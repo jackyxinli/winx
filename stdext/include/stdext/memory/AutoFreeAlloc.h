@@ -35,7 +35,7 @@ public:
 	enum { MemBlockSize = _MemBlockSize };
 	enum { HeaderSize = sizeof(void*) };
 	enum { BlockSize = MemBlockSize - HeaderSize };
-	enum { IsAutoFreeAlloctor = 1 };
+	enum { IsAutoFreeAllocator = 1 };
 
 private:
 	struct _MemBlock
@@ -210,9 +210,6 @@ public:
 
 // -------------------------------------------------------------------------
 // $Log: AutoFreeAlloc.h,v $
-// Revision 1.1  2006/10/18 12:13:39  xushiwei
-// stdext as independent component
-//
 // Revision 1.3  2006/09/26 07:51:00  xushiwei
 // STL-Extension:
 //  TestCase(WINX_TEST_APP, WINX_TEST_CLASS, WINX_TEST_SUITE, WINX_TEST, WINX_TEST_SUITE_END)
