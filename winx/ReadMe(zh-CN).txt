@@ -20,13 +20,15 @@ WINX关注一个目标：简单而高效。
 	├─winx
 	│  ├─include
 	│  │  └─winx
-	│  ├─docs(zh-CN)
-	│  ├─docs(en)
-	│  ├─samples
-	│  ├─tutorials
 	│  ├─lib
 	│  ├─src
 	│  └─test
+	├─winxdoc
+	│  ├─docs(zh-CN)
+	│  └─docs(en)
+	├─winxsamp
+	│  ├─samples
+	│  └─tutorials
 	├─stdext
 	│  └─include
 	│     └─stdext

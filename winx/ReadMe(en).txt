@@ -22,13 +22,15 @@ library. However, it is not SIMPLE.
 	©À©¤winx
 	©¦  ©À©¤include
 	©¦  ©¦  ©¸©¤winx
-	©¦  ©À©¤docs(zh-CN)
-	©¦  ©À©¤docs(en)
-	©¦  ©À©¤samples
-	©¦  ©À©¤tutorials
 	©¦  ©À©¤lib
 	©¦  ©À©¤src
 	©¦  ©¸©¤test
+	©À©¤winxdoc
+	©¦  ©À©¤docs(zh-CN)
+	©¦  ©¸©¤docs(en)
+	©À©¤winxsamp
+	©¦  ©À©¤samples
+	©¦  ©¸©¤tutorials
 	©À©¤stdext
 	©¦  ©¸©¤include
 	©¦     ©¸©¤stdext
