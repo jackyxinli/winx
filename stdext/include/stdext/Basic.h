@@ -116,6 +116,16 @@ inline int __cdecl _null_func(int nLevel, const void* fmt, ...) { return 0; }
 #endif
 
 // -------------------------------------------------------------------------
+// fix warning: VS.NET 2003
+
+#if defined(_MSC_VER) && (_MSC_VER > 1200)
+#	if defined(_ATL_VER) && (_ATL_VER <= 0x0710) // VS.NET 2003
+#		pragma warning(disable:4290)
+		// A function is declared using exception specification, which Visual C++ accepts but does not implement
+#	endif
+#endif
+
+// -------------------------------------------------------------------------
 // countof - for general use
 
 #ifndef	countof

@@ -49,14 +49,14 @@ HRESULT winx_call RegWriteString(
 
 #if defined(UNICODE)
 	_itow(index, szName+1, 10);
-	#if (_ATL_VER >= 0x0800)
+	#if (_ATL_VER >= 0x0710)
 		return HRESULT_FROM_WIN32(regKey.SetStringValue(str.c_str(), szName));
 	#else
 		return HRESULT_FROM_WIN32(regKey.SetValue(str.c_str(), szName));
 	#endif
 #else
 	_itoa(index, szName+1, 10);
-	#if (_ATL_VER >= 0x0800)
+	#if (_ATL_VER >= 0x0710)
 		USES_CONVERSION;
 		return HRESULT_FROM_WIN32(regKey.SetStringValue(W2A(str.c_str()), szName));
 	#else
@@ -82,7 +82,7 @@ HRESULT winx_call RegReadString(RegKeyType& regKey, UINT index, UniString& str)
 #endif
 
 	DWORD dwCount = 0;
-#if (_ATL_VER >= 0x0800)
+#if (_ATL_VER >= 0x0710)
 	LONG lRes = regKey.QueryStringValue(szName, NULL, &dwCount);
 #else
 	LONG lRes = regKey.QueryValue(NULL, szName, &dwCount);
@@ -91,7 +91,7 @@ HRESULT winx_call RegReadString(RegKeyType& regKey, UINT index, UniString& str)
 		return HRESULT_FROM_WIN32(lRes);
 
 	TCHAR* szValue = (TCHAR*)_alloca(dwCount*sizeof(TCHAR));
-#if (_ATL_VER >= 0x0800)
+#if (_ATL_VER >= 0x0710)
 	lRes = regKey.QueryStringValue(szName, szValue, &dwCount);
 #else
 	lRes = regKey.QueryValue(szValue, szName, &dwCount);

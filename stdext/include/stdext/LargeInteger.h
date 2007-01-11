@@ -146,9 +146,9 @@ public:
 		return tmp -= rhs;
 	}
 
-	ThisClass winx_call operator-() const
+	LONGLONG winx_call operator-() const
 	{
-		return -QuadPart;
+		return -(LONGLONG)QuadPart;
 	}
 	
 	bool winx_call operator==(const ThisClass& rhs) const

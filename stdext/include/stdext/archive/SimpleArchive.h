@@ -249,7 +249,7 @@ public:
 	
 	void winx_call put(const char_type* lpBuf)
 	{
-		insert(end(), lpBuf, strchr(lpBuf, '\0'));
+		insert( end(), lpBuf, static_cast<const char_type*>(strchr(lpBuf, '\0')) );
 	}
 	
 	size_type winx_call put(int_type ch)
