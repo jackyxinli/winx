@@ -186,8 +186,12 @@ inline HRESULT AtlCreateActiveXControls(HWND hWndParent, HINSTANCE hInst, UINT n
 							if (h != NULL)
 							{
 								BYTE* pBytes = (BYTE*) GlobalLock(h);
-								BYTE* pSource = pData; 
+								BYTE* pSource = pData;
+#if _ATL_VER <= 0x0710
+								memcpy(pBytes, pSource, dwLen);
+#else
 								Checked::memcpy_s(pBytes, dwLen, pSource, dwLen);
+#endif
 								GlobalUnlock(h);
 								CreateStreamOnHGlobal(h, TRUE, &spStream);
 							}

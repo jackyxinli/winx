@@ -45,13 +45,17 @@
 #endif
 
 #if defined(_MSC_VER) && (_MSC_VER > 1200)
-#	define __WINX_LINK_VS2005		"-2005"
+#	if defined(_ATL_VER) && (_ATL_VER <= 0x0710) // VS.NET 2003
+#		define __WINX_LINK_VER			"-2003"
+#	else
+#		define __WINX_LINK_VER			"-2005"
+#	endif
 #else
-#	define __WINX_LINK_VS2005
+#	define __WINX_LINK_VER
 #endif
 
 #define __WINX_LINK_SUFFIX			\
-	__WINX_LINK_CRT __WINX_LINK_DEBUG __WINX_LINK_UNICODE __WINX_LINK_VS2005
+	__WINX_LINK_CRT __WINX_LINK_DEBUG __WINX_LINK_UNICODE __WINX_LINK_VER
 
 // -------------------------------------------------------------------------
 // link winx

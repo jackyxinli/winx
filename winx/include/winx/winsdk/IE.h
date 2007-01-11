@@ -67,11 +67,11 @@
 #include <exdisp.h>
 #endif
 
-#if !defined(WINX_VC6)
+#if defined(WINX_VC_NET_GE2005)
 #ifndef __tlogstg_h__
 #include <tlogstg.h>
 #endif
-#endif // !defined(WINX_VC6)
+#endif // defined(WINX_VC_NET_GE2005)
 
 #ifndef __mshtmhst_h__
 #include <mshtmhst.h>

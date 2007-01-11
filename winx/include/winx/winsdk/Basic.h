@@ -30,6 +30,9 @@
 #if defined(_MSC_VER) 
 #	if (_MSC_VER > 1200)
 #		define WINX_VC_NET
+#		if (_ATL_VER > 0x0710)
+#			define WINX_VC_NET_GE2005 // Version >= VS.NET 2005
+#		endif
 #	else
 #		define WINX_VC6
 #	endif
@@ -149,9 +152,6 @@ inline BOOL InitRichEditControl(BOOL fInitRichEditV1 = TRUE)
 
 // =========================================================================
 // $Log: Basic.h,v $
-// Revision 1.7  2006/12/11 05:19:16  xushiwei
-// vs2005 __w64 support
-//
 // Revision 1.6  2006/09/13 17:05:11  xushiwei
 // WINX-Basic: DefaultWindowHandle(see macro WINX_NULL_WINDOW_HANDLE)
 // WINX-Core: AxModalDialog/AxModalessDialog

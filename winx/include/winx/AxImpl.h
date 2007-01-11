@@ -21,10 +21,6 @@
 
 // -------------------------------------------------------------------------
 
-#ifndef __WINX_WINSDK_IE_H__
-#include "winsdk/IE.h"
-#endif
-
 #ifndef __ATLCOM_H__
 #include <atlcom.h>
 #endif
