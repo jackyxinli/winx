@@ -132,6 +132,15 @@ public:
 		return p;
 	}
 
+	void winx_call Release()
+	{
+		if (p)
+		{
+			p->Release();
+			p = NULL;
+		}
+	}
+
 	HRESULT winx_call GetIDOfName(LPCOLESTR lpsz, DISPID* pdispid) const
 	{
 		return p->GetIDsOfNames(IID_NULL, (LPOLESTR*)&lpsz, 1, LOCALE_USER_DEFAULT, pdispid);
@@ -551,60 +560,92 @@ public:
 // -------------------------------------------------------------------------
 // GetDispatchObj
 
-struct DispatchObj
+template <bool bOwn>
+struct DispatchObjT
 {
 	DispatchHandle disp;
 	DISPID dispid;
-};
 
-inline HRESULT winx_call GetDispatchObj(
-	IN IDispatch* obj, IN LPOLESTR nameObj, OUT DispatchObj& info)
-{
-	if (obj == NULL)
-		return E_ACCESSDENIED;
-
-	HRESULT hr;
-	IDispatch* objTmp;
-	LPWSTR pos;
-	obj->AddRef();
-	while ( (pos = wcschr(nameObj, '.')) != NULL )
+public:
+	~DispatchObjT()
 	{
-		*pos = '\0';
-		hr = DispatchHandle::GetProperty(obj, nameObj, &objTmp);
-		obj->Release();
-		if (FAILED(hr))
-			return hr;
-		obj = objTmp;
-		nameObj = pos + 1;
+		if (bOwn)
+			disp.Release();
 	}
-	info.disp = obj;
-	return obj->GetIDsOfNames(
-		IID_NULL, (LPOLESTR*)&nameObj, 1, LOCALE_USER_DEFAULT, &info.dispid);
-}
 
-inline HRESULT winx_call GetDispatchObjHelper(
-	IN IDispatch* obj, IN LPCOLESTR nameObj, OUT DispatchObj& info)
-{
-	UINT cb = sizeof(OLECHAR) * (wcslen(nameObj) + 1);
-	LPOLESTR name = (LPOLESTR)_alloca(cb);
-	memcpy(name, nameObj, cb);
-	return GetDispatchObj(obj, name, info);
-}
+	void winx_call Release()
+	{
+		disp.Release();
+	}
+
+	HRESULT winx_call Assign(IDispatch* obj, DISPID id)
+	{
+		if (bOwn)
+			disp.Release();
+		disp = obj;
+		dispid = id;
+		return S_OK;
+	}
+	
+	HRESULT winx_call Assign(IDispatch* obj, LPCOLESTR name)
+	{
+		if (bOwn)
+			disp.Release();
+		disp = obj;
+		dispid = DISPID_UNKNOWN;
+		return disp.GetIDOfName(name, &dispid);
+	}
+
+	HRESULT winx_call ExAssign(IDispatch* obj, LPOLESTR nameObj)
+	{
+		if (bOwn)
+			disp.Release();
+
+		if (obj == NULL)
+			return E_ACCESSDENIED;
+
+		IDispatch* objTmp;
+		LPOLESTR pos;
+		obj->AddRef();
+		while ( (pos = wcschr(nameObj, '.')) != NULL )
+		{
+			*pos = '\0';
+			HRESULT hr = DispatchHandle::GetProperty(obj, nameObj, &objTmp);
+			obj->Release();
+			if (FAILED(hr))
+				return hr;
+			obj = objTmp;
+			nameObj = pos + 1;
+		}
+		disp = obj;
+		return obj->GetIDsOfNames(
+			IID_NULL, (LPOLESTR*)&nameObj, 1, LOCALE_USER_DEFAULT, &dispid);
+	}
+
+	HRESULT winx_call ExAssign(IN IDispatch* obj, IN LPCOLESTR nameObj)
+	{
+		UINT cb = sizeof(OLECHAR) * (wcslen(nameObj) + 1);
+		LPOLESTR name = (LPOLESTR)_alloca(cb);
+		memcpy(name, nameObj, cb);
+		return ExAssign(obj, name);
+	}
+};
 
 // -------------------------------------------------------------------------
 // class DispatchMethod
 
-class DispatchMethod : public DispatchObj
+template <bool bOwn>
+class DispatchMethodT : public DispatchObjT<bOwn>
 {
 public:
-	DispatchMethod() {
+	DispatchMethodT() {
 		dispid = DISPID_UNKNOWN;
 	}
-	DispatchMethod(IDispatch* obj, DISPID id) {
+	DispatchMethodT(IDispatch* obj, DISPID id) {
 		disp = obj;
 		dispid = id;
 	}
-	DispatchMethod(IDispatch* obj, LPCWSTR name) {
+	DispatchMethodT(IDispatch* obj, LPCOLESTR name) {
 		disp = obj;
 		dispid = DISPID_UNKNOWN;
 		disp.GetIDOfName(name, &dispid);
@@ -640,31 +681,38 @@ public:
 	}
 };
 
-class DispatchMethodEx : public DispatchMethod
+typedef DispatchMethodT<false> DispatchMethod;
+
+// -------------------------------------------------------------------------
+// class ExDispatchMethod
+
+class ExDispatchMethod : public DispatchMethodT<true>
 {
 public:
-	DispatchMethodEx(IDispatch* obj, LPWSTR nameObj) {
-		GetDispatchObj(obj, nameObj, *this);
+	ExDispatchMethod() {}
+	ExDispatchMethod(IDispatch* obj, LPOLESTR nameObj) {
+		ExAssign(obj, nameObj);
 	}
-	DispatchMethodEx(IDispatch* obj, LPCWSTR nameObj) {
-		GetDispatchObjHelper(obj, nameObj, *this);
+	ExDispatchMethod(IDispatch* obj, LPCOLESTR nameObj) {
+		ExAssign(obj, nameObj);
 	}
 };
 
 // -------------------------------------------------------------------------
-// class DispatchFunction
+// class DispatchFunctionT
 
-class DispatchFunction : public DispatchObj
+template <bool bOwn>
+class DispatchFunctionT : public DispatchObjT<bOwn>
 {
 public:
-	DispatchFunction() {
+	DispatchFunctionT() {
 		dispid = DISPID_UNKNOWN;
 	}
-	DispatchFunction(IDispatch* obj, DISPID id) {
+	DispatchFunctionT(IDispatch* obj, DISPID id) {
 		disp = obj;
 		dispid = id;
 	}
-	DispatchFunction(IDispatch* obj, LPCWSTR name) {
+	DispatchFunctionT(IDispatch* obj, LPCOLESTR name) {
 		disp = obj;
 		dispid = DISPID_UNKNOWN;
 		disp.GetIDOfName(name, &dispid);
@@ -735,31 +783,38 @@ public:
 	}
 };
 
-class DispatchFunctionEx : public DispatchFunction
+typedef DispatchFunctionT<false> DispatchFunction;
+
+// -------------------------------------------------------------------------
+// class ExDispatchFunction
+
+class ExDispatchFunction : public DispatchFunctionT<true>
 {
 public:
-	DispatchFunctionEx(IDispatch* obj, LPWSTR nameObj) {
-		GetDispatchObj(obj, nameObj, *this);
+	ExDispatchFunction() {}
+	ExDispatchFunction(IDispatch* obj, LPOLESTR nameObj) {
+		ExAssign(obj, nameObj);
 	}
-	DispatchFunctionEx(IDispatch* obj, LPCWSTR nameObj) {
-		GetDispatchObjHelper(obj, nameObj, *this);
+	ExDispatchFunction(IDispatch* obj, LPCOLESTR nameObj) {
+		ExAssign(obj, nameObj);
 	}
 };
 
 // -------------------------------------------------------------------------
-// class DispatchProperty
+// class DispatchPropertyT
 
-class DispatchProperty : public DispatchObj
+template <bool bOwn>
+class DispatchPropertyT : public DispatchObjT<bOwn>
 {
 public:
-	DispatchProperty() {
+	DispatchPropertyT() {
 		dispid = DISPID_UNKNOWN;
 	}
-	DispatchProperty(IDispatch* obj, DISPID id) {
+	DispatchPropertyT(IDispatch* obj, DISPID id) {
 		disp = obj;
 		dispid = id;
 	}
-	DispatchProperty(IDispatch* obj, LPCWSTR name) {
+	DispatchPropertyT(IDispatch* obj, LPCOLESTR name) {
 		disp = obj;
 		dispid = DISPID_UNKNOWN;
 		disp.GetIDOfName(name, &dispid);
@@ -780,14 +835,20 @@ public:
 	}
 };
 
-class DispatchPropertyEx : public DispatchProperty
+typedef DispatchPropertyT<false> DispatchProperty;
+
+// -------------------------------------------------------------------------
+// class ExDispatchProperty
+
+class ExDispatchProperty : public DispatchPropertyT<true>
 {
 public:
-	DispatchPropertyEx(IDispatch* obj, LPWSTR nameObj) {
-		GetDispatchObj(obj, nameObj, *this);
+	ExDispatchProperty() {}
+	ExDispatchProperty(IDispatch* obj, LPOLESTR nameObj) {
+		ExAssign(obj, nameObj);
 	}
-	DispatchPropertyEx(IDispatch* obj, LPCWSTR nameObj) {
-		GetDispatchObjHelper(obj, nameObj, *this);
+	ExDispatchProperty(IDispatch* obj, LPCOLESTR nameObj) {
+		ExAssign(obj, nameObj);
 	}
 };
 
@@ -795,7 +856,7 @@ public:
 // $Log: Dispatch.h,v $
 // Revision 1.2  2007/01/12 22:37:13  xushiwei
 // WINX-Core:
-//   class DispatchMethod(Ex), DispatchFunction(Ex), DispatchProperty(Ex)
+//   class DispatchMethod, DispatchFunction, DispatchProperty
 //
 // Revision 1.1  2007/01/12 20:27:53  xushiwei
 // WINX-Core:
