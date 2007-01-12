@@ -132,7 +132,7 @@ public:
 		return p;
 	}
 
-	HRESULT GetIDOfName(LPCOLESTR lpsz, DISPID* pdispid)
+	HRESULT winx_call GetIDOfName(LPCOLESTR lpsz, DISPID* pdispid) const
 	{
 		return p->GetIDsOfNames(IID_NULL, (LPOLESTR*)&lpsz, 1, LOCALE_USER_DEFAULT, pdispid);
 	}
@@ -148,7 +148,7 @@ private:
 		}
 		
 		template <class RetType>
-		HRESULT CastTo(RetType* result)
+		HRESULT winx_call CastTo(RetType* result)
 		{
 			enum { VT_NEED = _DispRetTypeTraits<RetType>::VT };
 			if (vt != VT_NEED)
@@ -164,13 +164,14 @@ private:
 
 public:
 	// Invoke a method by DISPID with no parameters
-	HRESULT Invoke0(DISPID dispid, VARIANT* pvarRet = NULL)
+	HRESULT winx_call Invoke0(DISPID dispid, VARIANT* pvarRet = NULL) const
 	{
 		DISPPARAMS dispparams = { NULL, NULL, 0, 0};
 		return p->Invoke(dispid, IID_NULL, LOCALE_USER_DEFAULT, DISPATCH_METHOD, &dispparams, pvarRet, NULL, NULL);
 	}
+
 	// Invoke a method by name with no parameters
-	HRESULT Invoke0(LPCOLESTR lpszName, VARIANT* pvarRet = NULL)
+	HRESULT winx_call Invoke0(LPCOLESTR lpszName, VARIANT* pvarRet = NULL) const
 	{
 		DISPID dispid;
 		HRESULT hr = GetIDOfName(lpszName, &dispid);
@@ -178,14 +179,16 @@ public:
 			hr = Invoke0(dispid, pvarRet);
 		return hr;
 	}
+
 	// Invoke a method by DISPID with a single parameter
-	HRESULT Invoke1(DISPID dispid, VARIANT* pvarParam1, VARIANT* pvarRet = NULL)
+	HRESULT winx_call Invoke1(DISPID dispid, VARIANT* pvarParam1, VARIANT* pvarRet = NULL) const
 	{
 		DISPPARAMS dispparams = { pvarParam1, NULL, 1, 0};
 		return p->Invoke(dispid, IID_NULL, LOCALE_USER_DEFAULT, DISPATCH_METHOD, &dispparams, pvarRet, NULL, NULL);
 	}
+
 	// Invoke a method by name with a single parameter
-	HRESULT Invoke1(LPCOLESTR lpszName, VARIANT* pvarParam1, VARIANT* pvarRet = NULL)
+	HRESULT winx_call Invoke1(LPCOLESTR lpszName, VARIANT* pvarParam1, VARIANT* pvarRet = NULL) const
 	{
 		DISPID dispid;
 		HRESULT hr = GetIDOfName(lpszName, &dispid);
@@ -193,8 +196,9 @@ public:
 			hr = Invoke1(dispid, pvarParam1, pvarRet);
 		return hr;
 	}
+
 	// Invoke a method by DISPID with two parameters
-	HRESULT Invoke2(DISPID dispid, VARIANT* pvarParam1, VARIANT* pvarParam2, VARIANT* pvarRet = NULL)
+	HRESULT winx_call Invoke2(DISPID dispid, VARIANT* pvarParam1, VARIANT* pvarParam2, VARIANT* pvarRet = NULL) const
 	{
 		VARIANT varArgs[2];
 		varArgs[0] = *pvarParam2;
@@ -202,8 +206,11 @@ public:
 		DISPPARAMS dispparams = { &varArgs[0], NULL, 2, 0};
 		return p->Invoke(dispid, IID_NULL, LOCALE_USER_DEFAULT, DISPATCH_METHOD, &dispparams, pvarRet, NULL, NULL);
 	}
+
 	// Invoke a method by name with two parameters
-	HRESULT Invoke2(LPCOLESTR lpszName, VARIANT* pvarParam1, VARIANT* pvarParam2, VARIANT* pvarRet = NULL)
+	HRESULT winx_call Invoke2(
+		LPCOLESTR lpszName, VARIANT* pvarParam1,
+		VARIANT* pvarParam2, VARIANT* pvarRet = NULL) const
 	{
 		DISPID dispid;
 		HRESULT hr = GetIDOfName(lpszName, &dispid);
@@ -211,8 +218,9 @@ public:
 			hr = Invoke2(dispid, pvarParam1, pvarParam2, pvarRet);
 		return hr;
 	}
+
 	// Invoke a method by DISPID with three parameters
-	HRESULT Invoke3(DISPID dispid, VARIANT* pvarParam1, VARIANT* pvarParam2, VARIANT* pvarParam3, VARIANT* pvarRet = NULL)
+	HRESULT winx_call Invoke3(DISPID dispid, VARIANT* pvarParam1, VARIANT* pvarParam2, VARIANT* pvarParam3, VARIANT* pvarRet = NULL) const
 	{
 		VARIANT varArgs[3];
 		varArgs[0] = *pvarParam3;
@@ -221,8 +229,11 @@ public:
 		DISPPARAMS dispparams = { &varArgs[0], NULL, 3, 0};
 		return p->Invoke(dispid, IID_NULL, LOCALE_USER_DEFAULT, DISPATCH_METHOD, &dispparams, pvarRet, NULL, NULL);
 	}
+
 	// Invoke a method by name with three parameters
-	HRESULT Invoke3(LPCOLESTR lpszName, VARIANT* pvarParam1, VARIANT* pvarParam2, VARIANT* pvarParam3, VARIANT* pvarRet = NULL)
+	HRESULT winx_call Invoke3(
+		LPCOLESTR lpszName, VARIANT* pvarParam1, VARIANT* pvarParam2,
+		VARIANT* pvarParam3, VARIANT* pvarRet = NULL) const
 	{
 		DISPID dispid;
 		HRESULT hr = GetIDOfName(lpszName, &dispid);
@@ -230,14 +241,16 @@ public:
 			hr = Invoke3(dispid, pvarParam1, pvarParam2, pvarParam3, pvarRet);
 		return hr;
 	}
+
 	// Invoke a method by DISPID with N parameters
-	HRESULT InvokeN(DISPID dispid, VARIANT* pvarParams, int nParams, VARIANT* pvarRet = NULL)
+	HRESULT winx_call InvokeN(DISPID dispid, VARIANT* pvarParams, int nParams, VARIANT* pvarRet = NULL) const
 	{
 		DISPPARAMS dispparams = { pvarParams, NULL, nParams, 0};
 		return p->Invoke(dispid, IID_NULL, LOCALE_USER_DEFAULT, DISPATCH_METHOD, &dispparams, pvarRet, NULL, NULL);
 	}
-	// Invoke a method by name with Nparameters
-	HRESULT InvokeN(LPCOLESTR lpszName, VARIANT* pvarParams, int nParams, VARIANT* pvarRet = NULL)
+
+	// Invoke a method by name with N parameters
+	HRESULT winx_call InvokeN(LPCOLESTR lpszName, VARIANT* pvarParams, int nParams, VARIANT* pvarRet = NULL) const
 	{
 		HRESULT hr;
 		DISPID dispid;
@@ -248,7 +261,7 @@ public:
 	}
 
 public:
-	static HRESULT GetProperty(IDispatch* pDisp, DISPID dwDispID, VARIANT* pVar)
+	static HRESULT winx_call GetProperty(IDispatch* pDisp, DISPID dwDispID, VARIANT* pVar)
 	{
 		DISPPARAMS dispparamsNoArgs = {NULL, NULL, 0, 0};
 		return pDisp->Invoke(dwDispID, IID_NULL,
@@ -256,8 +269,7 @@ public:
 				&dispparamsNoArgs, pVar, NULL, NULL);
 	}
 
-	static HRESULT PutProperty(IDispatch* pDisp, DISPID dwDispID,
-		VARIANT* pVar)
+	static HRESULT winx_call PutProperty(IDispatch* pDisp, DISPID dwDispID, VARIANT* pVar)
 	{
 		DISPPARAMS dispparams = {NULL, NULL, 1, 1};
 		dispparams.rgvarg = pVar;
@@ -280,7 +292,7 @@ public:
 	}
 
 	template <class RetType>
-	static HRESULT GetProperty(IDispatch* pDisp, DISPID dwDispID, RetType* result)
+	static HRESULT winx_call GetProperty(IDispatch* pDisp, DISPID dwDispID, RetType* result)
 	{
 		_RetVariant varRet;
 		DISPPARAMS dispparamsNoArgs = {NULL, NULL, 0, 0};
@@ -293,7 +305,7 @@ public:
 	}
 
 	template <class RetType>
-	static HRESULT GetProperty(IDispatch* pDisp, LPCOLESTR lpsz, RetType* result)
+	static HRESULT winx_call GetProperty(IDispatch* pDisp, LPCOLESTR lpsz, RetType* result)
 	{
 		DISPID dwDispID;
 		HRESULT hr = pDisp->GetIDsOfNames(IID_NULL, 
@@ -303,14 +315,15 @@ public:
 		return hr;
 	}
 
+public:
 	template <class RetType>
-	HRESULT GetProperty(DISPID dwDispID, RetType* pVar)
+	HRESULT winx_call GetProperty(DISPID dwDispID, RetType* pVar) const
 	{
 		return GetProperty(p, dwDispID, pVar);
 	}
 
 	template <class RetType>
-	HRESULT GetProperty(LPCOLESTR lpsz, RetType* pVar)
+	HRESULT winx_call GetProperty(LPCOLESTR lpsz, RetType* pVar) const
 	{
 		DISPID dwDispID;
 		HRESULT hr = GetIDOfName(lpsz, &dwDispID);
@@ -319,11 +332,12 @@ public:
 		return hr;
 	}
 
-	HRESULT PutProperty(DISPID dwDispID, VARIANT* pVar)
+	HRESULT winx_call PutProperty(DISPID dwDispID, VARIANT* pVar) const
 	{
 		return PutProperty(p, dwDispID, pVar);
 	}
-	HRESULT PutProperty(LPCOLESTR lpsz, VARIANT* pVar)
+
+	HRESULT winx_call PutProperty(LPCOLESTR lpsz, VARIANT* pVar) const
 	{
 		DISPID dwDispID;
 		HRESULT hr = GetIDOfName(lpsz, &dwDispID);
@@ -332,28 +346,80 @@ public:
 		return hr;
 	}
 
+	HRESULT winx_call PutProperty(DISPID dwDispID, CComVariant val) const
+	{
+		return PutProperty(p, dwDispID, &val);
+	}
+
+	HRESULT winx_call PutProperty(LPCOLESTR lpsz, CComVariant val) const
+	{
+		DISPID dwDispID;
+		HRESULT hr = GetIDOfName(lpsz, &dwDispID);
+		if (SUCCEEDED(hr))
+			hr = PutProperty(p, dwDispID, &val);
+		return hr;
+	}
+
 public:
-	HRESULT winx_call CallMethod(LPCOLESTR name) { return Invoke0(name); }
-	HRESULT winx_call CallMethod(LPCOLESTR name, VARIANT* arg1) { return Invoke1(name, arg1); }
-	HRESULT winx_call CallMethod(LPCOLESTR name, VARIANT* arg1, VARIANT* arg2) { return Invoke2(name, arg1, arg2); }
-	HRESULT winx_call CallMethod(LPCOLESTR name, VARIANT* arg1, VARIANT* arg2, VARIANT* arg3) { return Invoke3(name, arg1, arg2, arg3); }
+	HRESULT winx_call CallMethod(LPCOLESTR name) const {
+		return Invoke0(name);
+	}
 
-	HRESULT winx_call CallMethod(DISPID name) { return Invoke0(name); }
-	HRESULT winx_call CallMethod(DISPID name, VARIANT* arg1) { return Invoke1(name, arg1); }
-	HRESULT winx_call CallMethod(DISPID name, VARIANT* arg1, VARIANT* arg2) { return Invoke2(name, arg1, arg2); }
-	HRESULT winx_call CallMethod(DISPID name, VARIANT* arg1, VARIANT* arg2, VARIANT* arg3) { return Invoke3(name, arg1, arg2, arg3); }
+	HRESULT winx_call CallMethod(LPCOLESTR name, VARIANT* arg1) const {
+		return Invoke1(name, arg1);
+	}
 
-	HRESULT winx_call CallMethod(LPCOLESTR name, CComVariant arg1) { return Invoke1(name, &arg1); }
-	HRESULT winx_call CallMethod(LPCOLESTR name, CComVariant arg1, CComVariant arg2) { return Invoke2(name, &arg1, &arg2); }
-	HRESULT winx_call CallMethod(LPCOLESTR name, CComVariant arg1, CComVariant arg2, CComVariant arg3) { return Invoke3(name, &arg1, &arg2, &arg3); }
+	HRESULT winx_call CallMethod(LPCOLESTR name, VARIANT* arg1, VARIANT* arg2) const {
+		return Invoke2(name, arg1, arg2);
+	}
 
-	HRESULT winx_call CallMethod(DISPID name, CComVariant arg1) { return Invoke1(name, &arg1); }
-	HRESULT winx_call CallMethod(DISPID name, CComVariant arg1, CComVariant arg2) { return Invoke2(name, &arg1, &arg2); }
-	HRESULT winx_call CallMethod(DISPID name, CComVariant arg1, CComVariant arg2, CComVariant arg3) { return Invoke3(name, &arg1, &arg2, &arg3); }
+	HRESULT winx_call CallMethod(LPCOLESTR name, VARIANT* arg1, VARIANT* arg2, VARIANT* arg3) const {
+		return Invoke3(name, arg1, arg2, arg3);
+	}
+
+	HRESULT winx_call CallMethod(DISPID name) const {
+		return Invoke0(name);
+	}
+
+	HRESULT winx_call CallMethod(DISPID name, VARIANT* arg1) const {
+		return Invoke1(name, arg1);
+	}
+
+	HRESULT winx_call CallMethod(DISPID name, VARIANT* arg1, VARIANT* arg2) const {
+		return Invoke2(name, arg1, arg2);
+	}
+
+	HRESULT winx_call CallMethod(DISPID name, VARIANT* arg1, VARIANT* arg2, VARIANT* arg3) const {
+		return Invoke3(name, arg1, arg2, arg3);
+	}
+
+	HRESULT winx_call CallMethod(LPCOLESTR name, CComVariant arg1) const {
+		return Invoke1(name, &arg1);
+	}
+
+	HRESULT winx_call CallMethod(LPCOLESTR name, CComVariant arg1, CComVariant arg2) const {
+		return Invoke2(name, &arg1, &arg2);
+	}
+
+	HRESULT winx_call CallMethod(LPCOLESTR name, CComVariant arg1, CComVariant arg2, CComVariant arg3) const {
+		return Invoke3(name, &arg1, &arg2, &arg3);
+	}
+
+	HRESULT winx_call CallMethod(DISPID name, CComVariant arg1) const {
+		return Invoke1(name, &arg1);
+	}
+
+	HRESULT winx_call CallMethod(DISPID name, CComVariant arg1, CComVariant arg2) const {
+		return Invoke2(name, &arg1, &arg2);
+	}
+
+	HRESULT winx_call CallMethod(DISPID name, CComVariant arg1, CComVariant arg2, CComVariant arg3) const {
+		return Invoke3(name, &arg1, &arg2, &arg3);
+	}
 
 public:
 	template <class RetType>
-	HRESULT winx_call CallFunction(LPCOLESTR name, RetType* result) {
+	HRESULT winx_call CallFunction(LPCOLESTR name, RetType* result) const {
 		_RetVariant varRet;
 		HRESULT hr = Invoke0(name, &varRet);
 		if (SUCCEEDED(hr))
@@ -362,7 +428,7 @@ public:
 	}
 
 	template <class RetType>
-	HRESULT winx_call CallFunction(LPCOLESTR name, VARIANT* arg1, RetType* result) {
+	HRESULT winx_call CallFunction(LPCOLESTR name, VARIANT* arg1, RetType* result) const {
 		_RetVariant varRet;
 		HRESULT hr = Invoke1(name, arg1, &varRet);
 		if (SUCCEEDED(hr))
@@ -371,7 +437,7 @@ public:
 	}
 
 	template <class RetType>
-	HRESULT winx_call CallFunction(LPCOLESTR name, VARIANT* arg1, VARIANT* arg2, RetType* result) {
+	HRESULT winx_call CallFunction(LPCOLESTR name, VARIANT* arg1, VARIANT* arg2, RetType* result) const {
 		_RetVariant varRet;
 		HRESULT hr = Invoke2(name, arg1, arg2, &varRet);
 		if (SUCCEEDED(hr))
@@ -380,7 +446,7 @@ public:
 	}
 
 	template <class RetType>
-	HRESULT winx_call CallFunction(LPCOLESTR name, VARIANT* arg1, VARIANT* arg2, VARIANT* arg3, RetType* result) {
+	HRESULT winx_call CallFunction(LPCOLESTR name, VARIANT* arg1, VARIANT* arg2, VARIANT* arg3, RetType* result) const {
 		_RetVariant varRet;
 		HRESULT hr = Invoke3(name, arg1, arg2, arg3, &varRet);
 		if (SUCCEEDED(hr))
@@ -390,7 +456,7 @@ public:
 
 public:
 	template <class RetType>
-	HRESULT winx_call CallFunction(DISPID name, RetType* result) {
+	HRESULT winx_call CallFunction(DISPID name, RetType* result) const {
 		_RetVariant varRet;
 		HRESULT hr = Invoke0(name, &varRet);
 		if (SUCCEEDED(hr))
@@ -399,7 +465,7 @@ public:
 	}
 
 	template <class RetType>
-	HRESULT winx_call CallFunction(DISPID name, VARIANT* arg1, RetType* result) {
+	HRESULT winx_call CallFunction(DISPID name, VARIANT* arg1, RetType* result) const {
 		_RetVariant varRet;
 		HRESULT hr = Invoke1(name, arg1, &varRet);
 		if (SUCCEEDED(hr))
@@ -408,7 +474,7 @@ public:
 	}
 
 	template <class RetType>
-	HRESULT winx_call CallFunction(DISPID name, VARIANT* arg1, VARIANT* arg2, RetType* result) {
+	HRESULT winx_call CallFunction(DISPID name, VARIANT* arg1, VARIANT* arg2, RetType* result) const {
 		_RetVariant varRet;
 		HRESULT hr = Invoke2(name, arg1, arg2, &varRet);
 		if (SUCCEEDED(hr))
@@ -417,7 +483,7 @@ public:
 	}
 
 	template <class RetType>
-	HRESULT winx_call CallFunction(DISPID name, VARIANT* arg1, VARIANT* arg2, VARIANT* arg3, RetType* result) {
+	HRESULT winx_call CallFunction(DISPID name, VARIANT* arg1, VARIANT* arg2, VARIANT* arg3, RetType* result) const {
 		_RetVariant varRet;
 		HRESULT hr = Invoke3(name, arg1, arg2, arg3, &varRet);
 		if (SUCCEEDED(hr))
@@ -427,7 +493,7 @@ public:
 
 public:
 	template <class RetType>
-	HRESULT winx_call CallFunction(LPCOLESTR name, CComVariant arg1, RetType* result) {
+	HRESULT winx_call CallFunction(LPCOLESTR name, CComVariant arg1, RetType* result) const {
 		_RetVariant varRet;
 		HRESULT hr = Invoke1(name, &arg1, &varRet);
 		if (SUCCEEDED(hr))
@@ -436,7 +502,7 @@ public:
 	}
 
 	template <class RetType>
-	HRESULT winx_call CallFunction(LPCOLESTR name, CComVariant arg1, CComVariant arg2, RetType* result) {
+	HRESULT winx_call CallFunction(LPCOLESTR name, CComVariant arg1, CComVariant arg2, RetType* result) const {
 		_RetVariant varRet;
 		HRESULT hr = Invoke2(name, &arg1, &arg2, &varRet);
 		if (SUCCEEDED(hr))
@@ -445,7 +511,7 @@ public:
 	}
 
 	template <class RetType>
-	HRESULT winx_call CallFunction(LPCOLESTR name, CComVariant arg1, CComVariant arg2, CComVariant arg3, RetType* result) {
+	HRESULT winx_call CallFunction(LPCOLESTR name, CComVariant arg1, CComVariant arg2, CComVariant arg3, RetType* result) const {
 		_RetVariant varRet;
 		HRESULT hr = Invoke3(name, &arg1, &arg2, &arg3, &varRet);
 		if (SUCCEEDED(hr))
@@ -455,7 +521,7 @@ public:
 
 public:
 	template <class RetType>
-	HRESULT winx_call CallFunction(DISPID name, CComVariant arg1, RetType* result) {
+	HRESULT winx_call CallFunction(DISPID name, CComVariant arg1, RetType* result) const {
 		_RetVariant varRet;
 		HRESULT hr = Invoke1(name, &arg1, &varRet);
 		if (SUCCEEDED(hr))
@@ -464,7 +530,7 @@ public:
 	}
 
 	template <class RetType>
-	HRESULT winx_call CallFunction(DISPID name, CComVariant arg1, CComVariant arg2, RetType* result) {
+	HRESULT winx_call CallFunction(DISPID name, CComVariant arg1, CComVariant arg2, RetType* result) const {
 		_RetVariant varRet;
 		HRESULT hr = Invoke2(name, &arg1, &arg2, &varRet);
 		if (SUCCEEDED(hr))
@@ -473,15 +539,13 @@ public:
 	}
 
 	template <class RetType>
-	HRESULT winx_call CallFunction(DISPID name, CComVariant arg1, CComVariant arg2, CComVariant arg3, RetType* result) {
+	HRESULT winx_call CallFunction(DISPID name, CComVariant arg1, CComVariant arg2, CComVariant arg3, RetType* result) const {
 		_RetVariant varRet;
 		HRESULT hr = Invoke3(name, &arg1, &arg2, &arg3, &varRet);
 		if (SUCCEEDED(hr))
 			hr = varRet.CastTo(result);
 		return hr;
 	}
-
-public:
 };
 
 // -------------------------------------------------------------------------
@@ -513,7 +577,7 @@ inline HRESULT winx_call GetDispatchObj(
 		obj = objTmp;
 		nameObj = pos + 1;
 	}
-	info.obj = obj;
+	info.disp = obj;
 	return obj->GetIDsOfNames(
 		IID_NULL, (LPOLESTR*)&nameObj, 1, LOCALE_USER_DEFAULT, &info.dispid);
 }
@@ -533,7 +597,56 @@ inline HRESULT winx_call GetDispatchObjHelper(
 class DispatchMethod : public DispatchObj
 {
 public:
-	DispatchMethod(IDispatch* obj, LPCWSTR nameObj) {
+	DispatchMethod() {
+		dispid = DISPID_UNKNOWN;
+	}
+	DispatchMethod(IDispatch* obj, DISPID id) {
+		disp = obj;
+		dispid = id;
+	}
+	DispatchMethod(IDispatch* obj, LPCWSTR name) {
+		disp = obj;
+		dispid = DISPID_UNKNOWN;
+		disp.GetIDOfName(name, &dispid);
+	}
+
+public:
+	HRESULT winx_call operator()() const {
+		return disp.Invoke0(dispid);
+	}
+
+	HRESULT winx_call operator()(VARIANT* arg1) const {
+		return disp.Invoke1(dispid, arg1);
+	}
+
+	HRESULT winx_call operator()(VARIANT* arg1, VARIANT* arg2) const {
+		return disp.Invoke2(dispid, arg1, arg2);
+	}
+
+	HRESULT winx_call operator()(VARIANT* arg1, VARIANT* arg2, VARIANT* arg3) const {
+		return disp.Invoke3(dispid, arg1, arg2, arg3);
+	}
+
+	HRESULT winx_call operator()(CComVariant arg1) const {
+		return disp.Invoke1(dispid, &arg1);
+	}
+
+	HRESULT winx_call operator()(CComVariant arg1, CComVariant arg2) const {
+		return disp.Invoke2(dispid, &arg1, &arg2);
+	}
+
+	HRESULT winx_call operator()(CComVariant arg1, CComVariant arg2, CComVariant arg3) const {
+		return disp.Invoke3(dispid, &arg1, &arg2, &arg3);
+	}
+};
+
+class DispatchMethodEx : public DispatchMethod
+{
+public:
+	DispatchMethodEx(IDispatch* obj, LPWSTR nameObj) {
+		GetDispatchObj(obj, nameObj, *this);
+	}
+	DispatchMethodEx(IDispatch* obj, LPCWSTR nameObj) {
 		GetDispatchObjHelper(obj, nameObj, *this);
 	}
 };
@@ -541,16 +654,152 @@ public:
 // -------------------------------------------------------------------------
 // class DispatchFunction
 
-class DispatchFunction
+class DispatchFunction : public DispatchObj
 {
 public:
+	DispatchFunction() {
+		dispid = DISPID_UNKNOWN;
+	}
+	DispatchFunction(IDispatch* obj, DISPID id) {
+		disp = obj;
+		dispid = id;
+	}
+	DispatchFunction(IDispatch* obj, LPCWSTR name) {
+		disp = obj;
+		dispid = DISPID_UNKNOWN;
+		disp.GetIDOfName(name, &dispid);
+	}
+
+public:
+	template <class RetType>
+	HRESULT winx_call operator()(RetType* result) const {
+		_RetVariant varRet;
+		HRESULT hr = disp.Invoke0(dispid, &varRet);
+		if (SUCCEEDED(hr))
+			hr = varRet.CastTo(result);
+		return hr;
+	}
+
+	template <class RetType>
+	HRESULT winx_call operator()(VARIANT* arg1, RetType* result) const {
+		_RetVariant varRet;
+		HRESULT hr = disp.Invoke1(dispid, arg1, &varRet);
+		if (SUCCEEDED(hr))
+			hr = varRet.CastTo(result);
+		return hr;
+	}
+
+	template <class RetType>
+	HRESULT winx_call operator()(VARIANT* arg1, VARIANT* arg2, RetType* result) const {
+		_RetVariant varRet;
+		HRESULT hr = disp.Invoke2(dispid, arg1, arg2, &varRet);
+		if (SUCCEEDED(hr))
+			hr = varRet.CastTo(result);
+		return hr;
+	}
+
+	template <class RetType>
+	HRESULT winx_call operator()(VARIANT* arg1, VARIANT* arg2, VARIANT* arg3, RetType* result) const {
+		_RetVariant varRet;
+		HRESULT hr = disp.Invoke3(dispid, arg1, arg2, arg3, &varRet);
+		if (SUCCEEDED(hr))
+			hr = varRet.CastTo(result);
+		return hr;
+	}
+
+	template <class RetType>
+	HRESULT winx_call operator()(CComVariant arg1, RetType* result) const {
+		_RetVariant varRet;
+		HRESULT hr = disp.Invoke1(dispid, &arg1, &varRet);
+		if (SUCCEEDED(hr))
+			hr = varRet.CastTo(result);
+		return hr;
+	}
+
+	template <class RetType>
+	HRESULT winx_call operator()(CComVariant arg1, CComVariant arg2, RetType* result) const {
+		_RetVariant varRet;
+		HRESULT hr = disp.Invoke2(dispid, &arg1, &arg2, &varRet);
+		if (SUCCEEDED(hr))
+			hr = varRet.CastTo(result);
+		return hr;
+	}
+
+	template <class RetType>
+	HRESULT winx_call operator()(CComVariant arg1, CComVariant arg2, CComVariant arg3, RetType* result) const {
+		_RetVariant varRet;
+		HRESULT hr = disp.Invoke3(dispid, &arg1, &arg2, &arg3, &varRet);
+		if (SUCCEEDED(hr))
+			hr = varRet.CastTo(result);
+		return hr;
+	}
+};
+
+class DispatchFunctionEx : public DispatchFunction
+{
+public:
+	DispatchFunctionEx(IDispatch* obj, LPWSTR nameObj) {
+		GetDispatchObj(obj, nameObj, *this);
+	}
+	DispatchFunctionEx(IDispatch* obj, LPCWSTR nameObj) {
+		GetDispatchObjHelper(obj, nameObj, *this);
+	}
+};
+
+// -------------------------------------------------------------------------
+// class DispatchProperty
+
+class DispatchProperty : public DispatchObj
+{
+public:
+	DispatchProperty() {
+		dispid = DISPID_UNKNOWN;
+	}
+	DispatchProperty(IDispatch* obj, DISPID id) {
+		disp = obj;
+		dispid = id;
+	}
+	DispatchProperty(IDispatch* obj, LPCWSTR name) {
+		disp = obj;
+		dispid = DISPID_UNKNOWN;
+		disp.GetIDOfName(name, &dispid);
+	}
+
+public:
+	template <class RetType>
+	HRESULT winx_call Get(RetType* pVar) const {
+		return DispatchHandle::GetProperty(disp, dispid, pVar);
+	}
+
+	HRESULT winx_call Put(VARIANT* pVar) const {
+		return DispatchHandle::PutProperty(disp, dispid, pVar);
+	}
+
+	HRESULT winx_call Put(CComVariant val) const {
+		return DispatchHandle::PutProperty(disp, dispid, &val);
+	}
+};
+
+class DispatchPropertyEx : public DispatchProperty
+{
+public:
+	DispatchPropertyEx(IDispatch* obj, LPWSTR nameObj) {
+		GetDispatchObj(obj, nameObj, *this);
+	}
+	DispatchPropertyEx(IDispatch* obj, LPCWSTR nameObj) {
+		GetDispatchObjHelper(obj, nameObj, *this);
+	}
 };
 
 // -------------------------------------------------------------------------
 // $Log: Dispatch.h,v $
+// Revision 1.2  2007/01/12 22:37:13  xushiwei
+// WINX-Core:
+//   class DispatchMethod(Ex), DispatchFunction(Ex), DispatchProperty(Ex)
+//
 // Revision 1.1  2007/01/12 20:27:53  xushiwei
 // WINX-Core:
-//   Dispatch Helper
+//   class DispatchHandle
 //
 
 __WINX_END
