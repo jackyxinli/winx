@@ -693,6 +693,7 @@ public:																		\
 	WINX_MSG_DEFAULT_HANDLER(OnInitMenuPopup);								\
 	WINX_MSG_DEFAULT_HANDLER(OnSetFocus);									\
 	WINX_MSG_DEFAULT_HANDLER(OnKillFocus);									\
+	WINX_MSG_DEFAULT_HANDLER(OnEnable);										\
 	WINX_MSG_DEFAULT_HANDLER(OnThemeChanged);								\
 	WINX_MSG_DEFAULT_HANDLER(OnSettingChange);								\
 	WINX_MSG_DEFAULT_HANDLER(OnQueryDragIcon);								\
@@ -962,6 +963,8 @@ public:
 	//
 	BOOL winx_msg OnSetFocus(HWND hWnd, HWND hWndPrevFocus)	{ return FALSE; }
 	BOOL winx_msg OnKillFocus(HWND hWnd, HWND hWndNewFocus) { return FALSE; }
+	
+	VOID winx_msg OnEnable(HWND hWnd, BOOL fEnable)			{}
 
 public:
 	// MouseEvent Support
@@ -1079,9 +1082,6 @@ public:
 
 // =========================================================================
 // $Log: MessagePrototype.h,v $
-// Revision 1.15  2006/12/11 05:19:08  xushiwei
-// vs2005 __w64 support
-//
 // Revision 1.14  2006/12/03 08:40:22  xushiwei
 // Unify style of map macro, such as:
 //  WINX_TEST_SUITE/WINX_TEST/WINX_TEST_SUITE_END;
@@ -1107,10 +1107,6 @@ public:
 // Revision 1.6  2006/09/03 04:32:56  xushiwei
 // WINX-Core: Behavior(BehaviorPermit, BehaviorSwitch, AutoHidden, etc)
 // WINX-Extension: PropertySheet, PropertyPage
-//
-// Revision 1.5  2006/08/25 15:13:19  xushiwei
-// Winx-Extension:
-//    ActiveX, WebBrowser(IE), Theme(XPStyle) support
 //
 // Revision 1.4  2006/08/23 05:47:06  xushiwei
 // WINX-Core:

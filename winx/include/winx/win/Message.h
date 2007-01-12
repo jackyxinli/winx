@@ -336,6 +336,7 @@ public:
 
 	BOOL winx_msg OnSetFocus(HWND hWnd, HWND hWndPrevFocus);
 	BOOL winx_msg OnKillFocus(HWND hWnd, HWND hWndNewFocus);
+	VOID winx_msg OnEnable(HWND hWnd, BOOL fEnable);
 
 	VOID winx_msg OnMouseMove(HWND hWnd, UINT nFlags, winx::CPoint point);
 	VOID winx_msg OnLButtonDown(HWND hWnd, UINT nFlags, winx::CPoint point);
@@ -685,13 +686,20 @@ NcPaint:	_WINX_PWND->OnNcPaint(hWnd, (HRGN)wParam);
 				return lResult = TRUE;
 			return FALSE;
 		}
+		WINX_MSG_CASE(WM_ENABLE, OnEnable)
+		{
+			_WINX_PWND->OnEnable(hWnd, wParam);
+			return TRUE;
+		}
 		WINX_MSG_CASE(WM_SETFOCUS, OnSetFocus)
 		{
-			return _WINX_PWND->OnSetFocus(hWnd, (HWND)wParam);
+			lResult = _WINX_PWND->OnSetFocus(hWnd, (HWND)wParam);
+			return TRUE;
 		}
 		WINX_MSG_CASE(WM_KILLFOCUS, OnKillFocus)
 		{
-			return _WINX_PWND->OnKillFocus(hWnd, (HWND)wParam);
+			lResult = _WINX_PWND->OnKillFocus(hWnd, (HWND)wParam);
+			return TRUE;
 		}
 		WINX_MSG_HAS(OnCtlColor)
 		{
