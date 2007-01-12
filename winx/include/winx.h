@@ -38,6 +38,14 @@
 #include "winx/Trace.h"
 #endif
 
+#ifndef __WINX_DISPATCH_H__
+#include "winx/Dispatch.h"
+#endif
+
+#ifndef __WINX_DISPATCHEVENT_H__
+#include "winx/DispatchEvent.h"
+#endif
+
 #ifndef __WINX_WINCORE_H__
 #include "winx/WinCore.h"
 #endif
