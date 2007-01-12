@@ -271,6 +271,14 @@ public:
 		WINX_ASSERT(font != NULL && ::GetObjectType(font->m_hFont) == OBJ_FONT);
 		return (HFONT)::SelectObject(m_hDC, font->m_hFont);
 	}
+
+	HGDIOBJ SelectStockObject(int nIndex)
+	{
+		WINX_ASSERT(m_hDC != NULL);
+		HGDIOBJ hObject = ::GetStockObject(nIndex);
+		WINX_ASSERT(hObject != NULL);
+		return ::SelectObject(m_hDC, hObject);
+	}
 	
 	HPALETTE SelectPalette(HPALETTE hPalette, BOOL bForceBackground) {
 		WINX_ASSERT(m_hDC != NULL);	
@@ -908,7 +916,7 @@ typedef PaintDC  CPaintDC;
 //
 // Revision 1.2  2006/08/20 04:49:57  xushiwei
 // MFC-Compatibility:
-//   GdiObject(CDC, CClientDC, CPaintDC, CBitmap, CPalette, etc),  Diagnost(ASSERT, VERIFY, etc)
+//   GdiObject(CDC, CClientDC, CPaintDC, CBitmap, CPalette, etc),  Diagnost(WINX_ASSERT, VERIFY, etc)
 //   CreditStatic - Demonstrate how to port MFC code to WINX --- see @@code in source code
 //
 // Revision 1.1  2006/08/19 09:42:10  xushiwei
