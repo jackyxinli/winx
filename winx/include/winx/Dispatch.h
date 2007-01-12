@@ -585,10 +585,10 @@ inline HRESULT winx_call GetDispatchObj(
 inline HRESULT winx_call GetDispatchObjHelper(
 	IN IDispatch* obj, IN LPCOLESTR nameObj, OUT DispatchObj& info)
 {
-	LPOLESTR name = wcsdup(nameObj);
-	HRESULT hr = GetDispatchObj(obj, name, info);
-	free(name);
-	return hr;
+	UINT cb = sizeof(OLECHAR) * (wcslen(nameObj) + 1);
+	LPOLESTR name = (LPOLESTR)_alloca(cb);
+	memcpy(name, nameObj, cb);
+	return GetDispatchObj(obj, name, info);
 }
 
 // -------------------------------------------------------------------------
