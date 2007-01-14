@@ -66,7 +66,7 @@ public:
 	
 	int_type winx_call get()
 	{
-		return (*m_p ? *m_p++ : endch);
+		return (*m_p ? *m_p++ : (int_type)endch);
 	}
 
 	const _E* winx_call tell() const
@@ -293,7 +293,7 @@ public:
 	@*/
 	HRESULT winx_call initPattern(const std::basic_string<_E>& strPattern)
 	{
-		return initPattern(str.c_str(), str.size());
+		return initPattern(strPattern.c_str(), strPattern.size());
 	}
 
 	/*
@@ -488,6 +488,9 @@ private:
 	typedef Finder< _E, MatchNoCase<_E> > BaseClass;
 
 public:
+    typedef typename BaseClass::size_type size_type;
+    typedef typename BaseClass::char_type char_type;
+    
 	/*
 	@ctor()
 	@brief					Default constructor.

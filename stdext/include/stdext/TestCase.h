@@ -23,9 +23,17 @@
 #include "Basic.h"
 #endif
 
+#ifndef _ITERATOR_
+#include <iterator>
+#endif
+
+#if defined(_DEBUG)
+#define STD_FILTER_TEST_CASE
+#endif
+
 __NS_STD_BEGIN
 
-// -------------------------------------------------------------------------
+// =========================================================================
 // class TestRunner
 
 template <class LogT>
@@ -46,11 +54,13 @@ public:
 
 	void winx_call select(LPCSTR testClass = "", LPCSTR testCase = "")
 	{
+#if defined(STD_FILTER_TEST_CASE)
 		WINX_ASSERT(testClass != NULL);
 		WINX_ASSERT(testCase != NULL);
 		
 		szTestClassSel = testClass;
 		szTestCaseSel = testCase;
+#endif
 	}
 
 	void winx_call setTestCase(LPCSTR testCase)
@@ -61,37 +71,67 @@ public:
 public:
 	bool winx_call runableTestClass(LPCSTR testClass)
 	{
+#if defined(STD_FILTER_TEST_CASE)
 		if (strstr(testClass, szTestClassSel))
 		{
 			szTestClass = testClass;
-			step('*');
+			LogT::step('*');
 			return true;
 		}
 		return false;
+#else
+		return true;
+#endif
 	}
 
 	bool winx_call runableTestCase(LPCSTR testCase)
 	{
+#if defined(STD_FILTER_TEST_CASE)
 		if (*szTestCaseSel == 0 || strcmp(testCase, szTestCaseSel) == 0)
 		{
 			szTestCase = testCase;
-			step();
+			LogT::step();
 			return true;
 		}
 		return false;
+#else
+		return true;
+#endif
 	}
 
 public:
 	void winx_call reportError(LPCSTR msg, const char* szFile, int nLine)
 	{
-		reportTestCaseError(szTestClass, szTestCase, msg, szFile, nLine);
+		LogT::reportTestCaseError(szTestClass, szTestCase, msg, szFile, nLine);
 	}
 };
+
+// -------------------------------------------------------------------------
+// WINX_DBG_PAUSE
+
+inline void pause()
+{
+	printf("Press <return> key to continue");
+	getchar();
+}
+
+struct PauseOnExit {
+	~PauseOnExit() { pause(); }
+};
+
+#if defined(_DEBUG) && defined(WINX_GCC)
+#define WINX_DBG_PAUSE_ON_EXIT()	std::PauseOnExit _winx_pause_on_exit
+#define WINX_DBG_PAUSE()			std::pause()
+#else
+#define WINX_DBG_PAUSE_ON_EXIT()
+#define WINX_DBG_PAUSE()
+#endif
 
 // -------------------------------------------------------------------------
 // TestApp
 
 #define WINX_TEST_APP(LogT, Test, Case)										\
+	WINX_DBG_PAUSE_ON_EXIT();												\
 	_CrtSetDbgFlag(															\
 		_CrtSetDbgFlag(_CRTDBG_REPORT_FLAG)|_CRTDBG_LEAK_CHECK_DF);			\
 	typedef std::TestRunner< LogT > TestCaseLog;							\
@@ -163,9 +203,21 @@ public:																		\
 #define WINX_TEST_SUITE_END()												\
 	}
 
+// =========================================================================
+// isEqBuf
+
+template <class _It1, class _It2>
+bool winx_call isEqBuf(_It1 a1, _It2 a2, size_t count)
+{
+	_It1 last = a1;
+	std::advance(last, count);
+	return std::equal(a1, last, a2);
+}
+
 // -------------------------------------------------------------------------
 // AssertExp, AssertEq, AssertEqBuf, AssertMsg, AssertFail
 
+#ifndef AssertMsg
 #define AssertMsg(msg, exp) 												\
 	do {																	\
 		if (!(exp)) {														\
@@ -173,6 +225,7 @@ public:																		\
 			WINX_DBG_BREAK();												\
 		}																	\
 	} while (0)
+#endif
 
 #define AssertFail(msg)														\
 	AssertMsg(msg, 0)
@@ -186,7 +239,7 @@ public:																		\
 #define AssertEqBuf(a1, a2, count)											\
 	AssertMsg("Failed: AssertEqBuf(" #a1 "," #a2 "," #count ");", std::isEqBuf(a1, a2, count))
 
-// -------------------------------------------------------------------------
+// =========================================================================
 // $Log: TestCase.h,v $
 // Revision 1.4  2007/01/10 09:32:25  xushiwei
 // move UnitTest Assert(AssertExp, AssertFail, etc) from Log.h to TestCase.h

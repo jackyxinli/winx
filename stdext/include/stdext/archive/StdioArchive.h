@@ -84,8 +84,8 @@ public:
 	HRESULT winx_call open_to_write(LPCWSTR szFile)
 	{
 		WINX_ASSERT(m_pFile == NULL);
-		USES_CONVERSION;
-		m_pFile = fopen(W2CA(szFile), "wb");
+		WINX_USES_CONVERSION;
+		m_pFile = fopen(WINX_W2CA(szFile), "wb");
 		return m_pFile ? S_OK : E_ACCESSDENIED;
 	}
 
@@ -99,8 +99,8 @@ public:
 	HRESULT winx_call open_to_read(LPCWSTR szFile)
 	{
 		WINX_ASSERT(m_pFile == NULL);
-		USES_CONVERSION;
-		m_pFile = fopen(W2CA(szFile), "rb");
+		WINX_USES_CONVERSION;
+		m_pFile = fopen(WINX_W2CA(szFile), "rb");
 		return m_pFile ? S_OK : E_ACCESSDENIED;
 	}
 

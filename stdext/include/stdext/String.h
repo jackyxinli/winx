@@ -264,12 +264,12 @@ template<class _InputIt, class _E>
 inline int winx_call compare(
 	_InputIt first, _InputIt last, const _E* str)
 {
-	for (;; ++first1, ++str)
+	for (;; ++first, ++str)
 	{
-		if (first1 == last1)
+		if (first == last)
 			return *str == 0 ? 0 : -1;
-		if (*first1 != *str)
-			return (int)*first1 - (int)*str;
+		if (*first != *str)
+			return (int)*first - (int)*str;
 		if (*str == 0)
 			return 1;
 	}

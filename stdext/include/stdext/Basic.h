@@ -20,7 +20,6 @@
 #define __STDEXT_BASIC_H__
 
 #if defined(_WIN32)
-#define STD_SUPPORT_CRTDBG		// for crtdbg.h
 #define STD_SUPPORT_TASKALLOC	// for CoTaskMemAlloc
 #endif
 
@@ -45,12 +44,6 @@
 
 #ifndef _INC_STRING
 #include <string.h>
-#endif
-
-#if defined(STD_SUPPORT_CRTDBG)
-#ifndef _INC_CRTDBG
-#include <crtdbg.h>
-#endif
 #endif
 
 #if defined(STD_SUPPORT_TASKALLOC) && !defined(STD_NO_TASKALLOC)
@@ -84,10 +77,23 @@ typedef unsigned short UINT16, *PUINT16;
 #endif
 
 // -------------------------------------------------------------------------
+// WINX_GCC (gnu c++)
+
+#if !defined(_MSC_VER)
+	#if defined(__GNUG__) || defined(__GNUC__)
+	#	define WINX_GCC
+	#endif
+#endif
+
+// -------------------------------------------------------------------------
 // winx_call
 
 #ifndef winx_call
-#define winx_call				__fastcall
+#	if defined(WINX_GCC)
+#		define winx_call
+#	else
+#		define winx_call	__fastcall
+#	endif
 #endif
 
 // -------------------------------------------------------------------------
@@ -106,7 +112,7 @@ inline int __cdecl _null_func(int nLevel, const void* fmt, ...) { return 0; }
 #endif
 
 // -------------------------------------------------------------------------
-// macro for
+// macro for, __forceinline
 
 #if defined(STD_ISOCPP_FOR)
 #	if defined(_MSC_VER) && (_MSC_VER <= 1200)
@@ -115,14 +121,26 @@ inline int __cdecl _null_func(int nLevel, const void* fmt, ...) { return 0; }
 #	endif
 #endif
 
+#if !defined(_MSC_VER) && !defined(__forceinline)
+#define __forceinline inline
+#endif
+
 // -------------------------------------------------------------------------
 // fix warning: VS.NET 2003
 
 #if defined(_MSC_VER) && (_MSC_VER > 1200)
 #	if defined(_ATL_VER) && (_ATL_VER <= 0x0710) // VS.NET 2003
 #		pragma warning(disable:4290)
-		// A function is declared using exception specification, which Visual C++ accepts but does not implement
+		// A function is declared using exception specification, which Visual C++
+		// accepts but does not implement
 #	endif
+#endif
+
+// -------------------------------------------------------------------------
+// msvcrt
+
+#ifndef __STDEXT_MSVC_MSVCRT_H__
+#include "msvc/msvcrt.h"
 #endif
 
 // -------------------------------------------------------------------------
@@ -230,7 +248,7 @@ inline int __cdecl _null_func(int nLevel, const void* fmt, ...) { return 0; }
 #ifdef _DEBUG
 #define WINX_ASSERT(e)		assert(e)
 #else
-#define WINX_ASSERT(e)		0
+#define WINX_ASSERT(e)
 #endif
 #endif
 
@@ -344,7 +362,7 @@ do {																		\
 #if defined(_DEBUG)
 #define WINX_DBG_BREAK()		WINX_BREAK()
 #else
-#define WINX_DBG_BREAK()		0
+#define WINX_DBG_BREAK()
 #endif
 
 // -------------------------------------------------------------------------

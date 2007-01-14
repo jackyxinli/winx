@@ -133,7 +133,12 @@ public:
 	typedef typename StreamHandle::off_type	off_type;
 	typedef typename StreamHandle::size_type size_type;
 	
-protected:	
+    using BaseClass::default_buffer_size;
+
+protected:
+    using BaseClass::m_lpBufStart;
+    using BaseClass::m_nBufSize;
+    
 	char_type* m_lpBufCur;
 	char_type* m_lpBufMax;
 	StreamHandle m_handle;
@@ -453,7 +458,12 @@ public:
 	typedef typename StreamHandle::off_type	off_type;
 	typedef typename StreamHandle::size_type size_type;
 	
+    using BaseClass::default_buffer_size;
+
 protected:
+    using BaseClass::m_lpBufStart;
+    using BaseClass::m_nBufSize;
+
 	char_type* m_lpBufCur;
 	char_type* m_lpBufMax;
 	StreamHandle m_handle;
@@ -615,7 +625,7 @@ public:
 			return (uchar_type)*m_lpBufCur++;
 
 		char_type ch;
-		return get(&ch, 1) ? (uchar_type)ch : endch;
+		return get(&ch, 1) ? (uchar_type)ch : (int_type)endch;
 	}
 
 	void winx_call reget(size_type offset, char_type* lpBuf, size_type cch)

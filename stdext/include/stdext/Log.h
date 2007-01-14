@@ -42,51 +42,6 @@
 __NS_STD_BEGIN
 
 // =========================================================================
-// TraceTraits
-
-template <class DataT>
-struct TraceTraits
-{
-	template <class LogT>
-	static void winx_call trace(LogT& log, const DataT& v) {
-		v.trace(log);
-	}
-
-	template <class LogT, class ArgT1>
-	static void winx_call trace(LogT& log, const DataT& v, ArgT1 arg1) {
-		v.trace(log, arg1);
-	}
-
-	template <class LogT, class ArgT1, class ArgT2>
-	static void winx_call trace(LogT& log, const DataT& v, ArgT1 arg1, ArgT2 arg2) {
-		v.trace(log, arg1, arg2);
-	}
-
-	template <class LogT, class ArgT1, class ArgT2, class ArgT3>
-	static void winx_call trace(LogT& log, const DataT& v, ArgT1 arg1, ArgT2 arg2, ArgT3 arg3) {
-		v.trace(log, arg1, arg2, arg3);
-	}
-};
-
-template <>
-struct TraceTraits<RECT>
-{
-	template <class LogT>
-	static void winx_call trace(LogT& log, const RECT& rc) {
-		log.trace("(%d, %d) - (%d, %d)", rc.left, rc.top, rc.right, rc.bottom);
-	}
-};
-
-template <>
-struct TraceTraits<SIZE>
-{
-	template <class LogT>
-	static void winx_call trace(LogT& log, const SIZE& sz) {
-		trace("(%d, %d)", sz.cx, sz.cy);
-	}
-};
-
-// =========================================================================
 // __STD_LOG_PRINT
 
 #define __STD_LOG_FMT_PRINT_EX(DataT, vData)								\
@@ -119,7 +74,7 @@ struct TraceTraits<SIZE>
 	}																		\
 	Log& winx_call print(unsigned DataT v) {								\
 		char buf[32];														\
-		return printString(ultoa(v, buf, 10));								\
+		return printString(_ultoa(v, buf, 10));								\
 	}																		\
 	__STD_LOG_FMT_PRINT(signed DataT)										\
 	__STD_LOG_FMT_PRINT(unsigned DataT)
@@ -169,17 +124,6 @@ struct TraceTraits<SIZE>
 	__STD_LOG_PRINT_INT64(__int64)											\
 	__STD_LOG_PRINT_FLOAT(float, 12)										\
 	__STD_LOG_PRINT_FLOAT(double, 12)
-
-// =========================================================================
-// isEqBuf
-
-template <class _It1, class _It2>
-bool winx_call isEqBuf(_It1 a1, _It2 a2, size_t count)
-{
-	_It1 last = a1;
-	std::advance(last, count);
-	return std::equal(a1, last, a2);
-}
 
 // =========================================================================
 // class Log
@@ -332,32 +276,43 @@ public:
 		return trace("%S", s);
 	}
 
-public:	
-	template <class DataT>
-	Log& winx_call print(const DataT& v)
+public:
+	Log& winx_call print(const RECT& rc)
 	{
-		TraceTraits<DataT>::trace(*this, v);
+		return trace("(%d, %d) - (%d, %d)", rc.left, rc.top, rc.right, rc.bottom);
+	}
+
+	Log& winx_call print(const SIZE& sz)
+	{
+		return trace("(%d, %d)", sz.cx, sz.cy);
+	}
+
+public:
+	template <class DataT>
+	Log& winx_call printObj(const DataT& v)
+	{
+		v.trace(*this);
 		return *this;
 	}
 	
 	template <class DataT, class ArgT1>
-	Log& winx_call print(const DataT& v, ArgT1 arg1)
+	Log& winx_call printObj(const DataT& v, ArgT1 arg1)
 	{
-		TraceTraits<DataT>::trace(*this, v, arg1);
+		v.trace(*this, arg1);
 		return *this;
 	}
 
 	template <class DataT, class ArgT1, class ArgT2>
-	Log& winx_call print(const DataT& v, ArgT1 arg1, ArgT2 arg2)
+	Log& winx_call printObj(const DataT& v, ArgT1 arg1, ArgT2 arg2)
 	{
-		TraceTraits<DataT>::trace(*this, v, arg1, arg2);
+		v.trace(*this, arg1, arg2);
 		return *this;
 	}
 
 	template <class DataT, class ArgT1, class ArgT2, class ArgT3>
-	Log& winx_call print(const DataT& v, ArgT1 arg1, ArgT2 arg2, ArgT3 arg3)
+	Log& winx_call printObj(const DataT& v, ArgT1 arg1, ArgT2 arg2, ArgT3 arg3)
 	{
-		TraceTraits<DataT>::trace(*this, v, arg1, arg2, arg3);
+		v.trace(*this, arg1, arg2, arg3);
 		return *this;
 	}
 
@@ -414,14 +369,14 @@ public:
 	template <class CharT, class VectorT1, class VectorT2>
 	Log& winx_call traceDim(const CharT* fmt, const VectorT1& x, const VectorT2& y)
 	{
-		Size count = x.size();
+		size_t count = x.size();
 		if (y.size() < count)
 		{
 			print("\t[ Exception: Size of vector doesn't match! ]\n");
 		}
 		else
 		{
-			for (Size i = 0; i < count; ++i)
+			for (size_t i = 0; i < count; ++i)
 				trace(fmt, x[i], y[i]);
 		}
 		return *this;
@@ -430,14 +385,14 @@ public:
 	template <class CharT, class VectorT1, class VectorT2, class VectorT3>
 	Log& winx_call traceDim(const CharT* fmt, const VectorT1& x, const VectorT2& y, const VectorT3& z)
 	{
-		Size count = x.size();
+		size_t count = x.size();
 		if (y.size() < count || z.size() < count)
 		{
 			print("\t[ Exception: Size of vector doesn't match! ]\n");
 		}
 		else
 		{
-			for (Size i = 0; i < count; ++i)
+			for (size_t i = 0; i < count; ++i)
 				trace(fmt, x[i], y[i], z[i]);
 		}
 		return *this;
@@ -446,14 +401,14 @@ public:
 	template <class CharT, class VectorT1, class VectorT2, class VectorT3, class VectorT4>
 	Log& winx_call traceDim(const CharT* fmt, const VectorT1& x, const VectorT2& y, const VectorT3& z, const VectorT4& u)
 	{
-		Size count = x.size();
+		size_t count = x.size();
 		if (y.size() < count || z.size() < count || u.size() < count)
 		{
 			print("\t[ Exception: Size of vector doesn't match! ]\n");
 		}
 		else
 		{
-			for (Size i = 0; i < count; ++i)
+			for (size_t i = 0; i < count; ++i)
 				trace(fmt, x[i], y[i], z[i], u[i]);
 		}
 		return *this;
@@ -463,14 +418,14 @@ public:
 	template <class VectorT1, class VectorT2>
 	Log& winx_call printDim(const VectorT1& x, const VectorT2& y)
 	{
-		Size count = x.size();
+		size_t count = x.size();
 		if (y.size() < count)
 		{
 			print("\t[ Exception: Size of vector doesn't match! ]\n");
 		}
 		else
 		{
-			for (Size i = 0; i < count; ++i)
+			for (size_t i = 0; i < count; ++i)
 				print("\t[ ").
 				print(x[i]).print(", ").
 				print(y[i]).print(" ]\n");
@@ -481,14 +436,14 @@ public:
 	template <class VectorT1, class VectorT2, class VectorT3>
 	Log& winx_call printDim(const VectorT1& x, const VectorT2& y, const VectorT3& z)
 	{
-		Size count = x.size();
+		size_t count = x.size();
 		if (y.size() < count || z.size() < count)
 		{
 			print("\t[ Exception: Size of vector doesn't match! ]\n");
 		}
 		else
 		{
-			for (Size i = 0; i < count; ++i)
+			for (size_t i = 0; i < count; ++i)
 				print("\t[ ").
 				print(x[i]).print(", ").
 				print(y[i]).print(", ").
@@ -500,14 +455,14 @@ public:
 	template <class VectorT1, class VectorT2, class VectorT3, class VectorT4>
 	Log& winx_call printDim(const VectorT1& x, const VectorT2& y, const VectorT3& z, const VectorT4& u)
 	{
-		Size count = x.size();
+		size_t count = x.size();
 		if (y.size() < count || z.size() < count || u.size() < count)
 		{
 			print("\t[ Exception: Size of vector doesn't match! ]\n");
 		}
 		else
 		{
-			for (Size i = 0; i < count; ++i)
+			for (size_t i = 0; i < count; ++i)
 				print("\t[ ").
 				print(x[i]).print(", ").
 				print(y[i]).print(", ").
@@ -705,17 +660,16 @@ public:
 		int m_data;
 		Obj(int data) : m_data(data) {}
 
-		template <class LogT>
-		void trace(LogT& log) const {
+		template <class LogT2>
+		void trace(LogT2& log) const {
 			log.trace("%d", m_data);
 		}
 		
-		template <class LogT>
-		void trace(LogT& log, const char* fmt) const {
+		template <class LogT2>
+		void trace(LogT2& log, const char* fmt) const {
 			log.trace(fmt, m_data);
 		}
 	};
-
 
 	void testLog(LogT& log)
 	{
@@ -751,8 +705,8 @@ public:
 		log.print(s, "%8s").newline();
 
 		log.print("\n---> print object\n");
-		log.print(obj, "0x%.4x").newline();
-		log.print(obj).newline();
+		log.printObj(obj, "0x%.4x").newline();
+		log.printObj(obj).newline();
 	}
 
 	void testStringLog(LogT& log)

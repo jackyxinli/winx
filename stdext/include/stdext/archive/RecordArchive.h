@@ -187,7 +187,7 @@ public:
 			
 			//seek
 			LARGE_INTEGER dlibMove;
-			LISet32(dlibMove, lbPlyPos);
+			ULISet32(dlibMove, lbPlyPos);
 			HRESULT hr = m_pStrm->Seek(dlibMove, SEEK_SET, (ULARGE_INTEGER*)&dlibMove);
 			m_lbPhyPos = dlibMove.LowPart;
 			return hr;

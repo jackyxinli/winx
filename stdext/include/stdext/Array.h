@@ -212,7 +212,7 @@ public:
 		const int dataSel[] = { 1, 1, 2 };
 		
 		PriorityArray<int, 3> pa;
-		for (int i = 0; i < countof(data); ++i)
+		for (size_t i = 0; i < countof(data); ++i)
 			pa.push_back(data[i]);
 
 		AssertExp(pa.size() == 3);
@@ -225,7 +225,7 @@ public:
 		const int dataSel[] = { 7, 6, 5 };
 		
 		PriorityArray<int, 3, greater<int> > pa;
-		for (int i = 0; i < countof(data); ++i)
+		for (size_t i = 0; i < countof(data); ++i)
 			pa.push_back(data[i]);
 
 		AssertExp(pa.size() == 3);

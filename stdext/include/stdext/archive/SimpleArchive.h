@@ -23,10 +23,6 @@
 #include <vector>
 #endif
 
-#ifndef __ATLBASE_H__
-#include <atlbase.h>
-#endif
-
 __NS_STD_BEGIN
 
 // -------------------------------------------------------------------------
@@ -58,8 +54,8 @@ public:
 		IN UINT nMode = STGM_CREATE|STGM_WRITE|STGM_SHARE_EXCLUSIVE)
 	{
 		WINX_ASSERT(nMode & STGM_CREATE);
-		USES_CONVERSION;
-		LPCSTR szFileA = W2A(szFile);
+		WINX_USES_CONVERSION;
+		LPCSTR szFileA = WINX_W2A(szFile);
 		m_fp = fopen(szFileA, "wb");
 	}
 
@@ -92,10 +88,10 @@ public:
 		IN UINT nMode = STGM_CREATE|STGM_WRITE|STGM_SHARE_EXCLUSIVE)
 	{
 		WINX_ASSERT(nMode & STGM_CREATE);
-		USES_CONVERSION;
+		WINX_USES_CONVERSION;
 		if (good())
 			return E_ACCESSDENIED;
-		LPCSTR szFileA = W2A(szFile);
+		LPCSTR szFileA = WINX_W2A(szFile);
 		m_fp = fopen(szFileA, "wb");
 		return m_fp ? S_OK : E_INVALIDARG;
 	}
@@ -152,8 +148,8 @@ public:
 		IN UINT nMode = STGM_READ|STGM_SHARE_EXCLUSIVE)
 	{
 		WINX_ASSERT(!(nMode & STGM_CREATE));
-		USES_CONVERSION;
-		LPCSTR szFileA = W2A(szFile);
+		WINX_USES_CONVERSION;
+		LPCSTR szFileA = WINX_W2A(szFile);
 		m_fp = fopen(szFileA, "rb");
 	}
 
@@ -186,10 +182,10 @@ public:
 		IN UINT nMode = STGM_READ|STGM_SHARE_EXCLUSIVE)
 	{
 		WINX_ASSERT(!(nMode & STGM_CREATE));
-		USES_CONVERSION;
+		WINX_USES_CONVERSION;
 		if (good())
 			return E_ACCESSDENIED;
-		LPCSTR szFileA = W2A(szFile);
+		LPCSTR szFileA = WINX_W2A(szFile);
 		m_fp = fopen(szFileA, "rb");
 		return m_fp ? S_OK : E_INVALIDARG;
 	}

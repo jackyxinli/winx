@@ -71,7 +71,7 @@ public:
 	template <class AllocT>
 	AutoArray(const UINT count, AllocT& alloc)
 	{
-		reserve(count, alloc)
+		reserve(count, alloc);
 	}
 
 	template <class AllocT>
@@ -175,10 +175,10 @@ public:
 		std::AutoFreeAlloc alloc;
 		
 		std::AutoArray<char> ss("abc", alloc);
-		log.print(ss).newline();
+		log.printObj(ss).newline();
 
 		ss.assign("2324", alloc);
-		log.print(ss).newline();
+		log.printObj(ss).newline();
 		
 		std::string str;
 		ss.copyTo(str);

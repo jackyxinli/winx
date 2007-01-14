@@ -25,8 +25,8 @@
 
 // -------------------------------------------------------------------------
 
-#ifndef _INC_NEW
-#include <new.h>
+#ifndef _NEW_
+#include <new>
 #endif
 
 #ifndef _INC_STDIO

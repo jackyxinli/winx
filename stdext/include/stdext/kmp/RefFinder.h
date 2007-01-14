@@ -32,7 +32,7 @@ __STD_KMP_BEGIN
 // -------------------------------------------------------------------------
 // class RefFinder - just for testing class Finder
 
-template < class _E, class _Strategy = MatchOption<_E> >
+template < class _E, class _Strategy = MatchCase<_E> >
 class RefFinder : public _Strategy
 {
 public:

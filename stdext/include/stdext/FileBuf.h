@@ -96,16 +96,18 @@ template <class _Alloc>
 class WinFileBufT : public AutoBufferT<_Alloc>
 {
 private:
+	typedef AutoBufferT<_Alloc> Base;
+	
 	HRESULT winx_call __read(HANDLE hFile)
 	{
-		WINX_ASSERT(!good());
+		WINX_ASSERT(!Base::good());
 		
 		DWORD dwFileSizeHigh = 0;
 		DWORD dwFileSize = ::GetFileSize(hFile, &dwFileSizeHigh);
 		if (dwFileSizeHigh > 0)
 			return E_OUTOFMEMORY;
 		
-		::ReadFile(hFile, allocate(dwFileSize), dwFileSize, &dwFileSizeHigh, NULL);
+		::ReadFile(hFile, Base::allocate(dwFileSize), dwFileSize, &dwFileSizeHigh, NULL);
 		return (dwFileSizeHigh == dwFileSize ? S_OK : STG_E_READFAULT);
 	}
 
@@ -155,9 +157,11 @@ template <class _Alloc>
 class FILEFileBufT : public AutoBufferT<_Alloc>
 {
 private:
+	typedef AutoBufferT<_Alloc> Base;
+
 	HRESULT winx_call __read(FILE* fp)
 	{
-		WINX_ASSERT(!good());
+		WINX_ASSERT(!Base::good());
 		
 		::fseek(fp, 0, SEEK_END);
 		long lFileSize = ::ftell(fp);
@@ -165,7 +169,7 @@ private:
 			return STG_E_READFAULT;
 
 		::fseek(fp, 0, SEEK_SET);
-		if (lFileSize != ::fread(allocate(lFileSize), 1, lFileSize, fp))
+		if (lFileSize != (long)::fread(Base::allocate(lFileSize), 1, lFileSize, fp))
 			return STG_E_READFAULT;
 
 		return S_OK;
@@ -192,8 +196,8 @@ public:
 	
 	HRESULT winx_call read(LPCWSTR file)
 	{
-		USES_CONVERSION;
-		return read(W2CA(file));
+		WINX_USES_CONVERSION;
+		return read(WINX_W2CA(file));
 	}
 };
 

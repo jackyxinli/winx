@@ -53,8 +53,10 @@
 #include "archive/SimpleArchive.h"
 #endif
 
+#if defined(_ATL_VER)
 #ifndef __STDEXT_ARCHIVE_REGARCHIVE_H__
 #include "archive/RegArchive.h"
+#endif
 #endif
 
 #ifndef __STDEXT_ARCHIVE_STREAMARCHIVE_H__
