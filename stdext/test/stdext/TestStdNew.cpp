@@ -45,7 +45,7 @@ public:
 };
 
 template <class AllocType>
-__forceinline void* operator new(size_t cb, AllocFlag, AllocType& alloc)
+__forceinline void* operator new(unsigned int cb, AllocFlag, AllocType& alloc)
 {
 	return alloc.allocate(cb);
 }
@@ -68,7 +68,9 @@ inline void Test()
 	MyAlloc a;
 	STD_NEW(a) int;
 	STD_NEW(a) A;
+#if defined(_MSC_VER)
 	STD_NEW(a) A[10];
+#endif
 }
 
 // -------------------------------------------------------------------------

@@ -1,11 +1,11 @@
 [Project]
-FileName=TestStdExt.dev
+FileName=TestStdExt-dbg.dev
 Name=TestStdExt
 Ver=1
 IsCpp=1
 Type=1
-Compiler=-D__GNUWIN32__ -W -DWIN32 -DNDEBUG -D_CONSOLE -D_MBCS_@@_
-CppCompiler=-D__GNUWIN32__ -W -DWIN32 -DNDEBUG -D_CONSOLE -D_MBCS_@@_
+Compiler=-D__GNUWIN32__ -W -DWIN32 -D_DEBUG -D_CONSOLE -D_MBCS_@@_
+CppCompiler=-D__GNUWIN32__ -W -DWIN32 -D_DEBUG -D_CONSOLE -D_MBCS_@@_
 Includes=../../include;../../../stdext/include;../../../boost;../../../stdext/include/msvcrt
 Linker=-lkernel32 -luser32 -msvcrtd -lgdi32 -lwinspool -lcomdlg32 -ladvapi32 -lshell32 -lole32 -loleaut32 -luuid -lodbc32 -lodbccp32 -lkernel32 -luser32 -lgdi32 -lwinspool -lcomdlg32 -ladvapi32 -lshell32 -lole32 -loleaut32 -luuid -lodbc32 -lodbccp32_@@_
 Libs=../../../winsdk/lib
@@ -16,8 +16,8 @@ PrivateResource=
 ResourceIncludes=
 MakeIncludes=
 Icon=
-ExeOutput=.\ReleaseDevCpp
-ObjectOutput=.\ReleaseDevCpp
+ExeOutput=.\DebugDevCpp
+ObjectOutput=.\DebugDevCpp
 OverrideOutput=0
 OverrideOutputName=TestStdExt.exe
 HostApplication=
@@ -27,7 +27,7 @@ CustomMakefile=
 IncludeVersionInfo=0
 SupportXPThemes=0
 CompilerSet=0
-CompilerSettings=0000000001001000001000
+CompilerSettings=0000000000000101001000
 
 [Unit1]
 FileName=TestStdExt.cpp

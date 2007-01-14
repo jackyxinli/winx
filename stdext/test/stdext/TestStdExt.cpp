@@ -17,25 +17,28 @@
 // $Id: TestStdExt.cpp,v 1.8 2006/12/03 07:52:55 xushiwei Exp $
 // -----------------------------------------------------------------------*/
 
+#define STD_FILTER_TEST_CASE
 #define STD_NO_TASKALLOC
 #include <stdext.h>
 #include <stdext/Archive.h>
-#include <stdext/memory/Pool.h>
 #include <stdext/kmp/TestFinder.h>
+#include <stdext/memory/Pool.h>
+#include <stdext/memory/GC.h>
 #pragma comment(lib, "shlwapi.lib")
 
 // -------------------------------------------------------------------------
 // main
 
-void main()
+int main()
 {
 	WINX_TEST_APP(std::ErrorLog, "TestPriorityArray", "");
 
 	WINX_TEST_CLASS(TestPool);
 	WINX_TEST_CLASS(TestFinder);
 
+	WINX_TEST_CLASS(std::TestGC);
 	WINX_TEST_CLASS(std::TestPriorityArray);
-	WINX_TEST_CLASS(std::TestStreamArchive);
+//	WINX_TEST_CLASS(std::TestStreamArchive);
 	WINX_TEST_CLASS(std::TestStdioArchive);
 	WINX_TEST_CLASS(std::TestString);
 	WINX_TEST_CLASS(std::TestCharType);
@@ -44,6 +47,8 @@ void main()
 	WINX_TEST_CLASS(std::TestAutoArray);
 	WINX_TEST_CLASS(std::TestSimpleMultiMap);
 	WINX_TEST_CLASS(std::TestFileBuf);
+	
+	return 0;
 }
 
 // -------------------------------------------------------------------------
