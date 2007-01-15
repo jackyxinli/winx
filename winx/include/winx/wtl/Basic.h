@@ -21,6 +21,7 @@
 
 #if (0)
 #define WINX_USE_APPMODULE
+#define WINX_USE_ATLPORT
 #define WINX_CREATE_AX_ON_DLGINIT
 #endif
 
@@ -31,7 +32,11 @@
 #define _WTL_NO_AUTOMATIC_NAMESPACE
 
 #ifndef __ATLBASE_H__
-#include <atlbase.h>
+	#if defined(WINX_USE_ATLPORT)
+	#include "../../../../atlport/include/atlbase.h"
+	#else
+	#include <atlbase.h>
+	#endif
 #endif
 
 #if defined(_ATL_VER) && (_ATL_VER > 0x0300)
@@ -80,12 +85,16 @@ extern WTL::CAppModule _Module;
 #endif
 
 #ifndef __ATLWIN_H__
-	#ifdef for
-		#undef for
-		#include <atlwin.h>
-		#define for if (0); else for
+	#if defined(WINX_USE_ATLPORT)
+		#include "../../../../atlport/include/atlwin.h"
 	#else
-		#include <atlwin.h>
+		#ifdef for
+			#undef for
+			#include <atlwin.h>
+			#define for if (0); else for
+		#else
+			#include <atlwin.h>
+		#endif
 	#endif
 #endif
 

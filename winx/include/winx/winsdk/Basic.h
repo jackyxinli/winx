@@ -78,6 +78,10 @@
 #include <objbase.h>
 #endif
 
+#ifndef _WIN32_IE
+#define _WIN32_IE	0x0300
+#endif
+
 #ifndef _INC_COMMCTRL
 #include <commctrl.h>
 #endif
@@ -119,6 +123,10 @@ typedef unsigned short UINT16, *PUINT16;
 //
 #undef SubclassWindow
 #undef CreateDialog
+
+#ifndef WINCOMMCTRLAPI
+#define WINCOMMCTRLAPI
+#endif
 
 WINCOMMCTRLAPI HIMAGELIST WINAPI ImageList_Read(LPSTREAM pstm);
 WINCOMMCTRLAPI BOOL       WINAPI ImageList_Write(HIMAGELIST himl, LPSTREAM pstm);
