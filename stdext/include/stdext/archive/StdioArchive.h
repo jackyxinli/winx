@@ -123,7 +123,7 @@ public:
 
 	pos_type winx_call size() const
 	{
-		return filelength(m_pFile->_file);
+		return _filelength(m_pFile->_file);
 	}
 	
 	size_type winx_call get(_E* buf, size_type cch)

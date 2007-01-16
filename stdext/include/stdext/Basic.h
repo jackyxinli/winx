@@ -83,12 +83,11 @@ typedef unsigned short UINT16, *PUINT16;
 #	if (_MSC_VER > 1200)
 #		ifndef WINX_VC_NET
 #		define WINX_VC_NET
-#		if (_ATL_VER > 0x0710)
+#		pragma warning(disable:4290)
+		// A function is declared using exception specification, which Visual C++
+		// accepts but does not implement
+#		if (_MSC_VER > 1310)
 #			define WINX_VC_NET_GE2005 // Version >= VS.NET 2005
-#		else
-#			pragma warning(disable:4290)
-			// A function is declared using exception specification, which Visual C++
-			// accepts but does not implement
 #		endif
 #		endif
 #	else
