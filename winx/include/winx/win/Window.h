@@ -339,9 +339,14 @@ public:
 #if !defined(WINX_NO_RESEND_DESTROY)
 		if (!fForceTerminate) {
 			// 如果是因为调用Unsubclass进行强制退出的，不能发'WM_NCDESTROY'消息。
+#if defined(WINX_GCC)
+			try { ::CallWindowProc(_m_prevProc, hWnd, WM_NCDESTROY, 0, 0); }
+			catch (...) {}
+#else
 			WINX_TRY {
 				::CallWindowProc(_m_prevProc, hWnd, WM_NCDESTROY, 0, 0);
 			} WINX_TRY_END;
+#endif
 		}
 #endif
 
