@@ -59,6 +59,9 @@
 #define _free_dbg(p, t)                 free(p)
 #define _msize_dbg(p, t)                _msize(p)
 
+#undef NULL
+#define NULL 0
+
 #else
 
 #ifndef _INC_CRTDBG

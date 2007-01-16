@@ -77,12 +77,31 @@ typedef unsigned short UINT16, *PUINT16;
 #endif
 
 // -------------------------------------------------------------------------
-// WINX_GCC (gnu c++)
+// C++ Compiler
 
-#if !defined(_MSC_VER)
-	#if defined(__GNUG__) || defined(__GNUC__)
-	#	define WINX_GCC
-	#endif
+#if defined(_MSC_VER) 
+#	if (_MSC_VER > 1200)
+#		ifndef WINX_VC_NET
+#		define WINX_VC_NET
+#		if (_ATL_VER > 0x0710)
+#			define WINX_VC_NET_GE2005 // Version >= VS.NET 2005
+#		else
+#			pragma warning(disable:4290)
+			// A function is declared using exception specification, which Visual C++
+			// accepts but does not implement
+#		endif
+#		endif
+#	else
+#		ifndef WINX_VC6
+#		define WINX_VC6
+#		endif
+#	endif
+#else
+#	if defined(__GNUG__) || defined(__GNUC__)
+#		ifndef WINX_GCC
+#		define WINX_GCC
+#		endif
+#	endif
 #endif
 
 // -------------------------------------------------------------------------
@@ -105,9 +124,9 @@ typedef unsigned short UINT16, *PUINT16;
 #			define __noop 0
 #		endif
 #	else
-inline int __cdecl _null_func(const void* fmt, ...) { return 0; }
-inline int __cdecl _null_func(int nLevel, const void* fmt, ...) { return 0; }
-#	define __noop	winx::_null_func
+inline int __cdecl _winx_null_func(const void* fmt, ...) { return 0; }
+inline int __cdecl _winx_null_func(int nLevel, const void* fmt, ...) { return 0; }
+#	define __noop  _winx_null_func
 #	endif
 #endif
 
@@ -123,17 +142,6 @@ inline int __cdecl _null_func(int nLevel, const void* fmt, ...) { return 0; }
 
 #if !defined(_MSC_VER) && !defined(__forceinline)
 #define __forceinline inline
-#endif
-
-// -------------------------------------------------------------------------
-// fix warning: VS.NET 2003
-
-#if defined(_MSC_VER) && (_MSC_VER > 1200)
-#	if defined(_ATL_VER) && (_ATL_VER <= 0x0710) // VS.NET 2003
-#		pragma warning(disable:4290)
-		// A function is declared using exception specification, which Visual C++
-		// accepts but does not implement
-#	endif
 #endif
 
 // -------------------------------------------------------------------------
@@ -397,6 +405,13 @@ __NS_STD_BEGIN
 class NullClass {};
 
 __NS_STD_END
+
+// -------------------------------------------------------------------------
+// uuidof
+
+#ifndef __STDEXT_MSVC_UUIDOF_H__
+#include "msvc/uuidof.h"
+#endif
 
 // -------------------------------------------------------------------------
 // TestCase class
