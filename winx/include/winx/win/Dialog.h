@@ -445,11 +445,11 @@ public:
 template <class WindowClass, int nDlgId = 0, class HandleClass = DefaultWindowHandle>
 class AxModalDialog : public ModalDialog<WindowClass, nDlgId, HandleClass>
 {
-	typedef ModalDialog<WindowClass, nDlgId, HandleClass> BaseClass;
 	WINX_ON_DLGINIT_CREATE_AXCTRL();
 	WINX_DLG_FWDMSG(); // 默认就进行ForwardMessage。
 
 public:
+	typedef ModalDialog<WindowClass, nDlgId, HandleClass> BaseClass;
 	typedef WindowClass WindowImplClass;
 
 	using BaseClass::IDD;
