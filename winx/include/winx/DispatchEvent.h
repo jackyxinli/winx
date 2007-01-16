@@ -193,7 +193,7 @@ inline HRESULT winx_call ClosureCall(
 	ClosureCallThunk thunk;
 	thunk.Init(closure);
 
-	CComVariant tmpResult;
+	ATL::CComVariant tmpResult;
 	if (pvarResult == NULL)
 		pvarResult = &tmpResult;
 
