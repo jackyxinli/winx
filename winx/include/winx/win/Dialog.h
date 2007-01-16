@@ -239,6 +239,10 @@ public:
 	typedef DialogBase<WindowClass, nDlgId, HandleClass> BaseClass;
 	typedef ModalessDialog<WindowClass, nDlgId, HandleClass> WindowBase;
 	typedef NormalWindowMap WindowMap;
+	typedef WindowClass WindowImplClass;
+	
+	using BaseClass::IDD;
+	using BaseClass::GetOrgDlgClassName;
 
 public:
 	VOID winx_call ProcessTermMessage(HWND hWnd)
@@ -335,7 +339,7 @@ public:
 
 	void winx_call CloseDialog(int nResult = IDOK)
 	{
-		::DestroyWindow(m_hWnd);
+		::DestroyWindow(BaseClass::m_hWnd);
 	}
 
 	HWND winx_call Create(
@@ -383,6 +387,9 @@ public:
 	typedef NormalWindowMap WindowMap;
 	typedef DialogBase<WindowClass, nDlgId, HandleClass> BaseClass;
 	typedef ModalDialog<WindowClass, nDlgId, HandleClass> WindowBase;
+	typedef WindowClass WindowImplClass;
+
+	using BaseClass::IDD;
 
 public:
 	VOID winx_call ProcessTermMessage(HWND hWnd)
@@ -412,7 +419,7 @@ public:
 
 	void winx_call CloseDialog(int nResult = IDOK)
 	{
-		::EndDialog(m_hWnd, nResult);
+		::EndDialog(BaseClass::m_hWnd, nResult);
 	}
 
 	int winx_call DoModal(
@@ -438,10 +445,15 @@ public:
 template <class WindowClass, int nDlgId = 0, class HandleClass = DefaultWindowHandle>
 class AxModalDialog : public ModalDialog<WindowClass, nDlgId, HandleClass>
 {
+	typedef ModalDialog<WindowClass, nDlgId, HandleClass> BaseClass;
 	WINX_ON_DLGINIT_CREATE_AXCTRL();
 	WINX_DLG_FWDMSG(); // 默认就进行ForwardMessage。
 
 public:
+	typedef WindowClass WindowImplClass;
+
+	using BaseClass::IDD;
+
 	int winx_call DoModal(
 		HWND hWndParent, RESID nResId = IDD, HINSTANCE hInst = GetThisModule())
 	{

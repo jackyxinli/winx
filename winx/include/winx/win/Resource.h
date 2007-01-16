@@ -253,7 +253,9 @@ inline VOID winx_call SetMenuOwnerDraw(HMENU hMenu)
 {
 	WINX_ASSERT(::IsMenu(hMenu));
 	TCHAR szCaption[256];
-	MENUITEMINFO mii = { sizeof(mii) };
+	MENUITEMINFO mii;
+	ZeroMemory(&mii, sizeof(mii));
+	mii.cbSize = sizeof(mii);
 	UINT nCount = ::GetMenuItemCount(hMenu);
 
 	for (UINT i = 0; i < nCount; ++i)

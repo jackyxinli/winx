@@ -128,7 +128,14 @@ public:
 template <class WindowImplClass>
 class _DialogResize : public ATL::CWindow, public WTL::CDialogResize<WindowImplClass>
 {
+	typedef WTL::CDialogResize<WindowImplClass> BaseClass;
+	
 public:
+	using BaseClass::DLSZ_SIZE_X;
+	using BaseClass::DLSZ_SIZE_Y;
+	using BaseClass::DLSZ_MOVE_X;
+	using BaseClass::DLSZ_MOVE_Y;
+	
 	enum { AddGripper = TRUE };
 	enum { UseMinTrackSize = TRUE };
 	enum { ForceStyle = WS_CLIPCHILDREN };

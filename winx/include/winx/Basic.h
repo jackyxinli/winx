@@ -21,9 +21,6 @@
 
 #if (0)
 #define WINX_NO_DEBUG_NEW
-#define WINX_USE_DEFINE_IID
-#define DEFINE_IID
-#define __uuid
 #endif
 
 #ifndef _CRT_SECURE_NO_DEPRECATE
@@ -146,6 +143,8 @@ __forceinline void _WinxDbgDelete(WindowClass* pOb)
 // -------------------------------------------------------------------------
 // WINX_PROPERTY - for general use
 
+#if defined(_MSC_VER)
+
 #define WINX_PROPERTY(Type, Name, Method)									\
 	Type __declspec(property(get=Method)) Name
 
@@ -160,6 +159,15 @@ __forceinline void _WinxDbgDelete(WindowClass* pOb)
 	Type winx_call _winx_get_##Name() const { return Variant; }				\
 	void winx_call _winx_put_##Name(Type _winx_v) { Variant = _winx_v; }	\
 	WINX_PROPERTY_RW(Type, Name, _winx_get_##Name, _winx_put_##Name)
+
+#else
+
+#define WINX_PROPERTY(Type, Name, Method)
+#define WINX_PROPERTY_RW(Type, Name, Get, Put)
+#define WINX_PROP_READONLY(Type, Name, Variant)
+#define WINX_PROP_READWRITE(Type, Name, Variant)
+
+#endif
 
 // -------------------------------------------------------------------------
 // WINX_TEXT
@@ -193,11 +201,15 @@ public:
 inline VOID _DummyFunction() {}
 
 template <class Unused>
-HMODULE WinxThisModuleT<Unused>::_g_hInst = GetModuleHandleEx(_DummyFunction);
+HMODULE WinxThisModuleT<Unused>::_g_hInst = GetModuleHandleEx((void*)_DummyFunction);
 
 typedef WinxThisModuleT<void> WinxThisModule;
 
+#if defined(_MSC_VER)
 #define GetThisModule()	WinxThisModule::_g_hInst
+#else
+inline HMODULE winx_call GetThisModule() { return WinxThisModule::_g_hInst; }
+#endif
 
 // -------------------------------------------------------------------------
 // class CComAppInit/COleAppInit - Helper
@@ -227,18 +239,23 @@ public:
 // -------------------------------------------------------------------------
 // class CDebugAppInit - Debug Helper
 
+#if defined(_DEBUG)
+inline void winx_call EnableMemoryLeakCheck()
+{
+	_CrtSetDbgFlag(_CrtSetDbgFlag(_CRTDBG_REPORT_FLAG) | _CRTDBG_LEAK_CHECK_DF);
+}
+#else
+inline void winx_call EnableMemoryLeakCheck() {}
+#endif
+
 class CDebugAppInit
 {
 public:
-	static VOID winx_call EnableLeakCheck() {
-		_CrtSetDbgFlag(_CrtSetDbgFlag(_CRTDBG_REPORT_FLAG) | _CRTDBG_LEAK_CHECK_DF);
-	}
 
 #if defined(_DEBUG)
-	CDebugAppInit() {
-		EnableLeakCheck();
-	}
+	CDebugAppInit() { EnableMemoryLeakCheck(); }
 #endif
+
 };
 
 // -------------------------------------------------------------------------

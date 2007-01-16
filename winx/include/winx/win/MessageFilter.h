@@ -233,6 +233,8 @@ public:
 // =========================================================================
 // class MultiTheadHook
 
+#if defined(WINX_MT_HOOK)
+
 template <class HookClass, int idHook>
 class MultiTheadHook
 {
@@ -290,6 +292,8 @@ public:
 		}
 	}
 };
+
+#endif // #if defined(WINX_MT_HOOK)
 
 // =========================================================================
 // class AccelFrame

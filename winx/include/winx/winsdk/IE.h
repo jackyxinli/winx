@@ -73,8 +73,10 @@
 #endif
 #endif // defined(WINX_VC_NET_GE2005)
 
+#if !defined(WINX_GCC)
 #ifndef __mshtmhst_h__
 #include <mshtmhst.h>
+#endif
 #endif
 
 #if defined(WINX_INC_MSHTML)

@@ -37,17 +37,7 @@ __WINX_BEGIN
 #define STDPROC_(Type)			virtual Type __stdcall
 #endif
 
-#if defined(WINX_USE_DEFINE_IID)
-#define WINX_DEFINE_IID(Interface, sz, x, s1, s2, c1, c2, c3, c4, c5, c6, c7, c8) \
-	DEFINE_IID(Interface, sz, x, s1, s2, c1, c2, c3, c4, c5, c6, c7, c8)
-#else
-#define WINX_DEFINE_IID(Interface, sz, x, s1, s2, c1, c2, c3, c4, c5, c6, c7, c8) \
-	interface __declspec(uuid(sz)) Interface;
-#endif
-
-#if defined(WINX_USE_DEFINE_IID)
-#define WINX_UUID(Interface)	__uuid(Interface)
-#else
+#ifndef WINX_UUID
 #define WINX_UUID(Interface)	__uuidof(Interface)
 #endif
 

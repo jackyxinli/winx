@@ -71,6 +71,8 @@ private:
 	typedef WTL::CBitmapT<t_bManaged> BaseClass;
 
 public:
+	using BaseClass::m_hBitmap;
+	
 	WINX_PROP_READWRITE(HBITMAP, m_hObject, m_hBitmap);
 
 public:
@@ -164,6 +166,8 @@ private:
 	typedef WTL::CPaletteT<t_bManaged> BaseClass;
 
 public:
+	using BaseClass::m_hPalette;
+	
 	WINX_PROP_READWRITE(HPALETTE, m_hObject, m_hPalette);
 
 public:
@@ -207,6 +211,8 @@ private:
 	typedef WTL::CDCT<t_bManaged> BaseClass;
 
 public:
+	using BaseClass::m_hDC;
+	
 	DCT(HDC hDC = NULL) : BaseClass(hDC) {}
 
 	BOOL GetTextExtent(LPCTSTR lpszString, int nCount, LPSIZE lpSize) const {

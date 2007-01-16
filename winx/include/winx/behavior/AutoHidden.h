@@ -98,7 +98,7 @@ private:
 	VOID winx_msg PreMoving(LPRECT lpRect)
 	{
 		RECT rcLimit;
-		GetLimitRange(rcLimit);
+		RangeClass::GetLimitRange(rcLimit);
 
 		INT dx, dy;
 		if (lpRect->left < rcLimit.left)

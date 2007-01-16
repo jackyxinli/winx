@@ -308,6 +308,7 @@ class SubclassWindow :
 	
 public:
 	using WindowMessage<WindowClass>::Create;
+	using SuperclassRegister<WindowClass, HandleClass>::OrgWndProc;
 	
 	typedef WindowClass WindowImplClass;
 	typedef WindowMessage<WindowClass> BaseClass;
@@ -696,6 +697,8 @@ class LightSuperclassWindow :
 {
 public:
 	typedef WindowClass WindowImplClass;
+	
+	using SuperclassRegister<WindowClass, HandleClass>::OrgWndProc;
 
 	static LRESULT CALLBACK DefaultHandle(
 		HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)

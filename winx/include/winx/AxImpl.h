@@ -26,11 +26,19 @@
 #endif
 
 #ifndef __ATLCOM_H__
-#include <atlcom.h>
+	#if defined(WINX_USE_ATLPORT)
+		#include "../../../atlport/include/atlcom.h"
+	#else
+		#include <atlcom.h>
+	#endif
 #endif
 
 #ifndef __ATLHOST_H__
-#include <atlhost.h>
+	#if defined(WINX_USE_ATLPORT)
+		#include "../../../atlport/include/atlhost.h"
+	#else
+		#include <atlhost.h>
+	#endif
 #endif
 
 // -------------------------------------------------------------------------

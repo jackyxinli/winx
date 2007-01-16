@@ -234,12 +234,22 @@ inline int winx_call GetDlgItemText(HWND hDlg, int nID, StringT& rString)
 // =========================================================================
 // WINX_HANDLE_CLASS
 
-#define WINX_HANDLE_CLASS(HandleClass)										\
-public:																		\
-	HandleClass() {}														\
-	HandleClass(HWND hWnd) { m_hWnd = hWnd; }								\
-	void operator=(HWND hWnd) { m_hWnd = hWnd; }							\
-private:
+#if defined(_MSC_VER)
+#define WINX_HANDLE_CLASS(HandleT)											\
+	public:																	\
+		HandleT() {}														\
+		HandleT(HWND hWnd) { m_hWnd = hWnd; }								\
+		void operator=(HWND hWnd) { m_hWnd = hWnd; }						\
+	private:
+#else
+#define WINX_HANDLE_CLASS(HandleT)											\
+	public:																	\
+		using HandleT::m_hWnd;												\
+		HandleT() {}														\
+		HandleT(HWND hWnd) { m_hWnd = hWnd; }								\
+		void operator=(HWND hWnd) { m_hWnd = hWnd; }						\
+	private:
+#endif
 
 // -------------------------------------------------------------------------
 // HandleClass Extension
@@ -315,7 +325,7 @@ public:
 	void winx_call operator=(HWND hWnd) {}
 };
 
-typedef HandleT<::ATL::CWindow> WindowHandle;
+typedef HandleT< ::ATL::CWindow > WindowHandle;
 
 // =========================================================================
 // DefaultWindowHandle

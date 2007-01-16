@@ -56,10 +56,12 @@ class ScrollBarHandle : public HandleT<WTL::CScrollBar>
 	WINX_HANDLE_CLASS(ScrollBarHandle);
 };
 
+#if (_WIN32_IE >= 0x0400) && !defined(_WIN32_WCE)
 class FlatScrollBarHandle : public HandleT<WTL::CFlatScrollBar>
 {
 	WINX_HANDLE_CLASS(FlatScrollBarHandle);
 };
+#endif
 
 class ListBoxHandle : public HandleT<WTL::CListBox>
 {
@@ -294,17 +296,21 @@ class MonthCalCtrlHandle : public HandleT<WTL::CMonthCalendarCtrl>
 	WINX_HANDLE_CLASS(MonthCalCtrlHandle);
 };
 
+#if (_WIN32_IE >= 0x0400)
 class IPAddressCtrlHandle : public HandleT<WTL::CIPAddressCtrl>
 {
 	WINX_HANDLE_CLASS(IPAddressCtrlHandle);
 };
+#endif
 
+#if (_WIN32_IE >= 0x0400) && !defined(_WIN32_WCE)
 class PagerCtrlHandle : public HandleT<WTL::CPagerCtrl>
 {
 	WINX_HANDLE_CLASS(PagerCtrlHandle);
 };
+#endif
 
-class AxCtrlHandle : public HandleT<::ATL::CAxWindow> // ActiveX Control
+class AxCtrlHandle : public HandleT< ::ATL::CAxWindow > // ActiveX Control
 {
 	WINX_HANDLE_CLASS(AxCtrlHandle);
 };
@@ -503,6 +509,8 @@ public:
 // =========================================================================
 // class FlatScrollBar - todo
 
+#if (_WIN32_IE >= 0x0400) && !defined(_WIN32_WCE)
+
 template <
 	class WindowClass,
 	class HandleClass = FlatScrollBarHandle,
@@ -512,6 +520,8 @@ class FlatScrollBar : public CommCtrlT<SubclassWindow<WindowClass, HandleClass, 
 public:
 	typedef CommCtrlT<SubclassWindow<WindowClass, HandleClass, nInst> > BaseClass;
 };
+
+#endif
 
 // =========================================================================
 // WINX_REFLECT_NOTIFY
@@ -805,6 +815,8 @@ public:
 // =========================================================================
 // class IPAddressCtrl
 
+#if (_WIN32_IE >= 0x0400)
+
 template <
 	class WindowClass,
 	class HandleClass = IPAddressCtrlHandle,
@@ -815,8 +827,12 @@ public:
 	typedef ExCommCtrlT<SubclassWindow<WindowClass, HandleClass, nInst> > BaseClass;
 };
 
+#endif
+
 // =========================================================================
 // class PagerCtrl
+
+#if (_WIN32_IE >= 0x0400) && !defined(_WIN32_WCE)
 
 template <
 	class WindowClass,
@@ -827,6 +843,8 @@ class PagerCtrl : public ExCommCtrlT<SubclassWindow<WindowClass, HandleClass, nI
 public:
 	typedef ExCommCtrlT<SubclassWindow<WindowClass, HandleClass, nInst> > BaseClass;
 };
+
+#endif
 
 // =========================================================================
 // class RichEdit

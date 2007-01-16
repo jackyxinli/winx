@@ -25,22 +25,49 @@
 #endif
 
 // =========================================================================
-// Visual C++ Version
+// C++ Compiler
 
 #if defined(_MSC_VER) 
 #	if (_MSC_VER > 1200)
+#		ifndef WINX_VC_NET
 #		define WINX_VC_NET
-#		if (_ATL_VER > 0x0710)
+#		pragma warning(disable:4290)
+		// A function is declared using exception specification, which Visual C++
+		// accepts but does not implement
+#		if (_MSC_VER > 1310)
 #			define WINX_VC_NET_GE2005 // Version >= VS.NET 2005
 #		endif
+#		endif
 #	else
+#		ifndef WINX_VC6
 #		define WINX_VC6
+#		endif
 #	endif
 #else
+#	if defined(__GNUG__) || defined(__GNUC__)
+#		ifndef WINX_GCC
+#		define WINX_GCC
+#		endif
+#	endif
 #endif
 
 // =========================================================================
+// UNICODE
+
+#if defined(_UNICODE)
+	#ifndef UNICODE
+	#define UNICODE
+	#endif
+#endif // defined(_UNICODE)
+
+// =========================================================================
 // Reference Win32 SDK
+
+#if defined(WINX_GCC)
+	#ifndef _WIN32_IE
+	#define _WIN32_IE	0x0400
+	#endif
+#endif
 
 #if defined(WINX_USE_WINSDK)
 
@@ -78,10 +105,6 @@
 #include <objbase.h>
 #endif
 
-#ifndef _WIN32_IE
-#define _WIN32_IE	0x0300
-#endif
-
 #ifndef _INC_COMMCTRL
 #include <commctrl.h>
 #endif
@@ -112,6 +135,47 @@ typedef signed char INT8, *PINT8;
 typedef signed short INT16, *PINT16;
 typedef unsigned char UINT8, *PUINT8;
 typedef unsigned short UINT16, *PUINT16;
+#endif
+
+#ifndef __TCHAR_DEFINED
+#define __TCHAR_DEFINED
+	#if defined(UNICODE)
+		typedef wchar_t     _TCHAR;
+		typedef wchar_t     _TSCHAR;
+		typedef wchar_t     _TUCHAR;
+		typedef wchar_t     _TXCHAR;
+		typedef wint_t      _TINT;
+	#else
+		typedef char            _TCHAR;
+		typedef signed char     _TSCHAR;
+		typedef unsigned char   _TUCHAR;
+		typedef char            _TXCHAR;
+		typedef int             _TINT;
+	#endif
+#endif
+
+#ifndef HDITEM
+#ifdef UNICODE
+#define HDITEM HDITEMW
+#else
+#define HDITEM HDITEMA
+#endif
+#endif
+
+#ifndef LPHDITEM
+#ifdef UNICODE
+#define LPHDITEM LPHDITEMW
+#else
+#define LPHDITEM LPHDITEMA
+#endif
+#endif
+
+#ifndef LPLVITEM
+#ifdef UNICODE
+#define LPLVITEM  LPLVITEMW
+#else
+#define LPLVITEM  LPLVITEMA
+#endif
 #endif
 
 // =========================================================================

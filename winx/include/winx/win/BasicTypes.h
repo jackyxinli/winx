@@ -209,8 +209,10 @@ typedef DWORD HLSCOLOR;
 
 inline HLSCOLOR winx_call RGB2HLS(COLORREF rgb)
 {
-    unsigned char minval = min(GetRValue(rgb), min(GetGValue(rgb), GetBValue(rgb)));
-    unsigned char maxval = max(GetRValue(rgb), max(GetGValue(rgb), GetBValue(rgb)));
+	unsigned char min1 = MIN(GetGValue(rgb), GetBValue(rgb));
+	unsigned char max1 = MAX(GetGValue(rgb), GetBValue(rgb));
+    unsigned char minval = MIN(GetRValue(rgb), min1);
+    unsigned char maxval = MAX(GetRValue(rgb), max1);
     float mdiff  = float(maxval) - float(minval);
     float msum   = float(maxval) + float(minval);
 	

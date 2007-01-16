@@ -25,6 +25,10 @@
 #define WINX_CREATE_AX_ON_DLGINIT
 #endif
 
+#if defined(WINX_GCC)
+#define WINX_USE_ATLPORT
+#endif
+
 // -------------------------------------------------------------------------
 // WINX_CREATE_AX_ON_DLGINIT
 //	- @@bugfix: 高版本的ATL::CAxDialogImpl将ActiveX创建挪到了WM_INITDIALOG
