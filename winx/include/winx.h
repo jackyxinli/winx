@@ -50,8 +50,10 @@
 #include "winx/WinCore.h"
 #endif
 
+#if !defined(_ATL_NO_HOSTING)
 #ifndef __WINX_AXIMPL_H__
 #include "winx/AxImpl.h"
+#endif
 #endif
 
 #ifndef __WINX_BEHAVIOR_WINDOWBEHAVIOR_H__

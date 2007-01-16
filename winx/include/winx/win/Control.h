@@ -310,12 +310,14 @@ class PagerCtrlHandle : public HandleT<WTL::CPagerCtrl>
 };
 #endif
 
+#if !defined(_ATL_NO_HOSTING)
 class AxCtrlHandle : public HandleT< ::ATL::CAxWindow > // ActiveX Control
 {
 	WINX_HANDLE_CLASS(AxCtrlHandle);
 };
-
 typedef AxCtrlHandle AxHandle;
+#endif
+
 typedef ListCtrlHandle ListViewCtrlHandle;
 typedef TreeCtrlHandle TreeViewCtrlHandle;
 typedef SliderCtrlHandle TrackBarCtrlHandle;

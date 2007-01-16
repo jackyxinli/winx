@@ -178,6 +178,8 @@ typedef unsigned short UINT16, *PUINT16;
 #endif
 #endif
 
+typedef struct tagNMOBJECTNOTIFY* LPNMOBJECTNOTIFY;
+
 // =========================================================================
 // DisableConflictSymbols
 

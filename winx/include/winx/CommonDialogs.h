@@ -141,6 +141,9 @@ typedef FileDialogT<fdtSaveFileDialog> SaveFileDialog;
 template <class Base>
 class MultiSelectFiles : public Base
 {
+public:
+	using Base::lpstrFile;
+	
 private:
 	LPCTSTR m_lpszIter;
 
