@@ -28,7 +28,11 @@
 #endif
 
 #ifndef WINX_NO_VTABLE
-#define WINX_NO_VTABLE __declspec(novtable)
+	#if defined(ATL_NO_VTABLE)
+	#define WINX_NO_VTABLE ATL_NO_VTABLE
+	#else
+	#define WINX_NO_VTABLE
+	#endif
 #endif
 
 // =========================================================================
@@ -177,6 +181,13 @@ public:
 
 // -------------------------------------------------------------------------
 // ClosureCall
+
+/* Low-level helper for IDispatch::Invoke() provides machine independence
+ * for customized Invoke().
+ */
+WINOLEAUTAPI DispCallFunc(void * pvInstance, ULONG oVft, CALLCONV cc,
+            VARTYPE vtReturn, UINT  cActuals, VARTYPE * prgvt,
+            VARIANTARG ** prgpvarg, VARIANT * pvargResult);
 
 inline HRESULT winx_call ClosureCall(
 	IN const CStdFuncInfo& info,

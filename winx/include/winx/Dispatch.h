@@ -109,6 +109,33 @@ struct _DispRetTypeTraits<IUnknown**> {
 };
 
 // -------------------------------------------------------------------------
+// class _DispRetVariant
+
+class _DispRetVariant : public VARIANT
+{
+public:
+	_DispRetVariant() { ::VariantInit(this); }
+	~_DispRetVariant() {
+		if (vt != VT_EMPTY)
+			::VariantClear(this);
+	}
+	
+	template <class RetType>
+	HRESULT winx_call CastTo(RetType* result)
+	{
+		enum { VT_NEED = _DispRetTypeTraits<RetType>::VT };
+		if (vt != VT_NEED)
+		{
+			HRESULT hr = ::VariantChangeType(this, this, 0, VT_NEED);
+			if (FAILED(hr))
+				return hr;
+		}
+		*result = _DispRetTypeTraits<RetType>::DetachValue(*this);
+		return S_OK;
+	}
+};
+
+// -------------------------------------------------------------------------
 // class DispatchHandle - see class ATL::CComDispatchDriver
 
 class DispatchHandle
@@ -145,31 +172,6 @@ public:
 	{
 		return p->GetIDsOfNames(IID_NULL, (LPOLESTR*)&lpsz, 1, LOCALE_USER_DEFAULT, pdispid);
 	}
-
-private:
-	class _RetVariant : public VARIANT
-	{
-	public:
-		_RetVariant() { ::VariantInit(this); }
-		~_RetVariant() {
-			if (vt != VT_EMPTY)
-				::VariantClear(this);
-		}
-		
-		template <class RetType>
-		HRESULT winx_call CastTo(RetType* result)
-		{
-			enum { VT_NEED = _DispRetTypeTraits<RetType>::VT };
-			if (vt != VT_NEED)
-			{
-				HRESULT hr = ::VariantChangeType(this, this, 0, VT_NEED);
-				if (FAILED(hr))
-					return hr;
-			}
-			*result = _DispRetTypeTraits<RetType>::DetachValue(*this);
-			return S_OK;
-		}
-	};
 
 public:
 	// Invoke a method by DISPID with no parameters
@@ -303,7 +305,7 @@ public:
 	template <class RetType>
 	static HRESULT winx_call GetProperty(IDispatch* pDisp, DISPID dwDispID, RetType* result)
 	{
-		_RetVariant varRet;
+		_DispRetVariant varRet;
 		DISPPARAMS dispparamsNoArgs = {NULL, NULL, 0, 0};
 		HRESULT hr = pDisp->Invoke(dwDispID, IID_NULL,
 				LOCALE_USER_DEFAULT, DISPATCH_PROPERTYGET,
@@ -429,7 +431,7 @@ public:
 public:
 	template <class RetType>
 	HRESULT winx_call CallFunction(LPCOLESTR name, RetType* result) const {
-		_RetVariant varRet;
+		_DispRetVariant varRet;
 		HRESULT hr = Invoke0(name, &varRet);
 		if (SUCCEEDED(hr))
 			hr = varRet.CastTo(result);
@@ -438,7 +440,7 @@ public:
 
 	template <class RetType>
 	HRESULT winx_call CallFunction(LPCOLESTR name, VARIANT* arg1, RetType* result) const {
-		_RetVariant varRet;
+		_DispRetVariant varRet;
 		HRESULT hr = Invoke1(name, arg1, &varRet);
 		if (SUCCEEDED(hr))
 			hr = varRet.CastTo(result);
@@ -447,7 +449,7 @@ public:
 
 	template <class RetType>
 	HRESULT winx_call CallFunction(LPCOLESTR name, VARIANT* arg1, VARIANT* arg2, RetType* result) const {
-		_RetVariant varRet;
+		_DispRetVariant varRet;
 		HRESULT hr = Invoke2(name, arg1, arg2, &varRet);
 		if (SUCCEEDED(hr))
 			hr = varRet.CastTo(result);
@@ -456,7 +458,7 @@ public:
 
 	template <class RetType>
 	HRESULT winx_call CallFunction(LPCOLESTR name, VARIANT* arg1, VARIANT* arg2, VARIANT* arg3, RetType* result) const {
-		_RetVariant varRet;
+		_DispRetVariant varRet;
 		HRESULT hr = Invoke3(name, arg1, arg2, arg3, &varRet);
 		if (SUCCEEDED(hr))
 			hr = varRet.CastTo(result);
@@ -466,7 +468,7 @@ public:
 public:
 	template <class RetType>
 	HRESULT winx_call CallFunction(DISPID name, RetType* result) const {
-		_RetVariant varRet;
+		_DispRetVariant varRet;
 		HRESULT hr = Invoke0(name, &varRet);
 		if (SUCCEEDED(hr))
 			hr = varRet.CastTo(result);
@@ -475,7 +477,7 @@ public:
 
 	template <class RetType>
 	HRESULT winx_call CallFunction(DISPID name, VARIANT* arg1, RetType* result) const {
-		_RetVariant varRet;
+		_DispRetVariant varRet;
 		HRESULT hr = Invoke1(name, arg1, &varRet);
 		if (SUCCEEDED(hr))
 			hr = varRet.CastTo(result);
@@ -484,7 +486,7 @@ public:
 
 	template <class RetType>
 	HRESULT winx_call CallFunction(DISPID name, VARIANT* arg1, VARIANT* arg2, RetType* result) const {
-		_RetVariant varRet;
+		_DispRetVariant varRet;
 		HRESULT hr = Invoke2(name, arg1, arg2, &varRet);
 		if (SUCCEEDED(hr))
 			hr = varRet.CastTo(result);
@@ -493,7 +495,7 @@ public:
 
 	template <class RetType>
 	HRESULT winx_call CallFunction(DISPID name, VARIANT* arg1, VARIANT* arg2, VARIANT* arg3, RetType* result) const {
-		_RetVariant varRet;
+		_DispRetVariant varRet;
 		HRESULT hr = Invoke3(name, arg1, arg2, arg3, &varRet);
 		if (SUCCEEDED(hr))
 			hr = varRet.CastTo(result);
@@ -503,7 +505,7 @@ public:
 public:
 	template <class RetType>
 	HRESULT winx_call CallFunction(LPCOLESTR name, CComVariant arg1, RetType* result) const {
-		_RetVariant varRet;
+		_DispRetVariant varRet;
 		HRESULT hr = Invoke1(name, &arg1, &varRet);
 		if (SUCCEEDED(hr))
 			hr = varRet.CastTo(result);
@@ -512,7 +514,7 @@ public:
 
 	template <class RetType>
 	HRESULT winx_call CallFunction(LPCOLESTR name, CComVariant arg1, CComVariant arg2, RetType* result) const {
-		_RetVariant varRet;
+		_DispRetVariant varRet;
 		HRESULT hr = Invoke2(name, &arg1, &arg2, &varRet);
 		if (SUCCEEDED(hr))
 			hr = varRet.CastTo(result);
@@ -521,7 +523,7 @@ public:
 
 	template <class RetType>
 	HRESULT winx_call CallFunction(LPCOLESTR name, CComVariant arg1, CComVariant arg2, CComVariant arg3, RetType* result) const {
-		_RetVariant varRet;
+		_DispRetVariant varRet;
 		HRESULT hr = Invoke3(name, &arg1, &arg2, &arg3, &varRet);
 		if (SUCCEEDED(hr))
 			hr = varRet.CastTo(result);
@@ -531,7 +533,7 @@ public:
 public:
 	template <class RetType>
 	HRESULT winx_call CallFunction(DISPID name, CComVariant arg1, RetType* result) const {
-		_RetVariant varRet;
+		_DispRetVariant varRet;
 		HRESULT hr = Invoke1(name, &arg1, &varRet);
 		if (SUCCEEDED(hr))
 			hr = varRet.CastTo(result);
@@ -540,7 +542,7 @@ public:
 
 	template <class RetType>
 	HRESULT winx_call CallFunction(DISPID name, CComVariant arg1, CComVariant arg2, RetType* result) const {
-		_RetVariant varRet;
+		_DispRetVariant varRet;
 		HRESULT hr = Invoke2(name, &arg1, &arg2, &varRet);
 		if (SUCCEEDED(hr))
 			hr = varRet.CastTo(result);
@@ -549,7 +551,7 @@ public:
 
 	template <class RetType>
 	HRESULT winx_call CallFunction(DISPID name, CComVariant arg1, CComVariant arg2, CComVariant arg3, RetType* result) const {
-		_RetVariant varRet;
+		_DispRetVariant varRet;
 		HRESULT hr = Invoke3(name, &arg1, &arg2, &arg3, &varRet);
 		if (SUCCEEDED(hr))
 			hr = varRet.CastTo(result);
@@ -637,7 +639,12 @@ public:
 template <bool bOwn>
 class DispatchMethodT : public DispatchObjT<bOwn>
 {
+	typedef DispatchObjT<bOwn> Base;
+	
 public:
+	using Base::disp;
+	using Base::dispid;
+		
 	DispatchMethodT() {
 		dispid = DISPID_UNKNOWN;
 	}
@@ -704,7 +711,12 @@ public:
 template <bool bOwn>
 class DispatchFunctionT : public DispatchObjT<bOwn>
 {
+	typedef DispatchObjT<bOwn> Base;
+	
 public:
+	using Base::disp;
+	using Base::dispid;
+		
 	DispatchFunctionT() {
 		dispid = DISPID_UNKNOWN;
 	}
@@ -721,7 +733,7 @@ public:
 public:
 	template <class RetType>
 	HRESULT winx_call operator()(RetType* result) const {
-		_RetVariant varRet;
+		_DispRetVariant varRet;
 		HRESULT hr = disp.Invoke0(dispid, &varRet);
 		if (SUCCEEDED(hr))
 			hr = varRet.CastTo(result);
@@ -730,7 +742,7 @@ public:
 
 	template <class RetType>
 	HRESULT winx_call operator()(VARIANT* arg1, RetType* result) const {
-		_RetVariant varRet;
+		_DispRetVariant varRet;
 		HRESULT hr = disp.Invoke1(dispid, arg1, &varRet);
 		if (SUCCEEDED(hr))
 			hr = varRet.CastTo(result);
@@ -739,7 +751,7 @@ public:
 
 	template <class RetType>
 	HRESULT winx_call operator()(VARIANT* arg1, VARIANT* arg2, RetType* result) const {
-		_RetVariant varRet;
+		_DispRetVariant varRet;
 		HRESULT hr = disp.Invoke2(dispid, arg1, arg2, &varRet);
 		if (SUCCEEDED(hr))
 			hr = varRet.CastTo(result);
@@ -748,7 +760,7 @@ public:
 
 	template <class RetType>
 	HRESULT winx_call operator()(VARIANT* arg1, VARIANT* arg2, VARIANT* arg3, RetType* result) const {
-		_RetVariant varRet;
+		_DispRetVariant varRet;
 		HRESULT hr = disp.Invoke3(dispid, arg1, arg2, arg3, &varRet);
 		if (SUCCEEDED(hr))
 			hr = varRet.CastTo(result);
@@ -757,7 +769,7 @@ public:
 
 	template <class RetType>
 	HRESULT winx_call operator()(CComVariant arg1, RetType* result) const {
-		_RetVariant varRet;
+		_DispRetVariant varRet;
 		HRESULT hr = disp.Invoke1(dispid, &arg1, &varRet);
 		if (SUCCEEDED(hr))
 			hr = varRet.CastTo(result);
@@ -766,7 +778,7 @@ public:
 
 	template <class RetType>
 	HRESULT winx_call operator()(CComVariant arg1, CComVariant arg2, RetType* result) const {
-		_RetVariant varRet;
+		_DispRetVariant varRet;
 		HRESULT hr = disp.Invoke2(dispid, &arg1, &arg2, &varRet);
 		if (SUCCEEDED(hr))
 			hr = varRet.CastTo(result);
@@ -775,7 +787,7 @@ public:
 
 	template <class RetType>
 	HRESULT winx_call operator()(CComVariant arg1, CComVariant arg2, CComVariant arg3, RetType* result) const {
-		_RetVariant varRet;
+		_DispRetVariant varRet;
 		HRESULT hr = disp.Invoke3(dispid, &arg1, &arg2, &arg3, &varRet);
 		if (SUCCEEDED(hr))
 			hr = varRet.CastTo(result);
@@ -806,7 +818,12 @@ public:
 template <bool bOwn>
 class DispatchPropertyT : public DispatchObjT<bOwn>
 {
+	typedef DispatchObjT<bOwn> Base;
+	
 public:
+	using Base::disp;
+	using Base::dispid;
+		
 	DispatchPropertyT() {
 		dispid = DISPID_UNKNOWN;
 	}
