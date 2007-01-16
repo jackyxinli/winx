@@ -262,17 +262,22 @@ STD_DECL_INT_CTYPE(long);
 __NS_STD_BEGIN
 
 template <class AllocT, class Type>
-inline void __delete(AllocT& alloc, Type* o)
+inline void winx_call __delete(AllocT& alloc, Type* o)
 {
 	o->~Type();
 	alloc.deallocate((void*)o, sizeof(Type));
 }
 
 template <class AllocT, class Type>
-inline void __deleteArray(AllocT& alloc, Type* array, size_t count)
+inline void winx_call __deleteArray(AllocT& alloc, Type* array, size_t count)
 {
 	std::DestructorTraits<Type>::_destructArray(array, count);
 	alloc.deallocate((void*)array, sizeof(Type)*count);
+}
+
+inline void winx_call enableMemoryLeakCheck()
+{
+	_CrtSetDbgFlag(_CrtSetDbgFlag(_CRTDBG_REPORT_FLAG) | _CRTDBG_LEAK_CHECK_DF);
 }
 
 __NS_STD_END
