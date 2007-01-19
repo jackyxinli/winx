@@ -82,12 +82,14 @@ public:
 	}
 
 protected:
-	static void winx_call _copyMemory(char_type* dest, const char_type* src, size_type n)
-	{
-		while (n--)
-			*dest++ = *src++;
+	static void winx_call _copyMemory(char* dest, const char* src, size_type n) {
+		memcpy(dest, src, n);
 	}
-	
+
+	static void winx_call _copyMemory(WCHAR* dest, const WCHAR* src, size_type n) {
+		wmemcpy(dest, src, n);
+	}
+
 protected:
 	char_type*	m_lpBufStart;
 	size_type	m_nBufSize;
