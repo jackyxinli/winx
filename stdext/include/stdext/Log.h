@@ -366,6 +366,55 @@ public:
 	}
 
 public:
+	template <class DataIt>
+	Log& winx_call printObjArray(
+		DataIt array, size_t count,
+		const char* bracketL = "{ ", const char* bracketR = " }\n",
+		const char* dataSep = ", ")
+	{
+		if (m_stg)
+		{
+			m_stg.put(bracketL, strlen(bracketL));
+			if (count)
+			{
+				for (size_t i = 0;;)
+				{
+					(*array++).trace(*this);
+					if (++i >= count)
+						break;
+					m_stg.put(dataSep, strlen(dataSep));
+				}
+			}
+			m_stg.put(bracketR, strlen(bracketR));
+		}
+		return *this;
+	}
+
+	template <class ArgT, class DataIt>
+	Log& winx_call printObjArray(
+		ArgT fmt, DataIt array, size_t count,
+		const char* bracketL = "{ ", const char* bracketR = " }\n",
+		const char* dataSep = ", ")
+	{
+		if (m_stg)
+		{
+			m_stg.put(bracketL, strlen(bracketL));
+			if (count)
+			{
+				for (size_t i = 0;;)
+				{
+					(*array++).trace(*this, fmt);
+					if (++i >= count)
+						break;
+					m_stg.put(dataSep, strlen(dataSep));
+				}
+			}
+			m_stg.put(bracketR, strlen(bracketR));
+		}
+		return *this;
+	}
+
+public:
 	template <class CharT, class VectorT1, class VectorT2>
 	Log& winx_call traceDim(const CharT* fmt, const VectorT1& x, const VectorT2& y)
 	{
