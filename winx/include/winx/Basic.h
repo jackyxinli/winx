@@ -102,45 +102,6 @@ __forceinline void _WinxDbgDelete(WindowClass* pOb)
 #endif
 
 // -------------------------------------------------------------------------
-// for MFC Compatibility
-
-#ifndef ASSERT
-#define ASSERT(e)			WINX_ASSERT(e)
-#endif
-
-#ifndef ASSERT_VALID
-#define ASSERT_VALID(pObj)	WINX_ASSERT((pObj) != NULL)
-#endif
-
-#ifndef VERIFY
-#define VERIFY(e)			WINX_VERIFY(e)
-#endif
-
-#ifndef TRACE
-#define TRACE				WINX_TRACE
-#endif
-
-#ifndef TRACE0
-#define TRACE0				WINX_TRACE
-#endif
-
-#ifndef TRACE1
-#define TRACE1				WINX_TRACE
-#endif
-
-#ifndef TRACE2
-#define TRACE2				WINX_TRACE
-#endif
-
-#ifndef TRACE3
-#define TRACE3				WINX_TRACE
-#endif
-
-#ifndef DEBUG_ONLY
-#define DEBUG_ONLY(e)		WINX_DEBUG_ONLY(e)
-#endif
-
-// -------------------------------------------------------------------------
 // WINX_PROPERTY - for general use
 
 #if defined(_MSC_VER)
@@ -305,12 +266,6 @@ public:
 // $Log: Basic.h,v $
 // Revision 1.9  2006/12/22 10:22:28  xushiwei
 // STL-Patch: std::basic_string::_Split function bugfix (vc6)
-//
-// Revision 1.8  2006/10/18 12:13:46  xushiwei
-// stdext as independent component
-//
-// Revision 1.7  2006/08/26 09:12:37  xushiwei
-// vs2005 support
 //
 // Revision 1.6  2006/08/22 10:36:53  xushiwei
 // WINX-Core:
