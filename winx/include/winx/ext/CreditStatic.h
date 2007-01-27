@@ -19,6 +19,10 @@
 #ifndef __WINX_EXT_CREDITSTATIC_H__
 #define __WINX_EXT_CREDITSTATIC_H__
 
+#ifndef __MFCPORT_AFX_H__
+#include "../../mfcport/afx.h"
+#endif
+
 namespace winx {	//@@code insert
 
 // CreditStatic.h : header file
