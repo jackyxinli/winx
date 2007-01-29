@@ -27,11 +27,11 @@
 #error "Don't include atlscrl.h first"
 #endif
 
-#include "wtl/WrapperMessage.h"
 #define DoPaint	__WTL_DoPaint
+#include "wtl/WrapperMessage.h"
 #include "../../../wtl/include/atlscrl.h"
-#undef DoPaint
 #include "wtl/UnWrapperMessage.h"
+#undef DoPaint
 
 #if (0) && defined(_DEBUG)
 #define _DEBUG_SCROLLWINDOW_MSG
@@ -63,7 +63,7 @@ public:
 // -------------------------------------------------------------------------
 // class ScrollWindow
 
-template <class WindowClass, class Base = Window<WindowClass, DefaultWindowHandle> >
+template <class WindowClass, class Base = Window<WindowClass, WindowHandle> >
 class ScrollWindow : public Base, public ScrollImpl<WindowClass>
 {
 public:
@@ -117,6 +117,40 @@ public:
 			f = Base::OnCommand(hWnd, wParam, hWndCtlFrom);
 		return f;
 	}
+};
+
+// -------------------------------------------------------------------------
+// class FormWindow, AxFormWindow
+
+template <class WindowClass, class Base>
+class _ScrollDlgT : public ScrollWindow<WindowClass, Base>
+{
+public:
+	typedef ScrollWindow<WindowClass, Base> BaseClass;
+
+	BOOL winx_call ProcessScrollWindowMessage(
+		HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam, LRESULT& lResult)
+	{
+		if (uMsg == WM_INITDIALOG)
+		{
+			BOOL f;
+			ClientRect rect(m_hWnd = hWnd);
+			BaseClass::__WTL_OnCreate(WM_CREATE, 0, 0, f);
+			BaseClass::SetScrollSize(rect.right, rect.bottom);
+			return FALSE;
+		}
+		return BaseClass::ProcessScrollWindowMessage(hWnd, uMsg, wParam, lParam, lResult);
+	}
+};
+
+template <class WindowClass, int nDlgId = 0, class HandleClass = WindowHandle>
+class FormWindow : public _ScrollDlgT<WindowClass, ModalessDialog<WindowClass, nDlgId, HandleClass> >
+{
+};
+
+template <class WindowClass, int nDlgId = 0, class HandleClass = WindowHandle>
+class AxFormWindow : public _ScrollDlgT<WindowClass, AxModalessDialog<WindowClass, nDlgId, HandleClass> >
+{
 };
 
 // -------------------------------------------------------------------------
