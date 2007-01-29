@@ -981,7 +981,7 @@ public:
 		HWND hWnd, UINT nFlags, INT zDelta, winx::CPoint point) {}
 
 	BOOL winx_msg OnSetCursor(
-		HWND hWnd, HWND hWndContainsCursor, LPARAM lParam) { return FALSE; }
+		HWND hWnd, HWND hWndContainsCursor, UINT nHitTest, UINT uMouseMsg) { return FALSE; }
 
 	UINT winx_msg OnNcHitTest(
 		HWND hWnd, winx::CPoint point) { return HTNOWHERE; }

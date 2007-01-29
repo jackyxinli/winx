@@ -348,12 +348,8 @@ public:
 	VOID winx_msg OnMouseWheel(
 		HWND hWnd, UINT nFlags, INT zDelta, winx::CPoint point);
 
-	//
-	//lParam
-	//	- The low-order word of lParam specifies the hit-test code. 
-	//	- The high-order word of lParam specifies the identifier of the mouse message.
 	BOOL winx_msg OnSetCursor(
-		HWND hWnd, HWND hWndContainsCursor, LPARAM lParam);
+		HWND hWnd, HWND hWndContainsCursor, UINT nHitTest, UINT uMouseMsg);
 
 	UINT winx_msg OnNcHitTest(
 		HWND hWnd, winx::CPoint point);
@@ -519,7 +515,7 @@ NcPaint:	_WINX_PWND->OnNcPaint(hWnd, (HRGN)wParam);
 		}
 		WINX_MSG_CASE(WM_SETCURSOR, OnSetCursor)
 		{
-			lResult = _WINX_PWND->OnSetCursor(hWnd, (HWND)wParam, lParam);
+			lResult = _WINX_PWND->OnSetCursor(hWnd, (HWND)wParam, LOWORD(lParam), HIWORD(lParam));
 			return TRUE;
 		}
 		WINX_MSG_CASE(WM_ERASEBKGND, OnEraseBkgnd)
@@ -801,16 +797,16 @@ public:
 			if (_WINX_PWND->ProcessDialogResizeMessage(hWnd, message, wParam, lParam, lResult))
 				return lResult;
 		}
-		WINX_MSG_HAS(ProcessScrollWindowMessage)
-		{
-			// support WTL::CScrollImpl
-			if (_WINX_PWND->ProcessScrollWindowMessage(hWnd, message, wParam, lParam, lResult))
-				return lResult;
-		}
 		WINX_MSG_HAS(DispatchMessage)
 		{
 			// DispatchMessage可能被派生类禁止。
 			if (_WINX_PWND->DispatchMessage(hWnd, message, wParam, lParam, lResult))
+				return lResult;
+		}
+		WINX_MSG_HAS(ProcessScrollWindowMessage)
+		{
+			// support WTL::CScrollImpl
+			if (_WINX_PWND->ProcessScrollWindowMessage(hWnd, message, wParam, lParam, lResult))
 				return lResult;
 		}
 		WINX_MSG_HAS(ProcessUserMessage)
