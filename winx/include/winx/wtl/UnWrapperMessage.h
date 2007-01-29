@@ -36,5 +36,11 @@
 #undef OnSize
 #undef OnPaint
 
+#undef OnSetCursor
+#undef OnLButtonDown
+#undef OnMouseMove
+#undef OnLButtonUp
+#undef OnCaptureChanged
+
 // -------------------------------------------------------------------------
 // $Log: $

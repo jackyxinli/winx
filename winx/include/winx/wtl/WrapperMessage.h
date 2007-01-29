@@ -34,6 +34,12 @@
 #define OnSize				__WTL_OnSize
 #define OnPaint				__WTL_OnPaint
 
+#define OnSetCursor			__WTL_OnSetCursor
+#define OnLButtonDown		__WTL_OnLButtonDown
+#define OnMouseMove			__WTL_OnMouseMove
+#define OnLButtonUp			__WTL_OnLButtonUp
+#define OnCaptureChanged	__WTL_OnCaptureChanged
+
 #define ATL ::ATL
 
 // -------------------------------------------------------------------------
