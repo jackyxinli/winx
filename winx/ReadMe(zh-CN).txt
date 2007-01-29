@@ -6,9 +6,8 @@ WINX关注一个目标：简单而高效。
 
 *) WINX相关的链接
 
-	winx official blog (英文)	- http://winxhome.blogspot.com/
-	winx official blog (中文)	- http://winxcn.blogspot.com/
-	winx official blog (繁体)	- http://winxtw.blogspot.com/
+	winx 官方网站 (英文)		- http://www.winxgui.com/
+	winx 官方网站 (中文)		- http://www.winxgui.cn/
 	winx group (英文) 			- http://groups.google.com/group/winx/
 	winx group (中文)			- http://groups.google.com/group/winxcn/
 	winx at sourceforge 		- http://sourceforge.net/projects/winx/
@@ -21,8 +20,7 @@ WINX关注一个目标：简单而高效。
 	│  ├─include
 	│  │  └─winx
 	│  ├─lib
-	│  ├─src
-	│  └─test
+	│  └─src
 	├─winxdoc
 	│  ├─docs(zh-CN)
 	│  └─docs(en)
@@ -32,6 +30,9 @@ WINX关注一个目标：简单而高效。
 	├─stdext
 	│  └─include
 	│     └─stdext
+	├─atlport
+	│  └─include
+	│     └─atlport
 	├─winsdk
 	│  ├─bin
 	│  ├─include
@@ -45,32 +46,32 @@ WINX关注一个目标：简单而高效。
 winx/include/
   WINX界面开发库源代码。
 
-winx/docs(zh-CN)/
-  简体中文版本的文档，包括：
-  *) 授权（License）
-  *) 更新历史（ChangeLog）
-  *) 使用手册（The user's manual）
-
-winx/docs(en)/
-  英文版本的文档。
-
-winx/samples/
-  WINX样例程序。
-
-winx/tutorials/
-  使用指南。一步步介绍你如何使用WINX。
-
 winx/lib/
   WINX静态库。因为WINX多数代码均在include目录，故此通常情况下并不需要它。
 
 winx/src/
   WINX静态库的源代码。对WINX的使用者而言并不需要。
 
-winx/test/
-  测试案例。对WINX的使用者而言并不需要。
+winxdoc/docs(zh-CN)/
+  简体中文版本的文档，包括：
+  *) 授权（License）
+  *) 更新历史（ChangeLog）
+  *) 使用手册（The user's manual）
+
+winxdoc/docs(en)/
+  英文版本的文档。
+
+winxsamp/samples/
+  WINX样例程序。
+
+winxsamp/tutorials/
+  使用指南。一步步介绍你如何使用WINX。
 
 stdext/
   C++标准库（STL）扩展。用于一般性用途。
+
+atlport/
+	ATL 3.0的可移植版本，支持Mingw32。
 
 winsdk/
   Windows平台SDK，来自Visual Studio .NET 2005的版本。

@@ -8,9 +8,8 @@ library. However, it is not SIMPLE.
 
 *) Links
 
-	winx official blog (english)	- http://winxhome.blogspot.com/
-	winx official blog (chinese)	- http://winxcn.blogspot.com/
-	winx official blog (big5)		- http://winxtw.blogspot.com/
+	winx official site (english)	- http://www.winxgui.com/
+	winx official site (chinese)	- http://www.winxgui.cn/
 	winx group (english) 			- http://groups.google.com/group/winx/
 	winx group (chinese)			- http://groups.google.com/group/winxcn/
 	winx at sourceforge 			- http://sourceforge.net/projects/winx/
@@ -23,8 +22,7 @@ library. However, it is not SIMPLE.
 	©¦  ©À©¤include
 	©¦  ©¦  ©¸©¤winx
 	©¦  ©À©¤lib
-	©¦  ©À©¤src
-	©¦  ©¸©¤test
+	©¦  ©¸©¤src
 	©À©¤winxdoc
 	©¦  ©À©¤docs(zh-CN)
 	©¦  ©¸©¤docs(en)
@@ -34,6 +32,9 @@ library. However, it is not SIMPLE.
 	©À©¤stdext
 	©¦  ©¸©¤include
 	©¦     ©¸©¤stdext
+	©À©¤atlport
+	©¦  ©¸©¤include
+	©¦     ©¸©¤atlport
 	©À©¤winsdk
 	©¦  ©À©¤bin
 	©¦  ©À©¤include
@@ -47,32 +48,32 @@ library. However, it is not SIMPLE.
 winx/include/
   The source code of the WINX template GUI library.     
 
-winx/docs(en)/
-  English version documents, include:
-  *) License declaration.
-  *) Change log.
-  *) The user's manual.
-
-winx/docs(zh-CN)/
-  Chinese (simplified) version documents.
-
-winx/tutorials/
-  Introduction of how to use the WINX library, step by step.
-
-winx/samples/
-  The demo applications of the WINX library.
-
 winx/lib/
   The WINX static library. At most time it is not needed.
 
 winx/src/
   The source code of the WINX static library.
 
-winx/test/
-  The testcases.
+winxdoc/docs(en)/
+  English version documents, include:
+  *) License declaration.
+  *) Change log.
+  *) The user's manual.
+
+winxdoc/docs(zh-CN)/
+  Chinese (simplified) version documents.
+
+winxsamp/tutorials/
+  Introduction of how to use the WINX library, step by step.
+
+winxsamp/samples/
+  The demo applications of the WINX library.
 
 stdext/
   The STL-extension library for general use.
+
+atlport/
+  Porting version of ATL 3.0 to Mingw32.
 
 winsdk/
   Windows Platform SDK from Visual Studio .NET 2005.
