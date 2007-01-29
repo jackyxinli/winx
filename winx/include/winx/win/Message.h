@@ -387,6 +387,9 @@ public:
 	BOOL winx_call ProcessDialogResizeMessage(
 		HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam, LRESULT& lResult);
 
+	BOOL winx_call ProcessScrollWindowMessage(
+		HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam, LRESULT& lResult);
+
 	BOOL winx_call ProcessUserMessage(
 		HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam, LRESULT& lResult);
 #endif
@@ -788,14 +791,20 @@ public:
 		}
 		WINX_MSG_HAS(ProcessUpdateUIMessage)
 		{
-			// 支持WTL::CUpdateUI
+			// support WTL::CUpdateUI
 			if (_WINX_PWND->ProcessUpdateUIMessage(hWnd, message, wParam, lParam, lResult))
 				return lResult;
 		}
 		WINX_MSG_HAS(ProcessDialogResizeMessage)
 		{
-			// 支持WTL::CDialogResize
+			// support WTL::CDialogResize
 			if (_WINX_PWND->ProcessDialogResizeMessage(hWnd, message, wParam, lParam, lResult))
+				return lResult;
+		}
+		WINX_MSG_HAS(ProcessScrollWindowMessage)
+		{
+			// support WTL::CScrollImpl
+			if (_WINX_PWND->ProcessScrollWindowMessage(hWnd, message, wParam, lParam, lResult))
 				return lResult;
 		}
 		WINX_MSG_HAS(DispatchMessage)

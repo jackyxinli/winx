@@ -70,14 +70,8 @@
 // -------------------------------------------------------------------------
 // class Theme
 
-#define OnCreate			__WTL_OnCreate
-#define OnDestroy			__WTL_OnDestroy
-#define OnThemeChanged		__WTL_OnThemeChanged
-#define OnNcPaint			__WTL_OnNcPaint
-
-#define ATL ::ATL
+#include "wtl/WrapperMessage.h"
 #include "../../../wtl/include/atltheme.h"
-#undef ATL
 
 __WINX_BEGIN
 
@@ -97,10 +91,7 @@ public:
 
 __WINX_END
 
-#undef OnCreate
-#undef OnDestroy
-#undef OnThemeChanged
-#undef OnNcPaint
+#include "wtl/UnWrapperMessage.h"
 
 // -------------------------------------------------------------------------
 // WINX_THEME

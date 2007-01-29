@@ -27,13 +27,9 @@
 #error "Don't include atlframe.h first"
 #endif
 
-#define OnInitMenuPopup		__WTL_OnInitMenuPopup
-#define OnCommand			__WTL_OnCommand
-#define ATL ::ATL
+#include "../wtl/WrapperMessage.h"
 #include "../../../../wtl/include/atlframe.h"
-#undef ATL
-#undef OnCommand
-#undef OnInitMenuPopup
+#include "../wtl/UnWrapperMessage.h"
 
 __WINX_BEGIN
 

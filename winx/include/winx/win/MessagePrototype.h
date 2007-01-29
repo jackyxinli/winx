@@ -647,6 +647,7 @@ public:																		\
 	WINX_MSG_NULL_HANDLER(ProcessUserMessage);								\
 	WINX_MSG_NULL_HANDLER(ProcessUpdateUIMessage);							\
 	WINX_MSG_NULL_HANDLER(ProcessDialogResizeMessage);						\
+	WINX_MSG_NULL_HANDLER(ProcessScrollWindowMessage);						\
 	WINX_MSG_NULL_HANDLER(ProcessHostMessage);								\
 	WINX_MSG_NULL_HANDLER(ProcessTermMessage);								\
 	WINX_MSG_NULL_HANDLER(InternalDefault);									\
@@ -1054,6 +1055,12 @@ public:
 	// ProcessDialogResizeMessage - WTL::CDialogResize Support
 
 	BOOL winx_call ProcessDialogResizeMessage(
+		HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam, LRESULT& lResult);
+
+public:
+	// ProcessScrollWindowMessage - WTL::CScrollImpl Support
+
+	BOOL winx_call ProcessScrollWindowMessage(
 		HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam, LRESULT& lResult);
 
 public:

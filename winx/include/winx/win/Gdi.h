@@ -69,6 +69,9 @@ class BitmapT : public WTL::CBitmapT<t_bManaged>
 {
 private:
 	typedef WTL::CBitmapT<t_bManaged> BaseClass;
+	
+	BitmapT(const BitmapT&);
+	void operator=(const BitmapT&);
 
 public:
 	using BaseClass::m_hBitmap;
@@ -76,8 +79,13 @@ public:
 	WINX_PROP_READWRITE(HBITMAP, m_hObject, m_hBitmap);
 
 public:
-	BitmapT(HBITMAP hBitmap = NULL) : BaseClass(hBitmap)
+	BitmapT(HBITMAP hBitmap = NULL) : BaseClass(hBitmap) {
+	}
+
+	HBITMAP operator=(HBITMAP hBitmap)
 	{
+		Attach(hBitmap);
+		return hBitmap;
 	}
 
 	HBITMAP CreateCompatibleBitmap(HDC hDC, int nWidth, int nHeight)
