@@ -58,18 +58,20 @@ __WINX_BEGIN
 // -------------------------------------------------------------------------
 // MsgBoxTrace
 
-inline void winx_call ExMsgBoxTraceV(LPCWSTR fmt, va_list arglist, LPCWSTR caption = L"Information")
+inline void winx_call ExMsgBoxTraceV(
+	LPCWSTR fmt, va_list arglist, LPCWSTR caption = L"Information", HWND hWnd = NULL)
 {
 	WCHAR buff[2048];	
 	_vsnwprintf_dbg(buff, 2048, fmt, arglist);
-	::MessageBoxW(NULL, buff, caption, MB_TOPMOST|MB_OK);
+	::MessageBoxW(hWnd, buff, caption, MB_TOPMOST|MB_OK);
 }
 
-inline void winx_call ExMsgBoxTraceV(LPCSTR fmt, va_list arglist, LPCSTR caption = "Information")
+inline void winx_call ExMsgBoxTraceV(
+	LPCSTR fmt, va_list arglist, LPCSTR caption = "Information", HWND hWnd = NULL)
 {
 	char buff[2048];
 	_vsnprintf_dbg(buff, 2048, fmt, arglist);
-	::MessageBoxA(NULL, buff, caption, MB_TOPMOST|MB_OK);
+	::MessageBoxA(hWnd, buff, caption, MB_TOPMOST|MB_OK);
 }
 
 template <class E>
@@ -87,6 +89,15 @@ inline void __cdecl ExMsgBoxTrace(const E* caption, const E* fmt, ...)
 	va_list arglist;
 	va_start(arglist, fmt);
 	ExMsgBoxTraceV(fmt, arglist, caption);
+	va_end(arglist);
+}
+
+template <class E>
+inline void __cdecl ExMsgBoxTrace(HWND hWnd, const E* caption, const E* fmt, ...)
+{
+	va_list arglist;
+	va_start(arglist, fmt);
+	ExMsgBoxTraceV(fmt, arglist, caption, hWnd);
 	va_end(arglist);
 }
 
