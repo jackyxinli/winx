@@ -397,6 +397,15 @@ do {																		\
 #endif
 
 // -------------------------------------------------------------------------
+// WINX_TEXT
+
+#if defined(UNICODE)
+#define WINX_TEXT(str)		L ## str
+#else
+#define WINX_TEXT(str)		str
+#endif
+
+// -------------------------------------------------------------------------
 // class NullClass
 
 __NS_STD_BEGIN
