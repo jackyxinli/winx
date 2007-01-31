@@ -24,6 +24,7 @@
 #include <stdext/kmp/TestFinder.h>
 #include <stdext/memory/Pool.h>
 #include <stdext/memory/GC.h>
+#include <stdext/filemapping/FileMapping.h>
 #pragma comment(lib, "shlwapi.lib")
 
 // -------------------------------------------------------------------------
@@ -31,11 +32,13 @@
 
 int main()
 {
-	WINX_TEST_APP(std::ErrorLog, "TestPriorityArray", "");
+	WINX_TEST_APP(std::ErrorLog, "TestFileMapping", "");
 
 	WINX_TEST_CLASS(TestPool);
 	WINX_TEST_CLASS(TestFinder);
 
+	WINX_TEST_CLASS(std::TestSimpleFileMapping);
+	WINX_TEST_CLASS(std::TestFileMapping);
 	WINX_TEST_CLASS(std::TestGC);
 	WINX_TEST_CLASS(std::TestPriorityArray);
 //	WINX_TEST_CLASS(std::TestStreamArchive);
