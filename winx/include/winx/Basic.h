@@ -131,15 +131,6 @@ __forceinline void _WinxDbgDelete(WindowClass* pOb)
 #endif
 
 // -------------------------------------------------------------------------
-// WINX_TEXT
-
-#if defined(UNICODE)
-#define WINX_TEXT(str)		L ## str
-#else
-#define WINX_TEXT(str)		str
-#endif
-
-// -------------------------------------------------------------------------
 // GetModuleHandleEx
 
 inline HMODULE GetModuleHandleEx(LPCVOID lpAddress)
