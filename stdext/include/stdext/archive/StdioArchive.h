@@ -212,9 +212,9 @@ public:
 		{
 			char szBuf[100];
 			StdioWriteArchive ar("/__test__.txt");
-			ar.put(itoa(13242, szBuf, 10));
+			ar.put(_itoa(13242, szBuf, 10));
 			ar.put(' ');
-			ar.put(itoa(1111, szBuf, 10));
+			ar.put(_itoa(1111, szBuf, 10));
 		}
 		{
 			StdioReadArchive ar("/__test__.txt");

@@ -29,8 +29,12 @@
 
 #if !defined(WINX_USE_WINSDK)
 #if !defined(_MSC_VER) || (_MSC_VER <= 1200)
-STDAPI SHCreateStreamOnFileA(LPCSTR pszFile, DWORD grfMode, struct IStream **ppstm);
-STDAPI SHCreateStreamOnFileW(LPCWSTR pszFile, DWORD grfMode, struct IStream **ppstm);
+	STDAPI SHCreateStreamOnFileA(LPCSTR pszFile, DWORD grfMode, struct IStream **ppstm);
+	STDAPI SHCreateStreamOnFileW(LPCWSTR pszFile, DWORD grfMode, struct IStream **ppstm);
+#else
+	#ifndef _INC_SHLWAPI
+	#include <shlwapi.h>
+	#endif
 #endif
 #endif
 
