@@ -610,6 +610,7 @@ class TestFileMapping
 {
 	WINX_TEST_SUITE(TestFileMapping);
 		WINX_TEST(testAccessBuffer);
+		WINX_TEST(testAccessBuffer2);
 		WINX_TEST(testSegmentAccessBuffer);
 		WINX_TEST(testSegmentAccessBuffer2);
 		WINX_TEST(testSegmentAllocBuffer);
@@ -637,8 +638,27 @@ public:
 
 		FileMapping::ViewBuffer vb(ab);
 		char* buf2 = vb.view(FileMapping::AllocationGranularity-5, 32);
+
 		log.print(buf2).newline();
 		AssertExp(strcmp(buf2, buf) == 0);
+	}
+
+	void testAccessBuffer2(LogT& log)
+	{
+		FileMapping fm(WINX_TEXT("/__AccessBuffer2__.txt"));
+
+		FileMapping::AccessBuffer ab(fm);
+		char* buf = ab.view(0, 32);
+		strcpy(buf, "hello, xushiwei!");
+
+		FileMapping::ViewBuffer vb(fm);
+		char* buf2 = vb.view(0, 32);
+
+		buf = ab.view(FileMapping::AllocationGranularity-5, 32);
+		strcpy(buf, "hello, abcdefg!");
+
+		log.print(buf2).newline();
+		AssertExp(strcmp(buf2, "hello, xushiwei!") == 0);
 	}
 
 	void testSegmentAccessBuffer(LogT& log)
@@ -646,7 +666,7 @@ public:
 		char* buf;
 		SegmentAccessBufferT<FileMapping> sab;
 
-		sab.open(WINX_TEXT("/__AccessBuffer1__.txt"));
+		sab.open(WINX_TEXT("/__SegmentAccessBuffer1__.txt"));
 
 		buf = sab.view(0);
 		strcpy(buf, "hello, xushiwei!");
@@ -664,7 +684,7 @@ public:
 	void testSegmentAccessBuffer2(LogT& log)
 	{
 		char* buf;
-		FileMapping fm(WINX_TEXT("/__AccessBuffer2__.txt"));;
+		FileMapping fm(WINX_TEXT("/__SegmentAccessBuffer2__.txt"));;
 		FileMapping::SegmentAccessBuffer<> sab(fm);
 
 		buf = sab.view(0);

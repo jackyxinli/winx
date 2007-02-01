@@ -344,6 +344,8 @@ do {																		\
 
 #if defined(STATIC_ASSERT)
 #define WINX_STATIC_ASSERT(e)	STATIC_ASSERT(e)
+#elif defined(BOOST_STATIC_ASSERT)
+#define WINX_STATIC_ASSERT(e)	BOOST_STATIC_ASSERT(e)
 #else
 #define WINX_STATIC_ASSERT(e)	WINX_ASSERT(e)
 #endif

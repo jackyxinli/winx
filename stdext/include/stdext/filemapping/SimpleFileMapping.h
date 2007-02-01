@@ -93,7 +93,7 @@ public:
 		LPSECURITY_ATTRIBUTES lpFileMappingAttributes = NULL,
 		PVOID pvBaseAddress = NULL) : m_pView(NULL)
 	{
-		open(hFile, cbSize, lpFileMappingAttributes, pvBaseAddress);
+		open(cbSize, lpObjectName, lpFileMappingAttributes, pvBaseAddress);
 	}
 
 	~SimpleFileMappingT()
