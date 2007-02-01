@@ -119,7 +119,7 @@ public:
 
 	char* winx_call allocData(size_type cbSize, pos_type& fcPos)
 	{
-		WINX_ASSERT(SegmentBits >= AllocationGranularityBits);
+		WINX_ASSERT((int)SegmentBits >= (int)AllocationGranularityBits);
 		WINX_ASSERT(cbSize <= SegmentSize);
 
 		if (cbSize <= m_cbFree)
