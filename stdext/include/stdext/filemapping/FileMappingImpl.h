@@ -583,8 +583,8 @@ public:
 		SegmentViewBuffer(Owner& owner) { init(owner); }
 	};
 
-	template <int SegBits = 16, BOOL ReadOnly = FALSE>
-	class SegmentAccessBuffer : public SegmentAccessBufferT<Handle, SegBits, ReadOnly>
+	template <int SegBits = 16>
+	class SegmentAccessBuffer : public SegmentAccessBufferT<Handle, SegBits>
 	{
 	public:
 		SegmentAccessBuffer() {}
@@ -685,7 +685,7 @@ public:
 	{
 		char* buf;
 		FileMapping fm(WINX_TEXT("/__SegmentAccessBuffer2__.txt"));;
-		FileMapping::SegmentAccessBuffer<> sab(fm);
+		FileMapping::SegmentAccessBuffer<0> sab(fm);
 
 		buf = sab.view(0);
 		strcpy(buf, "hello, xushiwei!");
@@ -747,8 +747,8 @@ public:
 
 		char* buf;
 		FileMapping fm(WINX_TEXT("/__AccessAndAlloc__.txt"));
-		FileMapping::SegmentAccessBuffer<> sab(fm);
-		FileMapping::SegmentAllocBuffer<> sa(fm);
+		FileMapping::SegmentAccessBuffer<0> sab(fm);
+		FileMapping::SegmentAllocBuffer<0> sa(fm);
 
 		buf = sab.view(0);
 		log.trace(buf);
