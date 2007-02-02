@@ -81,8 +81,8 @@ public:
 public:
 	FILEStorageT() : m_fp(NULL) {}
 	FILEStorageT(FILE* fp) : m_fp(fp) {}
-	FILEStorageT(LPCSTR szFile) {
-		WINX_ASSERT(bOwn);
+	FILEStorageT(LPCSTR szFile, bool bCheckOwn = true) {
+		WINX_ASSERT(bOwn || !bCheckOwn);
 		m_fp = fopen(szFile, "w");
 	}
 	~FILEStorageT() {
@@ -90,9 +90,15 @@ public:
 			close();
 	}
 
-	void winx_call open(LPCSTR szFile)
+	int winx_call good()
 	{
-		WINX_ASSERT(bOwn && m_fp == NULL);
+		return m_fp != NULL;
+	}
+
+	void winx_call open(LPCSTR szFile, bool bCheckOwn = true)
+	{
+		WINX_ASSERT(bOwn || !bCheckOwn);
+		WINX_ASSERT(m_fp == NULL);
 		m_fp = fopen(szFile, "w");
 	}
 	

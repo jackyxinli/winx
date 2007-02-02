@@ -138,9 +138,10 @@ public:
 	Log() {}
 	
 	template <class ArgT>
-	Log(ArgT arg) : m_stg(arg)
-	{
-	}
+	Log(ArgT arg) : m_stg(arg) {}
+
+	template <class ArgT1, class ArgT2>
+	Log(ArgT1 arg1, ArgT2 arg2) : m_stg(arg1, arg2) {}
 
 public:
 	Storage& winx_call storage() {
@@ -588,11 +589,15 @@ public:
 	FileLog() {}
 
 	template <class ArgT>
-	FileLog(ArgT szFile) : Log<FILEStorage>(szFile) {
-	}
+	FileLog(ArgT szFile) : Log<FILEStorage>(szFile, false) {}
 
 	~FileLog() {
 		m_stg.close();
+	}
+
+	template <class ArgT>
+	void winx_call open(ArgT szFile) {
+		m_stg.open(szFile, false);
 	}
 };
 
