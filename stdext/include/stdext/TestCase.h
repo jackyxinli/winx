@@ -215,10 +215,10 @@ bool winx_call isEqBuf(_It1 a1, _It2 a2, size_t count)
 }
 
 // -------------------------------------------------------------------------
-// AssertExp, AssertEq, AssertEqBuf, AssertMsg, AssertFail
+// AssertExp, AssertEq, AssertEqBuf, AssertFail, ReportErrorMsgIf
 
-#ifndef AssertMsg
-#define AssertMsg(msg, exp) 												\
+#ifndef ReportErrorMsgIf
+#define ReportErrorMsgIf(msg, exp) 											\
 	do {																	\
 		if (!(exp)) {														\
 			log.reportError(msg, __FILE__, __LINE__);						\
@@ -228,16 +228,16 @@ bool winx_call isEqBuf(_It1 a1, _It2 a2, size_t count)
 #endif
 
 #define AssertFail(msg)														\
-	AssertMsg(msg, 0)
+	ReportErrorMsgIf(msg, 0)
 
 #define AssertExp(exp)														\
-	AssertMsg("Failed: AssertExp(" #exp ");", exp)
+	ReportErrorMsgIf("Failed: AssertExp(" #exp ");", exp)
 
 #define AssertEq(a, b)														\
-	AssertMsg("Failed: AssertEq(" #a "," #b ");", (a) == (b))
+	ReportErrorMsgIf("Failed: AssertEq(" #a "," #b ");", (a) == (b))
 
 #define AssertEqBuf(a1, a2, count)											\
-	AssertMsg("Failed: AssertEqBuf(" #a1 "," #a2 "," #count ");", std::isEqBuf(a1, a2, count))
+	ReportErrorMsgIf("Failed: AssertEqBuf(" #a1 "," #a2 "," #count ");", std::isEqBuf(a1, a2, count))
 
 // =========================================================================
 // $Log: TestCase.h,v $
