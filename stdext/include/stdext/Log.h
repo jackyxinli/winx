@@ -637,8 +637,9 @@ public:
 	Log& winx_call trace(const char* fmt, ...)		{ return *this; }
 	Log& winx_call trace(const WCHAR* fmt, ...)		{ return *this; }
 
+public:
 	template <class DataT>
-	Log& winx_call print(const DataT& v)		
+	Log& winx_call print(const DataT& v)
 	{
 		return *this;
 	}
@@ -661,6 +662,32 @@ public:
 		return *this;
 	}
 
+public:
+	template <class DataT>
+	Log& winx_call printObj(const DataT& v)
+	{
+		return *this;
+	}
+
+	template <class DataT, class ArgT1>
+	Log& winx_call printObj(const DataT& v, ArgT1 arg1)
+	{
+		return *this;
+	}
+	
+	template <class DataT, class ArgT1, class ArgT2>
+	Log& winx_call printObj(const DataT& v, ArgT1 arg1, ArgT2 arg2)
+	{
+		return *this;
+	}
+	
+	template <class DataT, class ArgT1, class ArgT2, class ArgT3>
+	Log& winx_call printObj(const DataT& v, ArgT1 arg1, ArgT2 arg2, ArgT3 arg3)
+	{
+		return *this;
+	}
+
+public:
 	template <class _It>
 	Log& winx_call printString(_It first, _It last)	{ return *this; }
 	
@@ -670,6 +697,16 @@ public:
 		return *this;
 	}
 	
+public:
+	template <class ArgT, class DataIt>
+	Log& winx_call printArray(
+		DataIt array, size_t count,
+		const char* bracketL = "{ ", const char* bracketR = " }\n",
+		const char* dataSep = ", ")
+	{
+		return *this;
+	}
+
 	template <class ArgT, class DataIt>
 	Log& winx_call printArray(
 		ArgT fmt, DataIt array, size_t count,
@@ -679,6 +716,25 @@ public:
 		return *this;
 	}
 	
+public:
+	template <class ArgT, class DataIt>
+	Log& winx_call printObjArray(
+		DataIt array, size_t count,
+		const char* bracketL = "{ ", const char* bracketR = " }\n",
+		const char* dataSep = ", ")
+	{
+		return *this;
+	}
+
+	template <class ArgT, class DataIt>
+	Log& winx_call printObjArray(
+		ArgT fmt, DataIt array, size_t count,
+		const char* bracketL = "{ ", const char* bracketR = " }\n",
+		const char* dataSep = ", ")
+	{
+		return *this;
+	}
+
 public:
 	void winx_call reportTestCaseError(
 		const char* testClass,
