@@ -41,8 +41,10 @@
 	#endif
 #endif
 
-#ifndef _INC_SHLWAPI
+#if !defined(WINX_USE_WINSDK)
+	#ifndef _INC_SHLWAPI
 	#include <shlwapi.h>
+	#endif
 #endif
 
 __NS_STD_BEGIN
