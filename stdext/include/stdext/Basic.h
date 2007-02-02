@@ -40,6 +40,10 @@
 #define _CRT_SECURE_NO_DEPRECATE
 #endif
 
+#ifndef _SECURE_SCL
+#define _SECURE_SCL 0
+#endif
+
 // -------------------------------------------------------------------------
 
 #ifndef _INC_STRING
@@ -88,6 +92,8 @@ typedef unsigned short UINT16, *PUINT16;
 		// accepts but does not implement
 #		if (_MSC_VER > 1310)
 #			define WINX_VC_NET_GE2005 // Version >= VS.NET 2005
+#		else
+#			define WINX_VC_NET_LE2003 // Version <= VS.NET 2003
 #		endif
 #		endif
 #	else

@@ -1,4 +1,4 @@
-/* -------------------------------------------------------------------------
+/* ------------------------------------------------------------------------
 // WINX: a C++ template GUI library - MOST SIMPLE BUT EFFECTIVE
 // 
 // This file is a part of the WINX Library.
@@ -43,6 +43,7 @@ public:
 
 	static int winx_call good()	{ return TRUE; }
 	static int winx_call select(int mask) { return 0; }
+	static void winx_call flush() {}
 };
 
 // -------------------------------------------------------------------------
@@ -61,6 +62,8 @@ interface ILogStorage
 
 	virtual void winx_call putv(const char* fmt, va_list args) = 0;
 	virtual void winx_call putv(const WCHAR* fmt, va_list args) = 0;
+
+	virtual void winx_call flush() {}
 };
 
 // -------------------------------------------------------------------------
@@ -72,6 +75,9 @@ class FILEStorageT : public Base
 protected:
 	FILE* m_fp;
 	
+public:
+	typedef char char_type;
+
 public:
 	FILEStorageT() : m_fp(NULL) {}
 	FILEStorageT(FILE* fp) : m_fp(fp) {}
@@ -96,6 +102,12 @@ public:
 			fclose(m_fp);
 			m_fp = NULL;
 		}
+	}
+
+	void winx_call flush()
+	{
+		if (m_fp)
+			fflush(m_fp);
 	}
 	
 	void winx_call assign(FILE* fp)	{ m_fp = fp; }
@@ -129,46 +141,41 @@ typedef FILEStorageT<false, StorageBase> FILEStorage;
 // class StringStorage
 
 template <class StringT, class Base = StorageBase>
-class StringStorage : public Base
+class StringStorage : public StringT, public Base
 {
-protected:
-	StringT* m_data;
-	
 public:
-	StringStorage() : m_data(NULL) {}
-	StringStorage(StringT* data) : m_data(data) {}
-	
-	void winx_call assign(StringT* data) { m_data = data; }
-	
+	typedef typename StringT::value_type char_type;
+	typedef StringT storage_type;
+
 public:
 	void winx_call put(int ch)
 	{
-		m_data->append(1, ch);
+		StringT::append(1, ch);
 	}
 	
 	void winx_call putw(wint_t wch)
 	{
-		m_data->append(1, wch);
+		StringT::append(1, wch);
 	}
 	
 	void winx_call put(size_t count, int ch)
 	{
-		m_data->append(count, ch);
+		StringT::append(count, ch);
 	}
 	
 	void winx_call putw(size_t count, wint_t wch)
 	{
-		m_data->append(count, wch);
+		StringT::append(count, wch);
 	}
 	
 	void winx_call put(const char* s, size_t count)
 	{
-		m_data->append(s, count);
+		StringT::append(s, count);
 	}
 	
 	void winx_call put(const WCHAR* s, size_t count)
 	{
-		m_data->append(s, count);
+		StringT::append(s, count);
 	}
 
 private:
@@ -178,16 +185,18 @@ public:
 	void winx_call putv(const char* fmt, va_list args)
 	{
 		char buf[__STD_LOG_BUFSIZE];
-		_vsnprintf(buf, __STD_LOG_BUFSIZE, fmt, args);
-		buf[__STD_LOG_BUFSIZE - 1] = '\0';
-		m_data->append(buf);
+		int cch = _vsnprintf(buf, __STD_LOG_BUFSIZE, fmt, args);
+		if (cch < 0)
+			cch = __STD_LOG_BUFSIZE;
+		StringT::append(buf, cch);
 	}
 	
 	void winx_call putv(const WCHAR* fmt, va_list args)	{
 		WCHAR buf[__STD_LOG_BUFSIZE];
-		_vsnwprintf(buf, __STD_LOG_BUFSIZE, fmt, args);
-		buf[__STD_LOG_BUFSIZE - 1] = '\0';
-		m_data->append(buf);
+		int cch = _vsnwprintf(buf, __STD_LOG_BUFSIZE, fmt, args);
+		if (cch < 0)
+			cch = __STD_LOG_BUFSIZE;
+		StringT::append(buf, cch);
 	}
 };
 
@@ -200,6 +209,9 @@ class MultiStorage : public StorageBase
 private:
 	StorageContainer m_stgs;
 	int m_enables;
+
+public:
+	typedef char char_type;
 
 public:
 	MultiStorage() : m_enables(-1) {}
@@ -224,6 +236,12 @@ public:
 	int winx_call enabled(size_t i)
 	{
 		return m_enables & (1 << i);
+	}
+
+	void winx_call flush() {
+		for (size_t i = 0; i < m_stgs.size(); ++i)
+			if (enabled(i))
+				m_stgs[i]->flush();
 	}
 	
 	void winx_call put(int ch)	{

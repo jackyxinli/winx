@@ -70,7 +70,7 @@ __NS_STD_BEGIN
 #define __STD_LOG_PRINT_INT(DataT)											\
 	Log& winx_call print(signed DataT v) {									\
 		char buf[32];														\
-		return printString(ltoa(v, buf, 10));								\
+		return printString(_ltoa(v, buf, 10));								\
 	}																		\
 	Log& winx_call print(unsigned DataT v) {								\
 		char buf[32];														\
@@ -143,12 +143,31 @@ public:
 	}
 
 public:
-	Storage& winx_call storage()
-	{
+	Storage& winx_call storage() {
+		return m_stg;
+	}
+	const Storage& winx_call storage() const {
 		return m_stg;
 	}
 
 public:
+	int winx_call good() const
+	{
+		return m_stg.good();
+	}
+
+	template <class ArgT>
+	void winx_call open(ArgT stg)
+	{
+		WINX_ASSERT(!m_stg.good());
+		m_stg.open(stg);
+	}
+
+	void winx_call close()
+	{
+		m_stg.close();
+	}
+
 	void winx_call flush()
 	{
 		if (m_stg)
@@ -280,6 +299,11 @@ public:
 	Log& winx_call print(const RECT& rc)
 	{
 		return trace("(%d, %d) - (%d, %d)", rc.left, rc.top, rc.right, rc.bottom);
+	}
+
+	Log& winx_call print(const POINT& pt)
+	{
+		return trace("(%d, %d)", pt.x, pt.y);
 	}
 
 	Log& winx_call print(const SIZE& sz)
@@ -562,48 +586,27 @@ class FileLog : public Log<FILEStorage>
 {
 public:
 	FileLog() {}
-	FileLog(LPCSTR szFile)
-		: Log<FILEStorage>(fopen(szFile, "w"))
-	{
+
+	template <class ArgT>
+	FileLog(ArgT szFile) : Log<FILEStorage>(szFile) {
 	}
-	~FileLog()
-	{
+
+	~FileLog() {
 		m_stg.close();
-	}
-
-	void winx_call open(LPCSTR szFile)
-	{
-		WINX_ASSERT(!m_stg.good());
-		m_stg.assign(fopen(szFile, "w"));
-	}
-
-	int winx_call good() const
-	{
-		return m_stg.good();
 	}
 };
 
 // =========================================================================
 // class StringLog
 
-class StringLog : 
-	public std::basic_string< char >,
-	public Log< StringStorage< std::basic_string<char> > >
+class StringLog : public Log< StringStorage<std::string> >
 {
-private:
-	typedef std::basic_string< char > StorageT;
-	typedef Log< StringStorage< std::basic_string<char> > > LogT;
-
 public:
-	StringLog() 
-	{
-		m_stg.assign(this);
-	}
-
 	template <class LogT>
 	void winx_call trace(LogT& log) const
 	{
-		log.printString(*static_cast<const StorageT*>(this));
+		const std::string& str = storage();
+		log.printString(str);
 	}
 };
 
@@ -765,7 +768,7 @@ public:
 		slog.print(1.0/3).newline();
 		slog.print(1.0/3, 1).newline();
 		slog.newline();
-		log.print(slog);
+		log.print(slog.storage());
 	}
 
 	void testMultiLog(LogT& log)
