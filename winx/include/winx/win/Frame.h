@@ -203,6 +203,13 @@ public:																		\
 	__WINX_INIT_DLGRESIZE(resizer)											\
 	__WINX_PROCESS_DLGRESIZE(resizer)
 
+// -------------------------------------------------------------------------
+
+#define WINX_DLGRESIZE_BEGIN_NOGRIPPER(fMinSizeLimit)						\
+	WINX_DLGRESIZE_BEGIN_EX(fMinSizeLimit)									\
+	WINX_DLGRESIZE_ADDGRIPPER(FALSE)										\
+	WINX_DLGRESIZE_MAP_BEGIN()
+
 #define WINX_DLGRESIZE_BEGIN(fMinSizeLimit)									\
 	WINX_DLGRESIZE_BEGIN_EX(fMinSizeLimit)									\
 	WINX_DLGRESIZE_MAP_BEGIN()
