@@ -30,7 +30,7 @@ private:
 	static void* operator new(size_t);
 	static void operator delete(void*);
 
-	static BOOL _isNormalCall(PBYTE callAddr)
+	static bool winx_call _isNormalCall(PBYTE callAddr)
 	{
 		return callAddr[0] != 0xC3 && // is not 'ret'
 			*((PWORD)callAddr-1) != 0xD0FF; // is not 'call eax'
@@ -61,10 +61,7 @@ public:
 			mov callAddr, eax;
 #endif
 		}
-		if ( _isNormalCall(callAddr) ) // is normal call?
-			Base::onNormalCall();
-		else
-			Base::onException();
+		Base::onLeave( _isNormalCall(callAddr) ); // is normal call?
 	}
 
 	// use project default optimization settings
@@ -112,13 +109,13 @@ public:
 		SimpleCheck(LogT* aLog, bool aIsNormal)
 			: log(*aLog), isNormal(aIsNormal) {
 		}
-		void winx_call onNormalCall() {
-			log.print("onNormalCall\n");
-			AssertExp(isNormal);
-		}
-		void winx_call onException() {
-			log.print("onException\n");
-			AssertExp(!isNormal);
+		void winx_call onLeave(bool aIsNormal)
+		{
+			if (aIsNormal)
+				log.print("onNormalCall\n");
+			else 
+				log.print("onException\n");
+			AssertExp(isNormal == aIsNormal);
 		}
 	};
 

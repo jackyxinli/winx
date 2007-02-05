@@ -9,28 +9,27 @@
 // of this license. You must not remove this notice, or any other, from
 // this software.
 // 
-// Module: stlpatch.h
+// Module: stdext/ScopeDebug.h
 // Creator: xushiwei
 // Email: xushiweizh@gmail.com
-// Date: 2006-12-22 18:01:56
+// Date: 2007-2-3 17:32:38
 // 
-// $Id: stlpatch.h,v 1.1 2006/12/22 10:19:55 xushiwei Exp $
+// $Id: $
 // -----------------------------------------------------------------------*/
-#ifndef __STLPATCH_H__
-#define __STLPATCH_H__
+#ifndef __STDEXT_SCOPEDEBUG_H__
+#define __STDEXT_SCOPEDEBUG_H__
 
 // -------------------------------------------------------------------------
 
-#pragma warning(disable:4786)
+#ifndef __STDEXT_SCOPEDBG_SCOPELOG_H__
+#include "scopedbg/ScopeLog.h"
+#endif
 
-#ifndef __STDEXT_PATCH_STRING_H__
-#include "stdext/patch/string.h"
+#ifndef __STDEXT_SCOPEDBG_ERRORGUARD_H__
+#include "scopedbg/ErrorGuard.h"
 #endif
 
 // -------------------------------------------------------------------------
-// $Log: stlpatch.h,v $
-// Revision 1.1  2006/12/22 10:19:55  xushiwei
-// STL-Patch: std::basic_string::_Split function bugfix (vc6)
-//
+// $Log: $
 
-#endif /* __STLPATCH_H__ */
+#endif /* __STDEXT_SCOPEDEBUG_H__ */

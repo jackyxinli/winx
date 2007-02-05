@@ -25,8 +25,7 @@
 #include <stdext/memory/Pool.h>
 #include <stdext/memory/GC.h>
 #include <stdext/FileMapping.h>
-#include <stdext/scopedbg/CheckException.h>
-#include <stdext/scopedbg/ScopeLog.h>
+#include <stdext/ScopeDebug.h>
 #pragma comment(lib, "shlwapi.lib")
 
 // -------------------------------------------------------------------------
@@ -34,10 +33,11 @@
 
 int main()
 {
-	WINX_TEST_APP(std::ErrorLog, "TestScopeLog", "");
+	WINX_TEST_APP(std::ErrorLog, "TestErrorGuard", "");
 
 	WINX_TEST_CLASS(TestPool);
 	WINX_TEST_CLASS(TestFinder);
+	WINX_TEST_CLASS(std::TestErrorGuard);
 	WINX_TEST_CLASS(std::TestScopeLog);
 	WINX_TEST_CLASS(std::TestCheckException);
 	WINX_TEST_CLASS(std::TestSimpleFileMapping);

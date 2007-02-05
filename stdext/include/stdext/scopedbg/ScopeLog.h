@@ -12,7 +12,7 @@
 // Module: stdext/scopedbg/ScopeLog.h
 // Creator: xushiwei
 // Email: xushiweizh@gmail.com
-// Date: 2007-2-2 10:31:46
+// Date: 2007-2-2 20:31:46
 // 
 // $Id: $
 // -----------------------------------------------------------------------*/
@@ -311,15 +311,19 @@ private:
 	static __declspec(thread) LogT* s_log;
 
 public:
-	static void winx_call init() {
-		WINX_ASSERT(s_log == NULL);
+	typedef NameT NameMakerType;
+
+	static void winx_call init()
+	{
 		TCHAR szFile[_MAX_PATH];
-		s_log = new LogT(NameT::make(szFile));
+		LogT* log = new LogT(NameT::make(szFile));
+		init(log);
 	}
 
-	static void winx_call init(LogT* log) {
-		WINX_ASSERT(s_log == NULL);
+	static LogT* winx_call init(LogT* log) {
+		LogT* old_log = s_log;
 		s_log = log;
+		return old_log;
 	}
 
 	static void winx_call term() {
@@ -344,6 +348,36 @@ public:
 template <class LogT, class NameT>
 LogT* ThreadLog<LogT, NameT>::s_log;
 
+// -------------------------------------------------------------------------
+// class ThreadLogInit
+
+template <class LogT, class NameT = _LogFileName>
+class ThreadLogInit
+{
+private:
+	typedef ThreadLog<LogT, NameT> ThreadLogT;
+
+	LogT m_log;
+	LogT* m_old_log;
+
+public:
+	ThreadLogInit()
+	{
+		TCHAR szFile[_MAX_PATH];
+		m_log.open(NameT::make(szFile));
+		m_old_log = ThreadLogT::init(&m_log);
+	}
+	ThreadLogInit(LPCSTR szFile)
+	{
+		m_log.open(szFile);
+		m_old_log = ThreadLogT::init(&m_log);
+	}
+	~ThreadLogInit()
+	{
+		ThreadLogT::init(m_old_log);
+	}
+};
+
 // =========================================================================
 // class TestScopeLog
 
@@ -352,7 +386,8 @@ class TestScopeLog
 {
 	WINX_TEST_SUITE(TestScopeLog);
 		WINX_TEST(testBasic);
-		WINX_TEST(testThread);
+		WINX_TEST(testThreadLog);
+		WINX_TEST(testThreadLogInit);
 	WINX_TEST_SUITE_END();
 
 public:
@@ -378,9 +413,16 @@ public:
 		slog.print("done!");
 	}
 
-	void testThread(LogT& log)
+	struct _NameT {
+		static LPCSTR make(LPSTR) {
+			return "/__ThreadLog__.log";
+		}
+	};
+
+	void testThreadLog(LogT& log)
 	{
-		FileScopeLog& slog = ThreadLog<FileScopeLog>::instance(true);
+		typedef ThreadLog<FileScopeLog, _NameT> ThreadLogT;
+		FileScopeLog& slog = ThreadLogT::instance(true);
 		slog.print("message in global scope!!!");
 		slog.enterScope();
 			slog.print("message in level 1 scope!");
@@ -393,7 +435,25 @@ public:
 			slog.leaveScope(false);
 		slog.leaveScope();
 		slog.print("done!");
-		ThreadLog<FileScopeLog>::term();
+		ThreadLogT::term();
+	}
+
+	void testThreadLogInit(LogT& log)
+	{
+		ThreadLogInit<FileScopeLog> logInit("/__ThreadLogInit__.log");
+		FileScopeLog& slog = ThreadLog<FileScopeLog>::instance();
+		slog.print("message in global scope!!!");
+		slog.enterScope();
+			slog.print("message in level 1 scope!");
+			slog.enterScope();
+				slog.print("level 2 message");
+				slog.enterScope();
+					slog.print("level 3 message");
+				slog.leaveScope();
+				slog.print("message discard!!!");
+			slog.leaveScope(false);
+		slog.leaveScope();
+		slog.print("done!");
 	}
 };
 

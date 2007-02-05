@@ -559,6 +559,15 @@ public:
 			);
 	}
 
+	void winx_call reportGuardError(
+		const char* general,
+		const int error,
+		const char* detail,
+		const char* file, int line)
+	{
+		trace("%s(%d):\n\t%s[%d] - %s\n", file, line, general, error, detail);
+	}
+
 	void winx_call reportError(
 		const char* msg, const char* file, int line)
 	{
@@ -749,6 +758,14 @@ public:
 	{
 	}
 	
+	void winx_call reportGuardError(
+		const char* general,
+		const int error,
+		const char* detail,
+		const char* file, int line)
+	{
+	}
+
 	void winx_call reportError(
 		const char* msg, const char* file, int line)
 	{
