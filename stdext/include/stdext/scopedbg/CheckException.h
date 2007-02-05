@@ -1,10 +1,21 @@
 /* -------------------------------------------------------------------------
-//	文件名		：	stdext/scopedbg/CheckException.h
-//	创建者		：	许式伟
-//	创建时间	：	2007-1-31 16:30:23
-//	功能描述	：	
-//
-//	$Id: $
+// WINX: a C++ template GUI library - MOST SIMPLE BUT EFFECTIVE
+// 
+// This file is a part of the WINX Library.
+// The use and distribution terms for this software are covered by the
+// Common Public License 1.0 (http://opensource.org/licenses/cpl.php)
+// which can be found in the file CPL.txt at this distribution. By using
+// this software in any fashion, you are agreeing to be bound by the terms
+// of this license. You must not remove this notice, or any other, from
+// this software.
+// 
+// Module: stdext/scopedbg/CheckException.h
+// Creator: xushiwei
+// Email: xushiweizh@gmail.com
+// Contributor: sting.feng@gmail.com
+// Date: 2007-2-4 15:00:59
+// 
+// $Id: $
 // -----------------------------------------------------------------------*/
 #ifndef __STDEXT_SCOPEDBG_CHECKEXCEPTION_H__
 #define __STDEXT_SCOPEDBG_CHECKEXCEPTION_H__

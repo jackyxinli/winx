@@ -12,6 +12,7 @@
 // Module: stdext/scopedbg/ScopeLog.h
 // Creator: xushiwei
 // Email: xushiweizh@gmail.com
+// Contributor: sting.feng@gmail.com
 // Date: 2007-2-2 20:31:46
 // 
 // $Id: $

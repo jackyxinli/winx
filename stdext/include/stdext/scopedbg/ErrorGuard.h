@@ -12,6 +12,7 @@
 // Module: stdext/scopedbg/ErrorGuard.h
 // Creator: xushiwei
 // Email: xushiweizh@gmail.com
+// Contributor: sting.feng@gmail.com
 // Date: 2007-2-1 13:56:50
 // 
 // $Id: $

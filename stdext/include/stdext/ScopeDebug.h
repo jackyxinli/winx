@@ -12,6 +12,7 @@
 // Module: stdext/ScopeDebug.h
 // Creator: xushiwei
 // Email: xushiweizh@gmail.com
+// Contributor: sting.feng@gmail.com
 // Date: 2007-2-3 17:32:38
 // 
 // $Id: $
