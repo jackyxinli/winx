@@ -90,7 +90,7 @@ public:
 			close();
 	}
 
-	int winx_call good()
+	int winx_call good() const
 	{
 		return m_fp != NULL;
 	}
