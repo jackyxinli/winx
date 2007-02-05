@@ -59,24 +59,18 @@ inline void winx_call printScopeMessage(
 {
 	for (;;)
 	{
+		if (msg == msgEnd)
+			return;
 		const CharT* it = std::find(msg, msgEnd, '\n');
+		const CharT* it2 = (it == msgEnd ? msgEnd : it+1);
+		stg.put(rep_count, rep_ch);
+		stg.put(msg, it2 - msg);
 		if (it == msgEnd)
 		{
-			if (msg != msgEnd)
-			{
-				stg.put(rep_count, rep_ch);
-				stg.put(msg, it - msg);
-				stg.put('\n');
-			}
+			stg.put('\n');
 			return;
 		}
-		else
-		{
-			++it;
-			stg.put(rep_count, rep_ch);
-			stg.put(msg, it - msg);
-			msg = it;
-		}
+		msg = it2;
 	}
 }
 
