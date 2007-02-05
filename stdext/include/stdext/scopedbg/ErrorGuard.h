@@ -51,37 +51,67 @@ private:
 	const char* m_func;
 	const char* m_file;
 	const int m_line;
+
+public:
 	FileScopeLog& m_log;
 
 public:
 	_ExceptionGuardBase(const char* func, const char* file, int line)
 		: m_func(func), m_file(file), m_line(line), m_log(WINX_THREAD_LOG)
 	{
-		m_log.enterScope();
 		m_log.trace("%s(%d): Enter '%s'\n", file, line, func);
+		m_log.enterScope();
+	}
+
+	template <class CharT>
+	void winx_call operator()(const CharT* fmt, ...)
+	{
+		try
+		{
+			va_list args;
+			va_start(args, fmt);
+			m_log.vtrace(fmt, args).newline();
+			va_end(args);
+		}
+		catch (...)
+		{
+			m_log.trace("Exception when dumping params\n");
+			m_log.commit();
+		}
 	}
 
 	void winx_call onLeave(bool isNormal)
 	{
-		if (!isNormal)
+		if (isNormal)
+		{
+			m_log.leaveScope(false);
+			m_log.trace("Leave '%s'\n", m_func);
+		}
+		else
 		{
 			char msg[1024];
-			sprintf(msg, "Exception in '%s'.", m_func);
+			sprintf(msg, "Exception in '%s'", m_func);
 			m_log.reportGuardError("Exception", -1, msg, m_file, m_line);
+			m_log.leaveScope();
 		}
-		m_log.leaveScope(!isNormal);
 	}
 };
 
 typedef CheckException<_ExceptionGuardBase> ExceptionGuard;
 
-#ifndef WINX_EXCEPTION_GUARD
-#define WINX_EXCEPTION_GUARD(func)											\
-	std::ExceptionGuard _winx_guard_exception(func, __FILE__, __LINE__)
+#ifndef WINX_GUARD
+#define WINX_GUARD(func)													\
+	std::ExceptionGuard _winx_guard(func, __FILE__, __LINE__);				\
+	_winx_guard
 #endif
 
-#ifndef WINX_FUNCTION_GUARD
-#define WINX_FUNCTION_GUARD		WINX_EXCEPTION_GUARD(__FUNCTION__)
+#ifndef WINX_GUARD_LOG
+#define WINX_GUARD_LOG _winx_guard.m_log
+#endif
+
+#ifndef WINX_EXCEPTION_GUARD
+#define WINX_EXCEPTION_GUARD(func)											\
+	WINX_GUARD(func)
 #endif
 
 // =========================================================================
@@ -102,9 +132,8 @@ inline void winx_call reportGuardWin32Error(
 		(LPSTR)&lpMsgBuf,
 		0, NULL
 		);
-	log.enterScope();
 	log.reportGuardError(general, error, lpMsgBuf, file, line);
-	log.leaveScope();
+	log.commit();
 	::LocalFree(lpMsgBuf);
 }
 
@@ -175,18 +204,32 @@ public:
 	void tearDown() {}
 
 public:
+	void foo()
+	{
+		WINX_GUARD("TestErrorGuard::foo()");
+	}
+
+	HRESULT foo(int arg1, const char* arg2)
+	{
+		LONG result;
+		WINX_GUARD("TestErrorGuard::foo(arg1, arg2)")("Params: arg1=%d, arg2='%s'", arg1, arg2);
+		WINX_WIN32_ERROR_GUARD(result);
+
+		foo();
+
+		::CreateDirectoryA("C:\\", NULL);
+		result = ::GetLastError();
+		throw 0;
+	}
+
 	void test(LogT& log)
 	{
 		ThreadFileScopeLogInit logInit("/__ErrorGuard__.log");
 		{
 			try
 			{
-				LONG result;
-				WINX_EXCEPTION_GUARD("TestErrorGuard::test");
-				WINX_WIN32_ERROR_GUARD(result);
-				::CreateDirectoryA("C:\\", NULL);
-				result = ::GetLastError();
-				throw 0;
+				foo();
+				foo(100, "abc");
 			}
 			catch (...) {
 			}
@@ -198,5 +241,6 @@ public:
 // $Log: $
 
 __NS_STD_END
+
 
 #endif /* __STDEXT_SCOPEDBG_ERRORGUARD_H__ */

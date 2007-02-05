@@ -217,19 +217,16 @@ public:
 		return *this;
 	}
 
-	Log& winx_call trace(const char* fmt, ...)
+	template <class CharT>
+	Log& winx_call vtrace(const CharT* fmt, va_list args)
 	{
 		if (m_stg)
-		{
-			va_list args;
-			va_start(args, fmt);
 			m_stg.putv(fmt, args);
-			va_end(args);
-		}
 		return *this;
 	}
-	
-	Log& winx_call trace(const WCHAR* fmt, ...)
+
+	template <class CharT>
+	Log& winx_call trace(const CharT* fmt, ...)
 	{
 		if (m_stg)
 		{
@@ -249,7 +246,7 @@ private:
 			m_stg.put(&*first, last-first);
 		return *this;
 	}
-		
+	
 	template <class _It>
 	Log& winx_call __printString(_It first, _It last, unsigned char)
 	{
