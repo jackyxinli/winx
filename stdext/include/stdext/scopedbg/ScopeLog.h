@@ -137,17 +137,12 @@ public:
 		m_curr.erase();
 	}
 
-	void winx_call leaveScope(bool fCommit = true)
+	void winx_call leaveScope()
 	{
 		WINX_ASSERT( !m_scopes.empty() );
 
-		if (fCommit)
-			commit();
-
-		if (m_scopes.empty()) {
-			m_curr.erase();
-		}
-		else {
+		if (!m_scopes.empty())
+		{
 			m_curr.assign(m_scopes.back());
 			m_scopes.pop_back();
 		}
@@ -227,13 +222,31 @@ public:
 		m_stg.enterScope();
 	}
 
-	void winx_call leaveScope(bool fCommit = true)
+	void winx_call leaveScope()
 	{
-		m_stg.leaveScope(fCommit);
+		m_stg.leaveScope();
 	}
 
 	void winx_call commit()
 	{
+		m_stg.commit();
+	}
+
+	void winx_call traceScopeMessage(
+		const char* scope,
+		const char* operation,
+		const char* file, int line)
+	{
+		trace("%s(%d): %s '%s'\n", file, line, operation, scope);
+	}
+	
+	void winx_call reportGuardError(
+		const char* general,
+		const int error,
+		const char* detail,
+		const char* file, int line)
+	{
+		trace("%s(%d):\n\t%s[%d] - %s\n", file, line, general, error, detail);
 		m_stg.commit();
 	}
 };
@@ -276,7 +289,7 @@ public:
 // =========================================================================
 // class ThreadLog
 
-class _LogFileName
+class ThreadLogName
 {
 public:
 	static BOOL testAndCreateDir(LPCSTR szPath)
@@ -300,11 +313,12 @@ public:
 		sprintf(
 			szFileName, "[%d-%d-%d][TID=%.4x].log",
 			gmt.wYear, gmt.wMonth, gmt.wDay, GetCurrentThreadId());
+
 		return szFile;
 	}
 };
 
-template <class LogT, class NameT = _LogFileName>
+template <class LogT, class NameT = ThreadLogName>
 class ThreadLog
 {
 private:
@@ -335,14 +349,6 @@ public:
 		WINX_ASSERT(s_log != NULL);
 		return *s_log;
 	}
-
-	static LogT& winx_call instance(bool doInit)
-	{
-		WINX_ASSERT(doInit);
-		if (s_log == NULL)
-			init();
-		return *s_log;
-	}
 };
 
 template <class LogT, class NameT>
@@ -351,7 +357,7 @@ LogT* ThreadLog<LogT, NameT>::s_log;
 // -------------------------------------------------------------------------
 // class ThreadLogInit
 
-template <class LogT, class NameT = _LogFileName>
+template <class LogT, class NameT = ThreadLogName>
 class ThreadLogInit
 {
 private:
@@ -406,9 +412,11 @@ public:
 				slog.print("level 2 message");
 				slog.enterScope();
 					slog.print("level 3 message");
+				slog.commit();
 				slog.leaveScope();
 				slog.print("message discard!!!");
-			slog.leaveScope(false);
+			slog.leaveScope();
+		slog.commit();
 		slog.leaveScope();
 		slog.print("done!");
 	}
@@ -422,7 +430,8 @@ public:
 	void testThreadLog(LogT& log)
 	{
 		typedef ThreadLog<FileScopeLog, _NameT> ThreadLogT;
-		FileScopeLog& slog = ThreadLogT::instance(true);
+		ThreadLogT::init();
+		FileScopeLog& slog = ThreadLogT::instance();
 		slog.print("message in global scope!!!");
 		slog.enterScope();
 			slog.print("message in level 1 scope!");
@@ -430,9 +439,11 @@ public:
 				slog.print("level 2 message");
 				slog.enterScope();
 					slog.print("level 3 message");
+				slog.commit();
 				slog.leaveScope();
 				slog.print("message discard!!!");
-			slog.leaveScope(false);
+			slog.leaveScope();
+		slog.commit();
 		slog.leaveScope();
 		slog.print("done!");
 		ThreadLogT::term();
@@ -449,9 +460,11 @@ public:
 				slog.print("level 2 message");
 				slog.enterScope();
 					slog.print("level 3 message");
+				slog.commit();
 				slog.leaveScope();
 				slog.print("message discard!!!");
-			slog.leaveScope(false);
+			slog.leaveScope();
+		slog.commit();
 		slog.leaveScope();
 		slog.print("done!");
 	}

@@ -39,8 +39,10 @@ __NS_STD_BEGIN
 typedef ThreadLog<FileScopeLog>	ThreadFileScopeLog;
 typedef ThreadLogInit<FileScopeLog>	ThreadFileScopeLogInit;
 
-#define WINX_THREAD_LOG				std::ThreadFileScopeLog::instance(true)
+#define WINX_THREAD_LOG_INIT()		std::ThreadFileScopeLog::init()
 #define WINX_THREAD_LOG_TERM()		std::ThreadFileScopeLog::term()
+
+#define WINX_THREAD_LOG				std::ThreadFileScopeLog::instance()
 
 // =========================================================================
 // class ExceptionGuard
@@ -59,7 +61,7 @@ public:
 	_ExceptionGuardBase(const char* func, const char* file, int line)
 		: m_func(func), m_file(file), m_line(line), m_log(WINX_THREAD_LOG)
 	{
-		m_log.trace("%s(%d): Enter '%s'\n", file, line, func);
+		m_log.traceScopeMessage(m_func, "Enter", m_file, m_line);
 		m_log.enterScope();
 	}
 
@@ -75,24 +77,22 @@ public:
 		}
 		catch (...)
 		{
-			m_log.trace("Exception when dumping params\n");
-			m_log.commit();
+			m_log.reportGuardError("Exception", 0, "Exception when dumping params", m_file, m_line);
 		}
 	}
 
 	void winx_call onLeave(bool isNormal)
 	{
-		if (isNormal)
-		{
-			m_log.leaveScope(false);
-			m_log.trace("Leave '%s'\n", m_func);
-		}
-		else
+		if (!isNormal)
 		{
 			char msg[1024];
 			sprintf(msg, "Exception in '%s'", m_func);
-			m_log.reportGuardError("Exception", -1, msg, m_file, m_line);
-			m_log.leaveScope();
+			m_log.reportGuardError("Exception", 0, msg, m_file, m_line);
+		}
+		m_log.leaveScope();
+		if (isNormal)
+		{
+			m_log.traceScopeMessage(m_func, "Leave", m_file, m_line);
 		}
 	}
 };
@@ -133,7 +133,6 @@ inline void winx_call reportGuardWin32Error(
 		0, NULL
 		);
 	log.reportGuardError(general, error, lpMsgBuf, file, line);
-	log.commit();
 	::LocalFree(lpMsgBuf);
 }
 
