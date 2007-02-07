@@ -59,6 +59,56 @@ __WINX_BEGIN
 template <class T>
 class WinDataExchange : public WTL::CWinDataExchange<T>
 {
+private:
+	typedef WTL::CWinDataExchange<T> Base;
+
+public:
+	using Base::DDX_Text;
+
+	BOOL DDX_Text(
+		UINT nID, std::basic_string<TCHAR>& strText,
+		int /*cbSize*/, BOOL bSave, BOOL bValidate = FALSE, int nLength = 0)
+	{
+		T* pT = static_cast<T*>(this);
+		BOOL bSuccess = TRUE;
+
+		if(bSave)
+		{
+			HWND hWndCtrl = pT->GetDlgItem(nID);
+			int nLen = ::GetWindowTextLength(hWndCtrl);
+			int nRetLen = -1;
+			strText.resize(nLen);
+			LPTSTR lpstr = &strText[0];
+			if(lpstr != NULL)
+			{
+				nRetLen = ::GetWindowText(hWndCtrl, lpstr, nLen + 1);
+			}
+			if(nRetLen < nLen)
+				bSuccess = FALSE;
+		}
+		else
+		{
+			bSuccess = pT->SetDlgItemText(nID, strText.c_str());
+		}
+
+		if(!bSuccess)
+		{
+			pT->OnDataExchangeError(nID, bSave);
+		}
+		else if(bSave && bValidate)   // validation
+		{
+			ATLASSERT(nLength > 0);
+			if(strText.size() > nLength)
+			{
+				_XData data = { ddxDataText };
+				data.textData.nLength = strText.size();
+				data.textData.nMaxLength = nLength;
+				pT->OnDataValidateError(nID, bSave, data);
+				bSuccess = FALSE;
+			}
+		}
+		return bSuccess;
+	}
 };
 
 #define WINX_DDX_BEGIN()						BEGIN_DDX_MAP(void)
