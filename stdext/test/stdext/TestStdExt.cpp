@@ -26,6 +26,7 @@
 #include <stdext/memory/GC.h>
 #include <stdext/FileMapping.h>
 #include <stdext/ScopeDebug.h>
+#include <stdext/Registry.h>
 #pragma comment(lib, "shlwapi.lib")
 
 // -------------------------------------------------------------------------
@@ -33,10 +34,11 @@
 
 int main()
 {
-	WINX_TEST_APP(std::ErrorLog, "TestErrorGuard", "");
+	WINX_TEST_APP(std::ErrorLog, "TestWinRegKey", "");
 
 	WINX_TEST_CLASS(TestPool);
 	WINX_TEST_CLASS(TestFinder);
+	WINX_TEST_CLASS(std::TestWinRegKey);
 	WINX_TEST_CLASS(std::TestErrorGuard);
 	WINX_TEST_CLASS(std::TestScopeLog);
 	WINX_TEST_CLASS(std::TestCheckException);
