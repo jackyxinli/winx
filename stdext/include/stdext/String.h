@@ -33,6 +33,12 @@
 
 __NS_STD_BEGIN
 
+#if defined(UNICODE)
+typedef std::basic_string<WCHAR> tstring;
+#else
+typedef std::basic_string<char> tstring;
+#endif
+
 // -------------------------------------------------------------------------
 
 typedef std::basic_string<char> AnsiString;
