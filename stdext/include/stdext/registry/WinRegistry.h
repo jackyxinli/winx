@@ -186,6 +186,11 @@ public:
 		return ::RegSetValueEx(m_hKey, pszValueName, NULL, REG_DWORD, reinterpret_cast<const BYTE*>(&dwValue), sizeof(DWORD));
 	}
 
+	LONG winx_call putInt(LPCTSTR pszValueName, int nValue)
+	{
+		return putDWord(pszValueName, (DWORD)nValue);
+	}
+
 	LONG winx_call putQWord(LPCTSTR pszValueName, ULONGLONG qwValue)
 	{
 		WINX_ASSERT(m_hKey != NULL);
@@ -291,6 +296,14 @@ public:
 			return ERROR_INVALID_DATA;
 
 		return ERROR_SUCCESS;
+	}
+
+	LONG winx_call getInt(
+		__in_z_opt LPCTSTR pszValueName,
+		__out int& nValue)
+	{
+		WINX_ASSERT( sizeof(int) == sizeof(DWORD) ); //@@todo: 64bits cpu
+		return getDWord(pszValueName, (DWORD&)nValue);
 	}
 
 	LONG winx_call getDWord(
