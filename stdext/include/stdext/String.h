@@ -50,7 +50,7 @@ inline _It winx_call end(_It it)
 }
 
 template <class _It>
-inline _It winx_call length(_It it)
+inline size_t winx_call length(_It it)
 {
 	_It first = it;
 	while (*it)

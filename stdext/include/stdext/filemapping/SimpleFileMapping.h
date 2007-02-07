@@ -40,7 +40,7 @@ struct FileMappingReadWrite
 };
 
 // -------------------------------------------------------------------------
-// struct FileMappingReadWrite
+// struct FileMappingReadOnly
 
 struct FileMappingReadOnly
 {

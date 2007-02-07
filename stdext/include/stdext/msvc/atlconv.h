@@ -81,19 +81,19 @@ inline LPSTR __stdcall _winx_W2AHelper(LPSTR lpa, LPCWSTR lpw, int nWideChars)
 // WINX_T2CA/WINX_A2CT/WINX_T2CW/WINX_W2CT
 
 #ifdef _UNICODE
-	#define WINX_T2A W2A
-	#define WINX_A2T A2W
-	#define WINX_T2CA W2CA
-	#define WINX_A2CT A2CW
+	#define WINX_T2A WINX_W2A
+	#define WINX_A2T WINX_A2W
+	#define WINX_T2CA WINX_W2CA
+	#define WINX_A2CT WINX_A2CW
 	inline LPWSTR WINX_T2W(LPTSTR lp) { return lp; }
 	inline LPTSTR WINX_W2T(LPWSTR lp) { return lp; }
 	inline LPCWSTR WINX_T2CW(LPCTSTR lp) { return lp; }
 	inline LPCTSTR WINX_W2CT(LPCWSTR lp) { return lp; }
 #else
-	#define WINX_T2W A2W
-	#define WINX_W2T W2A
-	#define WINX_T2CW A2CW
-	#define WINX_W2CT W2CA
+	#define WINX_T2W WINX_A2W
+	#define WINX_W2T WINX_W2A
+	#define WINX_T2CW WINX_A2CW
+	#define WINX_W2CT WINX_W2CA
 	inline LPSTR WINX_T2A(LPTSTR lp) { return lp; }
 	inline LPTSTR WINX_A2T(LPSTR lp) { return lp; }
 	inline LPCSTR WINX_T2CA(LPCTSTR lp) { return lp; }
