@@ -40,11 +40,6 @@ typedef std::basic_string<char> tstring;
 #endif
 
 // -------------------------------------------------------------------------
-
-typedef std::basic_string<char> AnsiString;
-typedef std::basic_string<WCHAR> UniString;
-
-// -------------------------------------------------------------------------
 // end, length
 
 template <class _It>

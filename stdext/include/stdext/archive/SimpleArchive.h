@@ -96,9 +96,9 @@ public:
 		return m_fp ? S_OK : E_INVALIDARG;
 	}
 
-	HRESULT winx_call put(const UniString& str)
+	HRESULT winx_call put(const std::basic_string<WCHAR>& str)
 	{
-		typedef UniString::value_type CharType;
+		typedef WCHAR CharType;
 		const UINT32 cchStr = str.size();
 		put((const char*)&cchStr, sizeof(cchStr));
 		put((const char*)str.c_str(), cchStr*sizeof(CharType));
@@ -190,18 +190,18 @@ public:
 		return m_fp ? S_OK : E_INVALIDARG;
 	}
 	
-	HRESULT winx_call get(UniString& str)
+	HRESULT winx_call get(std::basic_string<WCHAR>& str)
 	{
 		UINT32 cchStr;
 		if (get((char*)&cchStr, sizeof(cchStr)) != sizeof(cchStr))
 			return S_FALSE;
 
-		typedef UniString::value_type CharType;
+		typedef WCHAR CharType;
 		UINT32 cbStr = cchStr*sizeof(CharType);
 		str.resize(cchStr);
 		if (get((char*)&str[0], cbStr) != cbStr)
 		{
-			WINX_REPORT("SimpleReadArchive::get(UniString& str) Error - Unexpected Data");
+			WINX_REPORT("SimpleReadArchive::get(StringT& str) Error - Unexpected Data");
 			return E_UNEXPECTED;
 		}
 		return S_OK;

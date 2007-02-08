@@ -19,10 +19,6 @@
 #ifndef __STDEXT_ARCHIVE_REGARCHIVE_H__
 #define __STDEXT_ARCHIVE_REGARCHIVE_H__
 
-#ifndef __STDEXT_STRING_H__
-#include "../String.h" // for UniString type
-#endif
-
 #ifndef __ATLBASE_H__
 #include <atlbase.h>
 #endif
@@ -42,7 +38,7 @@ __NS_STD_BEGIN
 
 template <class RegKeyType>
 HRESULT winx_call RegWriteString(
-	RegKeyType& regKey, UINT index, const UniString& str)
+	RegKeyType& regKey, UINT index, const std::basic_string<WCHAR>& str)
 {
 	TCHAR szName[16];
 	szName[0] = _WINX_REG_STRING_PREFIX;
@@ -70,7 +66,7 @@ HRESULT winx_call RegWriteString(
 // RegReadString
 
 template <class RegKeyType>
-HRESULT winx_call RegReadString(RegKeyType& regKey, UINT index, UniString& str)
+HRESULT winx_call RegReadString(RegKeyType& regKey, UINT index, std::basic_string<WCHAR>& str)
 {
 	TCHAR szName[16];
 	szName[0] = _WINX_REG_STRING_PREFIX;
@@ -156,7 +152,7 @@ public:
 			lpszClass, dwOptions, samDesired, lpSecAttr, lpdwDisposition));
 	}
 
-	HRESULT winx_call put(const UniString& str) {
+	HRESULT winx_call put(const std::basic_string<WCHAR>& str) {
 		return RegWriteString(m_regKey, ++m_nCount, str);
 	}
 
@@ -199,7 +195,7 @@ public:
 		return HRESULT_FROM_WIN32(m_regKey.Open(hKeyParent, lpszKeyName));
 	}
 	
-	HRESULT winx_call get(UniString& str) {
+	HRESULT winx_call get(std::basic_string<WCHAR>& str) {
 		return RegReadString(m_regKey, ++m_nCount, str);
 	}
 	
@@ -210,12 +206,6 @@ public:
 
 // -------------------------------------------------------------------------
 // $Log: RegArchive.h,v $
-// Revision 1.1  2006/10/18 12:13:39  xushiwei
-// stdext as independent component
-//
-// Revision 1.2  2006/08/26 09:12:37  xushiwei
-// vs2005 support
-//
 // Revision 1.1  2006/08/26 03:19:44  xushiwei
 // STL-Extension:
 //   Archive(SimpleWriteArchive, SimpleReadArchive, MemSeqWriteArchive, RegWriteArchive, RegReadArchive)
