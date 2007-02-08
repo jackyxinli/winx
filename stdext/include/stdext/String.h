@@ -329,6 +329,24 @@ inline xchar* winx_call strecpy(xchar* pszDest, const xchar* pszSrc)
 }
 
 // -------------------------------------------------------------------------
+// replaceText
+
+template <class StringT>
+inline void winx_call replaceText(
+	StringT& szText, const StringT& szFindText, const StringT& szReplaceText)
+{
+	typedef typename StringT::size_type size_type;
+	size_type pos = 0;
+	while (
+		(pos = szText.find(szFindText, pos)) != StringT::npos
+		)
+	{
+		szText.replace(pos, szFindText.size(), szReplaceText);
+		pos += szReplaceText.size();
+	}
+}
+
+// -------------------------------------------------------------------------
 // class TestString
 
 template <class LogT>

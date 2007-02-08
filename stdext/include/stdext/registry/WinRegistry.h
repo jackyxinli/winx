@@ -174,6 +174,20 @@ public:
 			(std::length(pszValue)+1) * sizeof(TCHAR));
 	}
 
+	LONG winx_call putString(
+		__in_z LPCTSTR pszValueName,
+		__in const tstring& strValue,
+		__in DWORD dwType = REG_SZ)
+	{
+		WINX_ASSERT(m_hKey != NULL);
+		WINX_ASSERT((dwType == REG_SZ) || (dwType == REG_EXPAND_SZ));
+
+		return ::RegSetValueEx(
+			m_hKey, pszValueName, NULL, dwType,
+			reinterpret_cast<const BYTE*>(strValue.c_str()),
+			(strValue.size()+1) * sizeof(TCHAR));
+	}
+
 	LONG winx_call putBinary(LPCTSTR pszValueName, const void* pData, ULONG nBytes)
 	{
 		WINX_ASSERT(m_hKey != NULL);
@@ -219,6 +233,22 @@ public:
 public:
 	LONG winx_call getString(
 		__in_z_opt LPCTSTR pszValueName,
+		__out tstring& strValue)
+	{
+		DWORD dwType;
+		ULONG nBytes = 0;
+		LONG lRes = ::RegQueryValueEx(m_hKey, pszValueName, NULL, &dwType, NULL, &nBytes);
+		if (lRes != ERROR_SUCCESS)
+			return lRes;
+		if(dwType != REG_SZ && dwType != REG_EXPAND_SZ || nBytes < 2)
+			return ERROR_INVALID_DATA;
+		
+		strValue.resize(nBytes/sizeof(TCHAR)-1);
+		return ::RegQueryValueEx(m_hKey, pszValueName, NULL, &dwType, (BYTE*)&strValue[0], &nBytes);
+	}
+
+	LONG winx_call getString(
+		__in_z_opt LPCTSTR pszValueName,
 		__out_ecount_part_z_opt(*pnChars, *pnChars) LPTSTR pszValue,
 		__inout ULONG* pnChars)
 	{
@@ -231,7 +261,7 @@ public:
 
 		nBytes = (*pnChars)*sizeof(TCHAR);
 		*pnChars = 0;
-		lRes = ::RegQueryValueEx(m_hKey, pszValueName, NULL, &dwType, reinterpret_cast<LPBYTE>(pszValue),&nBytes);
+		lRes = ::RegQueryValueEx(m_hKey, pszValueName, NULL, &dwType, reinterpret_cast<LPBYTE>(pszValue), &nBytes);
 		
 		if (lRes != ERROR_SUCCESS)
 		{
@@ -444,6 +474,9 @@ public:
 
 		WinRegWriteKey(HKEY_CURRENT_USER, _WINX_TEST_KEY)
 			.putGuid(WINX_TEXT("guid"), IID_IClassFactory);
+
+		WinRegWriteKey(HKEY_CURRENT_USER, _WINX_TEST_KEY)
+			.putString(WINX_TEXT("string"), WINX_TEXT("abc"));
 	}
 
 	void testRead(LogT& log)
@@ -457,6 +490,11 @@ public:
 		GUID iid;
 		key.getGuid(WINX_TEXT("guid"), iid);
 		AssertExp(iid == IID_IClassFactory);
+
+		tstring str;
+		key.getString(WINX_TEXT("string"), str);
+		AssertExp(str.size() == 3);
+		AssertExp(str == WINX_TEXT("abc"));
 	}
 };
 
