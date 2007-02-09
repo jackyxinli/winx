@@ -19,8 +19,8 @@
 #ifndef __WINX_EXT_CREDITSTATIC_H__
 #define __WINX_EXT_CREDITSTATIC_H__
 
-#ifndef __MFCPORT_AFX_H__
-#include "../../mfcport/afx.h"
+#ifndef __WINX_MFCPORT_H__
+#include "../MfcPort.h"
 #endif
 
 namespace winx {	//@@code insert
