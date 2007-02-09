@@ -56,6 +56,12 @@ __WINX_BEGIN
 // =========================================================================
 // WINX DDX - DataExchange
 
+#define _WINX_DDX_USING_BASE				\
+	using Base::DDX_Text;					\
+	using Base::DDX_Int;					\
+	using Base::DDX_Check;					\
+	using Base::DDX_Radio;
+
 template <class T>
 class WinDataExchange : public WTL::CWinDataExchange<T>
 {
@@ -63,11 +69,13 @@ private:
 	typedef WTL::CWinDataExchange<T> Base;
 
 public:
-	using Base::DDX_Text;
+	_WINX_DDX_USING_BASE
+	typedef WinDataExchange<T> DataExchangeClass;
 
+public:
 	BOOL DDX_Text(
-		UINT nID, std::basic_string<TCHAR>& strText,
-		int /*cbSize*/, BOOL bSave, BOOL bValidate = FALSE, int nLength = 0)
+		UINT nID, std::tstring& strText, int /*cbSize*/, BOOL bSave,
+		BOOL bValidate = FALSE, int nLength = 0)
 	{
 		T* pT = static_cast<T*>(this);
 		BOOL bSuccess = TRUE;
@@ -80,9 +88,7 @@ public:
 			strText.resize(nLen);
 			LPTSTR lpstr = &strText[0];
 			if(lpstr != NULL)
-			{
 				nRetLen = ::GetWindowText(hWndCtrl, lpstr, nLen + 1);
-			}
 			if(nRetLen < nLen)
 				bSuccess = FALSE;
 		}
@@ -97,7 +103,7 @@ public:
 		}
 		else if(bSave && bValidate)   // validation
 		{
-			ATLASSERT(nLength > 0);
+			WINX_ASSERT(nLength > 0);
 			if(strText.size() > nLength)
 			{
 				_XData data = { ddxDataText };
