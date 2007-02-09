@@ -518,6 +518,27 @@ public:
 		}
 	}
 	
+	template <class ArgT>
+	static WindowClass* winx_call SubclassOnce(HWND hWnd, ArgT arg)
+	{
+		WINX_ASSERT(!WindowClass::StackWindowObject);
+
+		if (WindowClass::StackWindowObject) {
+			return NULL;
+		}
+		else {
+			void* lPrevUserData = WindowMap::GetWindow(hWnd);
+			if (lPrevUserData != 0) {
+				return (WindowClass*)lPrevUserData;
+			}
+			else {
+				WindowClass* pWnd = WINX_NEW(WindowClass)(arg);
+				WINX_VERIFY(pWnd->Subclass(hWnd));
+				return pWnd;
+			}
+		}
+	}
+
 	static WindowClass* winx_call SubclassDlgItemOnce(HWND hDlg, int nIDDlgItem)
 	{
 		HWND hDlgItem = ::GetDlgItem(hDlg, nIDDlgItem);

@@ -34,6 +34,7 @@
 //	- @@bugfix: 高版本的ATL::CAxDialogImpl将ActiveX创建挪到了WM_INITDIALOG
 
 #define _WTL_NO_AUTOMATIC_NAMESPACE
+#define _WTL_USE_CSTRING
 
 #ifndef __ATLBASE_H__
 	#if defined(WINX_USE_ATLPORT)
