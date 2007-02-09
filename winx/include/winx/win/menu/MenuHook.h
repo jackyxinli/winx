@@ -385,10 +385,9 @@ public:
 			LONG style;
 			style = ((LPCREATESTRUCT)lpCWP->lParam)->style;
 			if (WS_DLGFRAME & style)
-				m_extImpl->OnInitDlgFrame(lpCWP->hwnd);
-			
-			if (WS_POPUP & style)
 			{
+				m_extImpl->OnInitDlgFrame(lpCWP->hwnd);
+
 				TCHAR szClass[16];
 				if (GetClassName(hWnd, szClass, countof(szClass)) == 6 &&
 					_tcscmp(szClass, WINX_TEXT("#32768")) == 0)
