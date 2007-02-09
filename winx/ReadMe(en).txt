@@ -21,6 +21,8 @@ library. However, it is not SIMPLE.
 	©À©¤winx
 	©¦  ©À©¤include
 	©¦  ©¦  ©¸©¤winx
+	©¦  ©À©¤bin
+	©¦  ©¦  ©¸©¤winxwiz60.awx
 	©¦  ©À©¤lib
 	©¦  ©¸©¤src
 	©À©¤winxdoc
@@ -50,6 +52,9 @@ winx/include/
 
 winx/lib/
   The WINX static library. At most time it is not needed.
+
+winx/bin/winxwiz60.awx
+  The WINX application wizard, for Visual C++ 6.0
 
 winx/src/
   The source code of the WINX static library.

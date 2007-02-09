@@ -19,6 +19,8 @@ WINX关注一个目标：简单而高效。
 	├─winx
 	│  ├─include
 	│  │  └─winx
+	│  ├─bin
+	│  │  └─winxwiz60.awx
 	│  ├─lib
 	│  └─src
 	├─winxdoc
@@ -48,6 +50,9 @@ winx/include/
 
 winx/lib/
   WINX静态库。因为WINX多数代码均在include目录，故此通常情况下并不需要它。
+
+winx/bin/winxwiz60.awx
+  WINX应用程序向导，用于Visual C++ 6.0
 
 winx/src/
   WINX静态库的源代码。对WINX的使用者而言并不需要。

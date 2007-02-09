@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="gb2312"?>
 <VisualStudioProject
 	ProjectType="Visual C++"
-	Version="8.00"
+	Version="7.10"
 	Name="winx"
 	ProjectGUID="{504F8450-E305-4FA5-8231-B4960A206588}"
 	>
@@ -15,8 +15,8 @@
 	<Configurations>
 		<Configuration
 			Name="Debug|Win32"
-			OutputDirectory=".\src/Debug2005"
-			IntermediateDirectory=".\src/Debug2005"
+			OutputDirectory="./Debug2003"
+			IntermediateDirectory="./Debug2003"
 			ConfigurationType="4"
 			InheritedPropertySheets="$(VCInstallDir)VCProjectDefaults\UpgradeFromVC60.vsprops"
 			UseOfMFC="0"
@@ -41,15 +41,15 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories="include"
+				AdditionalIncludeDirectories="../include"
 				PreprocessorDefinitions="WIN32;_DEBUG;_LIB"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
 				RuntimeLibrary="3"
-				PrecompiledHeaderFile=".\src/Debug2005/winx.pch"
-				AssemblerListingLocation=".\src/Debug2005/"
-				ObjectFile=".\src/Debug2005/"
-				ProgramDataBaseFileName=".\src/Debug2005/"
+				PrecompiledHeaderFile="./Debug2003/winx.pch"
+				AssemblerListingLocation="./Debug2003/"
+				ObjectFile="./Debug2003/"
+				ProgramDataBaseFileName="./Debug2003/"
 				WarningLevel="3"
 				SuppressStartupBanner="true"
 				DebugInformationFormat="4"
@@ -67,7 +67,7 @@
 			/>
 			<Tool
 				Name="VCLibrarianTool"
-				OutputFile="lib/winx-mtdll-dbg-2005.lib"
+				OutputFile="../lib/winx-mtdll-dbg-2003.lib"
 				SuppressStartupBanner="true"
 			/>
 			<Tool
@@ -79,7 +79,7 @@
 			<Tool
 				Name="VCBscMakeTool"
 				SuppressStartupBanner="true"
-				OutputFile=".\src/Debug2005/winx.bsc"
+				OutputFile="./Debug2003/winx.bsc"
 			/>
 			<Tool
 				Name="VCFxCopTool"
@@ -90,8 +90,8 @@
 		</Configuration>
 		<Configuration
 			Name="DebugUnicode|Win32"
-			OutputDirectory=".\src/DebugUnicode2005"
-			IntermediateDirectory=".\src/DebugUnicode2005"
+			OutputDirectory="./DebugUnicode2003"
+			IntermediateDirectory="./DebugUnicode2003"
 			ConfigurationType="4"
 			InheritedPropertySheets="$(VCInstallDir)VCProjectDefaults\UpgradeFromVC60.vsprops"
 			UseOfMFC="0"
@@ -116,15 +116,15 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories="include"
+				AdditionalIncludeDirectories="../include"
 				PreprocessorDefinitions="WIN32;_DEBUG;UNICODE;_LIB"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
 				RuntimeLibrary="3"
-				PrecompiledHeaderFile=".\src/DebugUnicode2005/winx.pch"
-				AssemblerListingLocation=".\src/DebugUnicode2005/"
-				ObjectFile=".\src/DebugUnicode2005/"
-				ProgramDataBaseFileName=".\src/DebugUnicode2005/"
+				PrecompiledHeaderFile="./DebugUnicode2003/winx.pch"
+				AssemblerListingLocation="./DebugUnicode2003/"
+				ObjectFile="./DebugUnicode2003/"
+				ProgramDataBaseFileName="./DebugUnicode2003/"
 				WarningLevel="3"
 				SuppressStartupBanner="true"
 				DebugInformationFormat="4"
@@ -142,7 +142,7 @@
 			/>
 			<Tool
 				Name="VCLibrarianTool"
-				OutputFile="lib/winx-mtdll-dbg-u-2005.lib"
+				OutputFile="../lib/winx-mtdll-dbg-u-2003.lib"
 				SuppressStartupBanner="true"
 			/>
 			<Tool
@@ -154,7 +154,7 @@
 			<Tool
 				Name="VCBscMakeTool"
 				SuppressStartupBanner="true"
-				OutputFile=".\src/DebugUnicode2005/winx.bsc"
+				OutputFile="./DebugUnicode2003/winx.bsc"
 			/>
 			<Tool
 				Name="VCFxCopTool"
@@ -165,8 +165,8 @@
 		</Configuration>
 		<Configuration
 			Name="Release|Win32"
-			OutputDirectory=".\src/Release2005"
-			IntermediateDirectory=".\src/Release2005"
+			OutputDirectory="./Release2003"
+			IntermediateDirectory="./Release2003"
 			ConfigurationType="4"
 			InheritedPropertySheets="$(VCInstallDir)VCProjectDefaults\UpgradeFromVC60.vsprops"
 			UseOfMFC="0"
@@ -192,15 +192,15 @@
 				Name="VCCLCompilerTool"
 				Optimization="2"
 				InlineFunctionExpansion="1"
-				AdditionalIncludeDirectories="include"
+				AdditionalIncludeDirectories="../include"
 				PreprocessorDefinitions="WIN32;NDEBUG;_LIB"
 				StringPooling="true"
 				RuntimeLibrary="2"
 				EnableFunctionLevelLinking="true"
-				PrecompiledHeaderFile=".\src/Release2005/winx.pch"
-				AssemblerListingLocation=".\src/Release2005/"
-				ObjectFile=".\src/Release2005/"
-				ProgramDataBaseFileName=".\src/Release2005/"
+				PrecompiledHeaderFile="./Release2003/winx.pch"
+				AssemblerListingLocation="./Release2003/"
+				ObjectFile="./Release2003/"
+				ProgramDataBaseFileName="./Release2003/"
 				WarningLevel="3"
 				SuppressStartupBanner="true"
 			/>
@@ -217,7 +217,7 @@
 			/>
 			<Tool
 				Name="VCLibrarianTool"
-				OutputFile="lib/winx-mtdll-rls-2005.lib"
+				OutputFile="../lib/winx-mtdll-rls-2003.lib"
 				SuppressStartupBanner="true"
 			/>
 			<Tool
@@ -229,7 +229,7 @@
 			<Tool
 				Name="VCBscMakeTool"
 				SuppressStartupBanner="true"
-				OutputFile=".\src/Release2005/winx.bsc"
+				OutputFile="./Release2003/winx.bsc"
 			/>
 			<Tool
 				Name="VCFxCopTool"
@@ -240,8 +240,8 @@
 		</Configuration>
 		<Configuration
 			Name="ReleaseUnicode|Win32"
-			OutputDirectory=".\src/ReleaseUnicode2005"
-			IntermediateDirectory=".\src/ReleaseUnicode2005"
+			OutputDirectory="./ReleaseUnicode2003"
+			IntermediateDirectory="./ReleaseUnicode2003"
 			ConfigurationType="4"
 			InheritedPropertySheets="$(VCInstallDir)VCProjectDefaults\UpgradeFromVC60.vsprops"
 			UseOfMFC="0"
@@ -267,15 +267,15 @@
 				Name="VCCLCompilerTool"
 				Optimization="2"
 				InlineFunctionExpansion="1"
-				AdditionalIncludeDirectories="include"
+				AdditionalIncludeDirectories="../include"
 				PreprocessorDefinitions="WIN32;NDEBUG;UNICODE;_LIB"
 				StringPooling="true"
 				RuntimeLibrary="2"
 				EnableFunctionLevelLinking="true"
-				PrecompiledHeaderFile=".\src/ReleaseUnicode2005/winx.pch"
-				AssemblerListingLocation=".\src/ReleaseUnicode2005/"
-				ObjectFile=".\src/ReleaseUnicode2005/"
-				ProgramDataBaseFileName=".\src/ReleaseUnicode2005/"
+				PrecompiledHeaderFile="./ReleaseUnicode2003/winx.pch"
+				AssemblerListingLocation="./ReleaseUnicode2003/"
+				ObjectFile="./ReleaseUnicode2003/"
+				ProgramDataBaseFileName="./ReleaseUnicode2003/"
 				WarningLevel="3"
 				SuppressStartupBanner="true"
 			/>
@@ -292,7 +292,7 @@
 			/>
 			<Tool
 				Name="VCLibrarianTool"
-				OutputFile="lib/winx-mtdll-rls-u-2005.lib"
+				OutputFile="../lib/winx-mtdll-rls-u-2003.lib"
 				SuppressStartupBanner="true"
 			/>
 			<Tool
@@ -304,7 +304,7 @@
 			<Tool
 				Name="VCBscMakeTool"
 				SuppressStartupBanner="true"
-				OutputFile=".\src/ReleaseUnicode2005/winx.bsc"
+				OutputFile="./ReleaseUnicode2003/winx.bsc"
 			/>
 			<Tool
 				Name="VCFxCopTool"
@@ -318,11 +318,11 @@
 	</References>
 	<Files>
 		<File
-			RelativePath="src\Config.h"
+			RelativePath="Config.h"
 			>
 		</File>
 		<File
-			RelativePath="src\shell\ShellGuid.cpp"
+			RelativePath="shell\ShellGuid.cpp"
 			>
 			<FileConfiguration
 				Name="Debug|Win32"
