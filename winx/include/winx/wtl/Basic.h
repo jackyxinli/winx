@@ -85,6 +85,10 @@ namespace WTL { typedef _WTL_CDC CDC; }
 // --> 在VC++ 6.0下，奇怪虽然有namespace WTL，但WTL::CDC还是与MFC的CDC编译冲突。
 #endif
 
+#if defined(WINX_USE_APPMODULE)
+extern WTL::CAppModule _Module;
+#endif
+
 #ifndef __ATLWIN_H__
 	#if defined(WINX_USE_ATLPORT)
 		#include "../../../../atlport/include/atlwin.h"
