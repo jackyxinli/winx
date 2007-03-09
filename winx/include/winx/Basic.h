@@ -213,11 +213,19 @@ public:
 // -------------------------------------------------------------------------
 // class CComModuleInit - ATL Helper
 
+#if (_ATL_VER > 0x0300)
+
+class CComModuleInit
+{
+};
+
+#else
+
 class CComModuleInit
 {
 public:
 	CComModuleInit(
-		_ATL_OBJMAP_ENTRY* p = NULL,
+		ATL::_ATL_OBJMAP_ENTRY* p = NULL,
 		HINSTANCE hInst = GetThisModule(),
 		const GUID* plibid = NULL)
 	{
@@ -228,6 +236,8 @@ public:
 		_Module.Term();
 	}
 };
+
+#endif
 
 // -------------------------------------------------------------------------
 // CAppModuleInit - WTL Helper

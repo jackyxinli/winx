@@ -166,10 +166,12 @@ public:
 		pfn.pfn = closure.pEvent;
 		pVtable = &pFunc;
 		pFunc = &m_mov;
+#pragma warning(disable:4311)
 		m_mov = 0x042444C7;
 		m_this = (DWORD)closure.pThis;
 		m_jmp = 0xE9;
 		m_relproc = (int)pfn.dwFunc - ((int)this+sizeof(ClosureCallThunk));
+#pragma warning(default:4311)
 		::FlushInstructionCache(::GetCurrentProcess(), this, sizeof(ClosureCallThunk));
 	}
 };

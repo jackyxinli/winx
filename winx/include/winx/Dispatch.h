@@ -29,6 +29,8 @@
 
 __WINX_BEGIN
 
+typedef ATL::CComVariant CComVariant;
+
 // -------------------------------------------------------------------------
 // struct _DispRetTypeTraits
 
@@ -626,7 +628,7 @@ public:
 
 	HRESULT winx_call ExAssign(IN IDispatch* obj, IN LPCOLESTR nameObj)
 	{
-		UINT cb = sizeof(OLECHAR) * (wcslen(nameObj) + 1);
+		UINT cb = (UINT)sizeof(OLECHAR) * (wcslen(nameObj) + 1);
 		LPOLESTR name = (LPOLESTR)_alloca(cb);
 		memcpy(name, nameObj, cb);
 		return ExAssign(obj, name);
