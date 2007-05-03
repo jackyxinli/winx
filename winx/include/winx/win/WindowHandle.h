@@ -340,7 +340,7 @@ typedef WindowHandle DefaultWindowHandle;
 // $Log: WindowHandle.h,v $
 // Revision 1.3  2006/09/13 17:05:11  xushiwei
 // WINX-Basic: DefaultWindowHandle(see macro WINX_NULL_WINDOW_HANDLE)
-// WINX-Core: AxModalDialog/AxModalessDialog
+// WINX-Core: AxModelDialog/AxModelessDialog
 //
 // Revision 1.2  2006/08/20 04:49:57  xushiwei
 // MFC-Compatibility:

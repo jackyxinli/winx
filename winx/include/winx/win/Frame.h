@@ -23,6 +23,10 @@
 #include "Window.h"
 #endif
 
+#ifndef __WINX_WIN_DIALOG_H__
+#include "Dialog.h"
+#endif
+
 #ifdef __ATLFRAME_H__
 #error "Don't include atlframe.h first"
 #endif
@@ -34,20 +38,44 @@
 __WINX_BEGIN
 
 // =========================================================================
+// WINX_MAINFRAME
+
+#define WINX_ON_MAINFRAME_TERM()											\
+public:																		\
+	VOID winx_msg OnMainFrameTerm(HWND hWnd)								\
+	{																		\
+		::PostQuitMessage(0);												\
+	}
+
+#define WINX_MAINFRAME()													\
+	WINX_STACK_OBJECT(TRUE);												\
+	WINX_ON_MAINFRAME_TERM()
+
+// =========================================================================
 // class MainFrame
 
 template <class WindowClass, class HandleClass = DefaultWindowHandle>
 class MainFrame : public Window<WindowClass, HandleClass>
 {
-	WINX_DEFAULT_STYLE(WS_OVERLAPPEDWINDOW|WS_VISIBLE);
-	WINX_DEFAULT_EXSTYLE(0);
-	WINX_STACK_OBJECT(TRUE);
-	
-public:
-	void OnDestroy(HWND hWnd)
-	{
-		::PostQuitMessage(0);
-	}
+	WINX_MAINFRAME();
+};
+
+// =========================================================================
+// class MainDlgFrame
+
+template <class WindowClass, int nDlgId = 0, class HandleClass = DefaultWindowHandle>
+class MainDlgFrame : public ModelessDialog<WindowClass, nDlgId, HandleClass>
+{
+	WINX_MAINFRAME();
+};
+
+// =========================================================================
+// class AxMainDlgFrame
+
+template <class WindowClass, int nDlgId = 0, class HandleClass = DefaultWindowHandle>
+class AxMainDlgFrame : public AxModelessDialog<WindowClass, nDlgId, HandleClass>
+{
+	WINX_MAINFRAME();
 };
 
 // =========================================================================
@@ -56,20 +84,12 @@ public:
 template <class WindowClass, class HandleClass = DefaultWindowHandle>
 class MDIMainFrame : public Window<WindowClass, HandleClass>
 {
-	WINX_DEFAULT_STYLE(WS_OVERLAPPEDWINDOW|WS_VISIBLE);
-	WINX_DEFAULT_EXSTYLE(0);
-	WINX_STACK_OBJECT(TRUE);
-
+	WINX_MAINFRAME();
 public:
 	LRESULT winx_msg InternalDefault(
 		HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 	{
 		return ::DefFrameProc(hWnd, NULL, message, wParam, lParam);
-	}
-
-	void OnDestroy(HWND hWnd)
-	{
-		::PostQuitMessage(0);
 	}
 };
 
@@ -225,7 +245,7 @@ public:																		\
 //
 // Revision 1.3  2006/09/13 17:05:11  xushiwei
 // WINX-Basic: DefaultWindowHandle(see macro WINX_NULL_WINDOW_HANDLE)
-// WINX-Core: AxModalDialog/AxModalessDialog
+// WINX-Core: AxModelDialog/AxModelessDialog
 //
 // Revision 1.2  2006/08/23 05:47:06  xushiwei
 // WINX-Core:

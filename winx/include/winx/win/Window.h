@@ -97,7 +97,7 @@ class Window :
 	WINX_CLASS_STYLE(CS_HREDRAW|CS_VREDRAW|CS_DBLCLKS);
 	WINX_DEFAULT_COLOR(COLOR_WINDOW);
 	WINX_DEFAULT_SYSCURSOR(IDC_ARROW);
-	WINX_DEFAULT_STYLE(WS_OVERLAPPEDWINDOW);
+	WINX_DEFAULT_STYLE(WS_OVERLAPPEDWINDOW|WS_VISIBLE);
 	WINX_DEFAULT_EXSTYLE(0);
 	WINX_STACK_OBJECT(FALSE);
 	WINX_ON_INITIAL();
@@ -839,7 +839,7 @@ class SimpleSafeCtrl : public LightSuperclassWindow<WindowClass>
 // $Log: Window.h,v $
 // Revision 1.7  2006/11/23 06:12:53  xushiwei
 // WINX-Basic: DefaultWindowHandle(see macro WINX_NULL_WINDOW_HANDLE)
-// WINX-Core: AxModalDialog/AxModalessDialog
+// WINX-Core: AxModelDialog/AxModelessDialog
 //
 // Revision 1.5  2006/09/03 06:32:13  xushiwei
 // WINX-Extension: PropertySheet, PropertyPage

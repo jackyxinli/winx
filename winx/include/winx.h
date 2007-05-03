@@ -77,7 +77,7 @@
 //
 // Revision 1.10  2006/09/13 17:05:11  xushiwei
 // WINX-Basic: DefaultWindowHandle(see macro WINX_NULL_WINDOW_HANDLE)
-// WINX-Core: AxModalDialog/AxModalessDialog
+// WINX-Core: AxModelDialog/AxModelessDialog
 //
 // Revision 1.9  2006/09/13 13:57:55  xushiwei
 // WINX-Core:

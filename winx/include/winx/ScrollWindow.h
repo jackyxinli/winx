@@ -130,12 +130,12 @@ public:
 };
 
 template <class WindowClass, int nDlgId = 0, class HandleClass = WindowHandle>
-class FormWindow : public _ScrollDlgT<WindowClass, ModalessDialog<WindowClass, nDlgId, HandleClass> >
+class FormWindow : public _ScrollDlgT<WindowClass, ModelessDialog<WindowClass, nDlgId, HandleClass> >
 {
 };
 
 template <class WindowClass, int nDlgId = 0, class HandleClass = WindowHandle>
-class AxFormWindow : public _ScrollDlgT<WindowClass, AxModalessDialog<WindowClass, nDlgId, HandleClass> >
+class AxFormWindow : public _ScrollDlgT<WindowClass, AxModelessDialog<WindowClass, nDlgId, HandleClass> >
 {
 };
 

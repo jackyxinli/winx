@@ -228,7 +228,7 @@ inline BOOL InitRichEditControl(BOOL fInitRichEditV1 = TRUE)
 // $Log: Basic.h,v $
 // Revision 1.6  2006/09/13 17:05:11  xushiwei
 // WINX-Basic: DefaultWindowHandle(see macro WINX_NULL_WINDOW_HANDLE)
-// WINX-Core: AxModalDialog/AxModalessDialog
+// WINX-Core: AxModelDialog/AxModelessDialog
 //
 // Revision 1.5  2006/08/25 15:13:19  xushiwei
 // Winx-Extension:

@@ -616,6 +616,8 @@ public:																		\
 			_WINX_PWND->OnAccelTerm(hWnd);									\
 		WINX_MSG_HAS(OnLeaveAccelFrame)										\
 			_WINX_PWND->OnLeaveAccelFrame(hWnd);							\
+		WINX_MSG_HAS(OnMainFrameTerm)										\
+			_WINX_PWND->OnMainFrameTerm(hWnd);								\
 	}
 
 // =========================================================================
@@ -720,6 +722,7 @@ public:																		\
 	WINX_MSG_NULL_HANDLER(OnDropTargetTerm);								\
 	WINX_MSG_NULL_HANDLER(OnEnterAccelFrame);								\
 	WINX_MSG_NULL_HANDLER(OnLeaveAccelFrame);								\
+	WINX_MSG_NULL_HANDLER(OnMainFrameTerm);									\
 																			\
 	WINX_MSG_SIMPLE_HANDLER(OnNcCreate, TRUE);								\
 	WINX_MSG_SIMPLE_HANDLER(OnCreate, 0);									\
@@ -790,6 +793,11 @@ public:
 
 	VOID winx_msg OnEnterAccelFrame(HWND hWnd)	{}
 	VOID winx_msg OnLeaveAccelFrame(HWND hWnd)	{}
+
+public:
+	// OnMainFrameTerm - Only For MainFrame
+
+	VOID winx_msg OnMainFrameTerm(HWND hWnd) {}
 
 public:
 	// Reflect Support

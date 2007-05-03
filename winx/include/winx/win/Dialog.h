@@ -285,15 +285,15 @@ public:
 };
 
 // =========================================================================
-// class ModalessDialog
+// class ModelessDialog
 
 template <class WindowClass, int nDlgId = 0, class HandleClass = DefaultWindowHandle>
-class ModalessDialog : public DialogBase<WindowClass, nDlgId, HandleClass>
+class ModelessDialog : public DialogBase<WindowClass, nDlgId, HandleClass>
 {
 	WINX_STACK_OBJECT(FALSE);
 public:
 	typedef DialogBase<WindowClass, nDlgId, HandleClass> BaseClass;
-	typedef ModalessDialog<WindowClass, nDlgId, HandleClass> WindowBase;
+	typedef ModelessDialog<WindowClass, nDlgId, HandleClass> WindowBase;
 	typedef NormalWindowMap WindowMap;
 	typedef WindowClass WindowImplClass;
 	
@@ -416,10 +416,10 @@ public:
 };
 
 // -------------------------------------------------------------------------
-// class AxModalessDialog
+// class AxModelessDialog
 
 template <class WindowClass, int nDlgId = 0, class HandleClass = DefaultWindowHandle>
-class AxModalessDialog : public ModalessDialog<WindowClass, nDlgId, HandleClass>
+class AxModelessDialog : public ModelessDialog<WindowClass, nDlgId, HandleClass>
 {
 	WINX_ON_DLGINIT_CREATE_AXCTRL();
 	WINX_DLG_FWDMSG(); // 默认就进行ForwardMessage。
@@ -434,15 +434,15 @@ public:
 };
 
 // =========================================================================
-// class ModalDialog
+// class ModelDialog
 
 template <class WindowClass, int nDlgId = 0, class HandleClass = DefaultWindowHandle>
-class ModalDialog : public DialogBase<WindowClass, nDlgId, HandleClass>
+class ModelDialog : public DialogBase<WindowClass, nDlgId, HandleClass>
 {
 public:
 	typedef NormalWindowMap WindowMap;
 	typedef DialogBase<WindowClass, nDlgId, HandleClass> BaseClass;
-	typedef ModalDialog<WindowClass, nDlgId, HandleClass> WindowBase;
+	typedef ModelDialog<WindowClass, nDlgId, HandleClass> WindowBase;
 	typedef WindowClass WindowImplClass;
 
 	using BaseClass::IDD;
@@ -496,16 +496,16 @@ public:
 };
 
 // -------------------------------------------------------------------------
-// class AxModalDialog
+// class AxModelDialog
 
 template <class WindowClass, int nDlgId = 0, class HandleClass = DefaultWindowHandle>
-class AxModalDialog : public ModalDialog<WindowClass, nDlgId, HandleClass>
+class AxModelDialog : public ModelDialog<WindowClass, nDlgId, HandleClass>
 {
 	WINX_ON_DLGINIT_CREATE_AXCTRL();
 	WINX_DLG_FWDMSG(); // 默认就进行ForwardMessage。
 
 public:
-	typedef ModalDialog<WindowClass, nDlgId, HandleClass> BaseClass;
+	typedef ModelDialog<WindowClass, nDlgId, HandleClass> BaseClass;
 	typedef WindowClass WindowImplClass;
 
 	using BaseClass::IDD;
@@ -531,14 +531,22 @@ public:
 // class SimpleDialog - 简单对话框。
 // class AxSimpleDialog - 支持ActiveX的简单对话框。
 
-class SimpleDialog : public ModalDialog<SimpleDialog, 0, NullWindowHandle>
+class SimpleDialog : public ModelDialog<SimpleDialog, 0, NullWindowHandle>
 {
 };
 
 template <int nDlgId>
-class AxSimpleDialog : public AxModalDialog<AxSimpleDialog<nDlgId>, nDlgId, NullWindowHandle>
+class AxSimpleDialog : public AxModelDialog<AxSimpleDialog<nDlgId>, nDlgId, NullWindowHandle>
 {
 };
+
+// -------------------------------------------------------------------------
+// error spelling
+
+#define ModalDialog			ModelDialog
+#define ModalessDialog		ModelessDialog
+#define AxModalDialog		AxModelDialog
+#define AxModalessDialog	AxModelessDialog
 
 // =========================================================================
 // $Log: Dialog.h,v $
@@ -552,7 +560,7 @@ class AxSimpleDialog : public AxModalDialog<AxSimpleDialog<nDlgId>, nDlgId, Null
 //
 // Revision 1.10  2006/09/13 17:05:11  xushiwei
 // WINX-Basic: DefaultWindowHandle(see macro WINX_NULL_WINDOW_HANDLE)
-// WINX-Core: AxModalDialog/AxModalessDialog
+// WINX-Core: AxModelDialog/AxModelessDialog
 //
 // Revision 1.9  2006/09/13 13:54:36  xushiwei
 // WINX-Core:
