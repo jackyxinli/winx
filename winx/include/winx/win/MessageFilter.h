@@ -269,9 +269,12 @@ class AccelFrameHook :
 public:
 	LRESULT winx_call ProcessHookMessage(int code, WPARAM wParam, LPARAM lParam)
 	{
-		MSG* lpMsg = (MSG*)lParam;
-		if (lpMsg->message >= WM_KEYFIRST && lpMsg->message <= WM_KEYLAST)
-			return ForwardMessage(m_hWndModal, lpMsg);
+		if (code < MSGF_MENU || code > MSGF_MAX)
+		{
+			MSG* lpMsg = (MSG*)lParam;
+			if (lpMsg->message >= WM_KEYFIRST && lpMsg->message <= WM_KEYLAST)
+				return ForwardMessage(m_hWndModal, lpMsg);
+		}
 		return FALSE;
 	}
 
