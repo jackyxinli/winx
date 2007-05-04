@@ -240,6 +240,36 @@ public:
 #endif
 
 // -------------------------------------------------------------------------
+// RunMsgLoop
+
+#define WINX_MSGF_BASE		0x8100
+#define WINX_MSGF_MAINLOOP	(WINX_MSGF_BASE + 1)
+
+inline int winx_call RunMsgLoop(int codeMsgf = WINX_MSGF_MAINLOOP)
+{
+	for(;;)
+	{
+		MSG msg;
+		BOOL bRet = ::GetMessage(&msg, NULL, 0, 0);
+		if (bRet == -1)
+		{
+			WINX_TRACE("GetMessage returned -1 (error)\n");
+			continue; // error, don't process
+		}
+		if (!bRet)
+		{
+			WINX_TRACE("RunMsgLoop - exiting\n");
+			return (int)msg.wParam; // WM_QUIT, exit message loop
+		}
+		if (!::CallMsgFilter(&msg, codeMsgf))
+		{
+			::TranslateMessage(&msg);
+			::DispatchMessage(&msg);
+		}
+	}
+}
+
+// -------------------------------------------------------------------------
 // CAppModuleInit - WTL Helper
 
 #if defined(WINX_USE_APPMODULE)
@@ -258,6 +288,14 @@ public:
 	~CAppModuleInit()
 	{
 		_Module.Term();
+	}
+
+	BOOL PreTranslateMessage(MSG* pMsg)
+	{
+		using namespace WTL;
+		if (CallMsgFilter(pMsg, WINX_MSGF_MAINLOOP))
+			return TRUE;
+		return CMessageLoop::PreTranslateMessage(pMsg);
 	}
 };
 

@@ -348,7 +348,7 @@ public:
 };
 
 template <class T = _DummyHookExt>
-class MenuHook : public SimpleHook<MenuHook<T>, WH_CALLWNDPROC>
+class MenuHook : public MessageHook<MenuHook<T>, WH_CALLWNDPROC>
 {
 private:
 	T* m_extImpl;
@@ -373,7 +373,7 @@ public:
 		m_extImpl = extImpl;
 	}
 
-	VOID winx_call ProcessMessage(WPARAM wParam, LPARAM lParam)
+	LONG winx_call ProcessHookMessage(int code, WPARAM wParam, LPARAM lParam)
 	{
 		CWPSTRUCT* lpCWP = (CWPSTRUCT*)lParam;
 		HWND hWnd = lpCWP->hwnd;
@@ -420,6 +420,7 @@ public:
 				InitMenu(hWnd, hSysMenu, FALSE);
 			break;
 		}
+		return 0;
 	}
 
 private:

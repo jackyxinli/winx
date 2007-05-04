@@ -137,22 +137,10 @@ public:
 
 // =========================================================================
 // WINX_DLG_ACCEL - 对话框支持Accelerator
-
-#define WINX_DLG_ACCEL()													\
-public:																		\
-	VOID winx_msg OnEnterAccelFrame(HWND hWnd) {							\
-		WINX_ENTERACCELFRAME(_winx_oldFrame, hWnd);							\
-	}																		\
-	VOID winx_msg OnLeaveAccelFrame(HWND hWnd) {							\
-		WINX_LEAVEACCELFRAME(_winx_oldFrame);								\
-	}																		\
-private:																	\
-	winx::ModalFrame _winx_oldFrame
-
-// -------------------------------------------------------------------------
 // WINX_DLG_FWDMSG - 对话框支持ForwardMessage
 
-#define WINX_DLG_FWDMSG()	WINX_DLG_ACCEL()
+#define WINX_DLG_ACCEL()	WINX_ACCELFRAME()
+#define WINX_DLG_FWDMSG()	WINX_ACCELFRAME()
 
 // =========================================================================
 // class DialogBase
@@ -288,9 +276,12 @@ public:
 // class ModelessDialog
 
 template <class WindowClass, int nDlgId = 0, class HandleClass = DefaultWindowHandle>
-class ModelessDialog : public DialogBase<WindowClass, nDlgId, HandleClass>
+class ModelessDialog : 
+	public DialogBase<WindowClass, nDlgId, HandleClass>,
+	public MessageFilter<WindowClass>
 {
 	WINX_STACK_OBJECT(FALSE);
+	WINX_MSGFILTER();
 public:
 	typedef DialogBase<WindowClass, nDlgId, HandleClass> BaseClass;
 	typedef ModelessDialog<WindowClass, nDlgId, HandleClass> WindowBase;
@@ -301,6 +292,15 @@ public:
 	using BaseClass::GetOrgDlgClassName;
 
 public:
+	BOOL winx_msg PreTranslateMessage(MSG* lpMsg)
+	{
+		// don't translate non-input events
+		if (lpMsg->message < WM_KEYFIRST || lpMsg->message > WM_KEYLAST)
+			return FALSE;
+
+		return ::IsDialogMessage(_WINX_PWND->m_hWnd, lpMsg);
+	}
+
 	VOID winx_call ProcessTermMessage(HWND hWnd)
 	{
 		WindowMap::DestroyWindow(hWnd);

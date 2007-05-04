@@ -26,6 +26,95 @@
 __WINX_BEGIN
 
 // =========================================================================
+// WindowMessage Helper
+
+#ifndef _WINX_PWND
+#define _WINX_PWND			(static_cast<WindowImplClass*>(this))
+#define _WINX_NULL_PWND		(static_cast<WindowImplClass*>(0))
+#endif
+
+typedef LRESULT (CDECL *NullHandler)(LPCVOID hWnd, ...);
+
+class _No	{ int __unused; };
+class _Yes	{ _No __no[2]; };
+
+_No  _Valid(int, NullHandler);
+_Yes _Valid(int, ...);
+
+#define WINX_MSG_HANDLER_VALID(checkHandler)								\
+	( sizeof(winx::_Valid(0, &WindowImplClass::checkHandler)) == sizeof(winx::_Yes) )
+
+// -------------------------------------------------------------------------
+// WINX_MSG_NULL_HANDLER
+
+#define WINX_MSG_NULL_HANDLER(Handle)										\
+public:																		\
+	static LRESULT CDECL Handle(LPCVOID hWnd, ...) {						\
+		WINX_REPORT("Don't call me!!!\n");									\
+		return 0;															\
+	}
+
+#define WINX_MSG_NULL_HANDLER_IMPL(Handle)									\
+	static LRESULT CDECL Handle(LPCVOID hWnd, ...)
+
+#define WINX_MSG_SIMPLE_HANDLER(Handle, lResult)							\
+	static LRESULT CDECL Handle(LPCVOID hWnd, ...) {						\
+		return lResult;														\
+	}
+
+#define WINX_MSG_DEFAULT_HANDLER(Handle)									\
+	static LRESULT CDECL Handle(LPCVOID hWnd, ...) {						\
+		return ProcessDefault((HWND)hWnd);									\
+	}
+
+// -------------------------------------------------------------------------
+// WINX_MSG_HAS
+
+#define WINX_MSG_CASE(msg, checkHandler)									\
+	if (WINX_MSG_HANDLER_VALID(checkHandler) && message == (msg))
+
+#define WINX_MSG_CASEIF(msg, cond)											\
+	if ((cond) && message == (msg))
+
+#define WINX_MSG_IF(cond)													\
+	if (cond)
+
+#define WINX_MSG_ELSE														\
+	else
+
+#define WINX_MSG_HAS(checkHandler)											\
+	if (WINX_MSG_HANDLER_VALID(checkHandler))
+
+#define WINX_MSG_HAS2(a1, a2)												\
+	if (WINX_MSG_HANDLER_VALID(a1) || WINX_MSG_HANDLER_VALID(a2))
+
+#define WINX_MSG_HAS3(a1, a2, a3)											\
+	if (WINX_MSG_HANDLER_VALID(a1) || WINX_MSG_HANDLER_VALID(a2) ||			\
+		WINX_MSG_HANDLER_VALID(a3))
+
+#define WINX_MSG_HAS4(a1, a2, a3, a4)										\
+	if (WINX_MSG_HANDLER_VALID(a1) || WINX_MSG_HANDLER_VALID(a2) ||			\
+		WINX_MSG_HANDLER_VALID(a3) || WINX_MSG_HANDLER_VALID(a4))
+
+#define WINX_MSG_HAS5(a1, a2, a3, a4, a5)									\
+	if (WINX_MSG_HANDLER_VALID(a1) || WINX_MSG_HANDLER_VALID(a2) ||			\
+		WINX_MSG_HANDLER_VALID(a3) || WINX_MSG_HANDLER_VALID(a4) ||			\
+		WINX_MSG_HANDLER_VALID(a5))
+
+#define WINX_MSG_HAS6(a1, a2, a3, a4, a5, a6)								\
+	if (WINX_MSG_HANDLER_VALID(a1) || WINX_MSG_HANDLER_VALID(a2) ||			\
+		WINX_MSG_HANDLER_VALID(a3) || WINX_MSG_HANDLER_VALID(a4) ||			\
+		WINX_MSG_HANDLER_VALID(a5) || WINX_MSG_HANDLER_VALID(a6))
+
+// =========================================================================
+// WINX_NO_DEFAULT
+//	 - 不支持类似mfc的CWnd::Default()函数。
+//	 - 这可以优化代码。但是代价是你不能使用Default()方法。
+
+#define WINX_NO_DEFAULT()													\
+	WINX_MSG_NULL_HANDLER(InternalDefault)
+
+// =========================================================================
 // Winx Extended Messages
 
 #ifndef WM_MOUSEWHEEL
@@ -580,6 +669,8 @@ public:																		\
 																			\
 		WINX_MSG_HAS(OnEnterAccelFrame)										\
 			_WINX_PWND->OnEnterAccelFrame(hWnd);							\
+		WINX_MSG_HAS(OnMsgFilterInit)										\
+			_WINX_PWND->OnMsgFilterInit(hWnd);								\
 		WINX_MSG_HAS(OnAccelInit)											\
 			_WINX_PWND->OnAccelInit(hWnd);									\
 		WINX_MSG_HAS(OnXPThemeInit)											\
@@ -614,6 +705,8 @@ public:																		\
 			_WINX_PWND->OnXPThemeTerm(hWnd);								\
 		WINX_MSG_HAS(OnAccelTerm)											\
 			_WINX_PWND->OnAccelTerm(hWnd);									\
+		WINX_MSG_HAS(OnMsgFilterTerm)										\
+			_WINX_PWND->OnMsgFilterTerm(hWnd);								\
 		WINX_MSG_HAS(OnLeaveAccelFrame)										\
 			_WINX_PWND->OnLeaveAccelFrame(hWnd);							\
 		WINX_MSG_HAS(OnMainFrameTerm)										\
@@ -712,6 +805,8 @@ public:																		\
 	WINX_MSG_NULL_HANDLER(OnIconSmInit);									\
 	WINX_MSG_NULL_HANDLER(OnAccelInit);										\
 	WINX_MSG_NULL_HANDLER(OnAccelTerm);										\
+	WINX_MSG_NULL_HANDLER(OnMsgFilterInit);									\
+	WINX_MSG_NULL_HANDLER(OnMsgFilterTerm);									\
 	WINX_MSG_NULL_HANDLER(OnXPThemeInit);									\
 	WINX_MSG_NULL_HANDLER(OnXPThemeTerm);									\
 	WINX_MSG_NULL_HANDLER(OnIpcHostInit);									\
@@ -763,7 +858,10 @@ public:
 
 	VOID winx_msg OnDropTargetInit(HWND hWnd)	{}
 	VOID winx_msg OnDropTargetTerm(HWND hWnd)	{}
-		
+
+	VOID winx_msg OnMsgFilterInit(HWND hWnd) {}
+	VOID winx_msg OnMsgFilterTerm(HWND hWnd) {}
+	
 	VOID winx_msg OnInitial(HWND hWnd)			{}
 	VOID winx_msg OnTerminate(HWND hWnd)		{}
 	
@@ -789,7 +887,7 @@ public:
 	VOID winx_msg OnPostInitDialog(HWND hDlg) {}
 
 public:
-	// OnEnterAccelFrame/OnLeaveAccelFrame - Only For Dialog Box
+	// OnEnterAccelFrame/OnLeaveAccelFrame - Only For MainFrame/DialogBox
 
 	VOID winx_msg OnEnterAccelFrame(HWND hWnd)	{}
 	VOID winx_msg OnLeaveAccelFrame(HWND hWnd)	{}
