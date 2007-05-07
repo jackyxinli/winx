@@ -90,8 +90,9 @@ public:
 	{
 		while (m_destroyChain)
 		{
-			m_destroyChain->fnDestroy(m_destroyChain + 1);
+			_DestroyNode* curr = m_destroyChain;
 			m_destroyChain = m_destroyChain->pPrev;
+			curr->fnDestroy(curr + 1);
 		}
 		_MemBlock* pHeader = _ChainHeader();
 		while (pHeader)
