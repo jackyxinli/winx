@@ -23,7 +23,7 @@
 #include <stdext/Archive.h>
 #include <stdext/kmp/TestFinder.h>
 #include <stdext/memory/Pool.h>
-#include <stdext/memory/GC.h>
+//#include <stdext/memory/GC.h>
 #include <stdext/FileMapping.h>
 #include <stdext/ScopeDebug.h>
 #include <stdext/Registry.h>
@@ -34,18 +34,19 @@
 
 int main()
 {
-	WINX_TEST_APP(std::ErrorLog, "TestWinRegKey", "");
+	WINX_TEST_APP(std::ErrorLog, "TestAutoFreeAlloc", "");
 
 	WINX_TEST_CLASS(TestPool);
 	WINX_TEST_CLASS(TestFinder);
+//	WINX_TEST_CLASS(std::TestObjectPool);
 	WINX_TEST_CLASS(std::TestWinRegKey);
 	WINX_TEST_CLASS(std::TestErrorGuard);
 	WINX_TEST_CLASS(std::TestScopeLog);
 	WINX_TEST_CLASS(std::TestCheckException);
 	WINX_TEST_CLASS(std::TestSimpleFileMapping);
 	WINX_TEST_CLASS(std::TestFileMapping);
-	WINX_TEST_CLASS(std::TestGC);
 	WINX_TEST_CLASS(std::TestPriorityArray);
+//	WINX_TEST_CLASS(std::TestGC);
 //	WINX_TEST_CLASS(std::TestStreamArchive);
 	WINX_TEST_CLASS(std::TestStdioArchive);
 	WINX_TEST_CLASS(std::TestString);

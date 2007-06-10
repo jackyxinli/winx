@@ -99,9 +99,9 @@ private:
 			for (_Node* it = bucket->first; it != (_Node*)bucket; it = next)
 			{
 				next = it->next;
-				STD_DELETE(m_alloc, it);
+				m_alloc.destroy(it);
 			}
-			STD_DELETE(m_alloc, bucket);
+			m_alloc.destroy(bucket);
 		}
 	};
 

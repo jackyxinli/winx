@@ -104,6 +104,25 @@ public:
 		m_begin = m_end = (char*)HeaderSize;
 	}
 
+	template <class Type>
+	void winx_call destroy(Type* obj)
+	{
+		// no action
+	}
+
+	template <class Type>
+	Type* winx_call newArray(size_t count, Type* zero)
+	{
+		Type* array = (Type*)DestructorTraits<Type>::allocArrayBuf(*this, count);
+		return ConstructorTraits<Type>::constructArray(array, count);
+	}
+
+	template <class Type>
+	void winx_call destroyArray(Type* array, size_t count)
+	{
+		// no action
+	}
+
 	void* winx_call allocate(size_t cb)
 	{
 		if ((size_t)(m_end - m_begin) < cb)
@@ -149,24 +168,7 @@ public:
 		return allocate(cb);
 	}
 
-#if defined(_DEBUG)
-
-	void* winx_call allocate(size_t cb, LPCSTR szFile, int nLine)
-	{
-		return allocate(cb);
-	}
-
-	void* winx_call allocate(size_t cb, DestructorType fn, LPCSTR szFile, int nLine)
-	{
-		return allocate(cb, fn);
-	}
-
-	void* winx_call allocate(size_t cb, int fnZero, LPCSTR szFile, int nLine)
-	{
-		return allocate(cb);
-	}
-
-#endif // defined(_DEBUG)
+	__STD_FAKE_DBG_ALLOCATE();
 };
 
 typedef AutoFreeAllocT<DefaultStaticAlloc> AutoFreeAlloc;
@@ -198,6 +200,7 @@ public:
 		
 		Obj* o1 = STD_NEW(alloc, Obj)(1);
 		Obj* o2 = STD_NEW_ARRAY(alloc, Obj, 8);
+		Obj* o3 = STD_ALLOC_ARRAY(alloc, Obj, 10); // NOTE
 		
 		char* s1 = STD_ALLOC(alloc, char);
 		char* s2 = STD_ALLOC_ARRAY(alloc, char, 100);
