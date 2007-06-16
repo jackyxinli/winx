@@ -37,6 +37,8 @@
 
 __NS_STD_BEGIN
 
+//#define __in
+//#define __in_z
 // -------------------------------------------------------------------------
 // class WinRegKeyHandle
 
