@@ -701,27 +701,27 @@ public:
 			if (_WINX_PWND->ProcessUpdateUIMessage(hWnd, message, wParam, lParam, lResult))
 				return lResult;
 		}
-		WINX_MSG_HAS(ProcessDialogResizeMessage)
-		{
-			// support WTL::CDialogResize
-			if (_WINX_PWND->ProcessDialogResizeMessage(hWnd, message, wParam, lParam, lResult))
-				return lResult;
-		}
 		WINX_MSG_HAS(DispatchMessage)
 		{
 			// DispatchMessage可能被派生类禁止。
 			if (_WINX_PWND->DispatchMessage(hWnd, message, wParam, lParam, lResult))
 				return lResult;
 		}
+		WINX_MSG_HAS(ProcessUserMessage)
+		{
+			if (_WINX_PWND->ProcessUserMessage(hWnd, message, wParam, lParam, lResult))
+				return lResult;
+		}
+		WINX_MSG_HAS(ProcessDialogResizeMessage)
+		{
+			// support WTL::CDialogResize
+			if (_WINX_PWND->ProcessDialogResizeMessage(hWnd, message, wParam, lParam, lResult))
+				return lResult;
+		}
 		WINX_MSG_HAS(ProcessScrollWindowMessage)
 		{
 			// support WTL::CScrollImpl
 			if (_WINX_PWND->ProcessScrollWindowMessage(hWnd, message, wParam, lParam, lResult))
-				return lResult;
-		}
-		WINX_MSG_HAS(ProcessUserMessage)
-		{
-			if (_WINX_PWND->ProcessUserMessage(hWnd, message, wParam, lParam, lResult))
 				return lResult;
 		}
 		return _WINX_PWND->DefaultHandle(hWnd, message, wParam, lParam);
