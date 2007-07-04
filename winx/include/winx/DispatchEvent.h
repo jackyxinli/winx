@@ -23,6 +23,10 @@
 #include "Basic.h"
 #endif
 
+#ifndef __WINX_COM_SAFEARRAY_H__
+#include "com/SafeArray.h"
+#endif
+
 #if !defined( _OBJBASE_H_ )
 #include <objbase.h>
 #endif

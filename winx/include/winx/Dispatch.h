@@ -161,6 +161,11 @@ public:
 		return p;
 	}
 
+	IDispatch* operator->() const
+	{
+		return p;
+	}
+
 	void winx_call Release()
 	{
 		if (p)
