@@ -19,6 +19,12 @@
 #ifndef __WINX_COM_OLESTR_H__
 #define __WINX_COM_OLESTR_H__
 
+#ifndef __WINX_BASIC_H__
+#include "../Basic.h"
+#endif
+
+__WINX_BEGIN
+
 // -------------------------------------------------------------------------
 // AllocOLESTR
 
@@ -143,5 +149,7 @@ public:
 //   WindowHandle, WindowMap, MessageMap
 //   COM Support(Object, StackObject, FakeObject, COLESTR, etc)
 //
+
+__WINX_END
 
 #endif /* __WINX_COM_OLESTR_H__ */
