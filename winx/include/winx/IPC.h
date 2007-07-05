@@ -31,6 +31,22 @@
 #endif
 
 // -------------------------------------------------------------------------
+// GetActiveObject
+
+template <class Interface>
+inline HRESULT winx_call GetActiveObject(REFCLSID rclsid, Interface** pp)
+{
+	IUnknown* pUnk;
+	HRESULT hr = GetActiveObject(rclsid, NULL, &pUnk);
+	if (SUCCEEDED(hr))
+	{
+		hr = pUnk->QueryInterface(WINX_UUID(Interface), (void**)pp);
+		pUnk->Release();
+	}
+	return hr;
+}
+
+// -------------------------------------------------------------------------
 // $Log: ipc.h,v $
 
 #endif /* __WINX_IPC_H__ */
