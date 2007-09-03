@@ -351,7 +351,7 @@ template <class T = _DummyHookExt>
 class MenuHook : public MessageHook<MenuHook<T>, WH_CALLWNDPROC>
 {
 private:
-	T* m_extImpl;
+	static T* m_extImpl;
 
 public:
 	static VOID OnInitMenuPopup(HWND hWnd, HMENU hMenu)
@@ -368,12 +368,12 @@ public:
 	}
 
 public:
-	VOID SetHookExt(T* extImpl)
+	static VOID SetHookExt(T* extImpl)
 	{
 		m_extImpl = extImpl;
 	}
 
-	LONG winx_call ProcessHookMessage(int code, WPARAM wParam, LPARAM lParam)
+	static LONG winx_call ProcessHookMessage(int code, WPARAM wParam, LPARAM lParam)
 	{
 		CWPSTRUCT* lpCWP = (CWPSTRUCT*)lParam;
 		HWND hWnd = lpCWP->hwnd;
@@ -425,7 +425,7 @@ public:
 
 private:
 	//Calc MenuItem's width, 
-	VOID InitMenu(HWND hWnd, HMENU hMenu, bool bMenuBar = FALSE)
+	static VOID InitMenu(HWND hWnd, HMENU hMenu, bool bMenuBar = FALSE)
 	{
 		WINX_ASSERT(::IsMenu(hMenu));
 		TCHAR szCaption[256];
@@ -477,6 +477,9 @@ private:
 		::ReleaseDC(hWnd, hDC);
 	}
 };
+
+template <class T>
+T* MenuHook<T>::m_extImpl;
 
 // -------------------------------------------------------------------------
 // LookNFeelStyle

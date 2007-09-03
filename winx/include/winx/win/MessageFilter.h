@@ -76,27 +76,31 @@ struct HookCodeTraits<WH_SYSMSGFILTER>
 
 typedef HHOOK HookHandle;
 
-template <class _HookClass, int idHook>
+struct _NullHookData {};
+
+template <class _HookClass, int idHook, class _DataClass = _NullHookData>
 class MessageHook
 {
 public:
 	typedef MessageHook HookBase;
 	typedef _HookClass HookClass;
+	typedef _DataClass HookDataClass;
 
-protected:
-	typedef HookCodeTraits<idHook> _HookCodeTraits;
 	struct _HookData
 	{
 		HookHandle hhk;
-		HookClass* doIt;
+		HookDataClass info;
 	};
+
+protected:
+	typedef HookCodeTraits<idHook> _HookCodeTraits;
 	static _HookData m_data;
 
 	static LRESULT CALLBACK _HookProc(int code, WPARAM wParam, LPARAM lParam)
 	{
 		if (_HookCodeTraits::IsAction(code))
 		{
-			LRESULT res = m_data.doIt->ProcessHookMessage(code, wParam, lParam);
+			LRESULT res = _HookClass::ProcessHookMessage(code, wParam, lParam);
 			if (_HookCodeTraits::HasRetVal)
 			{
 				if (res != 0)
@@ -107,30 +111,29 @@ protected:
 	}
 
 public:
-	HookHandle winx_call Hook(HINSTANCE hInst)
+	static HookHandle winx_call Hook(HINSTANCE hInst)
 	{
 		WINX_ASSERT(m_data.hhk == NULL);
-		WINX_ASSERT(m_data.doIt == NULL);
 	
-		m_data.doIt = static_cast<HookClass*>(this);
+		_HookClass::OnInitHook(m_data.info);
 		return m_data.hhk = ::SetWindowsHookEx(
 			idHook, _HookProc, hInst, ::GetCurrentThreadId()
 			);
 	}
 
-	HookHandle winx_call Hook(HWND hWnd)
+	static HookHandle winx_call Hook(HWND hWnd)
 	{
 		HINSTANCE hInst = (HINSTANCE)::GetWindowLong(hWnd, GWL_HINSTANCE);
 		return Hook(hInst);
 	}
 
-	VOID winx_call HookOnce(HINSTANCE hInst)
+	static VOID winx_call HookOnce(HINSTANCE hInst)
 	{
 		if (m_data.hhk == NULL)
 			Hook(hInst);
 	}
 
-	VOID winx_call HookOnce(HWND hWnd)
+	static VOID winx_call HookOnce(HWND hWnd)
 	{
 		if (m_data.hhk == NULL)
 			Hook(hWnd);
@@ -142,13 +145,17 @@ public:
 		{
 			::UnhookWindowsHookEx(m_data.hhk);
 			m_data.hhk = NULL;
-			m_data.doIt = NULL;
 		}
 	}
 
-	static HookClass* winx_call GetHook()
+public:
+	static VOID winx_call OnInitHook(HookDataClass& info)
 	{
-		return m_data.doIt;
+	}
+
+	static HookDataClass& winx_call Data()
+	{
+		return m_data.info;
 	}
 
 	static BOOL winx_call IsHooking()
@@ -157,28 +164,9 @@ public:
 	}
 };
 
-template <class HookClass, int idHook>
-typename MessageHook<HookClass, idHook>::_HookData MessageHook<HookClass, idHook>::m_data;
-
-// =========================================================================
-// class AutoMessageHook
-
-template <class HookClass, int idHook>
-class AutoMessageHook : public MessageHook<HookClass, idHook>
-{
-public:
-	typedef AutoMessageHook HookBase;
-
-	AutoMessageHook() {}
-	AutoMessageHook(HINSTANCE hInst)
-	{
-		Hook(hInst);
-	}
-	~AutoMessageHook()
-	{
-		Unhook();
-	}
-};
+template <class HookClass, int idHook, class _DataClass>
+typename MessageHook<HookClass, idHook, _DataClass>::_HookData 
+	MessageHook<HookClass, idHook, _DataClass>::m_data;
 
 // =========================================================================
 // class AppIconImpl
@@ -189,16 +177,21 @@ private:
 	HICON m_hAppIcon;
 	
 public:
-	AppIconImpl(HINSTANCE hInst, RESID uIconID)
-		: m_hAppIcon(::LoadIcon(hInst, (LPCTSTR)(uIconID)))
+	AppIconImpl() : m_hAppIcon(NULL)
 	{
 	}
 	~AppIconImpl()
 	{
-		::DestroyIcon(m_hAppIcon);
+		if (m_hAppIcon)
+			::DestroyIcon(m_hAppIcon);
 	}
 	
 public:
+	VOID winx_call InitIcon(HINSTANCE hInst, RESID uIconID)
+	{
+		m_hAppIcon = ::LoadIcon(hInst, (LPCTSTR)(uIconID));
+	}
+
 	VOID winx_call SetWindowIcon(HWND hWnd)
 	{
 #if defined(_DEBUG)
@@ -209,31 +202,31 @@ public:
 		WINX_ASSERT(m_hAppIcon);
 		winx::SetWindowIcon(hWnd, m_hAppIcon);
 	}
-
-	VOID winx_call OnInitDlgFrame(HWND hWnd)
-	{
-		SetWindowIcon(hWnd);
-	}
 };
 
 // -------------------------------------------------------------------------
 // class AppIconHook
 
 class AppIconHook : 
-	public AppIconImpl,
-	public AutoMessageHook<AppIconHook, WH_CALLWNDPROC>
+	public MessageHook<AppIconHook, WH_CALLWNDPROC, AppIconImpl>
 {
 public:
 	AppIconHook(HINSTANCE hInst, RESID uIconID) 
-		: AppIconImpl(hInst, uIconID), HookBase(hInst)
 	{
+		Data().InitIcon(hInst, uIconID);
+		Hook(hInst);
 	}
 	AppIconHook(HINSTANCE hInst, RESID uIconID, int zeroForNoAutoHook) 
-		: AppIconImpl(hInst, uIconID)
 	{
+		Data().InitIcon(hInst, uIconID);
 	}
 
-	LRESULT winx_call ProcessHookMessage(int code, WPARAM wParam, LPARAM lParam)
+	static VOID winx_call OnInitDlgFrame(HWND hWnd)
+	{
+		Data().SetWindowIcon(hWnd);
+	}
+
+	static LRESULT winx_call ProcessHookMessage(int code, WPARAM wParam, LPARAM lParam)
 	{
 		CWPSTRUCT* lpCWP = (CWPSTRUCT*)lParam;
 		if (lpCWP->message == WM_CREATE)
@@ -241,7 +234,7 @@ public:
 			LPCREATESTRUCT lpCS = (LPCREATESTRUCT)lpCWP->lParam;
 			if (WS_DLGFRAME & lpCS->style)
 			{
-				SetWindowIcon(lpCWP->hwnd);
+				Data().SetWindowIcon(lpCWP->hwnd);
 			}
 		}
 		return 0;
@@ -263,50 +256,33 @@ struct ModelFrame
 };
 
 class AccelFrameHook : 
-	public ModelFrame,
-	public MessageHook<AccelFrameHook, WH_MSGFILTER>
+	public MessageHook<AccelFrameHook, WH_MSGFILTER, ModelFrame>
 {
 public:
-	LRESULT winx_call ProcessHookMessage(int code, WPARAM wParam, LPARAM lParam)
+	static LRESULT winx_call ProcessHookMessage(int code, WPARAM wParam, LPARAM lParam)
 	{
 		if (code < MSGF_MENU || code > MSGF_MAX)
 		{
 			MSG* lpMsg = (MSG*)lParam;
 			if (lpMsg->message >= WM_KEYFIRST && lpMsg->message <= WM_KEYLAST)
-				return ForwardMessage(m_hWndModal, lpMsg);
+				return ForwardMessage(Data().m_hWndModal, lpMsg);
 		}
 		return FALSE;
 	}
 
 	static VOID winx_call Enter(HWND hWndModal, ModelFrame& oldFrame)
 	{
-		HookClass* data = GetHook();
-		if (data == NULL)
-		{
-			oldFrame.m_hWndModal = NULL;
-			data = new HookClass;
-			data->m_hWndModal = hWndModal;
-			data->Hook(hWndModal);
-		}
-		else
-		{
-			oldFrame.m_hWndModal = data->m_hWndModal;
-			data->m_hWndModal = hWndModal;
-		}
+		ModelFrame& data = Data();
+		oldFrame.m_hWndModal = data.m_hWndModal;
+		data.m_hWndModal = hWndModal;
+		HookOnce(hWndModal);
 	}
 
 	static VOID winx_call Leave(const ModelFrame& oldFrame)
 	{
-		HookClass* data = GetHook();
 		if (oldFrame.m_hWndModal == NULL)
-		{
 			Unhook();
-			delete data;
-		}
-		else
-		{
-			data->m_hWndModal = oldFrame.m_hWndModal;
-		}
+		Data().m_hWndModal = oldFrame.m_hWndModal;
 	}
 };
 
@@ -327,9 +303,12 @@ private:																	\
 // =========================================================================
 // class MessageFilter
 
-template <class WindowImplClass>
-class MessageFilter : public winx::MessageHook<WindowImplClass, WH_MSGFILTER>
+class _MsgFilter
 {
+private:
+	_MsgFilter* m_pNext;
+
+public:
 /*
  * Don't uncomment this. It's just an example.
  *
@@ -343,10 +322,60 @@ class MessageFilter : public winx::MessageHook<WindowImplClass, WH_MSGFILTER>
 		return ::IsDialogMessage(_WINX_PWND->m_hWnd, lpMsg);
 	}
  */
-public:
-	BOOL winx_msg PreTranslateMessage(MSG* lpMsg)
+	virtual BOOL winx_msg PreTranslateMessage(MSG* lpMsg)
 	{
 		return FALSE;
+	}
+
+public:
+	static BOOL winx_call _DoPreTranslateMessage(_MsgFilter* p, MSG* lpMsg)
+	{
+		for (; p; p = p->m_pNext)
+		{
+			if (p->PreTranslateMessage(lpMsg))
+				return TRUE;
+		}
+		return FALSE;
+	}
+
+	static VOID winx_call _DoEnterChain(_MsgFilter*& pChain, _MsgFilter* pFilter)
+	{
+		pFilter->m_pNext = pChain;
+		pChain = pFilter;
+	}
+
+	static VOID winx_call _DoLeaveChain(_MsgFilter** pp, _MsgFilter* pFilter)
+	{
+		_MsgFilter* p;
+		while( (p = *pp) != NULL )
+		{
+			if (p == pFilter)
+			{
+				*pp = p->m_pNext;
+				return;
+			}
+			pp = &p->m_pNext;	
+		}
+	}
+};
+
+template <class WindowImplClass>
+class MessageFilter : 
+	public _MsgFilter,
+	public winx::MessageHook<WindowImplClass, WH_MSGFILTER, _MsgFilter*>
+{
+public:
+	typedef MessageFilter MessageFilterClass;
+
+	VOID winx_call EnterMsgFilterChain(HWND hWnd)
+	{
+		_DoEnterChain(Data(), this);
+		HookOnce(hWnd);
+	}
+
+	VOID winx_call LeaveMsgFilterChain()
+	{
+		_DoLeaveChain(&Data(), this);
 	}
 
 /*
@@ -358,11 +387,11 @@ public:
 	generate WH_MSGFILTER hook messages.
  */
 public:
-	LRESULT winx_call ProcessHookMessage(int code, WPARAM wParam, LPARAM lParam)
+	static LRESULT winx_call ProcessHookMessage(int code, WPARAM wParam, LPARAM lParam)
 	{
 		if (code < WINX_MSGF_BASE)
 			return FALSE;
-		return _WINX_PWND->PreTranslateMessage((MSG*)lParam);
+		return _DoPreTranslateMessage(Data(), (MSG*)lParam);
 	}
 };
 
@@ -376,10 +405,10 @@ public:
 #define WINX_MSGFILTER()													\
 public:																		\
 	VOID winx_msg OnMsgFilterInit(HWND hWnd) {								\
-		Hook(hWnd);															\
+		EnterMsgFilterChain(hWnd);											\
 	}																		\
 	VOID winx_msg OnMsgFilterTerm(HWND hWnd) {								\
-		Unhook();															\
+		LeaveMsgFilterChain();												\
 	}
 
 #define WINX_MESSAGEFILTER()		WINX_MSGFILTER()

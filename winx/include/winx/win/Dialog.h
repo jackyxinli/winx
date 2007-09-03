@@ -405,6 +405,20 @@ public:
 	}
 
 	HWND winx_call Create(
+		HWND hWndParent, int x, int y,
+		RESID nResId = IDD, HINSTANCE hInst = GetThisModule())
+	{
+		HWND hDlg = WindowClass::CreateDialog(hInst, nResId, hWndParent, (LPARAM)_WINX_PWND);
+		if (hDlg)
+		{
+			RECT rc;
+			::GetWindowRect(hDlg, &rc);
+			::MoveWindow(hDlg, x, y, rc.right - rc.left, rc.bottom - rc.top, TRUE);
+		}
+		return hDlg;
+	}
+
+	HWND winx_call Create(
 		HWND hWndParent, int x, int y, int nWidth, int nHeight,
 		RESID nResId = IDD, HINSTANCE hInst = GetThisModule())
 	{
