@@ -29,7 +29,7 @@ __WINX_BEGIN
 // _vsnprintf_dbg, _vsnwprintf_dbg
 
 #if !defined(_vsnprintf_dbg) // _vsnwprintf_dbg
-	#if defined(_TRUNCATE)
+	#if defined(WINX_VC_NET)
 		#define _vsnprintf_dbg(buff, cchBuff, fmt, arglist)					\
 			_vsnprintf_s(buff, cchBuff, _TRUNCATE, fmt, arglist)
 		#define _vsnwprintf_dbg(buff, cchBuff, fmt, arglist)				\
