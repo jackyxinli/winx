@@ -531,12 +531,17 @@ public:																		\
 		UINT message = pnmh->code;
 
 #define WINX_NOTIFY(id, nCode, Function)									\
-		if (idCtrl == (id) && message == nCode)	{							\
+		if (idCtrl == (id) && message == (nCode))	{						\
 			Function(hWnd, pnmh, pResult); return TRUE;						\
 		}
 
+#define WINX_NOTIFY_CODE(nCode, Function)									\
+		if (message == (nCode))	{											\
+			Function(hWnd, idCtrl, pnmh, pResult); return TRUE;				\
+		}
+
 #define WINX_NOTIFY_RANGE(idFirst, idLast, nCode, Function)					\
-		if (idCtrl >= (idFirst) && idCtrl <= (idLast) && message == nCode){ \
+		if (idCtrl >= (idFirst) && idCtrl <= (idLast) && message == (nCode)) { \
 			Function(hWnd, pnmh, pResult); return TRUE;						\
 		}
 
@@ -784,9 +789,14 @@ public:																		\
 	WINX_MSG_SIMPLE_HANDLER(OnIdle, 0);										\
 	WINX_MSG_DEFAULT_HANDLER(OnWindowPosChanging);							\
 	WINX_MSG_DEFAULT_HANDLER(OnWindowPosChanged);							\
+	WINX_MSG_DEFAULT_HANDLER(OnSize)										\
+	WINX_MSG_DEFAULT_HANDLER(OnSizing)										\
+	WINX_MSG_DEFAULT_HANDLER(OnMove)										\
+	WINX_MSG_DEFAULT_HANDLER(OnMoving)										\
 	WINX_MSG_DEFAULT_HANDLER(OnGetMinMaxInfo);								\
 	WINX_MSG_DEFAULT_HANDLER(OnContextMenu);								\
 	WINX_MSG_DEFAULT_HANDLER(OnInitMenuPopup);								\
+	WINX_MSG_DEFAULT_HANDLER(OnMenuSelect)									\
 	WINX_MSG_DEFAULT_HANDLER(OnSetFocus);									\
 	WINX_MSG_DEFAULT_HANDLER(OnKillFocus);									\
 	WINX_MSG_DEFAULT_HANDLER(OnEnable);										\
@@ -1018,12 +1028,19 @@ public:
 
 	VOID winx_msg OnContextMenu(HWND hWnd, winx::CPoint pos)				{}
 	VOID winx_msg OnInitMenuPopup(HWND hWnd, HMENU hMenu, LPARAM lParam)	{}
+	VOID winx_msg OnMenuSelect(HWND hWnd , UINT nItemID, UINT nFlags, HMENU hSysMenu)	{}
 
 public:
 	// OnWindowPosChanged/OnWindowPosChanging
 
 	VOID winx_msg OnWindowPosChanged(HWND hWnd, const WINDOWPOS& wndPos)	{}
 	VOID winx_msg OnWindowPosChanging(HWND hWnd, WINDOWPOS& wndPos)			{}
+
+	VOID winx_msg OnSize(HWND hWnd, UINT nType, int cx, int cy)				{}
+	VOID winx_msg OnSizing(HWND hWnd, UINT fwSide, LPRECT pRect)			{}
+
+	VOID winx_msg OnMove(HWND hWnd, int x, int y)							{}
+	VOID winx_msg OnMoving(HWND hWnd, UINT fwSide, LPRECT pRect)			{}
 
 public:
 	// OnGetMinMaxInfo - 限制Resizing窗口大小的行为

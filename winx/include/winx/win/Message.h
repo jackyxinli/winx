@@ -236,6 +236,11 @@ public:
 	VOID winx_msg OnWindowPosChanged(HWND hWnd, const WINDOWPOS& wndPos);
 	VOID winx_msg OnWindowPosChanging(HWND hWnd, WINDOWPOS& wndPos);
 
+	VOID winx_msg OnSize(HWND hWnd, UINT nType, int cx, int cy);
+	VOID winx_msg OnSizing(HWND hWnd, UINT fwSide, LPRECT pRect);
+	VOID winx_msg OnMove(HWND hWnd, int x, int y);
+	VOID winx_msg OnMoving(HWND hWnd, UINT fwSide, LPRECT pRect);
+
 	VOID winx_msg OnGetMinMaxInfo(HWND hWnd, LPMINMAXINFO lpMM);
 
 	VOID winx_msg OnThemeChanged(HWND hWnd);
@@ -574,6 +579,30 @@ NcPaint:	_WINX_PWND->OnNcPaint(hWnd, (HRGN)wParam);
 			_WINX_PWND->OnWindowPosChanged(hWnd, *(LPWINDOWPOS)lParam);
 			return TRUE;
 		}
+		// void OnMove(HWND hWnd, int x, int y)
+		WINX_MSG_CASE(WM_MOVE, OnMove)
+		{
+			_WINX_PWND->OnMove(hWnd, GET_X_LPARAM(lParam), GET_Y_LPARAM(lParam));
+			return 0;
+		}
+		// void OnMoving(HWND hWnd, UINT fwSide, LPRECT pRect)
+		WINX_MSG_CASE(WM_MOVING, OnMoving)
+		{
+			_WINX_PWND->OnMoving(hWnd, (UINT)wParam, (LPRECT)lParam);
+			return TRUE;
+		}
+		// void OnSize(HWND hWnd, UINT nType, int cx, int cy)
+		WINX_MSG_CASE(WM_SIZE, OnSize)
+		{
+			_WINX_PWND->OnSize(hWnd, (UINT)wParam, GET_X_LPARAM(lParam), GET_Y_LPARAM(lParam));
+			return 0;
+		}
+		// void OnSizing(HWND hWnd, UINT fwSide, LPRECT pRect)
+		WINX_MSG_CASE(WM_SIZING, OnSizing)
+		{
+			_WINX_PWND->OnSizing(hWnd, (UINT)wParam, (LPRECT)lParam);
+			return TRUE;
+		}
 		WINX_MSG_CASE(WM_GETMINMAXINFO, OnGetMinMaxInfo)
 		{
 			_WINX_PWND->OnGetMinMaxInfo(hWnd, (LPMINMAXINFO)lParam);
@@ -588,6 +617,12 @@ NcPaint:	_WINX_PWND->OnNcPaint(hWnd, (HRGN)wParam);
 		{
 			_WINX_PWND->OnInitMenuPopup(hWnd, (HMENU)wParam, lParam);
 			return TRUE;
+		}
+		//void OnMenuSelect(HWND hWnd , UINT nItemID, UINT nFlags, HMENU hSysMenu)
+		WINX_MSG_CASE(WM_MENUSELECT, OnMenuSelect)
+		{
+			_WINX_PWND->OnMenuSelect(hWnd, (UINT)LOWORD(wParam), (UINT)HIWORD(wParam), (HMENU)(lParam));
+			return 0;
 		}
 		WINX_MSG_CASE(WM_SYSCOMMAND, OnSysCommand)
 		{
