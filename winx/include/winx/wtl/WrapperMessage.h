@@ -34,12 +34,30 @@
 #define OnSize				__WTL_OnSize
 #define OnPaint				__WTL_OnPaint
 
+#define OnKillFocus			__WTL_OnKillFocus
 #define OnSetFocus			__WTL_OnSetFocus
 #define OnSetCursor			__WTL_OnSetCursor
-#define OnLButtonDown		__WTL_OnLButtonDown
 #define OnMouseMove			__WTL_OnMouseMove
+#define OnMouseWheel		__WTL_OnMouseWheel
+#define OnLButtonDown		__WTL_OnLButtonDown
 #define OnLButtonUp			__WTL_OnLButtonUp
+#define OnLButtonDblClk		__WTL_OnLButtonDblClk
+#define OnRButtonDown		__WTL_OnLButtonDown
+#define OnRButtonUp			__WTL_OnLButtonUp
+#define OnRButtonDblClk		__WTL_OnLButtonDblClk
 #define OnCaptureChanged	__WTL_OnCaptureChanged
+
+#define OnHScroll			__WTL_OnHScroll
+#define OnVScroll			__WTL_OnVScroll
+
+#define OnChar				__WTL_OnChar
+#define OnKeyDown			__WTL_OnKeyDown
+#define OnKeyUp				__WTL_OnKeyUp
+#define OnSysKeyDown		__WTL_OnSysKeyDown
+#define OnSysKeyUp			__WTL_OnSysKeyUp
+
+#define OnTimer				__WTL_OnTimer
+
 
 #define ATL ::ATL
 

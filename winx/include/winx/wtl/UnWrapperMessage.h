@@ -36,12 +36,29 @@
 #undef OnSize
 #undef OnPaint
 
+#undef OnKillFocus
 #undef OnSetFocus
 #undef OnSetCursor
-#undef OnLButtonDown
+#undef OnMouseWheel
 #undef OnMouseMove
+#undef OnLButtonDown
 #undef OnLButtonUp
+#undef OnLButtonDblClk
+#undef OnRButtonDown
+#undef OnRButtonUp
+#undef OnRButtonDblClk
 #undef OnCaptureChanged
+
+#undef OnHScroll
+#undef OnVScroll
+
+#undef OnChar
+#undef OnKeyDown
+#undef OnKeyUp
+#undef OnSysKeyDown
+#undef OnSysKeyUp
+
+#undef OnTimer
 
 // -------------------------------------------------------------------------
 // $Log: $
