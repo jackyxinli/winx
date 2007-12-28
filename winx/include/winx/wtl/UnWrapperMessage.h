@@ -36,6 +36,7 @@
 #undef OnSize
 #undef OnPaint
 
+#undef OnSetFocus
 #undef OnSetCursor
 #undef OnLButtonDown
 #undef OnMouseMove
