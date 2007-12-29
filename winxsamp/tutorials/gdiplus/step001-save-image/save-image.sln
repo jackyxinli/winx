@@ -1,0 +1,32 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 9.00
+# Visual Studio 2005
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ImageEncoders", "1.image-encoders\imgencoders.vcproj", "{C1B29C38-FF5C-441E-AC60-5643B2CF3395}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "SaveImage", "2.save-image\saveimg.vcproj", "{7B38B6BB-5592-4452-B29F-57D19F7D9FD6}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "MultiFrame", "3.save-multi-frame\multiframe.vcproj", "{F78E5A6B-E187-46F5-A2D8-0BEFE29C3FED}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Win32 = Debug|Win32
+		Release|Win32 = Release|Win32
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{C1B29C38-FF5C-441E-AC60-5643B2CF3395}.Debug|Win32.ActiveCfg = Debug|Win32
+		{C1B29C38-FF5C-441E-AC60-5643B2CF3395}.Debug|Win32.Build.0 = Debug|Win32
+		{C1B29C38-FF5C-441E-AC60-5643B2CF3395}.Release|Win32.ActiveCfg = Release|Win32
+		{C1B29C38-FF5C-441E-AC60-5643B2CF3395}.Release|Win32.Build.0 = Release|Win32
+		{7B38B6BB-5592-4452-B29F-57D19F7D9FD6}.Debug|Win32.ActiveCfg = Debug|Win32
+		{7B38B6BB-5592-4452-B29F-57D19F7D9FD6}.Debug|Win32.Build.0 = Debug|Win32
+		{7B38B6BB-5592-4452-B29F-57D19F7D9FD6}.Release|Win32.ActiveCfg = Release|Win32
+		{7B38B6BB-5592-4452-B29F-57D19F7D9FD6}.Release|Win32.Build.0 = Release|Win32
+		{F78E5A6B-E187-46F5-A2D8-0BEFE29C3FED}.Debug|Win32.ActiveCfg = Debug|Win32
+		{F78E5A6B-E187-46F5-A2D8-0BEFE29C3FED}.Debug|Win32.Build.0 = Debug|Win32
+		{F78E5A6B-E187-46F5-A2D8-0BEFE29C3FED}.Release|Win32.ActiveCfg = Release|Win32
+		{F78E5A6B-E187-46F5-A2D8-0BEFE29C3FED}.Release|Win32.Build.0 = Release|Win32
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal

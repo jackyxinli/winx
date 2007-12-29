@@ -1,0 +1,26 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 9.00
+# Visual Studio 2005
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "OpenFileDlg", "openfiledlg\hello.vcproj", "{92416B89-3018-40EE-ACDC-AD26146D5407}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "OpenMultiFiles", "openmultifiles\hello2.vcproj", "{2415FBC5-ED70-4FEF-8FBB-04F81F72355E}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Win32 = Debug|Win32
+		Release|Win32 = Release|Win32
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{92416B89-3018-40EE-ACDC-AD26146D5407}.Debug|Win32.ActiveCfg = Debug|Win32
+		{92416B89-3018-40EE-ACDC-AD26146D5407}.Debug|Win32.Build.0 = Debug|Win32
+		{92416B89-3018-40EE-ACDC-AD26146D5407}.Release|Win32.ActiveCfg = Release|Win32
+		{92416B89-3018-40EE-ACDC-AD26146D5407}.Release|Win32.Build.0 = Release|Win32
+		{2415FBC5-ED70-4FEF-8FBB-04F81F72355E}.Debug|Win32.ActiveCfg = Debug|Win32
+		{2415FBC5-ED70-4FEF-8FBB-04F81F72355E}.Debug|Win32.Build.0 = Debug|Win32
+		{2415FBC5-ED70-4FEF-8FBB-04F81F72355E}.Release|Win32.ActiveCfg = Release|Win32
+		{2415FBC5-ED70-4FEF-8FBB-04F81F72355E}.Release|Win32.Build.0 = Release|Win32
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal

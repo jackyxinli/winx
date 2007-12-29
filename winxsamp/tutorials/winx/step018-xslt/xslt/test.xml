@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<classes>
+	<class name="GpPen">
+	    This is GpPen class.
+	</class>
+	<class name="GpBrush">
+	   	This is GpBrush class.
+	</class>
+</classes>
