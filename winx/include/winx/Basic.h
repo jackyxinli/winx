@@ -242,6 +242,7 @@ public:
 // -------------------------------------------------------------------------
 // RunMsgLoop
 
+#define WINX_MSGF_MODELDLG	0
 #define WINX_MSGF_BASE		0x8100
 #define WINX_MSGF_MAINLOOP	(WINX_MSGF_BASE + 1)
 

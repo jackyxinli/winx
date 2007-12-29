@@ -309,19 +309,6 @@ private:
 	_MsgFilter* m_pNext;
 
 public:
-/*
- * Don't uncomment this. It's just an example.
- *
-	BOOL winx_msg PreTranslateMessage(MSG* lpMsg)
-	{
-		// don't translate non-input events
-		if ((lpMsg->message < WM_KEYFIRST || lpMsg->message > WM_KEYLAST) &&
-			(lpMsg->message < WM_MOUSEFIRST || lpMsg->message > WM_MOUSELAST))
-			return FALSE;
-
-		return ::IsDialogMessage(_WINX_PWND->m_hWnd, lpMsg);
-	}
- */
 	virtual BOOL winx_msg PreTranslateMessage(MSG* lpMsg)
 	{
 		return FALSE;
@@ -359,13 +346,27 @@ public:
 	}
 };
 
-template <class WindowImplClass>
+template <class WindowImplClass, int MSGF_BASE = WINX_MSGF_BASE>
 class MessageFilter : 
 	public _MsgFilter,
 	public winx::MessageHook<WindowImplClass, WH_MSGFILTER, _MsgFilter*>
 {
 public:
 	typedef MessageFilter MessageFilterClass;
+
+/*
+ * Don't uncomment this. It's just an example.
+ *
+	BOOL winx_msg PreTranslateMessage(MSG* lpMsg)
+	{
+		// don't translate non-input events
+		if ((lpMsg->message < WM_KEYFIRST || lpMsg->message > WM_KEYLAST) &&
+			(lpMsg->message < WM_MOUSEFIRST || lpMsg->message > WM_MOUSELAST))
+			return FALSE;
+
+		return ::IsDialogMessage(_WINX_PWND->m_hWnd, lpMsg);
+	}
+ */
 
 	VOID winx_call EnterMsgFilterChain(HWND hWnd)
 	{
@@ -389,7 +390,7 @@ public:
 public:
 	static LRESULT winx_call ProcessHookMessage(int code, WPARAM wParam, LPARAM lParam)
 	{
-		if (code < WINX_MSGF_BASE)
+		if (code < MSGF_BASE)
 			return FALSE;
 		return _DoPreTranslateMessage(Data(), (MSG*)lParam);
 	}
