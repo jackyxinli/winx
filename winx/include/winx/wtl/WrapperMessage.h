@@ -23,6 +23,7 @@
 #define OnThemeChanged		__WTL_OnThemeChanged
 #define OnNcPaint			__WTL_OnNcPaint
 
+#define OnMenuSelect		__WTL_OnMenuSelect
 #define OnInitMenuPopup		__WTL_OnInitMenuPopup
 #define OnCommand			__WTL_OnCommand
 
@@ -57,6 +58,8 @@
 #define OnSysKeyUp			__WTL_OnSysKeyUp
 
 #define OnTimer				__WTL_OnTimer
+
+#define PreTranslateMessage	__WTL_PreTranslateMessage
 
 
 #define ATL ::ATL

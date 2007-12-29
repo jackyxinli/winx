@@ -27,6 +27,7 @@
 
 #undef OnCommand
 #undef OnInitMenuPopup
+#undef OnMenuSelect
 
 #undef OnVScroll
 #undef OnHScroll
@@ -59,6 +60,8 @@
 #undef OnSysKeyUp
 
 #undef OnTimer
+
+#undef PreTranslateMessage
 
 // -------------------------------------------------------------------------
 // $Log: $
