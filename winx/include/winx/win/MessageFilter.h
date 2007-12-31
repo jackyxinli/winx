@@ -368,6 +368,12 @@ public:
 	}
  */
 
+	VOID winx_call EnterMsgFilterChain(HINSTANCE hInst)
+	{
+		_DoEnterChain(Data(), this);
+		HookOnce(hInst);
+	}
+
 	VOID winx_call EnterMsgFilterChain(HWND hWnd)
 	{
 		_DoEnterChain(Data(), this);
