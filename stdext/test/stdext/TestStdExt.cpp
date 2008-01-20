@@ -22,23 +22,41 @@
 #include <stdext.h>
 #include <stdext/Archive.h>
 #include <stdext/kmp/TestFinder.h>
-#include <stdext/memory/Pool.h>
-//#include <stdext/memory/GC.h>
 #include <stdext/FileMapping.h>
 #include <stdext/ScopeDebug.h>
 #include <stdext/Registry.h>
 #pragma comment(lib, "shlwapi.lib")
 
 // -------------------------------------------------------------------------
+// testBoost
+
+#if defined(USES_BOOST)
+
+#include <stdext/memory/Pool.h>
+
+template <class LogT>
+inline void testBoost(LogT& log)
+{
+	WINX_TEST_CLASS(TestPool);
+}
+
+#else
+
+template <class LogT>
+inline void testBoost(LogT& log)
+{
+}
+
+#endif
+
+// -------------------------------------------------------------------------
 // main
 
 int main()
 {
-	WINX_TEST_APP(std::ErrorLog, "TestAutoFreeAlloc", "");
+	WINX_TEST_APP(std::ErrorLog, "TestScopeAlloc", "");
 
-	WINX_TEST_CLASS(TestPool);
 	WINX_TEST_CLASS(TestFinder);
-//	WINX_TEST_CLASS(std::TestObjectPool);
 	WINX_TEST_CLASS(std::TestWinRegKey);
 	WINX_TEST_CLASS(std::TestErrorGuard);
 	WINX_TEST_CLASS(std::TestScopeLog);
@@ -46,17 +64,21 @@ int main()
 	WINX_TEST_CLASS(std::TestSimpleFileMapping);
 	WINX_TEST_CLASS(std::TestFileMapping);
 	WINX_TEST_CLASS(std::TestPriorityArray);
-//	WINX_TEST_CLASS(std::TestGC);
-//	WINX_TEST_CLASS(std::TestStreamArchive);
+	WINX_TEST_CLASS(std::TestStreamArchive);
 	WINX_TEST_CLASS(std::TestStdioArchive);
 	WINX_TEST_CLASS(std::TestString);
 	WINX_TEST_CLASS(std::TestCharType);
 	WINX_TEST_CLASS(std::TestLog);
-	WINX_TEST_CLASS(std::TestAutoFreeAlloc);
-	WINX_TEST_CLASS(std::TestAutoArray);
 	WINX_TEST_CLASS(std::TestSimpleMultiMap);
 	WINX_TEST_CLASS(std::TestFileBuf);
 	
+	//Memory.h
+	WINX_TEST_CLASS(std::TestAutoFreeAlloc);
+	WINX_TEST_CLASS(std::TestAutoArray);
+	WINX_TEST_CLASS(std::TestScopeAlloc);
+
+	//Boost
+	testBoost(log);
 	return 0;
 }
 
