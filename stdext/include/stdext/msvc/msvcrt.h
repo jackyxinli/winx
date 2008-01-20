@@ -19,10 +19,16 @@
 #ifndef __STDEXT_MSVC_MSVCRT_H__
 #define __STDEXT_MSVC_MSVCRT_H__
 
+#if (0)
+#define STD_NO_MAP_ALLOC
+#endif
+
 // -------------------------------------------------------------------------
 // crtdbg.h
 
+#ifndef STD_NO_MAP_ALLOC
 #define _CRTDBG_MAP_ALLOC
+#endif
 
 #ifndef _INC_STDLIB
 #include <stdlib.h>
