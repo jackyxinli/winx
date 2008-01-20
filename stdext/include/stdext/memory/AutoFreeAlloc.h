@@ -60,7 +60,6 @@ private:
 		return (_MemBlock*)(m_begin - HeaderSize);
 	}
 
-	AutoFreeAllocT(const AutoFreeAllocT& rhs);
 	const AutoFreeAllocT& operator=(const AutoFreeAllocT& rhs);
 
 public:
@@ -68,7 +67,12 @@ public:
 	{
 		m_begin = m_end = (char*)HeaderSize;
 	}
-	AutoFreeAllocT(_Alloc alloc) : m_alloc(alloc), m_destroyChain(NULL)
+	explicit AutoFreeAllocT(_Alloc alloc) : m_alloc(alloc), m_destroyChain(NULL)
+	{
+		m_begin = m_end = (char*)HeaderSize;
+	}
+	explicit AutoFreeAllocT(AutoFreeAllocT& owner)
+		: m_alloc(owner.m_alloc), m_destroyChain(NULL)
 	{
 		m_begin = m_end = (char*)HeaderSize;
 	}
@@ -177,8 +181,12 @@ typedef AutoFreeAllocT<DefaultStaticAlloc> AutoFreeAlloc;
 // class TestAutoFreeAlloc
 
 template <class LogT>
-class TestAutoFreeAlloc
+class TestAutoFreeAlloc : public TestCase
 {
+	WINX_TEST_SUITE(TestAutoFreeAlloc);
+		WINX_TEST(testBasic);
+	WINX_TEST_SUITE_END();
+
 public:
 	class Obj
 	{
@@ -194,7 +202,7 @@ public:
 		}
 	};
 
-	static void doTest(LogT& log)
+	void testBasic(LogT& log)
 	{
 		std::AutoFreeAlloc alloc;
 		

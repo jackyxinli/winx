@@ -37,6 +37,10 @@
 #include "memory/RecycleBuffer.h"
 #endif
 
+#ifndef __STDEXT_MEMORY_SCOPEALLOC_H__
+#include "memory/ScopeAlloc.h"
+#endif
+
 // -------------------------------------------------------------------------
 // $Log: Memory.h,v $
 // Revision 1.1  2006/10/18 12:13:39  xushiwei

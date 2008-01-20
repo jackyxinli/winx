@@ -210,7 +210,7 @@ STD_DECL_INT_CTYPE(long);
 // NEW, NEW_ARRAY, ALLOC, ALLOC_ARRAY
 
 #define STD_NEW(alloc, Type)					::new((alloc).allocate(MEMORY_DBG_NEW_ARG(Type))) Type
-#define STD_NEW_ARRAY(alloc, Type, count) 		alloc.newArray(MEMORY_DBG_NEW_ARRAY_ARG(Type, count))
+#define STD_NEW_ARRAY(alloc, Type, count) 		(alloc).newArray(MEMORY_DBG_NEW_ARRAY_ARG(Type, count))
 
 #define STD_ALLOC(alloc, Type)					((Type*)(alloc).allocate(MEMORY_DBG_ALLOC_ARG(Type)))
 #define STD_ALLOC_ARRAY(alloc, Type, count)		((Type*)(alloc).allocate(MEMORY_DBG_ALLOC_ARRAY_ARG(Type, count)))

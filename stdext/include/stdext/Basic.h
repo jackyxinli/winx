@@ -50,25 +50,8 @@
 #include <string.h>
 #endif
 
-#if defined(STD_SUPPORT_TASKALLOC) && !defined(STD_NO_TASKALLOC)
-#ifndef _OBJBASE_H_
-#include <objbase.h>		// for CoTaskMemAlloc, CoTaskMemFree
-#endif
-#endif
-
 #ifndef assert
 #include <assert.h>
-#endif
-
-#ifndef __wtypes_h__
-#include <wtypes.h>
-#endif
-
-#if !defined(_W64)
-typedef signed char INT8, *PINT8;
-typedef signed short INT16, *PINT16;
-typedef unsigned char UINT8, *PUINT8;
-typedef unsigned short UINT16, *PUINT16;
 #endif
 
 // -------------------------------------------------------------------------
@@ -147,6 +130,25 @@ inline int __cdecl _winx_null_func(int nLevel, const void* fmt, ...) { return 0;
 
 #if !defined(_MSC_VER) && !defined(__forceinline)
 #define __forceinline inline
+#endif
+
+// -------------------------------------------------------------------------
+
+#if defined(STD_SUPPORT_TASKALLOC) && !defined(STD_NO_TASKALLOC)
+#ifndef _OBJBASE_H_
+#include <objbase.h>		// for CoTaskMemAlloc, CoTaskMemFree
+#endif
+#endif
+
+#ifndef __wtypes_h__
+#include <wtypes.h>
+#endif
+
+#if !defined(_W64)
+typedef signed char INT8, *PINT8;
+typedef signed short INT16, *PINT16;
+typedef unsigned char UINT8, *PUINT8;
+typedef unsigned short UINT16, *PUINT16;
 #endif
 
 // -------------------------------------------------------------------------

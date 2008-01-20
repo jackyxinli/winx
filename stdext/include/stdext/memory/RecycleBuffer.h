@@ -71,55 +71,6 @@ public:
 };
 
 // -------------------------------------------------------------------------
-// class RecycleBlockAlloc
-
-class RecycleBlockAlloc
-{
-private:
-	struct _Block {
-		_Block* next;
-	};
-	_Block* m_freeList;
-
-public:
-	RecycleBlockAlloc() : m_freeList(NULL) {}
-	~RecycleBlockAlloc()
-	{
-		clear();
-	}
-
-public:
-	void* winx_call allocate(size_t cb)
-	{
-		if (m_freeList)
-		{
-			MEMORY_ASSERT(_msize(m_freeList) == cb);
-			_Block* blk = m_freeList;
-			m_freeList = blk->next;
-			return blk;
-		}
-		return malloc(cb);
-	}
-
-	void winx_call deallocate(void* p)
-	{
-		_Block* blk = (_Block*)p;
-		blk->next = m_freeList;
-		m_freeList = blk;
-	}
-
-	void winx_call clear()
-	{
-		while (m_freeList)
-		{
-			_Block* blk = m_freeList;
-			m_freeList = blk->next;
-			free(blk);
-		}
-	}
-};
-
-// -------------------------------------------------------------------------
 // $Log: RecycleBuffer.h,v $
 // Revision 1.1  2006/10/18 12:13:39  xushiwei
 // stdext as independent component

@@ -19,12 +19,18 @@
 #ifndef __STDEXT_MSVC_MSVCRT_H__
 #define __STDEXT_MSVC_MSVCRT_H__
 
-#ifndef __STDEXT_MSVC_ATLCONV_H__
-#include "atlconv.h"
-#endif
-
 // -------------------------------------------------------------------------
 // crtdbg.h
+
+#define _CRTDBG_MAP_ALLOC
+
+#ifndef _INC_STDLIB
+#include <stdlib.h>
+#endif
+
+#ifndef _INC_MALLOC
+#include <malloc.h>
+#endif
 
 #if defined(WINX_GCC)
 
@@ -95,6 +101,12 @@ namespace std
 #define exception msvc_exception
 
 #endif // defined(WINX_GCC)
+
+// -------------------------------------------------------------------------
+
+#ifndef __STDEXT_MSVC_ATLCONV_H__
+#include "atlconv.h"
+#endif
 
 // -------------------------------------------------------------------------
 // $Log: $
