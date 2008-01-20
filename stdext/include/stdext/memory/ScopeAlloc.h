@@ -71,7 +71,7 @@ private:
 	void operator=(const BlockPool&);
 
 public:
-	BlockPool(int cbBlock, int cbFreeLimit = INT_MAX)
+	BlockPool(int cbBlock = MEMORY_BLOCK_SIZE, int cbFreeLimit = INT_MAX)
 		: m_freeList(NULL), m_cbBlock(cbBlock), m_nFree(0),
 		  m_nFreeLimit(cbFreeLimit / cbBlock + 1)
 	{
@@ -158,7 +158,7 @@ public:
 
 	void testBasic(LogT& log)
 	{
-		std::BlockPool recycle(MEMORY_BLOCK_SIZE);
+		std::BlockPool recycle;
 		std::AutoFreeAllocT<std::ProxyBlockPool> alloc(recycle);
 		alloc.allocate(1024);
 		alloc.allocate(1024);
@@ -168,7 +168,7 @@ public:
 
 	void testScope(LogT& log)
 	{
-		std::BlockPool recycle(MEMORY_BLOCK_SIZE);
+		std::BlockPool recycle;
 		std::ScopeAlloc alloc(recycle);
 		printf("\n------------------- global: have 3 objs ----------------\n");
 		{
