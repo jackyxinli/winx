@@ -62,8 +62,8 @@ private:
 	};
 	_Block* m_freeList;
 
-	int m_cbFree;
-	const int m_cbFreeLimit;
+	int m_nFree;
+	const int m_nFreeLimit;
 	const int m_cbBlock;
 
 private:
@@ -72,7 +72,8 @@ private:
 
 public:
 	BlockPool(int cbBlock, int cbFreeLimit = INT_MAX)
-		: m_freeList(NULL), m_cbBlock(cbBlock), m_cbFree(0), m_cbFreeLimit(cbFreeLimit)
+		: m_freeList(NULL), m_cbBlock(cbBlock), m_nFree(0),
+		  m_nFreeLimit(cbFreeLimit / cbBlock + 1)
 	{
 	}
 	~BlockPool()
@@ -90,7 +91,7 @@ public:
 				MEMORY_ASSERT(_msize(m_freeList) >= cb);
 				_Block* blk = m_freeList;
 				m_freeList = blk->next;
-				m_cbFree -= m_cbBlock;
+				--m_nFree;
 				return blk;
 			}
 		}
@@ -99,14 +100,14 @@ public:
 
 	void winx_call deallocate(void* p)
 	{
-		if (m_cbFree >= m_cbFreeLimit) {
+		if (m_nFree >= m_nFreeLimit) {
 			free(p);
 		}
 		else {
 			_Block* blk = (_Block*)p;
 			blk->next = m_freeList;
 			m_freeList = blk;
-			m_cbFree += m_cbBlock;
+			++m_nFree;
 		}
 	}
 
@@ -118,6 +119,7 @@ public:
 			m_freeList = blk->next;
 			free(blk);
 		}
+		m_nFree = 0;
 	}
 };
 
