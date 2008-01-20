@@ -55,8 +55,13 @@
 // class TestPool
 
 template <class LogT>
-class TestPool
+class TestPool : public TestCase
 {
+	WINX_TEST_SUITE(TestPool);
+		WINX_TEST(testPool);
+		WINX_TEST(testOjectPool);
+	WINX_TEST_SUITE_END();
+
 public:
 	class TestClass
 	{
@@ -70,18 +75,18 @@ public:
 		}
 	};
 
-	void doTest(LogT& log)
+	void testPool(LogT& log)
 	{
-		{
-			boost::pool<> alloc(sizeof(int));
-			void* p = alloc.malloc();
-		}
-		{
-			boost::object_pool<TestClass> alloc;
-			TestClass* p = alloc.construct();
-			TestClass* p2 = alloc.construct();
-			alloc.destroy(p);
-		}
+		boost::pool<> alloc(sizeof(int));
+		void* p = alloc.malloc();
+	}
+
+	void testOjectPool(LogT& log)
+	{
+		boost::object_pool<TestClass> alloc;
+		TestClass* p = alloc.construct();
+		TestClass* p2 = alloc.construct();
+		alloc.destroy(p);
 	}
 };
 
