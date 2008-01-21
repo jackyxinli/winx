@@ -71,7 +71,7 @@ private:
 	void operator=(const BlockPool&);
 
 public:
-	BlockPool(int cbBlock = MEMORY_BLOCK_SIZE, int cbFreeLimit = INT_MAX)
+	BlockPool(int cbFreeLimit = INT_MAX, int cbBlock = MEMORY_BLOCK_SIZE)
 		: m_freeList(NULL), m_cbBlock(cbBlock), m_nFree(0),
 		  m_nFreeLimit(cbFreeLimit / cbBlock + 1)
 	{

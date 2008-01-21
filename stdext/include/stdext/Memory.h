@@ -42,6 +42,118 @@
 #endif
 
 // -------------------------------------------------------------------------
+// class TestCompareAllocators
+
+#ifndef __STDEXT_COUNTER_H__
+#include "Counter.h"
+#endif
+
+__NS_STD_BEGIN
+
+template <class LogT>
+class TestCompareAllocators : public TestCase
+{
+	WINX_TEST_SUITE(TestCompareAllocators);
+		WINX_TEST(testComparison1);
+		WINX_TEST(testComparison2);
+	WINX_TEST_SUITE_END();
+
+public:
+	enum { N = 60000 };
+
+	void doNewDelete(LogT& log)
+	{
+		log.print("===== NewDelete =====\n");
+		PerformanceCounter counter;
+		for (int i = 0; i < N; ++i)
+		{
+			int* p = new int;
+			delete p;
+		}
+		counter.trace(log);
+	}
+
+	void doAutoFreeAlloc1(LogT& log)
+	{
+		log.print("===== AutoFreeAlloc =====\n");
+		PerformanceCounter counter;
+		for (int i = 0; i < N; ++i)
+		{
+			AutoFreeAlloc alloc;
+			int* p = STD_NEW(alloc, int);
+		}
+		counter.trace(log);
+	}
+
+	void doScopeAlloc1(LogT& log)
+	{
+		log.print("===== ScopeAlloc =====\n");
+		BlockPool recyle;
+		PerformanceCounter counter;
+		for (int i = 0; i < N; ++i)
+		{
+			ScopeAlloc alloc(recyle);
+			int* p = STD_NEW(alloc, int);
+		}
+		counter.trace(log);
+	}
+
+	void testComparison1(LogT& log)
+	{
+		for (int i = 0; i < 4; ++i)
+		{
+			log.newline();
+			doAutoFreeAlloc1(log);
+			doNewDelete(log);
+			doScopeAlloc1(log);
+		}
+	}
+
+public:
+	void doAutoFreeAlloc2(LogT& log)
+	{
+		log.print("===== AutoFreeAlloc =====\n");
+		PerformanceCounter counter;
+		{
+			AutoFreeAlloc alloc;
+			for (int i = 0; i < N; ++i)
+			{
+				int* p = STD_NEW(alloc, int);
+			}
+		}
+		counter.trace(log);
+	}
+
+	void doScopeAlloc2(LogT& log)
+	{
+		log.print("===== ScopeAlloc =====\n");
+		BlockPool recyle;
+		PerformanceCounter counter;
+		{
+			ScopeAlloc alloc(recyle);
+			for (int i = 0; i < N; ++i)
+			{
+				int* p = STD_NEW(alloc, int);
+			}
+		}
+		counter.trace(log);
+	}
+
+	void testComparison2(LogT& log)
+	{
+		for (int i = 0; i < 4; ++i)
+		{
+			log.newline();
+			doAutoFreeAlloc2(log);
+			doNewDelete(log);
+			doScopeAlloc2(log);
+		}
+	}
+};
+
+__NS_STD_END
+
+// -------------------------------------------------------------------------
 // $Log: Memory.h,v $
 // Revision 1.1  2006/10/18 12:13:39  xushiwei
 // stdext as independent component
