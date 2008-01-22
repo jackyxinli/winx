@@ -61,7 +61,7 @@ class TestCompareAllocators : public TestCase
 public:
 	enum { N = 60000 };
 
-	void doNewDelete(LogT& log)
+	void doNewDelete1(LogT& log)
 	{
 		log.print("===== NewDelete =====\n");
 		PerformanceCounter counter;
@@ -104,12 +104,28 @@ public:
 		{
 			log.newline();
 			doAutoFreeAlloc1(log);
-			doNewDelete(log);
+			doNewDelete1(log);
 			doScopeAlloc1(log);
 		}
 	}
 
 public:
+	void doNewDelete2(LogT& log)
+	{
+		int i, *p[N];
+		log.print("===== NewDelete =====\n");
+		PerformanceCounter counter;
+		for (i = 0; i < N; ++i)
+		{
+			p[i] = new int;
+		}
+		for (i = 0; i < N; ++i)
+		{
+			delete p[i];
+		}
+		counter.trace(log);
+	}
+
 	void doAutoFreeAlloc2(LogT& log)
 	{
 		log.print("===== AutoFreeAlloc =====\n");
@@ -145,7 +161,7 @@ public:
 		{
 			log.newline();
 			doAutoFreeAlloc2(log);
-			doNewDelete(log);
+			doNewDelete2(log);
 			doScopeAlloc2(log);
 		}
 	}
