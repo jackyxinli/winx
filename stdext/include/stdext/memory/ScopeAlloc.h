@@ -27,6 +27,10 @@
 #include "AutoFreeAlloc.h"
 #endif
 
+#ifndef __STDEXT_THREADMODEL_H__
+#include "../ThreadModel.h"
+#endif
+
 #ifndef _INC_LIMITS
 #include <limits.h>
 #endif
@@ -52,9 +56,10 @@ public:
 };
 
 // -------------------------------------------------------------------------
-// class BlockPool
+// class BlockPoolT
 
-class BlockPool
+template <class ThreadModel>
+class BlockPoolT
 {
 private:
 	struct _Block {
@@ -67,16 +72,22 @@ private:
 	const int m_cbBlock;
 
 private:
-	BlockPool(const BlockPool&);
-	void operator=(const BlockPool&);
+	typedef typename ThreadModel::CS CS;
+	typedef typename ThreadModel::CSLock CSLock;
+
+	static CS g_cs;
+
+private:
+	BlockPoolT(const BlockPoolT&);
+	void operator=(const BlockPoolT&);
 
 public:
-	BlockPool(int cbFreeLimit = INT_MAX, int cbBlock = MEMORY_BLOCK_SIZE)
+	BlockPoolT(int cbFreeLimit = INT_MAX, int cbBlock = MEMORY_BLOCK_SIZE)
 		: m_freeList(NULL), m_cbBlock(cbBlock), m_nFree(0),
 		  m_nFreeLimit(cbFreeLimit / cbBlock + 1)
 	{
 	}
-	~BlockPool()
+	~BlockPoolT()
 	{
 		clear();
 	}
@@ -84,15 +95,18 @@ public:
 public:
 	void* winx_call allocate(size_t cb)
 	{
-		if (m_freeList)
 		{
-			if (m_cbBlock >= cb)
+			CSLock aLock(g_cs);
+			if (m_freeList)
 			{
-				MEMORY_ASSERT(_msize(m_freeList) >= cb);
-				_Block* blk = m_freeList;
-				m_freeList = blk->next;
-				--m_nFree;
-				return blk;
+				if (m_cbBlock >= cb)
+				{
+					MEMORY_ASSERT(_msize(m_freeList) >= cb);
+					_Block* blk = m_freeList;
+					m_freeList = blk->next;
+					--m_nFree;
+					return blk;
+				}
 			}
 		}
 		return malloc(cb);
@@ -100,6 +114,7 @@ public:
 
 	void winx_call deallocate(void* p)
 	{
+		CSLock aLock(g_cs);
 		if (m_nFree >= m_nFreeLimit) {
 			free(p);
 		}
@@ -113,6 +128,7 @@ public:
 
 	void winx_call clear()
 	{
+		CSLock aLock(g_cs);
 		while (m_freeList)
 		{
 			_Block* blk = m_freeList;
@@ -123,12 +139,29 @@ public:
 	}
 };
 
-typedef ProxyAlloc<BlockPool> ProxyBlockPool;
+template <class ThreadModel>
+typename ThreadModel::CS BlockPoolT<ThreadModel>::g_cs;
 
 // -------------------------------------------------------------------------
 // class ScopeAlloc
 
-typedef AutoFreeAllocT<ProxyBlockPool> ScopeAlloc;
+typedef BlockPoolT<SingleThreadModel> BlockPoolST;
+typedef ProxyAlloc<BlockPoolST> ProxyBlockPoolST;
+typedef AutoFreeAllocT<ProxyBlockPoolST> ScopeAllocST;
+
+typedef BlockPoolT<MultiThreadModel> BlockPoolMT;
+typedef ProxyAlloc<BlockPoolMT> ProxyBlockPoolMT;
+typedef AutoFreeAllocT<ProxyBlockPoolMT> ScopeAllocMT;
+
+#if defined(_MT)
+typedef BlockPoolMT BlockPool;
+typedef ProxyBlockPoolMT ProxyBlockPool;
+typedef ScopeAllocMT ScopeAlloc;
+#else
+typedef BlockPoolST BlockPool;
+typedef ProxyBlockPoolST ProxyBlockPool;
+typedef ScopeAllocST ScopeAlloc;
+#endif
 
 // -------------------------------------------------------------------------
 // class TestScopeAlloc
