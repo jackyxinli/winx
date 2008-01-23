@@ -54,7 +54,7 @@ inline void testBoost(LogT& log)
 
 int main()
 {
-	WINX_TEST_APP(std::ErrorLog, "TestScopeAlloc", "");
+	WINX_TEST_APP(std::ErrorLog, "TestCompareAllocators", "");
 
 	WINX_TEST_CLASS(TestFinder);
 	WINX_TEST_CLASS(std::TestWinRegKey);
@@ -71,11 +71,12 @@ int main()
 	WINX_TEST_CLASS(std::TestLog);
 	WINX_TEST_CLASS(std::TestSimpleMultiMap);
 	WINX_TEST_CLASS(std::TestFileBuf);
-	
+
 	//Memory.h
 	WINX_TEST_CLASS(std::TestAutoFreeAlloc);
 	WINX_TEST_CLASS(std::TestAutoArray);
 	WINX_TEST_CLASS(std::TestScopeAlloc);
+	WINX_TEST_CLASS(std::TestCompareAllocators);
 
 	//Boost
 	testBoost(log);

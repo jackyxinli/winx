@@ -60,6 +60,10 @@ class CriticalSectionMT
 private:
 	CRITICAL_SECTION m_cs;
 	
+private:
+	CriticalSectionMT(const CriticalSectionMT&);
+	void operator=(const CriticalSectionMT&);
+
 public:
 	CriticalSectionMT()
 	{

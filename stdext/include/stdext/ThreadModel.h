@@ -42,6 +42,10 @@ class AutoLock
 private:
 	LockT& m_lock;
 
+private:
+	AutoLock(const AutoLock&);
+	void operator=(const AutoLock&);
+
 public:
 	AutoLock(LockT& lock) : m_lock(lock)
 	{
