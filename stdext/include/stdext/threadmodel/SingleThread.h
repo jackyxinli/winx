@@ -35,15 +35,8 @@ public:
 	{
 	}
 
-	value_type winx_call inc()
-	{
-		return ++m_nRef;
-	}
-
-	value_type winx_call dec()
-	{
-		return --m_nRef;
-	}
+	value_type winx_call acquire() { return ++m_nRef; }
+	value_type winx_call release() { return --m_nRef; }
 
 	operator value_type()
 	{
@@ -57,8 +50,8 @@ public:
 class CriticalSectionST
 {
 public:
-	void winx_call lock()	{}
-	void winx_call unlock() {}
+	void winx_call acquire() {}
+	void winx_call release() {}
 };
 
 // -------------------------------------------------------------------------

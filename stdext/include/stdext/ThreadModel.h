@@ -45,11 +45,11 @@ private:
 public:
 	AutoLock(LockT& lock) : m_lock(lock)
 	{
-		m_lock.lock();
+		m_lock.acquire();
 	}
 	~AutoLock()
 	{
-		m_lock.unlock();
+		m_lock.release();
 	}
 };
 

@@ -36,12 +36,12 @@ public:
 	{
 	}
 
-	value_type winx_call inc()
+	value_type winx_call acquire()
 	{
 		return InterlockedIncrement(&m_nRef);
 	}
 
-	value_type winx_call dec()
+	value_type winx_call release()
 	{
 		return InterlockedDecrement(&m_nRef);
 	}
@@ -70,12 +70,12 @@ public:
 		DeleteCriticalSection(&m_cs);
 	}
 
-	void winx_call lock()
+	void winx_call acquire()
 	{
 		EnterCriticalSection(&m_cs);
 	}
 
-	void winx_call unlock()
+	void winx_call release()
 	{
 		LeaveCriticalSection(&m_cs);
 	}
