@@ -110,7 +110,7 @@ public:
 				--m_nFree;
 				return blk;
 			}
-			return malloc(cb);
+			return malloc(m_cbBlock);
 		}
 	}
 
