@@ -95,21 +95,23 @@ public:
 public:
 	void* winx_call allocate(size_t cb)
 	{
+		MEMORY_ASSERT(cb >= m_cbBlock);
+
+		if (cb > m_cbBlock)
+			return malloc(cb);
+		else
 		{
 			CSLock aLock(g_cs);
 			if (m_freeList)
 			{
-				if (m_cbBlock >= cb)
-				{
-					MEMORY_ASSERT(_msize(m_freeList) >= cb);
-					_Block* blk = m_freeList;
-					m_freeList = blk->next;
-					--m_nFree;
-					return blk;
-				}
+				MEMORY_ASSERT(_msize(m_freeList) >= cb);
+				_Block* blk = m_freeList;
+				m_freeList = blk->next;
+				--m_nFree;
+				return blk;
 			}
+			return malloc(cb);
 		}
-		return malloc(cb);
 	}
 
 	void winx_call deallocate(void* p)
