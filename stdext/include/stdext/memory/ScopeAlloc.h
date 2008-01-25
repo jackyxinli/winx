@@ -75,7 +75,7 @@ private:
 	typedef typename ThreadModel::CS CS;
 	typedef typename ThreadModel::CSLock CSLock;
 
-	static CS g_cs;
+	CS m_cs;
 
 private:
 	BlockPoolT(const BlockPoolT&);
@@ -101,7 +101,7 @@ public:
 			return malloc(cb);
 		else
 		{
-			CSLock aLock(g_cs);
+			CSLock aLock(m_cs);
 			if (m_freeList)
 			{
 				MEMORY_ASSERT(_msize(m_freeList) >= cb);
@@ -116,7 +116,7 @@ public:
 
 	void winx_call deallocate(void* p)
 	{
-		CSLock aLock(g_cs);
+		CSLock aLock(m_cs);
 		if (m_nFree >= m_nFreeLimit) {
 			free(p);
 		}
@@ -130,7 +130,7 @@ public:
 
 	void winx_call clear()
 	{
-		CSLock aLock(g_cs);
+		CSLock aLock(m_cs);
 		while (m_freeList)
 		{
 			_Block* blk = m_freeList;
@@ -140,9 +140,6 @@ public:
 		m_nFree = 0;
 	}
 };
-
-template <class ThreadModel>
-typename ThreadModel::CS BlockPoolT<ThreadModel>::g_cs;
 
 // -------------------------------------------------------------------------
 // class ScopeAlloc
