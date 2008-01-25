@@ -21,8 +21,12 @@
 
 // -------------------------------------------------------------------------
 
+#if defined(_WIN32)
 #ifndef _INC_IO
 #include <io.h>
+#endif
+#else
+#include "../msvc/io.h"
 #endif
 
 #ifndef __STDEXT_ARCHIVE_ARCHIVEIMPL_H__

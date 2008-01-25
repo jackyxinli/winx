@@ -9,32 +9,33 @@
 // of this license. You must not remove this notice, or any other, from
 // this software.
 // 
-// Module: stdext/ScopeDebug.h
+// Module: stdext/msvc/io.h
 // Creator: xushiwei
 // Email: xushiweizh@gmail.com
-// Contributor: sting.feng@gmail.com
-// Date: 2007-2-3 17:32:38
+// Date: 2003-10-5 13:20:48
 // 
 // $Id: $
 // -----------------------------------------------------------------------*/
-#ifndef __STDEXT_SCOPEDEBUG_H__
-#define __STDEXT_SCOPEDEBUG_H__
-
-// -------------------------------------------------------------------------
+#ifndef __STDEXT_MSVC_IO_H__
+#define __STDEXT_MSVC_IO_H__
 
 #if defined(_WIN32)
-
-#ifndef __STDEXT_SCOPEDBG_SCOPELOG_H__
-#include "scopedbg/ScopeLog.h"
+#error "Don't include <stdext/msvc/io.h>"
 #endif
 
-#ifndef __STDEXT_SCOPEDBG_ERRORGUARD_H__
-#include "scopedbg/ErrorGuard.h"
-#endif
+#include <sys/stat.h>
 
-#endif
+// =========================================================================
 
-// -------------------------------------------------------------------------
+inline long _filelength(int fd)
+{
+    struct stat s;
+    if (fstat(fd, &s) < 0)
+        return 0;
+    return s.st_size;
+}
+
+// =========================================================================
 // $Log: $
 
-#endif /* __STDEXT_SCOPEDEBUG_H__ */
+#endif /* __STDEXT_MSVC_IO_H__ */

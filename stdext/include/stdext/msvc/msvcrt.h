@@ -40,9 +40,9 @@
 
 #if defined(WINX_GCC)
 
-#ifndef _INC_CRTDBG
-#include "crtdbg.h"
-#endif
+//#ifndef _INC_CRTDBG
+//#include "crtdbg.h" -- @@todo
+//#endif
 
 #ifndef _ASSERT_H_
 #include <assert.h>

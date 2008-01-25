@@ -112,8 +112,8 @@
 #			define __noop 0
 #		endif
 #	else
-inline int __cdecl _winx_null_func(const void* fmt, ...) { return 0; }
-inline int __cdecl _winx_null_func(int nLevel, const void* fmt, ...) { return 0; }
+inline int _winx_null_func(const void* fmt, ...) { return 0; }
+inline int _winx_null_func(int nLevel, const void* fmt, ...) { return 0; }
 #	define __noop  _winx_null_func
 #	endif
 #endif
@@ -128,10 +128,6 @@ inline int __cdecl _winx_null_func(int nLevel, const void* fmt, ...) { return 0;
 #	endif
 #endif
 
-#if !defined(_MSC_VER) && !defined(__forceinline)
-#define __forceinline inline
-#endif
-
 // -------------------------------------------------------------------------
 
 #if defined(STD_SUPPORT_TASKALLOC) && !defined(STD_NO_TASKALLOC)
@@ -140,8 +136,14 @@ inline int __cdecl _winx_null_func(int nLevel, const void* fmt, ...) { return 0;
 #endif
 #endif
 
+#if defined(_WIN32) 
 #ifndef __wtypes_h__
 #include <wtypes.h>
+#endif
+#else
+#ifndef __STDEXT_MSVC_WTYPES_H__
+#include "msvc/wtypes.h"
+#endif
 #endif
 
 #if !defined(_W64)
@@ -153,6 +155,10 @@ typedef unsigned short UINT16, *PUINT16;
 
 // -------------------------------------------------------------------------
 // msvcrt
+
+#ifndef __STDEXT_MSVC_DECLSPEC_H__
+#include "msvc/declspec.h"
+#endif
 
 #ifndef __STDEXT_MSVC_MSVCRT_H__
 #include "msvc/msvcrt.h"
@@ -423,13 +429,6 @@ __NS_STD_BEGIN
 class NullClass {};
 
 __NS_STD_END
-
-// -------------------------------------------------------------------------
-// uuidof
-
-#ifndef __STDEXT_MSVC_UUIDOF_H__
-#include "msvc/uuidof.h"
-#endif
 
 // -------------------------------------------------------------------------
 // TestCase class

@@ -23,8 +23,19 @@
 #include "Basic.h"
 #endif
 
+#if defined(_WIN32)
 #ifndef _WINBASE_
 #include <winbase.h>
+#endif
+#else
+inline BOOL WINAPI QueryPerformanceFrequency(LARGE_INTEGER* lp) //@@todo
+{
+    return TRUE;
+}
+inline BOOL WINAPI QueryPerformanceCount(LARGE_INTEGER* lp)
+{
+    return TRUE;
+}
 #endif
 
 __NS_STD_BEGIN
