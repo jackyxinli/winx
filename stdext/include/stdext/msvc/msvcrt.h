@@ -49,12 +49,6 @@
 #endif // !defined(STD_NO_MSVCRT)
 
 // -------------------------------------------------------------------------
-
-#ifndef interface
-#define interface struct
-#endif
-
-// -------------------------------------------------------------------------
 // std::exception
 
 #if defined(WINX_GCC)

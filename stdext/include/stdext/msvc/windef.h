@@ -104,6 +104,10 @@ typedef void __RPC_FAR * RPC_IF_HANDLE;
 #define PURE                    = 0
 #endif
 
+#ifndef interface
+#define interface struct
+#endif
+
 // -------------------------------------------------------------------------
 
 #ifndef NULL
