@@ -33,6 +33,10 @@
 #define VERIFY_OK
 #endif
 
+#ifndef __STDEXT_PLATFORM_H__
+#include "Platform.h"
+#endif
+
 #ifndef _CRT_SECURE_NO_DEPRECATE
 #define _CRT_SECURE_NO_DEPRECATE
 #endif
@@ -71,30 +75,24 @@
 // -------------------------------------------------------------------------
 // C++ Compiler
 
-#if defined(_MSC_VER) 
-#	if (_MSC_VER > 1200)
-#		ifndef WINX_VC_NET
+#if defined(X_CC_VC)
+#	if defined(X_CC_VC_NET)
 #		define WINX_VC_NET
 #		pragma warning(disable:4290)
 		// A function is declared using exception specification, which Visual C++
 		// accepts but does not implement
-#		if (_MSC_VER > 1310)
+#		if defined(X_CC_VC_NET_GE2005)
 #			define WINX_VC_NET_GE2005 // Version >= VS.NET 2005
 #		else
 #			define WINX_VC_NET_LE2003 // Version <= VS.NET 2003
 #		endif
-#		endif
 #	else
-#		ifndef WINX_VC6
-#		define WINX_VC6
+#		if defined(X_CC_VC6)
+#			define WINX_VC6
 #		endif
 #	endif
-#else
-#	if defined(__GNUG__) || defined(__GNUC__)
-#		ifndef WINX_GCC
-#		define WINX_GCC
-#		endif
-#	endif
+#elif (X_CC_GCC)
+#	define WINX_GCC
 #endif
 
 // -------------------------------------------------------------------------

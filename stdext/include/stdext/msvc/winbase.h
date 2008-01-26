@@ -35,6 +35,10 @@
 #include "posix/pthread.h"
 #endif
 
+#ifndef __STDEXT_MSVC_POSIX_TIME_H__
+#include "posix/time.h"
+#endif
+
 // -------------------------------------------------------------------------
 // NotImplementFeature
 
@@ -158,20 +162,6 @@ WINBASEAPI DWORD WINAPI GetModuleFileNameW(
 #else
 #define GetModuleFileName  GetModuleFileNameA
 #endif // !UNICODE
-
-// -------------------------------------------------------------------------
-
-WINBASEAPI BOOL WINAPI QueryPerformanceFrequency(LARGE_INTEGER* lp)
-{
-	NotImplementFeature("QueryPerformanceFrequency");
-    return TRUE;
-}
-
-WINBASEAPI BOOL WINAPI QueryPerformanceCounter(LARGE_INTEGER* lp)
-{
-	NotImplementFeature("QueryPerformanceCounter");
-    return TRUE;
-}
 
 // -------------------------------------------------------------------------
 

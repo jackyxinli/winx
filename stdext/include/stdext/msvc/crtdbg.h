@@ -31,6 +31,8 @@
 #include <stdarg.h>
 #endif
 
+#if defined(_DEBUG)
+
 inline int _ExCrtDbgBreak(
     int nRptType, const char * szFile, int nLine, const char * szModule,
     const char * szFormat, ...)
@@ -43,6 +45,8 @@ inline int _ExCrtDbgBreak(
 	va_end(arglist);
 	return 1;
 }
+
+#endif
 
 /****************************************************************************
  *
