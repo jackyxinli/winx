@@ -36,6 +36,25 @@
 #endif
 
 // -------------------------------------------------------------------------
+// NotImplementFeature
+
+#if !defined(STD_NO_MSVCRT)
+	#ifndef _INC_CRTDBG
+	#include <crtdbg.h>
+	#endif
+#else
+	#ifndef __STDEXT_MSVC_CRTDBG_H__
+	#include "crtdbg.h"
+	#endif
+#endif
+
+inline void NotImplementFeature(const char* szFeature)
+{
+	_RPT1(_CRT_ERROR, "NotImplementFeature - %s\n", szFeature);
+	throw szFeature;
+}
+
+// -------------------------------------------------------------------------
 
 #define INVALID_HANDLE_VALUE ((HANDLE)-1)
 #define INVALID_FILE_SIZE ((DWORD)0xFFFFFFFF)
@@ -63,13 +82,15 @@
 #define FORMAT_MESSAGE_ARGUMENT_ARRAY  0x00002000
 #define FORMAT_MESSAGE_MAX_WIDTH_MASK  0x000000FF
 
-WINBASEAPI DWORD WINAPI GetLastError() //@@todo
+WINBASEAPI DWORD WINAPI GetLastError()
 {
+	NotImplementFeature("GetLastError");
 	return 0;
 }
 
 WINBASEAPI VOID WINAPI SetLastError(DWORD dwErrCode)
 {
+	NotImplementFeature("SetLastError");
 }
 
 WINBASEAPI DWORD WINAPI FormatMessageA(
@@ -81,6 +102,7 @@ WINBASEAPI DWORD WINAPI FormatMessageA(
     DWORD nSize,
     va_list *Arguments)
 {
+	NotImplementFeature("FormatMessageA");
 	return 0;
 }
 
@@ -93,6 +115,7 @@ WINBASEAPI DWORD WINAPI FormatMessageW(
     DWORD nSize,
     va_list *Arguments)
 {
+	NotImplementFeature("FormatMessageW");
 	return 0;
 }
 
@@ -107,6 +130,7 @@ WINBASEAPI DWORD WINAPI FormatMessageW(
 WINBASEAPI VOID WINAPI GetSystemTime(
     LPSYSTEMTIME lpSystemTime)
 {
+	NotImplementFeature("GetSystemTime");
 }
 
 // -------------------------------------------------------------------------
@@ -116,6 +140,7 @@ WINBASEAPI DWORD WINAPI GetModuleFileNameA(
     LPSTR lpFilename,
     DWORD nSize)
 {
+	NotImplementFeature("GetModuleFileName");
 	return 0;
 }
 
@@ -124,6 +149,7 @@ WINBASEAPI DWORD WINAPI GetModuleFileNameW(
     LPWSTR lpFilename,
     DWORD nSize)
 {
+	NotImplementFeature("GetModuleFileName");
 	return 0;
 }
 
@@ -135,13 +161,15 @@ WINBASEAPI DWORD WINAPI GetModuleFileNameW(
 
 // -------------------------------------------------------------------------
 
-WINBASEAPI BOOL WINAPI QueryPerformanceFrequency(LARGE_INTEGER* lp) //@@todo
+WINBASEAPI BOOL WINAPI QueryPerformanceFrequency(LARGE_INTEGER* lp)
 {
+	NotImplementFeature("QueryPerformanceFrequency");
     return TRUE;
 }
 
 WINBASEAPI BOOL WINAPI QueryPerformanceCounter(LARGE_INTEGER* lp)
 {
+	NotImplementFeature("QueryPerformanceCounter");
     return TRUE;
 }
 
@@ -150,23 +178,25 @@ WINBASEAPI BOOL WINAPI QueryPerformanceCounter(LARGE_INTEGER* lp)
 WINBASEAPI HANDLE WINAPI HeapCreate(
 	DWORD flOptions,
     DWORD dwInitialSize,
-    DWORD dwMaximumSize) //@@todo
+    DWORD dwMaximumSize)
 {
+	NotImplementFeature("HeapCreate");
 	return NULL;
 }
 
 WINBASEAPI BOOL WINAPI HeapDestroy(
     HANDLE hHeap)
 {
+	NotImplementFeature("HeapDestroy");
 	return TRUE;
 }
-
 
 WINBASEAPI LPVOID WINAPI HeapAlloc(
     HANDLE hHeap,
     DWORD dwFlags,
     DWORD dwBytes)
 {
+	NotImplementFeature("HeapAlloc");
 	return NULL;
 }
 
@@ -176,6 +206,7 @@ WINBASEAPI LPVOID WINAPI HeapReAlloc(
     LPVOID lpMem,
     DWORD dwBytes)
 {
+	NotImplementFeature("HeapReAlloc");
 	return NULL;
 }
 
@@ -184,6 +215,7 @@ WINBASEAPI BOOL WINAPI HeapFree(
     DWORD dwFlags,
     LPVOID lpMem)
 {
+	NotImplementFeature("HeapFree");
 	return TRUE;
 }
 
@@ -192,11 +224,13 @@ WINBASEAPI DWORD WINAPI HeapSize(
     DWORD dwFlags,
     LPCVOID lpMem)
 {
+	NotImplementFeature("HeapSize");
 	return 0;
 }
 
 WINBASEAPI HANDLE WINAPI GetProcessHeap()
 {
+	NotImplementFeature("GetProcessHeap");
 	return NULL;
 }
 
@@ -204,6 +238,7 @@ WINBASEAPI HANDLE WINAPI GetProcessHeap()
 
 WINBASEAPI DWORD WINAPI GetCurrentThreadId()
 {
+	NotImplementFeature("GetCurrentThreadId");
 	return 0;
 }
 
@@ -212,12 +247,14 @@ WINBASEAPI DWORD WINAPI GetCurrentThreadId()
 WINBASEAPI LONG WINAPI InterlockedIncrement(
     LPLONG lpAddend)
 {
+	NotImplementFeature("InterlockedIncrement");
 	return *lpAddend;
 }
 
 WINBASEAPI LONG WINAPI InterlockedDecrement(
     LPLONG lpAddend)
 {
+	NotImplementFeature("InterlockedDecrement");
 	return *lpAddend;
 }
 
@@ -227,6 +264,7 @@ WINBASEAPI HLOCAL WINAPI LocalAlloc(
     UINT uFlags,
     UINT uBytes)
 {
+	NotImplementFeature("LocalAlloc");
 	return NULL;
 }
 
@@ -235,42 +273,49 @@ WINBASEAPI HLOCAL WINAPI LocalReAlloc(
     UINT uBytes,
     UINT uFlags)
 {
+	NotImplementFeature("LocalReAlloc");
 	return NULL;
 }
 
 WINBASEAPI LPVOID WINAPI LocalLock(
     HLOCAL hMem)
 {
+	NotImplementFeature("LocalLock");
 	return NULL;
 }
 
 WINBASEAPI HLOCAL WINAPI LocalHandle(
     LPCVOID pMem)
 {
+	NotImplementFeature("LocalHandle");
 	return NULL;
 }
 
 WINBASEAPI BOOL WINAPI LocalUnlock(
     HLOCAL hMem)
 {
+	NotImplementFeature("LocalUnlock");
 	return TRUE;
 }
 
 WINBASEAPI UINT WINAPI LocalSize(
     HLOCAL hMem)
 {
+	NotImplementFeature("LocalSize");
 	return 0;
 }
 
 WINBASEAPI UINT WINAPI LocalFlags(
     HLOCAL hMem)
 {
+	NotImplementFeature("LocalFlags");
 	return 0;
 }
 
 WINBASEAPI HLOCAL WINAPI LocalFree(
     HLOCAL hMem)
 {
+	NotImplementFeature("LocalFree");
 	return NULL;
 }
 
@@ -280,6 +325,7 @@ WINBASEAPI HGLOBAL WINAPI GlobalAlloc(
     UINT uFlags,
     DWORD dwBytes)
 {
+	NotImplementFeature("GlobalAlloc");
 	return NULL;
 }
 
@@ -288,36 +334,42 @@ WINBASEAPI HGLOBAL WINAPI GlobalReAlloc(
     DWORD dwBytes,
     UINT uFlags)
 {
+	NotImplementFeature("GlobalReAlloc");
 	return NULL;
 }
 
 WINBASEAPI DWORD WINAPI GlobalSize(
     HGLOBAL hMem)
 {
+	NotImplementFeature("GlobalSize");
 	return 0;
 }
 
 WINBASEAPI UINT WINAPI GlobalFlags(
 	HGLOBAL hMem)
 {
+	NotImplementFeature("GlobalFlags");
 	return 0;
 }
 
 WINBASEAPI LPVOID WINAPI GlobalLock(
     HGLOBAL hMem)
 {
+	NotImplementFeature("GlobalLock");
 	return NULL;
 }
 
 WINBASEAPI BOOL WINAPI GlobalUnlock(
     HGLOBAL hMem)
 {
+	NotImplementFeature("GlobalUnlock");
 	return TRUE;
 }
 
 WINBASEAPI HGLOBAL WINAPI GlobalFree(
     HGLOBAL hMem)
 {
+	NotImplementFeature("GlobalFree");
 	return NULL;
 }
 
@@ -515,6 +567,7 @@ WINBASEAPI HANDLE WINAPI CreateFileA(
     DWORD dwFlagsAndAttributes,
     HANDLE hTemplateFile)
 {
+	NotImplementFeature("CreateFile");
 	return NULL;
 }
 
@@ -527,6 +580,7 @@ WINBASEAPI HANDLE WINAPI CreateFileW(
     DWORD dwFlagsAndAttributes,
     HANDLE hTemplateFile)
 {
+	NotImplementFeature("CreateFile");
 	return NULL;
 }
 
@@ -540,6 +594,7 @@ WINBASEAPI DWORD WINAPI GetFileSize(
     HANDLE hFile,
     LPDWORD lpFileSizeHigh)
 {
+	NotImplementFeature("GetFileSize");
 	return 0;
 }
 
@@ -550,6 +605,7 @@ WINBASEAPI BOOL WINAPI WriteFile(
     LPDWORD lpNumberOfBytesWritten,
     LPOVERLAPPED lpOverlapped)
 {
+	NotImplementFeature("WriteFile");
 	return TRUE;
 }
 
@@ -560,12 +616,14 @@ WINBASEAPI BOOL WINAPI ReadFile(
     LPDWORD lpNumberOfBytesRead,
     LPOVERLAPPED lpOverlapped)
 {
+	NotImplementFeature("ReadFile");
 	return TRUE;
 }
 
 WINBASEAPI BOOL WINAPI FlushFileBuffers(
     HANDLE hFile)
 {
+	NotImplementFeature("FlushFileBuffers");
 	return TRUE;
 }
 
@@ -577,6 +635,7 @@ WINBASEAPI HANDLE WINAPI CreateFileMappingA(
     DWORD dwMaximumSizeLow,
     LPCSTR lpName)
 {
+	NotImplementFeature("CreateFileMapping");
 	return NULL;
 }
 
@@ -588,6 +647,7 @@ WINBASEAPI HANDLE WINAPI CreateFileMappingW(
     DWORD dwMaximumSizeLow,
     LPCWSTR lpName)
 {
+	NotImplementFeature("CreateFileMapping");
 	return NULL;
 }
 
@@ -601,6 +661,7 @@ WINBASEAPI BOOL WINAPI FlushViewOfFile(
     LPCVOID lpBaseAddress,
     DWORD dwNumberOfBytesToFlush)
 {
+	NotImplementFeature("FlushViewOfFile");
 	return TRUE;
 }
 
@@ -612,12 +673,14 @@ WINBASEAPI LPVOID WINAPI MapViewOfFileEx(
     DWORD dwNumberOfBytesToMap,
     LPVOID lpBaseAddress)
 {
+	NotImplementFeature("MapViewOfFileEx");
 	return NULL;
 }
 
 WINBASEAPI BOOL WINAPI UnmapViewOfFile(
     LPCVOID lpBaseAddress)
 {
+	NotImplementFeature("UnmapViewOfFile");
 	return TRUE;
 }
 
@@ -627,6 +690,7 @@ WINBASEAPI BOOL WINAPI CreateDirectoryA(
     LPCSTR lpPathName,
     LPSECURITY_ATTRIBUTES lpSecurityAttributes)
 {
+	NotImplementFeature("CreateDirectory");
 	return TRUE;
 }
 
@@ -634,6 +698,7 @@ WINBASEAPI BOOL WINAPI CreateDirectoryW(
     LPCWSTR lpPathName,
     LPSECURITY_ATTRIBUTES lpSecurityAttributes)
 {
+	NotImplementFeature("CreateDirectory");
 	return TRUE;
 }
 
@@ -648,6 +713,7 @@ WINBASEAPI BOOL WINAPI CreateDirectoryW(
 WINBASEAPI BOOL WINAPI CloseHandle(
     HANDLE hObject)
 {
+	NotImplementFeature("CloseHandle");
 	return TRUE;
 }
 

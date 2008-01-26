@@ -19,7 +19,7 @@
 #ifndef __STDEXT_MSVC_IO_H__
 #define __STDEXT_MSVC_IO_H__
 
-#if !defined(STD_NO_WINSDK)
+#if !defined(STD_NO_MSVCRT)
 #error "Don't include <stdext/msvc/io.h>"
 #endif
 

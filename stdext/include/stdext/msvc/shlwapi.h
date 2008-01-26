@@ -24,8 +24,9 @@
 
 // =========================================================================
 
-LWSTDAPI_(LPSTR) PathFindExtensionA(LPCSTR pszPath) //@@todo
+LWSTDAPI_(LPSTR) PathFindExtensionA(LPCSTR pszPath)
 {
+	NotImplementFeature("PathFindExtensionA");
 	return NULL;
 }
 
@@ -33,11 +34,13 @@ LWSTDAPI_(LPSTR) PathFindExtensionA(LPCSTR pszPath) //@@todo
 
 LWSTDAPI SHCreateStreamOnFileA(LPCSTR pszFile, DWORD grfMode, struct IStream **ppstm)
 {
+	NotImplementFeature("SHCreateStreamOnFileA");
 	return S_OK;
 }
 
 LWSTDAPI SHCreateStreamOnFileW(LPCWSTR pszFile, DWORD grfMode, struct IStream **ppstm)
 {
+	NotImplementFeature("SHCreateStreamOnFileW");
 	return S_OK;
 }
 

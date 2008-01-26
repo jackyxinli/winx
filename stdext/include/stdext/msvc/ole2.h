@@ -35,23 +35,27 @@
 
 WINOLEAPI GetHGlobalFromILockBytes(LPLOCKBYTES plkbyt, HGLOBAL FAR* phglobal)
 {
-	return S_OK; //@@todo
+	NotImplementFeature("GetHGlobalFromILockBytes");
+	return S_OK;
 }
 
 WINOLEAPI CreateILockBytesOnHGlobal(HGLOBAL hGlobal, BOOL fDeleteOnRelease,
 									 LPLOCKBYTES FAR* pplkbyt)
 {
+	NotImplementFeature("CreateILockBytesOnHGlobal");
 	return S_OK;
 }
 
 WINOLEAPI GetHGlobalFromStream(LPSTREAM pstm, HGLOBAL FAR* phglobal)
 {
+	NotImplementFeature("GetHGlobalFromStream");
 	return S_OK;
 }
 
 WINOLEAPI CreateStreamOnHGlobal(HGLOBAL hGlobal, BOOL fDeleteOnRelease,
 								 LPSTREAM FAR* ppstm)
 {
+	NotImplementFeature("CreateStreamOnHGlobal");
 	return S_OK;
 }
 
@@ -62,20 +66,25 @@ interface IDataObject;
 
 WINOLEAPI  OleSetClipboard(IDataObject* pDataObj)
 {
+	NotImplementFeature("OleSetClipboard");
 	return S_OK;
 }
 
 WINOLEAPI  OleGetClipboard(IDataObject** ppDataObj)
 {
+	NotImplementFeature("OleGetClipboard");
 	return S_OK;
 }
+
 WINOLEAPI  OleFlushClipboard()
 {
+	NotImplementFeature("OleFlushClipboard");
 	return S_OK;
 }
 
 WINOLEAPI  OleIsCurrentClipboard(IDataObject* pDataObj)
 {
+	NotImplementFeature("OleIsCurrentClipboard");
 	return S_OK;
 }
 
@@ -91,6 +100,7 @@ WINOLEAPI  DoDragDrop(
 	DWORD dwOKEffects,
 	LPDWORD pdwEffect)
 {
+	NotImplementFeature("DoDragDrop");
 	return S_OK;
 }
 

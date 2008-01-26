@@ -19,8 +19,8 @@
 #ifndef __STDEXT_MSVC_WINNLS_H__
 #define __STDEXT_MSVC_WINNLS_H__
 
-#ifndef __STDEXT_MSVC_WINDEF_H__
-#include "windef.h"
+#ifndef __STDEXT_MSVC_WINBASE_H__
+#include "winbase.h"
 #endif
 
 // -------------------------------------------------------------------------
@@ -46,7 +46,8 @@ inline int WINAPI MultiByteToWideChar(
     LPWSTR   lpWideCharStr,
     int      cchWideChar)
 {
-	return 0; //@@todo
+	NotImplementFeature("MultiByteToWideChar");
+	return 0;
 }
 
 inline int WINAPI WideCharToMultiByte(
@@ -59,7 +60,8 @@ inline int WINAPI WideCharToMultiByte(
     LPCSTR   lpDefaultChar,
     LPBOOL   lpUsedDefaultChar)
 {
-	return 0; //@@todo
+	NotImplementFeature("WideCharToMultiByte");
+	return 0;
 }
 
 // -------------------------------------------------------------------------

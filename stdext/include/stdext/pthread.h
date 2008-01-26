@@ -26,6 +26,7 @@
 	#if !defined( PTHREAD_H )
 	#include "../../../pthreads-w32/include/pthread.h"
 	#endif
+	#pragma comment(lib, "pthreadVC2.lib")
 #else
 	#ifndef _PTHREAD_H
 	#include <pthread.h>
