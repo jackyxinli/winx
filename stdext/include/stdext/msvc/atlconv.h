@@ -27,6 +27,10 @@
 #include <malloc.h>
 #endif
 
+#if defined(STD_NO_WINSDK)
+#include "winnls.h"
+#endif
+
 // -------------------------------------------------------------------------
 // _winx_A2WHelper/_winx_W2AHelper
 

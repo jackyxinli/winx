@@ -23,19 +23,14 @@
 #include "Basic.h"
 #endif
 
-#if defined(_WIN32)
+#if !defined(STD_NO_WINSDK)
 #ifndef _WINBASE_
 #include <winbase.h>
 #endif
 #else
-inline BOOL WINAPI QueryPerformanceFrequency(LARGE_INTEGER* lp) //@@todo
-{
-    return TRUE;
-}
-inline BOOL WINAPI QueryPerformanceCount(LARGE_INTEGER* lp)
-{
-    return TRUE;
-}
+#ifndef __STDEXT_MSVC_WINBASE_H__
+#include "msvc/winbase.h"
+#endif
 #endif
 
 __NS_STD_BEGIN

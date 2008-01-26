@@ -38,49 +38,21 @@
 #include <malloc.h>
 #endif
 
-#if defined(WINX_GCC)
-
-//#ifndef _INC_CRTDBG
-//#include "crtdbg.h" -- @@todo
-//#endif
-
-#ifndef _ASSERT_H_
-#include <assert.h>
-#endif
-
-#undef _ASSERTE
-#define _ASSERTE(e)	assert(e)
-
-#undef _CrtDbgBreak
-#define _CrtDbgBreak()	_assert("_CrtDbgBreak", __FILE__, __LINE__)
-
-#undef _CrtSetDbgFlag
-#define _CrtSetDbgFlag(f)
-
-#undef _malloc_dbg
-#undef _calloc_dbg
-#undef _realloc_dbg
-#undef _expand_dbg
-#undef _free_dbg
-#undef _msize_dbg
-
-#define _malloc_dbg(s, t, f, l)         malloc(s)
-#define _calloc_dbg(c, s, t, f, l)      calloc(c, s)
-#define _realloc_dbg(p, s, t, f, l)     realloc(p, s)
-#define _expand_dbg(p, s, t, f, l)      _expand(p, s)
-#define _free_dbg(p, t)                 free(p)
-#define _msize_dbg(p, t)                _msize(p)
-
-#undef NULL
-#define NULL 0
-
-#else
-
+#if !defined(STD_NO_MSVCRT)
 #ifndef _INC_CRTDBG
 #include <crtdbg.h>
 #endif
+#else
+#ifndef __STDEXT_MSVC_CRTDBG_H__
+#include "crtdbg.h"
+#endif
+#endif // !defined(STD_NO_MSVCRT)
 
-#endif // defined(WINX_GCC)
+// -------------------------------------------------------------------------
+
+#ifndef interface
+#define interface struct
+#endif
 
 // -------------------------------------------------------------------------
 // std::exception

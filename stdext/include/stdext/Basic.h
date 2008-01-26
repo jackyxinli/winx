@@ -19,12 +19,9 @@
 #ifndef __STDEXT_BASIC_H__
 #define __STDEXT_BASIC_H__
 
-#if defined(_WIN32)
-#define STD_SUPPORT_TASKALLOC	// for CoTaskMemAlloc
-#endif
-
 #if (0)
-#define STD_NO_TASKALLOC
+#define STD_NO_WINSDK
+#define STD_NO_MSVCRT
 #define STD_ISOCPP_FOR
 #define STD_EXIT
 #define STATIC_ASSERT
@@ -42,6 +39,14 @@
 
 #ifndef _SECURE_SCL
 #define _SECURE_SCL 0
+#endif
+
+#if !defined(_WIN32)
+#define STD_NO_WINSDK
+#endif
+
+#if !defined(_MSC_VER)
+#define STD_NO_MSVCRT
 #endif
 
 // -------------------------------------------------------------------------
@@ -129,21 +134,30 @@ inline int _winx_null_func(int nLevel, const void* fmt, ...) { return 0; }
 #endif
 
 // -------------------------------------------------------------------------
+// winsdk & msvcrt
 
-#if defined(STD_SUPPORT_TASKALLOC) && !defined(STD_NO_TASKALLOC)
+#if !defined(STD_NO_WINSDK)
+
 #ifndef _OBJBASE_H_
 #include <objbase.h>		// for CoTaskMemAlloc, CoTaskMemFree
 #endif
-#endif
 
-#if defined(_WIN32) 
 #ifndef __wtypes_h__
 #include <wtypes.h>
 #endif
+
 #else
+
+#if !defined(_MSC_VER)
+#ifndef __STDEXT_MSVC_DECLSPEC_H__
+#include "msvc/declspec.h"
+#endif
+#endif
+
 #ifndef __STDEXT_MSVC_WTYPES_H__
 #include "msvc/wtypes.h"
 #endif
+
 #endif
 
 #if !defined(_W64)
@@ -151,13 +165,6 @@ typedef signed char INT8, *PINT8;
 typedef signed short INT16, *PINT16;
 typedef unsigned char UINT8, *PUINT8;
 typedef unsigned short UINT16, *PUINT16;
-#endif
-
-// -------------------------------------------------------------------------
-// msvcrt
-
-#ifndef __STDEXT_MSVC_DECLSPEC_H__
-#include "msvc/declspec.h"
 #endif
 
 #ifndef __STDEXT_MSVC_MSVCRT_H__

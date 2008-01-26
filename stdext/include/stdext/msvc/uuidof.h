@@ -19,6 +19,34 @@
 #ifndef __STDEXT_MSVC_UUIDOF_H__
 #define __STDEXT_MSVC_UUIDOF_H__
 
+#if defined(STD_NO_WINSDK)
+#ifndef __STDEXT_MSVC_WTYPES_H__
+#include "wtypes.h"
+#endif
+#endif
+
+// =========================================================================
+
+extern "C" {
+
+extern IID IID_IUnknown;
+extern IID IID_IClassFactory;
+extern IID IID_IMalloc;
+extern IID IID_IMallocSpy;
+extern IID IID_ILockBytes;
+extern IID IID_ISequentialStream;
+extern IID IID_IStream;
+extern IID IID_IStorage;
+extern IID IID_IPersistStorage;
+extern IID IID_IEnumSTATSTG;
+extern IID IID_IDispatch;
+extern IID IID_ITypeLib;
+extern IID IID_ITypeLib2;
+extern IID IID_ICreateErrorInfo;
+extern IID IID_IErrorInfo;
+
+} // extern "C"
+
 // =========================================================================
 // WINX_RLS_DEFINE_GUID/WINX_RLS_DEFINE_GUID_ALTER
 // WINX_RLS_GUIDOF
