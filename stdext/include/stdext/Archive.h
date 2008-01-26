@@ -28,6 +28,12 @@
 #include "Basic.h"
 #endif
 
+#if defined(STD_NO_WINSDK)
+#ifndef __STDEXT_MSVC_OLE2_H__
+#include "msvc/ole2.h"
+#endif
+#endif
+
 // -------------------------------------------------------------------------
 // WINX_BYTESWAP
 

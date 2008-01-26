@@ -21,12 +21,14 @@
 
 // -------------------------------------------------------------------------
 
-#if defined(_WIN32)
-#ifndef _INC_IO
-#include <io.h>
-#endif
+#if !defined(STD_NO_MSVCRT)
+	#ifndef _INC_IO
+	#include <io.h>
+	#endif
 #else
-#include "../msvc/io.h"
+	#ifndef __STDEXT_MSVC_IO_H__
+	#include "../msvc/io.h"
+	#endif
 #endif
 
 #ifndef __STDEXT_ARCHIVE_ARCHIVEIMPL_H__

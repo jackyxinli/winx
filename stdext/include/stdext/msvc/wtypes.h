@@ -27,13 +27,16 @@
 #include "windef.h"
 #endif
 
-#ifndef __RPC_FAR
-#define __RPC_FAR
-#endif
-
 // =========================================================================
 
+typedef unsigned char byte;
 typedef unsigned short WCHAR;
+
+typedef WCHAR			OLECHAR;
+typedef OLECHAR*		LPOLESTR;
+typedef const OLECHAR*	LPCOLESTR;
+typedef OLECHAR*		BSTR;
+typedef double			DATE;
 
 // =========================================================================
 
@@ -95,6 +98,58 @@ typedef ULARGE_INTEGER *PULARGE_INTEGER;
 
 // =========================================================================
 
+#ifndef _FILETIME_
+#define _FILETIME_
+
+typedef struct  _FILETIME
+    {
+    DWORD dwLowDateTime;
+    DWORD dwHighDateTime;
+    }	FILETIME;
+
+typedef struct _FILETIME __RPC_FAR *PFILETIME;
+typedef struct _FILETIME __RPC_FAR *LPFILETIME;
+
+#endif // !_FILETIME
+
+#ifndef _SYSTEMTIME_
+#define _SYSTEMTIME_
+
+typedef struct  _SYSTEMTIME
+    {
+    WORD wYear;
+    WORD wMonth;
+    WORD wDayOfWeek;
+    WORD wDay;
+    WORD wHour;
+    WORD wMinute;
+    WORD wSecond;
+    WORD wMilliseconds;
+    }	SYSTEMTIME;
+
+typedef struct _SYSTEMTIME __RPC_FAR *PSYSTEMTIME;
+typedef struct _SYSTEMTIME __RPC_FAR *LPSYSTEMTIME;
+
+#endif // !_SYSTEMTIME
+
+// -------------------------------------------------------------------------
+
+#ifndef _SECURITY_ATTRIBUTES_
+#define _SECURITY_ATTRIBUTES_
+typedef struct  _SECURITY_ATTRIBUTES
+    {
+    DWORD nLength;
+    /* [size_is] */ LPVOID lpSecurityDescriptor;
+    BOOL bInheritHandle;
+    }	SECURITY_ATTRIBUTES;
+
+typedef struct _SECURITY_ATTRIBUTES __RPC_FAR *PSECURITY_ATTRIBUTES;
+typedef struct _SECURITY_ATTRIBUTES __RPC_FAR *LPSECURITY_ATTRIBUTES;
+
+#endif // !_SECURITY_ATTRIBUTES_
+
+// =========================================================================
+
 #ifdef __cplusplus
 extern "C" {
 #endif
@@ -112,6 +167,9 @@ typedef struct _GUID
 typedef GUID IID;
 typedef GUID CLSID;
 
+typedef CLSID __RPC_FAR* LPCLSID;
+typedef IID __RPC_FAR*	LPIID;
+
 #ifdef __cplusplus
 } // extern "C"
 #endif
@@ -120,6 +178,58 @@ typedef GUID CLSID;
 
 typedef const IID& REFIID;
 typedef const CLSID& REFCLSID;
+typedef const GUID& REFGUID;
+
+// =========================================================================
+// HANDLE
+
+#define DECLARE_HANDLE(name) struct name##__ { int unused; }; typedef struct name##__ *name
+
+DECLARE_HANDLE(HINSTANCE);
+
+typedef PVOID HANDLE;
+typedef HINSTANCE HMODULE;      /* HMODULEs can be used in place of HINSTANCEs */
+
+typedef HANDLE HGLOBAL;
+typedef HANDLE HLOCAL;
+
+typedef /* [wire_marshal] */ void __RPC_FAR *HMETAFILEPICT;
+
+// -------------------------------------------------------------------------
+
+DECLARE_HANDLE(HGDIOBJ);
+DECLARE_HANDLE(HBITMAP);
+DECLARE_HANDLE(HBRUSH);
+DECLARE_HANDLE(HDC);
+DECLARE_HANDLE(HFONT);
+DECLARE_HANDLE(HICON);
+DECLARE_HANDLE(HCURSOR);
+DECLARE_HANDLE(HMENU);
+DECLARE_HANDLE(HPALETTE);
+DECLARE_HANDLE(HPEN);
+DECLARE_HANDLE(HRGN);
+DECLARE_HANDLE(HRSRC);
+DECLARE_HANDLE(HSTR);
+DECLARE_HANDLE(HTASK);
+DECLARE_HANDLE(HWINSTA);
+DECLARE_HANDLE(HKL);
+DECLARE_HANDLE(HACCEL);
+
+DECLARE_HANDLE(HGLRC);          // OpenGL
+DECLARE_HANDLE(HDESK);
+DECLARE_HANDLE(HMETAFILE);
+DECLARE_HANDLE(HENHMETAFILE);
+
+// -------------------------------------------------------------------------
+
+DECLARE_HANDLE(HKEY);
+typedef HKEY *PHKEY;
+
+//
+// Requested Key access mask type.
+//
+
+typedef ACCESS_MASK REGSAM;
 
 // =========================================================================
 // $Log: $

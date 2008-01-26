@@ -134,16 +134,35 @@ inline int _winx_null_func(int nLevel, const void* fmt, ...) { return 0; }
 #endif
 
 // -------------------------------------------------------------------------
+// WINX_TEXT
+
+#if defined(UNICODE)
+#	if !defined(_UNICODE)
+#		define _UNICODE
+#	endif
+#elif defined(_UNICODE)
+#	if !defined(UNICODE)
+#		define UNICODE
+#	endif
+#endif
+
+#if defined(UNICODE)
+#define WINX_TEXT(str)		L ## str
+#else
+#define WINX_TEXT(str)		str
+#endif
+
+// -------------------------------------------------------------------------
 // winsdk & msvcrt
 
 #if !defined(STD_NO_WINSDK)
 
-#ifndef _OBJBASE_H_
-#include <objbase.h>		// for CoTaskMemAlloc, CoTaskMemFree
-#endif
-
 #ifndef __wtypes_h__
 #include <wtypes.h>
+#endif
+
+#ifndef _OBJBASE_H_
+#include <objbase.h>		// for CoTaskMemAlloc, CoTaskMemFree
 #endif
 
 #else
@@ -156,6 +175,10 @@ inline int _winx_null_func(int nLevel, const void* fmt, ...) { return 0; }
 
 #ifndef __STDEXT_MSVC_WTYPES_H__
 #include "msvc/wtypes.h"
+#endif
+
+#ifndef __STDEXT_MSVC_OBJBASE_H__
+#include "msvc/objbase.h"
 #endif
 
 #endif
@@ -417,15 +440,6 @@ do {																		\
 #ifndef WINX_PTHIS
 #define WINX_PTHIS			(static_cast<FinalClass*>(this))
 #define WINX_NULL_PTHIS		(static_cast<FinalClass*>(0))
-#endif
-
-// -------------------------------------------------------------------------
-// WINX_TEXT
-
-#if defined(UNICODE)
-#define WINX_TEXT(str)		L ## str
-#else
-#define WINX_TEXT(str)		str
 #endif
 
 // -------------------------------------------------------------------------

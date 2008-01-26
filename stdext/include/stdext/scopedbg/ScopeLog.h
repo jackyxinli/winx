@@ -43,8 +43,14 @@
 #endif
 
 #if !defined(WINX_USE_WINSDK)
-	#ifndef _INC_SHLWAPI
-	#include <shlwapi.h>
+	#if !defined(STD_NO_WINSDK)
+		#ifndef _INC_SHLWAPI
+		#include <shlwapi.h>
+		#endif
+	#else
+		#ifndef __STDEXT_MSVC_SHLWAPI_H__
+		#include "../msvc/shlwapi.h"
+		#endif
 	#endif
 #endif
 

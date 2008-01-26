@@ -9,27 +9,30 @@
 // of this license. You must not remove this notice, or any other, from
 // this software.
 // 
-// Module: stdext/Registry.h
+// Module: stdext/pthread.h
 // Creator: xushiwei
 // Email: xushiweizh@gmail.com
-// Date: 2007-2-7 16:20:30
+// Date: 2003-10-5 13:20:48
 // 
 // $Id: $
 // -----------------------------------------------------------------------*/
-#ifndef __STDEXT_REGISTRY_H__
-#define __STDEXT_REGISTRY_H__
+#ifndef __STDEXT_PTHREAD_H__
+#define __STDEXT_PTHREAD_H__
 
 // -------------------------------------------------------------------------
+// pthread.h
 
-#if !defined(STD_NO_WINSDK)
-
-#ifndef __STDEXT_REGISTRY_WINREGISTRY_H__
-#include "registry/WinRegistry.h"
-#endif
-
+#if defined(_WIN32)
+	#if !defined( PTHREAD_H )
+	#include "../../../pthreads-w32/include/pthread.h"
+	#endif
+#else
+	#ifndef _PTHREAD_H
+	#include <pthread.h>
+	#endif
 #endif
 
 // -------------------------------------------------------------------------
 // $Log: $
 
-#endif /* __STDEXT_REGISTRY_H__ */
+#endif /* __STDEXT_PTHREAD_H__ */

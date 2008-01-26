@@ -9,33 +9,39 @@
 // of this license. You must not remove this notice, or any other, from
 // this software.
 // 
-// Module: stdext/msvc/io.h
+// Module: stdext/msvc/shlwapi.h
 // Creator: xushiwei
 // Email: xushiweizh@gmail.com
 // Date: 2003-10-5 13:20:48
 // 
 // $Id: $
 // -----------------------------------------------------------------------*/
-#ifndef __STDEXT_MSVC_IO_H__
-#define __STDEXT_MSVC_IO_H__
+#ifndef __STDEXT_MSVC_SHLWAPI_H__
+#define __STDEXT_MSVC_SHLWAPI_H__
 
-#if !defined(STD_NO_WINSDK)
-#error "Don't include <stdext/msvc/io.h>"
-#endif
-
-#include <sys/stat.h>
+#define LWSTDAPI          inline HRESULT STDAPICALLTYPE
+#define LWSTDAPI_(type)   inline type STDAPICALLTYPE
 
 // =========================================================================
 
-inline long _filelength(int fd)
+LWSTDAPI_(LPSTR) PathFindExtensionA(LPCSTR pszPath) //@@todo
 {
-    struct stat s;
-    if (fstat(fd, &s) < 0)
-        return 0;
-    return s.st_size;
+	return NULL;
+}
+
+// =========================================================================
+
+LWSTDAPI SHCreateStreamOnFileA(LPCSTR pszFile, DWORD grfMode, struct IStream **ppstm)
+{
+	return S_OK;
+}
+
+LWSTDAPI SHCreateStreamOnFileW(LPCWSTR pszFile, DWORD grfMode, struct IStream **ppstm)
+{
+	return S_OK;
 }
 
 // =========================================================================
 // $Log: $
 
-#endif /* __STDEXT_MSVC_IO_H__ */
+#endif /* __STDEXT_MSVC_SHLWAPI_H__ */

@@ -9,27 +9,20 @@
 // of this license. You must not remove this notice, or any other, from
 // this software.
 // 
-// Module: stdext/Registry.h
+// Module: stdext/msvc/oleauto.h
 // Creator: xushiwei
 // Email: xushiweizh@gmail.com
-// Date: 2007-2-7 16:20:30
+// Date: 2006-8-26 0:45:33
 // 
-// $Id: $
+// $Id: oleauto.h,v 1.1 2006/10/18 12:13:39 xushiwei Exp $
 // -----------------------------------------------------------------------*/
-#ifndef __STDEXT_REGISTRY_H__
-#define __STDEXT_REGISTRY_H__
+#ifndef __STDEXT_MSVC_OLEAUTO_H__
+#define __STDEXT_MSVC_OLEAUTO_H__
 
 // -------------------------------------------------------------------------
 
-#if !defined(STD_NO_WINSDK)
-
-#ifndef __STDEXT_REGISTRY_WINREGISTRY_H__
-#include "registry/WinRegistry.h"
-#endif
-
-#endif
-
 // -------------------------------------------------------------------------
-// $Log: $
+// $Log: oleauto.h,v $
+//
 
-#endif /* __STDEXT_REGISTRY_H__ */
+#endif /* __STDEXT_MSVC_OLEAUTO_H__ */

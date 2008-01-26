@@ -19,6 +19,10 @@
 #ifndef __STDEXT_REGISTRY_WINREGISTRY_H__
 #define __STDEXT_REGISTRY_WINREGISTRY_H__
 
+#if defined(STD_NO_WINSDK)
+#error "Require windows sdk!!!"
+#endif
+
 #ifndef __STDEXT_BASIC_H__
 #include "../Basic.h"
 #endif
@@ -37,8 +41,6 @@
 
 __NS_STD_BEGIN
 
-//#define __in
-//#define __in_z
 // -------------------------------------------------------------------------
 // class WinRegKeyHandle
 

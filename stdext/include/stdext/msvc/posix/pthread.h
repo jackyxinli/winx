@@ -19,68 +19,99 @@
 #ifndef __STDEXT_MSVC_POSIX_PTHREAD_H__
 #define __STDEXT_MSVC_POSIX_PTHREAD_H__
 
-#ifndef _PTHREAD_H
-#include <pthread.h>
+#ifndef __STDEXT_PTHREAD_H__
+#include "../../pthread.h"
+#endif
+
+#ifndef __STDEXT_MSVC_WINDEF_H__
+#include "../windef.h"
+#endif
+
+#ifndef WINBASEAPI
+#define WINBASEAPI inline
 #endif
 
 // -------------------------------------------------------------------------
+// class PthreadRefCount
 
-struct _Kern_Refcount
+class PthreadRefCount
 {
-	typedef long _RC_t;
+public:
+	typedef long value_type;
 
-	volatile _RC_t _M_ref_count;
-	pthread_mutex_t _M_ref_count_lock;
+private:
+	volatile value_type m_nRef;
+	pthread_mutex_t m_lock;
 
-	_Kern_Refcount(_RC_t __n) : _M_ref_count(__n)
+public:
+	PthreadRefCount(value_type nRef) : m_nRef(nRef)
     {
-		pthread_mutex_init(&_M_ref_count_lock, 0);
+		pthread_mutex_init(&m_lock, 0);
 	}
-	~_Kern_Refcount()
+	~PthreadRefCount()
 	{
-		pthread_mutex_destroy(&_M_ref_count_lock);
+		pthread_mutex_destroy(&m_lock);
 	}
-	STDMETHODIMP_(_RC_t) Increment()
+
+	value_type winx_call acquire()
 	{
-		pthread_mutex_lock(&_M_ref_count_lock);
-		volatile _RC_t result = ++_M_ref_count;
-		pthread_mutex_unlock(&_M_ref_count_lock);
+		pthread_mutex_lock(&m_lock);
+		value_type result = ++m_nRef;
+		pthread_mutex_unlock(&m_lock);
 		return result;
 	}
-	STDMETHODIMP_(_RC_t) Decrement()
+
+	value_type winx_call release()
 	{
-		pthread_mutex_lock(&_M_ref_count_lock);
-		volatile _RC_t result = --_M_ref_count;
-		pthread_mutex_unlock(&_M_ref_count_lock);
+		pthread_mutex_lock(&m_lock);
+		value_type result = --m_nRef;
+		pthread_mutex_unlock(&m_lock);
 		return result;
+	}
+
+	operator value_type()
+	{
+		return m_nRef;
 	}
 };
 
 // -------------------------------------------------------------------------
+// CriticalSection
 
-struct _Kern_Mutex
+typedef pthread_mutex_t RTL_CRITICAL_SECTION, *PRTL_CRITICAL_SECTION;
+typedef RTL_CRITICAL_SECTION CRITICAL_SECTION;
+typedef PRTL_CRITICAL_SECTION PCRITICAL_SECTION;
+typedef PRTL_CRITICAL_SECTION LPCRITICAL_SECTION;
+
+WINBASEAPI VOID WINAPI InitializeCriticalSection(
+    LPCRITICAL_SECTION lpCriticalSection)
 {
-	pthread_mutex_t _M_lock;
+	pthread_mutex_init(lpCriticalSection, NULL);
+}
 
-	_Kern_Mutex()
-	{
-		pthread_mutex_init(&_M_lock, 0);
-	}
-	~_Kern_Mutex()
-	{
-		pthread_mutex_destroy(&_M_lock);
-	}
-	STDMETHODIMP_(void) Lock()
-	{
-		pthread_mutex_lock(&_M_lock);
-	}
-	STDMETHODIMP_(void) Unlock()
-	{
-		pthread_mutex_unlock(&_M_lock);
-	}
-};
+WINBASEAPI VOID WINAPI EnterCriticalSection(
+    LPCRITICAL_SECTION lpCriticalSection)
+{
+	pthread_mutex_lock(lpCriticalSection);
+}
 
-typedef _Kern_Mutex _Kern_CriticalSection;
+WINBASEAPI BOOL WINAPI TryEnterCriticalSection(
+    LPCRITICAL_SECTION lpCriticalSection)
+{
+	return pthread_mutex_trylock(lpCriticalSection) == 0;
+}
+
+WINBASEAPI VOID WINAPI LeaveCriticalSection(
+    LPCRITICAL_SECTION lpCriticalSection)
+{
+	pthread_mutex_unlock(lpCriticalSection);
+}
+
+WINBASEAPI VOID WINAPI DeleteCriticalSection(
+    LPCRITICAL_SECTION lpCriticalSection)
+{
+	pthread_mutex_destroy(lpCriticalSection);
+}
 
 // -------------------------------------------------------------------------
 // $Log: $
