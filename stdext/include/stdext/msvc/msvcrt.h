@@ -23,6 +23,27 @@
 #define STD_NO_MAP_ALLOC
 #endif
 
+#if !defined(WINX_VC)
+
+#include <stdio.h>
+#define _vsnprintf(buf, n, fmt, arglist) vsnprintf(buf, n, fmt, arglist)
+
+#include <assert.h>
+#define _assert(exp, file, line) __assert_fail(exp, (const char*)(file), line, __ASSERT_FUNCTION)
+
+/*
+_itoa
+_ltoa
+_ultoa
+_i64toa
+_ui64toa
+_gcvt
+_alloca
+_msize
+*/
+
+#endif
+
 // -------------------------------------------------------------------------
 // crtdbg.h
 

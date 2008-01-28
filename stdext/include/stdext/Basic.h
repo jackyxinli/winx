@@ -91,7 +91,7 @@
 #			define WINX_VC6
 #		endif
 #	endif
-#elif (X_CC_GCC)
+#elif defined(X_CC_GCC)
 #	define WINX_GCC
 #endif
 

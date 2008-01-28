@@ -29,8 +29,12 @@
 #define __cdecl
 #endif
 
+#ifndef __stdcall
+#define __stdcall // __attribute__((stdcall))
+#endif
+
 #ifndef __fastcall
-#define __fastcall
+#define __fastcall // __attribute__((fastcall))
 #endif
 
 #ifndef __forceinline

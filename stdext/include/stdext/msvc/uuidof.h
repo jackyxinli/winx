@@ -29,21 +29,21 @@
 
 extern "C" {
 
-extern IID IID_IUnknown;
-extern IID IID_IClassFactory;
-extern IID IID_IMalloc;
-extern IID IID_IMallocSpy;
-extern IID IID_ILockBytes;
-extern IID IID_ISequentialStream;
-extern IID IID_IStream;
-extern IID IID_IStorage;
-extern IID IID_IPersistStorage;
-extern IID IID_IEnumSTATSTG;
-extern IID IID_IDispatch;
-extern IID IID_ITypeLib;
-extern IID IID_ITypeLib2;
-extern IID IID_ICreateErrorInfo;
-extern IID IID_IErrorInfo;
+extern const IID IID_IUnknown;
+extern const IID IID_IClassFactory;
+extern const IID IID_IMalloc;
+extern const IID IID_IMallocSpy;
+extern const IID IID_ILockBytes;
+extern const IID IID_ISequentialStream;
+extern const IID IID_IStream;
+extern const IID IID_IStorage;
+extern const IID IID_IPersistStorage;
+extern const IID IID_IEnumSTATSTG;
+extern const IID IID_IDispatch;
+extern const IID IID_ITypeLib;
+extern const IID IID_ITypeLib2;
+extern const IID IID_ICreateErrorInfo;
+extern const IID IID_IErrorInfo;
 
 } // extern "C"
 
@@ -222,11 +222,6 @@ interface ITypeLib;
 interface ITypeLib2;
 interface ICreateErrorInfo;
 interface IErrorInfo;
-
-EXTERN_C const IID IID_IPersistStorage;
-EXTERN_C const IID IID_IDispatch;
-EXTERN_C const IID IID_ITypeLib;
-EXTERN_C const IID IID_ITypeLib2;
 
 DEFINE_IID_ALTER(IUnknown)
 DEFINE_IID_ALTER(IClassFactory)

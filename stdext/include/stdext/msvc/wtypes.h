@@ -27,10 +27,14 @@
 #include "windef.h"
 #endif
 
+#ifndef __STDEXT_PLATFORM_H__
+#include "../Platform.h"
+#endif
+
 // =========================================================================
 
 typedef unsigned char byte;
-typedef unsigned short WCHAR;
+typedef wchar_t WCHAR;
 
 typedef WCHAR			OLECHAR;
 typedef OLECHAR*		LPOLESTR;
@@ -58,15 +62,22 @@ typedef /* [string] */ const TCHAR __RPC_FAR *LPCTSTR;
 
 // =========================================================================
 
+#if defined(X_CC_GCC)
+typedef long long __int64;
+typedef unsigned long long __uint64;
+#else
+typedef unsigned __int64 __uint64;
+#endif
+
 typedef __int64 LONG64, *PLONG64;
 typedef __int64 INT64, *PINT64;
 
-typedef unsigned __int64 ULONG64, *PULONG64;
-typedef unsigned __int64 DWORD64, *PDWORD64;
-typedef unsigned __int64 UINT64, *PUINT64;
+typedef __uint64 ULONG64, *PULONG64;
+typedef __uint64 DWORD64, *PDWORD64;
+typedef __uint64 UINT64, *PUINT64;
 
 typedef __int64 LONGLONG;
-typedef unsigned __int64 ULONGLONG;
+typedef __uint64 ULONGLONG;
 
 // =========================================================================
 

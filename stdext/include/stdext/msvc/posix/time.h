@@ -23,8 +23,8 @@
 #include "../../Platform.h"
 #endif
 
-#ifndef __STDEXT_MSVC_WINDEF_H__
-#include "../windef.h"
+#ifndef __STDEXT_MSVC_WTYPES_H__
+#include "../wtypes.h"
 #endif
 
 #ifndef WINBASEAPI
@@ -77,7 +77,7 @@ WINBASEAPI BOOL WINAPI QueryPerformanceCounter(LARGE_INTEGER* lp)
 {
     struct timespec now;
     clock_gettime(CLOCK_MONOTONIC, &now);
-    __u64 ticks = (__u64)now.tv_sec * 1000000000 + now.tv_nsec;
+    UINT64 ticks = (UINT64)now.tv_sec * 1000000000 + now.tv_nsec;
     lp->QuadPart = ticks;
 	return TRUE;
 }
@@ -94,10 +94,10 @@ EXTERN_C BOOL WINAPI QueryPerformanceFrequency(LARGE_INTEGER* lp);
 #include <stdio.h>
 #endif
 
-inline __u64 WINAPI __get_cpu_freq()
+inline UINT64 WINAPI __get_cpu_freq()
 {
     FILE* fd = 0;
-    __u64 freq = 0;
+    UINT64 freq = 0;
     float freqf = 0;
 	char* line = NULL;
     size_t len = 0;

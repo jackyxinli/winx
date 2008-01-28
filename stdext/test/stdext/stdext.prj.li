@@ -16,4 +16,5 @@ LibDir
 Libraries	
 
 [Source]
+// test.cpp
 TestStdExt.dsp
