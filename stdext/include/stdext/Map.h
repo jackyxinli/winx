@@ -132,10 +132,10 @@ public:
 		std::BlockPool recyle;
 		std::ScopeAlloc alloc(recyle);
 		std::MultiMap<int, Obj> coll(alloc);
-		coll.insert(std::Map<int, Obj>::value_type(1, 2));
-		coll.insert(std::Map<int, Obj>::value_type(1, 4));
-		coll.insert(std::Map<int, Obj>::value_type(2, 4));
-		coll.insert(std::Map<int, Obj>::value_type(4, 8));
+		coll.insert(std::MultiMap<int, Obj>::value_type(1, 2));
+		coll.insert(std::MultiMap<int, Obj>::value_type(1, 4));
+		coll.insert(std::MultiMap<int, Obj>::value_type(2, 4));
+		coll.insert(std::MultiMap<int, Obj>::value_type(4, 8));
 		AssertExp(coll.size() == 4);
 	}
 
