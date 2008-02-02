@@ -19,11 +19,11 @@
 #ifndef __STDEXT_MSVC_MSVCRT_H__
 #define __STDEXT_MSVC_MSVCRT_H__
 
-#if (0)
-#define STD_NO_MAP_ALLOC
+#ifndef __STDEXT_PLATFORM_H__
+#include "../Platform.h"
 #endif
 
-#if !defined(WINX_VC)
+#if !defined(X_CC_VC)
 
 #include <stdio.h>
 #define _vsnprintf(buf, n, fmt, arglist) vsnprintf(buf, n, fmt, arglist)
@@ -46,6 +46,10 @@ _msize
 
 // -------------------------------------------------------------------------
 // crtdbg.h
+
+#if (0)
+#define STD_NO_MAP_ALLOC
+#endif
 
 #ifndef STD_NO_MAP_ALLOC
 #define _CRTDBG_MAP_ALLOC

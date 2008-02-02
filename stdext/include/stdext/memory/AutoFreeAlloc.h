@@ -172,6 +172,11 @@ public:
 		return allocate(cb);
 	}
 
+	void winx_call deallocate(void* p, size_t cb)
+	{
+		// no action
+	}
+
 	__STD_FAKE_DBG_ALLOCATE();
 };
 

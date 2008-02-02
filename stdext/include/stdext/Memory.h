@@ -42,6 +42,114 @@
 #endif
 
 // -------------------------------------------------------------------------
+// --> Memory leak checker - count-checker
+
+__NS_STD_BEGIN
+
+inline void _ReportCountLeak(unsigned nRef, const char* szClass, const char* szFile, int nLine)
+{
+	char szBuf[1024];
+	int cch = 0;
+
+	sprintf(szBuf, "%s(%d):", szFile, nLine);
+	for (cch = strlen(szBuf); cch < 70; ++cch)
+	{
+		szBuf[cch] = ' ';
+	}
+	szBuf[cch] = '\0';
+	OutputDebugStringA(szBuf);
+
+	sprintf(szBuf, "%s (%d) is leaked\n", szClass, nRef);
+	OutputDebugStringA(szBuf);
+}
+
+class _CountChecker
+{
+public:
+	_CountChecker(const char* szClass, const char* szFile, int nLine)
+		: m_nRef(0), m_szClass(szClass), m_szFile(szFile), m_nLine(nLine) {}
+	~_CountChecker()
+		{ if (m_nRef > 0)
+			_ReportCountLeak(m_nRef, m_szClass, m_szFile, m_nLine); }
+	void __stdcall operator++()	{ ++m_nRef; }
+	void __stdcall operator--()	{ --m_nRef; }
+ 
+private:
+	unsigned m_nRef;
+	const char* m_szClass;
+	const char* m_szFile;
+	int m_nLine;
+};
+
+#if !defined(_DEBUG)
+#	define WINX_DECLARE_COUNT(Class)
+#else
+#	define WINX_DECLARE_COUNT(Class)										\
+	class _XCountChecker													\
+	{																		\
+	public:																	\
+		_XCountChecker()							{ ++counter(); }		\
+		_XCountChecker(const _XCountChecker& rhs)	{ ++counter(); }		\
+		~_XCountChecker()							{ --counter(); }		\
+	private:																\
+		_CountChecker& __stdcall counter()									\
+			{ static std::_CountChecker r(#Class, __FILE__, __LINE__);		\
+			  return r; }													\
+	} __cntchecker;
+#endif
+
+__NS_STD_END
+
+// -------------------------------------------------------------------------
+// class StlAlloc
+
+__NS_STD_BEGIN
+
+template <class _Ty, class _Alloc = ScopeAlloc>
+class StlAlloc
+{
+private:
+	_Alloc* m_alloc;
+
+public:
+	typedef size_t size_type;
+	typedef ptrdiff_t difference_type;
+	typedef _Ty* pointer;
+	typedef const _Ty* const_pointer;
+	typedef _Ty& reference;
+	typedef const _Ty& const_reference;
+	typedef _Ty value_type;
+
+public:
+	pointer address(reference val) const
+		{ return &val; }
+	const_pointer address(const_reference val) const
+		{ return &val; }
+
+	size_type max_size() const
+		{ size_type count = (size_type)(-1) / sizeof (_Ty);
+		  return (0 < count ? count : 1); }
+
+public:
+	StlAlloc(_Alloc& alloc) : m_alloc(&alloc) {}
+
+	pointer allocate(size_type count, const void*)
+		{ return m_alloc->allocate(count * sizeof(_Ty)); }
+	void deallocate(void* p, size_type cb)
+		{ m_alloc->deallocate(p, cb); }
+	void construct(pointer p, const _Ty& val)
+		{ new(p) _Ty(val); }
+	void destroy(pointer p)
+		{ DestructorTraits<_Ty>::destruct(p); }
+
+public:
+	char* _Charalloc(size_type cb)
+		{ return (char*)m_alloc->allocate(cb); }
+};
+
+__NS_STD_END
+
+// -------------------------------------------------------------------------
 // class TestCompareAllocators
 
 #ifndef __STDEXT_COUNTER_H__

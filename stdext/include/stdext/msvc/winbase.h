@@ -131,6 +131,24 @@ WINBASEAPI DWORD WINAPI FormatMessageW(
 
 // -------------------------------------------------------------------------
 
+WINBASEAPI VOID WINAPI OutputDebugStringA(LPCSTR lpOutputString)
+{
+	NotImplementFeature("OutputDebugStringA");
+}
+
+WINBASEAPI VOID WINAPI OutputDebugStringW(LPCWSTR lpOutputString)
+{
+	NotImplementFeature("OutputDebugStringW");
+}
+
+#ifdef UNICODE
+#define OutputDebugString  OutputDebugStringW
+#else
+#define OutputDebugString  OutputDebugStringA
+#endif // !UNICODE
+
+// -------------------------------------------------------------------------
+
 WINBASEAPI VOID WINAPI GetSystemTime(
     LPSYSTEMTIME lpSystemTime)
 {
