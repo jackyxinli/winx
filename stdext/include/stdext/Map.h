@@ -57,12 +57,41 @@ public:
 };
 
 // -------------------------------------------------------------------------
+// class MultiMap
+
+template <
+	class KeyT, class DataT,
+	class PredT = std::less<KeyT>,
+	class AllocT = ScopeAlloc
+	>
+class MultiMap : public std::multimap< KeyT, DataT, PredT, StlAlloc<DataT, AllocT> >
+{
+private:
+	typedef StlAlloc<DataT, AllocT> _Alloc;
+	typedef std::multimap<KeyT, DataT, PredT, _Alloc> _Base;
+
+public:
+	explicit MultiMap(AllocT& alloc, const PredT& pred = PredT())
+		: _Base(pred, alloc)
+	{
+	}
+
+	template <class Iterator>
+	MultiMap(AllocT& alloc, Iterator first, Iterator last, const PredT& pred = PredT())
+		: _Base(first, last, pred, alloc)
+	{
+	}
+};
+
+// -------------------------------------------------------------------------
 // class TestMap
 
 template <class LogT>
 class TestMap : public TestCase
 {
 	WINX_TEST_SUITE(TestMap);
+		WINX_TEST(testMap);
+		WINX_TEST(testMultiMap);
 		WINX_TEST(testCompare);
 	WINX_TEST_SUITE_END();
 
@@ -86,14 +115,28 @@ public:
 		}
 	};
 
-	void testBasic(LogT& log)
+	void testMap(LogT& log)
 	{
 		std::BlockPool recyle;
 		std::ScopeAlloc alloc(recyle);
 		std::Map<int, Obj> coll(alloc);
 		coll.insert(std::Map<int, Obj>::value_type(1, 2));
+		coll.insert(std::Map<int, Obj>::value_type(1, 4));
 		coll.insert(std::Map<int, Obj>::value_type(2, 4));
 		coll.insert(std::Map<int, Obj>::value_type(4, 8));
+		AssertExp(coll.size() == 3);
+	}
+
+	void testMultiMap(LogT& log)
+	{
+		std::BlockPool recyle;
+		std::ScopeAlloc alloc(recyle);
+		std::MultiMap<int, Obj> coll(alloc);
+		coll.insert(std::Map<int, Obj>::value_type(1, 2));
+		coll.insert(std::Map<int, Obj>::value_type(1, 4));
+		coll.insert(std::Map<int, Obj>::value_type(2, 4));
+		coll.insert(std::Map<int, Obj>::value_type(4, 8));
+		AssertExp(coll.size() == 4);
 	}
 
 public:

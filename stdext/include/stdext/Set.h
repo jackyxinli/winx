@@ -57,12 +57,41 @@ public:
 };
 
 // -------------------------------------------------------------------------
+// class MultiSet
+
+template <
+	class KeyT,
+	class PredT = std::less<KeyT>,
+	class AllocT = ScopeAlloc
+	>
+class MultiSet : public std::multiset< KeyT, PredT, StlAlloc<KeyT, AllocT> >
+{
+private:
+	typedef StlAlloc<KeyT, AllocT> _Alloc;
+	typedef std::multiset<KeyT, PredT, _Alloc> _Base;
+
+public:
+	explicit MultiSet(AllocT& alloc, const PredT& pred = PredT())
+		: _Base(pred, alloc)
+	{
+	}
+
+	template <class Iterator>
+	MultiSet(AllocT& alloc, Iterator first, Iterator last, const PredT& pred = PredT())
+		: _Base(first, last, pred, alloc)
+	{
+	}
+};
+
+// -------------------------------------------------------------------------
 // class TestSet
 
 template <class LogT>
 class TestSet : public TestCase
 {
 	WINX_TEST_SUITE(TestSet);
+		WINX_TEST(testSet);
+		WINX_TEST(testMultiSet);
 		WINX_TEST(testCompare);
 	WINX_TEST_SUITE_END();
 
@@ -84,16 +113,33 @@ public:
 		~Obj() {
 			printf("destruct Obj: %d\n", m_val);
 		}
+		bool operator<(const Obj& o) const {
+			return m_val < o.m_val;
+		}
 	};
 
-	void testBasic(LogT& log)
+	void testSet(LogT& log)
 	{
 		std::BlockPool recyle;
 		std::ScopeAlloc alloc(recyle);
 		std::Set<Obj> coll(alloc);
 		coll.insert(1);
+		coll.insert(1);
 		coll.insert(2);
 		coll.insert(4);
+		AssertExp(coll.size() == 3);
+	}
+
+	void testMultiSet(LogT& log)
+	{
+		std::BlockPool recyle;
+		std::ScopeAlloc alloc(recyle);
+		std::MultiSet<Obj> coll(alloc);
+		coll.insert(1);
+		coll.insert(1);
+		coll.insert(2);
+		coll.insert(4);
+		AssertExp(coll.size() == 4);
 	}
 
 public:

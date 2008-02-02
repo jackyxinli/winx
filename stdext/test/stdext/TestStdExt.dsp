@@ -51,7 +51,7 @@ BSC32=bscmake.exe
 # ADD BSC32 /nologo
 LINK32=link.exe
 # ADD BASE LINK32 kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /nologo /subsystem:console /machine:I386
-# ADD LINK32 kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /nologo /subsystem:console /debug /machine:I386 /libpath:"../../../winsdk/lib"
+# ADD LINK32 kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /nologo /subsystem:console /debug /machine:I386 /libpath:"../../../winsdk/lib" /libpath:"../../../pthreads-w32/lib"
 
 !ELSEIF  "$(CFG)" == "TestStdExt - Win32 Debug"
 
@@ -76,7 +76,7 @@ BSC32=bscmake.exe
 # ADD BSC32 /nologo
 LINK32=link.exe
 # ADD BASE LINK32 kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /nologo /subsystem:console /debug /machine:I386 /pdbtype:sept
-# ADD LINK32 kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /nologo /subsystem:console /debug /machine:I386 /pdbtype:sept /libpath:"../../../winsdk/lib"
+# ADD LINK32 kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /nologo /subsystem:console /debug /machine:I386 /pdbtype:sept /libpath:"../../../winsdk/lib" /libpath:"../../../pthreads-w32/lib"
 
 !ENDIF 
 
@@ -84,6 +84,9 @@ LINK32=link.exe
 
 # Name "TestStdExt - Win32 Release"
 # Name "TestStdExt - Win32 Debug"
+# Begin Group "src"
+
+# PROP Default_Filter ""
 # Begin Source File
 
 SOURCE=.\TestStdExt.cpp
@@ -91,6 +94,47 @@ SOURCE=.\TestStdExt.cpp
 # Begin Source File
 
 SOURCE=.\TestStdNew.cpp
+# End Source File
+# End Group
+# Begin Source File
+
+SOURCE=..\..\include\stdext\msvc\crtdbg.h
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\include\stdext\msvc\objbase.h
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\include\stdext\msvc\objidl.h
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\include\stdext\msvc\ole2.h
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\include\stdext\msvc\posix\pthread.h
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\include\stdext\archive\StreamArchive.h
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\include\stdext\msvc\posix\time.h
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\include\stdext\msvc\winbase.h
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\include\stdext\msvc\windef.h
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\include\stdext\msvc\wtypes.h
 # End Source File
 # End Target
 # End Project

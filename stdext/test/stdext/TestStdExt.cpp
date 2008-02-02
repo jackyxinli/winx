@@ -19,12 +19,17 @@
 
 #define STD_FILTER_TEST_CASE
 #define STD_NO_TASKALLOC
+#define STD_NO_MSVCRT
+#define STD_NO_WINSDK
 #include <stdext.h>
 #include <stdext/Archive.h>
 #include <stdext/kmp/TestFinder.h>
 #include <stdext/FileMapping.h>
 #include <stdext/ScopeDebug.h>
 #include <stdext/Registry.h>
+#include <stdext/Map.h>
+#include <stdext/Set.h>
+#include <stdext/List.h>
 #pragma comment(lib, "shlwapi.lib")
 
 // -------------------------------------------------------------------------
@@ -54,23 +59,32 @@ inline void testBoost(LogT& log)
 
 int main()
 {
-	WINX_TEST_APP(std::ErrorLog, "TestCompareAllocators", "");
+	WINX_TEST_APP(std::ErrorLog, "TestSet", "");
 
 	WINX_TEST_CLASS(TestFinder);
+#if !defined(STD_NO_WINSDK)
 	WINX_TEST_CLASS(std::TestWinRegKey);
+#endif
 	WINX_TEST_CLASS(std::TestErrorGuard);
 	WINX_TEST_CLASS(std::TestScopeLog);
 	WINX_TEST_CLASS(std::TestCheckException);
 	WINX_TEST_CLASS(std::TestSimpleFileMapping);
 	WINX_TEST_CLASS(std::TestFileMapping);
-	WINX_TEST_CLASS(std::TestPriorityArray);
 	WINX_TEST_CLASS(std::TestStreamArchive);
 	WINX_TEST_CLASS(std::TestStdioArchive);
-	WINX_TEST_CLASS(std::TestString);
-	WINX_TEST_CLASS(std::TestCharType);
 	WINX_TEST_CLASS(std::TestLog);
-	WINX_TEST_CLASS(std::TestSimpleMultiMap);
 	WINX_TEST_CLASS(std::TestFileBuf);
+
+	//String
+	WINX_TEST_CLASS(std::TestCharType);
+	WINX_TEST_CLASS(std::TestString);
+
+	//Collection
+	WINX_TEST_CLASS(std::TestSimpleMultiMap);
+	WINX_TEST_CLASS(std::TestPriorityArray);
+	WINX_TEST_CLASS(std::TestMap);
+	WINX_TEST_CLASS(std::TestSet);
+	WINX_TEST_CLASS(std::TestList);
 
 	//Memory.h
 	WINX_TEST_CLASS(std::TestAutoFreeAlloc);

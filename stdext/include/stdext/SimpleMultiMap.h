@@ -208,18 +208,21 @@ public:
 // class TestSimpleMultiMap
 
 template <class LogT>
-class TestSimpleMultiMap
+class TestSimpleMultiMap : public TestCase
 {
+	WINX_TEST_SUITE(TestSimpleMultiMap);
+		WINX_TEST(testBasic);
+	WINX_TEST_SUITE_END();
 public:
-	static void doTest(LogT& log)
+	void testBasic(LogT& log)
 	{
-		typedef std::SimpleMultiMap<int, int> MultiMap;
+		typedef std::SimpleMultiMap<int, int> MapT;
 		std::PerformanceCounter counter;
 		{
-			MultiMap mm;
-			MultiMap::cookie_type c1 = mm.insert(MultiMap::value_type(1, 2));
-			MultiMap::cookie_type c2 = mm.insert(MultiMap::value_type(1, 3));
-			MultiMap::cookie_type c3 = mm.insert(MultiMap::value_type(1, 4));
+			MapT mm;
+			MapT::cookie_type c1 = mm.insert(MapT::value_type(1, 2));
+			MapT::cookie_type c2 = mm.insert(MapT::value_type(1, 3));
+			MapT::cookie_type c3 = mm.insert(MapT::value_type(1, 4));
 		}
 		counter.trace(log);
 	}
