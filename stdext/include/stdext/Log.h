@@ -217,6 +217,13 @@ public:
 		return *this;
 	}
 
+	Log& winx_call newline(size_t count)
+	{
+		if (m_stg)
+			m_stg.put(count, '\n');
+		return *this;
+	}
+
 	template <class CharT>
 	Log& winx_call vtrace(const CharT* fmt, va_list args)
 	{
