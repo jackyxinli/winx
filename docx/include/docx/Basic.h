@@ -54,7 +54,7 @@ public:
 	
 public:
 	template <class AllocT>
-	static const char* makeBuf(AllocT& alloc, const char* pszVal, UINT cch)
+	static const char* makeBuf(AllocT& alloc, const char* pszVal, size_type cch)
 	{
 		char* psz = (char*)alloc.allocate(cch);
 		memcpy(psz, pszVal, cch);
@@ -87,6 +87,18 @@ public:
 	size_type winx_call size() const
 	{
 		return length;
+	}
+
+	bool winx_call operator==(const String& s) const
+	{
+		return length == s.length && 
+			(memcmp(pszBuf, s.pszBuf, length) == 0);
+	}
+
+	bool winx_call operator!=(const String& s) const
+	{
+		return length != s.length || 
+			(memcmp(pszBuf, s.pszBuf, length) != 0);
 	}
 
 	template <class LogT>
@@ -134,11 +146,6 @@ public:
 			int iVal;
 		};
 
-		const List& _toList() const {
-			WINX_ASSERT(ot == otList);
-			return (const List&)lstVal;
-		}
-
 	public:
 		Object(const List& lst) {
 			ot = otList;
@@ -168,6 +175,61 @@ public:
 			dblVal = STD_NEW(alloc, double)(dbl);
 		}
 
+		ObjectType winx_call type() const {
+			return ot;
+		}
+
+		const List& winx_call toList() const
+		{
+			WINX_ASSERT(ot == otList);
+			if (ot != otList)
+				throw std::bad_cast();
+			return (const List&)lstVal;
+		}
+
+		bool winx_call contains(const Object& o) const
+		{
+			if (ot != o.ot)
+				return false;
+			switch (ot)
+			{
+			case otString:
+				return *strVal == *o.strVal;
+			case otList:
+				return toList().contains(o.toList());
+			case otInteger:
+				return iVal == o.iVal;
+			case otDouble:
+				return *dblVal == *o.dblVal;
+			default:
+				return false;
+			}
+		}
+
+		bool winx_call operator==(const Object& o) const
+		{
+			if (ot != o.ot)
+				return false;
+			switch (ot)
+			{
+			case otString:
+				return *strVal == *o.strVal;
+			case otList:
+				return toList() == o.toList();
+			case otInteger:
+				return iVal == o.iVal;
+			case otDouble:
+				return *dblVal == *o.dblVal;
+			default:
+				return false;
+			}
+		}
+
+		bool winx_call operator!=(const Object& o) const
+		{
+			return !operator==(o);
+		}
+
 		template <class LogT>
 		void winx_call trace(LogT& log) const
 		{
@@ -177,7 +239,7 @@ public:
 				strVal->trace(log);
 				break;
 			case otList:
-				_toList().trace(log);
+				toList().trace(log);
 				break;
 			case otInteger:
 				log.print(iVal);
@@ -199,8 +261,31 @@ public:
 		const Object value;
 
 	public:
-		Element(String n, Object v) : name(n), value(v)
+		Element(const String& n, const Object& v)
+			: name(n), value(v)
 		{
+		}
+
+		bool winx_call operator==(const Element& e) const
+		{
+			return (name == e.name) && (value == e.value);
+		}
+
+		bool winx_call operator!=(const Element& e) const
+		{
+			return (name != e.name) || (value != e.value);
+		}
+
+		bool winx_call contains(const Element& e) const
+		{
+			return name == e.name && value.contains(e.value);
+		}
+		
+		template <class LogT>
+		void winx_call trace(LogT& log) const
+		{
+			log.print('{').printObj(name).print(": ")
+				.printObj(value).print('}');
 		}
 	};
 
@@ -210,8 +295,12 @@ private:
 	public:
 		const Node* tail;
 	public:
-		Node(String name, Object value, const Node* t = NULL)
-			: Element(name, value), tail(t)
+		Node(const Element& e, const Node* t = NULL)
+			: Element(e), tail(t)
+		{
+		}
+		Node(const String& n, const Object& v, const Node* t = NULL)
+			: Element(n, v), tail(t)
 		{
 		}
 	};
@@ -221,12 +310,28 @@ private:
 	{
 	}
 
+#define _DOCX_NEXT_NODE(n) \
+	n = n->tail
 #define _DOCX_FOREACH_NODE(n) \
 	for (const Node* n = m_list; n; n = n->tail)
+#define _DOCX_FOREACH_NODE2(n, lst) \
+	for (const Node* n = (lst).m_list; n; n = n->tail)
 
 public:
 	List() : m_list(NULL)
 	{
+	}
+
+	template <class AllocT>
+	List(AllocT& alloc, const Element& e)
+	{
+		m_list = STD_NEW(alloc, Node)(e);
+	}
+
+	template <class AllocT>
+	List(AllocT& alloc, const String& name, const Object& value)
+	{
+		m_list = STD_NEW(alloc, Node)(name, value);
 	}
 
 public:
@@ -240,11 +345,6 @@ public:
 		return m_list;
 	}
 
-	bool winx_call empty() const
-	{
-		return m_list != NULL;
-	}
-
 	size_type winx_call size() const
 	{
 		size_type count = 0;
@@ -252,19 +352,84 @@ public:
 		return count;
 	}
 
+	bool winx_call empty() const
+	{
+		return m_list != NULL;
+	}
+
+	bool winx_call operator==(const List& lst) const
+	{
+		const Node* n2 = lst.m_list;
+		_DOCX_FOREACH_NODE(n)
+		{
+			if (n2 == NULL || *n != *n2)
+				return false;
+			_DOCX_NEXT_NODE(n2);
+		}
+		return n2 == NULL;
+	}
+
+	bool winx_call operator!=(const List& lst) const
+	{
+		return !operator==(lst);
+	}
+
+	bool winx_call contains(const Element& e) const
+	{
+		_DOCX_FOREACH_NODE(n)
+		{
+			if (n->contains(e))
+				return true;
+		}
+		return false;
+	}
+
+	bool winx_call contains(const List& lst) const
+	{
+		_DOCX_FOREACH_NODE2(n, lst)
+		{
+			if (!contains(*n))
+				return false;
+		}
+		return true;
+	}
+
+	template <class LogT>
+	void winx_call trace(LogT& log) const
+	{
+		log.print("\n[");
+		_DOCX_FOREACH_NODE(n)
+		{
+			log.print('\t').printObj(*n).newline();
+		}
+		log.print("]");
+	}
+
+public:
 	template <class AllocT>
 	void winx_call reverse(AllocT& alloc)
 	{
 		Node* lst = NULL;
 		_DOCX_FOREACH_NODE(n)
 		{
-			lst = STD_NEW(alloc, Node)(n->name, n->value, lst);
+			lst = STD_NEW(alloc, Node)(*n, lst);
 		}
 		m_list = lst;
 	}
-	
+
+	void winx_call pop_front()
+	{
+		m_list = m_list->tail;
+	}
+
 	template <class AllocT>
-	void winx_call push_front(AllocT& alloc, String name, Object value)
+	void winx_call push_front(AllocT& alloc, const Element& e)
+	{
+		m_list = STD_NEW(alloc, Node)(e, m_list);
+	}
+
+	template <class AllocT>
+	void winx_call push_front(AllocT& alloc, const String& name, const Object& value)
 	{
 		m_list = STD_NEW(alloc, Node)(name, value, m_list);
 	}
@@ -277,26 +442,38 @@ public:
 		m_list = lstRet;
 	}
 
-public:
-	template <class LogT>
-	void winx_call trace(LogT& log) const
+	template <class AllocT, class CondT>
+	List winx_call select(AllocT& alloc, CondT cond) const
 	{
-		log.print("\n[");
+		const Node* lstRet;
+		_selectRetTail(alloc, cond, &lstRet);
+		return lstRet;
+	}
+	
+private:
+	template <class AllocT, class CondT>
+	const Node*& winx_call _selectRetTail(
+		AllocT& alloc, CondT cond, const Node** ptail) const
+	{
 		_DOCX_FOREACH_NODE(n)
 		{
-			log.print("\t{").printObj(n->name).print(": ")
-				.printObj(n->value).print("}\n");
+			const Element& e = *n;
+			if (cond(e))
+			{
+				Node* node = STD_NEW(alloc, Node)(e);
+				*ptail = node;
+				ptail = &node->tail;
+			}
 		}
-		log.print("]");
+		return *ptail;
 	}
 
-private:
 	template <class AllocT>
 	const Node*& winx_call _dupRetTail(AllocT& alloc, const Node** ptail) const
 	{
 		_DOCX_FOREACH_NODE(n)
 		{
-			Node* node = STD_NEW(alloc, Node)(n->name, n->value);
+			Node* node = STD_NEW(alloc, Node)(*n);
 			*ptail = node;
 			ptail = &node->tail;
 		}
@@ -317,6 +494,52 @@ STD_NO_DESTRUCTOR(__DOCX Object);
 STD_NO_DESTRUCTOR(__DOCX Element);
 
 // -------------------------------------------------------------------------
+// class NameIs, Equals, Contains
+
+__DOCX_BEGIN
+
+class NameIs
+{
+private:
+	const String& m_name;
+
+public:
+	NameIs(const String& n) : m_name(n) {}
+
+	bool operator()(const Element& e) const {
+		return e.name == m_name;
+	}
+};
+
+class Equals
+{
+private:
+	const Element& m_e;
+
+public:
+	Equals(const Element& e) : m_e(e) {}
+
+	bool operator()(const Element& e) const {
+		return e == m_e;
+	}
+};
+
+class Contains
+{
+private:
+	const Element& m_e;
+
+public:
+	Contains(const Element& e) : m_e(e) {}
+
+	bool operator()(const Element& e) const {
+		return e.contains(m_e);
+	}
+};
+
+__DOCX_END
+
+// -------------------------------------------------------------------------
 // class TestDocxBasic
 
 __DOCX_BEGIN
@@ -331,6 +554,9 @@ class TestDocxBasic : public TestCase
 public:
 	void testList(LogT& log)
 	{
+		using docx::String;
+		using docx::Object;
+
 		std::BlockPool recycle;
 		std::ScopeAlloc alloc(recycle);
 		
@@ -340,6 +566,7 @@ public:
 		lst.push_front(alloc, String(alloc, "Allocator"), Object(alloc, "ScopeAlloc"));
 		log.newline().printObj(lst);
 		AssertExp(lst.size() == 3);
+		docx::List list0 = lst;
 
 		docx::List list2 = lst;
 		lst.push_front(alloc, String(alloc, "List"), 1);
@@ -353,9 +580,36 @@ public:
 		log.newline().printObj(lst);
 		AssertExp(lst.size() == 8);
 
+		list2.push_front(alloc, String(alloc, "SubList"), list0);
 		lst.push_front(alloc, String(alloc, "SubList"), list2);
 		log.newline().printObj(lst);
 		AssertExp(lst.size() == 9);
+
+		List list3 = lst.select(alloc, docx::NameIs(String(alloc, "List")));
+		log.newline().printObj(list3);
+		AssertExp(list3.size() == 2);
+
+		docx::Element e(String(alloc, "Class"), Object(alloc, "TestDocxBasic"));
+		List list4 = lst.select(alloc, docx::Equals(e));
+		log.newline().printObj(list4);
+		AssertExp(list4.size() == 2);
+
+		docx::List list5 = list2;
+		docx::Element e2(String(alloc, "List"), 5);
+		list5.push_front(alloc, e2);
+		lst.push_front(alloc, String(alloc, "SubList"), list5);
+		log.newline().printObj(lst);
+
+		docx::Element e3(String(alloc, "Allocator"), Object(alloc, "ScopeAlloc"));
+		docx::List sub(alloc, String(alloc, "SubList"), docx::List(alloc, e3));
+		docx::Element e4(String(alloc, "SubList"), sub);
+		log.newline(2).printObj(e4);
+
+		docx::List list6 = lst.select(alloc, docx::Contains(e4));
+		log.newline().printObj(list6);
+		AssertExp(list6.size() == 2);
+
+		log.newline();
 	}
 };
 
