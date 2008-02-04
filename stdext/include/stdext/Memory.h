@@ -234,11 +234,11 @@ public:
 	void doScopeAlloc1(LogT& log)
 	{
 		log.print("===== ScopeAlloc =====\n");
-		BlockPool recyle;
+		BlockPool recycle;
 		PerformanceCounter counter;
 		for (int i = 0; i < N; ++i)
 		{
-			ScopeAlloc alloc(recyle);
+			ScopeAlloc alloc(recycle);
 			int* p = STD_NEW(alloc, int);
 		}
 		counter.trace(log);
@@ -289,10 +289,10 @@ public:
 	void doScopeAlloc2(LogT& log)
 	{
 		log.print("===== ScopeAlloc =====\n");
-		BlockPool recyle;
+		BlockPool recycle;
 		PerformanceCounter counter;
 		{
-			ScopeAlloc alloc(recyle);
+			ScopeAlloc alloc(recycle);
 			for (int i = 0; i < N; ++i)
 			{
 				int* p = STD_NEW(alloc, int);

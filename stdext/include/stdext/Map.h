@@ -117,8 +117,8 @@ public:
 
 	void testMap(LogT& log)
 	{
-		std::BlockPool recyle;
-		std::ScopeAlloc alloc(recyle);
+		std::BlockPool recycle;
+		std::ScopeAlloc alloc(recycle);
 		std::Map<int, Obj> coll(alloc);
 		coll.insert(std::Map<int, Obj>::value_type(1, 2));
 		coll.insert(std::Map<int, Obj>::value_type(1, 4));
@@ -129,8 +129,8 @@ public:
 
 	void testMultiMap(LogT& log)
 	{
-		std::BlockPool recyle;
-		std::ScopeAlloc alloc(recyle);
+		std::BlockPool recycle;
+		std::ScopeAlloc alloc(recycle);
 		std::MultiMap<int, Obj> coll(alloc);
 		coll.insert(std::MultiMap<int, Obj>::value_type(1, 2));
 		coll.insert(std::MultiMap<int, Obj>::value_type(1, 4));
@@ -175,8 +175,8 @@ public:
 		log.print("===== std::Map (ScopeAlloc) =====\n");
 		std::PerformanceCounter counter;
 		{
-			std::BlockPool recyle;
-			std::ScopeAlloc alloc(recyle);
+			std::BlockPool recycle;
+			std::ScopeAlloc alloc(recycle);
 			MapT coll(alloc);
 			for (int i = 0; i < N; ++i)
 				coll.insert(MapT::value_type(i, i));
@@ -187,14 +187,14 @@ public:
 	void doShareAllocMap(LogT& log)
 	{
 		typedef std::Map<int, int> MapT;
-		std::BlockPool recyle;
+		std::BlockPool recycle;
 		log.newline();
 		for (int i = 0; i < 5; ++i)
 		{
 			log.print("===== doShareAllocMap =====\n");
 			std::PerformanceCounter counter;
 			{
-				std::ScopeAlloc alloc(recyle);
+				std::ScopeAlloc alloc(recycle);
 				MapT coll(alloc);
 				for (int i = 0; i < N; ++i)
 					coll.insert(MapT::value_type(i, i));

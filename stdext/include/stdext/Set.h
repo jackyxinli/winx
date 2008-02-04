@@ -120,8 +120,8 @@ public:
 
 	void testSet(LogT& log)
 	{
-		std::BlockPool recyle;
-		std::ScopeAlloc alloc(recyle);
+		std::BlockPool recycle;
+		std::ScopeAlloc alloc(recycle);
 		std::Set<Obj> coll(alloc);
 		coll.insert(1);
 		coll.insert(1);
@@ -132,8 +132,8 @@ public:
 
 	void testMultiSet(LogT& log)
 	{
-		std::BlockPool recyle;
-		std::ScopeAlloc alloc(recyle);
+		std::BlockPool recycle;
+		std::ScopeAlloc alloc(recycle);
 		std::MultiSet<Obj> coll(alloc);
 		coll.insert(1);
 		coll.insert(1);
@@ -178,8 +178,8 @@ public:
 		log.print("===== std::Set (ScopeAlloc) =====\n");
 		std::PerformanceCounter counter;
 		{
-			std::BlockPool recyle;
-			std::ScopeAlloc alloc(recyle);
+			std::BlockPool recycle;
+			std::ScopeAlloc alloc(recycle);
 			SetT coll(alloc);
 			for (int i = 0; i < N; ++i)
 				coll.insert(i);
@@ -190,14 +190,14 @@ public:
 	void doShareAllocSet(LogT& log)
 	{
 		typedef std::Set<int> SetT;
-		std::BlockPool recyle;
+		std::BlockPool recycle;
 		log.newline();
 		for (int i = 0; i < 5; ++i)
 		{
 			log.print("===== doShareAllocSet =====\n");
 			std::PerformanceCounter counter;
 			{
-				std::ScopeAlloc alloc(recyle);
+				std::ScopeAlloc alloc(recycle);
 				SetT coll(alloc);
 				for (int i = 0; i < N; ++i)
 					coll.insert(i);

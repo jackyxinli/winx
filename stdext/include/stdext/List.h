@@ -89,8 +89,8 @@ public:
 
 	void testBasic(LogT& log)
 	{
-		std::BlockPool recyle;
-		std::ScopeAlloc alloc(recyle);
+		std::BlockPool recycle;
+		std::ScopeAlloc alloc(recycle);
 		std::List<Obj> coll(alloc);
 		coll.push_back(1);
 		coll.push_back(2);
