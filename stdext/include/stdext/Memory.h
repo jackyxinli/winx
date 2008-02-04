@@ -120,6 +120,9 @@ public:
 	typedef const _Ty& const_reference;
 	typedef _Ty value_type;
 
+    template <class U>
+    struct rebind { typedef StlAlloc<U, _Alloc> other; };
+
 public:
 	pointer address(reference val) const
 		{ return &val; }
@@ -133,6 +136,9 @@ public:
 public:
 	StlAlloc(_Alloc& alloc) : m_alloc(&alloc) {}
 
+    template <class U>
+	StlAlloc(const StlAlloc<U, _Alloc>& rhs) : m_alloc(rhs.m_alloc) {}
+
 	pointer allocate(size_type count, const void*)
 		{ return m_alloc->allocate(count * sizeof(_Ty)); }
 	void deallocate(void* p, size_type cb)
@@ -140,12 +146,44 @@ public:
 	void construct(pointer p, const _Ty& val)
 		{ new(p) _Ty(val); }
 	void destroy(pointer p)
-		{ DestructorTraits<_Ty>::destruct(p); }
+		{ p->~_Ty(); }
 
 public:
 	char* _Charalloc(size_type cb)
 		{ return (char*)m_alloc->allocate(cb); }
 };
+
+template<> class StlAlloc<void, ScopeAlloc>
+{
+    typedef void        value_type;
+    typedef void*       pointer;
+    typedef const void* const_pointer;
+ 
+    template <class U>
+    struct rebind { typedef StlAlloc<U, ScopeAlloc> other; };
+};
+
+template<> class StlAlloc<void, AutoFreeAlloc>
+{
+    typedef void        value_type;
+    typedef void*       pointer;
+    typedef const void* const_pointer;
+ 
+    template <class U>
+    struct rebind { typedef StlAlloc<U, ScopeAlloc> other; };
+};
+
+template <class _Ty, class _Alloc>
+inline bool operator==(const StlAlloc<_Ty, _Alloc>&,
+                       const StlAlloc<_Ty, _Alloc>&) {
+    return true;
+}
+
+template <class _Ty, class _Alloc>
+inline bool operator!=(const StlAlloc<_Ty, _Alloc>&,
+                       const StlAlloc<_Ty, _Alloc>&) {
+    return false;
+}
 
 __NS_STD_END
 
