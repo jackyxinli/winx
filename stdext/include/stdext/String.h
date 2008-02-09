@@ -344,6 +344,8 @@ inline void winx_call replaceText(
 // -------------------------------------------------------------------------
 // class TestString
 
+#if defined(X_CC_VC)
+
 template <class LogT>
 class TestString : public TestCase
 {
@@ -374,6 +376,8 @@ public:
 		AssertExp(s == "abc123");
 	}
 };
+
+#endif
 
 // -------------------------------------------------------------------------
 // $Log: String.h,v $

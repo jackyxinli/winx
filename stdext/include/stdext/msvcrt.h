@@ -58,6 +58,7 @@
 //
 // io.h
 //
+#if defined(STD_NO_MSVCRT)
 #ifndef _SYS_STAT_H
 #include <sys/stat.h>
 #endif
@@ -68,6 +69,7 @@ inline long _filelength(int fd)
         return 0;
     return s.st_size;
 }
+#endif // defined(STD_NO_MSVCRT)
 
 //
 // stdlib.h
@@ -75,15 +77,25 @@ inline long _filelength(int fd)
 
 #ifdef WINX_GCC
 
+#define _MAX_PATH   260 /* max. length of full pathname */
+#define _MAX_DRIVE  3   /* max. length of drive component */
+#define _MAX_DIR    256 /* max. length of path component */
+#define _MAX_FNAME  256 /* max. length of file name component */
+#define _MAX_EXT    256 /* max. length of extension component */
+
+#ifndef __STDEXT_WINAPI_WTYPES_H__
+#include "winapi/wtypes.h"
+#endif
+
 #ifndef __STDEXT_TCHAR_H__
 #include "tchar.h"
 #endif
 
-#define _itoa		tchar::itoa
-#define _ltoa		tchar::ltoa
-#define _ultoa		tchar::ultoa
-#define	_i64toa		tchar::i64toa
-#define _ui64toa	tchar::ui64toa
+#define _itoa		std::tchar::itoa
+#define _ltoa		std::tchar::ltoa
+#define _ultoa		std::tchar::ultoa
+#define	_i64toa		std::tchar::i64toa
+#define _ui64toa	std::tchar::ui64toa
 
 inline void __not_impl(const char* szFeature)
 {

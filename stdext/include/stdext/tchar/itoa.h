@@ -133,7 +133,7 @@ xchar * __xdecl __xcharfunc(ultoa)(
 
 __template_xchar
 void __xdecl __xcharfunc(__x64toa) (   /* stdcall is faster and smaller... Might as well use it for the helper. */
-        unsigned __int64 val,
+        __uint64 val,
         xchar *buf,
         unsigned radix,
         int is_neg
@@ -195,7 +195,7 @@ xchar* __xdecl __xcharfunc(i64toa) (
 
 __template_xchar
 xchar* __xdecl __xcharfunc(ui64toa) (
-        unsigned __int64 val,
+        __uint64 val,
         xchar *buf,
         int radix
         )

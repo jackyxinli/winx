@@ -67,17 +67,17 @@ __NS_STD_BEGIN
 	}																		\
 	__STD_LOG_FMT_PRINT(DataT)
 
-#define __STD_LOG_PRINT_INT(DataT)											\
-	Log& winx_call print(signed DataT v) {									\
+#define __STD_LOG_PRINT_INT(SIntT, UIntT)									\
+	Log& winx_call print(SIntT v) {         								\
 		char buf[32];														\
 		return printString(_ltoa(v, buf, 10));								\
 	}																		\
-	Log& winx_call print(unsigned DataT v) {								\
+	Log& winx_call print(UIntT v) {								            \
 		char buf[32];														\
 		return printString(_ultoa(v, buf, 10));								\
 	}																		\
-	__STD_LOG_FMT_PRINT(signed DataT)										\
-	__STD_LOG_FMT_PRINT(unsigned DataT)
+	__STD_LOG_FMT_PRINT(SIntT)										        \
+	__STD_LOG_FMT_PRINT(UIntT)
 
 #define __STD_LOG_PRINT_STRING(DataT)										\
 	Log& winx_call print(DataT v) {											\
@@ -91,17 +91,17 @@ __NS_STD_BEGIN
 	}																		\
 	__STD_LOG_FMT_PRINT_EX(DataT, v.c_str())
 
-#define __STD_LOG_PRINT_INT64(DataT)										\
-	Log& winx_call print(signed DataT v) {									\
+#define __STD_LOG_PRINT_INT64()	        									\
+	Log& winx_call print(__int64 v) {									    \
 		char buf[32];														\
 		return printString(_i64toa(v, buf, 10));							\
 	}																		\
-	Log& winx_call print(unsigned DataT v) {								\
+	Log& winx_call print(__uint64 v) {		    					        \
 		char buf[32];														\
 		return printString(_ui64toa(v, buf, 10));							\
 	}																		\
-	__STD_LOG_FMT_PRINT(signed DataT)										\
-	__STD_LOG_FMT_PRINT(unsigned DataT)
+	__STD_LOG_FMT_PRINT(__int64)    										\
+	__STD_LOG_FMT_PRINT(__uint64)
 
 #define __STD_LOG_PRINT_FLOAT(DataT, n)										\
 	Log& winx_call print(DataT v, int digits = n) {							\
@@ -118,10 +118,10 @@ __NS_STD_BEGIN
 	__STD_LOG_PRINT_STRING(const WCHAR*)									\
 	__STD_LOG_PRINT_STRING_CLS(std::basic_string<char>)						\
 	__STD_LOG_PRINT_STRING_CLS(std::basic_string<WCHAR>)					\
-	__STD_LOG_PRINT_INT(int)												\
-	__STD_LOG_PRINT_INT(short)												\
-	__STD_LOG_PRINT_INT(long)												\
-	__STD_LOG_PRINT_INT64(__int64)											\
+	__STD_LOG_PRINT_INT(signed int, unsigned int)							\
+	__STD_LOG_PRINT_INT(signed short, unsigned short)						\
+	__STD_LOG_PRINT_INT(signed long, unsigned long)						    \
+	__STD_LOG_PRINT_INT64()		        									\
 	__STD_LOG_PRINT_FLOAT(float, 12)										\
 	__STD_LOG_PRINT_FLOAT(double, 12)
 

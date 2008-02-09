@@ -153,6 +153,12 @@ inline int _winx_null_func(int nLevel, const void* fmt, ...) { return 0; }
 // -------------------------------------------------------------------------
 // winsdk & msvcrt
 
+#if defined(X_CC_GCC)
+typedef unsigned long long __uint64;
+#else
+typedef unsigned __int64 __uint64;
+#endif
+
 #if !defined(STD_NO_WINSDK)
 
 #ifndef __wtypes_h__
@@ -186,12 +192,6 @@ typedef signed char INT8, *PINT8;
 typedef signed short INT16, *PINT16;
 typedef unsigned char UINT8, *PUINT8;
 typedef unsigned short UINT16, *PUINT16;
-#endif
-
-#if defined(X_CC_GCC)
-typedef unsigned long long __uint64;
-#else
-typedef unsigned __int64 __uint64;
 #endif
 
 #ifndef __STDEXT_MSVCRT_H__

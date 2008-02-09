@@ -47,8 +47,8 @@
 	#include <crtdbg.h>
 	#endif
 #else
-	#ifndef __STDEXT_MSVC_CRTDBG_H__
-	#include "crtdbg.h"
+	#ifndef __STDEXT_MSVCRT_CRTDBG_H__
+	#include "../msvcrt/crtdbg.h"
 	#endif
 #endif
 
