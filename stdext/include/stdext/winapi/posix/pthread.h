@@ -9,21 +9,21 @@
 // of this license. You must not remove this notice, or any other, from
 // this software.
 // 
-// Module: stdext/msvc/posix/pthread.h
+// Module: stdext/winapi/posix/pthread.h
 // Creator: xushiwei
 // Email: xushiweizh@gmail.com
 // Date: 2003-10-5 13:20:48
 // 
 // $Id: $
 // -----------------------------------------------------------------------*/
-#ifndef __STDEXT_MSVC_POSIX_PTHREAD_H__
-#define __STDEXT_MSVC_POSIX_PTHREAD_H__
+#ifndef __STDEXT_WINAPI_POSIX_PTHREAD_H__
+#define __STDEXT_WINAPI_POSIX_PTHREAD_H__
 
 #ifndef __STDEXT_PTHREAD_H__
 #include "../../pthread.h"
 #endif
 
-#ifndef __STDEXT_MSVC_WINDEF_H__
+#ifndef __STDEXT_WINAPI_WINDEF_H__
 #include "../windef.h"
 #endif
 
@@ -116,4 +116,4 @@ WINBASEAPI VOID WINAPI DeleteCriticalSection(
 // -------------------------------------------------------------------------
 // $Log: $
 
-#endif /* __STDEXT_MSVC_POSIX_PTHREAD_H__ */
+#endif /* __STDEXT_WINAPI_POSIX_PTHREAD_H__ */

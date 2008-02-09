@@ -9,19 +9,19 @@
 // of this license. You must not remove this notice, or any other, from
 // this software.
 // 
-// Module: stdext/msvc/uuidof.h
+// Module: stdext/vc/uuidof.h
 // Creator: xushiwei
 // Email: xushiweizh@gmail.com
 // Date: 2003-10-5 13:20:48
 // 
 // $Id: $
 // -----------------------------------------------------------------------*/
-#ifndef __STDEXT_MSVC_UUIDOF_H__
-#define __STDEXT_MSVC_UUIDOF_H__
+#ifndef __STDEXT_VC_UUIDOF_H__
+#define __STDEXT_VC_UUIDOF_H__
 
 #if defined(STD_NO_WINSDK)
-#ifndef __STDEXT_MSVC_WTYPES_H__
-#include "wtypes.h"
+#ifndef __STDEXT_WINAPI_WTYPES_H__
+#include "../winapi/wtypes.h"
 #endif
 #endif
 
@@ -275,4 +275,4 @@ DEFINE_IID_ALTER(IErrorInfo)
 // =========================================================================
 // $Log: $
 
-#endif /* __STDEXT_MSVC_UUIDOF_H__ */
+#endif /* __STDEXT_VC_UUIDOF_H__ */

@@ -9,21 +9,21 @@
 // of this license. You must not remove this notice, or any other, from
 // this software.
 // 
-// Module: stdext/msvc/posix/time.h
+// Module: stdext/winapi/posix/time.h
 // Creator: xushiwei
 // Email: xushiweizh@gmail.com
 // Date: 2003-10-5 13:20:48
 // 
 // $Id: $
 // -----------------------------------------------------------------------*/
-#ifndef __STDEXT_MSVC_POSIX_TIME_H__
-#define __STDEXT_MSVC_POSIX_TIME_H__
+#ifndef __STDEXT_WINAPI_POSIX_TIME_H__
+#define __STDEXT_WINAPI_POSIX_TIME_H__
 
 #ifndef __STDEXT_PLATFORM_H__
 #include "../../Platform.h"
 #endif
 
-#ifndef __STDEXT_MSVC_WTYPES_H__
+#ifndef __STDEXT_WINAPI_WTYPES_H__
 #include "../wtypes.h"
 #endif
 
@@ -168,4 +168,4 @@ WINBASEAPI BOOL WINAPI QueryPerformanceCounter(LARGE_INTEGER* lp)
 // =========================================================================
 // $Log: $
 
-#endif /* __STDEXT_MSVC_POSIX_TIME_H__ */
+#endif /* __STDEXT_WINAPI_POSIX_TIME_H__ */

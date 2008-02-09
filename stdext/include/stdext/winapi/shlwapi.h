@@ -9,49 +9,42 @@
 // of this license. You must not remove this notice, or any other, from
 // this software.
 // 
-// Module: stdext/msvc/declspec.h
+// Module: stdext/winapi/shlwapi.h
 // Creator: xushiwei
 // Email: xushiweizh@gmail.com
 // Date: 2003-10-5 13:20:48
 // 
 // $Id: $
 // -----------------------------------------------------------------------*/
-#ifndef __STDEXT_MSVC_DECLSPEC_H__
-#define __STDEXT_MSVC_DECLSPEC_H__
+#ifndef __STDEXT_WINAPI_SHLWAPI_H__
+#define __STDEXT_WINAPI_SHLWAPI_H__
 
-#if defined(_MSC_VER)
-#error "Don't include <stdext/msvc/declspec.h>"
-#endif
-
-// =========================================================================
-
-#ifndef __cdecl
-#define __cdecl
-#endif
-
-#ifndef __stdcall
-#define __stdcall // __attribute__((stdcall))
-#endif
-
-#ifndef __fastcall
-#define __fastcall // __attribute__((fastcall))
-#endif
-
-#ifndef __forceinline
-#define __forceinline inline
-#endif
+#define LWSTDAPI          inline HRESULT STDAPICALLTYPE
+#define LWSTDAPI_(type)   inline type STDAPICALLTYPE
 
 // =========================================================================
 
-#ifndef __STDEXT_MSVC_WTYPES_H__
-#include "wtypes.h"
-#endif
+LWSTDAPI_(LPSTR) PathFindExtensionA(LPCSTR pszPath)
+{
+	NotImplementFeature("PathFindExtensionA");
+	return NULL;
+}
 
-#ifndef __STDEXT_MSVC_UUIDOF_H__
-#include "uuidof.h"
-#endif
+// =========================================================================
+
+LWSTDAPI SHCreateStreamOnFileA(LPCSTR pszFile, DWORD grfMode, struct IStream **ppstm)
+{
+	NotImplementFeature("SHCreateStreamOnFileA");
+	return S_OK;
+}
+
+LWSTDAPI SHCreateStreamOnFileW(LPCWSTR pszFile, DWORD grfMode, struct IStream **ppstm)
+{
+	NotImplementFeature("SHCreateStreamOnFileW");
+	return S_OK;
+}
 
 // =========================================================================
 // $Log: $
 
-#endif /* __STDEXT_MSVC_DECLSPEC_H__ */
+#endif /* __STDEXT_WINAPI_SHLWAPI_H__ */

@@ -9,17 +9,17 @@
 // of this license. You must not remove this notice, or any other, from
 // this software.
 // 
-// Module: stdext/msvc/objidl.h
+// Module: stdext/winapi/objidl.h
 // Creator: xushiwei
 // Email: xushiweizh@gmail.com
 // Date: 2006-8-26 0:45:33
 // 
 // $Id: objidl.h,v 1.1 2006/10/18 12:13:39 xushiwei Exp $
 // -----------------------------------------------------------------------*/
-#ifndef __STDEXT_MSVC_OBJIDL_H__
-#define __STDEXT_MSVC_OBJIDL_H__
+#ifndef __STDEXT_WINAPI_OBJIDL_H__
+#define __STDEXT_WINAPI_OBJIDL_H__
 
-#ifndef __STDEXT_MSVC_WINDEF_H__
+#ifndef __STDEXT_WINAPI_WINDEF_H__
 #include "windef.h"
 #endif
 
@@ -889,4 +889,4 @@ public:
 // $Log: objidl.h,v $
 //
 
-#endif /* __STDEXT_MSVC_OBJIDL_H__ */
+#endif /* __STDEXT_WINAPI_OBJIDL_H__ */

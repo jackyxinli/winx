@@ -9,18 +9,18 @@
 // of this license. You must not remove this notice, or any other, from
 // this software.
 // 
-// Module: stdext/msvc/crtdbg.h
+// Module: stdext/msvcrt/crtdbg.h
 // Creator: xushiwei
 // Email: xushiweizh@gmail.com
 // Date: 2007-1-14 15:24:12
 // 
 // $Id: $
 // -----------------------------------------------------------------------*/
-#ifndef __STDEXT_MSVC_CRTDBG_H__
-#define __STDEXT_MSVC_CRTDBG_H__
+#ifndef __STDEXT_MSVCRT_CRTDBG_H__
+#define __STDEXT_MSVCRT_CRTDBG_H__
 
 #if !defined(STD_NO_MSVCRT)
-#error "Don't include <stdext/msvc/crtdbg.h>"
+#error "Don't include <stdext/msvcrt/crtdbg.h>"
 #endif
 
 #ifndef _ASSERT_H_
@@ -223,4 +223,4 @@ typedef struct _CrtMemState
 // -------------------------------------------------------------------------
 // $Log: $
 
-#endif /* __STDEXT_MSVC_CRTDBG_H__ */
+#endif /* __STDEXT_MSVCRT_CRTDBG_H__ */

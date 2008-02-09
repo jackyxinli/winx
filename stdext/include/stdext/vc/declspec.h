@@ -9,42 +9,46 @@
 // of this license. You must not remove this notice, or any other, from
 // this software.
 // 
-// Module: stdext/msvc/shlwapi.h
+// Module: stdext/vc/declspec.h
 // Creator: xushiwei
 // Email: xushiweizh@gmail.com
 // Date: 2003-10-5 13:20:48
 // 
 // $Id: $
 // -----------------------------------------------------------------------*/
-#ifndef __STDEXT_MSVC_SHLWAPI_H__
-#define __STDEXT_MSVC_SHLWAPI_H__
+#ifndef __STDEXT_VC_DECLSPEC_H__
+#define __STDEXT_VC_DECLSPEC_H__
 
-#define LWSTDAPI          inline HRESULT STDAPICALLTYPE
-#define LWSTDAPI_(type)   inline type STDAPICALLTYPE
-
-// =========================================================================
-
-LWSTDAPI_(LPSTR) PathFindExtensionA(LPCSTR pszPath)
-{
-	NotImplementFeature("PathFindExtensionA");
-	return NULL;
-}
+#if defined(_MSC_VER)
+#error "Don't include <stdext/vc/declspec.h>"
+#endif
 
 // =========================================================================
 
-LWSTDAPI SHCreateStreamOnFileA(LPCSTR pszFile, DWORD grfMode, struct IStream **ppstm)
-{
-	NotImplementFeature("SHCreateStreamOnFileA");
-	return S_OK;
-}
+#ifndef __cdecl
+#define __cdecl
+#endif
 
-LWSTDAPI SHCreateStreamOnFileW(LPCWSTR pszFile, DWORD grfMode, struct IStream **ppstm)
-{
-	NotImplementFeature("SHCreateStreamOnFileW");
-	return S_OK;
-}
+#ifndef __stdcall
+#define __stdcall // __attribute__((stdcall))
+#endif
+
+#ifndef __fastcall
+#define __fastcall // __attribute__((fastcall))
+#endif
+
+#ifndef __forceinline
+#define __forceinline inline
+#endif
+
+// =========================================================================
+// uuidof
+
+#ifndef __STDEXT_MSVC_UUIDOF_H__
+#include "uuidof.h"
+#endif
 
 // =========================================================================
 // $Log: $
 
-#endif /* __STDEXT_MSVC_SHLWAPI_H__ */
+#endif /* __STDEXT_VC_DECLSPEC_H__ */

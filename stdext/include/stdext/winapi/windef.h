@@ -9,18 +9,22 @@
 // of this license. You must not remove this notice, or any other, from
 // this software.
 // 
-// Module: stdext/msvc/windef.h
+// Module: stdext/winapi/windef.h
 // Creator: xushiwei
 // Email: xushiweizh@gmail.com
 // Date: 2006-8-18 18:08:57
 // 
-// $Id: Basic.h,v 1.6 2007/01/10 09:38:10 xushiwei Exp $
+// $Id: windef.h,v 1.6 2007/01/10 09:38:10 xushiwei Exp $
 // -----------------------------------------------------------------------*/
-#ifndef __STDEXT_MSVC_WINDEF_H__
-#define __STDEXT_MSVC_WINDEF_H__
+#ifndef __STDEXT_WINAPI_WINDEF_H__
+#define __STDEXT_WINAPI_WINDEF_H__
 
 #ifndef STD_NO_WINSDK
-#error "Don't include <stdext/msvc/windef.h>"
+#error "Don't include <stdext/winapi/windef.h>"
+#endif
+
+#ifndef __STDEXT_PLATFORM_H__
+#include "../Platform.h"
 #endif
 
 // -------------------------------------------------------------------------
@@ -564,4 +568,4 @@ typedef ACCESS_MASK *PACCESS_MASK;
 // -------------------------------------------------------------------------
 // $Log: $
 
-#endif /* __STDEXT_MSVC_WINDEF_H__ */
+#endif /* __STDEXT_WINAPI_WINDEF_H__ */

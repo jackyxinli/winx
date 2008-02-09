@@ -9,15 +9,15 @@
 // of this license. You must not remove this notice, or any other, from
 // this software.
 // 
-// Module: stdext/msvc/atlconv.h
+// Module: stdext/msvcrt/atlconv.h
 // Creator: xushiwei
 // Email: xushiweizh@gmail.com
 // Date: 2007-1-14 14:55:48
 // 
 // $Id: $
 // -----------------------------------------------------------------------*/
-#ifndef __STDEXT_MSVC_ATLCONV_H__
-#define __STDEXT_MSVC_ATLCONV_H__
+#ifndef __STDEXT_MSVCRT_ATLCONV_H__
+#define __STDEXT_MSVCRT_ATLCONV_H__
 
 #ifndef _INC_WCHAR
 #include <wchar.h>
@@ -28,7 +28,9 @@
 #endif
 
 #if defined(STD_NO_WINSDK)
-#include "winnls.h"
+#ifndef __STDEXT_WINAPI_WINNLS_H__
+#include "../winapi/winnls.h"
+#endif
 #endif
 
 // -------------------------------------------------------------------------
@@ -107,4 +109,4 @@ inline LPSTR __stdcall _winx_W2AHelper(LPSTR lpa, LPCWSTR lpw, int nWideChars)
 // -------------------------------------------------------------------------
 // $Log: $
 
-#endif /* __STDEXT_MSVC_ATLCONV_H__ */
+#endif /* __STDEXT_MSVCRT_ATLCONV_H__ */

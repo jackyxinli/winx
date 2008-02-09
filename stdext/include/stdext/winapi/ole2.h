@@ -9,21 +9,21 @@
 // of this license. You must not remove this notice, or any other, from
 // this software.
 // 
-// Module: stdext/msvc/ole2.h
+// Module: stdext/winapi/ole2.h
 // Creator: xushiwei
 // Email: xushiweizh@gmail.com
 // Date: 2003-10-5 13:20:48
 // 
 // $Id: $
 // -----------------------------------------------------------------------*/
-#ifndef __STDEXT_MSVC_OLE2_H__
-#define __STDEXT_MSVC_OLE2_H__
+#ifndef __STDEXT_WINAPI_OLE2_H__
+#define __STDEXT_WINAPI_OLE2_H__
 
-#ifndef __STDEXT_MSVC_OBJBASE_H__
+#ifndef __STDEXT_WINAPI_OBJBASE_H__
 #include "objbase.h"
 #endif
 
-#ifndef __STDEXT_MSVC_OLEAUTO_H__
+#ifndef __STDEXT_WINAPI_OLEAUTO_H__
 #include "oleauto.h"
 #endif
 
@@ -107,4 +107,4 @@ WINOLEAPI  DoDragDrop(
 // =========================================================================
 // $Log: $
 
-#endif /* __STDEXT_MSVC_OLE2_H__ */
+#endif /* __STDEXT_WINAPI_OLE2_H__ */

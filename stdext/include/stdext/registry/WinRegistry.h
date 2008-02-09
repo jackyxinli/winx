@@ -31,8 +31,8 @@
 #include "../String.h"
 #endif
 
-#ifndef __STDEXT_SPECSTRINGS_H__
-#include "../SpecStrings.h"
+#ifndef __STDEXT_MSVCRT_SPECSTRINGS_H__
+#include "../msvcrt/specstrings.h"
 #endif
 
 #ifndef REG_QWORD

@@ -26,8 +26,8 @@
 	#include <io.h>
 	#endif
 #else
-	#ifndef __STDEXT_MSVC_IO_H__
-	#include "../msvc/io.h"
+	#ifndef __STDEXT_MSVCRT_H__
+	#include "../msvcrt.h"
 	#endif
 #endif
 

@@ -166,17 +166,17 @@ inline int _winx_null_func(int nLevel, const void* fmt, ...) { return 0; }
 #else
 
 #if !defined(_MSC_VER)
-#ifndef __STDEXT_MSVC_DECLSPEC_H__
-#include "msvc/declspec.h"
+#ifndef __STDEXT_VC_DECLSPEC_H__
+#include "vc/declspec.h"
 #endif
 #endif
 
-#ifndef __STDEXT_MSVC_WTYPES_H__
-#include "msvc/wtypes.h"
+#ifndef __STDEXT_WINAPI_WTYPES_H__
+#include "winapi/wtypes.h"
 #endif
 
-#ifndef __STDEXT_MSVC_OBJBASE_H__
-#include "msvc/objbase.h"
+#ifndef __STDEXT_WINAPI_OBJBASE_H__
+#include "winapi/objbase.h"
 #endif
 
 #endif
@@ -188,8 +188,8 @@ typedef unsigned char UINT8, *PUINT8;
 typedef unsigned short UINT16, *PUINT16;
 #endif
 
-#ifndef __STDEXT_MSVC_MSVCRT_H__
-#include "msvc/msvcrt.h"
+#ifndef __STDEXT_MSVCRT_H__
+#include "msvcrt.h"
 #endif
 
 // -------------------------------------------------------------------------

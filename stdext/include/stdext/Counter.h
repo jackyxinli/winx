@@ -28,8 +28,8 @@
 #include <winbase.h>
 #endif
 #else
-#ifndef __STDEXT_MSVC_WINBASE_H__
-#include "msvc/winbase.h"
+#ifndef __STDEXT_WINAPI_WINBASE_H__
+#include "winapi/winbase.h"
 #endif
 #endif
 

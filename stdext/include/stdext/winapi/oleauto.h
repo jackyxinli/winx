@@ -9,33 +9,20 @@
 // of this license. You must not remove this notice, or any other, from
 // this software.
 // 
-// Module: stdext/msvc/io.h
+// Module: stdext/winapi/oleauto.h
 // Creator: xushiwei
 // Email: xushiweizh@gmail.com
-// Date: 2003-10-5 13:20:48
+// Date: 2006-8-26 0:45:33
 // 
-// $Id: $
+// $Id: oleauto.h,v 1.1 2006/10/18 12:13:39 xushiwei Exp $
 // -----------------------------------------------------------------------*/
-#ifndef __STDEXT_MSVC_IO_H__
-#define __STDEXT_MSVC_IO_H__
+#ifndef __STDEXT_WINAPI_OLEAUTO_H__
+#define __STDEXT_WINAPI_OLEAUTO_H__
 
-#if !defined(STD_NO_MSVCRT)
-#error "Don't include <stdext/msvc/io.h>"
-#endif
+// -------------------------------------------------------------------------
 
-#include <sys/stat.h>
+// -------------------------------------------------------------------------
+// $Log: oleauto.h,v $
+//
 
-// =========================================================================
-
-inline long _filelength(int fd)
-{
-    struct stat s;
-    if (fstat(fd, &s) < 0)
-        return 0;
-    return s.st_size;
-}
-
-// =========================================================================
-// $Log: $
-
-#endif /* __STDEXT_MSVC_IO_H__ */
+#endif /* __STDEXT_WINAPI_OLEAUTO_H__ */

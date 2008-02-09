@@ -9,18 +9,18 @@
 // of this license. You must not remove this notice, or any other, from
 // this software.
 // 
-// Module: stdext/msvc/winbase.h
+// Module: stdext/winapi/winbase.h
 // Creator: xushiwei
 // Email: xushiweizh@gmail.com
 // Date: 2006-8-18 18:08:57
 // 
-// $Id: Basic.h,v 1.6 2007/01/10 09:38:10 xushiwei Exp $
+// $Id: winbase.h,v 1.6 2007/01/10 09:38:10 xushiwei Exp $
 // -----------------------------------------------------------------------*/
-#ifndef __STDEXT_MSVC_WINBASE_H__
-#define __STDEXT_MSVC_WINBASE_H__
+#ifndef __STDEXT_WINAPI_WINBASE_H__
+#define __STDEXT_WINAPI_WINBASE_H__
 
 #ifndef STD_NO_WINSDK
-#error "Don't include <stdext/msvc/winbase.h>"
+#error "Don't include <stdext/winapi/winbase.h>"
 #endif
 
 #ifndef WINBASEAPI
@@ -728,4 +728,4 @@ WINBASEAPI BOOL WINAPI CloseHandle(
 // -------------------------------------------------------------------------
 // $Log: $
 
-#endif /* __STDEXT_MSVC_WINBASE_H__ */
+#endif /* __STDEXT_WINAPI_WINBASE_H__ */

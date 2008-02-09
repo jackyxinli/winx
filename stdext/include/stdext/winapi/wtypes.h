@@ -9,26 +9,22 @@
 // of this license. You must not remove this notice, or any other, from
 // this software.
 // 
-// Module: stdext/msvc/wtypes.h
+// Module: stdext/winapi/wtypes.h
 // Creator: xushiwei
 // Email: xushiweizh@gmail.com
 // Date: 2003-10-5 13:20:48
 // 
 // $Id: $
 // -----------------------------------------------------------------------*/
-#ifndef __STDEXT_MSVC_WTYPES_H__
-#define __STDEXT_MSVC_WTYPES_H__
+#ifndef __STDEXT_WINAPI_WTYPES_H__
+#define __STDEXT_WINAPI_WTYPES_H__
 
 #if !defined(STD_NO_WINSDK)
-#error "Don't include <stdext/msvc/wtypes.h>"
+#error "Don't include <stdext/winapi/wtypes.h>"
 #endif
 
-#ifndef __STDEXT_MSVC_WINDEF_H__
+#ifndef __STDEXT_WINAPI_WINDEF_H__
 #include "windef.h"
-#endif
-
-#ifndef __STDEXT_PLATFORM_H__
-#include "../Platform.h"
 #endif
 
 // =========================================================================
@@ -245,4 +241,4 @@ typedef ACCESS_MASK REGSAM;
 // =========================================================================
 // $Log: $
 
-#endif /* __STDEXT_MSVC_WTYPES_H__ */
+#endif /* __STDEXT_WINAPI_WTYPES_H__ */

@@ -9,17 +9,17 @@
 // of this license. You must not remove this notice, or any other, from
 // this software.
 // 
-// Module: stdext/msvc/winnls.h
+// Module: stdext/winapi/winnls.h
 // Creator: xushiwei
 // Email: xushiweizh@gmail.com
 // Date: 2007-1-14 14:55:48
 // 
 // $Id: $
 // -----------------------------------------------------------------------*/
-#ifndef __STDEXT_MSVC_WINNLS_H__
-#define __STDEXT_MSVC_WINNLS_H__
+#ifndef __STDEXT_WINAPI_WINNLS_H__
+#define __STDEXT_WINAPI_WINNLS_H__
 
-#ifndef __STDEXT_MSVC_WINBASE_H__
+#ifndef __STDEXT_WINAPI_WINBASE_H__
 #include "winbase.h"
 #endif
 
@@ -67,4 +67,4 @@ inline int WINAPI WideCharToMultiByte(
 // -------------------------------------------------------------------------
 // $Log: $
 
-#endif /* __STDEXT_MSVC_WINNLS_H__ */
+#endif /* __STDEXT_WINAPI_WINNLS_H__ */

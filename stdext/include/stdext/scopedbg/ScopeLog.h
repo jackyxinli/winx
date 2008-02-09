@@ -48,8 +48,8 @@
 		#include <shlwapi.h>
 		#endif
 	#else
-		#ifndef __STDEXT_MSVC_SHLWAPI_H__
-		#include "../msvc/shlwapi.h"
+		#ifndef __STDEXT_WINAPI_SHLWAPI_H__
+		#include "../winapi/shlwapi.h"
 		#endif
 	#endif
 #endif

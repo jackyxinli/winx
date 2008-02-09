@@ -9,15 +9,15 @@
 // of this license. You must not remove this notice, or any other, from
 // this software.
 // 
-// Module: stdext/SpecStrings.h
+// Module: stdext/msvcrt/specstrings.h
 // Creator: xushiwei
 // Email: xushiweizh@gmail.com
 // Date: 2007-2-7 15:25:27
 // 
 // $Id: $
 // -----------------------------------------------------------------------*/
-#ifndef __STDEXT_SPECSTRINGS_H__
-#define __STDEXT_SPECSTRINGS_H__
+#ifndef __STDEXT_MSVCRT_SPECSTRINGS_H__
+#define __STDEXT_MSVCRT_SPECSTRINGS_H__
 
 #if !defined(__specstrings)
 
@@ -186,4 +186,4 @@
 
 #endif // !defined(__specstrings)
 
-#endif /* __STDEXT_SPECSTRINGS_H__ */
+#endif /* __STDEXT_MSVCRT_SPECSTRINGS_H__ */

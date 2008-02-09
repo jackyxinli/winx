@@ -9,15 +9,15 @@
 // of this license. You must not remove this notice, or any other, from
 // this software.
 // 
-// Module: stdext/msvc/winerror.h
+// Module: stdext/winapi/winerror.h
 // Creator: xushiwei
 // Email: xushiweizh@gmail.com
 // Date: 2007-1-14 15:24:12
 // 
 // $Id: $
 // -----------------------------------------------------------------------*/
-#ifndef __STDEXT_MSVC_WINERROR_H__
-#define __STDEXT_MSVC_WINERROR_H__
+#ifndef __STDEXT_WINAPI_WINERROR_H__
+#define __STDEXT_WINAPI_WINERROR_H__
 
 //
 //  Values are 32 bit values layed out as follows:
@@ -12945,4 +12945,4 @@
 // -------------------------------------------------------------------------
 // $Log: $
 
-#endif /* __STDEXT_MSVC_WINERROR_H__ */
+#endif /* __STDEXT_WINAPI_WINERROR_H__ */
