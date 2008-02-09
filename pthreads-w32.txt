@@ -1,2 +1,0 @@
-http://sources-redhat.oc1.mirrors.redwire.net/pthreads-win32/dll-latest/
-Sources: pthreads-w32-2-8-0-release.tar.gz

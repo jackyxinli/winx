@@ -1,4 +1,0 @@
-REGEDIT4
-
-[HKEY_CLASSES_ROOT\chm.file\shell\∑¥±‡“Î(&Decompile)\command]
-@="hh -decompile %1.src %1"
