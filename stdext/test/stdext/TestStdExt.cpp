@@ -19,8 +19,8 @@
 
 #define STD_FILTER_TEST_CASE
 #define STD_NO_TASKALLOC
-#define STD_NO_MSVCRT
-#define STD_NO_WINSDK
+//#define STD_NO_MSVCRT
+//#define STD_NO_WINSDK
 #include <stdext.h>
 #include <stdext/Archive.h>
 #include <stdext/kmp/TestFinder.h>
@@ -30,6 +30,7 @@
 #include <stdext/Map.h>
 #include <stdext/Set.h>
 #include <stdext/List.h>
+#include <stdext/tchar.h>
 #pragma comment(lib, "shlwapi.lib")
 
 // -------------------------------------------------------------------------
@@ -55,11 +56,11 @@ inline void testBoost(LogT& log)
 #endif
 
 // -------------------------------------------------------------------------
-// main
+// testStdExt
 
-int main()
+void testStdExt()
 {
-	WINX_TEST_APP(std::ErrorLog, "TestSet", "");
+	WINX_TEST_APP(std::ErrorLog, "TestMap", "testMultiMap");
 
 	WINX_TEST_CLASS(TestFinder);
 #if !defined(STD_NO_WINSDK)
@@ -94,8 +95,15 @@ int main()
 
 	//Boost
 	testBoost(log);
+}
+
+int main()
+{
 	return 0;
 }
+
+WINX_SELECT_RUN("testStdExt");
+WINX_AUTORUN(testStdExt);
 
 // -------------------------------------------------------------------------
 // $Log: TestStdExt.cpp,v $

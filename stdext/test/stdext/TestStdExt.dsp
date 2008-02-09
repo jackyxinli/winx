@@ -96,45 +96,5 @@ SOURCE=.\TestStdExt.cpp
 SOURCE=.\TestStdNew.cpp
 # End Source File
 # End Group
-# Begin Source File
-
-SOURCE=..\..\include\stdext\msvc\crtdbg.h
-# End Source File
-# Begin Source File
-
-SOURCE=..\..\include\stdext\msvc\objbase.h
-# End Source File
-# Begin Source File
-
-SOURCE=..\..\include\stdext\msvc\objidl.h
-# End Source File
-# Begin Source File
-
-SOURCE=..\..\include\stdext\msvc\ole2.h
-# End Source File
-# Begin Source File
-
-SOURCE=..\..\include\stdext\msvc\posix\pthread.h
-# End Source File
-# Begin Source File
-
-SOURCE=..\..\include\stdext\archive\StreamArchive.h
-# End Source File
-# Begin Source File
-
-SOURCE=..\..\include\stdext\msvc\posix\time.h
-# End Source File
-# Begin Source File
-
-SOURCE=..\..\include\stdext\msvc\winbase.h
-# End Source File
-# Begin Source File
-
-SOURCE=..\..\include\stdext\msvc\windef.h
-# End Source File
-# Begin Source File
-
-SOURCE=..\..\include\stdext\msvc\wtypes.h
-# End Source File
 # End Target
 # End Project

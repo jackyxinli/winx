@@ -63,7 +63,7 @@ public:
 	}
 };
 
-inline void Test()
+inline void testStdNew()
 {
 	MyAlloc a;
 	STD_NEW(a) int;
@@ -72,6 +72,8 @@ inline void Test()
 	STD_NEW(a) A[10];
 #endif
 }
+
+WINX_AUTORUN(testStdNew);
 
 // -------------------------------------------------------------------------
 // $Log: TestStdNew.cpp,v $

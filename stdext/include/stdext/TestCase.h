@@ -240,10 +240,31 @@ bool winx_call isEqBuf(_It1 a1, _It2 a2, size_t count)
 	ReportErrorMsgIf("Failed: AssertEqBuf(" #a1 "," #a2 "," #count ");", std::isEqBuf(a1, a2, count))
 
 // =========================================================================
-// WINX_AUTORUN
+// WINX_SELECT_RUN, WINX_AUTORUN
 
-#define WINX_AUTORUN(Fun)                                                   \
-    int __g_autoRun_ ## __LINE__ = Fun()
+template <int n>
+struct __SelectFun
+{
+	static const char* _g_name;
+};
+
+#define WINX_SELECT_RUN(szFun)												\
+	template <int n> const char* std::__SelectFun<n>::_g_name = szFun
+
+template <class FunT>
+int __autoRun(FunT Fun, const char* szFun)
+{
+	const char* szSelFun = __SelectFun<0>::_g_name;
+	if (szSelFun == NULL || strstr(szFun, szSelFun))
+	{
+		printf("------------------------- %s -------------------------\n", szFun);
+		Fun();
+	}
+	return 0;
+}
+
+#define WINX_AUTORUN(Fun)													\
+	static int __g_autoRun_ ## __LINE__ = std::__autoRun(Fun, #Fun)
 
 // =========================================================================
 // $Log: TestCase.h,v $
