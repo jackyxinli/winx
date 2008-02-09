@@ -60,9 +60,6 @@ typedef /* [string] */ const TCHAR __RPC_FAR *LPCTSTR;
 
 #if defined(X_CC_GCC)
 typedef long long __int64;
-typedef unsigned long long __uint64;
-#else
-typedef unsigned __int64 __uint64;
 #endif
 
 typedef __int64 LONG64, *PLONG64;

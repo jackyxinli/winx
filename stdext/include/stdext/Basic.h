@@ -188,6 +188,12 @@ typedef unsigned char UINT8, *PUINT8;
 typedef unsigned short UINT16, *PUINT16;
 #endif
 
+#if defined(X_CC_GCC)
+typedef unsigned long long __uint64;
+#else
+typedef unsigned __int64 __uint64;
+#endif
+
 #ifndef __STDEXT_MSVCRT_H__
 #include "msvcrt.h"
 #endif
