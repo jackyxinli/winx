@@ -249,7 +249,7 @@ struct __SelectFun
 };
 
 #define WINX_SELECT_RUN(szFun)												\
-	template <int n> const char* std::__SelectFun<n>::_g_name = szFun
+	template <> const char* std::__SelectFun<0>::_g_name = szFun
 
 template <class FunT>
 int __autoRun(FunT Fun, const char* szFun)

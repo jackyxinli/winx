@@ -96,6 +96,7 @@ inline long _filelength(int fd)
 #define _ultoa		std::tchar::ultoa
 #define	_i64toa		std::tchar::i64toa
 #define _ui64toa	std::tchar::ui64toa
+#define _ui64tow    std::tchar::ui64toa
 #define _gcvt       gcvt
 
 inline void __not_impl(const char* szFeature)

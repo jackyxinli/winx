@@ -17,25 +17,38 @@
 // $Id: TestBasic.cpp,v 1.8 2006/12/03 07:52:55 xushiwei Exp $
 // -----------------------------------------------------------------------*/
 
-#include <stdext/Basic.h>
+#include <stdext/Memory.h>
 
 // -------------------------------------------------------------------------
 // TestCase
 
-int testBasic()
+void testAutoFreeAlloc()
 {
-    std::OutputLog log;
-    log.print('a')
-       .print(1)
-       .print((short)2)
-       .newline()
-       .print(1.0)
-       .print(1.0, "%4.3lf")
-       .newline(); 
-	return 0;
+    std::AutoFreeAlloc alloc;
+    int* a = STD_NEW(alloc, int);
+    int* b = STD_NEW_ARRAY(alloc, int, 100);
+    int* c = STD_ALLOC(alloc, int);
+    int* d = STD_ALLOC_ARRAY(alloc, int, 100);
+    
+    std::AutoFreeAlloc* suballoc = STD_NEW(alloc, std::AutoFreeAlloc);
+    int* e = STD_NEW(*suballoc, int);
 }
 
-WINX_AUTORUN(testBasic);
+void testScopeAlloc()
+{
+    std::BlockPool recycle;
+    std::ScopeAlloc alloc(recycle);
+    int* a = STD_NEW(alloc, int);
+    // ... --> same as std::AutoFreeAlloc
+}
+
+void testMemory()
+{
+    testAutoFreeAlloc();
+    testScopeAlloc();
+}
+
+WINX_AUTORUN(testMemory);
 
 // -------------------------------------------------------------------------
 // $Log: TestBasic.cpp,v $

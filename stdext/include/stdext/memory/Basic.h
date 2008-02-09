@@ -178,7 +178,6 @@ __NS_STD_END
 
 // -------------------------------------------------------------------------
 
-STD_DECL_CTYPE(void);
 STD_DECL_CTYPE(bool);
 STD_DECL_CTYPE(float);
 STD_DECL_CTYPE(double);
