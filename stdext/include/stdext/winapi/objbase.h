@@ -33,11 +33,11 @@
 
 // -------------------------------------------------------------------------
 
-#ifndef __STDEXT_MSVC_OBJIDL_H__
+#ifndef __STDEXT_WINAPI_OBJIDL_H__
 #include "objidl.h"
 #endif
 
-#ifndef __STDEXT_MSVC_OLEAUTO_H__
+#ifndef __STDEXT_WINAPI_OLEAUTO_H__
 #include "oleauto.h"
 #endif
 

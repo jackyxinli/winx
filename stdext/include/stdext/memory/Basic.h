@@ -256,8 +256,9 @@ inline void winx_call swap(void* a, void* b, size_t cb)
 // -------------------------------------------------------------------------
 // StdLibAlloc
 
-struct StdLibAlloc
+class StdLibAlloc
 {
+public:
 	static void* winx_call allocate(size_t cb)						{ return malloc(cb); }
 	static void* winx_call allocate(size_t cb, DestructorType fn)	{ return malloc(cb); }
 	static void* winx_call allocate(size_t cb, int fnZero)			{ return malloc(cb); }
@@ -309,11 +310,13 @@ struct StdLibAlloc
 typedef StdLibAlloc DefaultStaticAlloc;
 
 // -------------------------------------------------------------------------
+// CoTaskAlloc
 
-#if defined(STD_SUPPORT_CRTDBG) && !defined(STD_NO_TASKALLOC)
+#if !defined(STD_NO_WINSDK)
 
-struct CoTaskAlloc
+class CoTaskAlloc
 {
+public:
 	static void* winx_call allocate(size_t cb)						{ return CoTaskMemAlloc(cb); }
 	static void* winx_call allocate(size_t cb, DestructorType fn)	{ return CoTaskMemAlloc(cb); }
 	static void* winx_call allocate(size_t cb, int fnZero)			{ return CoTaskMemAlloc(cb); }
@@ -349,6 +352,7 @@ struct CoTaskAlloc
 #endif
 
 // -------------------------------------------------------------------------
+// HeapMemAllocBase, HeapMemAlloc
 
 template <DWORD uFlags = HEAP_GENERATE_EXCEPTIONS>
 class HeapMemAllocBase

@@ -44,7 +44,7 @@
 // =========================================================================
 // uuidof
 
-#ifndef __STDEXT_MSVC_UUIDOF_H__
+#ifndef __STDEXT_VC_UUIDOF_H__
 #include "uuidof.h"
 #endif
 
