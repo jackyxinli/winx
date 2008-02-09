@@ -23,12 +23,12 @@
 #include "../Platform.h"
 #endif
 
-// -------------------------------------------------------------------------
-// ==== crtdbg.h ====
-
 #if (0)
 #define STD_NO_MAP_ALLOC
 #endif
+
+// -------------------------------------------------------------------------
+// ==== crtdbg.h ====
 
 #ifndef STD_NO_MAP_ALLOC
 #define _CRTDBG_MAP_ALLOC
@@ -56,16 +56,6 @@
 // Visual C++ Special
 
 //
-// stdio.h
-//
-#ifdef WINX_GCC
-#ifndef _STDIO_H
-#include <stdio.h>
-#endif
-#define _vsnprintf(buf, n, fmt, arglist) vsnprintf(buf, n, fmt, arglist)
-#endif
-
-//
 // io.h
 //
 #ifndef _SYS_STAT_H
@@ -78,16 +68,6 @@ inline long _filelength(int fd)
         return 0;
     return s.st_size;
 }
-
-//
-// assert.h
-//
-#ifdef WINX_GCC
-#ifndef _ASSERT_H
-#include <assert.h>
-#endif
-#define _assert(exp, file, line) __assert_fail(exp, (const char*)(file), line, __ASSERT_FUNCTION)
-#endif
 
 //
 // stdlib.h

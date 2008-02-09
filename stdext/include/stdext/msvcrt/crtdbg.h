@@ -23,13 +23,34 @@
 #error "Don't include <stdext/msvcrt/crtdbg.h>"
 #endif
 
-#ifndef _ASSERT_H_
-#include <assert.h>
-#endif
-
-#ifndef _INC_STDARG
+#ifndef _STDARG_H
 #include <stdarg.h>
 #endif
+
+// -------------------------------------------------------------------------
+// ==== _vsnprintf, _assert ==> required by crtdbg.h ====
+
+//
+// stdio.h
+//
+#ifdef WINX_GCC
+#ifndef _STDIO_H
+#include <stdio.h>
+#endif
+#define _vsnprintf(buf, n, fmt, arglist) vsnprintf(buf, n, fmt, arglist)
+#endif
+
+//
+// assert.h
+//
+#ifdef WINX_GCC
+#ifndef _ASSERT_H
+#include <assert.h>
+#endif
+#define _assert(exp, file, line) __assert_fail(exp, (const char*)(file), line, __ASSERT_FUNCTION)
+#endif
+
+// -------------------------------------------------------------------------
 
 #if defined(_DEBUG)
 
