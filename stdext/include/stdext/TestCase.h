@@ -240,6 +240,12 @@ bool winx_call isEqBuf(_It1 a1, _It2 a2, size_t count)
 	ReportErrorMsgIf("Failed: AssertEqBuf(" #a1 "," #a2 "," #count ");", std::isEqBuf(a1, a2, count))
 
 // =========================================================================
+// WINX_AUTORUN
+
+#define WINX_AUTORUN(Fun)                                                   \
+    int __g_autoRun_ ## __LINE__ = Fun()
+
+// =========================================================================
 // $Log: TestCase.h,v $
 // Revision 1.4  2007/01/10 09:32:25  xushiwei
 // move UnitTest Assert(AssertExp, AssertFail, etc) from Log.h to TestCase.h

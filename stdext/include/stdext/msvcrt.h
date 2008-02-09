@@ -96,17 +96,12 @@ inline long _filelength(int fd)
 #define _ultoa		std::tchar::ultoa
 #define	_i64toa		std::tchar::i64toa
 #define _ui64toa	std::tchar::ui64toa
+#define _gcvt       gcvt
 
 inline void __not_impl(const char* szFeature)
 {
 	_RPT1(_CRT_ERROR, "NotImplementFeature - %s\n", szFeature);
 	throw szFeature;
-}
-
-inline char* _gcvt(double value, int ndec, char* buf)
-{
-	__not_impl("_gcvt");
-	return buf;
 }
 
 #endif // WINX_GCC
