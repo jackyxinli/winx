@@ -853,9 +853,15 @@ public:
 		mlog.storage().add(fout);
 		mlog.trace("Hello, MultiLog!!!\n");
 
-		int sel = mlog.storage().select(0);
+		int sel = mlog.storage().select(1);
 		mlog.trace("Message to file!!!\n");
 		mlog.storage().select(sel);
+
+		mlog.trace("Hello, MultiLog2!!!\n");
+
+		int sel2 = mlog.storage().select(0);
+		mlog.trace("Disabled message!!!\n");
+		mlog.storage().select(sel2);
 	}
 };
 

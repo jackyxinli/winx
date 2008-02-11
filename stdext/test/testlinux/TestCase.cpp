@@ -9,47 +9,45 @@
 // of this license. You must not remove this notice, or any other, from
 // this software.
 // 
-// Module: TestMemory.cpp
+// Module: TestCase.cpp
 // Creator: xushiwei
 // Email: xushiweizh@gmail.com
 // Date: 2006-8-18 13:57:28
 // 
-// $Id: TestMemory.cpp,v 1.8 2006/12/03 07:52:55 xushiwei Exp $
+// $Id: TestCase.cpp,v 1.8 2006/12/03 07:52:55 xushiwei Exp $
 // -----------------------------------------------------------------------*/
 
-#include <stdext/Memory.h>
+#include <stdext/Basic.h>
 
 // -------------------------------------------------------------------------
 // TestCase
 
-void testAutoFreeAlloc()
+template <class LogT>
+class DoTest : public TestCase
 {
-    std::AutoFreeAlloc alloc;
-    int* a = STD_NEW(alloc, int);
-    int* b = STD_NEW_ARRAY(alloc, int, 100);
-    int* c = STD_ALLOC(alloc, int);
-    int* d = STD_ALLOC_ARRAY(alloc, int, 100);
-    
-    std::AutoFreeAlloc* suballoc = STD_NEW(alloc, std::AutoFreeAlloc);
-    int* e = STD_NEW(*suballoc, int);
+	WINX_TEST_SUITE(DoTest);
+		WINX_TEST(test);
+	WINX_TEST_SUITE_END();
+
+public:
+	void test(LogT& log)
+	{
+		int a[] = {1, 2, 3};
+		int b[] = {1, 2, 3};
+		AssertEq(a[0], b[0]);
+		AssertExp(a[1] == b[1]);
+		AssertEqBuf(a, b, countof(a));
+	}
+};
+
+void testTestCase()
+{
+	WINX_TEST_APP(std::ErrorLog, "", "");
+	WINX_TEST_CLASS(DoTest);
 }
 
-void testScopeAlloc()
-{
-    std::BlockPool recycle;
-    std::ScopeAlloc alloc(recycle);
-    int* a = STD_NEW(alloc, int);
-    // ... --> same as std::AutoFreeAlloc
-}
-
-void testMemory()
-{
-    testAutoFreeAlloc();
-    testScopeAlloc();
-}
-
-WINX_AUTORUN(testMemory);
+WINX_AUTORUN(testTestCase);
 
 // -------------------------------------------------------------------------
-// $Log: TestMemory.cpp,v $
+// $Log: TestCase.cpp,v $
 //
