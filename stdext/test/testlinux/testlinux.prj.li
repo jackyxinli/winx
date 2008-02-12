@@ -16,7 +16,5 @@ LibDir
 Libraries	
 
 [Source]
-TestBasic.cpp
-TestLinux.cpp
-TestMemory.cpp
+testlinux.dsp
 
