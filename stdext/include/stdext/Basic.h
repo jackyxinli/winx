@@ -37,6 +37,10 @@
 #include "Platform.h"
 #endif
 
+#ifndef __STLPATCH_H__
+#include "../stlpatch.h"
+#endif
+
 #ifndef _CRT_SECURE_NO_DEPRECATE
 #define _CRT_SECURE_NO_DEPRECATE
 #endif
