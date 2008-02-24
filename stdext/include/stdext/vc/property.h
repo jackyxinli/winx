@@ -85,7 +85,6 @@ private:																	\
 		ThisClass* pThis = parent_class_ptr(ThisClass, Var);				\
 		return pThis->get();												\
 	}																		\
-	typedef _winxpr_##Var ThisPropClass;									\
 	_WINX_PROPERTY_BOOLOP(Type, Var)
 
 #define _WINX_PROPERTY_WRITE(Type, Var, put)								\
@@ -172,7 +171,6 @@ private:																	\
 		ThisClass* pThis = parent_class_ptr(ThisClass, Var);				\
 		return pThis->Member;												\
 	}																		\
-	typedef _winxpr_##Var ThisPropClass;									\
 	_WINX_PROPERTY_BOOLOP(const Type&, Var)
 
 #define _WINX_ALIAS_WRITE(Type, Var, Member)								\
