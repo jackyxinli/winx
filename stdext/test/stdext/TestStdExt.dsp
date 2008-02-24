@@ -104,5 +104,9 @@ SOURCE=.\TestStdNew.cpp
 
 SOURCE=..\..\include\stdext\msvcrt.h
 # End Source File
+# Begin Source File
+
+SOURCE=.\TestProperty.cpp
+# End Source File
 # End Target
 # End Project
