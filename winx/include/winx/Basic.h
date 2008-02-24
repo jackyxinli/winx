@@ -102,35 +102,6 @@ __forceinline void _WinxDbgDelete(WindowClass* pOb)
 #endif
 
 // -------------------------------------------------------------------------
-// WINX_PROPERTY - for general use
-
-#if defined(_MSC_VER)
-
-#define WINX_PROPERTY(Type, Name, Method)									\
-	Type __declspec(property(get=Method)) Name
-
-#define WINX_PROPERTY_RW(Type, Name, Get, Put)								\
-	Type __declspec(property(get=Get,put=Put)) Name
-
-#define WINX_PROP_READONLY(Type, Name, Variant)								\
-	Type winx_call _winx_get_##Name() const { return Variant; }				\
-	WINX_PROPERTY(Type, Name, _winx_get_##Name)
-
-#define WINX_PROP_READWRITE(Type, Name, Variant)							\
-	Type winx_call _winx_get_##Name() const { return Variant; }				\
-	void winx_call _winx_put_##Name(Type _winx_v) { Variant = _winx_v; }	\
-	WINX_PROPERTY_RW(Type, Name, _winx_get_##Name, _winx_put_##Name)
-
-#else
-
-#define WINX_PROPERTY(Type, Name, Method)
-#define WINX_PROPERTY_RW(Type, Name, Get, Put)
-#define WINX_PROP_READONLY(Type, Name, Variant)
-#define WINX_PROP_READWRITE(Type, Name, Variant)
-
-#endif
-
-// -------------------------------------------------------------------------
 // GetModuleHandleEx
 
 inline HMODULE GetModuleHandleEx(LPCVOID lpAddress)

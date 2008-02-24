@@ -19,10 +19,20 @@
 #ifndef __STDEXT_VC_UUIDOF_H__
 #define __STDEXT_VC_UUIDOF_H__
 
+// =========================================================================
+
 #if defined(STD_NO_WINSDK)
+
 #ifndef __STDEXT_WINAPI_WTYPES_H__
 #include "../winapi/wtypes.h"
 #endif
+
+#else
+
+#ifndef __wtypes_h__
+#include <wtypes.h>
+#endif
+
 #endif
 
 // =========================================================================

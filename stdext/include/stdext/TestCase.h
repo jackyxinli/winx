@@ -130,12 +130,15 @@ struct PauseOnExit {
 // -------------------------------------------------------------------------
 // TestApp
 
-#define WINX_TEST_APP(LogT, Test, Case)										\
-	WINX_DBG_PAUSE_ON_EXIT();												\
+#define WINX_TESTCASE_LOG(LogT)												\
 	_CrtSetDbgFlag(															\
 		_CrtSetDbgFlag(_CRTDBG_REPORT_FLAG)|_CRTDBG_LEAK_CHECK_DF);			\
 	typedef std::TestRunner< LogT > TestCaseLog;							\
-	TestCaseLog log;														\
+	TestCaseLog log
+
+#define WINX_TEST_APP(LogT, Test, Case)										\
+	WINX_DBG_PAUSE_ON_EXIT();												\
+	WINX_TESTCASE_LOG(LogT);												\
 	log.select(Test, Case)
 
 // -------------------------------------------------------------------------
@@ -155,12 +158,12 @@ struct PauseOnExit {
 // TestCase
 
 #define WINX_DEFINE_TEST(Test)												\
-	typedef Test ThisClass													\
+	typedef Test ThisTestClass												\
 
 #define WINX_TEST_CASE(Case)												\
 	try {																	\
 		if (log.runableTestCase(#Case))										\
-			ThisClass().Case(log);											\
+			ThisTestClass().Case(log);										\
 	} catch(...) {															\
 		log.reportError(													\
 			"Failed: Unexpected exception!!!", __FILE__, __LINE__);			\
@@ -189,7 +192,7 @@ public:																		\
 #define WINX_TEST(Case)														\
 		try {																\
 			if (log.runableTestCase(#Case))	{								\
-				ThisClass obj;												\
+				ThisTestClass obj;											\
 				obj.setUp();												\
 				obj.Case(log);												\
 				obj.tearDown();												\
@@ -240,7 +243,7 @@ bool winx_call isEqBuf(_It1 a1, _It2 a2, size_t count)
 	ReportErrorMsgIf("Failed: AssertEqBuf(" #a1 "," #a2 "," #count ");", std::isEqBuf(a1, a2, count))
 
 // =========================================================================
-// WINX_SELECT_RUN, WINX_AUTORUN
+// WINX_SELECT_RUN, WINX_AUTORUN, WINX_AUTORUN_CLASS
 
 template <int n>
 struct __SelectFun
@@ -265,6 +268,14 @@ int __autoRun(FunT Fun, const char* szFun)
 
 #define WINX_AUTORUN(Fun)													\
 	static int __g_autoRun_ ## __LINE__ = std::__autoRun(Fun, #Fun)
+
+#define WINX_AUTORUN_CLASS(Test, LogT)										\
+	inline void __autoRun_##Test()											\
+	{																		\
+		WINX_TESTCASE_LOG(LogT);											\
+		WINX_TEST_CLASS(Test);												\
+	}																		\
+	WINX_AUTORUN(__autoRun_##Test)
 
 // =========================================================================
 // $Log: TestCase.h,v $

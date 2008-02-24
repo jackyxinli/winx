@@ -102,7 +102,7 @@ int main()
 	return 0;
 }
 
-WINX_SELECT_RUN("testStdExt");
+WINX_SELECT_RUN("TestProperty");
 WINX_AUTORUN(testStdExt);
 
 // -------------------------------------------------------------------------

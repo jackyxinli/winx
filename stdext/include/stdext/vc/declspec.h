@@ -19,11 +19,10 @@
 #ifndef __STDEXT_VC_DECLSPEC_H__
 #define __STDEXT_VC_DECLSPEC_H__
 
-#if defined(_MSC_VER)
-#error "Don't include <stdext/vc/declspec.h>"
-#endif
-
 // =========================================================================
+// function calltype
+
+#if !defined(_MSC_VER)
 
 #ifndef __cdecl
 #define __cdecl
@@ -41,11 +40,17 @@
 #define __forceinline inline
 #endif
 
+#endif
+
 // =========================================================================
 // uuidof
 
 #ifndef __STDEXT_VC_UUIDOF_H__
 #include "uuidof.h"
+#endif
+
+#ifndef __STDEXT_VC_PROPERTY_H__
+#include "property.h"
 #endif
 
 // =========================================================================

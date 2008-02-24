@@ -126,13 +126,20 @@ inline int _winx_null_func(int nLevel, const void* fmt, ...) { return 0; }
 #endif
 
 // -------------------------------------------------------------------------
-// macro for, __forceinline
+// macro for
 
 #if defined(STD_ISOCPP_FOR)
 #	if defined(_MSC_VER) && (_MSC_VER <= 1200)
 #	undef for
 #	define for	if (0); else for
 #	endif
+#endif
+
+// -------------------------------------------------------------------------
+// countof - for general use
+
+#ifndef	countof
+#define countof(array)						(sizeof(array)/sizeof(array[0]))
 #endif
 
 // -------------------------------------------------------------------------
@@ -163,6 +170,10 @@ typedef unsigned long long __uint64;
 typedef unsigned __int64 __uint64;
 #endif
 
+#ifndef __STDEXT_VC_DECLSPEC_H__
+#include "vc/declspec.h"
+#endif
+
 #if !defined(STD_NO_WINSDK)
 
 #ifndef __wtypes_h__
@@ -174,12 +185,6 @@ typedef unsigned __int64 __uint64;
 #endif
 
 #else
-
-#if !defined(_MSC_VER)
-#ifndef __STDEXT_VC_DECLSPEC_H__
-#include "vc/declspec.h"
-#endif
-#endif
 
 #ifndef __STDEXT_WINAPI_WTYPES_H__
 #include "winapi/wtypes.h"
@@ -200,29 +205,6 @@ typedef unsigned short UINT16, *PUINT16;
 
 #ifndef __STDEXT_MSVCRT_H__
 #include "msvcrt.h"
-#endif
-
-// -------------------------------------------------------------------------
-// countof - for general use
-
-#ifndef	countof
-#define countof(array)						(sizeof(array)/sizeof(array[0]))
-#endif
-
-// -------------------------------------------------------------------------
-// parent_class_ptr - for general use
-
-#ifndef _offsetof
-#	if defined(X_CC_GCC)
-#		define _offsetof(coclass, member)	( (size_t)&((coclass*)64)->member - 64 )
-#	else
-#		define _offsetof(coclass, member)	( (size_t)&((coclass*)0)->member )
-#	endif
-#endif
-
-#ifndef parent_class_ptr
-#define parent_class_ptr(ParentClass, member)	\
-	( (ParentClass*)((const char*)(this) - _offsetof(ParentClass, member)) )
 #endif
 
 // -------------------------------------------------------------------------
