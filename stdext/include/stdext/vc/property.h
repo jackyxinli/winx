@@ -92,18 +92,6 @@ private:																	\
 	}																		\
 	inline bool operator!=(int b) const {									\
 		return (int)(Type)*this != b;										\
-	}																		\
-	inline bool operator<(int b) const {									\
-		return (int)(Type)*this < b;										\
-	}																		\
-	inline bool operator<=(int b) const {									\
-		return (int)(Type)*this <= b;										\
-	}																		\
-	inline bool operator>(int b) const {									\
-		return (int)(Type)*this > b;										\
-	}																		\
-	inline bool operator>=(int b) const {									\
-		return (int)(Type)*this >= b;										\
 	}
 
 // =========================================================================
