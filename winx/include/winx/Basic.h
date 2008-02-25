@@ -37,8 +37,8 @@
 #include "winsdk/Basic.h"
 #endif
 
-#ifndef __WINX_WTL_WINDOW_H__
-#include "wtl/Window.h"
+#ifndef __WINX_WTL_WTLPORT_H__
+#include "wtl/WtlPort.h"
 #endif
 
 #ifndef __STDEXT_H__
@@ -143,7 +143,7 @@ public:
 // -------------------------------------------------------------------------
 // class CComModuleInit - ATL Helper
 
-#if (_ATL_VER > 0x0300)
+#if (_ATL_VER > 0x0300) || defined(WINX_NO_WTL)
 
 class CComModuleInit
 {

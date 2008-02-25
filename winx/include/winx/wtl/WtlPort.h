@@ -9,15 +9,17 @@
 // of this license. You must not remove this notice, or any other, from
 // this software.
 // 
-// Module: winx/wtl/Window.h
+// Module: winx/wtl/WtlPort.h
 // Creator: xushiwei
 // Email: xushiweizh@gmail.com
 // Date: 2006-8-19 14:36:01
 // 
-// $Id: Window.h,v 1.11 2006/12/11 05:19:17 xushiwei Exp $
+// $Id: WtlPort.h,v 1.11 2006/12/11 05:19:17 xushiwei Exp $
 // -----------------------------------------------------------------------*/
-#ifndef __WINX_WTL_WINDOW_H__
-#define __WINX_WTL_WINDOW_H__
+#ifndef __WINX_WTL_WTLPORT_H__
+#define __WINX_WTL_WTLPORT_H__
+
+//#define WINX_NO_WTL
 
 #if (0)
 #define WINX_NO_WTL
@@ -38,10 +40,14 @@ typedef wtlport::CWindow _WtlCWindow;
 
 // -------------------------------------------------------------------------
 
+#if !defined(WINX_NO_WTL)
 typedef ::ATL::CWindow _AlterCWindow;
+#else
+#define WINX_NO_ALTER_WINDOW
+#endif
 
 // -------------------------------------------------------------------------
-// $Log: Window.h,v $
+// $Log: WtlPort.h,v $
 //
 
-#endif /* __WINX_WTL_WINDOW_H__ */
+#endif /* __WINX_WTL_WTLPORT_H__ */

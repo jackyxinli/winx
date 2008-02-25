@@ -28,10 +28,6 @@
 #include "BasicTypes.h"
 #endif
 
-#ifndef __WINX_WTL_WINDOW_H__
-#include "../wtl/Window.h"
-#endif
-
 __WINX_BEGIN
 
 // =========================================================================

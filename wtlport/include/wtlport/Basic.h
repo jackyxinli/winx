@@ -19,6 +19,22 @@
 #ifndef __WTLPORT_BASIC_H__
 #define __WTLPORT_BASIC_H__
 
+#ifndef __STDEXT_BASIC_H__
+#include "../../../stdext/include/stdext/Basic.h"
+#endif
+
+#ifndef ATLASSERT
+#define ATLASSERT(expr) WINX_ASSERT(expr)
+#endif
+
+#ifndef USES_CONVERSION
+#define USES_CONVERSION	WINX_USES_CONVERSION
+#endif
+
+#ifndef T2OLE
+#define T2OLE WINX_T2W
+#endif
+
 // -------------------------------------------------------------------------
 // GET_X_LPARAM, GET_Y_LPARAM - window message helper
 

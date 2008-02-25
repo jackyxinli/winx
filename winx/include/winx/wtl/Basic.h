@@ -23,7 +23,10 @@
 #define WINX_USE_APPMODULE
 #define WINX_USE_ATLPORT
 #define WINX_CREATE_AX_ON_DLGINIT
+#define WINX_NO_WTL
 #endif
+
+#if !defined(WINX_NO_WTL)
 
 #if defined(WINX_GCC)
 #define WINX_USE_ATLPORT
@@ -337,5 +340,7 @@ inline HRESULT AtlCreateActiveXControls(HWND hWndParent, HINSTANCE hInst, UINT n
 //   WindowHandle, WindowMap, MessageMap
 //   COM Support(Object, StackObject, FakeObject, COLESTR, etc)
 //
+
+#endif // !defined(WINX_NO_WTL)
 
 #endif /* __WINX_WTL_BASIC_H__ */
