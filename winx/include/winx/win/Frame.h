@@ -142,7 +142,7 @@ public:
 // Layout - DialogResize
 
 template <class WindowImplClass>
-class _DialogResize : public ATL::CWindow, public WTL::CDialogResize<WindowImplClass>
+class _DialogResize : public WindowHandle, public WTL::CDialogResize<WindowImplClass>
 {
 	typedef WTL::CDialogResize<WindowImplClass> BaseClass;
 	

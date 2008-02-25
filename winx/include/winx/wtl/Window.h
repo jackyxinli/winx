@@ -9,37 +9,39 @@
 // of this license. You must not remove this notice, or any other, from
 // this software.
 // 
-// Module: wtlport/Basic.h
+// Module: winx/wtl/Window.h
 // Creator: xushiwei
 // Email: xushiweizh@gmail.com
 // Date: 2006-8-19 14:36:01
 // 
-// $Id: Basic.h,v 1.11 2006/12/11 05:19:17 xushiwei Exp $
+// $Id: Window.h,v 1.11 2006/12/11 05:19:17 xushiwei Exp $
 // -----------------------------------------------------------------------*/
-#ifndef __WTLPORT_BASIC_H__
-#define __WTLPORT_BASIC_H__
+#ifndef __WINX_WTL_WINDOW_H__
+#define __WINX_WTL_WINDOW_H__
 
-namespace wtlport {};
-
-#ifndef __WTLPORT
-#define __WTLPORT				wtlport::
-#define __WTLPORT_BEGIN			namespace wtlport {
-#define __WTLPORT_END			}
+#if (0)
+#define WINX_NO_WTL
+#define WINX_NO_WTLPORT
+#define WINX_NO_ALTER_WINDOW
 #endif
 
-__WTLPORT_BEGIN
+#ifndef __WINX_WTL_BASIC_H__
+#include "Basic.h"
+#endif
 
 // -------------------------------------------------------------------------
-// class CWindow
 
-class CWindow
-{
-};
+#if !defined(WINX_NO_WTLPORT)
+#include "../../../../wtlport/include/wtlport/Basic.h"
+typedef ::ATL::CWindow _AlterCWindow;
+typedef wtlport::CWindow _WtlCWindow;
+#else
+typedef ::ATL::CWindow _WtlCWindow;
+#define WINX_NO_ALTER_WINDOW
+#endif
 
 // -------------------------------------------------------------------------
-// $Log: Basic.h,v $
+// $Log: Window.h,v $
 //
 
-__WTLPORT_END
-
-#endif /* __WTLPORT_BASIC_H__ */
+#endif /* __WINX_WTL_WINDOW_H__ */

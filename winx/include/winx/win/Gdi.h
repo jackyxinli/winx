@@ -67,6 +67,7 @@ typedef WTL::CFont Font;
 template <bool t_bManaged>
 class BitmapT : public WTL::CBitmapT<t_bManaged>
 {
+	WINX_THISCLASS(BitmapT);
 private:
 	typedef WTL::CBitmapT<t_bManaged> BaseClass;
 	
@@ -75,8 +76,8 @@ private:
 
 public:
 	using BaseClass::m_hBitmap;
-	
-	WINX_PROP_READWRITE(HBITMAP, m_hObject, m_hBitmap);
+
+	POINTER_ALIAS_RW(HBITMAP, m_hObject, m_hBitmap);
 
 public:
 	BitmapT(HBITMAP hBitmap = NULL) : BaseClass(hBitmap) {
@@ -170,13 +171,14 @@ inline HBITMAP winx_call ScreenCapture(HWND hWnd = ::GetDesktopWindow())
 template <bool t_bManaged>
 class PaletteT : public WTL::CPaletteT<t_bManaged>
 {
+	WINX_THISCLASS(PaletteT);
 private:
 	typedef WTL::CPaletteT<t_bManaged> BaseClass;
 
 public:
 	using BaseClass::m_hPalette;
 	
-	WINX_PROP_READWRITE(HPALETTE, m_hObject, m_hPalette);
+	POINTER_ALIAS_RW(HPALETTE, m_hObject, m_hPalette);
 
 public:
 	PaletteT(HPALETTE hPalette = NULL) : BaseClass(hPalette) {}
@@ -420,7 +422,15 @@ public:
 		m_hWnd = hWnd;
 		m_hDC = ::GetDC(m_hWnd);
 	}
-	ClientDC(ATL::CWindow* pWnd)
+#if !defined(WINX_NO_ALTER_WINDOW)
+	ClientDC(_AlterCWindow* pWnd)
+	{
+		WINX_ASSERT(pWnd != NULL && ::IsWindow(pWnd->m_hWnd));
+		m_hWnd = pWnd->m_hWnd;
+		m_hDC = ::GetDC(m_hWnd);
+	}
+#endif
+	ClientDC(BaseWindowHandle* pWnd)
 	{
 		WINX_ASSERT(pWnd != NULL && ::IsWindow(pWnd->m_hWnd));
 		m_hWnd = pWnd->m_hWnd;
@@ -493,7 +503,14 @@ public:
 		m_hWnd = hWnd;
 		m_hDC = ::BeginPaint(m_hWnd, &m_ps);
 	}
-	PaintDC(ATL::CWindow* pWnd)
+#if !defined(WINX_NO_ALTER_WINDOW)
+	PaintDC(_AlterCWindow* pWnd)
+	{
+		m_hWnd = pWnd->m_hWnd;
+		m_hDC = ::BeginPaint(m_hWnd, &m_ps);
+	}
+#endif
+	PaintDC(BaseWindowHandle* pWnd)
 	{
 		m_hWnd = pWnd->m_hWnd;
 		m_hDC = ::BeginPaint(m_hWnd, &m_ps);

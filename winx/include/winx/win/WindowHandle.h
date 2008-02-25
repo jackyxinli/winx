@@ -21,10 +21,15 @@
 
 #if (0)
 #define WINX_NULL_WINDOW_HANDLE
+#define WINX_NO_WTLPORT
 #endif
 
 #ifndef __WINX_WIN_BASICTYPES_H__
 #include "BasicTypes.h"
+#endif
+
+#ifndef __WINX_WTL_WINDOW_H__
+#include "../wtl/Window.h"
 #endif
 
 __WINX_BEGIN
@@ -316,6 +321,9 @@ public:
 	}
 };
 
+typedef _WtlCWindow BaseWindowHandle;
+typedef HandleT<BaseWindowHandle> WindowHandle;
+
 // =========================================================================
 // class NullWindowHandle/WindowHandle
 
@@ -324,8 +332,6 @@ class NullWindowHandle
 public:
 	void winx_call operator=(HWND hWnd) {}
 };
-
-typedef HandleT< ::ATL::CWindow > WindowHandle;
 
 // =========================================================================
 // DefaultWindowHandle
