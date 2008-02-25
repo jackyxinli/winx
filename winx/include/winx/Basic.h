@@ -94,47 +94,6 @@ __forceinline void _WinxDbgDelete(WindowClass* pOb)
 #endif
 
 // -------------------------------------------------------------------------
-// GET_X_LPARAM, GET_Y_LPARAM - window message helper
-
-#ifndef GET_X_LPARAM
-#define GET_X_LPARAM(lp)                ((int)(short)LOWORD(lp))
-#define GET_Y_LPARAM(lp)                ((int)(short)HIWORD(lp))
-#endif
-
-// -------------------------------------------------------------------------
-// GetModuleHandleEx
-
-inline HMODULE GetModuleHandleEx(LPCVOID lpAddress)
-{
-	MEMORY_BASIC_INFORMATION mInfo;
-	VirtualQuery(lpAddress, &mInfo, sizeof(mInfo));
-	return (HMODULE)mInfo.AllocationBase;
-}
-
-// -------------------------------------------------------------------------
-// GetThisModule
-
-template <class Unused>
-class WinxThisModuleT
-{
-public:
-	static HMODULE _g_hInst;
-};
-
-inline VOID _DummyFunction() {}
-
-template <class Unused>
-HMODULE WinxThisModuleT<Unused>::_g_hInst = GetModuleHandleEx((void*)_DummyFunction);
-
-typedef WinxThisModuleT<void> WinxThisModule;
-
-#if defined(_MSC_VER)
-#define GetThisModule()	WinxThisModule::_g_hInst
-#else
-inline HMODULE winx_call GetThisModule() { return WinxThisModule::_g_hInst; }
-#endif
-
-// -------------------------------------------------------------------------
 // class CComAppInit/COleAppInit - Helper
 
 class CComAppInit

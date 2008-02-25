@@ -19,7 +19,48 @@
 #ifndef __WTLPORT_BASIC_H__
 #define __WTLPORT_BASIC_H__
 
-namespace wtlport {};
+// -------------------------------------------------------------------------
+// GET_X_LPARAM, GET_Y_LPARAM - window message helper
+
+#ifndef GET_X_LPARAM
+#define GET_X_LPARAM(lp)                ((int)(short)LOWORD(lp))
+#define GET_Y_LPARAM(lp)                ((int)(short)HIWORD(lp))
+#endif
+
+// -------------------------------------------------------------------------
+// GetModuleHandleEx
+
+inline HMODULE GetModuleHandleEx(LPCVOID lpAddress)
+{
+	MEMORY_BASIC_INFORMATION mInfo;
+	VirtualQuery(lpAddress, &mInfo, sizeof(mInfo));
+	return (HMODULE)mInfo.AllocationBase;
+}
+
+// -------------------------------------------------------------------------
+// GetThisModule
+
+template <class Unused>
+class WinxThisModuleT
+{
+public:
+	static HMODULE _g_hInst;
+};
+
+inline VOID _DummyFunction() {}
+
+template <class Unused>
+HMODULE WinxThisModuleT<Unused>::_g_hInst = GetModuleHandleEx((void*)_DummyFunction);
+
+typedef WinxThisModuleT<void> WinxThisModule;
+
+#if defined(_MSC_VER)
+#define GetThisModule()	WinxThisModule::_g_hInst
+#else
+inline HMODULE winx_call GetThisModule() { return WinxThisModule::_g_hInst; }
+#endif
+
+// -------------------------------------------------------------------------
 
 #ifndef __WTLPORT
 #define __WTLPORT				wtlport::
@@ -27,10 +68,12 @@ namespace wtlport {};
 #define __WTLPORT_END			}
 #endif
 
-__WTLPORT_BEGIN
+namespace wtlport {};
 
 // -------------------------------------------------------------------------
 // class CWindow
+
+__WTLPORT_BEGIN
 
 class CWindow
 {
@@ -74,7 +117,7 @@ public:
 		m_hWnd = ::CreateWindowEx(dwExStyle, lpstrWndClass, szWindowName,
 			dwStyle, rcPos.left, rcPos.top, rcPos.right - rcPos.left,
 			rcPos.bottom - rcPos.top, hWndParent, (HMENU)nID,
-			_Module.GetModuleInstance(), lpCreateParam);
+			GetThisModule(), lpCreateParam);
 		return m_hWnd;
 	}
 
@@ -87,7 +130,7 @@ public:
 		m_hWnd = ::CreateWindowEx(dwExStyle, lpstrWndClass, szWindowName,
 			dwStyle, lpRect->left, lpRect->top, lpRect->right - lpRect->left,
 			lpRect->bottom - lpRect->top, hWndParent, hMenu,
-			_Module.GetModuleInstance(), lpCreateParam);
+			GetThisModule(), lpCreateParam);
 		return m_hWnd;
 	}
 
@@ -1224,10 +1267,10 @@ public:
 
 const RECT CWindow::rcDefault = { CW_USEDEFAULT, CW_USEDEFAULT, 0, 0 };
 
+__WTLPORT_END
+
 // -------------------------------------------------------------------------
 // $Log: Basic.h,v $
 //
-
-__WTLPORT_END
 
 #endif /* __WTLPORT_BASIC_H__ */

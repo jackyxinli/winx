@@ -21,7 +21,6 @@
 
 #if (0)
 #define WINX_NO_WTL
-#define WINX_NO_WTLPORT
 #define WINX_NO_ALTER_WINDOW
 #endif
 
@@ -31,14 +30,15 @@
 
 // -------------------------------------------------------------------------
 
-#if !defined(WINX_NO_WTLPORT)
+#ifndef __WTLPORT_BASIC_H__
 #include "../../../../wtlport/include/wtlport/Basic.h"
-typedef ::ATL::CWindow _AlterCWindow;
-typedef wtlport::CWindow _WtlCWindow;
-#else
-typedef ::ATL::CWindow _WtlCWindow;
-#define WINX_NO_ALTER_WINDOW
 #endif
+
+typedef wtlport::CWindow _WtlCWindow;
+
+// -------------------------------------------------------------------------
+
+typedef ::ATL::CWindow _AlterCWindow;
 
 // -------------------------------------------------------------------------
 // $Log: Window.h,v $
