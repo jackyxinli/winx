@@ -29,17 +29,29 @@ class FooProp
 private:
 	typedef std::string string;
 	string m_strText;
+	int m_nValue;
 
 public:
 	DEFINE_PROPERTY_RW(string, Text, get_Text, put_Text);
 	DEFINE_PROPERTY_RO(string, TextRO, get_Text);
 	DEFINE_PROPERTY_WO(string, TextWO, put_Text);
 
+	DEFINE_PROPERTY_RW(int, Value, get_Value, put_Value);
+	DEFINE_PROPERTY_RO(int, ValueRO, get_Value);
+	DEFINE_PROPERTY_WO(int, ValueWO, put_Value);
+
 	void put_Text(const string& value) {
 		m_strText = value;
 	}
 	string get_Text() const {
 		return m_strText;
+	}
+
+	void put_Value(int value) {
+		m_nValue = value;
+	}
+	int get_Value() const {
+		return m_nValue;
 	}
 };
 
@@ -50,11 +62,27 @@ class FooAlias
 private:
 	typedef std::string string;
 	string m_strText;
+	int m_nValue;
 
 public:
 	DEFINE_ALIAS_RW(string, Text, m_strText);
 	DEFINE_ALIAS_RO(string, TextRO, m_strText);
 	DEFINE_ALIAS_WO(string, TextWO, m_strText);
+
+	DEFINE_ALIAS_RW(int, Value, m_nValue);
+	DEFINE_ALIAS_RO(int, ValueRO, m_nValue);
+	DEFINE_ALIAS_WO(int, ValueWO, m_nValue);
+};
+
+class FooPtrProp
+{
+	WINX_THISCLASS(FooPtrProp);
+
+private:
+	FooAlias* m_ptr;
+
+public:
+	POINTER_ALIAS_RW(FooAlias*, Ptr, m_ptr);
 };
 
 template <class LogT>
@@ -63,7 +91,9 @@ class TestProperty : public TestCase
 	WINX_TEST_SUITE(TestProperty);
 		WINX_TEST(testProperty);
 		WINX_TEST(testAlias);
+		WINX_TEST(testPtrProperty)
 	WINX_TEST_SUITE_END();
+
 public:
 	void testProperty(LogT& log)
 	{
@@ -75,6 +105,11 @@ public:
 		foo.TextWO = "123";
 		AssertExp(foo.Text == "123");
 		AssertExp(foo.TextRO == (std::string)foo.Text);
+
+		foo.Value = 1;
+		AssertExp(foo.Value != 2);
+		AssertExp(foo.Value);
+		AssertExp(foo.ValueRO == (int)foo.Value);
 	}
 
 	void testAlias(LogT& log)
@@ -87,6 +122,21 @@ public:
 		foo.TextWO = "123";
 		AssertExp(foo.Text == "123");
 		AssertExp(foo.TextRO == (std::string)foo.Text);
+
+		foo.Value = 1;
+		AssertExp(foo.ValueRO == (int)foo.Value);
+
+		AssertExp(foo.Value != 2);
+		if (foo.Value); else AssertFail("foo.Value");
+	}
+
+	void testPtrProperty(LogT& log)
+	{
+		FooPtrProp foo;
+		foo.Ptr = NULL;
+		foo.Ptr = (FooAlias*)1;
+		AssertExp(foo.Ptr);
+		if (foo.Ptr); else AssertFail("foo.Ptr");
 	}
 };
 

@@ -44,7 +44,7 @@
 
 #define WINX_THISCLASS(Type)												\
 private:																	\
-	typedef Type ThisClass;													\
+	typedef Type ThisClass;
 
 // =========================================================================
 // Boolean operations
@@ -76,6 +76,47 @@ private:																	\
 	}
 
 // =========================================================================
+// Pointer operations
+
+#define _WINX_POINTER_MEMBER_ACCESS(Type, Var)								\
+	inline Type operator->() const {										\
+		return (Type)*this;													\
+	}
+
+#define _WINX_POINTER_BOOLOP(Type, Var)										\
+	inline bool operator!() const {											\
+		return !(Type)*this;												\
+	}																		\
+	inline bool operator==(int b) const {									\
+		return (int)(Type)*this == b;										\
+	}																		\
+	inline bool operator!=(int b) const {									\
+		return (int)(Type)*this != b;										\
+	}																		\
+	inline bool operator<(int b) const {									\
+		return (int)(Type)*this < b;										\
+	}																		\
+	inline bool operator<=(int b) const {									\
+		return (int)(Type)*this <= b;										\
+	}																		\
+	inline bool operator>(int b) const {									\
+		return (int)(Type)*this > b;										\
+	}																		\
+	inline bool operator>=(int b) const {									\
+		return (int)(Type)*this >= b;										\
+	}
+
+// =========================================================================
+// ReadEx operations
+
+#define _WINX_PROPERTY_READEX(Type, Var)									\
+	_WINX_PROPERTY_BOOLOP(Type, Var)
+
+#define _WINX_POINTER_READEX(Type, Var)										\
+	_WINX_POINTER_BOOLOP(Type, Var)											\
+	_WINX_POINTER_MEMBER_ACCESS(Type, Var)
+
+// =========================================================================
 // WINX_DEFINE_PROPERTY_RW, WINX_DEFINE_PROPERTY_RO, WINX_DEFINE_PROPERTY_WO
 // WINX_DEFINE_PROPERTY
 
@@ -85,11 +126,11 @@ private:																	\
 		ThisClass* pThis = parent_class_ptr(ThisClass, Var);				\
 		return pThis->get();												\
 	}																		\
-	_WINX_PROPERTY_BOOLOP(Type, Var)
+	_WINX_PROPERTY_READEX(Type, Var)
 
 #define _WINX_PROPERTY_WRITE(Type, Var, put)								\
-	inline void operator=(const Type& _winx_value) const					\
-	{																		\
+	template <class T2>														\
+	inline void operator=(T2 _winx_value) const {							\
 		ThisClass* pThis = parent_class_ptr(ThisClass, Var);				\
 		pThis->put(_winx_value);											\
 	}
@@ -166,16 +207,16 @@ private:																	\
 // WINX_DEFINE_ALIAS
 
 #define _WINX_ALIAS_READ(Type, Var, Member)									\
-	inline operator const Type&() const                						\
+	inline operator Type() const                							\
 	{																		\
 		ThisClass* pThis = parent_class_ptr(ThisClass, Var);				\
 		return pThis->Member;												\
 	}																		\
-	_WINX_PROPERTY_BOOLOP(const Type&, Var)
+	_WINX_PROPERTY_READEX(Type, Var)
 
 #define _WINX_ALIAS_WRITE(Type, Var, Member)								\
-	inline void operator=(const Type& _winx_value) const					\
-	{																		\
+	template <class T2>														\
+	inline void operator=(T2 _winx_value) const {							\
 		ThisClass* pThis = parent_class_ptr(ThisClass, Var);				\
 		pThis->Member = _winx_value;										\
 	}
@@ -203,18 +244,59 @@ private:																	\
 	WINX_DEFINE_ALIAS_RO(Type, Var, Member)
 
 // =========================================================================
+// WINX_POINTER_ALIAS_RW, WINX_POINTER_ALIAS_WO, WINX_POINTER_ALIAS_RO
+
+#define _WINX_ALIAS_WRITE_NULLPTR(Type, Var, Member)						\
+	inline void operator=(int _winx_value) const {							\
+		ThisClass* pThis = parent_class_ptr(ThisClass, Var);				\
+		pThis->Member = (Type)_winx_value;									\
+	}
+
+#define WINX_POINTER_ALIAS_RW(Type, Var, Member)							\
+	struct _winxpr_##Var {													\
+		_WINX_ALIAS_READ(Type, Var, Member)									\
+		_WINX_POINTER_READEX(Type, Var)										\
+		_WINX_ALIAS_WRITE(Type, Var, Member)								\
+		_WINX_ALIAS_WRITE_NULLPTR(Type, Var, Member)						\
+	};																		\
+	_WINX_PROPERTY(Var)
+
+#define WINX_POINTER_ALIAS_WO(Type, Var, Member)							\
+	struct _winxpr_##Var {													\
+		_WINX_ALIAS_WRITE(Type, Var, Member)								\
+		_WINX_ALIAS_WRITE_NULLPTR(Type, Var, Member)						\
+	};																		\
+	_WINX_PROPERTY(Var)
+
+#define WINX_POINTER_ALIAS_RO(Type, Var, Member)							\
+	struct _winxpr_##Var {													\
+		_WINX_ALIAS_READ(Type, Var, Member)									\
+		_WINX_POINTER_READEX(Type, Var)										\
+	};																		\
+	_WINX_PROPERTY(Var)
+
+// =========================================================================
 // DEFINE_ALIAS_RW/DEFINE_ALIAS_RO/DEFINE_ALIAS_WO
 // DEFINE_ALIAS
 
 #if !defined(_DEBUG) && defined(X_CC_BCB)
 
-#define DEFINE_ALIAS_RO(Type, Name, Member)
+#define DEFINE_ALIAS_RO(Type, Name, Member)									\
 	__property Type Name = {read=Member}
 
 #define DEFINE_ALIAS_WO(Type, Name, Member)									\
 	__property Type Name = {write=Member}
 
 #define DEFINE_ALIAS_RW(Type, Name, Member)									\
+	__property Type Name = {read=Member, write=Member}
+
+#define POINTER_ALIAS_RO(Type, Name, Member)								\
+	__property Type Name = {read=Member}
+
+#define POINTER_ALIAS_WO(Type, Name, Member)								\
+	__property Type Name = {write=Member}
+
+#define POINTER_ALIAS_RW(Type, Name, Member)								\
 	__property Type Name = {read=Member, write=Member}
 
 #else
@@ -227,6 +309,15 @@ private:																	\
 
 #define DEFINE_ALIAS_RW(Type, Name, Member)									\
 	WINX_DEFINE_ALIAS_RW(Type, Name, Member)
+
+#define POINTER_ALIAS_RO(Type, Name, Member)								\
+	WINX_POINTER_ALIAS_RO(Type, Name, Member)
+
+#define POINTER_ALIAS_WO(Type, Name, Member)								\
+	WINX_POINTER_ALIAS_WO(Type, Name, Member)
+
+#define POINTER_ALIAS_RW(Type, Name, Member)								\
+	WINX_POINTER_ALIAS_RW(Type, Name, Member)
 
 #endif
 

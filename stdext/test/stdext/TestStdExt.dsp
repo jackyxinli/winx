@@ -90,23 +90,51 @@ LINK32=link.exe
 # Begin Source File
 
 SOURCE=.\TestBoostRegEx.cpp
+
+!IF  "$(CFG)" == "TestStdExt - Win32 Release"
+
+!ELSEIF  "$(CFG)" == "TestStdExt - Win32 Debug"
+
+!ENDIF 
+
+# End Source File
+# Begin Source File
+
+SOURCE=.\TestProperty.cpp
+
+!IF  "$(CFG)" == "TestStdExt - Win32 Release"
+
+!ELSEIF  "$(CFG)" == "TestStdExt - Win32 Debug"
+
+!ENDIF 
+
 # End Source File
 # Begin Source File
 
 SOURCE=.\TestStdExt.cpp
+
+!IF  "$(CFG)" == "TestStdExt - Win32 Release"
+
+!ELSEIF  "$(CFG)" == "TestStdExt - Win32 Debug"
+
+!ENDIF 
+
 # End Source File
 # Begin Source File
 
 SOURCE=.\TestStdNew.cpp
+
+!IF  "$(CFG)" == "TestStdExt - Win32 Release"
+
+!ELSEIF  "$(CFG)" == "TestStdExt - Win32 Debug"
+
+!ENDIF 
+
 # End Source File
 # End Group
 # Begin Source File
 
 SOURCE=..\..\include\stdext\msvcrt.h
-# End Source File
-# Begin Source File
-
-SOURCE=.\TestProperty.cpp
 # End Source File
 # End Target
 # End Project
