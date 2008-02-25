@@ -18,6 +18,7 @@
 // -----------------------------------------------------------------------*/
 
 #include <stdext/Basic.h>
+#include <atlbase.h>
 
 // -------------------------------------------------------------------------
 // testProperty
@@ -81,8 +82,23 @@ class FooPtrProp
 private:
 	FooAlias* m_ptr;
 
+	typedef ATL::CComPtr<IClassFactory> ClassFactoryPtr;
+	ClassFactoryPtr m_spFac;
+
 public:
+	POINTER_PROPERTY_RW(ClassFactoryPtr, Factory, get_Factory, put_Factory);
+	POINTER_PROPERTY_RO(ClassFactoryPtr, FactoryRO, get_Factory);
+	POINTER_PROPERTY_WO(ClassFactoryPtr, FactoryWO, put_Factory);
+
 	POINTER_ALIAS_RW(FooAlias*, Ptr, m_ptr);
+	POINTER_ALIAS_RW(ClassFactoryPtr, Factory2, m_spFac);
+
+	void put_Factory(IClassFactory* pFac) {
+		m_spFac = pFac;
+	}
+	ClassFactoryPtr get_Factory() const {
+		return m_spFac;
+	}
 };
 
 template <class LogT>
@@ -137,6 +153,17 @@ public:
 		foo.Ptr = (FooAlias*)1;
 		AssertExp(foo.Ptr);
 		if (foo.Ptr); else AssertFail("foo.Ptr");
+
+		foo.Factory = NULL;
+		foo.Factory2 = NULL;
+		AssertExp(foo.FactoryRO == NULL);
+		AssertExp(foo.Factory2 == NULL);
+
+		void* p = NULL;
+		if (foo.Factory)
+			foo.Factory->CreateInstance(NULL, IID_IUnknown, &p);
+		if (foo.Factory2)
+			foo.Factory2->CreateInstance(NULL, IID_IUnknown, &p);
 	}
 };
 

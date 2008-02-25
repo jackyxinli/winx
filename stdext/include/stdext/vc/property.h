@@ -23,6 +23,10 @@
 #include "../Platform.h"
 #endif
 
+#ifndef assert
+#include <assert.h>
+#endif
+
 // =========================================================================
 // parent_class_ptr - for general use
 
@@ -84,14 +88,33 @@ private:																	\
 	}
 
 #define _WINX_POINTER_BOOLOP(Type, Var)										\
+	inline operator bool() const {											\
+		return (Type)*this != 0;											\
+	}																		\
 	inline bool operator!() const {											\
 		return !(Type)*this;												\
 	}																		\
-	inline bool operator==(int b) const {									\
-		return (int)(Type)*this == b;										\
+	inline bool operator==(int zero) const {								\
+		assert(zero == 0);													\
+		return (Type)*this == 0;											\
 	}																		\
-	inline bool operator!=(int b) const {									\
-		return (int)(Type)*this != b;										\
+	inline bool operator!=(int zero) const {								\
+		assert(zero == 0);													\
+		return (Type)*this != 0;											\
+	}
+
+#define _WINX_PROPERTY_WRITE_NULLPTR(Type, Var, put)						\
+	inline void operator=(int _zero_value) const {							\
+		assert(_zero_value == 0);											\
+		ThisClass* pThis = parent_class_ptr(ThisClass, Var);				\
+		pThis->put(0);														\
+	}
+
+#define _WINX_ALIAS_WRITE_NULLPTR(Type, Var, Member)						\
+	inline void operator=(int _zero_value) const {							\
+		assert(_zero_value == 0);											\
+		ThisClass* pThis = parent_class_ptr(ThisClass, Var);				\
+		pThis->Member = 0;													\
 	}
 
 // =========================================================================
@@ -150,6 +173,34 @@ private:																	\
 	WINX_DEFINE_PROPERTY_RW(Type, Name, Get, Put)
 
 // =========================================================================
+
+#define WINX_POINTER_PROPERTY_RW(Type, Var, get, put)						\
+	struct _winxpr_##Var {													\
+		_WINX_PROPERTY_READ(Type, Var, get)									\
+		_WINX_POINTER_READEX(Type, Var)										\
+		_WINX_PROPERTY_WRITE(Type, Var, put)								\
+		_WINX_PROPERTY_WRITE_NULLPTR(Type, Var, put)						\
+	};																		\
+	_WINX_PROPERTY(Var)
+
+#define WINX_POINTER_PROPERTY_RO(Type, Var, get)							\
+	struct _winxpr_##Var {													\
+		_WINX_PROPERTY_READ(Type, Var, get)									\
+		_WINX_POINTER_READEX(Type, Var)										\
+	};																		\
+	_WINX_PROPERTY(Var)
+
+#define WINX_POINTER_PROPERTY_WO(Type, Var, put)							\
+	struct _winxpr_##Var {													\
+		_WINX_PROPERTY_WRITE(Type, Var, put)								\
+		_WINX_PROPERTY_WRITE_NULLPTR(Type, Var, put)						\
+	};																		\
+	_WINX_PROPERTY(Var)
+
+#define WINX_POINTER_PROPERTY(Type, Name, Get, Put) 						\
+	WINX_POINTER_PROPERTY_RW(Type, Name, Get, Put)
+
+// =========================================================================
 // DEFINE_PROPERTY_RW, DEFINE_PROPERTY_RO, DEFINE_PROPERTY_WO
 // DEFINE_PROPERTY
 
@@ -164,6 +215,15 @@ private:																	\
 #define DEFINE_PROPERTY_RW(Type, Name, Get, Put)							\
 	Type __declspec(property(get=Get,put=Put)) Name
 
+#define POINTER_PROPERTY_RO(Type, Name, Method)								\
+	Type __declspec(property(get=Method)) Name
+
+#define POINTER_PROPERTY_WO(Type, Name, Method)								\
+	Type __declspec(property(put=Method)) Name
+
+#define POINTER_PROPERTY_RW(Type, Name, Get, Put)							\
+	Type __declspec(property(get=Get,put=Put)) Name
+
 #elif !defined(_DEBUG) && defined(X_CC_BCB)
 
 #define DEFINE_PROPERTY_RO(Type, Name, Method)								\
@@ -173,6 +233,15 @@ private:																	\
 	__property Type Name = {write=Method}
 
 #define DEFINE_PROPERTY_RW(Type, Name, Get, Put)							\
+	__property Type Name = {read=Get, write=Put}
+
+#define POINTER_PROPERTY_RO(Type, Name, Method)								\
+	__property Type Name = {read=Method}
+
+#define POINTER_PROPERTY_WO(Type, Name, Method)								\
+	__property Type Name = {write=Method}
+
+#define POINTER_PROPERTY_RW(Type, Name, Get, Put)							\
 	__property Type Name = {read=Get, write=Put}
 
 #else
@@ -186,9 +255,19 @@ private:																	\
 #define DEFINE_PROPERTY_RW(Type, Name, Get, Put)							\
 	WINX_DEFINE_PROPERTY_RW(Type, Name, Get, Put)
 
+#define POINTER_PROPERTY_RO(Type, Name, Method)								\
+	WINX_POINTER_PROPERTY_RO(Type, Name, Method)
+
+#define POINTER_PROPERTY_WO(Type, Name, Method)								\
+	WINX_POINTER_PROPERTY_WO(Type, Name, Method)
+
+#define POINTER_PROPERTY_RW(Type, Name, Get, Put)							\
+	WINX_POINTER_PROPERTY_RW(Type, Name, Get, Put)
+
 #endif
 
 #define DEFINE_PROPERTY(Type, Name, Get, Put) DEFINE_PROPERTY_RW(Type, Name, Get, Put)
+#define POINTER_PROPERTY(Type, Name, Get, Put) POINTER_PROPERTY_RW(Type, Name, Get, Put)
 
 // =========================================================================
 // WINX_DEFINE_ALIAS_RW, WINX_DEFINE_ALIAS_RO, WINX_DEFINE_ALIAS_RO
@@ -233,12 +312,6 @@ private:																	\
 
 // =========================================================================
 // WINX_POINTER_ALIAS_RW, WINX_POINTER_ALIAS_WO, WINX_POINTER_ALIAS_RO
-
-#define _WINX_ALIAS_WRITE_NULLPTR(Type, Var, Member)						\
-	inline void operator=(int _winx_value) const {							\
-		ThisClass* pThis = parent_class_ptr(ThisClass, Var);				\
-		pThis->Member = (Type)_winx_value;									\
-	}
 
 #define WINX_POINTER_ALIAS_RW(Type, Var, Member)							\
 	struct _winxpr_##Var {													\
@@ -326,6 +399,11 @@ private:
 	string m_strText;
 	string m_strToAlias;
 
+	FooProp* m_ptr;
+	
+	typedef ATL::CComPtr<IClassFactory> ClassFactoryPtr;
+	ClassFactoryPtr m_spFac;
+
 public:
 	DEFINE_PROPERTY_RW(string, Text, get_Text, put_Text);
 	DEFINE_PROPERTY_RO(string, TextRO, get_Text);
@@ -335,11 +413,30 @@ public:
 	DEFINE_ALIAS_RO(string, AliasRO, m_strToAlias);
 	DEFINE_ALIAS_WO(string, AliasWO, m_strToAlias);
 
+	POINTER_ALIAS_RW(FooProp*, Pointer, m_ptr);
+	POINTER_ALIAS_RO(FooProp*, PointerRO, m_ptr);
+	POINTER_ALIAS_WO(FooProp*, PointerWO, m_ptr);
+
+	POINTER_PROPERTY_RW(ClassFactoryPtr, Factory, get_Factory, put_Factory);
+	POINTER_PROPERTY_RO(ClassFactoryPtr, FactoryRO, get_Factory);
+	POINTER_PROPERTY_WO(ClassFactoryPtr, FactoryWO, put_Factory);
+
+	POINTER_ALIAS_RW(ClassFactoryPtr, SmartPointer, m_spFac);
+	POINTER_ALIAS_RO(ClassFactoryPtr, SmartPointerRO, m_spFac);
+	POINTER_ALIAS_WO(ClassFactoryPtr, SmartPointerWO, m_spFac);
+
 	void put_Text(const std::string& value) {
 		m_strText = value;
 	}
 	std::string get_Text() const {
 		return m_strText;
+	}
+
+	void put_Factory(IClassFactory* pFac) {
+		m_spFac = pFac;
+	}
+	ClassFactoryPtr get_Factory() const {
+		return m_spFac;
 	}
 };
 
