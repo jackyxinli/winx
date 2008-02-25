@@ -37,8 +37,8 @@
 #include "winsdk/Basic.h"
 #endif
 
-#ifndef __WINX_WTL_BASIC_H__
-#include "wtl/Basic.h"
+#ifndef __WINX_WTL_WINDOW_H__
+#include "wtl/Window.h"
 #endif
 
 #ifndef __STDEXT_H__
