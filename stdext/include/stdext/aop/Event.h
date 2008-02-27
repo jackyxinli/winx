@@ -146,7 +146,7 @@ public:																		\
 // -------------------------------------------------------------------------
 // class TestEvent
 
-#if defined(__STDEXT_TESTCASE_H__)
+#if defined(__STDEXT_TESTCASE_H__) && defined(__STDEXT_MEMORY_SCOPEALLOC_H__)
 
 __NS_STD_BEGIN
 

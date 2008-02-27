@@ -94,6 +94,10 @@ SOURCE=.\TestCase.cpp
 # End Source File
 # Begin Source File
 
+SOURCE=.\TestEvent.cpp
+# End Source File
+# Begin Source File
+
 SOURCE=.\TestLinux.cpp
 # End Source File
 # Begin Source File
