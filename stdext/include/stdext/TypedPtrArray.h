@@ -60,6 +60,13 @@ __forceinline _It _ConvIt(_It it)
 // class TypedPtrArray
 
 #define __STDEXT_PTRARRAY_USING												\
+private:																	\
+	typedef std::vector<void*> BaseClass;									\
+	typedef TypedPtrArray<_PtrType> _Myt;									\
+																			\
+	TypedPtrArray(const TypedPtrArray&);									\
+	void operator=(const TypedPtrArray&);									\
+																			\
 public:																		\
 	using BaseClass::size;													\
 	using BaseClass::resize;												\
@@ -72,13 +79,6 @@ template <class _PtrType>
 class TypedPtrArray : private std::vector<void*>
 {
 	__STDEXT_PTRARRAY_USING
-private:
-	typedef std::vector<void*> BaseClass;
-	typedef TypedPtrArray<_PtrType> _Myt;
-
-	TypedPtrArray(const TypedPtrArray&);
-	void operator=(const TypedPtrArray&);
-
 public:
 	typedef BaseClass::size_type size_type;
 	typedef _PtrType value_type;
@@ -200,6 +200,14 @@ public:
 // class InterfaceArray
 
 #define __STDEXT_INTERFACE_ARRAY_USING										\
+private:																	\
+	typedef std::vector<void*> BaseClass;									\
+	typedef Interface* _PtrType;											\
+	typedef InterfaceArray<Interface> _Myt;									\
+																			\
+	InterfaceArray(const InterfaceArray&);									\
+	void operator=(const InterfaceArray&);									\
+																			\
 public:																		\
 	using BaseClass::size;													\
 	using BaseClass::empty;													\
@@ -210,14 +218,6 @@ template <class Interface>
 class InterfaceArray : private std::vector<void*>
 {
 	__STDEXT_INTERFACE_ARRAY_USING
-private:
-	typedef std::vector<void*> BaseClass;
-	typedef Interface* _PtrType;
-	typedef InterfaceArray<Interface> _Myt;
-
-	InterfaceArray(const InterfaceArray&);
-	void operator=(const InterfaceArray&);
-
 public:
 	typedef BaseClass::size_type size_type;
 	typedef _PtrType value_type;

@@ -81,7 +81,6 @@ void testStdExt()
 	WINX_TEST_CLASS(std::TestString);
 
 	//Collection
-	WINX_TEST_CLASS(std::TestSimpleMultiMap);
 	WINX_TEST_CLASS(std::TestPriorityArray);
 	WINX_TEST_CLASS(std::TestMap);
 	WINX_TEST_CLASS(std::TestSet);
