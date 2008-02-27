@@ -20,6 +20,10 @@
 #ifndef __STDEXT_AOP_INTERFACE_H__
 #define __STDEXT_AOP_INTERFACE_H__
 
+#ifndef __STDEXT_BASIC_H__
+#include "../Basic.h"
+#endif
+
 __NS_STD_BEGIN
 
 // -------------------------------------------------------------------------
@@ -28,6 +32,41 @@ __NS_STD_BEGIN
 interface Connection
 {
 	virtual void __stdcall disconnect() = 0;
+};
+
+// -------------------------------------------------------------------------
+// class HConnection - Connection HandleClass
+
+class HConnection
+{
+private:
+	HConnection(const HConnection&);
+	void operator=(const HConnection&);
+
+private:
+	Connection* m_conn;
+
+public:
+	HConnection(Connection* conn = NULL) : m_conn(conn) {}
+	~HConnection() {
+		if (m_conn)
+			m_conn->disconnect();
+	}
+
+	void winx_call operator=(Connection* conn)
+	{
+		WINX_ASSERT(m_conn == NULL);
+		m_conn = conn;
+	}
+
+	void winx_call disconnect()
+	{
+		if (m_conn)
+		{
+			m_conn->disconnect();
+			m_conn = NULL;
+		}
+	}
 };
 
 // -------------------------------------------------------------------------
@@ -55,7 +94,7 @@ interface Event																\
 		void (__stdcall std::FakeTarget::*method) ParametersList) = 0;		\
 																			\
 	template <class Target>													\
-	__forceinline std::Connection* __stdcall addListener(					\
+	__forceinline std::Connection* winx_call addListener(					\
 		Target* target,														\
 		void (__stdcall Target::*method) ParametersList)					\
 	{																		\

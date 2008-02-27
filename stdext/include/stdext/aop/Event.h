@@ -75,10 +75,15 @@ public:
 	}
 	~BasicConnection()
 	{
-		ConnectionNodeBase::disconnect();
+		WINX_ASSERT(disconnected());
 	}
 
-	const BasicConnection* next() const
+	bool winx_call disconnected()
+	{
+		return m_prev == this && m_next == this;
+	}
+
+	const BasicConnection* winx_call next() const
 	{
 		return (const BasicConnection*)m_next;
 	}
@@ -196,18 +201,26 @@ class Dialog
 	std::ScopeAlloc m_alloc;
 
 	Edit m_edit;
-	std::Connection* m_editChanged; // is needed only if you want to disconnect
+	std::HConnection m_editChanged;
+	std::HConnection m_editChanged2;
+	// NOTE: even you don't need to disconnect, you must hold the connection handle.
 
 public:
 	Dialog() 
 		: m_alloc(m_recycle), m_edit(m_alloc)
 	{
 		m_editChanged = m_edit.textChanged()->addListener(this, &Dialog::onEditChanged);
+		m_editChanged2 = m_edit.textChanged()->addListener(this, &Dialog::onEditChanged2);
 	}
 
 	void __stdcall onEditChanged(Text text)
 	{
-		printf("text in edit is: %d\n", text);
+		printf("onEditChanged: text=%d\n", text);
+	}
+
+	void __stdcall onEditChanged2(Text text)
+	{
+		printf("onEditChanged2: text=%d\n", text);
 	}
 
 	void input(Text text)
@@ -217,7 +230,7 @@ public:
 
 	void disconnectEditChanged()
 	{
-		m_editChanged->disconnect();
+		m_editChanged.disconnect();
 	}
 };
 
