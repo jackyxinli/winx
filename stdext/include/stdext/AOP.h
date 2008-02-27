@@ -9,38 +9,28 @@
 // of this license. You must not remove this notice, or any other, from
 // this software.
 // 
-// Module: TestBoostRegEx.cpp
+// Module: stdext/AOP.h
 // Creator: xushiwei
 // Email: xushiweizh@gmail.com
-// Date: 2006-8-18 13:57:28
+// Date: 2006-8-13 9:41:58
+// Description: AOP - Aspect Oriented Programming
 // 
-// $Id: TestBoostRegEx.cpp,v 1.8 2006/12/03 07:52:55 xushiwei Exp $
+// $Id: $
 // -----------------------------------------------------------------------*/
-
-#define USES_BOOST
-#include <stdext/Basic.h>
-#include <boost/regex.hpp>
-//#pragma comment(lib, "shlwapi.lib")
+#ifndef __STDEXT_AOP_H__
+#define __STDEXT_AOP_H__
 
 // -------------------------------------------------------------------------
-// testBoost
 
-#if defined(USES_BOOST)
-
-void testBoostRegEx()
-{
-}
-
-#else
-
-void testBoostRegEx()
-{
-}
-
+#ifndef __STDEXT_AOP_INTERFACE_H__
+#include "aop/Interface.h"
 #endif
 
-WINX_AUTORUN(testBoostRegEx);
+#ifndef __STDEXT_AOP_EVENT_H__
+#include "aop/Event.h"
+#endif
 
 // -------------------------------------------------------------------------
-// $Log: TestBoostRegEx.cpp,v $
-//
+// $Log: $
+
+#endif /* __STDEXT_AOP_H__ */

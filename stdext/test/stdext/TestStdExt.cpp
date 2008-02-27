@@ -28,6 +28,7 @@
 #include <stdext/ScopeDebug.h>
 #include <stdext/Registry.h>
 #include <stdext/Map.h>
+#include <stdext/AOP.h>
 #include <stdext/Set.h>
 #include <stdext/List.h>
 #include <stdext/tchar.h>
@@ -60,7 +61,7 @@ inline void testBoost(LogT& log)
 
 void testStdExt()
 {
-	WINX_TEST_APP(std::ErrorLog, "TestLog", "testMultiLog");
+	WINX_TEST_APP(std::ErrorLog, "TestEvent", "");
 
 	WINX_TEST_CLASS(TestFinder);
 #if !defined(STD_NO_WINSDK)
@@ -91,6 +92,7 @@ void testStdExt()
 	WINX_TEST_CLASS(std::TestAutoArray);
 	WINX_TEST_CLASS(std::TestScopeAlloc);
 	WINX_TEST_CLASS(std::TestCompareAllocators);
+	WINX_TEST_CLASS(std::TestEvent);
 
 	//Boost
 	testBoost(log);
@@ -101,7 +103,7 @@ int main()
 	return 0;
 }
 
-WINX_SELECT_RUN("TestProperty");
+WINX_SELECT_RUN("testStdExt");
 WINX_AUTORUN(testStdExt);
 
 // -------------------------------------------------------------------------

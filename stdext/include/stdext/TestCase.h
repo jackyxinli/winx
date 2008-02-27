@@ -267,7 +267,7 @@ int __autoRun(FunT Fun, const char* szFun)
 }
 
 #define WINX_AUTORUN(Fun)													\
-	static int __g_autoRun_ ## __LINE__ = std::__autoRun(Fun, #Fun)
+	static int __g_autoRun_ ## Fun = std::__autoRun(Fun, #Fun)
 
 #define WINX_AUTORUN_CLASS(Test, LogT)										\
 	inline void __autoRun_##Test()											\
