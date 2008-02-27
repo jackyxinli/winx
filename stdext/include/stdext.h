@@ -69,10 +69,6 @@
 #include "stdext/TypedPtrArray.h"
 #endif
 
-#ifndef __STDEXT_SIMPLEMULTIMAP_H__
-#include "stdext/SimpleMultiMap.h"
-#endif
-
 #ifndef __STDEXT_FILEBUF_H__
 #include "stdext/FileBuf.h"
 #endif

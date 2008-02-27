@@ -59,9 +59,19 @@ __forceinline _It _ConvIt(_It it)
 // -------------------------------------------------------------------------
 // class TypedPtrArray
 
+#define __STDEXT_PTRARRAY_USING												\
+public:																		\
+	using BaseClass::size;													\
+	using BaseClass::resize;												\
+	using BaseClass::empty;													\
+	using BaseClass::reserve;												\
+	using BaseClass::pop_back;												\
+	using BaseClass::clear;
+
 template <class _PtrType>
 class TypedPtrArray : private std::vector<void*>
 {
+	__STDEXT_PTRARRAY_USING
 private:
 	typedef std::vector<void*> BaseClass;
 	typedef TypedPtrArray<_PtrType> _Myt;
@@ -82,18 +92,9 @@ public:
 	typedef pointer iterator;
 	typedef const_pointer const_iterator;
 
-public:
-	using BaseClass::size;
-	using BaseClass::resize;
-	using BaseClass::empty;
-	using BaseClass::reserve;
-	using BaseClass::pop_back;
-	using BaseClass::clear;
-
 #if (0)
 	size_t size();
 	bool empty();
-	void resize(size_type n, value_type val = NULL);
 	void reserve(size_type n);
 	void pop_back();
 	void clear();
@@ -198,9 +199,17 @@ public:
 // -------------------------------------------------------------------------
 // class InterfaceArray
 
+#define __STDEXT_INTERFACE_ARRAY_USING										\
+public:																		\
+	using BaseClass::size;													\
+	using BaseClass::empty;													\
+	using BaseClass::reserve;
+
+
 template <class Interface>
 class InterfaceArray : private std::vector<void*>
 {
+	__STDEXT_INTERFACE_ARRAY_USING
 private:
 	typedef std::vector<void*> BaseClass;
 	typedef Interface* _PtrType;
@@ -221,11 +230,6 @@ public:
 
 	typedef pointer iterator;
 	typedef const_pointer const_iterator;
-
-public:
-	using BaseClass::size;
-	using BaseClass::empty;
-	using BaseClass::reserve;
 
 #if (0)
 	size_t size();
