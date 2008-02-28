@@ -68,38 +68,35 @@ struct _WinxGuidTraits {
 #define WINX_RLS_DEFINE_GUID(												\
 	TheClass, sz, x, s1, s2, c1, c2, c3, c4, c5, c6, c7, c8)				\
 																			\
-template <class nInst>														\
-struct _GuidOf_##TheClass {													\
-	static const GUID guid;													\
-};																			\
-																			\
-template <class nInst>														\
-const GUID _GuidOf_##TheClass<nInst>::guid = {								\
-	x, s1, s2, { c1, c2, c3, c4, c5, c6, c7, c8 }							\
-};																			\
-																			\
 template <>																	\
 struct _WinxGuidTraits<TheClass> {											\
-	typedef _GuidOf_##TheClass<int> _Class;									\
+	template <class nInst>													\
+	struct _GuidOf_ {														\
+		static const GUID guid;												\
+	};																		\
+	typedef _GuidOf_<int> _Class;											\
+};																			\
+																			\
+template <class nInst>														\
+const GUID _WinxGuidTraits<TheClass>::_GuidOf_<nInst>::guid = {				\
+	x, s1, s2, { c1, c2, c3, c4, c5, c6, c7, c8 }							\
 };
 
 #define WINX_RLS_DEFINE_GUID_ALTER(TheClass, guidref)						\
 																			\
-template <class nInst>														\
-struct _GuidOf_##TheClass {													\
-	static const GUID& guid;												\
+template <>																	\
+struct _WinxGuidTraits<TheClass> {											\
+	template <class nInst>													\
+	struct _GuidOf_ {														\
+		static const GUID& guid;											\
+	};																		\
+	typedef _GuidOf_<int> _Class;											\
 };																			\
 																			\
 template <class nInst>														\
-const GUID& _GuidOf_##TheClass<nInst>::guid = guidref;						\
-																			\
-template <>																	\
-struct _WinxGuidTraits<TheClass> {											\
-	typedef _GuidOf_##TheClass<int> _Class;									\
-};
+const GUID& _WinxGuidTraits<TheClass>::_GuidOf_<nInst>::guid = guidref;
 
 #define WINX_RLS_GUIDOF(TheClass)	_WinxGuidTraits<TheClass>::_Class::guid
-
 
 // =========================================================================
 // WINX_DBG_VERIFY_GUID/WINX_DBG_REGISTER_GUID
