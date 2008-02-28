@@ -27,33 +27,33 @@
 __NS_STD_BEGIN
 
 // -------------------------------------------------------------------------
-// interface Connection
+// interface IConnection
 
-interface Connection
+interface IConnection
 {
 	virtual void __stdcall disconnect() = 0;
 };
 
 // -------------------------------------------------------------------------
-// class HConnection - Connection HandleClass
+// class Connection - IConnection* HandleClass
 
-class HConnection
+class Connection
 {
 private:
-	HConnection(const HConnection&);
-	void operator=(const HConnection&);
+	Connection(const Connection&);
+	void operator=(const Connection&);
 
 private:
-	Connection* m_conn;
+	IConnection* m_conn;
 
 public:
-	HConnection(Connection* conn = NULL) : m_conn(conn) {}
-	~HConnection() {
+	Connection(IConnection* conn = NULL) : m_conn(conn) {}
+	~Connection() {
 		if (m_conn)
 			m_conn->disconnect();
 	}
 
-	void winx_call operator=(Connection* conn)
+	void winx_call operator=(IConnection* conn)
 	{
 		WINX_ASSERT(m_conn == NULL);
 		m_conn = conn;
@@ -69,6 +69,8 @@ public:
 	}
 };
 
+typedef Connection HConnection;
+
 // -------------------------------------------------------------------------
 // interface Event
 
@@ -78,26 +80,26 @@ class FakeTarget
 
 typedef void* FakeMethod;
 
-interface EventBase
+interface IEvent
 {
-	virtual Connection* __stdcall _addListener(FakeTarget* target, FakeMethod method) = 0;
+	virtual IConnection* __stdcall _addListener(FakeTarget* target, FakeMethod method) = 0;
 };
 
 template <class EventTag>
-interface Event : EventBase
+interface SomeEvent : IEvent
 {
 	template <class Target, class ParametersList>
-	Connection* __stdcall addListener(
+	IConnection* __stdcall addListener(
 		Target* target,
 		void (__stdcall Target::*method)(ParametersList)
 		);
 };
 
 #define DEFINE_EVENT(Event, ParametersList)									\
-interface Event	: std::EventBase											\
+interface Event	: std::IEvent												\
 {																			\
 	template <class Target>													\
-	__forceinline std::Connection* winx_call addListener(					\
+	__forceinline std::IConnection* winx_call addListener(					\
 		Target* target,														\
 		void (__stdcall Target::*method) ParametersList)					\
 	{																		\
@@ -106,12 +108,12 @@ interface Event	: std::EventBase											\
 }
 
 // -------------------------------------------------------------------------
-// interface EventContainer
+// interface IEventContainer
 
 typedef IID EventID;
 typedef const EventID& EventIDRef;
 
-interface EventContainer
+interface IEventContainer
 {
 	virtual HRESULT __stdcall findEvent(EventIDRef name, void** event) = 0;
 };

@@ -61,7 +61,7 @@ inline void testBoost(LogT& log)
 
 void testStdExt()
 {
-	WINX_TEST_APP(std::ErrorLog, "TestEventContainer", "");
+	WINX_TEST_APP(std::ErrorLog, "TestEvent", "");
 
 	WINX_TEST_CLASS(TestFinder);
 #if !defined(STD_NO_WINSDK)

@@ -30,7 +30,7 @@ __NS_STD_BEGIN
 
 class BasicConnection;
 
-class ConnectionNodeBase : public Connection
+class ConnectionNodeBase : public IConnection
 {
 protected:
 	ConnectionNodeBase* m_prev;
@@ -110,7 +110,7 @@ protected:
 public:
 	BasicEvent(AllocT& alloc) : m_alloc(alloc) {}
 
-	Connection* __stdcall _addListener(FakeTarget* target, FakeMethod method)
+	IConnection* __stdcall _addListener(FakeTarget* target, FakeMethod method)
 	{
 		return STD_NEW(m_alloc, BasicConnection)(target, method, m_connections);
 	}
@@ -207,8 +207,8 @@ class Dialog
 	std::ScopeAlloc m_alloc;
 
 	Edit m_edit;
-	std::HConnection m_editChanged;
-	std::HConnection m_editChanged2;
+	std::Connection m_editChanged;
+	std::Connection m_editChanged2;
 	// NOTE: even you don't need to disconnect, you must hold the connection handle.
 
 public:

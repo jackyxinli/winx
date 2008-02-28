@@ -29,14 +29,15 @@
 #endif
 
 // -------------------------------------------------------------------------
-// class EventContainerT
+// class EventContainer
 
 __NS_STD_BEGIN
 
 template <int EventCount>
-class EventContainerT : public EventContainer
+class EventContainer : public IEventContainer
 {
 private:
+	typedef IEvent EventBase;
 	struct ValueType {
 		const EventID* m_name;
 		void* m_event;
@@ -114,7 +115,7 @@ namespace test_event_container {
 // Edit (v2.0) component
 //
 
-class EditV2 : public std::EventContainerT<1>
+class EditV2 : public std::EventContainer<1>
 {
 private:
 	typedef EVENT_TYPE(TextChanged, (Text text), (text)) TextChangedEvent;
@@ -145,8 +146,8 @@ class DialogV2
 	std::ScopeAlloc m_alloc;
 
 	EditV2 m_edit;
-	std::HConnection m_editChanged;
-	std::HConnection m_editChanged2;
+	std::Connection m_editChanged;
+	std::Connection m_editChanged2;
 	// NOTE: even you don't need to disconnect, you must hold the connection handle.
 
 public:
