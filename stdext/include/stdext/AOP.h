@@ -30,6 +30,10 @@
 #include "aop/Event.h"
 #endif
 
+#ifndef __STDEXT_AOP_EVENTCONTAINER_H__
+#include "aop/EventContainer.h"
+#endif
+
 // -------------------------------------------------------------------------
 // $Log: $
 

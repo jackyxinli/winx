@@ -59,9 +59,6 @@ public:
 
 class BasicConnection : public ConnectionNodeBase
 {
-private:
-	typedef void* FakeMethod;
-
 public:
 	FakeTarget* target;
 	FakeMethod method;
@@ -103,6 +100,22 @@ public:
 	}
 };
 
+template <class EventT, class AllocT>
+class BasicEvent : public EventT
+{
+protected:
+	std::ConnectionList m_connections;
+	AllocT& m_alloc;
+
+public:
+	BasicEvent(AllocT& alloc) : m_alloc(alloc) {}
+
+	Connection* __stdcall _addListener(FakeTarget* target, FakeMethod method)
+	{
+		return STD_NEW(m_alloc, BasicConnection)(target, method, m_connections);
+	}
+};
+
 __NS_STD_END
 
 // -------------------------------------------------------------------------
@@ -112,32 +125,25 @@ __NS_STD_END
 #define _AOP_METHOD_ASSIGN(dest, src)	(*(void**)&(dest) = (src))
 
 #define EX_EVENT_TYPE(Alloc, Event, ParametersList, arguments_list)			\
-class Event##Impl : public Event											\
+class Event##Impl : public std::BasicEvent<Event, Alloc>					\
 {																			\
 private:																	\
-	typedef std::FakeTarget FakeTarget;										\
-	typedef void (__stdcall FakeTarget::*FakeMethod) ParametersList;		\
-	std::ConnectionList m_connections;										\
-	Alloc& m_alloc;															\
+	typedef std::BasicEvent<Event, Alloc> BaseClass;						\
 																			\
 public:																		\
-	Event##Impl(Alloc& _winx_alloc) : m_alloc(_winx_alloc) {}				\
-																			\
-	std::Connection* __stdcall _addListener(								\
-		FakeTarget* _winx_target, FakeMethod _winx_method)					\
-	{																		\
-		return STD_NEW(m_alloc, std::BasicConnection)(						\
-			_winx_target, _AOP_CASTTO_VOID(_winx_method), m_connections);	\
-	}																		\
+	Event##Impl(Alloc& _winx_alloc) : BaseClass(_winx_alloc) {}				\
 																			\
 	void winx_call fire ParametersList										\
 	{																		\
-		FakeMethod _winx_method;											\
+		typedef std::FakeTarget RealTarget;									\
+		typedef void (__stdcall RealTarget::*RealMethod) ParametersList;	\
+																			\
+		RealMethod _winx_method;											\
 		const std::BasicConnection* _winx_conn = m_connections.first();		\
 		while (!m_connections.done(_winx_conn))								\
 		{																	\
 			const std::BasicConnection* _winx_next = _winx_conn->next();	\
-			FakeTarget* _winx_target = (FakeTarget*)_winx_conn->target;		\
+			RealTarget* _winx_target = _winx_conn->target;					\
 			_AOP_METHOD_ASSIGN(_winx_method, _winx_conn->method);			\
 			(_winx_target->*_winx_method) arguments_list;					\
 			_winx_conn = _winx_next;										\

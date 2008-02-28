@@ -48,10 +48,23 @@
 #pragma pack() // 为了不受其他头文件的字节对齐干扰
 
 // =========================================================================
+// Configurations
+
+#ifndef MEMORY_ALLOC_PADDING
+#define MEMORY_ALLOC_PADDING	32
+#endif
+
+#ifndef MEMORY_BLOCK_TOTAL
+#define MEMORY_BLOCK_TOTAL		16384	// 16k
+#endif
 
 #ifndef MEMORY_BLOCK_SIZE
-#define MEMORY_BLOCK_SIZE	2048	// 最佳的内存块大小，经验值
+#define MEMORY_BLOCK_SIZE		(MEMORY_BLOCK_TOTAL - MEMORY_ALLOC_PADDING)
+// 最佳的内存块大小，经验值
 #endif
+
+// =========================================================================
+// Basic Functions
 
 #define MEMORY_ASSERT(e)		WINX_ASSERT(e)
 #define MEMORY_STATIC_ASSERT(e)	WINX_STATIC_ASSERT(e)

@@ -76,43 +76,53 @@ class FakeTarget
 {
 };
 
+typedef void* FakeMethod;
+
+interface EventBase
+{
+	virtual Connection* __stdcall _addListener(FakeTarget* target, FakeMethod method) = 0;
+};
+
 template <class EventTag>
-interface Event
+interface Event : EventBase
 {
 	template <class Target, class ParametersList>
-	/* virtual */ Connection* __stdcall addListener(
+	Connection* __stdcall addListener(
 		Target* target,
 		void (__stdcall Target::*method)(ParametersList)
 		);
 };
 
 #define DEFINE_EVENT(Event, ParametersList)									\
-interface Event																\
+interface Event	: std::EventBase											\
 {																			\
-	virtual std::Connection* __stdcall _addListener(						\
-		std::FakeTarget* target,											\
-		void (__stdcall std::FakeTarget::*method) ParametersList) = 0;		\
-																			\
 	template <class Target>													\
 	__forceinline std::Connection* winx_call addListener(					\
 		Target* target,														\
 		void (__stdcall Target::*method) ParametersList)					\
 	{																		\
-		typedef void (__stdcall std::FakeTarget::*FakeMethod) ParametersList; \
-		return _addListener((std::FakeTarget*)target, (FakeMethod)method);	\
+		return _addListener((std::FakeTarget*)target, *(void**)&method);	\
 	}																		\
 }
 
 // -------------------------------------------------------------------------
 // interface EventContainer
 
-typedef IID EventName;
-typedef const EventName& EventNameRef;
+typedef IID EventID;
+typedef const EventID& EventIDRef;
 
 interface EventContainer
 {
-	virtual HRESULT __stdcall find(EventNameRef name, void** event) = 0;
+	virtual HRESULT __stdcall findEvent(EventIDRef name, void** event) = 0;
 };
+
+// -------------------------------------------------------------------------
+// EID, DEFINE_EID
+
+#define EID(Event)	WINX_UUID(Event)
+
+#define DEFINE_EID(Event, sz, x, s1, s2, c1, c2, c3, c4, c5, c6, c7, c8)	\
+	WINX_DEFINE_IID(Event, sz, x, s1, s2, c1, c2, c3, c4, c5, c6, c7, c8)
 
 // -------------------------------------------------------------------------
 // $Log: $
