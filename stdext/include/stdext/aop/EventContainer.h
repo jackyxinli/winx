@@ -67,7 +67,8 @@ public:
 
 	HRESULT __stdcall findEvent(EventIDRef name, void** event)
 	{
-		ContainerType::iterator it = std::find(m_events.begin(), m_events.end(), name);
+		typedef typename ContainerType::iterator Iterator;
+		Iterator it = std::find(m_events.begin(), m_events.end(), name);
 		if (it != m_events.end())
 		{
 			*event = (*it).m_event;

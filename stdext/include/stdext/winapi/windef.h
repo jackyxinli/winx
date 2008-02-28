@@ -208,6 +208,9 @@ typedef void far            *LPVOID;
 typedef CONST void far      *LPCVOID;
 typedef unsigned int        *PUINT;
 
+typedef SHORT *PSHORT;  
+typedef LONG *PLONG;    
+
 // -------------------------------------------------------------------------
 //
 // The following types are guaranteed to be signed and 32 bits wide.

@@ -27,11 +27,69 @@
 #include "winerror.h"
 #endif
 
+// =========================================================================
+
 #ifndef interface
 #define interface struct
 #endif
 
+// =========================================================================
+// InlineIsEqualGUID
+
+// Faster (but makes code fatter) inline version...use sparingly
+#ifdef __cplusplus
+__inline BOOL  InlineIsEqualGUID(REFGUID rguid1, REFGUID rguid2)
+{
+   return (
+      ((PLONG) &rguid1)[0] == ((PLONG) &rguid2)[0] &&
+      ((PLONG) &rguid1)[1] == ((PLONG) &rguid2)[1] &&
+      ((PLONG) &rguid1)[2] == ((PLONG) &rguid2)[2] &&
+      ((PLONG) &rguid1)[3] == ((PLONG) &rguid2)[3]);
+}
+#else   // ! __cplusplus
+#define InlineIsEqualGUID(rguid1, rguid2)  \
+        (((PLONG) rguid1)[0] == ((PLONG) rguid2)[0] &&   \
+        ((PLONG) rguid1)[1] == ((PLONG) rguid2)[1] &&    \
+        ((PLONG) rguid1)[2] == ((PLONG) rguid2)[2] &&    \
+        ((PLONG) rguid1)[3] == ((PLONG) rguid2)[3])
+#endif  // __cplusplus
+
 // -------------------------------------------------------------------------
+// IsEqualGUID, IsEqualIID, IsEqualCLSID
+
+#ifdef __cplusplus
+__inline BOOL IsEqualGUID(REFGUID rguid1, REFGUID rguid2)
+{
+    return !memcmp(&rguid1, &rguid2, sizeof(GUID));
+}
+#else   //  ! __cplusplus
+#define IsEqualGUID(rguid1, rguid2) (!memcmp(rguid1, rguid2, sizeof(GUID)))
+#endif  //  __cplusplus
+
+#define IsEqualIID(riid1, riid2) IsEqualGUID(riid1, riid2)
+#define IsEqualCLSID(rclsid1, rclsid2) IsEqualGUID(rclsid1, rclsid2)
+
+// -------------------------------------------------------------------------
+// operator==, operator!=
+
+#ifdef __cplusplus
+
+// because GUID is defined elsewhere in WIN32 land, the operator == and !=
+// are moved outside the class to global scope.
+
+__inline BOOL operator==(const GUID& guidOne, const GUID& guidOther)
+{
+    return IsEqualGUID(guidOne,guidOther);
+}
+
+__inline BOOL operator!=(const GUID& guidOne, const GUID& guidOther)
+{
+    return !IsEqualGUID(guidOne,guidOther);
+}
+
+#endif // __cpluscplus
+
+// =========================================================================
 
 #ifndef __STDEXT_WINAPI_OBJIDL_H__
 #include "objidl.h"
@@ -41,7 +99,7 @@
 #include "oleauto.h"
 #endif
 
-// -------------------------------------------------------------------------
+// =========================================================================
 
 /* Storage instantiation modes */
 #define STGM_DIRECT             0x00000000L
@@ -86,7 +144,7 @@
 // This is a legacy define to allow old component to builds
 #define STGFMT_DOCUMENT         0
 
-// -------------------------------------------------------------------------
+// =========================================================================
 // $Log: objbase.h,v $
 //
 

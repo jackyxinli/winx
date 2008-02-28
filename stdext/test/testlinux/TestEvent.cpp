@@ -26,6 +26,7 @@
 using namespace std;
 
 WINX_AUTORUN_CLASS(TestEvent, std::ErrorLog);
+WINX_AUTORUN_CLASS(TestEventContainer, std::ErrorLog);
 
 // -------------------------------------------------------------------------
 // $Log: TestBasic.cpp,v $
