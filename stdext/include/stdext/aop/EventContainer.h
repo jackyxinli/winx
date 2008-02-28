@@ -43,10 +43,10 @@ private:
 		ValueType() 
 			: m_name(NULL) {
 		}
-		ValueType(EventIDRef name, EventBase* event = NULL)
+		ValueType(EventIDRef name, EventBase* event)
 			: m_name(&name), m_event(event) {}
-		int winx_call operator==(const ValueType& v) const {
-			return *m_name == *v.m_name;
+		int winx_call operator==(EventIDRef name) const {
+			return *m_name == name;
 		}
 	};
 	typedef std::Array<ValueType, EventCount> ContainerType;
