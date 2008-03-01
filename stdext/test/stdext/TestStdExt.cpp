@@ -72,7 +72,7 @@ void testStdExt()
 	WINX_TEST_CLASS(std::TestCheckException);
 	WINX_TEST_CLASS(std::TestSimpleFileMapping);
 	WINX_TEST_CLASS(std::TestFileMapping);
-	WINX_TEST_CLASS(std::TestStreamArchive);
+//	WINX_TEST_CLASS(std::TestStreamArchive);
 	WINX_TEST_CLASS(std::TestStdioArchive);
 	WINX_TEST_CLASS(std::TestLog);
 	WINX_TEST_CLASS(std::TestFileBuf);
@@ -86,6 +86,7 @@ void testStdExt()
 	WINX_TEST_CLASS(std::TestMap);
 	WINX_TEST_CLASS(std::TestSet);
 	WINX_TEST_CLASS(std::TestList);
+	WINX_TEST_CLASS(std::TestDclList);
 
 	//Memory.h
 	WINX_TEST_CLASS(std::TestAutoFreeAlloc);

@@ -136,6 +136,7 @@ public:
 
 	bool winx_call empty() const
 	{
+		WINX_ASSERT(m_next == this || m_next != m_prev);
 		return m_next == this;
 	}
 };

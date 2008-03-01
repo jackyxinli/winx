@@ -24,79 +24,41 @@
 #include "Interface.h"
 #endif
 
+#ifndef __STDEXT_LIST_H__
+#include "../List.h"
+#endif
+
 // -------------------------------------------------------------------------
 
 __NS_STD_BEGIN
 
-class BasicConnection;
-
-class ConnectionNodeBase : public IConnection
-{
-protected:
-	ConnectionNodeBase* m_prev;
-	ConnectionNodeBase* m_next;
-
-	friend class BasicConnection;
-
-public:
-	ConnectionNodeBase()
-	{
-		m_prev = m_next = this;
-	}
-
-	ConnectionNodeBase(ConnectionNodeBase* aPrev, ConnectionNodeBase* aNext)
-		: m_prev(aPrev), m_next(aNext)
-	{
-	}
-
-	void __stdcall disconnect()
-	{
-		m_next->m_prev = m_prev;
-		m_prev->m_next = m_next;
-		m_prev = m_next = this;
-	}
-};
-
-class BasicConnection : public ConnectionNodeBase
+class BasicConnection : public DclListNode<BasicConnection>, public IConnection
 {
 public:
 	FakeTarget* target;
 	FakeMethod method;
 
 public:
-	BasicConnection(FakeTarget* aTarget, FakeMethod aMethod, ConnectionNodeBase& head)
-		: target(aTarget), method(aMethod), ConnectionNodeBase(&head, head.m_next)
+	BasicConnection(FakeTarget* aTarget, FakeMethod aMethod, DclList<BasicConnection>& lst)
+		: target(aTarget), method(aMethod), DclListNode<BasicConnection>(lst, insertAtFront)
 	{
-		head.m_next->m_prev = this;
-		head.m_next = this;
 	}
+
+#if defined(_DEBUG)
 	~BasicConnection()
 	{
 		WINX_ASSERT(disconnected());
 	}
+#endif
 
-	bool winx_call disconnected()
+	bool winx_call disconnected() const
 	{
-		return m_prev == this && m_next == this;
+		return empty();
 	}
 
-	const BasicConnection* winx_call next() const
+	void __stdcall disconnect()
 	{
-		return (const BasicConnection*)m_next;
-	}
-};
-
-class ConnectionList : public ConnectionNodeBase
-{
-public:
-	const BasicConnection* winx_call first() const
-	{
-		return (const BasicConnection*)m_next;
-	}
-
-	bool winx_call done(const ConnectionNodeBase* connection) const
-	{
-		return connection == this;
+		erase();
 	}
 };
 
@@ -104,7 +66,7 @@ template <class EventT, class AllocT>
 class BasicEvent : public EventT
 {
 protected:
-	std::ConnectionList m_connections;
+	std::DclList<BasicConnection> m_connections;
 	AllocT& m_alloc;
 
 public:
