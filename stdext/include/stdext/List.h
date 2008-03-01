@@ -181,7 +181,7 @@ public:
 	_DclIter(NodePtrT node) : m_node(node) {}
 
 	template <class RefT2, class NPtrT2>
-	_DclIter(_DclIter<ValT, RefT2, NPtrT2>& it) : m_node(it.__data()) {}
+	_DclIter(const _DclIter<ValT, RefT2, NPtrT2>& it) : m_node(it.__data()) {}
 
 	NodePtrT winx_call __data() const { return m_node; }
 	ReferenceT winx_call operator*() const { return m_node->data(); }
