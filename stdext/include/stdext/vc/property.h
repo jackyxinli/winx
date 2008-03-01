@@ -44,11 +44,16 @@
 #endif
 
 // =========================================================================
-// WINX_THISCLASS
+// WINX_THISCLASS, WINX_FINALCLASS
 
 #define WINX_THISCLASS(Type)												\
 private:																	\
 	typedef Type ThisClass;
+
+#define WINX_FINALCLASS(Type)												\
+private:																	\
+	typedef Type ThisClass;													\
+	typedef Type FinalClass;
 
 // =========================================================================
 // Boolean operations
