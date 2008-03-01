@@ -189,19 +189,19 @@ public:
 	bool winx_call operator==(const _Myt& it) const { return m_node == it.__data(); }
 	bool winx_call operator!=(const _Myt& it) const { return m_node != it.__data(); }
 
-	_Myt& winx_call operator++() { m_node = m_node->next(); return *(_Myt*)this; }
-	_Myt& winx_call operator--() { m_node = m_node->prev(); return *(_Myt*)this; }
+	_Myt& winx_call operator++() { m_node = m_node->next(); return *this; }
+	_Myt& winx_call operator--() { m_node = m_node->prev(); return *this; }
 
 	_Myt winx_call operator++(int)
 	{ 
-		_Myt it = *(_Myt*)this;
+		_Myt it = *this;
 		operator++();
 		return it;
 	}
 
 	_Myt winx_call operator--(int)
 	{ 
-		_Myt it = *(_Myt*)this;
+		_Myt it = *this;
 		operator--();
 		return it;
 	}

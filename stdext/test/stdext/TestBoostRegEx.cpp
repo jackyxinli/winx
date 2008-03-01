@@ -17,15 +17,15 @@
 // $Id: TestBoostRegEx.cpp,v 1.8 2006/12/03 07:52:55 xushiwei Exp $
 // -----------------------------------------------------------------------*/
 
-#define USES_BOOST
+//#define USES_BOOST
 #include <stdext/Basic.h>
-#include <boost/regex.hpp>
-//#pragma comment(lib, "shlwapi.lib")
 
 // -------------------------------------------------------------------------
 // testBoost
 
 #if defined(USES_BOOST)
+
+#include <boost/regex.hpp>
 
 void testBoostRegEx()
 {
