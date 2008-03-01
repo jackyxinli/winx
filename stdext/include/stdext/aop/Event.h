@@ -29,6 +29,7 @@
 #endif
 
 // -------------------------------------------------------------------------
+// class BasicConnection
 
 __NS_STD_BEGIN
 
@@ -61,6 +62,22 @@ public:
 		erase();
 	}
 };
+
+__NS_STD_END
+
+// -------------------------------------------------------------------------
+// Declaration of no destructor - for GC Allocator
+
+#if !defined(_DEBUG)
+
+STD_NO_DESTRUCTOR(std::BasicConnection);
+
+#endif
+
+// -------------------------------------------------------------------------
+// class BasicEvent
+
+__NS_STD_BEGIN
 
 template <class EventT, class AllocT>
 class BasicEvent : public EventT
