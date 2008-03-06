@@ -20,6 +20,7 @@ CFG=TestStdExt - Win32 Release
 !MESSAGE "TestStdExt - Win32 Release" (based on "Win32 (x86) Console Application")
 !MESSAGE "TestStdExt - Win32 Debug" (based on "Win32 (x86) Console Application")
 !MESSAGE "TestStdExt - Win32 ReleaseStaticLib" (based on "Win32 (x86) Console Application")
+!MESSAGE "TestStdExt - Win32 ReleaseST" (based on "Win32 (x86) Console Application")
 !MESSAGE 
 
 # Begin Project
@@ -106,6 +107,33 @@ LINK32=link.exe
 # ADD BASE LINK32 kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /nologo /subsystem:console /debug /machine:I386 /libpath:"../../../winsdk/lib" /libpath:"../../../pthreads-w32/lib" /libpath:"../../../boost\libs\regex\build\vc6" /libpath:"../../../apr/Release"
 # ADD LINK32 kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /nologo /subsystem:console /debug /machine:I386 /libpath:"../../../winsdk/lib" /libpath:"../../../pthreads-w32/lib" /libpath:"../../../boost\libs\regex\build\vc6" /libpath:"../../../apr/LibR"
 
+!ELSEIF  "$(CFG)" == "TestStdExt - Win32 ReleaseST"
+
+# PROP BASE Use_MFC 0
+# PROP BASE Use_Debug_Libraries 0
+# PROP BASE Output_Dir "TestStdExt___Win32_ReleaseST"
+# PROP BASE Intermediate_Dir "TestStdExt___Win32_ReleaseST"
+# PROP BASE Ignore_Export_Lib 0
+# PROP BASE Target_Dir ""
+# PROP Use_MFC 0
+# PROP Use_Debug_Libraries 0
+# PROP Output_Dir "ReleaseST"
+# PROP Intermediate_Dir "ReleaseST"
+# PROP Ignore_Export_Lib 0
+# PROP Target_Dir ""
+# ADD BASE CPP /nologo /MD /W3 /GX /Zi /O2 /I "../../include" /I "../../../stdext/include" /I "../../../boost" /D "WIN32" /D "NDEBUG" /D "_CONSOLE" /D "_MBCS" /D "APR_DECLARE_STATIC" /FD /c
+# SUBTRACT BASE CPP /YX /Yc /Yu
+# ADD CPP /nologo /W3 /GX /Zi /O2 /I "../../include" /I "../../../stdext/include" /I "../../../boost" /D "WIN32" /D "NDEBUG" /D "_CONSOLE" /D "_MBCS" /FD /c
+# SUBTRACT CPP /YX /Yc /Yu
+# ADD BASE RSC /l 0x804 /d "NDEBUG"
+# ADD RSC /l 0x804 /d "NDEBUG"
+BSC32=bscmake.exe
+# ADD BASE BSC32 /nologo
+# ADD BSC32 /nologo
+LINK32=link.exe
+# ADD BASE LINK32 kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /nologo /subsystem:console /debug /machine:I386 /libpath:"../../../winsdk/lib" /libpath:"../../../pthreads-w32/lib" /libpath:"../../../boost\libs\regex\build\vc6" /libpath:"../../../apr/LibR"
+# ADD LINK32 kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /nologo /subsystem:console /debug /machine:I386 /libpath:"../../../winsdk/lib" /libpath:"../../../pthreads-w32/lib" /libpath:"../../../boost\libs\regex\build\vc6" /libpath:"../../../apr/Release"
+
 !ENDIF 
 
 # Begin Target
@@ -113,6 +141,7 @@ LINK32=link.exe
 # Name "TestStdExt - Win32 Release"
 # Name "TestStdExt - Win32 Debug"
 # Name "TestStdExt - Win32 ReleaseStaticLib"
+# Name "TestStdExt - Win32 ReleaseST"
 # Begin Group "src"
 
 # PROP Default_Filter ""
