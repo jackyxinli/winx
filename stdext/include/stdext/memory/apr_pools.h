@@ -84,6 +84,9 @@ private:
 	{
 		apr_pool_initialize();
 		apr_pool_create(&m_pool, NULL);
+#if !defined(_MT)
+		apr_allocator_mutex_set(apr_pool_allocator_get(m_pool), NULL);
+#endif
 	}
 
 	void tearDown()
