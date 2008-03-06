@@ -159,11 +159,13 @@ public:
 		AssertExp(foo.FactoryRO == NULL);
 		AssertExp(foo.Factory2 == NULL);
 
+#if defined(_DEBUG)
 		void* p = NULL;
 		if (foo.Factory)
 			foo.Factory->CreateInstance(NULL, IID_IUnknown, &p);
 		if (foo.Factory2)
 			foo.Factory2->CreateInstance(NULL, IID_IUnknown, &p);
+#endif
 	}
 };
 

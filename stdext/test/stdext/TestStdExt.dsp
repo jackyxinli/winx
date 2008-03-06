@@ -19,6 +19,7 @@ CFG=TestStdExt - Win32 Release
 !MESSAGE 
 !MESSAGE "TestStdExt - Win32 Release" (based on "Win32 (x86) Console Application")
 !MESSAGE "TestStdExt - Win32 Debug" (based on "Win32 (x86) Console Application")
+!MESSAGE "TestStdExt - Win32 ReleaseStaticLib" (based on "Win32 (x86) Console Application")
 !MESSAGE 
 
 # Begin Project
@@ -51,7 +52,7 @@ BSC32=bscmake.exe
 # ADD BSC32 /nologo
 LINK32=link.exe
 # ADD BASE LINK32 kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /nologo /subsystem:console /machine:I386
-# ADD LINK32 kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /nologo /subsystem:console /debug /machine:I386 /libpath:"../../../winsdk/lib" /libpath:"../../../pthreads-w32/lib" /libpath:"../../../boost\libs\regex\build\vc6"
+# ADD LINK32 kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /nologo /subsystem:console /debug /machine:I386 /libpath:"../../../winsdk/lib" /libpath:"../../../pthreads-w32/lib" /libpath:"../../../boost\libs\regex\build\vc6" /libpath:"../../../apr/Release"
 
 !ELSEIF  "$(CFG)" == "TestStdExt - Win32 Debug"
 
@@ -76,7 +77,34 @@ BSC32=bscmake.exe
 # ADD BSC32 /nologo
 LINK32=link.exe
 # ADD BASE LINK32 kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /nologo /subsystem:console /debug /machine:I386 /pdbtype:sept
-# ADD LINK32 kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /nologo /subsystem:console /debug /machine:I386 /pdbtype:sept /libpath:"../../../winsdk/lib" /libpath:"../../../pthreads-w32/lib" /libpath:"../../../boost\libs\regex\build\vc6"
+# ADD LINK32 kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /nologo /subsystem:console /debug /machine:I386 /pdbtype:sept /libpath:"../../../winsdk/lib" /libpath:"../../../pthreads-w32/lib" /libpath:"../../../boost\libs\regex\build\vc6" /libpath:"../../../apr/Debug"
+
+!ELSEIF  "$(CFG)" == "TestStdExt - Win32 ReleaseStaticLib"
+
+# PROP BASE Use_MFC 0
+# PROP BASE Use_Debug_Libraries 0
+# PROP BASE Output_Dir "TestStdExt___Win32_ReleaseStaticLib"
+# PROP BASE Intermediate_Dir "TestStdExt___Win32_ReleaseStaticLib"
+# PROP BASE Ignore_Export_Lib 0
+# PROP BASE Target_Dir ""
+# PROP Use_MFC 0
+# PROP Use_Debug_Libraries 0
+# PROP Output_Dir "ReleaseStaticLib"
+# PROP Intermediate_Dir "ReleaseStaticLib"
+# PROP Ignore_Export_Lib 0
+# PROP Target_Dir ""
+# ADD BASE CPP /nologo /MD /W3 /GX /Zi /O2 /I "../../include" /I "../../../stdext/include" /I "../../../boost" /D "WIN32" /D "NDEBUG" /D "_CONSOLE" /D "_MBCS" /FD /c
+# SUBTRACT BASE CPP /YX /Yc /Yu
+# ADD CPP /nologo /MD /W3 /GX /Zi /O2 /I "../../include" /I "../../../stdext/include" /I "../../../boost" /D "WIN32" /D "NDEBUG" /D "_CONSOLE" /D "_MBCS" /D "APR_DECLARE_STATIC" /FD /c
+# SUBTRACT CPP /YX /Yc /Yu
+# ADD BASE RSC /l 0x804 /d "NDEBUG"
+# ADD RSC /l 0x804 /d "NDEBUG"
+BSC32=bscmake.exe
+# ADD BASE BSC32 /nologo
+# ADD BSC32 /nologo
+LINK32=link.exe
+# ADD BASE LINK32 kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /nologo /subsystem:console /debug /machine:I386 /libpath:"../../../winsdk/lib" /libpath:"../../../pthreads-w32/lib" /libpath:"../../../boost\libs\regex\build\vc6" /libpath:"../../../apr/Release"
+# ADD LINK32 kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /nologo /subsystem:console /debug /machine:I386 /libpath:"../../../winsdk/lib" /libpath:"../../../pthreads-w32/lib" /libpath:"../../../boost\libs\regex\build\vc6" /libpath:"../../../apr/LibR"
 
 !ENDIF 
 
@@ -84,52 +112,25 @@ LINK32=link.exe
 
 # Name "TestStdExt - Win32 Release"
 # Name "TestStdExt - Win32 Debug"
+# Name "TestStdExt - Win32 ReleaseStaticLib"
 # Begin Group "src"
 
 # PROP Default_Filter ""
 # Begin Source File
 
 SOURCE=.\TestBoostRegEx.cpp
-
-!IF  "$(CFG)" == "TestStdExt - Win32 Release"
-
-!ELSEIF  "$(CFG)" == "TestStdExt - Win32 Debug"
-
-!ENDIF 
-
 # End Source File
 # Begin Source File
 
 SOURCE=.\TestProperty.cpp
-
-!IF  "$(CFG)" == "TestStdExt - Win32 Release"
-
-!ELSEIF  "$(CFG)" == "TestStdExt - Win32 Debug"
-
-!ENDIF 
-
 # End Source File
 # Begin Source File
 
 SOURCE=.\TestStdExt.cpp
-
-!IF  "$(CFG)" == "TestStdExt - Win32 Release"
-
-!ELSEIF  "$(CFG)" == "TestStdExt - Win32 Debug"
-
-!ENDIF 
-
 # End Source File
 # Begin Source File
 
 SOURCE=.\TestStdNew.cpp
-
-!IF  "$(CFG)" == "TestStdExt - Win32 Release"
-
-!ELSEIF  "$(CFG)" == "TestStdExt - Win32 Debug"
-
-!ENDIF 
-
 # End Source File
 # End Group
 # Begin Source File

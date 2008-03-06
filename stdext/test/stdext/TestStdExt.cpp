@@ -19,6 +19,8 @@
 
 #define STD_FILTER_TEST_CASE
 #define STD_NO_TASKALLOC
+#define USES_APR
+//#define USES_BOOST
 //#define STD_NO_MSVCRT
 //#define STD_NO_WINSDK
 #include <stdext.h>
@@ -57,11 +59,18 @@ inline void testBoost(LogT& log)
 #endif
 
 // -------------------------------------------------------------------------
+// testApr
+
+#if defined(USES_APR)
+#include <stdext/memory/apr_pools.h>
+#endif
+
+// -------------------------------------------------------------------------
 // testStdExt
 
 void testStdExt()
 {
-	WINX_TEST_APP(std::ErrorLog, "TestEvent", "");
+	WINX_TEST_APP(std::ErrorLog, "TestAprPools", "");
 
 	WINX_TEST_CLASS(TestFinder);
 #if !defined(STD_NO_WINSDK)
@@ -95,6 +104,9 @@ void testStdExt()
 	WINX_TEST_CLASS(std::TestCompareAllocators);
 	WINX_TEST_CLASS(std::TestEvent);
 	WINX_TEST_CLASS(std::TestEventContainer);
+#if defined(USES_APR)
+	WINX_TEST_CLASS(TestAprPools);
+#endif
 
 	//Boost
 	testBoost(log);
