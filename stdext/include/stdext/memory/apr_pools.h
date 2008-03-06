@@ -78,13 +78,17 @@ class TestAprPools : public TestCase
 	WINX_TEST_SUITE_END();
 
 private:
+	apr_pool_t* m_pool;
+
 	void setUp()
 	{
 		apr_pool_initialize();
+		apr_pool_create(&m_pool, NULL);
 	}
 
 	void tearDown()
 	{
+		apr_pool_destroy(m_pool);
 		apr_pool_terminate();
 	}
 
@@ -110,7 +114,7 @@ public:
 		for (int i = 0; i < N; ++i)
 		{
 			apr_pool_t* alloc;
-			apr_pool_create(&alloc, NULL);
+			apr_pool_create(&alloc, m_pool);
 			int* p = (int*)apr_palloc(alloc, sizeof(int));
 			apr_pool_destroy(alloc);
 		}
@@ -177,7 +181,7 @@ public:
 		std::PerformanceCounter counter;
 		{
 			apr_pool_t* alloc;
-			apr_pool_create(&alloc, NULL);
+			apr_pool_create(&alloc, m_pool);
 			for (int i = 0; i < N; ++i)
 			{
 				int* p = (int*)apr_palloc(alloc, sizeof(int));
