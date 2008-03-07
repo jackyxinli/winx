@@ -40,6 +40,8 @@ private:
 	typedef std::list<ValT, _Alloc> _Base;
 
 public:
+    typedef typename _Base::size_type size_type;
+    
 	explicit List(AllocT& alloc)
 		: _Base(alloc)
 	{
@@ -326,12 +328,12 @@ public:
 			m_val = arg;
 		}
 		Obj(int arg, DclList<Obj>& lst, bool fInsertBack)
-			: DclListNode<Obj>(lst, insertAtBack)
+			: DclListNode<Obj>(lst, Obj::insertAtBack)
 		{
 			m_val = arg;
 		}
 		Obj(int arg, DclList<Obj>& lst)
-			: DclListNode<Obj>(lst, insertAtFront)
+			: DclListNode<Obj>(lst, Obj::insertAtFront)
 		{
 			m_val = arg;
 		}
@@ -340,7 +342,7 @@ public:
 	template <class ListType>
 	void print(LogT& log, ListType& coll)
 	{
-		for (ListType::const_iterator it = coll.begin(); it != coll.end(); ++it)
+		for (typename ListType::const_iterator it = coll.begin(); it != coll.end(); ++it)
 		{
 			const Obj& val = *it;
 			log.print(val.m_val).newline();
