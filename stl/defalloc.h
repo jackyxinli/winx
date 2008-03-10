@@ -31,7 +31,7 @@
 #include <stdlib.h>
 #include <limits.h>
 #include <iostream.h>
-#include <algobase.h>
+#include "algobase.h"
 
 
 template <class T>

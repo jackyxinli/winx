@@ -28,7 +28,7 @@
 #define __SGI_STL_DEQUE_H
 
 #include "stl_range_errors.h"
-#include <algobase.h>
+#include "algobase.h"
 #include <alloc.h>
 #include "stl_deque.h"
 

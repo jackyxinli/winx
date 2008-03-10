@@ -31,7 +31,7 @@
 #ifdef __STL_CLASS_PARTIAL_SPECIALIZATION
 #include <vector.h>
 #else
-#include <algobase.h>
+#include "algobase.h"
 #include <alloc.h>
 #endif 
 

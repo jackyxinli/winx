@@ -27,7 +27,7 @@
 #ifndef __SGI_STL_ALGO_H
 #define __SGI_STL_ALGO_H
 
-#include <algobase.h>
+#include "algobase.h"
 #include <tempbuf.h>
 #include "stl_algo.h"
 #include "stl_numeric.h"

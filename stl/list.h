@@ -27,7 +27,7 @@
 #ifndef __SGI_STL_LIST_H
 #define __SGI_STL_LIST_H
 
-#include <algobase.h>
+#include "algobase.h"
 #include <alloc.h>
 #include "stl_list.h"
 
