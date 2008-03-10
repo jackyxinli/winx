@@ -45,7 +45,7 @@
 #include "stl_iterator.h"
 #endif
 #ifndef __TYPE_TRAITS_H
-#include <type_traits.h>
+#include "type_traits.h"
 #endif
 #ifndef __SGI_STL_INTERNAL_CONSTRUCT_H
 #include "stl_construct.h"

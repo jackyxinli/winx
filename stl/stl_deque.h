@@ -28,7 +28,7 @@
  *   You should not attempt to use it directly.
  */
 
-#include <concept_checks.h>
+#include "concept_checks.h"
 
 #ifndef __SGI_STL_INTERNAL_DEQUE_H
 #define __SGI_STL_INTERNAL_DEQUE_H

@@ -27,7 +27,7 @@
 # ifdef __GC
 #   define __GC_CONST const
 # else
-#   include <stl_threads.h>
+#include "stl_threads.h"
 #   define __GC_CONST   // constant except for deallocation
 # endif
 # ifdef __STL_SGI_THREADS

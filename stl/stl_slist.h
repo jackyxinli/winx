@@ -19,7 +19,7 @@
 #ifndef __SGI_STL_INTERNAL_SLIST_H
 #define __SGI_STL_INTERNAL_SLIST_H
 
-#include <concept_checks.h>
+#include "concept_checks.h"
 
 __STL_BEGIN_NAMESPACE 
 

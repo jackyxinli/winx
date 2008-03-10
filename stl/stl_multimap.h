@@ -31,7 +31,7 @@
 #ifndef __SGI_STL_INTERNAL_MULTIMAP_H
 #define __SGI_STL_INTERNAL_MULTIMAP_H
 
-#include <concept_checks.h>
+#include "concept_checks.h"
 
 __STL_BEGIN_NAMESPACE
 

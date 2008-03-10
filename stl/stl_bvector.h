@@ -360,7 +360,7 @@ protected:
 #  define __BVECTOR_BASE      _Bvector_base<_Alloc>
 #  define __BVECTOR_TMPL_LIST template <class _Alloc>
    __STL_END_NAMESPACE
-#  include <stl_vector.h>
+#include "stl_vector.h"
    __STL_BEGIN_NAMESPACE
 #else  /* __STL_CLASS_PARTIAL_SPECIALIZATION && !__STL_NO_BOOL */
 #  undef  __SGI_STL_VECBOOL_TEMPLATE

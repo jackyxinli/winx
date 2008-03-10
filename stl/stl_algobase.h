@@ -42,7 +42,7 @@
 #include "stl_pair.h"
 #endif
 #ifndef __TYPE_TRAITS_H
-#include <type_traits.h>
+#include "type_traits.h"
 #endif
 
 #include <string.h>
