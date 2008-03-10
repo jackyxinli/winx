@@ -27,10 +27,10 @@
 #ifndef __SGI_STL_DEQUE_H
 #define __SGI_STL_DEQUE_H
 
-#include <stl_range_errors.h>
+#include "stl_range_errors.h"
 #include <algobase.h>
 #include <alloc.h>
-#include <stl_deque.h>
+#include "stl_deque.h"
 
 #ifdef __STL_USE_NAMESPACES
 using __STD::deque;

@@ -15,8 +15,8 @@
 #define __SGI_STL_STRING_FWD_H
 
 #include <stddef.h>
-#include <stl_config.h>
-#include <stl_alloc.h>
+#include "stl_config.h"
+#include "stl_alloc.h"
 #include <char_traits.h>
 
 __STL_BEGIN_NAMESPACE

@@ -26,8 +26,8 @@
 #ifndef __SGI_STL_HEAP_H
 #define __SGI_STL_HEAP_H
 
-#include <stl_config.h>
-#include <stl_heap.h>
+#include "stl_config.h"
+#include "stl_heap.h"
 
 #ifdef __STL_USE_NAMESPACES
 

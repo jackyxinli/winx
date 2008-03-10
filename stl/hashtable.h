@@ -31,7 +31,7 @@
 #ifndef __SGI_STL_HASHTABLE_H
 #define __SGI_STL_HASHTABLE_H
 
-#include <stl_hashtable.h>
+#include "stl_hashtable.h"
 #include <algo.h>
 #include <alloc.h>
 #include <vector.h>

@@ -17,7 +17,7 @@
 
 #include <algobase.h>
 #include <alloc.h>
-#include <stl_slist.h>
+#include "stl_slist.h"
 
 #ifdef __STL_USE_NAMESPACES
 using __STD::slist;

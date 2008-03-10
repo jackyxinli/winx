@@ -30,7 +30,7 @@
 #define __SGI_STL_TREE_H
 
 #ifndef __SGI_STL_INTERNAL_TREE_H
-#include <stl_tree.h>
+#include "stl_tree.h"
 #endif
 #include <algobase.h>
 #include <alloc.h>

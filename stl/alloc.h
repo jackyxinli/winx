@@ -15,10 +15,10 @@
 #define __SGI_STL_ALLOC_H
 
 #ifndef __STL_CONFIG_H
-#include <stl_config.h>
+#include "stl_config.h"
 #endif
 #ifndef __SGI_STL_INTERNAL_ALLOC_H
-#include <stl_alloc.h>
+#include "stl_alloc.h"
 #endif
 
 #ifdef __STL_USE_NAMESPACES

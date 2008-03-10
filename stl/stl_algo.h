@@ -31,7 +31,7 @@
 #ifndef __SGI_STL_INTERNAL_ALGO_H
 #define __SGI_STL_INTERNAL_ALGO_H
 
-#include <stl_heap.h>
+#include "stl_heap.h"
 
 // See concept_checks.h for the concept-checking macros 
 // __STL_REQUIRES, __STL_CONVERTIBLE, etc.

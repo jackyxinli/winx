@@ -30,8 +30,8 @@
 #include <vector.h>
 #include <deque.h>
 #include <heap.h>
-#include <stl_stack.h>
-#include <stl_queue.h>
+#include "stl_stack.h"
+#include "stl_queue.h"
 
 #ifdef __STL_USE_NAMESPACES
 using __STD::stack;

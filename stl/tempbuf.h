@@ -37,13 +37,13 @@
 #include <type_traits.h>
 #endif
 #ifndef __SGI_STL_INTERNAL_CONSTRUCT_H
-#include <stl_construct.h>
+#include "stl_construct.h"
 #endif
 #ifndef __SGI_STL_INTERNAL_UNINITIALIZED_H
-#include <stl_uninitialized.h>
+#include "stl_uninitialized.h"
 #endif
 #ifndef __SGI_STL_INTERNAL_TEMPBUF_H
-#include <stl_tempbuf.h>
+#include "stl_tempbuf.h"
 #endif
 
 #ifdef __STL_USE_NAMESPACES

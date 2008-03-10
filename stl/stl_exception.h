@@ -27,7 +27,7 @@
 // in <exception>, but it suffices to support a bare minimum of STL
 // functionality.
 
-#include <stl_config.h>
+#include "stl_config.h"
 
 #ifndef __STL_NO_EXCEPTION_HEADER
 

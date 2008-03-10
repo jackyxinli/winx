@@ -16,7 +16,7 @@
 #define __TYPE_TRAITS_H
 
 #ifndef __STL_CONFIG_H
-#include <stl_config.h>
+#include "stl_config.h"
 #endif
 
 /*

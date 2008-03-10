@@ -33,13 +33,13 @@
 #define __SGI_STL_INTERNAL_ALGOBASE_H
 
 #ifndef __STL_CONFIG_H
-#include <stl_config.h>
+#include "stl_config.h"
 #endif
 #ifndef __SGI_STL_INTERNAL_RELOPS
-#include <stl_relops.h>
+#include "stl_relops.h"
 #endif
 #ifndef __SGI_STL_INTERNAL_PAIR_H
-#include <stl_pair.h>
+#include "stl_pair.h"
 #endif
 #ifndef __TYPE_TRAITS_H
 #include <type_traits.h>
@@ -58,8 +58,8 @@
 #endif /* __STL_USE_NEW_IOSTREAMS */
 
 #ifndef __SGI_STL_INTERNAL_ITERATOR_H
-#include <stl_iterator_base.h>
-#include <stl_iterator.h>
+#include "stl_iterator_base.h"
+#include "stl_iterator.h"
 #endif
 
 // We pick up concept_checks.h from stl_iterator_base.h.

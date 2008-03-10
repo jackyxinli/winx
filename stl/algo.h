@@ -29,8 +29,8 @@
 
 #include <algobase.h>
 #include <tempbuf.h>
-#include <stl_algo.h>
-#include <stl_numeric.h>
+#include "stl_algo.h"
+#include "stl_numeric.h"
 
 #ifdef __STL_USE_NAMESPACES
 
