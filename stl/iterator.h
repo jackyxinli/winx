@@ -28,7 +28,7 @@
 #define __SGI_STL_ITERATOR_H
 
 #ifndef __SGI_STL_FUNCTION_H
-#include <function.h>
+#include "function.h"
 #endif
 #include <stddef.h>
 

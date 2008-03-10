@@ -31,7 +31,7 @@
 #include "stl_tree.h"
 #endif
 #include "algobase.h"
-#include <alloc.h>
+#include "alloc.h"
 #include "stl_map.h"
 
 #ifdef __STL_USE_NAMESPACES

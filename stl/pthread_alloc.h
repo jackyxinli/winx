@@ -14,7 +14,7 @@
 #ifndef __SGI_STL_PTHREAD_ALLOC_H
 #define __SGI_STL_PTHREAD_ALLOC_H
 
-#include <pthread_alloc>
+#include "pthread_alloc"
 
 #ifdef __STL_USE_NAMESPACES
 

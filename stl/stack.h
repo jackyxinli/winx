@@ -27,9 +27,9 @@
 #ifndef __SGI_STL_STACK_H
 #define __SGI_STL_STACK_H
 
-#include <vector.h>
-#include <deque.h>
-#include <heap.h>
+#include "vector.h"
+#include "deque.h"
+#include "heap.h"
 #include "stl_stack.h"
 #include "stl_queue.h"
 

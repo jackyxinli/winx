@@ -28,7 +28,7 @@
 #define __SGI_STL_TEMPBUF_H
 
 #ifndef __SGI_STL_PAIR_H
-#include <pair.h>
+#include "pair.h"
 #endif
 #include <limits.h>      /* XXX should use <climits> */
 #include <stddef.h>      /* XXX should use <cstddef> */

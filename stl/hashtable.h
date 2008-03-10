@@ -32,9 +32,9 @@
 #define __SGI_STL_HASHTABLE_H
 
 #include "stl_hashtable.h"
-#include <algo.h>
-#include <alloc.h>
-#include <vector.h>
+#include "algo.h"
+#include "alloc.h"
+#include "vector.h"
 
 #ifdef __STL_USE_NAMESPACES
 using __STD::hash;

@@ -27,10 +27,10 @@
 #define __SGI_STL_ALGOBASE_H
 
 #ifndef __SGI_STL_PAIR_H
-#include <pair.h>
+#include "pair.h"
 #endif
 #ifndef __SGI_STL_ITERATOR_H
-#include <iterator.h>
+#include "iterator.h"
 #endif
 #ifndef __SGI_STL_INTERNAL_ALGOBASE_H
 #include "stl_algobase.h"

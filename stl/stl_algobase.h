@@ -272,11 +272,7 @@ inline _OutputIter copy(_InputIter __first, _InputIter __last,
                 __DISTANCE_TYPE(__first));
 }
 
-#define __SGI_STL_DECLARE_COPY_TRIVIAL(_Tp)                                \
-  inline _Tp* copy(const _Tp* __first, const _Tp* __last, _Tp* __result) { \
-    memmove(__result, __first, sizeof(_Tp) * (__last - __first));          \
-    return __result + (__last - __first);                                  \
-  }
+#define __SGI_STL_DECLARE_COPY_TRIVIAL(_Tp)                                  inline _Tp* copy(const _Tp* __first, const _Tp* __last, _Tp* __result) {     memmove(__result, __first, sizeof(_Tp) * (__last - __first));              return __result + (__last - __first);                                    }
 
 __SGI_STL_DECLARE_COPY_TRIVIAL(char)
 __SGI_STL_DECLARE_COPY_TRIVIAL(signed char)

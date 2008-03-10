@@ -42,7 +42,7 @@
 #  if defined(__STL_NO_BAD_ALLOC) || !defined(__STL_USE_EXCEPTIONS)
 #    include <stdio.h>
 #    include <stdlib.h>
-#    define __THROW_BAD_ALLOC fprintf(stderr, "out of memory\n"); exit(1)
+#    define __THROW_BAD_ALLOC fprintf(stderr, "out of memoryn"); exit(1)
 #  else /* Standard conforming out-of-memory handling */
 #    include <new>
 #    define __THROW_BAD_ALLOC throw std::bad_alloc()
@@ -71,15 +71,11 @@
 	// The above is copied from malloc.h.  Including <malloc.h>
 	// would be cleaner but fails with certain levels of standard
 	// conformance.
-#   define __NODE_ALLOCATOR_LOCK if (threads && __us_rsthread_malloc) \
-                { _S_node_allocator_lock._M_acquire_lock(); }
-#   define __NODE_ALLOCATOR_UNLOCK if (threads && __us_rsthread_malloc) \
-                { _S_node_allocator_lock._M_release_lock(); }
+#   define __NODE_ALLOCATOR_LOCK if (threads && __us_rsthread_malloc)                 { _S_node_allocator_lock._M_acquire_lock(); }
+#   define __NODE_ALLOCATOR_UNLOCK if (threads && __us_rsthread_malloc)                 { _S_node_allocator_lock._M_release_lock(); }
 # else /* !__STL_SGI_THREADS */
-#   define __NODE_ALLOCATOR_LOCK \
-        { if (threads) _S_node_allocator_lock._M_acquire_lock(); }
-#   define __NODE_ALLOCATOR_UNLOCK \
-        { if (threads) _S_node_allocator_lock._M_release_lock(); }
+#   define __NODE_ALLOCATOR_LOCK         { if (threads) _S_node_allocator_lock._M_acquire_lock(); }
+#   define __NODE_ALLOCATOR_UNLOCK         { if (threads) _S_node_allocator_lock._M_release_lock(); }
 # endif
 #else
 //  Thread-unsafe

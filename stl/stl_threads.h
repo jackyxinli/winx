@@ -45,8 +45,7 @@ __STL_BEGIN_NAMESPACE
 // _M_ref_count.
 
 // Hack for SGI o32 compilers.
-#if defined(__STL_SGI_THREADS) && !defined(__add_and_fetch) && \
-    (__mips < 3 || !(defined (_ABIN32) || defined(_ABI64)))
+#if defined(__STL_SGI_THREADS) && !defined(__add_and_fetch) &&     (__mips < 3 || !(defined (_ABIN32) || defined(_ABI64)))
 #  define __add_and_fetch(__l,__v) add_then_test((unsigned long*)__l,__v)  
 #  define __test_and_set(__l,__v)  test_and_set(__l,__v)
 #endif /* o32 */
@@ -301,8 +300,7 @@ struct _STL_mutex_lock
 #   if defined(__STL_SGI_THREADS) && defined(__GNUC__) && __mips >= 3
         asm("sync");
         *__lock = 0;
-#   elif defined(__STL_SGI_THREADS) && __mips >= 3 \
-         && (defined (_ABIN32) || defined(_ABI64))
+#   elif defined(__STL_SGI_THREADS) && __mips >= 3          && (defined (_ABIN32) || defined(_ABI64))
         __lock_release(__lock);
 #   else 
         *__lock = 0;

@@ -33,7 +33,7 @@
 #include "stl_tree.h"
 #endif
 #include "algobase.h"
-#include <alloc.h>
+#include "alloc.h"
 
 #ifdef __STL_USE_NAMESPACES
 using __STD::rb_tree;

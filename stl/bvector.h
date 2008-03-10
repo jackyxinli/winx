@@ -29,10 +29,10 @@
 
 #include "stl_range_errors.h"
 #ifdef __STL_CLASS_PARTIAL_SPECIALIZATION
-#include <vector.h>
+#include "vector.h"
 #else
 #include "algobase.h"
-#include <alloc.h>
+#include "alloc.h"
 #endif 
 
 #include "stl_bvector.h"

@@ -14,7 +14,7 @@
 #ifndef __SGI_STL_ROPE_H
 #define __SGI_STL_ROPE_H
 
-#include <hashtable.h>
+#include "hashtable.h"
 #include "stl_rope.h"
 
 #ifdef __STL_USE_NAMESPACES

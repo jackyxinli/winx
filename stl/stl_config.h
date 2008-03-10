@@ -195,12 +195,10 @@
 #   if (_COMPILER_VERSION >= 721) && defined(_NAMESPACES)
 #     define __STL_HAS_NAMESPACES
 #   endif 
-#   if (_COMPILER_VERSION < 721) || \
-    !defined(__STL_HAS_NAMESPACES) || defined(__STL_NO_NAMESPACES)
+#   if (_COMPILER_VERSION < 721) ||     !defined(__STL_HAS_NAMESPACES) || defined(__STL_NO_NAMESPACES)
 #     define __STL_NO_EXCEPTION_HEADER
 #   endif
-#   if _COMPILER_VERSION < 730 || !defined(_STANDARD_C_PLUS_PLUS) || \
-      !defined(_NAMESPACES)
+#   if _COMPILER_VERSION < 730 || !defined(_STANDARD_C_PLUS_PLUS) ||       !defined(_NAMESPACES)
 #     define __STL_NO_BAD_ALLOC
 #   endif
 #   if !defined(_NOTHREADS) && !defined(__STL_PTHREADS)
@@ -455,8 +453,7 @@
 #   define __STL_NULL_TMPL_ARGS
 # endif
 
-# if defined(__STL_CLASS_PARTIAL_SPECIALIZATION) \
-     || defined (__STL_PARTIAL_SPECIALIZATION_SYNTAX)
+# if defined(__STL_CLASS_PARTIAL_SPECIALIZATION)      || defined (__STL_PARTIAL_SPECIALIZATION_SYNTAX)
 #   define __STL_TEMPLATE_NULL template<>
 # else
 #   define __STL_TEMPLATE_NULL
@@ -466,13 +463,7 @@
 // features.  __STL_USE_SGI_ALLOCATORS is a hook so that users can 
 // disable new-style allocators, and continue to use the same kind of
 // allocators as before, without having to edit library headers.
-# if defined(__STL_CLASS_PARTIAL_SPECIALIZATION) && \
-     defined(__STL_MEMBER_TEMPLATES) && \
-     defined(__STL_MEMBER_TEMPLATE_CLASSES) && \
-    !defined(__STL_NO_BOOL) && \
-    !defined(__STL_NON_TYPE_TMPL_PARAM_BUG) && \
-    !defined(__STL_LIMITED_DEFAULT_TEMPLATES) && \
-    !defined(__STL_USE_SGI_ALLOCATORS) 
+# if defined(__STL_CLASS_PARTIAL_SPECIALIZATION) &&      defined(__STL_MEMBER_TEMPLATES) &&      defined(__STL_MEMBER_TEMPLATE_CLASSES) &&     !defined(__STL_NO_BOOL) &&     !defined(__STL_NON_TYPE_TMPL_PARAM_BUG) &&     !defined(__STL_LIMITED_DEFAULT_TEMPLATES) &&     !defined(__STL_USE_SGI_ALLOCATORS) 
 #   define __STL_USE_STD_ALLOCATORS
 # endif
 
@@ -494,8 +485,7 @@
 #   define __STD std
 #   define __STL_BEGIN_NAMESPACE namespace std {
 #   define __STL_END_NAMESPACE }
-#   if defined(__STL_FUNCTION_TMPL_PARTIAL_ORDER) && \
-       !defined(__STL_NO_RELOPS_NAMESPACE)
+#   if defined(__STL_FUNCTION_TMPL_PARTIAL_ORDER) &&        !defined(__STL_NO_RELOPS_NAMESPACE)
 #     define __STL_USE_NAMESPACE_FOR_RELOPS
 #     define __STL_BEGIN_RELOPS_NAMESPACE namespace std { namespace rel_ops {
 #     define __STL_END_RELOPS_NAMESPACE } }
@@ -547,24 +537,19 @@
 
 #ifdef __STL_ASSERTIONS
 # include <stdio.h>
-# define __stl_assert(expr) \
-    if (!(expr)) { fprintf(stderr, "%s:%d STL assertion failure: %s\n", \
-			  __FILE__, __LINE__, # expr); abort(); }
+# define __stl_assert(expr)     if (!(expr)) { fprintf(stderr, "%s:%d STL assertion failure: %sn", 			  __FILE__, __LINE__, # expr); abort(); }
 #else
 # define __stl_assert(expr)
 #endif
 
-#if defined(__STL_WIN32THREADS) || defined(__STL_SGI_THREADS) \
-    || defined(__STL_PTHREADS)  || defined(__STL_UITHREADS)
+#if defined(__STL_WIN32THREADS) || defined(__STL_SGI_THREADS)     || defined(__STL_PTHREADS)  || defined(__STL_UITHREADS)
 #   define __STL_THREADS
 #   define __STL_VOLATILE volatile
 #else
 #   define __STL_VOLATILE
 #endif
 
-#if defined(__STL_CLASS_PARTIAL_SPECIALIZATION) \
-    && defined(__STL_MEMBER_TEMPLATES) \
-    && !defined(_STL_NO_CONCEPT_CHECKS)
+#if defined(__STL_CLASS_PARTIAL_SPECIALIZATION)     && defined(__STL_MEMBER_TEMPLATES)     && !defined(_STL_NO_CONCEPT_CHECKS)
 #  define __STL_USE_CONCEPT_CHECKS
 #endif
 

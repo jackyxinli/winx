@@ -29,7 +29,7 @@
 
 #include "stl_range_errors.h"
 #include "algobase.h"
-#include <alloc.h>
+#include "alloc.h"
 #include "stl_vector.h"
 
 #ifdef __STL_USE_NAMESPACES

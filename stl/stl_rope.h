@@ -353,16 +353,7 @@ identity_element(_Rope_Concat_fn<_CharT, _Alloc>)
 //   void name_deallocate(tipe *, size_t)
 // Both functions may or may not be static.
 
-#define __ROPE_DEFINE_ALLOCS(__a) \
-        __ROPE_DEFINE_ALLOC(_CharT,_Data) /* character data */ \
-        typedef _Rope_RopeConcatenation<_CharT,__a> __C; \
-        __ROPE_DEFINE_ALLOC(__C,_C) \
-        typedef _Rope_RopeLeaf<_CharT,__a> __L; \
-        __ROPE_DEFINE_ALLOC(__L,_L) \
-        typedef _Rope_RopeFunction<_CharT,__a> __F; \
-        __ROPE_DEFINE_ALLOC(__F,_F) \
-        typedef _Rope_RopeSubstring<_CharT,__a> __S; \
-        __ROPE_DEFINE_ALLOC(__S,_S)
+#define __ROPE_DEFINE_ALLOCS(__a)         __ROPE_DEFINE_ALLOC(_CharT,_Data) /* character data */         typedef _Rope_RopeConcatenation<_CharT,__a> __C;         __ROPE_DEFINE_ALLOC(__C,_C)         typedef _Rope_RopeLeaf<_CharT,__a> __L;         __ROPE_DEFINE_ALLOC(__L,_L)         typedef _Rope_RopeFunction<_CharT,__a> __F;         __ROPE_DEFINE_ALLOC(__F,_F)         typedef _Rope_RopeSubstring<_CharT,__a> __S;         __ROPE_DEFINE_ALLOC(__S,_S)
 
 //  Internal rope nodes potentially store a copy of the allocator
 //  instance used to allocate them.  This is mostly redundant.
@@ -394,13 +385,7 @@ public:
 protected:
     allocator_type _M_data_allocator;
 
-# define __ROPE_DEFINE_ALLOC(_Tp, __name) \
-        typedef typename \
-          _Alloc_traits<_Tp,_Allocator>::allocator_type __name##Allocator; \
-        /*static*/ _Tp * __name##_allocate(size_t __n) \
-          { return __name##Allocator(_M_data_allocator).allocate(__n); } \
-        void __name##_deallocate(_Tp* __p, size_t __n) \
-          { __name##Allocator(_M_data_allocator).deallocate(__p, __n); }
+# define __ROPE_DEFINE_ALLOC(_Tp, __name)         typedef typename           _Alloc_traits<_Tp,_Allocator>::allocator_type __name##Allocator;         /*static*/ _Tp * __name##_allocate(size_t __n)           { return __name##Allocator(_M_data_allocator).allocate(__n); }         void __name##_deallocate(_Tp* __p, size_t __n)           { __name##Allocator(_M_data_allocator).deallocate(__p, __n); }
   __ROPE_DEFINE_ALLOCS(_Allocator);
 # undef __ROPE_DEFINE_ALLOC
 };
@@ -419,15 +404,7 @@ public:
   
 protected:
 
-# define __ROPE_DEFINE_ALLOC(_Tp, __name) \
-        typedef typename \
-          _Alloc_traits<_Tp,_Allocator>::_Alloc_type __name##Alloc; \
-        typedef typename \
-          _Alloc_traits<_Tp,_Allocator>::allocator_type __name##Allocator; \
-        static _Tp* __name##_allocate(size_t __n) \
-                { return __name##Alloc::allocate(__n); } \
-        void __name##_deallocate(_Tp *__p, size_t __n) \
-                { __name##Alloc::deallocate(__p, __n); }
+# define __ROPE_DEFINE_ALLOC(_Tp, __name)         typedef typename           _Alloc_traits<_Tp,_Allocator>::_Alloc_type __name##Alloc;         typedef typename           _Alloc_traits<_Tp,_Allocator>::allocator_type __name##Allocator;         static _Tp* __name##_allocate(size_t __n)                 { return __name##Alloc::allocate(__n); }         void __name##_deallocate(_Tp *__p, size_t __n)                 { __name##Alloc::deallocate(__p, __n); }
   __ROPE_DEFINE_ALLOCS(_Allocator);
 # undef __ROPE_DEFINE_ALLOC
 };
@@ -459,12 +436,7 @@ public:
 
 protected:
 
-# define __ROPE_DEFINE_ALLOC(_Tp, __name) \
-        typedef simple_alloc<_Tp, _Alloc> __name##Alloc; \
-        static _Tp* __name##_allocate(size_t __n) \
-                { return __name##Alloc::allocate(__n); } \
-        static void __name##_deallocate(_Tp* __p, size_t __n) \
-                { __name##Alloc::deallocate(__p, __n); }
+# define __ROPE_DEFINE_ALLOC(_Tp, __name)         typedef simple_alloc<_Tp, _Alloc> __name##Alloc;         static _Tp* __name##_allocate(size_t __n)                 { return __name##Alloc::allocate(__n); }         static void __name##_deallocate(_Tp* __p, size_t __n)                 { __name##Alloc::deallocate(__p, __n); }
   __ROPE_DEFINE_ALLOCS(_Alloc);
 # undef __ROPE_DEFINE_ALLOC
 };
@@ -829,13 +801,7 @@ class _Rope_char_ref_proxy {
 // the only unusual operation it uses is the copy constructor, which
 // is needed for other purposes.  We provide a macro for
 // full specializations, and instantiate the most common case.
-# define _ROPE_SWAP_SPECIALIZATION(_CharT, __Alloc) \
-    inline void swap(_Rope_char_ref_proxy <_CharT, __Alloc > __a, \
-                     _Rope_char_ref_proxy <_CharT, __Alloc > __b) { \
-        _CharT __tmp = __a; \
-        __a = __b; \
-        __b = __tmp; \
-    }
+# define _ROPE_SWAP_SPECIALIZATION(_CharT, __Alloc)     inline void swap(_Rope_char_ref_proxy <_CharT, __Alloc > __a,                      _Rope_char_ref_proxy <_CharT, __Alloc > __b) {         _CharT __tmp = __a;         __a = __b;         __b = __tmp;     }
 
 _ROPE_SWAP_SPECIALIZATION(char,__STL_DEFAULT_ALLOCATOR(char))
 
@@ -1276,13 +1242,7 @@ protected:
     allocator_type _M_data_allocator;
     _RopeRep* _M_tree_ptr;
 
-# define __ROPE_DEFINE_ALLOC(_Tp, __name) \
-        typedef typename \
-          _Alloc_traits<_Tp,_Allocator>::allocator_type __name##Allocator; \
-        _Tp* __name##_allocate(size_t __n) const \
-          { return __name##Allocator(_M_data_allocator).allocate(__n); } \
-        void __name##_deallocate(_Tp *__p, size_t __n) const \
-                { __name##Allocator(_M_data_allocator).deallocate(__p, __n); }
+# define __ROPE_DEFINE_ALLOC(_Tp, __name)         typedef typename           _Alloc_traits<_Tp,_Allocator>::allocator_type __name##Allocator;         _Tp* __name##_allocate(size_t __n) const           { return __name##Allocator(_M_data_allocator).allocate(__n); }         void __name##_deallocate(_Tp *__p, size_t __n) const                 { __name##Allocator(_M_data_allocator).deallocate(__p, __n); }
   __ROPE_DEFINE_ALLOCS(_Allocator)
 # undef __ROPE_DEFINE_ALLOC
 };
@@ -1304,15 +1264,7 @@ protected:
   // The only data member of a rope:
     _RopeRep *_M_tree_ptr;
 
-# define __ROPE_DEFINE_ALLOC(_Tp, __name) \
-        typedef typename \
-          _Alloc_traits<_Tp,_Allocator>::_Alloc_type __name##Alloc; \
-        typedef typename \
-          _Alloc_traits<_Tp,_Allocator>::allocator_type __name##Allocator; \
-        static _Tp* __name##_allocate(size_t __n) \
-          { return __name##Alloc::allocate(__n); } \
-        static void __name##_deallocate(_Tp *__p, size_t __n) \
-          { __name##Alloc::deallocate(__p, __n); }
+# define __ROPE_DEFINE_ALLOC(_Tp, __name)         typedef typename           _Alloc_traits<_Tp,_Allocator>::_Alloc_type __name##Alloc;         typedef typename           _Alloc_traits<_Tp,_Allocator>::allocator_type __name##Allocator;         static _Tp* __name##_allocate(size_t __n)           { return __name##Alloc::allocate(__n); }         static void __name##_deallocate(_Tp *__p, size_t __n)           { __name##Alloc::deallocate(__p, __n); }
   __ROPE_DEFINE_ALLOCS(_Allocator)
 # undef __ROPE_DEFINE_ALLOC
 };
@@ -1347,12 +1299,7 @@ protected:
   // The only data member of a rope:
     _RopeRep* _M_tree_ptr;
 
-# define __ROPE_DEFINE_ALLOC(_Tp, __name) \
-        typedef simple_alloc<_Tp, _Alloc> __name##Alloc; \
-        static _Tp* __name##_allocate(size_t __n) \
-                { return __name##Alloc::allocate(__n); } \
-        static void __name##_deallocate(_Tp *__p, size_t __n) \
-                { __name##Alloc::deallocate(__p, __n); }
+# define __ROPE_DEFINE_ALLOC(_Tp, __name)         typedef simple_alloc<_Tp, _Alloc> __name##Alloc;         static _Tp* __name##_allocate(size_t __n)                 { return __name##Alloc::allocate(__n); }         static void __name##_deallocate(_Tp *__p, size_t __n)                 { __name##Alloc::deallocate(__p, __n); }
   __ROPE_DEFINE_ALLOCS(_Alloc)
 # undef __ROPE_DEFINE_ALLOC
 };
@@ -1541,14 +1488,12 @@ class rope : public _Rope_base<_CharT,_Alloc> {
           static
           _RopeLeaf* _S_RopeLeaf_from_unowned_char_ptr(const _CharT *__s,
                        size_t __size, allocator_type __a)
-#         define __STL_ROPE_FROM_UNOWNED_CHAR_PTR(__s, __size, __a) \
-                _S_RopeLeaf_from_unowned_char_ptr(__s, __size, __a)     
+#         define __STL_ROPE_FROM_UNOWNED_CHAR_PTR(__s, __size, __a)                 _S_RopeLeaf_from_unowned_char_ptr(__s, __size, __a)     
 #       else
           static
           _RopeLeaf* _S_RopeLeaf_from_unowned_char_ptr2(const _CharT* __s,
                                                         size_t __size)
-#         define __STL_ROPE_FROM_UNOWNED_CHAR_PTR(__s, __size, __a) \
-               _S_RopeLeaf_from_unowned_char_ptr2(__s, __size)
+#         define __STL_ROPE_FROM_UNOWNED_CHAR_PTR(__s, __size, __a)                _S_RopeLeaf_from_unowned_char_ptr2(__s, __size)
 #       endif
         {
             if (0 == __size) return 0;
@@ -2705,7 +2650,7 @@ __STL_TEMPLATE_NULL struct hash<wrope>
 
 __STL_END_NAMESPACE
 
-# include <ropeimpl.h>
+#include "ropeimpl.h"
 
 # endif /* __SGI_STL_INTERNAL_ROPE_H */
 

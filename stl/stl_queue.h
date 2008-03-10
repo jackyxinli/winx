@@ -31,7 +31,7 @@
 #ifndef __SGI_STL_INTERNAL_QUEUE_H
 #define __SGI_STL_INTERNAL_QUEUE_H
 
-#include <sequence_concepts.h>
+#include "sequence_concepts.h"
 
 __STL_BEGIN_NAMESPACE
 

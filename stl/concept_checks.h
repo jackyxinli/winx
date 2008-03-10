@@ -49,26 +49,18 @@
 // Some compilers lack the features that are necessary for concept checks.
 // On those compilers we define the concept check macros to do nothing.
 #define __STL_REQUIRES(__type_var, __concept) do {} while(0)
-#define __STL_CLASS_REQUIRES(__type_var, __concept) \
-  static int  __##__type_var##_##__concept
+#define __STL_CLASS_REQUIRES(__type_var, __concept)   static int  __##__type_var##_##__concept
 #define __STL_CONVERTIBLE(__type_x, __type_y) do {} while(0)
 #define __STL_REQUIRES_SAME_TYPE(__type_x, __type_y) do {} while(0)
-#define __STL_CLASS_REQUIRES_SAME_TYPE(__type_x, __type_y) \
-  static int  __##__type_x##__type_y##_require_same_type
+#define __STL_CLASS_REQUIRES_SAME_TYPE(__type_x, __type_y)   static int  __##__type_x##__type_y##_require_same_type
 #define __STL_GENERATOR_CHECK(__func, __ret) do {} while(0)
-#define __STL_CLASS_GENERATOR_CHECK(__func, __ret) \
-  static int  __##__func##__ret##_generator_check
+#define __STL_CLASS_GENERATOR_CHECK(__func, __ret)   static int  __##__func##__ret##_generator_check
 #define __STL_UNARY_FUNCTION_CHECK(__func, __ret, __arg) do {} while(0)
-#define __STL_CLASS_UNARY_FUNCTION_CHECK(__func, __ret, __arg) \
-  static int  __##__func##__ret##__arg##_unary_function_check
-#define __STL_BINARY_FUNCTION_CHECK(__func, __ret, __first, __second) \
-  do {} while(0)
-#define __STL_CLASS_BINARY_FUNCTION_CHECK(__func, __ret, __first, __second) \
-  static int  __##__func##__ret##__first##__second##_binary_function_check
-#define __STL_REQUIRES_BINARY_OP(__opname, __ret, __first, __second) \
-  do {} while(0)
-#define __STL_CLASS_REQUIRES_BINARY_OP(__opname, __ret, __first, __second) \
-  static int __##__opname##__ret##__first##__second##_require_binary_op
+#define __STL_CLASS_UNARY_FUNCTION_CHECK(__func, __ret, __arg)   static int  __##__func##__ret##__arg##_unary_function_check
+#define __STL_BINARY_FUNCTION_CHECK(__func, __ret, __first, __second)   do {} while(0)
+#define __STL_CLASS_BINARY_FUNCTION_CHECK(__func, __ret, __first, __second)   static int  __##__func##__ret##__first##__second##_binary_function_check
+#define __STL_REQUIRES_BINARY_OP(__opname, __ret, __first, __second)   do {} while(0)
+#define __STL_CLASS_REQUIRES_BINARY_OP(__opname, __ret, __first, __second)   static int __##__opname##__ret##__first##__second##_require_binary_op
 
 #else /* __STL_USE_CONCEPT_CHECKS */
 
@@ -91,59 +83,26 @@
 //       _Mutable_BidirectionalIterator
 //       _Mutable_RandomAccessIterator
 
-#define __STL_REQUIRES(__type_var, __concept) \
-do { \
-  void (*__x)( __type_var ) = __concept##_concept_specification< __type_var >\
-    ::__concept##_requirement_violation; __x = __x; } while (0)
+#define __STL_REQUIRES(__type_var, __concept) do {   void (*__x)( __type_var ) = __concept##_concept_specification< __type_var >    ::__concept##_requirement_violation; __x = __x; } while (0)
 
 // Use this to check whether type X is convertible to type Y
-#define __STL_CONVERTIBLE(__type_x, __type_y) \
-do { \
-  void (*__x)( __type_x , __type_y ) = _STL_CONVERT_ERROR< __type_x , \
-  __type_y >::__type_X_is_not_convertible_to_type_Y; \
-  __x = __x; } while (0)
+#define __STL_CONVERTIBLE(__type_x, __type_y) do {   void (*__x)( __type_x , __type_y ) = _STL_CONVERT_ERROR< __type_x ,   __type_y >::__type_X_is_not_convertible_to_type_Y;   __x = __x; } while (0)
 
 // Use this to test whether two template arguments are the same type
-#define __STL_REQUIRES_SAME_TYPE(__type_x, __type_y) \
-do { \
-  void (*__x)( __type_x , __type_y ) = _STL_SAME_TYPE_ERROR< __type_x, \
-    __type_y  >::__type_X_not_same_as_type_Y; \
-  __x = __x; } while (0)
+#define __STL_REQUIRES_SAME_TYPE(__type_x, __type_y) do {   void (*__x)( __type_x , __type_y ) = _STL_SAME_TYPE_ERROR< __type_x,     __type_y  >::__type_X_not_same_as_type_Y;   __x = __x; } while (0)
 
 
 // function object checks
-#define __STL_GENERATOR_CHECK(__func, __ret) \
-do { \
-  __ret (*__x)( __func&) = \
-     _STL_GENERATOR_ERROR< \
-  __func, __ret>::__generator_requirement_violation; \
-  __x = __x; } while (0)
+#define __STL_GENERATOR_CHECK(__func, __ret) do {   __ret (*__x)( __func&) =      _STL_GENERATOR_ERROR<   __func, __ret>::__generator_requirement_violation;   __x = __x; } while (0)
 
 
-#define __STL_UNARY_FUNCTION_CHECK(__func, __ret, __arg) \
-do { \
-  __ret (*__x)( __func&, const __arg& ) = \
-     _STL_UNARY_FUNCTION_ERROR< \
-  __func, __ret, __arg>::__unary_function_requirement_violation; \
-  __x = __x; } while (0)
+#define __STL_UNARY_FUNCTION_CHECK(__func, __ret, __arg) do {   __ret (*__x)( __func&, const __arg& ) =      _STL_UNARY_FUNCTION_ERROR<   __func, __ret, __arg>::__unary_function_requirement_violation;   __x = __x; } while (0)
 
 
-#define __STL_BINARY_FUNCTION_CHECK(__func, __ret, __first, __second) \
-do { \
-  __ret (*__x)( __func&, const __first&, const __second& ) = \
-     _STL_BINARY_FUNCTION_ERROR< \
-  __func, __ret, __first, __second>::__binary_function_requirement_violation; \
-  __x = __x; } while (0)
+#define __STL_BINARY_FUNCTION_CHECK(__func, __ret, __first, __second) do {   __ret (*__x)( __func&, const __first&, const __second& ) =      _STL_BINARY_FUNCTION_ERROR<   __func, __ret, __first, __second>::__binary_function_requirement_violation;   __x = __x; } while (0)
 
 
-#define __STL_REQUIRES_BINARY_OP(__opname, __ret, __first, __second) \
-    do { \
-  __ret (*__x)( __first&, __second& ) = _STL_BINARY##__opname##_ERROR< \
-    __ret, __first, __second>::__binary_operator_requirement_violation; \
-  __ret (*__y)( const __first&, const __second& ) = \
-    _STL_BINARY##__opname##_ERROR< __ret, __first, __second>:: \
-      __const_binary_operator_requirement_violation; \
-  __y = __y; __x = __x; } while (0)
+#define __STL_REQUIRES_BINARY_OP(__opname, __ret, __first, __second)     do {   __ret (*__x)( __first&, __second& ) = _STL_BINARY##__opname##_ERROR<     __ret, __first, __second>::__binary_operator_requirement_violation;   __ret (*__y)( const __first&, const __second& ) =     _STL_BINARY##__opname##_ERROR< __ret, __first, __second>::       __const_binary_operator_requirement_violation;   __y = __y; __x = __x; } while (0)
 
 
 #ifdef __STL_NO_FUNCTION_PTR_IN_CLASS_TEMPLATE
@@ -162,67 +121,22 @@ do { \
 // Warning: do not pass pointers and such (e.g. T*) in as the __type_var,
 // since the type_var is used to construct identifiers. Instead typedef
 // the pointer type, then use the typedef name for the __type_var.
-#define __STL_CLASS_REQUIRES(__type_var, __concept) \
-  typedef void (* __func##__type_var##__concept)( __type_var ); \
-  template <__func##__type_var##__concept _Tp1> \
-  struct __dummy_struct_##__type_var##__concept { }; \
-  static __dummy_struct_##__type_var##__concept< \
-    __concept##_concept_specification< \
-      __type_var>::__concept##_requirement_violation>  \
-  __dummy_ptr_##__type_var##__concept
+#define __STL_CLASS_REQUIRES(__type_var, __concept)   typedef void (* __func##__type_var##__concept)( __type_var );   template <__func##__type_var##__concept _Tp1>   struct __dummy_struct_##__type_var##__concept { };   static __dummy_struct_##__type_var##__concept<     __concept##_concept_specification<       __type_var>::__concept##_requirement_violation>    __dummy_ptr_##__type_var##__concept
 
 
-#define __STL_CLASS_REQUIRES_SAME_TYPE(__type_x, __type_y) \
-  typedef void (* __func_##__type_x##__type_y##same_type)( __type_x, \
-                                                            __type_y ); \
-  template < __func_##__type_x##__type_y##same_type _Tp1> \
-  struct __dummy_struct_##__type_x##__type_y##_same_type { }; \
-  static __dummy_struct_##__type_x##__type_y##_same_type< \
-    _STL_SAME_TYPE_ERROR<__type_x, __type_y>::__type_X_not_same_as_type_Y>  \
-  __dummy_ptr_##__type_x##__type_y##_same_type
+#define __STL_CLASS_REQUIRES_SAME_TYPE(__type_x, __type_y)   typedef void (* __func_##__type_x##__type_y##same_type)( __type_x,                                                             __type_y );   template < __func_##__type_x##__type_y##same_type _Tp1>   struct __dummy_struct_##__type_x##__type_y##_same_type { };   static __dummy_struct_##__type_x##__type_y##_same_type<     _STL_SAME_TYPE_ERROR<__type_x, __type_y>::__type_X_not_same_as_type_Y>    __dummy_ptr_##__type_x##__type_y##_same_type
 
 
-#define __STL_CLASS_GENERATOR_CHECK(__func, __ret) \
-  typedef __ret (* __f_##__func##__ret##_generator)( __func& ); \
-  template <__f_##__func##__ret##_generator _Tp1> \
-  struct __dummy_struct_##__func##__ret##_generator { }; \
-  static __dummy_struct_##__func##__ret##_generator< \
-    _STL_GENERATOR_ERROR< \
-      __func, __ret>::__generator_requirement_violation>  \
-  __dummy_ptr_##__func##__ret##_generator
+#define __STL_CLASS_GENERATOR_CHECK(__func, __ret)   typedef __ret (* __f_##__func##__ret##_generator)( __func& );   template <__f_##__func##__ret##_generator _Tp1>   struct __dummy_struct_##__func##__ret##_generator { };   static __dummy_struct_##__func##__ret##_generator<     _STL_GENERATOR_ERROR<       __func, __ret>::__generator_requirement_violation>    __dummy_ptr_##__func##__ret##_generator
 
 
-#define __STL_CLASS_UNARY_FUNCTION_CHECK(__func, __ret, __arg) \
-  typedef __ret (* __f_##__func##__ret##__arg##_unary_check)( __func&, \
-                                                         const __arg& ); \
-  template <__f_##__func##__ret##__arg##_unary_check _Tp1> \
-  struct __dummy_struct_##__func##__ret##__arg##_unary_check { }; \
-  static __dummy_struct_##__func##__ret##__arg##_unary_check< \
-    _STL_UNARY_FUNCTION_ERROR< \
-      __func, __ret, __arg>::__unary_function_requirement_violation>  \
-  __dummy_ptr_##__func##__ret##__arg##_unary_check
+#define __STL_CLASS_UNARY_FUNCTION_CHECK(__func, __ret, __arg)   typedef __ret (* __f_##__func##__ret##__arg##_unary_check)( __func&,                                                          const __arg& );   template <__f_##__func##__ret##__arg##_unary_check _Tp1>   struct __dummy_struct_##__func##__ret##__arg##_unary_check { };   static __dummy_struct_##__func##__ret##__arg##_unary_check<     _STL_UNARY_FUNCTION_ERROR<       __func, __ret, __arg>::__unary_function_requirement_violation>    __dummy_ptr_##__func##__ret##__arg##_unary_check
 
 
-#define __STL_CLASS_BINARY_FUNCTION_CHECK(__func, __ret, __first, __second) \
-  typedef __ret (* __f_##__func##__ret##__first##__second##_binary_check)( __func&, const __first&,\
-                                                    const __second& ); \
-  template <__f_##__func##__ret##__first##__second##_binary_check _Tp1> \
-  struct __dummy_struct_##__func##__ret##__first##__second##_binary_check { }; \
-  static __dummy_struct_##__func##__ret##__first##__second##_binary_check< \
-    _STL_BINARY_FUNCTION_ERROR<__func, __ret, __first, __second>:: \
-  __binary_function_requirement_violation>  \
-  __dummy_ptr_##__func##__ret##__first##__second##_binary_check
+#define __STL_CLASS_BINARY_FUNCTION_CHECK(__func, __ret, __first, __second)   typedef __ret (* __f_##__func##__ret##__first##__second##_binary_check)( __func&, const __first&,                                                    const __second& );   template <__f_##__func##__ret##__first##__second##_binary_check _Tp1>   struct __dummy_struct_##__func##__ret##__first##__second##_binary_check { };   static __dummy_struct_##__func##__ret##__first##__second##_binary_check<     _STL_BINARY_FUNCTION_ERROR<__func, __ret, __first, __second>::   __binary_function_requirement_violation>    __dummy_ptr_##__func##__ret##__first##__second##_binary_check
 
 
-#define __STL_CLASS_REQUIRES_BINARY_OP(__opname, __ret, __first, __second) \
-  typedef __ret (* __f_##__func##__ret##__first##__second##_binary_op)(const __first&, \
-                                                    const __second& ); \
-  template <__f_##__func##__ret##__first##__second##_binary_op _Tp1> \
-  struct __dummy_struct_##__func##__ret##__first##__second##_binary_op { }; \
-  static __dummy_struct_##__func##__ret##__first##__second##_binary_op< \
-    _STL_BINARY##__opname##_ERROR<__ret, __first, __second>:: \
-  __binary_operator_requirement_violation>  \
-  __dummy_ptr_##__func##__ret##__first##__second##_binary_op
+#define __STL_CLASS_REQUIRES_BINARY_OP(__opname, __ret, __first, __second)   typedef __ret (* __f_##__func##__ret##__first##__second##_binary_op)(const __first&,                                                     const __second& );   template <__f_##__func##__ret##__first##__second##_binary_op _Tp1>   struct __dummy_struct_##__func##__ret##__first##__second##_binary_op { };   static __dummy_struct_##__func##__ret##__first##__second##_binary_op<     _STL_BINARY##__opname##_ERROR<__ret, __first, __second>::   __binary_operator_requirement_violation>    __dummy_ptr_##__func##__ret##__first##__second##_binary_op
 
 #endif
 
@@ -320,20 +234,7 @@ struct _STL_BINARY_FUNCTION_ERROR<_Func, void, _First, _Second> {
 };
 
 
-#define __STL_DEFINE_BINARY_OP_CHECK(_OP, _NAME) \
-template <class _Ret, class _First, class _Second> \
-struct _STL_BINARY##_NAME##_ERROR { \
-  static _Ret \
-  __const_binary_operator_requirement_violation(const _First& __first,  \
-                                                const _Second& __second) { \
-    return __first _OP __second; \
-  } \
-  static _Ret \
-  __binary_operator_requirement_violation(_First& __first,  \
-                                          _Second& __second) { \
-    return __first _OP __second; \
-  } \
-}
+#define __STL_DEFINE_BINARY_OP_CHECK(_OP, _NAME) template <class _Ret, class _First, class _Second> struct _STL_BINARY##_NAME##_ERROR {   static _Ret   __const_binary_operator_requirement_violation(const _First& __first,                                                  const _Second& __second) {     return __first _OP __second;   }   static _Ret   __binary_operator_requirement_violation(_First& __first,                                            _Second& __second) {     return __first _OP __second;   } }
 
 __STL_DEFINE_BINARY_OP_CHECK(==, _OP_EQUAL);
 __STL_DEFINE_BINARY_OP_CHECK(!=, _OP_NOT_EQUAL);
@@ -763,11 +664,7 @@ _Mutable_RandomAccessIterator_requirement_violation(_RandAccIter __i)
 }
 };
 
-#define __STL_TYPEDEF_REQUIREMENT(__REQUIREMENT) \
-template <class Type> \
-struct __##__REQUIREMENT##__typedef_requirement_violation { \
-  typedef typename Type::__REQUIREMENT __REQUIREMENT; \
-}
+#define __STL_TYPEDEF_REQUIREMENT(__REQUIREMENT) template <class Type> struct __##__REQUIREMENT##__typedef_requirement_violation {   typedef typename Type::__REQUIREMENT __REQUIREMENT; }
 
 __STL_TYPEDEF_REQUIREMENT(value_type);
 __STL_TYPEDEF_REQUIREMENT(difference_type);

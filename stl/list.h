@@ -28,7 +28,7 @@
 #define __SGI_STL_LIST_H
 
 #include "algobase.h"
-#include <alloc.h>
+#include "alloc.h"
 #include "stl_list.h"
 
 #ifdef __STL_USE_NAMESPACES

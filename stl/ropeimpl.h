@@ -24,7 +24,7 @@
 #endif /* __STL_USE_NEW_IOSTREAMS */
 
 #ifdef __STL_USE_EXCEPTIONS
-# include <stdexcept>
+#include "stdexcept"
 #endif
 
 __STL_BEGIN_NAMESPACE
@@ -1035,7 +1035,7 @@ rope<_CharT,_Alloc>::_S_dump(_RopeRep* __r, int __indent)
 {
     for (int __i = 0; __i < __indent; __i++) putchar(' ');
     if (0 == __r) {
-	printf("NULL\n"); return;
+	printf("NULLn"); return;
     }
     if (_RopeRep::_S_concat == __r->_M_tag) {
 	_RopeConcatenation* __c = (_RopeConcatenation*)__r;
@@ -1043,11 +1043,11 @@ rope<_CharT,_Alloc>::_S_dump(_RopeRep* __r, int __indent)
 	_RopeRep* __right = __c->_M_right;
 
 #       ifdef __GC
-	  printf("Concatenation %p (depth = %d, len = %ld, %s balanced)\n",
+	  printf("Concatenation %p (depth = %d, len = %ld, %s balanced)n",
 	    __r, __r->_M_depth, __r->_M_size, __r->_M_is_balanced? "" : "not");
 #       else
 	  printf("Concatenation %p (rc = %ld, depth = %d, "
-	           "len = %ld, %s balanced)\n",
+	           "len = %ld, %s balanced)n",
 		 __r, __r->_M_ref_count, __r->_M_depth, __r->_M_size,
 		 __r->_M_is_balanced? "" : "not");
 #       endif
@@ -1085,10 +1085,10 @@ rope<_CharT,_Alloc>::_S_dump(_RopeRep* __r, int __indent)
 
 	    _S_flatten(__prefix, __buffer);
 	    __buffer[__prefix->_M_size] = _S_eos((_CharT*)0); 
-	    printf("%s%s\n", 
-	           (char*)__buffer, __too_big? "...\n" : "\n");
+	    printf("%s%sn", 
+	           (char*)__buffer, __too_big? "...n" : "n");
 	} else {
-	    printf("\n");
+	    printf("n");
 	}
     }
 }

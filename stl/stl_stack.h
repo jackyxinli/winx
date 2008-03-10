@@ -31,7 +31,7 @@
 #ifndef __SGI_STL_INTERNAL_STACK_H
 #define __SGI_STL_INTERNAL_STACK_H
 
-#include <sequence_concepts.h>
+#include "sequence_concepts.h"
 
 __STL_BEGIN_NAMESPACE
 

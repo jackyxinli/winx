@@ -24,17 +24,13 @@
 
 #include "stl_config.h"
 
-#if defined(__STL_CAN_THROW_RANGE_ERRORS) && \
-    defined(__STL_USE_EXCEPTIONS) && \
-    !defined(__STL_DONT_THROW_RANGE_ERRORS)
+#if defined(__STL_CAN_THROW_RANGE_ERRORS) &&     defined(__STL_USE_EXCEPTIONS) &&     !defined(__STL_DONT_THROW_RANGE_ERRORS)
 # define __STL_THROW_RANGE_ERRORS
 #endif
 
 // For the SGI 7.3 compiler, declare these functions here and define them
 // elsewhere.
-#if defined(__STL_THROW_RANGE_ERRORS) && \
-    defined(__sgi) && !defined(__GNUC__) && \
-    _COMPILER_VERSION >= 730 && defined(_STANDARD_C_PLUS_PLUS)
+#if defined(__STL_THROW_RANGE_ERRORS) &&     defined(__sgi) && !defined(__GNUC__) &&     _COMPILER_VERSION >= 730 && defined(_STANDARD_C_PLUS_PLUS)
 
 __STL_BEGIN_NAMESPACE
 void __stl_throw_range_error(const char* __msg);
@@ -45,7 +41,7 @@ __STL_END_NAMESPACE
 // stdexcept header and throw the appropriate exceptions directly.
 #elif defined(__STL_THROW_RANGE_ERRORS)
 
-#include <stdexcept>
+#include "stdexcept"
 
 __STL_BEGIN_NAMESPACE
 inline void __stl_throw_range_error(const char* __msg) 
