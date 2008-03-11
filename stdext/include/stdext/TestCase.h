@@ -25,7 +25,7 @@
 
 #if defined(X_STL_SGI)
 	#ifndef __SGI_STL_ITERATOR_H
-	#include "../../stl/iterator.h"
+	#include "../../../stl/iterator.h"
 	#endif
 #else
 	#ifndef _ITERATOR_

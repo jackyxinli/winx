@@ -25,11 +25,11 @@
 
 #if defined(X_STL_SGI)
 	#ifndef __SGI_STL_VECTOR_H
-	#include "../../stl/vector.h"
+	#include "../../../stl/vector.h"
 	#endif
 
 	#ifndef __SGI_STL_ALGORITHM
-	#include "../../stl/algorithm"
+	#include "../../../stl/algorithm"
 	#endif
 #else
 	#ifndef _VECTOR_

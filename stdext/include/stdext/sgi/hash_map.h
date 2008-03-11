@@ -33,11 +33,11 @@
 #endif
 
 #ifndef __SGI_STL_INTERNAL_HASHTABLE_H
-#include "../../stl/stl_hashtable.h"
+#include "../../../../stl/stl_hashtable.h"
 #endif 
 
 #ifndef __SGI_STL_HASH_MAP_H
-#include "../../stl/hash_map.h"
+#include "../../../../stl/hash_map.h"
 #endif
 
 // -------------------------------------------------------------------------

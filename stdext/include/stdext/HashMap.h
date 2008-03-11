@@ -20,7 +20,7 @@
 #define __STDEXT_HASHMAP_H__
 
 #ifndef __SGI_HASH_MAP_H__
-#include "../sgi/hash_map.h"
+#include "sgi/hash_map.h"
 #endif
 
 #ifndef __STDEXT_MEMORY_H__

@@ -37,7 +37,7 @@
 
 #if defined(X_STL_SGI)
 	#ifndef __SGI_STL_STRING
-	#include "../../stl/string"
+	#include "../../../stl/string"
 	#endif
 #else
 	#ifndef _STRING_

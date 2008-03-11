@@ -28,13 +28,13 @@
 // -------------------------------------------------------------------------
 
 #ifndef __STL_CONFIG_H
-#include "../../stl/stl_config.h"
+#include "../../../../stl/stl_config.h"
 #endif
 
 // -------------------------------------------------------------------------
 
 #ifndef __STDEXT_MEMORY_H__
-#include "../stdext/Memory.h"
+#include "../Memory.h"
 #endif
 
 namespace stdext
