@@ -14,16 +14,16 @@
 #ifndef __SGI_STL_ROPE
 #define __SGI_STL_ROPE
 
-#include <stl_algobase.h>
-#include <stl_tempbuf.h>
-#include <stl_algo.h>
-#include <stl_function.h>
-#include <stl_numeric.h>
-#include <stl_alloc.h>
-#include <stl_construct.h>
-#include <stl_uninitialized.h>
-#include <stl_hash_fun.h>
-#include <stl_rope.h>
+#include "stl_algobase.h"
+#include "stl_tempbuf.h"
+#include "stl_algo.h"
+#include "stl_function.h"
+#include "stl_numeric.h"
+#include "stl_alloc.h"
+#include "stl_construct.h"
+#include "stl_uninitialized.h"
+#include "stl_hash_fun.h"
+#include "stl_rope.h"
 
 #endif /* __SGI_STL_ROPE */
 

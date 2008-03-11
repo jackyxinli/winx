@@ -15,18 +15,17 @@
 #ifndef __SGI_STL_MEMORY
 #define __SGI_STL_MEMORY
 
-#include <stl_algobase.h>
-#include <stl_alloc.h>
-#include <stl_construct.h>
-#include <stl_tempbuf.h>
-#include <stl_uninitialized.h>
-#include <stl_raw_storage_iter.h>
+#include "stl_algobase.h"
+#include "stl_alloc.h"
+#include "stl_construct.h"
+#include "stl_tempbuf.h"
+#include "stl_uninitialized.h"
+#include "stl_raw_storage_iter.h"
 
 
 __STL_BEGIN_NAMESPACE
 
-#if defined(__SGI_STL_USE_AUTO_PTR_CONVERSIONS) && \
-    defined(__STL_MEMBER_TEMPLATES)
+#if defined(__SGI_STL_USE_AUTO_PTR_CONVERSIONS) &&     defined(__STL_MEMBER_TEMPLATES)
 
 template<class _Tp1> struct auto_ptr_ref {
   _Tp1* _M_ptr;
@@ -101,8 +100,7 @@ public:
   // in fact, most present-day compilers do not support the language 
   // features that these conversions rely on.
   
-#if defined(__SGI_STL_USE_AUTO_PTR_CONVERSIONS) && \
-    defined(__STL_MEMBER_TEMPLATES)
+#if defined(__SGI_STL_USE_AUTO_PTR_CONVERSIONS) &&     defined(__STL_MEMBER_TEMPLATES)
 
 public:
   auto_ptr(auto_ptr_ref<_Tp> __ref) __STL_NOTHROW

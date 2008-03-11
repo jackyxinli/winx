@@ -27,9 +27,9 @@
 #ifndef __SGI_STL_UTILITY
 #define __SGI_STL_UTILITY
 
-#include <stl_config.h>
-#include <stl_relops.h>
-#include <stl_pair.h>
+#include "stl_config.h"
+#include "stl_relops.h"
+#include "stl_pair.h"
 
 #endif /* __SGI_STL_UTILITY */
 

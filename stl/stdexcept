@@ -14,12 +14,11 @@
 #ifndef __SGI_STDEXCEPT
 #define __SGI_STDEXCEPT
 
-#include <stl_exception.h>
+#include "stl_exception.h"
 
-#if defined(__STL_USE_EXCEPTIONS) || \
-    !(defined(_MIPS_SIM) && defined(_ABIO32) && _MIPS_SIM == _ABIO32)
+#if defined(__STL_USE_EXCEPTIONS) ||     !(defined(_MIPS_SIM) && defined(_ABIO32) && _MIPS_SIM == _ABIO32)
 
-#include <stl_string_fwd.h>
+#include "stl_string_fwd.h"
 
 __STL_BEGIN_NAMESPACE
 
@@ -27,7 +26,7 @@ class __Named_exception : public __STL_EXCEPTION_BASE {
 public:
   __Named_exception(const string& __str) {
     strncpy(_M_name, __get_c_string(__str), _S_bufsize);
-    _M_name[_S_bufsize - 1] = '\0';
+    _M_name[_S_bufsize - 1] = '0';
   }
   virtual const char* what() const __STL_NOTHROW { return _M_name; }
 
@@ -84,7 +83,7 @@ public:
 __STL_END_NAMESPACE
 
 #ifndef __SGI_STL_STRING
-#include <string>
+#include "string"
 #endif
 
 #endif /* Not o32, and no exceptions */

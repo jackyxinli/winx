@@ -28,10 +28,10 @@
 #define __SGI_STL_HASH_SET
 
 #ifndef __SGI_STL_INTERNAL_HASHTABLE_H
-#include <stl_hashtable.h>
+#include "stl_hashtable.h"
 #endif 
 
-#include <stl_hash_set.h>
+#include "stl_hash_set.h"
 
 #endif /* __SGI_STL_HASH_SET */
 

@@ -15,11 +15,11 @@
 #ifndef __SGI_STL_SLIST
 #define __SGI_STL_SLIST
 
-#include <stl_algobase.h>
-#include <stl_alloc.h>
-#include <stl_construct.h>
-#include <stl_uninitialized.h>
-#include <stl_slist.h>
+#include "stl_algobase.h"
+#include "stl_alloc.h"
+#include "stl_construct.h"
+#include "stl_uninitialized.h"
+#include "stl_slist.h"
 
 #endif /* __SGI_STL_SLIST */
 

@@ -21,7 +21,7 @@
 
 #include <limits.h>
 #include <float.h>
-#include <stl_config.h>
+#include "stl_config.h"
 
 __STL_BEGIN_NAMESPACE
 
@@ -53,11 +53,9 @@ enum float_denorm_style {
 // take their addresses.  We choose the former workaround.
 
 #ifdef __STL_STATIC_CONST_INIT_BUG
-# define __STL_DECLARE_LIMITS_MEMBER(__mem_type, __mem_name, __mem_value) \
-  enum { __mem_name = __mem_value }
+# define __STL_DECLARE_LIMITS_MEMBER(__mem_type, __mem_name, __mem_value)   enum { __mem_name = __mem_value }
 #else /* __STL_STATIC_CONST_INIT_BUG */
-# define __STL_DECLARE_LIMITS_MEMBER(__mem_type, __mem_name, __mem_value) \
-  static const __mem_type __mem_name = __mem_value
+# define __STL_DECLARE_LIMITS_MEMBER(__mem_type, __mem_name, __mem_value)   static const __mem_type __mem_name = __mem_value
 #endif /* __STL_STATIC_CONST_INIT_BUG */
 
 // Base class for all specializations of numeric_limits.
@@ -114,9 +112,7 @@ public:
 #ifdef __STL_STATIC_CONST_INIT_BUG
 # define __STL_DEFINE_NUMERIC_BASE_MEMBER(__type, __mem)
 #else /* __STL_STATIC_CONST_INIT_BUG */
-# define __STL_DEFINE_NUMERIC_BASE_MEMBER(__type, __mem) \
-  template <class __number>                              \
-  const __type _Numeric_limits_base<__number>:: __mem
+# define __STL_DEFINE_NUMERIC_BASE_MEMBER(__type, __mem)   template <class __number>                                const __type _Numeric_limits_base<__number>:: __mem
 #endif /* __STL_STATIC_CONST_INIT_BUG */
 
 __STL_DEFINE_NUMERIC_BASE_MEMBER(bool, is_specialized);
@@ -176,9 +172,7 @@ public:
 #ifdef __STL_STATIC_CONST_INIT_BUG
 # define __STL_DEFINE_INTEGER_LIMITS_MEMBER(__type, __mem)
 #else /* __STL_STATIC_CONST_INIT_BUG */
-# define __STL_DEFINE_INTEGER_LIMITS_MEMBER(__type, __mem)              \
-  template <class _Int, _Int __imin, _Int __imax, int __idig, bool __ismod>  \
-  const __type _Integer_limits<_Int, __imin, __imax, __idig, __ismod>::__mem
+# define __STL_DEFINE_INTEGER_LIMITS_MEMBER(__type, __mem)                template <class _Int, _Int __imin, _Int __imax, int __idig, bool __ismod>    const __type _Integer_limits<_Int, __imin, __imax, __idig, __ismod>::__mem
 #endif /* __STL_STATIC_CONST_INIT_BUG */
 
 __STL_DEFINE_INTEGER_LIMITS_MEMBER(bool, is_specialized);
@@ -235,13 +229,7 @@ public:
 #ifdef __STL_STATIC_CONST_INIT_BUG
 # define __STL_DEFINE_FLOAT_LIMITS_MEMBER(__type, __mem)
 #else /* __STL_STATIC_CONST_INIT_BUG */
-# define __STL_DEFINE_FLOAT_LIMITS_MEMBER(__type, __mem)                   \
-  template <class __Num, int __Dig, int __Dig10,                           \
-            int __MnX, int __MxX, int __MnX10, int __MxX10,                \
-            bool __IsIEEE, float_round_style __Sty>                        \
-  const __type _Floating_limits<__Num, __Dig, __Dig10,                     \
-                                __MnX, __MxX, __MnX10, __MxX10,            \
-                                __IsIEEE, __Sty>:: __mem
+# define __STL_DEFINE_FLOAT_LIMITS_MEMBER(__type, __mem)                     template <class __Num, int __Dig, int __Dig10,                                       int __MnX, int __MxX, int __MnX10, int __MxX10,                            bool __IsIEEE, float_round_style __Sty>                          const __type _Floating_limits<__Num, __Dig, __Dig10,                                                     __MnX, __MxX, __MnX10, __MxX10,                                            __IsIEEE, __Sty>:: __mem
 #endif /* __STL_STATIC_CONST_INIT_BUG */
 
 __STL_DEFINE_FLOAT_LIMITS_MEMBER(bool, is_specialized);  
@@ -347,8 +335,7 @@ class numeric_limits<unsigned long>
 // Some compilers have long long, but don't define the
 // LONGLONG_MIN and LONGLONG_MAX macros in limits.h.  This
 // assumes that long long is 64 bits.
-#if !defined(LONGLONG_MIN) && !defined(LONGLONG_MAX) \
-                           && !defined(ULONGLONG_MAX)
+#if !defined(LONGLONG_MIN) && !defined(LONGLONG_MAX)                            && !defined(ULONGLONG_MAX)
 
 #define ULONGLONG_MAX 0xffffffffffffffffLLU
 #define LONGLONG_MAX 0x7fffffffffffffffLL
@@ -442,18 +429,9 @@ public:
 #if defined(_MIPSEB)
 // Big-endian MIPS.  float is 32 bits, double 64, long double 128.
 
-#define _Define_float(__f, __h, __l)                                     \
-   inline float numeric_limits<float>::__f() __STL_NOTHROW {             \
-     static const unsigned short __x[2] = { __h, __l };                  \
-     return *reinterpret_cast<const float*>(__x); }
-#define _Define_double(__f, __h, __l)                                    \
-   inline double numeric_limits<double>::__f() __STL_NOTHROW {           \
-     static const unsigned short __x[4] = { __h, __l };                  \
-     return *reinterpret_cast<const double*>(__x); }
-#define _Define_ldouble(__f, __h, __l)                                   \
-   inline long double numeric_limits<long double>::__f() __STL_NOTHROW { \
-     static const unsigned short __x[8] = { __h, __l };                  \
-     return *reinterpret_cast<const long double*>(__x); }
+#define _Define_float(__f, __h, __l)                                        inline float numeric_limits<float>::__f() __STL_NOTHROW {                  static const unsigned short __x[2] = { __h, __l };                       return *reinterpret_cast<const float*>(__x); }
+#define _Define_double(__f, __h, __l)                                       inline double numeric_limits<double>::__f() __STL_NOTHROW {                static const unsigned short __x[4] = { __h, __l };                       return *reinterpret_cast<const double*>(__x); }
+#define _Define_ldouble(__f, __h, __l)                                      inline long double numeric_limits<long double>::__f() __STL_NOTHROW {      static const unsigned short __x[8] = { __h, __l };                       return *reinterpret_cast<const long double*>(__x); }
 
 _Define_float(infinity, 0x7f80, 0)
 _Define_float(quiet_NaN, 0x7f81, 0)
@@ -470,18 +448,9 @@ _Define_ldouble(signaling_NaN, 0x7ff9, 0)
 #elif defined(__i386) || defined(_M_IX86)
 // Little-endian ia32.  float is 32 bits, double 64, long double 80.
 
-#define _Define_float(__f, __h, __l)                                     \
-   inline float numeric_limits<float>::__f() __STL_NOTHROW {             \
-     static const unsigned short __x[2] = { __l, __h };                  \
-     return *reinterpret_cast<const float*>(__x); }
-#define _Define_double(__f, __h, __l)                                    \
-   inline double numeric_limits<double>::__f() __STL_NOTHROW {           \
-     static const unsigned short __x[4] = { 0, 0, __l, __h };            \
-     return *reinterpret_cast<const double*>(__x); }
-#define _Define_ldouble(__f, __h, __l)                                   \
-   inline long double numeric_limits<long double>::__f() __STL_NOTHROW { \
-     static const unsigned short __x[5] = { 0, 0, 0, __l, __h };         \
-     return *reinterpret_cast<const long double*>(__x); }
+#define _Define_float(__f, __h, __l)                                        inline float numeric_limits<float>::__f() __STL_NOTHROW {                  static const unsigned short __x[2] = { __l, __h };                       return *reinterpret_cast<const float*>(__x); }
+#define _Define_double(__f, __h, __l)                                       inline double numeric_limits<double>::__f() __STL_NOTHROW {                static const unsigned short __x[4] = { 0, 0, __l, __h };                 return *reinterpret_cast<const double*>(__x); }
+#define _Define_ldouble(__f, __h, __l)                                      inline long double numeric_limits<long double>::__f() __STL_NOTHROW {      static const unsigned short __x[5] = { 0, 0, 0, __l, __h };              return *reinterpret_cast<const long double*>(__x); }
 
 _Define_float(infinity, 0x7f80, 0)
 _Define_float(quiet_NaN, 0x7fa0, 0)
@@ -500,15 +469,9 @@ _Define_ldouble(signaling_NaN, 0x7fff, 0xc000)
 /* This is an architecture we don't know how to handle.  Return some 
    obviously wrong values. */
 
-#define _Define_float(__f)                                               \
-   inline float numeric_limits<float>::__f() __STL_NOTHROW {             \
-     return 0; }
-#define _Define_double(__f)                                              \
-   inline double numeric_limits<double>::__f() __STL_NOTHROW {           \
-     return 0; }
-#define _Define_ldouble(__f)                                             \
-   inline long double numeric_limits<long double>::__f() __STL_NOTHROW { \
-     return 0; }
+#define _Define_float(__f)                                                  inline float numeric_limits<float>::__f() __STL_NOTHROW {                  return 0; }
+#define _Define_double(__f)                                                 inline double numeric_limits<double>::__f() __STL_NOTHROW {                return 0; }
+#define _Define_ldouble(__f)                                                inline long double numeric_limits<long double>::__f() __STL_NOTHROW {      return 0; }
 
 _Define_float(infinity)
 _Define_float(quiet_NaN)

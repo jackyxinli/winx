@@ -936,8 +936,7 @@ void hashtable<_Val,_Key,_HF,_Ex,_Eq,_All>
     const size_type __n = _M_next_size(__num_elements_hint);
     if (__n > __old_n) {
       vector<_Node*> __tmp(__n, (_Node*)(0));
-//      vector<_Node*, _All> __tmp(__n, (_Node*)(0),\
-                                 _M_buckets.get_allocator());
+//      vector<_Node*, _All> __tmp(__n, (_Node*)(0),                                 _M_buckets.get_allocator());
       __STL_TRY {
         for (size_type __bucket = 0; __bucket < __old_n; ++__bucket) {
           _Node* __first = _M_buckets[__bucket];

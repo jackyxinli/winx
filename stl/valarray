@@ -14,11 +14,11 @@
 #ifndef __SGI_STL_VALARRAY
 #define __SGI_STL_VALARRAY
 
-#include <type_traits.h>
+#include "type_traits.h"
 #include <math.h>
-#include <algorithm>
-#include <numeric>
-#include <limits>
+#include "algorithm"
+#include "numeric"
+#include "limits"
 #include <new>
 
 

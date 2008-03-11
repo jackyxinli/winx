@@ -14,20 +14,20 @@
 #ifndef __SGI_STL_STRING
 #define __SGI_STL_STRING
 
-#include <stl_config.h>
-#include <stl_string_fwd.h>
+#include "stl_config.h"
+#include "stl_string_fwd.h"
 #include <ctype.h>        
-#include <functional>
-#include <stl_ctraits_fns.h>
-#include <stdexcept>      
-#include <stl_iterator_base.h>
-#include <memory>
-#include <algorithm>
+#include "functional"
+#include "stl_ctraits_fns.h"
+#include "stdexcept"
+#include "stl_iterator_base.h"
+#include "memory"
+#include "algorithm"
 
 #ifdef __STL_USE_NEW_IOSTREAMS
 #include <iosfwd>
 #else /* __STL_USE_NEW_IOSTREAMS */
-#include <char_traits.h>
+#include "char_traits.h"
 #endif /* __STL_USE_NEW_IOSTREAMS */
 
 // Standard C++ string class.  This class has performance
@@ -2163,7 +2163,7 @@ inline basic_istream<_CharT, _Traits>&
 getline(basic_istream<_CharT, _Traits>& __is,
         basic_string<_CharT,_Traits,_Alloc>& __s)
 {
-  return getline(__is, __s, '\n');
+  return getline(__is, __s, 'n');
 }
 
 #else /* __STL_USE_NEW_IOSTREAMS */
@@ -2336,7 +2336,7 @@ template <class _CharT, class _Traits, class _Alloc>
 inline istream& 
 getline(istream& __is, basic_string<_CharT,_Traits,_Alloc>& __s)
 {
-  return getline(__is, __s, '\n');
+  return getline(__is, __s, 'n');
 }
 
 #endif /* __STL_USE_NEW_IOSTREAMS */
@@ -2366,7 +2366,7 @@ inline const char* __get_c_string(const string& __s) { return __s.c_str(); }
 
 __STL_END_NAMESPACE
 
-#include <stl_hash_fun.h>
+#include "stl_hash_fun.h"
 
 __STL_BEGIN_NAMESPACE
 

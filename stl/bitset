@@ -32,8 +32,8 @@
 
 #include <stddef.h>     // for size_t
 #include <string.h>     // for memset
-#include <string>
-#include <stdexcept>    // for invalid_argument, out_of_range, overflow_error
+#include "string"
+#include "stdexcept"
 
 #ifdef __STL_USE_NEW_IOSTREAMS 
 #include <iostream>
@@ -42,8 +42,7 @@
 #endif
 
 #define __BITS_PER_WORD (CHAR_BIT*sizeof(unsigned long))
-#define __BITSET_WORDS(__n) \
- ((__n) < 1 ? 1 : ((__n) + __BITS_PER_WORD - 1)/__BITS_PER_WORD)
+#define __BITSET_WORDS(__n)  ((__n) < 1 ? 1 : ((__n) + __BITS_PER_WORD - 1)/__BITS_PER_WORD)
 
 __STL_BEGIN_NAMESPACE
 
@@ -673,8 +672,7 @@ public:
 
   unsigned long to_ulong() const { return this->_M_do_to_ulong(); }
 
-#if defined(__STL_MEMBER_TEMPLATES) && \
-    defined(__STL_EXPLICIT_FUNCTION_TMPL_ARGS)
+#if defined(__STL_MEMBER_TEMPLATES) &&     defined(__STL_EXPLICIT_FUNCTION_TMPL_ARGS)
   template <class _CharT, class _Traits, class _Alloc>
   basic_string<_CharT, _Traits, _Alloc> to_string() const {
     basic_string<_CharT, _Traits, _Alloc> __result;
