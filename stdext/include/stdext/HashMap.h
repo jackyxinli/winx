@@ -76,7 +76,7 @@ public:
 };
 
 // -------------------------------------------------------------------------
-// class HashMap
+// Configuration
 
 #if defined(X_STL_NET)
 
@@ -111,6 +111,13 @@ struct _HashComp : public stdext::hash_compare<KeyT, typename HashCompT::key_pre
 		StlAlloc<DataT, AllocT>												\
 	>
 
+#define _WINX_BASE_HASHMULTIMAP(KeyT, DataT, HashCompT, AllocT)				\
+	stdext::hash_multimap<													\
+		KeyT, DataT,														\
+		_HashComp<KeyT, HashCompT>,											\
+		StlAlloc<DataT, AllocT>												\
+	>
+
 #else
 
 #define _WINX_BASE_HASHMAP(KeyT, DataT, HashCompT, AllocT)					\
@@ -121,7 +128,18 @@ struct _HashComp : public stdext::hash_compare<KeyT, typename HashCompT::key_pre
 		StlAlloc<DataT, AllocT>												\
 		>
 
+#define _WINX_BASE_HASHMULTIMAP(KeyT, DataT, HashCompT, AllocT)				\
+	stdext::hash_multimap<													\
+		KeyT, DataT,														\
+		typename HashCompT::hasher,											\
+		typename HashCompT::key_equal,										\
+		StlAlloc<DataT, AllocT>												\
+	>
+
 #endif
+
+// -------------------------------------------------------------------------
+// class HashMap
 
 template <
 	class KeyT, class DataT,
@@ -177,32 +195,32 @@ public:
 
 // -------------------------------------------------------------------------
 // class HashMultiMap
-/*
+
 template <
 	class KeyT, class DataT,
-	class HashT = Hash<KeyT>,
-	class EqualT = std::equal_to<KeyT>,
+	class HashCompT = HashCompare<KeyT>,
 	class AllocT = ScopeAlloc
-	>
-class HashMultiMap : public 
-	stdext::hash_multimap< KeyT, DataT, HashT, EqualT, StlAlloc<DataT, AllocT> >
+>
+class HashMultiMap : public _WINX_BASE_HASHMULTIMAP(KeyT, DataT, HashCompT, AllocT)
 {
+public:
+	typedef KeyT key_type;
+	typedef typename HashCompT::hasher hasher;
+	typedef typename HashCompT::key_equal key_equal;
+	typedef typename HashCompT::key_pred key_pred;
+	typedef AllocT allocator_type;
+
 private:
 	typedef StlAlloc<DataT, AllocT> _Alloc;
-	typedef stdext::hash_multimap< KeyT, DataT, HashT, EqualT, StlAlloc<DataT, AllocT> > _Base;
+	typedef _WINX_BASE_HASHMULTIMAP(KeyT, DataT, HashCompT, AllocT) _Base;
 
 public:
 	typedef typename _Base::size_type size_type;
-	typedef typename _Base::hasher hasher;
-	typedef typename _Base::key_equal key_equal;
-	typedef AllocT allocator_type;
 
-public:
+#if defined(X_STL_NET)
 	explicit HashMultiMap(
 		allocator_type& alloc,
-		size_type n = 100,
-		const hasher& hf = hasher(),
-		const key_equal& eql = key_equal()) : _Base(n, hf, eql, alloc)
+		size_type n = 100) : _Base(_HashComp<KeyT, HashCompT>(), alloc)
 	{
 	}
 
@@ -210,13 +228,26 @@ public:
 	HashMultiMap(
 		allocator_type& alloc,
 		Iterator first, Iterator last,
-		size_type n = 100,
-		const hasher& hf = hasher(),
-		const key_equal& eql = key_equal()) : _Base(first, last, n, hf, eql, alloc)
+		size_type n = 100) : _Base(first, last, _HashComp<KeyT, HashCompT>(), alloc)
 	{
 	}
+#else
+	explicit HashMultiMap(
+		allocator_type& alloc,
+		size_type n = 100) : _Base(n, hasher(), key_equal(), alloc)
+	{
+	}
+
+	template <class Iterator>
+	HashMultiMap(
+		allocator_type& alloc,
+		Iterator first, Iterator last,
+		size_type n = 100) : _Base(first, last, n, hasher(), key_equal(), alloc)
+	{
+	}
+#endif
 };
-*/
+
 // -------------------------------------------------------------------------
 // class TestHashMap
 
@@ -254,7 +285,7 @@ public:
 
 	void testMultiMap(LogT& log)
 	{
-/*		typedef std::HashMultiMap<int, int> MapType;
+		typedef std::HashMultiMap<int, int> MapType;
 
 		std::BlockPool recycle;
 		std::ScopeAlloc alloc(recycle);
@@ -272,7 +303,7 @@ public:
 				.print((*it).second)
 				.newline();
 		}
-*/	}
+	}
 
 public:
 	enum { N = 20000 };
