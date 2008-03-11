@@ -9,27 +9,27 @@
 // of this license. You must not remove this notice, or any other, from
 // this software.
 // 
-// Module: stdext/HashMap.h
+// Module: stdext/HashSet.h
 // Creator: xushiwei
 // Email: xushiweizh@gmail.com
 // Date: 2006-8-18 18:56:07
 // 
-// $Id: HashMap.h,v 1.1 2006/10/18 12:13:39 xushiwei Exp $
+// $Id: HashSet.h,v 1.1 2006/10/18 12:13:39 xushiwei Exp $
 // -----------------------------------------------------------------------*/
-#ifndef __STDEXT_HASHMAP_H__
-#define __STDEXT_HASHMAP_H__
+#ifndef __STDEXT_HASHSET_H__
+#define __STDEXT_HASHSET_H__
 
 #ifndef __STDEXT_BASIC_H__
 #include "Basic.h"
 #endif
 
 #if defined(X_STL_NET)
-	#ifndef _HASH_MAP_
-	#include <hash_map>
+	#ifndef _HASH_SET_
+	#include <hash_set>
 	#endif
 #else
-	#ifndef __SGI_HASH_MAP_H__
-	#include "sgi/hash_map.h"
+	#ifndef __SGI_HASH_SET_H__
+	#include "sgi/hash_set.h"
 	#endif
 #endif
 
@@ -44,52 +44,53 @@
 __NS_STD_BEGIN
 
 // -------------------------------------------------------------------------
-// class HashMap
+// class HashSet
 
 template <
-	class KeyT, class DataT,
-	class HashCompT = HashCompare<KeyT>,
+	class ValT,
+	class HashCompT = HashCompare<ValT>,
 	class AllocT = ScopeAlloc
 	>
-class HashMap : public _WINX_BASE_HASHMAP(KeyT, DataT, HashCompT, AllocT)
+class HashSet : public _WINX_BASE_HASHSET(ValT, HashCompT, AllocT)
 {
 public:
-	typedef KeyT key_type;
+	typedef ValT key_type;
+	typedef ValT value_type;
 	typedef typename HashCompT::hasher hasher;
 	typedef typename HashCompT::key_equal key_equal;
 	typedef typename HashCompT::key_pred key_pred;
 	typedef AllocT allocator_type;
 
 private:
-	typedef StlAlloc<DataT, AllocT> _Alloc;
-	typedef _WINX_BASE_HASHMAP(KeyT, DataT, HashCompT, AllocT) _Base;
+	typedef StlAlloc<ValT, AllocT> _Alloc;
+	typedef _WINX_BASE_HASHSET(ValT, HashCompT, AllocT) _Base;
 
 public:
 	typedef typename _Base::size_type size_type;
 
 #if defined(X_STL_NET)
-	explicit HashMap(
+	explicit HashSet(
 		allocator_type& alloc,
-		size_type n = 100) : _Base(_HashComp<KeyT, HashCompT>(), alloc)
+		size_type n = 100) : _Base(_HashComp<ValT, HashCompT>(), alloc)
 	{
 	}
 
 	template <class Iterator>
-	HashMap(
+	HashSet(
 		allocator_type& alloc,
 		Iterator first, Iterator last,
-		size_type n = 100) : _Base(first, last, _HashComp<KeyT, HashCompT>(), alloc)
+		size_type n = 100) : _Base(first, last, _HashComp<ValT, HashCompT>(), alloc)
 	{
 	}
 #else
-	explicit HashMap(
+	explicit HashSet(
 		allocator_type& alloc,
 		size_type n = 100) : _Base(n, hasher(), key_equal(), alloc)
 	{
 	}
 
 	template <class Iterator>
-	HashMap(
+	HashSet(
 		allocator_type& alloc,
 		Iterator first, Iterator last,
 		size_type n = 100) : _Base(first, last, n, hasher(), key_equal(), alloc)
@@ -99,52 +100,53 @@ public:
 };
 
 // -------------------------------------------------------------------------
-// class HashMultiMap
+// class HashMultiSet
 
 template <
-	class KeyT, class DataT,
-	class HashCompT = HashCompare<KeyT>,
+	class ValT,
+	class HashCompT = HashCompare<ValT>,
 	class AllocT = ScopeAlloc
->
-class HashMultiMap : public _WINX_BASE_HASHMULTIMAP(KeyT, DataT, HashCompT, AllocT)
+	>
+class HashMultiSet : public _WINX_BASE_HASHMULTISET(ValT, HashCompT, AllocT)
 {
 public:
-	typedef KeyT key_type;
+	typedef ValT key_type;
+	typedef ValT value_type;
 	typedef typename HashCompT::hasher hasher;
 	typedef typename HashCompT::key_equal key_equal;
 	typedef typename HashCompT::key_pred key_pred;
 	typedef AllocT allocator_type;
 
 private:
-	typedef StlAlloc<DataT, AllocT> _Alloc;
-	typedef _WINX_BASE_HASHMULTIMAP(KeyT, DataT, HashCompT, AllocT) _Base;
+	typedef StlAlloc<ValT, AllocT> _Alloc;
+	typedef _WINX_BASE_HASHMULTISET(ValT, HashCompT, AllocT) _Base;
 
 public:
 	typedef typename _Base::size_type size_type;
 
 #if defined(X_STL_NET)
-	explicit HashMultiMap(
+	explicit HashMultiSet(
 		allocator_type& alloc,
-		size_type n = 100) : _Base(_HashComp<KeyT, HashCompT>(), alloc)
+		size_type n = 100) : _Base(_HashComp<ValT, HashCompT>(), alloc)
 	{
 	}
 
 	template <class Iterator>
-	HashMultiMap(
+	HashMultiSet(
 		allocator_type& alloc,
 		Iterator first, Iterator last,
-		size_type n = 100) : _Base(first, last, _HashComp<KeyT, HashCompT>(), alloc)
+		size_type n = 100) : _Base(first, last, _HashComp<ValT, HashCompT>(), alloc)
 	{
 	}
 #else
-	explicit HashMultiMap(
+	explicit HashMultiSet(
 		allocator_type& alloc,
 		size_type n = 100) : _Base(n, hasher(), key_equal(), alloc)
 	{
 	}
 
 	template <class Iterator>
-	HashMultiMap(
+	HashMultiSet(
 		allocator_type& alloc,
 		Iterator first, Iterator last,
 		size_type n = 100) : _Base(first, last, n, hasher(), key_equal(), alloc)
@@ -154,94 +156,88 @@ public:
 };
 
 // -------------------------------------------------------------------------
-// class TestHashMap
+// class TestHashSet
 
 template <class LogT>
-class TestHashMap : public TestCase
+class TestHashSet : public TestCase
 {
-	WINX_TEST_SUITE(TestHashMap);
-		WINX_TEST(testMap);
-		WINX_TEST(testMultiMap);
+	WINX_TEST_SUITE(TestHashSet);
+		WINX_TEST(testSet);
+		WINX_TEST(testMultiSet);
 		WINX_TEST(testCompare);
 	WINX_TEST_SUITE_END();
 
 public:
-	void testMap(LogT& log)
+	void testSet(LogT& log)
 	{
-		typedef std::HashMap<int, int> MapType;
+		typedef std::HashSet<int> SetType;
 
 		std::BlockPool recycle;
 		std::ScopeAlloc alloc(recycle);
 		
-		MapType simp(alloc);
+		SetType simp(alloc);
 
-		simp.insert(MapType::value_type(1, 2));
-		simp.insert(MapType::value_type(1, 2));
-		simp.insert(MapType::value_type(192, 4));
-		simp.insert(MapType::value_type(194, 8));
-		for (MapType::const_iterator it = simp.begin(); it != simp.end(); ++it)
+		simp.insert(1);
+		simp.insert(1);
+		simp.insert(192);
+		simp.insert(194);
+		for (SetType::const_iterator it = simp.begin(); it != simp.end(); ++it)
 		{
-			log.print((*it).first)
-				.print(", ")
-				.print((*it).second)
-				.newline();
+			log.print(*it).newline();
 		}
 	}
 
-	void testMultiMap(LogT& log)
+	void testMultiSet(LogT& log)
 	{
-		typedef std::HashMultiMap<int, int> MapType;
+		typedef std::HashMultiSet<int> SetType;
 
 		std::BlockPool recycle;
 		std::ScopeAlloc alloc(recycle);
 		
-		MapType simp(alloc);
+		SetType simp(alloc);
 
-		simp.insert(MapType::value_type(1, 2));
-		simp.insert(MapType::value_type(1, 2));
-		simp.insert(MapType::value_type(192, 4));
-		simp.insert(MapType::value_type(194, 8));
-		for (MapType::const_iterator it = simp.begin(); it != simp.end(); ++it)
+		simp.insert(1);
+		simp.insert(1);
+		simp.insert(192);
+		simp.insert(194);
+		for (SetType::const_iterator it = simp.begin(); it != simp.end(); ++it)
 		{
-			log.print((*it).first)
-				.print(", ")
-				.print((*it).second)
-				.newline();
+			log.print(*it).newline();
 		}
 	}
 
 public:
 	enum { N = 20000 };
 
-	void doMap(LogT& log)
+	void doSet(LogT& log)
 	{
-		typedef std::HashMap<int, int> MapT;
-		log.print("===== std::HashMap (ScopeAlloc) =====\n");
+		typedef std::HashSet<int> SetType;
+		log.print("===== std::HashSet (ScopeAlloc) =====\n");
 		std::PerformanceCounter counter;
 		{
 			std::BlockPool recycle;
 			std::ScopeAlloc alloc(recycle);
-			MapT coll(alloc);
+			SetType coll(alloc);
 			for (int i = 0; i < N; ++i)
-				coll.insert(MapT::value_type(i, i));
+				coll.insert(i);
 		}
 		counter.trace(log);
 	}
 
-	void doShareAllocMap(LogT& log)
+	void doShareAllocSet(LogT& log)
 	{
-		typedef std::HashMap<int, int> MapT;
+		typedef std::HashSet<int> SetType;
 		std::BlockPool recycle;
 		log.newline();
 		for (int i = 0; i < 5; ++i)
 		{
-			log.print("===== doShareAllocMap =====\n");
+			log.print("===== doShareAllocSet =====\n");
 			std::PerformanceCounter counter;
 			{
 				std::ScopeAlloc alloc(recycle);
-				MapT coll(alloc);
+				SetType coll(alloc);
 				for (int i = 0; i < N; ++i)
-					coll.insert(MapT::value_type(i, i));
+					coll.insert(i);
 			}
 			counter.trace(log);
 		}
@@ -252,15 +248,15 @@ public:
 		for (int i = 0; i < 5; ++i)
 		{
 			log.newline();
-			doMap(log);
+			doSet(log);
 		}
-		doShareAllocMap(log);
+		doShareAllocSet(log);
 	}
 };
 
 // -------------------------------------------------------------------------
-// $Log: HashMap.h,v $
+// $Log: HashSet.h,v $
 
 __NS_STD_END
 
-#endif /* __STDEXT_HASHMAP_H__ */
+#endif /* __STDEXT_HASHSET_H__ */

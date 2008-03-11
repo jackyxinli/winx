@@ -31,6 +31,7 @@
 #include <stdext/Registry.h>
 #include <stdext/Map.h>
 #include <stdext/HashMap.h>
+#include <stdext/HashSet.h>
 #include <stdext/AOP.h>
 #include <stdext/Set.h>
 #include <stdext/List.h>
@@ -73,7 +74,7 @@ void testSgiHashMap();
 
 void testStdExt()
 {
-	WINX_TEST_APP(std::ErrorLog, "TestHashMap", "");
+	WINX_TEST_APP(std::ErrorLog, "TestHashSet", "");
 //	testSgiHashMap();
 
 	WINX_TEST_CLASS(TestFinder);
@@ -97,8 +98,9 @@ void testStdExt()
 	//Collection
 	WINX_TEST_CLASS(std::TestPriorityArray);
 	WINX_TEST_CLASS(std::TestMap);
-	WINX_TEST_CLASS(std::TestHashMap);
 	WINX_TEST_CLASS(std::TestSet);
+	WINX_TEST_CLASS(std::TestHashMap);
+	WINX_TEST_CLASS(std::TestHashSet);
 	WINX_TEST_CLASS(std::TestList);
 	WINX_TEST_CLASS(std::TestDclList);
 
