@@ -94,6 +94,14 @@ SOURCE=.\TestCase.cpp
 # End Source File
 # Begin Source File
 
+SOURCE=.\TestHash.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=.\TestStdHash.cpp
+# End Source File
+# Begin Source File
+
 SOURCE=.\TestEvent.cpp
 # End Source File
 # Begin Source File

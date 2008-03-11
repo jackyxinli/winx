@@ -237,6 +237,8 @@
 #	define X_STL_VC6
 #elif defined(X_CC_VC_NET_GE2005)
 #	define X_STL_NET // STL.NET
+#elif defined(X_CC_GCC)
+#	define X_STL_GCC
 #else
 #	define X_STL_UNKNOWN
 #endif

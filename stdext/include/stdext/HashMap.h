@@ -27,6 +27,10 @@
 	#ifndef _HASH_MAP_
 	#include <hash_map>
 	#endif
+#elif defined(X_STL_GCC)
+	#ifndef _HASH_MAP
+	#include <ext/hash_map>
+	#endif
 #else
 	#ifndef __SGI_HASH_MAP_H__
 	#include "sgi/hash_map.h"

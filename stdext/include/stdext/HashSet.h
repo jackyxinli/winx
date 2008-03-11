@@ -27,6 +27,10 @@
 	#ifndef _HASH_SET_
 	#include <hash_set>
 	#endif
+#elif defined(X_STL_GCC)
+	#ifndef _HASH_SET
+	#include <ext/hash_set>
+	#endif
 #else
 	#ifndef __SGI_HASH_SET_H__
 	#include "sgi/hash_set.h"
