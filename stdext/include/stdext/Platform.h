@@ -227,6 +227,18 @@
 #	define X_APPTYPE_UNKNOWN
 #endif
 
+// -------------------------------------------------------------------------
+// --> STL Detection
+
+#if defined(__STL_CONFIG_H) || defined(USE_SGISTL)
+#	define X_STL_SGI
+#elif defined(X_CC_VC6)
+#	define X_STL_P_J_Plauger
+#	define X_STL_VC6
+#else
+#	define X_STL_UNKNOWN
+#endif
+
 // =========================================================================
 // $Log: platform.h,v $
 //

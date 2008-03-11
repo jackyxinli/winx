@@ -23,16 +23,26 @@
 #include "Basic.h"
 #endif
 
-#ifndef _STDEXCEPT_
-#include <stdexcept>
-#endif
+#if defined(X_STL_SGI)
+	#ifndef __SGI_STL_FUNCTIONAL
+	#include "../../stl/functional"
+	#endif
 
-#ifndef _ALGORITHM_
-#include <algorithm>
-#endif
+	#ifndef __SGI_STL_ALGORITHM
+	#include "../../stl/algorithm"
+	#endif
+#else
+	#ifndef _STDEXCEPT_
+	#include <stdexcept>
+	#endif
 
-#ifndef _FUNCTIONAL_
-#include <functional>
+	#ifndef _ALGORITHM_
+	#include <algorithm>
+	#endif
+
+	#ifndef _FUNCTIONAL_
+	#include <functional>
+	#endif
 #endif
 
 __NS_STD_BEGIN

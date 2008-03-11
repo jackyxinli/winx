@@ -35,8 +35,14 @@
 #include <stdarg.h>
 #endif
 
-#ifndef _STRING_
-#include <string>
+#if defined(X_STL_SGI)
+	#ifndef __SGI_STL_STRING
+	#include "../../stl/string"
+	#endif
+#else
+	#ifndef _STRING_
+	#include <string>
+	#endif
 #endif
 
 __NS_STD_BEGIN

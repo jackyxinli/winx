@@ -19,6 +19,10 @@
 #ifndef __STLPATCH_H__
 #define __STLPATCH_H__
 
+#ifndef __STDEXT_PLATFORM_H__
+#include "stdext/Platform.h"
+#endif
+
 // -------------------------------------------------------------------------
 
 #pragma warning(disable:4786)

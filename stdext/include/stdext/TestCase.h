@@ -23,8 +23,18 @@
 #include "Basic.h"
 #endif
 
-#ifndef _ITERATOR_
-#include <iterator>
+#if defined(X_STL_SGI)
+	#ifndef __SGI_STL_ITERATOR_H
+	#include "../../stl/iterator.h"
+	#endif
+#else
+	#ifndef _ITERATOR_
+	#include <iterator>
+	#endif
+#endif
+
+#ifndef _INC_STDIO
+#include <stdio.h>
 #endif
 
 #if defined(_DEBUG)

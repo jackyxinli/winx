@@ -9,30 +9,49 @@
 // of this license. You must not remove this notice, or any other, from
 // this software.
 // 
-// Module: stdext/patch/string.h
+// Module: sgi/hash_map.h
 // Creator: xushiwei
 // Email: xushiweizh@gmail.com
-// Date: 2006-12-22 17:37:57
+// Date: 2006-8-18 18:56:07
 // 
-// $Id: string.h,v 1.1 2006/12/22 10:19:55 xushiwei Exp $
+// $Id: HashMap.h,v 1.1 2006/10/18 12:13:39 xushiwei Exp $
 // -----------------------------------------------------------------------*/
-#ifndef __STDEXT_PATCH_STRING_H__
-#define __STDEXT_PATCH_STRING_H__
+#ifndef __SGI_HASH_MAP_H__
+#define __SGI_HASH_MAP_H__
+
+#pragma warning(disable:4010) // vc6: single-line comment contains line-continuation character
 
 // -------------------------------------------------------------------------
+// hash_map/hash_multimap
 
-#if defined(X_STL_VC6)
-
-#if defined(_MSC_VER) && (_MSC_VER == 1200)
-#include "vc6/string.h"
+#ifndef __SGI_CONFIG_H__
+#include "config.h"
 #endif
 
+#ifndef __SGI_VECTOR_H__
+#include "vector.h"
+#endif
+
+#ifndef __SGI_STL_INTERNAL_HASHTABLE_H
+#include "../../stl/stl_hashtable.h"
+#endif 
+
+#ifndef __SGI_STL_HASH_MAP_H
+#include "../../stl/hash_map.h"
 #endif
 
 // -------------------------------------------------------------------------
-// $Log: string.h,v $
-// Revision 1.1  2006/12/22 10:19:55  xushiwei
-// STL-Patch: std::basic_string::_Split function bugfix (vc6)
-//
+// using
 
-#endif /* __STDEXT_PATCH_STRING_H__ */
+namespace std
+{
+	using stdext::hash;
+	using stdext::hashtable;
+	using stdext::hash_map;
+	using stdext::hash_multimap;
+}
+
+// -------------------------------------------------------------------------
+// $Log: hash_map.h,v $
+
+#endif /* __SGI_HASH_MAP_H__ */

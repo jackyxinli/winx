@@ -137,10 +137,10 @@ public:
 	StlAlloc(_Alloc& alloc) : m_alloc(&alloc) {}
 
     template <class U>
-	StlAlloc(const StlAlloc<U, _Alloc>& rhs) : m_alloc(rhs.m_alloc) {}
+	StlAlloc(const StlAlloc<U, _Alloc>& rhs) : m_alloc(rhs._Getalloc()) {}
 
-	pointer allocate(size_type count, const void*)
-		{ return m_alloc->allocate(count * sizeof(_Ty)); }
+	pointer allocate(size_type count, const void* = NULL)
+		{ return (pointer)m_alloc->allocate(count * sizeof(_Ty)); }
 	void deallocate(void* p, size_type cb)
 		{ m_alloc->deallocate(p, cb); }
 	void construct(pointer p, const _Ty& val)
@@ -151,6 +151,8 @@ public:
 public:
 	char* _Charalloc(size_type cb)
 		{ return (char*)m_alloc->allocate(cb); }
+
+	_Alloc* _Getalloc() const { return m_alloc; }
 };
 
 template<> class StlAlloc<void, ScopeAlloc>

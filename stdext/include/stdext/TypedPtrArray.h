@@ -23,12 +23,22 @@
 #include "Basic.h"
 #endif
 
-#ifndef _VECTOR_
-#include <vector>
-#endif
+#if defined(X_STL_SGI)
+	#ifndef __SGI_STL_VECTOR_H
+	#include "../../stl/vector.h"
+	#endif
 
-#ifndef _ALGORITHM_
-#include <algorithm>
+	#ifndef __SGI_STL_ALGORITHM
+	#include "../../stl/algorithm"
+	#endif
+#else
+	#ifndef _VECTOR_
+	#include <vector>
+	#endif
+
+	#ifndef _ALGORITHM_
+	#include <algorithm>
+	#endif
 #endif
 
 #ifndef __NS_STD

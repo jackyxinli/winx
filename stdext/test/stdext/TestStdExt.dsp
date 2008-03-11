@@ -151,6 +151,10 @@ SOURCE=.\TestBoostRegEx.cpp
 # End Source File
 # Begin Source File
 
+SOURCE=.\TestHashMap.cpp
+# End Source File
+# Begin Source File
+
 SOURCE=.\TestProperty.cpp
 # End Source File
 # Begin Source File

@@ -9,30 +9,40 @@
 // of this license. You must not remove this notice, or any other, from
 // this software.
 // 
-// Module: stdext/patch/string.h
+// Module: sgi/vector.h
 // Creator: xushiwei
 // Email: xushiweizh@gmail.com
-// Date: 2006-12-22 17:37:57
+// Date: 2006-8-18 18:56:07
 // 
-// $Id: string.h,v 1.1 2006/12/22 10:19:55 xushiwei Exp $
+// $Id: HashMap.h,v 1.1 2006/10/18 12:13:39 xushiwei Exp $
 // -----------------------------------------------------------------------*/
-#ifndef __STDEXT_PATCH_STRING_H__
-#define __STDEXT_PATCH_STRING_H__
+#ifndef __SGI_VECTOR_H__
+#define __SGI_VECTOR_H__
 
 // -------------------------------------------------------------------------
 
-#if defined(X_STL_VC6)
-
-#if defined(_MSC_VER) && (_MSC_VER == 1200)
-#include "vc6/string.h"
+#if defined(X_STL_SGI)
+	#ifndef __SGI_STL_VECTOR_H
+	#include "../../stl/vector.h"
+	#endif
+#else
+	#ifndef _VECTOR_
+	#include <vector>
+	#endif
 #endif
 
+#ifndef __SGI_STL_INTERNAL_VECTOR_H
+	#define __SGI_STL_INTERNAL_VECTOR_H
 #endif
 
 // -------------------------------------------------------------------------
-// $Log: string.h,v $
-// Revision 1.1  2006/12/22 10:19:55  xushiwei
-// STL-Patch: std::basic_string::_Split function bugfix (vc6)
-//
 
-#endif /* __STDEXT_PATCH_STRING_H__ */
+namespace stdext
+{
+	using std::vector;
+}
+
+// -------------------------------------------------------------------------
+// $Log: vector.h,v $
+
+#endif /* __SGI_VECTOR_H__ */
