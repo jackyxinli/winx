@@ -19,7 +19,7 @@
 
 #define STD_FILTER_TEST_CASE
 #define STD_NO_TASKALLOC
-#define USES_APR
+//#define USES_APR
 //#define USES_BOOST
 //#define STD_NO_MSVCRT
 //#define STD_NO_WINSDK
@@ -74,7 +74,7 @@ void testSgiHashMap();
 void testStdExt()
 {
 	WINX_TEST_APP(std::ErrorLog, "TestHashMap", "");
-	testSgiHashMap();
+//	testSgiHashMap();
 
 	WINX_TEST_CLASS(TestFinder);
 #if !defined(STD_NO_WINSDK)

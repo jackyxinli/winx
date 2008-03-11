@@ -41,6 +41,11 @@
 *
 *******************************************************************************/
 
+#if defined(X_CC_VC_NET)
+#pragma push_macro("strdup")
+#undef strdup
+#endif
+
 __template_xchar
 xchar * __xdecl __xcharfunc(strdup)(
         const xchar * string
@@ -57,3 +62,6 @@ xchar * __xdecl __xcharfunc(strdup)(
         return(NULL);
 }
 
+#if defined(X_CC_VC_NET)
+#pragma pop_macro("strdup")
+#endif

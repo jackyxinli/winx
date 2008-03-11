@@ -95,9 +95,9 @@ public:
 public:
 	void* winx_call allocate(size_t cb)
 	{
-		MEMORY_ASSERT(cb >= m_cbBlock);
+		MEMORY_ASSERT(cb >= (size_t)m_cbBlock);
 
-		if (cb > m_cbBlock)
+		if (cb > (size_t)m_cbBlock)
 			return malloc(cb);
 		else
 		{

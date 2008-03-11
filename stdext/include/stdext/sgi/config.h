@@ -40,16 +40,19 @@
 namespace stdext
 {
 #if defined(X_CC_VC6)
-	template <class _Tp, class _Allocator>
+	template <class _Tp, class _Alloc>
 	struct _Alloc_traits
 	{
-		typedef std::StlAlloc<_Tp, std::ScopeAlloc> allocator_type;
+		typedef _Tp value_type;
+		typedef std::StlAlloc<value_type, std::ScopeAlloc> allocator_type;
 	};
 #else
-	template <class _Tp, class _Allocator>
+	template <class _Tp, class _Alloc>
 	struct _Alloc_traits
 	{
-		typedef typename _Allocator::rebind<_Tp>::other allocator_type;
+		typedef _Tp value_type;
+		typedef typename _Alloc::template rebind<value_type>::other
+			allocator_type;
 	};
 #endif
 }
