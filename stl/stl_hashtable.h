@@ -229,7 +229,7 @@ private:
   hasher                _M_hash;
   key_equal             _M_equals;
   _ExtractKey           _M_get_key;
-  vector<_Node*,_Alloc> _M_buckets;
+  vector<_Node*>  _M_buckets;
   size_type             _M_num_elements;
 
 public:
@@ -254,7 +254,7 @@ public:
       _M_hash(__hf),
       _M_equals(__eql),
       _M_get_key(__ext),
-      _M_buckets(__a),
+      _M_buckets(),
       _M_num_elements(0)
   {
     _M_initialize_buckets(__n);
@@ -268,7 +268,7 @@ public:
       _M_hash(__hf),
       _M_equals(__eql),
       _M_get_key(_ExtractKey()),
-      _M_buckets(__a),
+      _M_buckets(),
       _M_num_elements(0)
   {
     _M_initialize_buckets(__n);
@@ -279,7 +279,7 @@ public:
       _M_hash(__ht._M_hash),
       _M_equals(__ht._M_equals),
       _M_get_key(__ht._M_get_key),
-      _M_buckets(__ht.get_allocator()),
+      _M_buckets(),
       _M_num_elements(0)
   {
     _M_copy_from(__ht);
@@ -935,7 +935,8 @@ void hashtable<_Val,_Key,_HF,_Ex,_Eq,_All>
   if (__num_elements_hint > __old_n) {
     const size_type __n = _M_next_size(__num_elements_hint);
     if (__n > __old_n) {
-      vector<_Node*, _All> __tmp(__n, (_Node*)(0),
+      vector<_Node*> __tmp(__n, (_Node*)(0));
+//      vector<_Node*, _All> __tmp(__n, (_Node*)(0),\
                                  _M_buckets.get_allocator());
       __STL_TRY {
         for (size_type __bucket = 0; __bucket < __old_n; ++__bucket) {
