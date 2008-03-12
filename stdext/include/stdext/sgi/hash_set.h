@@ -14,12 +14,10 @@
 // Email: xushiweizh@gmail.com
 // Date: 2006-8-18 18:56:07
 // 
-// $Id: HashMap.h,v 1.1 2006/10/18 12:13:39 xushiwei Exp $
+// $Id: hash_set.h,v 1.1 2006/10/18 12:13:39 xushiwei Exp $
 // -----------------------------------------------------------------------*/
 #ifndef __SGI_HASH_SET_H__
 #define __SGI_HASH_SET_H__
-
-#pragma warning(disable:4010) // vc6: single-line comment contains line-continuation character
 
 // -------------------------------------------------------------------------
 // hash_set/hash_multiset
@@ -39,17 +37,6 @@
 #ifndef __SGI_STL_HASH_SET_H
 #include "../../../../stl/hash_set.h"
 #endif
-
-// -------------------------------------------------------------------------
-// using
-
-namespace std
-{
-	using stdext::hash;
-	using stdext::hashtable;
-	using stdext::hash_set;
-	using stdext::hash_multiset;
-}
 
 // -------------------------------------------------------------------------
 // $Log: hash_set.h,v $

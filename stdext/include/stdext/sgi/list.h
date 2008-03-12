@@ -9,40 +9,53 @@
 // of this license. You must not remove this notice, or any other, from
 // this software.
 // 
-// Module: sgi/vector.h
+// Module: sgi/list.h
 // Creator: xushiwei
 // Email: xushiweizh@gmail.com
 // Date: 2006-8-18 18:56:07
 // 
-// $Id: vector.h,v 1.1 2006/10/18 12:13:39 xushiwei Exp $
+// $Id: list.h,v 1.1 2006/10/18 12:13:39 xushiwei Exp $
 // -----------------------------------------------------------------------*/
-#ifndef __SGI_VECTOR_H__
-#define __SGI_VECTOR_H__
+#ifndef __SGI_LIST_H__
+#define __SGI_LIST_H__
 
 // -------------------------------------------------------------------------
+// list
+
+#ifndef __SGI_CONFIG_H__
+#include "config.h"
+#endif
 
 #if defined(X_STL_SGI)
-	#ifndef __SGI_STL_VECTOR_H
-	#include "../../../../stl/vector.h"
+	#ifndef __SGI_STL_LIST_H
+	#include "../../../../stl/list.h"
 	#endif
 #else
-	#ifndef _VECTOR_
-	#include <vector>
+	#ifndef _LIST_
+	#include <list>
 	#endif
 #endif
 
-#ifndef __SGI_STL_INTERNAL_VECTOR_H
-	#define __SGI_STL_INTERNAL_VECTOR_H
+#ifndef __SGI_STL_INTERNAL_LIST_H
+	#define __SGI_STL_INTERNAL_LIST_H
 #endif
 
 // -------------------------------------------------------------------------
 
 namespace stdext
 {
-	using std::vector;
+	using std::list;
 }
 
 // -------------------------------------------------------------------------
-// $Log: vector.h,v $
+// slist
 
-#endif /* __SGI_VECTOR_H__ */
+#ifndef __SGI_STL_SLIST_H
+#include "../../../../stl/slist.h"
+#endif 
+
+// -------------------------------------------------------------------------
+// $Log: list.h,v $
+//
+
+#endif /* __SGI_LIST_H__ */

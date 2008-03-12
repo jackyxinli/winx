@@ -216,7 +216,8 @@ protected:
 
 // Specialization for instanceless allocators.
 template <class _Tp, class _Allocator>
-class _Slist_alloc_base<_Tp,_Allocator, true> {
+class _Slist_alloc_base_unused {
+	typedef _Slist_alloc_base_unused _Slist_alloc_base; // <_Tp,_Allocator, true> {
 public:
   typedef typename _Alloc_traits<_Tp,_Allocator>::allocator_type
           allocator_type;

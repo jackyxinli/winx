@@ -19,11 +19,14 @@
 #ifndef __SGI_CONFIG_H__
 #define __SGI_CONFIG_H__
 
+#pragma warning(disable:4010) // vc6: single-line comment contains line-continuation character
+
 // -------------------------------------------------------------------------
 // std::allocator
 
 #define __STL_USE_STD_ALLOCATORS
 #define __SGI_STL_INTERNAL_ALLOC_H
+#define __SGI_STL_ALLOC_H
 
 // -------------------------------------------------------------------------
 
@@ -43,6 +46,7 @@ namespace stdext
 	template <class _Tp, class _Alloc>
 	struct _Alloc_traits
 	{
+		enum { _S_instanceless = 0 };
 		typedef _Tp value_type;
 		typedef std::StlAlloc<value_type, std::ScopeAlloc> allocator_type;
 	};
@@ -50,6 +54,7 @@ namespace stdext
 	template <class _Tp, class _Alloc>
 	struct _Alloc_traits
 	{
+		enum { _S_instanceless = 0 };
 		typedef _Tp value_type;
 		typedef typename _Alloc::template rebind<value_type>::other
 			allocator_type;

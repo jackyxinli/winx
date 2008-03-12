@@ -74,7 +74,7 @@ void testSgiHashMap();
 
 void testStdExt()
 {
-	WINX_TEST_APP(std::ErrorLog, "TestHashSet", "");
+	WINX_TEST_APP(std::ErrorLog, "TestSlist", "");
 //	testSgiHashMap();
 
 	WINX_TEST_CLASS(TestFinder);
@@ -102,6 +102,7 @@ void testStdExt()
 	WINX_TEST_CLASS(std::TestHashMap);
 	WINX_TEST_CLASS(std::TestHashSet);
 	WINX_TEST_CLASS(std::TestList);
+	WINX_TEST_CLASS(std::TestSlist);
 	WINX_TEST_CLASS(std::TestDclList);
 
 	//Memory.h

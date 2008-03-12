@@ -19,8 +19,24 @@
 #ifndef __STDEXT_LIST_H__
 #define __STDEXT_LIST_H__
 
-#ifndef _LIST_
-#include <list>
+#if defined(X_STL_SGI)
+	#ifndef __SGI_STL_LIST_H
+	#include "../../../stl/list.h"
+	#endif
+#else
+	#ifndef _LIST_
+	#include <list>
+	#endif
+#endif
+
+#if defined(X_STL_GCC)
+	#ifndef _SLIST
+	#include <ext/slist>
+	#endif
+#else
+	#ifndef __SGI_LIST_H__
+	#include "sgi/list.h"
+	#endif
 #endif
 
 #ifndef __STDEXT_MEMORY_H__
@@ -54,6 +70,36 @@ public:
 
 	template <class Iterator>
 	List(AllocT& alloc, Iterator aFirst, Iterator aLast)
+		: _Base(aFirst, aLast, alloc)
+	{
+	}
+};
+
+// -------------------------------------------------------------------------
+// class Slist
+
+template <class ValT, class AllocT = ScopeAlloc>
+class Slist : public stdext::slist< ValT, StlAlloc<ValT, AllocT> >
+{
+private:
+	typedef StlAlloc<ValT, AllocT> _Alloc;
+	typedef stdext::slist<ValT, _Alloc> _Base;
+
+public:
+    typedef typename _Base::size_type size_type;
+    
+	explicit Slist(AllocT& alloc)
+		: _Base(alloc)
+	{
+	}
+
+	Slist(AllocT& alloc, size_type count, const ValT& val = ValT())
+		: _Base(count, val, alloc)
+	{
+	}
+
+	template <class Iterator>
+	Slist(AllocT& alloc, Iterator aFirst, Iterator aLast)
 		: _Base(aFirst, aLast, alloc)
 	{
 	}
@@ -303,6 +349,32 @@ public:
 		coll.push_back(1);
 		coll.push_back(2);
 		coll.push_back(4);
+	}
+};
+
+// -------------------------------------------------------------------------
+// class TestSlist
+
+template <class LogT>
+class TestSlist : public TestCase
+{
+	WINX_TEST_SUITE(TestSlist);
+		WINX_TEST(testBasic);
+	WINX_TEST_SUITE_END();
+
+public:
+	void testBasic(LogT& log)
+	{
+		std::BlockPool recycle;
+		std::ScopeAlloc alloc(recycle);
+		std::Slist<int> coll(alloc);
+		coll.push_front(1);
+		coll.push_front(2);
+		coll.push_front(4);
+		for (std::Slist<int>::const_iterator it = coll.begin(); it != coll.end(); ++it)
+		{
+			log.print(*it).newline();
+		}
 	}
 };
 
