@@ -98,12 +98,14 @@ interface SomeEvent : IEvent
 #define DEFINE_EVENT(Event, ParametersList)									\
 interface Event	: std::IEvent												\
 {																			\
-	template <class Target>													\
+	template <class Target, class TargetBase>								\
 	__forceinline std::IConnection* winx_call addListener(					\
 		Target* target,														\
-		void (__stdcall Target::*method) ParametersList)					\
+		void (__stdcall TargetBase::*method) ParametersList)				\
 	{																		\
-		return _addListener((std::FakeTarget*)target, *(void**)&method);	\
+		return _addListener(												\
+			(std::FakeTarget*)static_cast<TargetBase*>(target),				\
+			*(void**)&method);												\
 	}																		\
 }
 

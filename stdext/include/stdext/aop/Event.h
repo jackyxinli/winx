@@ -182,6 +182,7 @@ public:
 
 class Dialog
 {
+protected:
 	std::BlockPool m_recycle;
 	std::ScopeAlloc m_alloc;
 
@@ -219,6 +220,20 @@ public:
 	}
 };
 
+class Dialog2 : public Dialog
+{
+public:
+	Edit m_edit2;
+	std::Connection m_editChanged;
+
+public:
+	Dialog2()
+		: m_edit2(m_alloc)
+	{
+		m_editChanged = m_edit2.textChanged()->addListener(this, &Dialog2::onEditChanged);
+	}
+};
+
 } // namespace test_event
 
 template <class LogT>
@@ -238,6 +253,9 @@ public:
 		dlg.input(2);
 		dlg.disconnectEditChanged();
 		dlg.input(3);
+
+		Dialog2 dlg2;
+		dlg2.m_edit2.putText(20);
 	}
 };
 
