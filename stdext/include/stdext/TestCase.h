@@ -82,31 +82,23 @@ public:
 	bool winx_call runableTestClass(LPCSTR testClass)
 	{
 #if defined(STD_FILTER_TEST_CASE)
-		if (strstr(testClass, szTestClassSel))
-		{
-			szTestClass = testClass;
-			LogT::step('*');
-			return true;
-		}
-		return false;
-#else
-		return true;
+		if (strstr(testClass, szTestClassSel) == NULL)
+			return false;
 #endif
+		szTestClass = testClass;
+		LogT::step('*');
+		return true;
 	}
 
 	bool winx_call runableTestCase(LPCSTR testCase)
 	{
 #if defined(STD_FILTER_TEST_CASE)
-		if (*szTestCaseSel == 0 || strcmp(testCase, szTestCaseSel) == 0)
-		{
-			szTestCase = testCase;
-			LogT::step();
-			return true;
-		}
-		return false;
-#else
-		return true;
+		if (*szTestCaseSel != 0 && strcmp(testCase, szTestCaseSel) != 0)
+			return false;
 #endif
+		szTestCase = testCase;
+		LogT::step();
+		return true;
 	}
 
 public:
@@ -289,16 +281,6 @@ int __autoRun(FunT Fun, const char* szFun)
 
 // =========================================================================
 // $Log: TestCase.h,v $
-// Revision 1.4  2007/01/10 09:32:25  xushiwei
-// move UnitTest Assert(AssertExp, AssertFail, etc) from Log.h to TestCase.h
-//
-// Revision 1.3  2006/12/03 08:55:16  xushiwei
-// Unify style of map macro, such as:
-//  WINX_TEST_SUITE/WINX_TEST/WINX_TEST_SUITE_END;
-//
-// Revision 1.2  2006/11/21 10:43:37  xushiwei
-// WINX_TEST_APP支持内存泄漏调试。
-//
 // Revision 1.1  2006/09/26 07:51:00  xushiwei
 // STL-Extension:
 //  TestCase(WINX_TEST_APP, WINX_TEST_CLASS, WINX_TEST_SUITE, WINX_TEST, WINX_TEST_SUITE_END)
