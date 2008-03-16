@@ -31,9 +31,17 @@
 	#ifndef __SGI_STL_STRING
 	#include "../../../../stl/string"
 	#endif
+
+	#ifndef __SGI_STL_VECTOR_H
+	#include "../../../../stl/vector.h"
+	#endif
 #else
 	#ifndef _STRING_
 	#include <string>
+	#endif
+
+	#ifndef _VECTOR_
+	#include <vector>
 	#endif
 #endif
 

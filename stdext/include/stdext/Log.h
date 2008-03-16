@@ -355,7 +355,7 @@ public:
 	template <class DataIt>
 	Log& winx_call printArray(
 		DataIt array, size_t count,
-		const char* bracketL = "{ ", const char* bracketR = " }\n",
+		const char* bracketL = "{ ", const char* bracketR = " }",
 		const char* dataSep = ", ")
 	{
 		if (m_stg)
@@ -379,7 +379,7 @@ public:
 	template <class ArgT, class DataIt>
 	Log& winx_call printArray(
 		ArgT fmt, DataIt array, size_t count,
-		const char* bracketL = "{ ", const char* bracketR = " }\n",
+		const char* bracketL = "{ ", const char* bracketR = " }",
 		const char* dataSep = ", ")
 	{
 		if (m_stg)
@@ -404,7 +404,7 @@ public:
 	template <class DataIt>
 	Log& winx_call printObjArray(
 		DataIt array, size_t count,
-		const char* bracketL = "{ ", const char* bracketR = " }\n",
+		const char* bracketL = "{ ", const char* bracketR = " }",
 		const char* dataSep = ", ")
 	{
 		if (m_stg)
@@ -428,7 +428,7 @@ public:
 	template <class ArgT, class DataIt>
 	Log& winx_call printObjArray(
 		ArgT fmt, DataIt array, size_t count,
-		const char* bracketL = "{ ", const char* bracketR = " }\n",
+		const char* bracketL = "{ ", const char* bracketR = " }",
 		const char* dataSep = ", ")
 	{
 		if (m_stg)
@@ -716,8 +716,8 @@ public:
 	template <class ArgT, class DataIt>
 	Log& winx_call printArray(
 		DataIt array, size_t count,
-		const char* bracketL = "{ ", const char* bracketR = " }\n",
-		const char* dataSep = ", ")
+		const char* bracketL = NULL, const char* bracketR = NULL,
+		const char* dataSep = NULL)
 	{
 		return *this;
 	}
@@ -725,8 +725,8 @@ public:
 	template <class ArgT, class DataIt>
 	Log& winx_call printArray(
 		ArgT fmt, DataIt array, size_t count,
-		const char* bracketL = "{ ", const char* bracketR = " }\n",
-		const char* dataSep = ", ")
+		const char* bracketL = NULL, const char* bracketR = NULL,
+		const char* dataSep = NULL)
 	{
 		return *this;
 	}
@@ -735,8 +735,8 @@ public:
 	template <class ArgT, class DataIt>
 	Log& winx_call printObjArray(
 		DataIt array, size_t count,
-		const char* bracketL = "{ ", const char* bracketR = " }\n",
-		const char* dataSep = ", ")
+		const char* bracketL = NULL, const char* bracketR = NULL,
+		const char* dataSep = NULL)
 	{
 		return *this;
 	}
@@ -744,8 +744,8 @@ public:
 	template <class ArgT, class DataIt>
 	Log& winx_call printObjArray(
 		ArgT fmt, DataIt array, size_t count,
-		const char* bracketL = "{ ", const char* bracketR = " }\n",
-		const char* dataSep = ", ")
+		const char* bracketL = NULL, const char* bracketR = NULL,
+		const char* dataSep = NULL)
 	{
 		return *this;
 	}
