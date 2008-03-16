@@ -32,6 +32,35 @@
 #endif
 
 // -------------------------------------------------------------------------
+// _ConvIt - vector iterator convert
+
+namespace std {
+
+#if !defined(_MSC_VER)
+
+#ifndef __forceinline
+#define __forceinline inline
+#endif
+
+#endif
+
+#if defined(X_STL_NET) // visual c++ .net
+
+template <class _It>
+__forceinline typename _It::pointer _ConvIt(_It it)
+	{ return it._Myptr; }
+
+#else
+
+template <class _It>
+__forceinline _It _ConvIt(_It it)
+	{ return it; }
+
+#endif
+
+} // namespace std
+
+// -------------------------------------------------------------------------
 // $Log: stlpatch.h,v $
 // Revision 1.1  2006/12/22 10:19:55  xushiwei
 // STL-Patch: std::basic_string::_Split function bugfix (vc6)

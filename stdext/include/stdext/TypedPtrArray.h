@@ -50,23 +50,6 @@
 __NS_STD_BEGIN
 
 // -------------------------------------------------------------------------
-// _ConvIt - vector iterator convert
-
-#if defined(_MSC_VER) && (_MSC_VER > 1200) // visual c++ .net
-
-template <class _It>
-__forceinline typename _It::pointer _ConvIt(_It it)
-	{ return it._Myptr; }
-
-#else
-
-template <class _It>
-__forceinline _It _ConvIt(_It it)
-	{ return it; }
-
-#endif
-
-// -------------------------------------------------------------------------
 // class TypedPtrArray
 
 #define __STDEXT_PTRARRAY_USING												\
