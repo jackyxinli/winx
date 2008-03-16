@@ -40,6 +40,8 @@
 #include "../Memory.h"
 #endif
 
+#define _WINX_GC_ALLOCATOR
+
 namespace stdext
 {
 #if defined(X_CC_VC6)
@@ -82,6 +84,12 @@ namespace stdext
 #define __STL_BEGIN_RELOPS_NAMESPACE namespace stdext { namespace rel_ops {
 #define __STL_END_RELOPS_NAMESPACE } }
 #define __STD_RELOPS stdext::rel_ops
+
+// -------------------------------------------------------------------------
+
+#ifndef __SGI_ALGORITHM_H__
+#include "algorithm.h"
+#endif
 
 // -------------------------------------------------------------------------
 // $Log: config.h,v $

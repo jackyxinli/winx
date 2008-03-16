@@ -35,6 +35,10 @@
 #include <stdext/AOP.h>
 #include <stdext/Set.h>
 #include <stdext/List.h>
+#include <stdext/String.h>
+#include <stdext/text/Rope.h>
+#include <stdext/codepage/CP1252.h>
+#include <stdext/Rand.h>
 #include <stdext/tchar.h>
 #pragma comment(lib, "shlwapi.lib")
 
@@ -74,7 +78,7 @@ void testSgiHashMap();
 
 void testStdExt()
 {
-	WINX_TEST_APP(std::ErrorLog, "TestSlist", "");
+	WINX_TEST_APP(std::ErrorLog, "TestRope", "");
 //	testSgiHashMap();
 
 	WINX_TEST_CLASS(TestFinder);
@@ -93,7 +97,12 @@ void testStdExt()
 
 	//String
 	WINX_TEST_CLASS(std::TestCharType);
+	WINX_TEST_CLASS(std::TestCP1252);
 	WINX_TEST_CLASS(std::TestString);
+	WINX_TEST_CLASS(std::TestBasicString);
+	WINX_TEST_CLASS(std::TestStringBuilder);
+	WINX_TEST_CLASS(std::TestRope);
+	WINX_TEST_CLASS(std::TestRand);
 
 	//Collection
 	WINX_TEST_CLASS(std::TestPriorityArray);

@@ -60,7 +60,7 @@ public:
 // -------------------------------------------------------------------------
 // class MultiThreadModel
 
-class MultiThreadModel
+class MT
 {
 public:
 	typedef RefCountMT RefCount;
@@ -71,10 +71,12 @@ public:
 	typedef AutoLock<CS> CSLock;
 };
 
+typedef MT MultiThreadModel;
+
 // -------------------------------------------------------------------------
 // class SingleThreadModel
 
-class SingleThreadModel
+class ST
 {
 public:
 	typedef RefCountST RefCount;
@@ -84,6 +86,8 @@ public:
 	typedef CriticalSection CS;
 	typedef AutoLock<CS> CSLock;
 };
+
+typedef ST SingleThreadModel;
 
 // -------------------------------------------------------------------------
 //	$Log: $
