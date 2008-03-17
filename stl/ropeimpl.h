@@ -390,7 +390,7 @@ template <class _CharT, class _Alloc>
 // Concatenate a C string onto a leaf rope by copying the rope data.
 // Used for short ropes.
 template <class _CharT, class _Alloc>
-rope<_CharT,_Alloc>::_RopeLeaf*
+typename rope<_CharT,_Alloc>::_RopeLeaf*
 rope<_CharT,_Alloc>::_S_leaf_concat_char_iter
 		(_RopeLeaf* __r, const _CharT* __iter, size_t __len)
 {
@@ -414,7 +414,7 @@ rope<_CharT,_Alloc>::_S_leaf_concat_char_iter
 #ifndef __GC
 // As above, but it's OK to clobber original if refcount is 1
 template <class _CharT, class _Alloc>
-rope<_CharT,_Alloc>::_RopeLeaf*
+typename rope<_CharT,_Alloc>::_RopeLeaf*
 rope<_CharT,_Alloc>::_S_destr_leaf_concat_char_iter
 		(_RopeLeaf* __r, const _CharT* __iter, size_t __len)
 {
@@ -449,7 +449,7 @@ rope<_CharT,_Alloc>::_S_destr_leaf_concat_char_iter
 // Does not increment (nor decrement on exception) child reference counts.
 // Result has ref count 1.
 template <class _CharT, class _Alloc>
-rope<_CharT,_Alloc>::_RopeRep*
+typename rope<_CharT,_Alloc>::_RopeRep*
 rope<_CharT,_Alloc>::_S_tree_concat (_RopeRep* __left, _RopeRep* __right)
 {
     _RopeConcatenation* __result =
@@ -485,7 +485,7 @@ rope<_CharT,_Alloc>::_S_tree_concat (_RopeRep* __left, _RopeRep* __right)
 }
 
 template <class _CharT, class _Alloc>
-rope<_CharT,_Alloc>::_RopeRep* rope<_CharT,_Alloc>::_S_concat_char_iter
+typename rope<_CharT,_Alloc>::_RopeRep* rope<_CharT,_Alloc>::_S_concat_char_iter
 		(_RopeRep* __r, const _CharT*__s, size_t __slen)
 {
     _RopeRep* __result;
@@ -538,7 +538,7 @@ rope<_CharT,_Alloc>::_RopeRep* rope<_CharT,_Alloc>::_S_concat_char_iter
 
 #ifndef __GC
 template <class _CharT, class _Alloc>
-rope<_CharT,_Alloc>::_RopeRep* 
+typename rope<_CharT,_Alloc>::_RopeRep* 
 rope<_CharT,_Alloc>::_S_destr_concat_char_iter(
   _RopeRep* __r, const _CharT* __s, size_t __slen)
 {
@@ -596,7 +596,7 @@ rope<_CharT,_Alloc>::_S_destr_concat_char_iter(
 #endif /* !__GC */
 
 template <class _CharT, class _Alloc>
-rope<_CharT,_Alloc>::_RopeRep*
+typename rope<_CharT,_Alloc>::_RopeRep*
 rope<_CharT,_Alloc>::_S_concat(_RopeRep* __left, _RopeRep* __right)
 {
     if (0 == __left) {
@@ -641,7 +641,7 @@ rope<_CharT,_Alloc>::_S_concat(_RopeRep* __left, _RopeRep* __right)
 }
 
 template <class _CharT, class _Alloc>
-rope<_CharT,_Alloc>::_RopeRep*
+typename rope<_CharT,_Alloc>::_RopeRep*
 rope<_CharT,_Alloc>::_S_substring(_RopeRep* __base, 
                                size_t __start, size_t __endp1)
 {
@@ -889,16 +889,26 @@ bool rope<_CharT, _Alloc>::_S_apply_to_pieces(
 	    {
 		_RopeFunction* __f = (_RopeFunction*)__r;
 		size_t __len = __end - __begin;
-		bool __result;
+		bool __result = false;
+#ifdef __GC
+		_CharT* __buffer =
+		  (_CharT*)__r->get_allocator()._Charalloc(__len * sizeof(_CharT));
+		__STL_TRY {
+		  (*(__f->_M_fn))(__begin, __len, __buffer);
+		  __result = __c(__buffer, __len);
+		}
+		__STL_UNWIND(0)
+#else
 		_CharT* __buffer =
 		  (_CharT*)alloc::allocate(__len * sizeof(_CharT));
 		__STL_TRY {
 		  (*(__f->_M_fn))(__begin, __len, __buffer);
 		  __result = __c(__buffer, __len);
-                  alloc::deallocate(__buffer, __len * sizeof(_CharT));
-                }
+		  alloc::deallocate(__buffer, __len * sizeof(_CharT));
+		}
 		__STL_UNWIND((alloc::deallocate(__buffer,
 						__len * sizeof(_CharT))))
+#endif
 		return __result;
 	    }
 	default:
@@ -1111,7 +1121,7 @@ rope<_CharT,_Alloc>::_S_min_len[
 // These are Fibonacci numbers < 2**32.
 
 template <class _CharT, class _Alloc>
-rope<_CharT,_Alloc>::_RopeRep*
+typename rope<_CharT,_Alloc>::_RopeRep*
 rope<_CharT,_Alloc>::_S_balance(_RopeRep* __r)
 {
     _RopeRep* __forest[_RopeRep::_S_max_rope_depth + 1];
@@ -1490,7 +1500,7 @@ const _CharT* rope<_CharT,_Alloc>::c_str() const {
     __GC_CONST _CharT* __old_c_string = _M_tree_ptr->_M_c_string;
     if (0 != __old_c_string) return(__old_c_string);
     size_t __s = size();
-    _CharT* __result = _Data_allocate(__s + 1);
+    _CharT* __result = this->_Data_allocate(__s + 1);
     _S_flatten(_M_tree_ptr, __result);
     __result[__s] = _S_eos((_CharT*)0);
 #   ifdef __GC

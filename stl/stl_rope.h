@@ -540,6 +540,10 @@ struct _Rope_RopeRep : public _Rope_rep_base<_CharT,_Alloc>
 
 template<class _CharT, class _Alloc>
 struct _Rope_RopeLeaf : public _Rope_RopeRep<_CharT,_Alloc> {
+  typedef _Rope_RopeRep<_CharT,_Alloc> _Base;
+  public:
+  	using _Base::_S_leaf;
+  	using _Base::_M_c_string;
   public:
     // Apparently needed by VC++
     // The data fields of leaves are allocated with some
@@ -594,6 +598,9 @@ struct _Rope_RopeLeaf : public _Rope_RopeRep<_CharT,_Alloc> {
 
 template<class _CharT, class _Alloc>
 struct _Rope_RopeConcatenation : public _Rope_RopeRep<_CharT,_Alloc> {
+  typedef _Rope_RopeRep<_CharT,_Alloc> _Base;
+  public:
+  	using _Base::_S_concat;
   public:
     _Rope_RopeRep<_CharT,_Alloc>* _M_left;
     _Rope_RopeRep<_CharT,_Alloc>* _M_right;
@@ -620,6 +627,9 @@ struct _Rope_RopeConcatenation : public _Rope_RopeRep<_CharT,_Alloc> {
 
 template<class _CharT, class _Alloc>
 struct _Rope_RopeFunction : public _Rope_RopeRep<_CharT,_Alloc> {
+  typedef _Rope_RopeRep<_CharT,_Alloc> _Base;
+  public:
+  	using _Base::_S_function;
   public:
     char_producer<_CharT>* _M_fn;
 #   ifndef __GC
@@ -674,6 +684,12 @@ struct _Rope_RopeFunction : public _Rope_RopeRep<_CharT,_Alloc> {
 template<class _CharT, class _Alloc>
 struct _Rope_RopeSubstring : public _Rope_RopeFunction<_CharT,_Alloc>,
                              public char_producer<_CharT> {
+  typedef _Rope_RopeFunction<_CharT,_Alloc> _Base;
+  public:
+  	using _Base::_S_function;
+  	using _Base::_S_substringfn;
+  	using _Base::_S_leaf;
+  	using _Base::_M_tag;
   public:
     // XXX this whole class should be rewritten.
     _Rope_RopeRep<_CharT,_Alloc>* _M_base;      // not 0
@@ -943,6 +959,14 @@ template<class _CharT, class _Alloc> class _Rope_iterator;
 template<class _CharT, class _Alloc>
 class _Rope_const_iterator : public _Rope_iterator_base<_CharT,_Alloc> {
     friend class rope<_CharT,_Alloc>;
+    typedef _Rope_iterator_base<_CharT,_Alloc> _Base;
+  protected:
+    using _Base::_M_current_pos;
+    using _Base::_M_root;
+    using _Base::_M_buf_ptr;
+    using _Base::_M_buf_end;
+    using _Base::_M_incr;
+    using _Base::_M_decr;
   protected:
 #   ifdef __STL_HAS_NAMESPACES
       typedef _Rope_RopeRep<_CharT,_Alloc> _RopeRep;
@@ -1081,6 +1105,18 @@ class _Rope_const_iterator : public _Rope_iterator_base<_CharT,_Alloc> {
 template<class _CharT, class _Alloc>
 class _Rope_iterator : public _Rope_iterator_base<_CharT,_Alloc> {
     friend class rope<_CharT,_Alloc>;
+    typedef _Rope_iterator_base<_CharT,_Alloc> _Base;
+  protected:
+    using _Base::_M_current_pos;
+    using _Base::_M_root;
+    using _Base::_M_buf_ptr;
+    using _Base::_M_buf_end;
+    using _Base::_M_incr;
+    using _Base::_M_decr;
+#   ifdef __STL_HAS_NAMESPACES
+      typedef _Rope_RopeRep<_CharT,_Alloc> _RopeRep;
+      // The one from the base class may not be directly visible.
+#   endif
   protected:
     rope<_CharT,_Alloc>* _M_root_rope;
         // root is treated as a cached version of this,
@@ -1350,6 +1386,7 @@ class rope : public _Rope_base<_CharT,_Alloc> {
         typedef typename _Base::allocator_type allocator_type;
 #       ifdef __STL_USE_NAMESPACES
           using _Base::_M_tree_ptr;
+          using _Base::get_allocator;
 #       endif
         typedef __GC_CONST _CharT* _Cstrptr;
 
@@ -2359,7 +2396,7 @@ class rope : public _Rope_base<_CharT,_Alloc> {
 };
 
 template <class _CharT, class _Alloc>
-const rope<_CharT, _Alloc>::size_type rope<_CharT, _Alloc>::npos =
+const typename rope<_CharT, _Alloc>::size_type rope<_CharT, _Alloc>::npos =
                         (size_type)(-1);
 
 template <class _CharT, class _Alloc>
