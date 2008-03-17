@@ -23,14 +23,8 @@
 #include "../Basic.h"
 #endif
 
-#if defined(X_STL_GCC)
-	#ifndef _ROPE
-	#include <ext/rope>
-	#endif
-#else
-	#ifndef __SGI_ROPE_H__
-	#include "../sgi/rope.h"
-	#endif
+#ifndef __SGI_ROPE_H__
+#include "../sgi/rope.h"
 #endif
 
 __NS_STD_BEGIN

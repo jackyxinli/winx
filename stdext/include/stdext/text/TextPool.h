@@ -45,6 +45,9 @@ private:
 	typedef std::deque<CharT> _Base;
 
 public:
+	typedef typename _Base::size_type size_type;
+
+public:
 	TextPool() {}
 	explicit TextPool(size_type count, const CharT& ch = CharT())
 		: _Base(count, ch) {}

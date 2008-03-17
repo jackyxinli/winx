@@ -26,7 +26,7 @@
 	#include "../../../../stl/vector.h"
 	#endif
 #else
-	#ifndef _VECTOR_
+	#if !defined(_VECTOR_) && !defined(_VECTOR)
 	#include <vector>
 	#endif
 #endif
@@ -37,7 +37,7 @@
 
 // -------------------------------------------------------------------------
 
-namespace stdext
+namespace __STD
 {
 	using std::vector;
 }

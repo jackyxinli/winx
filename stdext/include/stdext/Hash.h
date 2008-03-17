@@ -42,10 +42,6 @@ public:
 
 #else
 
-#if defined(X_STL_GCC)
-namespace stdext = __gnu_cxx;
-#endif
-
 template <class KeyT>
 class Hash : public stdext::hash<KeyT>
 {

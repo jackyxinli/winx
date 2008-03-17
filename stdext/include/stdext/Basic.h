@@ -458,6 +458,13 @@ typedef std::TestCase TestCase;
 #endif
 
 // -------------------------------------------------------------------------
+// namespace stdext
+
+#if defined(X_STL_GCC)
+namespace stdext = __gnu_cxx;
+#endif
+
+// -------------------------------------------------------------------------
 // $Log: Basic.h,v $
 // Revision 1.6  2007/01/10 09:38:10  xushiwei
 // STD_ISOCPP_FOR

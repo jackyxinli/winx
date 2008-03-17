@@ -19,12 +19,16 @@
 #ifndef __STDEXT_TEXT_BASICSTRING_H__
 #define __STDEXT_TEXT_BASICSTRING_H__
 
-#ifndef __STDEXT_TEXT_BASICALGO_H__
-#include "BasicAlgo.h"
+#ifndef __STDEXT_BASIC_H__
+#include "../Basic.h"
 #endif
 
 #ifndef __STDEXT_MEMORY_H__
 #include "../Memory.h"
+#endif
+
+#ifndef __STDEXT_TEXT_BASICALGO_H__
+#include "BasicAlgo.h"
 #endif
 
 #if defined(X_STL_SGI)
@@ -75,12 +79,20 @@ public:
 
 	typedef const _E* iterator;
 	typedef const _E* const_iterator;
+
+#if defined(X_CC_VC6)
 	typedef std::reverse_iterator<const_iterator, value_type,
 		const_reference, const_pointer, difference_type>
 			const_reverse_iterator;
 	typedef std::reverse_iterator<iterator, value_type,
 		reference, pointer, difference_type>
 			reverse_iterator;
+#else
+	typedef std::reverse_iterator<const_iterator>
+			const_reverse_iterator;
+	typedef std::reverse_iterator<iterator>
+			reverse_iterator;
+#endif
 
 private:
     size_type m_length;

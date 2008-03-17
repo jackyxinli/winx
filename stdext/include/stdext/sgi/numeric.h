@@ -9,49 +9,50 @@
 // of this license. You must not remove this notice, or any other, from
 // this software.
 // 
-// Module: sgi/string.h
+// Module: sgi/numeric.h
 // Creator: xushiwei
 // Email: xushiweizh@gmail.com
 // Date: 2006-8-18 18:56:07
 // 
-// $Id: string.h,v 1.1 2006/10/18 12:13:39 xushiwei Exp $
+// $Id: numeric.h,v 1.1 2006/10/18 12:13:39 xushiwei Exp $
 // -----------------------------------------------------------------------*/
-#ifndef __SGI_STRING_H__
-#define __SGI_STRING_H__
+#ifndef __SGI_NUMERIC_H__
+#define __SGI_NUMERIC_H__
 
 // -------------------------------------------------------------------------
 
 #if defined(X_STL_SGI)
-	#ifndef __SGI_STL_STRING
-	#include "../../../../stl/string"
+	#ifndef __SGI_STL_NUMERIC
+	#include "../../../../stl/numeric"
 	#endif
 #else
-	#ifndef _STRING_
-	#include <string>
+	#if defined(X_STL_GCC)
+		#if !defined(_NUMERIC_) && !defined(_NUMERIC)
+		#include <numeric>
+		#endif
+		
+		#ifndef _EXT_NUMERIC
+		#include <ext/numeric>
+		#endif
+		
+		namespace __STD {
+			using std::accumulate;
+			using std::inner_product;
+			using std::partial_sum;
+			using std::adjacent_difference;
+		};
+	#else
+		#ifndef __SGI_STL_NUMERIC
+		#include "../../../../stl/numeric"
+		#endif
 	#endif
-
-	inline const char* __get_c_string(const std::string& __s) { return __s.c_str(); }
 #endif
 
-#ifndef __SGI_STL_STRING
-	#define __SGI_STL_STRING
-#endif
-
-#ifndef __SGI_STL_STRING_FWD_H
-	#define __SGI_STL_STRING_FWD_H
+#ifndef __SGI_STL_INTERNAL_NUMERIC_H
+	#define __SGI_STL_INTERNAL_NUMERIC_H
 #endif
 
 // -------------------------------------------------------------------------
+// $Log: numeric.h,v $
 
-namespace __STD
-{
-	using std::allocator;
-	using std::basic_string;
-	using std::string;
-	using std::wstring;
-}
-
-// -------------------------------------------------------------------------
-// $Log: string.h,v $
-
-#endif /* __SGI_STRING_H__ */
+#endif /* __SGI_NUMERIC_H__ */

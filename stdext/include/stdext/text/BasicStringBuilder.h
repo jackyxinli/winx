@@ -42,7 +42,9 @@ public:																		\
 	using _Base::assign;													\
 	using _Base::insert;													\
 	using _Base::erase;														\
-	using _Base::clear
+	using _Base::clear;														\
+	using _Base::begin;														\
+	using _Base::size
 
 // -------------------------------------------------------------------------
 // class BasicStringBuilder
@@ -57,6 +59,9 @@ private:
 	typedef BasicStringBuilder _Myt;
 	_WINX_BSB_USING_VECTOR;
 
+public:
+	typedef typename _Base::size_type size_type;
+	
 public:
 	BasicStringBuilder() {}
 

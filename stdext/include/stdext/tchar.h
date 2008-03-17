@@ -19,8 +19,8 @@
 #ifndef __STDEXT_TCHAR_H__
 #define __STDEXT_TCHAR_H__
 
-#ifndef __STDEXT_STRING_H__
-#include "String.h"
+#ifndef __STDEXT_TEXT_BASICALGO_H__
+#include "text/BasicAlgo.h"
 #endif
 
 #ifndef _INC_LIMITS

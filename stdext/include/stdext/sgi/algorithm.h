@@ -26,8 +26,13 @@
 	#include "../../../../stl/algorithm"
 	#endif
 #else
-	#ifndef _ALGORITHM_
+	#if !defined(_ALGORITHM_) && !defined(_ALGORITHM)
 	#include <algorithm>
+	#endif
+	#if defined(X_STL_GCC)
+		#ifndef _EXT_ALGORITHM
+		#include <ext/algorithm>
+		#endif
 	#endif
 #endif
 
@@ -39,13 +44,21 @@
 	#define __SGI_STL_INTERNAL_ALGO_H
 #endif
 
+#ifndef __SGI_STL_INTERNAL_ALGOBASE_H
+	#define __SGI_STL_INTERNAL_ALGOBASE_H
+#endif
+
 #ifndef __SGI_STL_ALGO_H
 	#define __SGI_STL_ALGO_H
 #endif
 
+#ifndef __SGI_STL_ALGOBASE_H
+	#define __SGI_STL_ALGOBASE_H
+#endif
+
 // -------------------------------------------------------------------------
 
-namespace stdext
+namespace __STD
 {
 	// Names from <stl_algo.h>
 	using std::for_each; 

@@ -98,6 +98,10 @@ SOURCE=.\TestHash.cpp
 # End Source File
 # Begin Source File
 
+SOURCE=.\TestString.cpp
+# End Source File
+# Begin Source File
+
 SOURCE=.\TestStdHash.cpp
 # End Source File
 # Begin Source File

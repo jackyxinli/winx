@@ -34,10 +34,48 @@
 #include "string.h"
 #endif
 
+#ifndef __SGI_VECTOR_H__
+#include "vector.h"
+#endif
+
+#ifndef __SGI_ITERATOR_H__
+#include "iterator.h"
+#endif
+
+#ifndef __SGI_FUNCTIONAL_H__
+#include "functional.h"
+#endif
+
+#ifndef __SGI_NUMERIC_H__
+#include "numeric.h"
+#endif
+
 #pragma warning(disable:4355)
 
-#ifndef __SGI_STL_INTERNAL_NUMERIC_H
-#include "../../../../stl/stl_numeric.h"
+#if defined(X_STL_GCC)
+	#define __SGI_STL_HASH_FUN_H
+	#define __SGI_STL_HASHTABLE_H
+	#define __SGI_STL_INTERNAL_HASHTABLE_H
+
+	#ifdef __STL_USE_NEW_IOSTREAMS
+		#ifndef _IOSTREAM
+		#include <iostream>
+		#endif
+	#endif
+
+	#ifndef _HASH_MAP
+	#include <ext/hash_map>
+	#endif
+
+	#ifndef _EXT_MEMORY
+	#include <ext/memory>
+	#endif
+
+	namespace __STD {
+		using std::basic_ostream;
+		using std::ios;
+		using std::length_error;
+	};
 #endif
 
 #define __GC

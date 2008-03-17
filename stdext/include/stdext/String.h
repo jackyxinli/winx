@@ -19,6 +19,10 @@
 #ifndef __STDEXT_STRING_H__
 #define __STDEXT_STRING_H__
 
+#ifndef __STDEXT_BASIC_H__
+#include "Basic.h"
+#endif
+
 #ifndef __STDEXT_TEXT_BASICALGO_H__
 #include "text/BasicAlgo.h"
 #endif

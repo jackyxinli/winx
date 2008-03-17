@@ -19,6 +19,10 @@
 #ifndef __STDEXT_LIST_H__
 #define __STDEXT_LIST_H__
 
+#ifndef __STDEXT_BASIC_H__
+#include "Basic.h"
+#endif
+
 #if defined(X_STL_SGI)
 	#ifndef __SGI_STL_LIST_H
 	#include "../../../stl/list.h"
