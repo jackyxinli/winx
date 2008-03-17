@@ -20,26 +20,16 @@
 #ifndef __STDEXT_SCOPEDBG_SCOPELOG_H__
 #define __STDEXT_SCOPEDBG_SCOPELOG_H__
 
-#if (0)
-	#define WINX_SCOPE_DEQUE_LOG
-#endif
-
 #ifndef __STDEXT_STORAGE_H__
-	#include "../Storage.h"
+#include "../Storage.h"
 #endif
 
 #ifndef __STDEXT_LOG_H__
-	#include "../Log.h"
+#include "../Log.h"
 #endif
 
-#if defined(WINX_SCOPE_DEQUE_LOG)
-	#ifndef _DEQUE_
-	#include <deque>
-	#endif
-#else
-	#ifndef _VECTOR_
-	#include <vector>
-	#endif
+#ifndef __STD_DEQUE_H__
+#include "../../std/deque.h"
 #endif
 
 #if !defined(WINX_USE_WINSDK)
@@ -90,12 +80,7 @@ private:
 	typedef typename StorageT::char_type CharT;
 	typedef std::basic_string<CharT> StringT;
 	typedef StringStorage<StringT> StringStorageT;
-
-#if defined(WINX_SCOPE_DEQUE_LOG)
 	typedef std::deque<StringT> QueuedMessageT;
-#else
-	typedef std::vector<StringT> QueuedMessageT;
-#endif
 
 	QueuedMessageT m_scopes;
 	StringStorageT m_curr; 

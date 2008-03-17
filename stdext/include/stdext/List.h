@@ -23,28 +23,12 @@
 #include "Basic.h"
 #endif
 
-#if defined(X_STL_SGI)
-	#ifndef __SGI_STL_LIST_H
-	#include "../../../stl/list.h"
-	#endif
-#else
-	#ifndef _LIST_
-	#include <list>
-	#endif
-#endif
-
-#if defined(X_STL_GCC)
-	#ifndef _SLIST
-	#include <ext/slist>
-	#endif
-#else
-	#ifndef __SGI_LIST_H__
-	#include "sgi/list.h"
-	#endif
-#endif
-
 #ifndef __STDEXT_MEMORY_H__
 #include "Memory.h"
+#endif
+
+#ifndef __STD_LIST_H__
+#include "../std/list.h"
 #endif
 
 __NS_STD_BEGIN

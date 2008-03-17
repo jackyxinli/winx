@@ -23,8 +23,8 @@
 #include "RefFinder.h"
 #endif
 
-#ifndef _DEQUE_
-#include <deque>
+#ifndef __STD_DEQUE_H__
+#include "../../std/deque.h"
 #endif
 
 #ifndef _FSTREAM_

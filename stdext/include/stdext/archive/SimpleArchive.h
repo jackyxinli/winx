@@ -19,14 +19,8 @@
 #ifndef __STDEXT_ARCHIVE_SIMPLEARCHIVE_H__
 #define __STDEXT_ARCHIVE_SIMPLEARCHIVE_H__
 
-#if defined(X_STL_SGI)
-	#ifndef __SGI_STL_VECTOR_H
-	#include "../../../../stl/vector.h"
-	#endif
-#else
-	#ifndef _VECTOR_
-	#include <vector>
-	#endif
+#ifndef __STD_VECTOR_H__
+#include "../../std/vector.h"
 #endif
 
 __NS_STD_BEGIN

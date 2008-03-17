@@ -23,14 +23,8 @@
 #include "../Basic.h"
 #endif
 
-#if defined(X_STL_SGI)
-	#ifndef __SGI_STL_DEQUE
-	#include "../../../../stl/deque"
-	#endif
-#else
-	#ifndef _DEQUE_
-	#include <deque>
-	#endif
+#ifndef __STD_DEQUE_H__
+#include "../../std/deque.h"
 #endif
 
 __NS_STD_BEGIN

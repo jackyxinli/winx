@@ -27,26 +27,16 @@
 #include "../Memory.h"
 #endif
 
-#ifndef __STDEXT_TEXT_BASICALGO_H__
-#include "BasicAlgo.h"
+#ifndef __STD_VECTOR_H__
+#include "../../std/vector.h"
 #endif
 
-#if defined(X_STL_SGI)
-	#ifndef __SGI_STL_STRING
-	#include "../../../../stl/string"
-	#endif
+#ifndef __STD_STRING_H__
+#include "../../std/string.h"
+#endif
 
-	#ifndef __SGI_STL_VECTOR_H
-	#include "../../../../stl/vector.h"
-	#endif
-#else
-	#ifndef _STRING_
-	#include <string>
-	#endif
-
-	#ifndef _VECTOR_
-	#include <vector>
-	#endif
+#ifndef __STDEXT_TEXT_BASICALGO_H__
+#include "BasicAlgo.h"
 #endif
 
 __NS_STD_BEGIN
