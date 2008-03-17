@@ -304,8 +304,8 @@ struct _Rope_Concat_fn
        : public binary_function<rope<_CharT,_Alloc>, rope<_CharT,_Alloc>,
                                      rope<_CharT,_Alloc> > {
 #ifdef _WINX_GC_ALLOCATOR
-		_Alloc& m_alloc;
-		_Rope_Concat_fn(_Alloc& alloc) : m_alloc(alloc) {}
+		_Alloc m_alloc;
+		_Rope_Concat_fn(_Alloc alloc) : m_alloc(alloc) {}
 #endif
         rope<_CharT,_Alloc> operator() (const rope<_CharT,_Alloc>& __x,
                                 const rope<_CharT,_Alloc>& __y) {
@@ -1386,7 +1386,12 @@ class rope : public _Rope_base<_CharT,_Alloc> {
         typedef typename _Base::allocator_type allocator_type;
 #       ifdef __STL_USE_NAMESPACES
           using _Base::_M_tree_ptr;
+#       endif
+#       ifdef __STL_USE_STD_ALLOCATORS
           using _Base::get_allocator;
+          typedef typename _Base::_LAllocator _LAllocator;
+          typedef typename _Base::_CAllocator _CAllocator;
+          typedef typename _Base::_FAllocator _FAllocator;
 #       endif
         typedef __GC_CONST _CharT* _Cstrptr;
 
