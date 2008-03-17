@@ -30,6 +30,18 @@
 #include "vector.h"
 #endif
 
+#ifndef __SGI_ITERATOR_H__
+#include "iterator.h"
+#endif
+
+#ifndef __TYPE_TRAITS_H
+#include "../../../../stl/type_traits.h"
+#endif
+
+#ifndef __SGI_STL_INTERNAL_PAIR_H
+#include "../../../../stl/stl_pair.h"
+#endif
+
 #ifndef __SGI_STL_INTERNAL_HASHTABLE_H
 #include "../../../../stl/stl_hashtable.h"
 #endif 

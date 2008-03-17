@@ -26,6 +26,10 @@
 #include "config.h"
 #endif
 
+#ifndef __SGI_ITERATOR_H__
+#include "iterator.h"
+#endif
+
 #if defined(X_STL_SGI)
 	#ifndef __SGI_STL_LIST_H
 	#include "../../../../stl/list.h"

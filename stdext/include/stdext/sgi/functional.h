@@ -26,19 +26,22 @@
 	#include "../../../../stl/functional"
 	#endif
 #else
-	#if !defined(_FUNCTIONAL_) && !defined(_FUNCTIONAL)
-	#include <functional>
+	#if defined(X_STL_GCC)
+		#if !defined(_FUNCTIONAL_) && !defined(_FUNCTIONAL)
+		#include <functional>
+		#endif
+		namespace __STD
+		{
+			using std::binary_function;
+			using std::min;
+			using std::max;
+		};
+	#else
+		#ifndef __SGI_STL_FUNCTIONAL
+		#include "../../../../stl/functional"
+		#endif
 	#endif
 #endif
-
-// -------------------------------------------------------------------------
-
-namespace __STD
-{
-	using std::binary_function;
-	using std::min;
-	using std::max;
-};
 
 // -------------------------------------------------------------------------
 // $Log: functional.h,v $

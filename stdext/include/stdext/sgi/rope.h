@@ -38,21 +38,21 @@
 #include "vector.h"
 #endif
 
-#ifndef __SGI_ITERATOR_H__
-#include "iterator.h"
-#endif
-
-#ifndef __SGI_FUNCTIONAL_H__
-#include "functional.h"
-#endif
-
-#ifndef __SGI_NUMERIC_H__
-#include "numeric.h"
-#endif
-
 #pragma warning(disable:4355)
 
 #if defined(X_STL_GCC)
+	#ifndef __SGI_ITERATOR_H__
+	#include "iterator.h"
+	#endif
+
+	#ifndef __SGI_FUNCTIONAL_H__
+	#include "functional.h"
+	#endif
+
+	#ifndef __SGI_NUMERIC_H__
+	#include "numeric.h"
+	#endif
+
 	#define __SGI_STL_HASH_FUN_H
 	#define __SGI_STL_HASHTABLE_H
 	#define __SGI_STL_INTERNAL_HASHTABLE_H
@@ -76,6 +76,14 @@
 		using std::ios;
 		using std::length_error;
 	};
+
+	#ifndef __TYPE_TRAITS_H
+	#include "../../../../stl/type_traits.h"
+	#endif
+
+	#ifndef __SGI_STL_INTERNAL_PAIR_H
+	#include "../../../../stl/stl_pair.h"
+	#endif
 #endif
 
 #define __GC
