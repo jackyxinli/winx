@@ -9,30 +9,50 @@
 // of this license. You must not remove this notice, or any other, from
 // this software.
 // 
-// Module: sgi/algorithm.h
+// Module: sgi/gcc/string.h
 // Creator: xushiwei
 // Email: xushiweizh@gmail.com
 // Date: 2006-8-18 18:56:07
 // 
-// $Id: algorithm.h,v 1.1 2006/10/18 12:13:39 xushiwei Exp $
+// $Id: string.h,v 1.1 2006/10/18 12:13:39 xushiwei Exp $
 // -----------------------------------------------------------------------*/
-#ifndef __SGI_ALGORITHM_H__
-#define __SGI_ALGORITHM_H__
+#ifndef __SGI_GCC_STRING_H__
+#define __SGI_GCC_STRING_H__
 
-// -------------------------------------------------------------------------
-// algorithm.h
-
-#if defined(X_STL_GCC)
-	#ifndef __SGI_GCC_ALGORITHM_H__
-	#include "gcc/algorithm.h"
-	#endif
-#else
-	#ifndef __SGI_STL_ALGORITHM
-	#include "../../../../stl/algorithm"
-	#endif
+#if !defined(X_STL_GCC)
+#error "only for compiling sgi-stl for gcc"
 #endif
 
 // -------------------------------------------------------------------------
-// $Log: algorithm.h,v $
 
-#endif /* __SGI_ALGORITHM_H__ */
+#ifndef _STRING
+#include <string>
+#endif
+
+#ifndef __SGI_STL_STRING
+	#define __SGI_STL_STRING
+#endif
+
+#ifndef __SGI_STL_STRING_FWD_H
+	#define __SGI_STL_STRING_FWD_H
+#endif
+
+// -------------------------------------------------------------------------
+
+namespace __STD
+{
+	inline const char* __get_c_string(const std::string& __s)
+	{
+		return __s.c_str();
+	}
+
+	using std::allocator;
+	using std::basic_string;
+	using std::string;
+	using std::wstring;
+}
+
+// -------------------------------------------------------------------------
+// $Log: string.h,v $
+
+#endif /* __SGI_GCC_STRING_H__ */

@@ -20,36 +20,16 @@
 #define __SGI_NUMERIC_H__
 
 // -------------------------------------------------------------------------
+// numeric.h
 
-#if defined(X_STL_SGI)
+#if defined(X_STL_GCC)
+	#ifndef __SGI_GCC_NUMERIC_H__
+	#include "gcc/numeric.h"
+	#endif
+#else
 	#ifndef __SGI_STL_NUMERIC
 	#include "../../../../stl/numeric"
 	#endif
-#else
-	#if defined(X_STL_GCC)
-		#if !defined(_NUMERIC_) && !defined(_NUMERIC)
-		#include <numeric>
-		#endif
-		
-		#ifndef _EXT_NUMERIC
-		#include <ext/numeric>
-		#endif
-		
-		namespace __STD {
-			using std::accumulate;
-			using std::inner_product;
-			using std::partial_sum;
-			using std::adjacent_difference;
-		};
-	#else
-		#ifndef __SGI_STL_NUMERIC
-		#include "../../../../stl/numeric"
-		#endif
-	#endif
-#endif
-
-#ifndef __SGI_STL_INTERNAL_NUMERIC_H
-	#define __SGI_STL_INTERNAL_NUMERIC_H
 #endif
 
 // -------------------------------------------------------------------------

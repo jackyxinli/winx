@@ -38,6 +38,10 @@
 #include "vector.h"
 #endif
 
+#ifndef __SGI_NUMERIC_H__
+#include "numeric.h"
+#endif
+
 #pragma warning(disable:4355)
 
 #if defined(X_STL_GCC)
@@ -49,22 +53,14 @@
 	#include "functional.h"
 	#endif
 
-	#ifndef __SGI_NUMERIC_H__
-	#include "numeric.h"
+	#ifndef __SGI_GCC_HASHTABLE_H__
+	#include "gcc/hashtable.h"
 	#endif
-
-	#define __SGI_STL_HASH_FUN_H
-	#define __SGI_STL_HASHTABLE_H
-	#define __SGI_STL_INTERNAL_HASHTABLE_H
 
 	#ifdef __STL_USE_NEW_IOSTREAMS
-		#ifndef _IOSTREAM
-		#include <iostream>
-		#endif
+	#ifndef _IOSTREAM
+	#include <iostream>
 	#endif
-
-	#ifndef _HASH_MAP
-	#include <ext/hash_map>
 	#endif
 
 	#ifndef _EXT_MEMORY
@@ -92,6 +88,5 @@
 
 // -------------------------------------------------------------------------
 // $Log: rope.h,v $
-//
 
 #endif /* __SGI_ROPE_H__ */

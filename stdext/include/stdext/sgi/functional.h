@@ -20,26 +20,15 @@
 #define __SGI_FUNCTIONAL_H__
 
 // -------------------------------------------------------------------------
+// functional.h
 
-#if defined(X_STL_SGI)
-	#ifndef __SGI_STL_FUNCTIONAL
-	#include "../../../../stl/functional"
+#if defined(X_STL_GCC)
+	#ifndef __SGI_GCC_FUNCTIONAL_H__
+	#include "gcc/functional.h"
 	#endif
 #else
-	#if defined(X_STL_GCC)
-		#if !defined(_FUNCTIONAL_) && !defined(_FUNCTIONAL)
-		#include <functional>
-		#endif
-		namespace __STD
-		{
-			using std::binary_function;
-			using std::min;
-			using std::max;
-		};
-	#else
-		#ifndef __SGI_STL_FUNCTIONAL
-		#include "../../../../stl/functional"
-		#endif
+	#ifndef __SGI_STL_FUNCTIONAL
+	#include "../../../../stl/functional"
 	#endif
 #endif
 

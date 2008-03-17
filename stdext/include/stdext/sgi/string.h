@@ -20,36 +20,21 @@
 #define __SGI_STRING_H__
 
 // -------------------------------------------------------------------------
+// string.h
 
-#if defined(X_STL_SGI)
+#if defined(X_CC_VC6)
+	#ifndef __SGI_VC6_STRING_H__
+	#include "vc6/string.h"
+	#endif
+#elif defined(X_STL_GCC)
+	#ifndef __SGI_GCC_STRING_H__
+	#include "gcc/string.h"
+	#endif
+#else
 	#ifndef __SGI_STL_STRING
 	#include "../../../../stl/string"
 	#endif
-#else
-	#ifndef _STRING_
-	#include <string>
-	#endif
-
-	inline const char* __get_c_string(const std::string& __s) { return __s.c_str(); }
 #endif
-
-#ifndef __SGI_STL_STRING
-	#define __SGI_STL_STRING
-#endif
-
-#ifndef __SGI_STL_STRING_FWD_H
-	#define __SGI_STL_STRING_FWD_H
-#endif
-
-// -------------------------------------------------------------------------
-
-namespace __STD
-{
-	using std::allocator;
-	using std::basic_string;
-	using std::string;
-	using std::wstring;
-}
 
 // -------------------------------------------------------------------------
 // $Log: string.h,v $

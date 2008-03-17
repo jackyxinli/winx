@@ -9,30 +9,34 @@
 // of this license. You must not remove this notice, or any other, from
 // this software.
 // 
-// Module: sgi/algorithm.h
+// Module: sgi/gcc/functional.h
 // Creator: xushiwei
 // Email: xushiweizh@gmail.com
 // Date: 2006-8-18 18:56:07
 // 
-// $Id: algorithm.h,v 1.1 2006/10/18 12:13:39 xushiwei Exp $
+// $Id: functional.h,v 1.1 2006/10/18 12:13:39 xushiwei Exp $
 // -----------------------------------------------------------------------*/
-#ifndef __SGI_ALGORITHM_H__
-#define __SGI_ALGORITHM_H__
+#ifndef __SGI_GCC_FUNCTIONAL_H__
+#define __SGI_GCC_FUNCTIONAL_H__
 
-// -------------------------------------------------------------------------
-// algorithm.h
-
-#if defined(X_STL_GCC)
-	#ifndef __SGI_GCC_ALGORITHM_H__
-	#include "gcc/algorithm.h"
-	#endif
-#else
-	#ifndef __SGI_STL_ALGORITHM
-	#include "../../../../stl/algorithm"
-	#endif
+#if !defined(X_STL_GCC)
+#error "only for compiling sgi-stl for gcc"
 #endif
 
 // -------------------------------------------------------------------------
-// $Log: algorithm.h,v $
 
-#endif /* __SGI_ALGORITHM_H__ */
+#if !defined(_FUNCTIONAL)
+#include <functional>
+#endif
+
+namespace __STD
+{
+	using std::binary_function;
+	using std::min;
+	using std::max;
+};
+
+// -------------------------------------------------------------------------
+// $Log: functional.h,v $
+
+#endif /* __SGI_GCC_FUNCTIONAL_H__ */
