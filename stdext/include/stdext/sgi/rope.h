@@ -76,14 +76,6 @@
 		using std::ios;
 		using std::length_error;
 	};
-
-	#ifndef __TYPE_TRAITS_H
-	#include "../../../../stl/type_traits.h"
-	#endif
-
-	#ifndef __SGI_STL_INTERNAL_PAIR_H
-	#include "../../../../stl/stl_pair.h"
-	#endif
 #endif
 
 #define __GC

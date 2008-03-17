@@ -29,7 +29,7 @@ using namespace std;
 WINX_AUTORUN_CLASS(TestBasicString, std::ErrorLog);
 WINX_AUTORUN_CLASS(TestStringBuilder, std::ErrorLog);
 WINX_AUTORUN_CLASS(TestTextPool, std::ErrorLog);
-//WINX_AUTORUN_CLASS(TestRope, std::ErrorLog);
+WINX_AUTORUN_CLASS(TestRope, std::ErrorLog);
 
 // -------------------------------------------------------------------------
 // $Log: TestString.cpp,v $
