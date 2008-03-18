@@ -19,8 +19,8 @@
 #ifndef __STDEXT_MAP_H__
 #define __STDEXT_MAP_H__
 
-#ifndef _MAP_
-#include <map>
+#ifndef __STD_MAP_H__
+#include "../std/map.h"
 #endif
 
 #ifndef __STDEXT_MEMORY_H__

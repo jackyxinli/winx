@@ -239,6 +239,7 @@
 #	define X_STL_NET // STL.NET
 #elif defined(X_CC_GCC)
 #	define X_STL_GCC
+#	define X_STL_SGI_GCC
 #else
 #	define X_STL_UNKNOWN
 #endif

@@ -9,15 +9,15 @@
 // of this license. You must not remove this notice, or any other, from
 // this software.
 // 
-// Module: std/hash_map.h
+// Module: std/stdexcept.h
 // Creator: xushiwei
 // Email: xushiweizh@gmail.com
 // Date: 2006-8-18 18:56:07
 // 
-// $Id: hash_map.h,v 1.1 2006/10/18 12:13:39 xushiwei Exp $
+// $Id: stdexcept.h,v 1.1 2006/10/18 12:13:39 xushiwei Exp $
 // -----------------------------------------------------------------------*/
-#ifndef __STD_HASH_MAP_H__
-#define __STD_HASH_MAP_H__
+#ifndef __STD_STDEXCEPT_H__
+#define __STD_STDEXCEPT_H__
 
 #ifndef __STDEXT_PLATFORM_H__
 #include "../stdext/Platform.h"
@@ -25,21 +25,17 @@
 
 // -------------------------------------------------------------------------
 
-#if defined(X_STL_NET)
-	#ifndef _HASH_MAP_
-	#include <hash_map>
-	#endif
-#elif defined(X_STL_GCC)
-	#ifndef _HASH_MAP
-	#include <ext/hash_map>
+#if defined(X_STL_SGI)
+	#ifndef __SGI_STDEXCEPT
+	#include "../../../stl/stdexcept"
 	#endif
 #else
-	#ifndef __SGI_HASH_MAP_H__
-	#include "../stdext/sgi/hash_map.h"
+	#if !defined(_STDEXCEPT_) && !defined(_STDEXCEPT)
+	#include <stdexcept>
 	#endif
 #endif
 
 // -------------------------------------------------------------------------
-// $Log: hash_map.h,v $
+// $Log: stdexcept.h,v $
 
-#endif /* __STD_HASH_MAP_H__ */
+#endif /* __STD_STDEXCEPT_H__ */

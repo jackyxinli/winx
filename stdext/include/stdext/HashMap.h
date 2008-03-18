@@ -23,18 +23,8 @@
 #include "Basic.h"
 #endif
 
-#if defined(X_STL_NET)
-	#ifndef _HASH_MAP_
-	#include <hash_map>
-	#endif
-#elif defined(X_STL_GCC)
-	#ifndef _HASH_MAP
-	#include <ext/hash_map>
-	#endif
-#else
-	#ifndef __SGI_HASH_MAP_H__
-	#include "sgi/hash_map.h"
-	#endif
+#ifndef __STD_HASH_MAP_H__
+#include "../std/hash_map.h"
 #endif
 
 #ifndef __STDEXT_HASH_H__

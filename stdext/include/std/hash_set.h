@@ -9,48 +9,37 @@
 // of this license. You must not remove this notice, or any other, from
 // this software.
 // 
-// Module: sgi/hash_set.h
+// Module: std/hash_set.h
 // Creator: xushiwei
 // Email: xushiweizh@gmail.com
 // Date: 2006-8-18 18:56:07
 // 
 // $Id: hash_set.h,v 1.1 2006/10/18 12:13:39 xushiwei Exp $
 // -----------------------------------------------------------------------*/
-#ifndef __SGI_HASH_SET_H__
-#define __SGI_HASH_SET_H__
+#ifndef __STD_HASH_SET_H__
+#define __STD_HASH_SET_H__
+
+#ifndef __STDEXT_PLATFORM_H__
+#include "../stdext/Platform.h"
+#endif
 
 // -------------------------------------------------------------------------
-// hash_set/hash_multiset
 
-#ifndef __SGI_CONFIG_H__
-#include "config.h"
-#endif
-
-#ifndef __SGI_VECTOR_H__
-#include "vector.h"
-#endif
-
-#ifndef __SGI_ITERATOR_H__
-#include "iterator.h"
-#endif
-
-#ifndef __TYPE_TRAITS_H
-#include "../../../../stl/type_traits.h"
-#endif
-
-#ifndef __SGI_STL_INTERNAL_PAIR_H
-#include "../../../../stl/stl_pair.h"
-#endif
-
-#ifndef __SGI_STL_INTERNAL_HASHTABLE_H
-#include "../../../../stl/stl_hashtable.h"
-#endif 
-
-#ifndef __SGI_STL_HASH_SET_H
-#include "../../../../stl/hash_set.h"
+#if defined(X_STL_NET)
+	#ifndef _HASH_SET_
+	#include <hash_set>
+	#endif
+#elif defined(X_STL_GCC)
+	#ifndef _HASH_SET
+	#include <ext/hash_set>
+	#endif
+#else
+	#ifndef __SGI_HASH_SET_H__
+	#include "../stdext/sgi/hash_set.h"
+	#endif
 #endif
 
 // -------------------------------------------------------------------------
 // $Log: hash_set.h,v $
 
-#endif /* __SGI_HASH_SET_H__ */
+#endif /* __STD_HASH_SET_H__ */

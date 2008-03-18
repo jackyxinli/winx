@@ -19,8 +19,8 @@
 #ifndef __STDEXT_SET_H__
 #define __STDEXT_SET_H__
 
-#ifndef _SET_
-#include <set>
+#ifndef __STD_SET_H__
+#include "../std/set.h"
 #endif
 
 #ifndef __STDEXT_MEMORY_H__
