@@ -126,6 +126,19 @@ inline _InputIt winx_call find_not(
 	return first;
 }
 
+template <class _BidiIt, class _ValT>
+inline _BidiIt winx_call rfind(
+	_BidiIt first, _BidiIt last, const _ValT& val)
+{
+	_BidiIt last0 = last;
+	while (first != last)
+	{
+		if (*--last == val)
+			return last;
+	}
+	return last0;
+}
+
 // -------------------------------------------------------------------------
 // search
 

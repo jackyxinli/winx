@@ -320,7 +320,7 @@ public:
 
 	const_iterator winx_call find(const _E* pattern, const_iterator from) const
 	{
-		return std::search(from, end(), pattern, pattern + _Tr::length(pattern));
+		return std::search(from, end(), pattern, std::end(pattern));
 	}
 
 	const_iterator winx_call find(const _E* pattern) const
@@ -339,52 +339,44 @@ public:
 	}
 
 public:
-	const_reverse_iterator winx_call rfind(const _E ch, const_reverse_iterator from) const
+	const_iterator winx_call rfind(const _E ch, const_iterator from) const
 	{
-		return std::find(from, rend(), ch);
+		return std::rfind(from, rend(), ch);
 	}
 
-	const_reverse_iterator winx_call rfind(const _E ch) const
+	const_iterator winx_call rfind(const _E ch) const
 	{
-		return std::find(rbegin(), rend(), ch);
+		return std::rfind(begin(), end(), ch);
 	}
 
-	const_reverse_iterator winx_call rfind(const _Myt& pattern, const_reverse_iterator from) const
+	const_iterator winx_call rfind(const _Myt& pattern, const_iterator from) const
 	{
-		return std::search(from, rend(), pattern.rbegin(), pattern.rend());
+		return std::find_end(from, end(), pattern.begin(), pattern.end());
 	}
 	
-	const_reverse_iterator winx_call rfind(const _Myt& pattern) const
+	const_iterator winx_call rfind(const _Myt& pattern) const
 	{
-		return std::search(rbegin(), rend(), pattern.rbegin(), pattern.rend());
+		return std::find_end(begin(), end(), pattern.begin(), pattern.end());
 	}
 
-	const_reverse_iterator winx_call rfind(const _E* pattern, const_reverse_iterator from) const
+	const_iterator winx_call rfind(const _E* pattern, const_iterator from) const
 	{
-		const_reverse_iterator p1(pattern + _Tr::length(pattern));
-		const_reverse_iterator p2(pattern);
-		return std::search(from, rend(), p1, p2);
+		return std::find_end(from, end(), pattern, std::end(pattern));
 	}
 
-	const_reverse_iterator winx_call rfind(const _E* pattern) const
+	const_iterator winx_call rfind(const _E* pattern) const
 	{
-		const_reverse_iterator p1(pattern + _Tr::length(pattern));
-		const_reverse_iterator p2(pattern);
-		return std::search(rbegin(), rend(), p1, p2);
+		return std::find_end(begin(), end(), pattern, std::end(pattern));
 	}
 
-	const_reverse_iterator winx_call rfind(const _E* pattern, size_type len, const_reverse_iterator from) const
+	const_iterator winx_call rfind(const _E* pattern, size_type len, const_iterator from) const
 	{
-		const_reverse_iterator p1(pattern + len);
-		const_reverse_iterator p2(pattern);
-		return std::search(from, rend(), p1, p2);
+		return std::find_end(from, end(), pattern, pattern+len);
 	}
 
-	const_reverse_iterator winx_call rfind(const _E* pattern, size_type len) const
+	const_iterator winx_call rfind(const _E* pattern, size_type len) const
 	{
-		const_reverse_iterator p1(pattern + len);
-		const_reverse_iterator p2(pattern);
-		return std::search(rbegin(), rend(), p1, p2);
+		return std::find_end(begin(), end(), pattern, pattern+len);
 	}
 
 public:
