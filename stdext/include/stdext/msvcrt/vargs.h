@@ -92,7 +92,31 @@
 		__asm { lea eax, [ebp+cbExPara+_WINX_CB_CALLFRAME+_WINX_CB_EBP] }	\
 		__asm { mov args, eax }												\
 		return call(exarg, args, 6);										\
-	}
+	}																		\
+	template <class TempParaT>												\
+	RetType __cdecl func(ExParaT exarg, ParaT& a1, ParaT& a2, ParaT& a3, ParaT& a4, ParaT& a5, ParaT& a6, ParaT& a7) \
+	{																		\
+		ParaT** args;														\
+		__asm { lea eax, [ebp+cbExPara+_WINX_CB_CALLFRAME+_WINX_CB_EBP] }	\
+		__asm { mov args, eax }												\
+		return call(exarg, args, 7);										\
+	}																		\
+	template <class TempParaT>												\
+	RetType __cdecl func(ExParaT exarg, ParaT& a1, ParaT& a2, ParaT& a3, ParaT& a4, ParaT& a5, ParaT& a6, ParaT& a7, ParaT& a8) \
+	{																		\
+		ParaT** args;														\
+		__asm { lea eax, [ebp+cbExPara+_WINX_CB_CALLFRAME+_WINX_CB_EBP] }	\
+		__asm { mov args, eax }												\
+		return call(exarg, args, 8);										\
+	}																		\
+	template <class TempParaT>												\
+	RetType __cdecl func(ExParaT exarg, ParaT& a1, ParaT& a2, ParaT& a3, ParaT& a4, ParaT& a5, ParaT& a6, ParaT& a7, ParaT& a8, ParaT& a9) \
+	{																		\
+		ParaT** args;														\
+		__asm { lea eax, [ebp+cbExPara+_WINX_CB_CALLFRAME+_WINX_CB_EBP] }	\
+		__asm { mov args, eax }												\
+		return call(exarg, args, 9);										\
+	}																		\
 
 #else
 
@@ -149,6 +173,46 @@
 		args[4] = &a5;														\
 		args[5] = &a6;														\
 		return call(exarg, args, 6);										\
+	}																		\
+	template <class TempParaT>												\
+	RetType __cdecl func(ExParaT exarg, ParaT& a1, ParaT& a2, ParaT& a3, ParaT& a4, ParaT& a5, ParaT& a6, ParaT& a7) \
+	{																		\
+		ParaT** args = _alloca_array(ParaT*, 7);							\
+		args[0] = &a1;														\
+		args[1] = &a2;														\
+		args[2] = &a3;														\
+		args[3] = &a4;														\
+		args[4] = &a5;														\
+		args[5] = &a6;														\
+		args[6] = &a7;														\
+		return call(exarg, args, 7);										\
+	}																		\
+	template <class TempParaT>												\
+	RetType __cdecl func(ExParaT exarg, ParaT& a1, ParaT& a2, ParaT& a3, ParaT& a4, ParaT& a5, ParaT& a6, ParaT& a7, ParaT& a8) \
+	{																		\
+		ParaT** args = _alloca_array(ParaT*, 8);							\
+		args[0] = &a1;														\
+		args[1] = &a2;														\
+		args[2] = &a3;														\
+		args[3] = &a4;														\
+		args[4] = &a5;														\
+		args[5] = &a6;														\
+		args[6] = &a7;														\
+		args[7] = &a8;														\
+		return call(exarg, args, 8);										\
+	}																		\	template <class TempParaT>												\
+	RetType __cdecl func(ExParaT exarg, ParaT& a1, ParaT& a2, ParaT& a3, ParaT& a4, ParaT& a5, ParaT& a6, ParaT& a7, ParaT& a8, ParaT& a9) \
+	{																		\
+		ParaT** args = _alloca_array(ParaT*, 9);							\
+		args[0] = &a1;														\
+		args[1] = &a2;														\
+		args[2] = &a3;														\		args[3] = &a4;														\
+		args[4] = &a5;														\
+		args[5] = &a6;														\
+		args[6] = &a7;														\
+		args[7] = &a8;														\
+		args[8] = &a9;														\
+		return call(exarg, args, 9);										\
 	}
 
 #endif
