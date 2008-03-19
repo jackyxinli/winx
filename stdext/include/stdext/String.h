@@ -35,6 +35,10 @@
 #include "text/BasicStringBuilder.h"
 #endif
 
+#ifndef __STDEXT_TEXT_STRINGALGO_H__
+#include "text/StringAlgo.h"
+#endif
+
 __NS_STD_BEGIN
 
 // -------------------------------------------------------------------------

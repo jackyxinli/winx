@@ -155,11 +155,11 @@
 
 // -------------------------------------------------------------------------
 
-#define WINX_VARGS_TFUNC_EP1_REF(RetType, func, TempParaT, ParaT, call, cbExPara)	\
-	_WINX_VARGS_TFUNC_EP1(RetType, func, TempParaT, TempParaT&, ParaT, call, cbExPara)
+#define WINX_VARGS_TFUNC_EP1_REF(RetType, func, TempParaT, ParaT, call)		\
+	_WINX_VARGS_TFUNC_EP1(RetType, func, TempParaT, TempParaT&, ParaT, call, WINX_CB_PTR)
 
-#define WINX_VARGS_TFUNC_EP1_CREF(RetType, func, TempParaT, ParaT, call, cbExPara)	\
-	_WINX_VARGS_TFUNC_EP1(RetType, func, TempParaT, const TempParaT&, ParaT, call, cbExPara)
+#define WINX_VARGS_TFUNC_EP1_CREF(RetType, func, TempParaT, ParaT, call)	\
+	_WINX_VARGS_TFUNC_EP1(RetType, func, TempParaT, const TempParaT&, ParaT, call, WINX_CB_PTR)
 
 // =========================================================================
 // $Log: $

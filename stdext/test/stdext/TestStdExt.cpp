@@ -36,7 +36,6 @@
 #include <stdext/Set.h>
 #include <stdext/List.h>
 #include <stdext/String.h>
-#include <stdext/text/StringAlgo.h>
 #include <stdext/text/Rope.h>
 #include <stdext/codepage/CP1252.h>
 #include <stdext/Rand.h>

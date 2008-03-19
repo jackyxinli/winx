@@ -100,12 +100,10 @@ inline BasicString<CharT> winx_call __concatString(
 }
 
 WINX_VARGS_TFUNC_EP1_REF(
-	BasicString<char>, concat, AllocT, const TempString<char>,
-	__concatString, WINX_CB_PTR);
+	BasicString<char>, concat, AllocT, const TempString<char>, __concatString);
 
 WINX_VARGS_TFUNC_EP1_REF(
-	BasicString<WCHAR>, concat, AllocT, const TempString<WCHAR>,
-	__concatString, WINX_CB_PTR);
+	BasicString<WCHAR>, concat, AllocT, const TempString<WCHAR>, __concatString);
 
 // -------------------------------------------------------------------------
 // class TestStringAlgo
