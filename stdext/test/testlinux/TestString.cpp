@@ -21,6 +21,7 @@
 #include <stdext/text/BasicStringBuilder.h>
 #include <stdext/text/TextPool.h>
 #include <stdext/text/Rope.h>
+#include <stdext/text/StringAlgo.h>
 
 // -------------------------------------------------------------------------
 
@@ -28,6 +29,7 @@ using namespace std;
 
 WINX_AUTORUN_CLASS(TestBasicString, std::ErrorLog);
 WINX_AUTORUN_CLASS(TestStringBuilder, std::ErrorLog);
+WINX_AUTORUN_CLASS(TestStringAlgo, std::ErrorLog);
 WINX_AUTORUN_CLASS(TestTextPool, std::ErrorLog);
 WINX_AUTORUN_CLASS(TestRope, std::ErrorLog);
 

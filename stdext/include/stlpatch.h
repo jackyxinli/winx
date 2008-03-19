@@ -49,6 +49,12 @@ namespace std {
 template <class _It>
 __forceinline typename _It::pointer _ConvIt(_It it)
 	{ return it._Myptr; }
+	
+#elif defined(X_STL_GCC) || defined(X_STL_SGI) // sgi-stl
+
+template <class _It>
+__forceinline typename _It::pointer _ConvIt(_It it)
+	{ return &*it; }
 
 #else
 
