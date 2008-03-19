@@ -36,6 +36,7 @@
 #include <stdext/Set.h>
 #include <stdext/List.h>
 #include <stdext/String.h>
+#include <stdext/text/StringAlgo.h>
 #include <stdext/text/Rope.h>
 #include <stdext/codepage/CP1252.h>
 #include <stdext/Rand.h>
@@ -78,7 +79,7 @@ void testSgiHashMap();
 
 void testStdExt()
 {
-	WINX_TEST_APP(std::ErrorLog, "TestRope", "");
+	WINX_TEST_APP(std::ErrorLog, "TestStringAlgo", "");
 //	testSgiHashMap();
 
 	WINX_TEST_CLASS(TestFinder);
@@ -99,6 +100,7 @@ void testStdExt()
 	WINX_TEST_CLASS(std::TestCharType);
 	WINX_TEST_CLASS(std::TestCP1252);
 	WINX_TEST_CLASS(std::TestString);
+	WINX_TEST_CLASS(std::TestStringAlgo);
 	WINX_TEST_CLASS(std::TestBasicString);
 	WINX_TEST_CLASS(std::TestStringBuilder);
 	WINX_TEST_CLASS(std::TestRope);

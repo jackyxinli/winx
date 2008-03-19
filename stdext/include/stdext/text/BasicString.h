@@ -111,9 +111,15 @@ public:
 	{
 		value_type* psz = (value_type*)alloc.allocate(count * sizeof(value_type));
 		std::fill_n(psz, count, ch);
+		return psz;
 	}
 
 public:
+	BasicString()
+		: m_length(0)
+	{
+	}
+
 	BasicString(const value_type* pszVal, size_type cch)
 		: m_length(cch), m_pszBuf(pszVal)
 	{
@@ -249,6 +255,16 @@ public:
 	{
 		std::swap(m_length, b.m_length);
 		std::swap(m_pszBuf, b.m_pszBuf);
+	}
+
+	void winx_call clear()
+	{
+		m_length = 0;
+	}
+
+	void winx_call erase()
+	{
+		m_length = 0;
 	}
 
 	static _Myt winx_call cast(const _StlString& src)
