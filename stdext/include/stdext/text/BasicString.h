@@ -43,7 +43,7 @@ __NS_STD_BEGIN
 
 // -------------------------------------------------------------------------
 
-inline void __cdecl __Xran()
+inline void winx_call __Xran()
 	{ throw std::out_of_range("invalid string position"); }
 
 #ifndef _WINX_ALLOC_TYPE
@@ -604,78 +604,85 @@ public:
 typedef BasicString<char> String;
 typedef BasicString<WCHAR> WString;
 
+__NS_STD_END
+
+STD_NO_DESTRUCTOR(String);
+STD_NO_DESTRUCTOR(WString);
+
 // -------------------------------------------------------------------------
 
+__NS_STD_BEGIN
+
 template <class _E, class _T2> __forceinline
-	bool __cdecl operator==(const BasicString<_E>& a, const _T2& b)
+	bool winx_call operator==(const BasicString<_E>& a, const _T2& b)
     {return (a.compare(b) == 0); }
 
 template <class _E> __forceinline
-    bool __cdecl operator==(const _E* a, const BasicString<_E>& b)
+    bool winx_call operator==(const _E* a, const BasicString<_E>& b)
     {return (b.compare(a) == 0); }
 
 template <class _E> __forceinline
-    bool __cdecl operator==(const basic_string<_E>& a, const BasicString<_E>& b)
+    bool winx_call operator==(const basic_string<_E>& a, const BasicString<_E>& b)
     {return (b.compare(a) == 0); }
 
 template <class _E, class _T2> __forceinline
-    bool __cdecl operator!=(const BasicString<_E>& a, const _T2& b)
+    bool winx_call operator!=(const BasicString<_E>& a, const _T2& b)
     {return (a.compare(b) != 0); }
 
 template <class _E> __forceinline
-    bool __cdecl operator!=(const _E* a, const BasicString<_E>& b)
+    bool winx_call operator!=(const _E* a, const BasicString<_E>& b)
     {return (b.compare(a) != 0); }
 
 template <class _E> __forceinline
-    bool __cdecl operator!=(const basic_string<_E>& a, const BasicString<_E>& b)
+    bool winx_call operator!=(const basic_string<_E>& a, const BasicString<_E>& b)
     {return (b.compare(a) != 0); }
 
 template <class _E, class _T2> __forceinline
-    bool __cdecl operator<(const BasicString<_E>& a, const _T2& b)
+    bool winx_call operator<(const BasicString<_E>& a, const _T2& b)
     {return (a.compare(b) < 0); }
 
 template <class _E> __forceinline
-    bool __cdecl operator<(const _E* a, const BasicString<_E>& b)
+    bool winx_call operator<(const _E* a, const BasicString<_E>& b)
     {return (b.compare(a) > 0); }
 
 template <class _E> __forceinline
-    bool __cdecl operator<(const basic_string<_E>& a, const BasicString<_E>& b)
+    bool winx_call operator<(const basic_string<_E>& a, const BasicString<_E>& b)
     {return (b.compare(a) > 0); }
 
 template <class _E, class _T2> __forceinline
-    bool __cdecl operator>(const BasicString<_E>& a, const _T2& b)
+    bool winx_call operator>(const BasicString<_E>& a, const _T2& b)
     {return (b < a); }
 
 template <class _E> __forceinline
-    bool __cdecl operator>(const _E* a, const BasicString<_E>& b)
+    bool winx_call operator>(const _E* a, const BasicString<_E>& b)
     {return (b < a); }
 
 template <class _E> __forceinline
-    bool __cdecl operator>(const basic_string<_E>& a, const BasicString<_E>& b)
+    bool winx_call operator>(const basic_string<_E>& a, const BasicString<_E>& b)
     {return (b < a); }
 
 template <class _E, class _T2> __forceinline
-    bool __cdecl operator<=(const BasicString<_E>& a, const _T2& b)
+    bool winx_call operator<=(const BasicString<_E>& a, const _T2& b)
     {return (!(b < a)); }
 
 template <class _E> __forceinline
-    bool __cdecl operator<=(const _E* a, const BasicString<_E>& b)
+    bool winx_call operator<=(const _E* a, const BasicString<_E>& b)
     {return (!(b < a)); }
 
 template <class _E> __forceinline
-    bool __cdecl operator<=(const basic_string<_E>& a, const BasicString<_E>& b)
+    bool winx_call operator<=(const basic_string<_E>& a, const BasicString<_E>& b)
     {return (!(b < a)); }
 
 template <class _E, class _T2> __forceinline
-    bool __cdecl operator>=(const BasicString<_E>& a, const _T2& b)
+    bool winx_call operator>=(const BasicString<_E>& a, const _T2& b)
     {return (!(a < b)); }
 
 template <class _E> __forceinline
-    bool __cdecl operator>=(const _E* a, const BasicString<_E>& b)
+    bool winx_call operator>=(const _E* a, const BasicString<_E>& b)
     {return (!(a < b)); }
 
 template <class _E> __forceinline
-    bool __cdecl operator>=(const basic_string<_E>& a, const BasicString<_E>& b)
+    bool winx_call operator>=(const basic_string<_E>& a, const BasicString<_E>& b)
     {return (!(a < b)); }
 
 // -------------------------------------------------------------------------
