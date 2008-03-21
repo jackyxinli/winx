@@ -138,7 +138,7 @@ public:
 
 		char s2buf[] = "world";
 		std::vector<char> s2(s2buf, std::end(s2buf));
-		std::string s1 = result2.strSTL();
+		std::string s1 = result2.stl_str();
 		std::String result4 = std::concat(alloc, s1, " ", s2, "!!", "!");
 		AssertExp(result4 == "Hello!!! world!!!");
 	}

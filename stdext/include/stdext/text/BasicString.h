@@ -310,7 +310,7 @@ public:
 	bool winx_call empty() const
 		{return m_length == 0; }
 
-	_StlString winx_call strSTL() const
+	_StlString winx_call stl_str() const
 		{return _StlString(m_pszBuf, m_length);	}
 
 public:
