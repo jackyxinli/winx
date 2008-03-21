@@ -96,7 +96,8 @@ public:
 		return m_fp ? S_OK : E_INVALIDARG;
 	}
 
-	HRESULT winx_call put(const std::basic_string<WCHAR>& str)
+	template <class _Tr, class _Alloc>
+	HRESULT winx_call put(const std::basic_string<WCHAR, _Tr, _Alloc>& str)
 	{
 		typedef WCHAR CharType;
 		const UINT32 cchStr = str.size();
@@ -190,7 +191,8 @@ public:
 		return m_fp ? S_OK : E_INVALIDARG;
 	}
 	
-	HRESULT winx_call get(std::basic_string<WCHAR>& str)
+	template <class _Tr, class _Alloc>
+	HRESULT winx_call get(std::basic_string<WCHAR, _Tr, _Alloc>& str)
 	{
 		UINT32 cchStr;
 		if (get((char*)&cchStr, sizeof(cchStr)) != sizeof(cchStr))

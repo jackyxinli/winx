@@ -36,9 +36,9 @@ __NS_STD_BEGIN
 
 #define _WINX_REG_STRING_PREFIX	'N'
 
-template <class RegKeyType>
+template <class RegKeyType, class _Tr, class _Alloc>
 HRESULT winx_call RegWriteString(
-	RegKeyType& regKey, UINT index, const std::basic_string<WCHAR>& str)
+	RegKeyType& regKey, UINT index, const std::basic_string<WCHAR, _Tr, _Alloc>& str)
 {
 	TCHAR szName[16];
 	szName[0] = _WINX_REG_STRING_PREFIX;
@@ -65,8 +65,9 @@ HRESULT winx_call RegWriteString(
 // -------------------------------------------------------------------------
 // RegReadString
 
-template <class RegKeyType>
-HRESULT winx_call RegReadString(RegKeyType& regKey, UINT index, std::basic_string<WCHAR>& str)
+template <class RegKeyType, class _Tr, class _Alloc>
+HRESULT winx_call RegReadString(
+	RegKeyType& regKey, UINT index, std::basic_string<WCHAR, _Tr, _Alloc>& str)
 {
 	TCHAR szName[16];
 	szName[0] = _WINX_REG_STRING_PREFIX;
@@ -152,7 +153,8 @@ public:
 			lpszClass, dwOptions, samDesired, lpSecAttr, lpdwDisposition));
 	}
 
-	HRESULT winx_call put(const std::basic_string<WCHAR>& str) {
+	template <class _Tr, class _Alloc>
+	HRESULT winx_call put(const std::basic_string<WCHAR, _Tr, _Alloc>& str) {
 		return RegWriteString(m_regKey, ++m_nCount, str);
 	}
 
@@ -194,8 +196,9 @@ public:
 		m_nCount = 0;
 		return HRESULT_FROM_WIN32(m_regKey.Open(hKeyParent, lpszKeyName));
 	}
-	
-	HRESULT winx_call get(std::basic_string<WCHAR>& str) {
+
+	template <class _Tr, class _Alloc>
+	HRESULT winx_call get(std::basic_string<WCHAR, _Tr, _Alloc>& str) {
 		return RegReadString(m_regKey, ++m_nCount, str);
 	}
 	

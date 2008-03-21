@@ -43,13 +43,12 @@ public:																		\
 // -------------------------------------------------------------------------
 // class BasicStringBuilder
 
-template <class _Ty>
-class BasicStringBuilder : public std::vector<_Ty>
+template <class _E>
+class BasicStringBuilder : public std::vector<_E>
 {
 private:
-	typedef std::vector<_Ty> _Base;
-	typedef std::basic_string<_Ty> _StlString;
-	typedef BasicString<_Ty> _String;
+	typedef std::vector<_E> _Base;
+	typedef BasicString<_E> _String;
 	typedef BasicStringBuilder _Myt;
 	_WINX_BSB_USING_VECTOR;
 
@@ -59,13 +58,14 @@ public:
 public:
 	BasicStringBuilder() {}
 
-	explicit BasicStringBuilder(const _StlString& s)
+	template <class _Tr, class _Alloc>
+	explicit BasicStringBuilder(const basic_string<_E, _Tr, _Alloc>& s)
 		: _Base(s.begin(), s.end()) {}
 
 	explicit BasicStringBuilder(const _String& s)
 		: _Base(s.begin(), s.end()) {}
 	
-	explicit BasicStringBuilder(size_type count, const _Ty& val = _Ty())
+	explicit BasicStringBuilder(size_type count, const _E& val = _E())
 		: _Base(count, val) {}
 
 public:

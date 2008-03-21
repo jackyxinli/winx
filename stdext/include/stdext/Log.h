@@ -51,12 +51,6 @@ __NS_STD_BEGIN
 // __STD_LOG_PRINT
 
 #define __STD_LOG_FMT_PRINT_EX(DataT, vData)								\
-	Log& winx_call print(DataT v, char* fmt) {								\
-		return trace(fmt, vData);											\
-	}																		\
-	Log& winx_call print(DataT v, WCHAR* fmt) {								\
-		return trace(fmt, vData);											\
-	}																		\
 	Log& winx_call print(DataT v, const WCHAR* fmt) {						\
 		return trace(fmt, vData);											\
 	}																		\
@@ -91,11 +85,16 @@ __NS_STD_BEGIN
 	}																		\
 	__STD_LOG_FMT_PRINT(DataT)
 
-#define __STD_LOG_PRINT_STRING_CLS(DataT)									\
-	Log& winx_call print(const DataT& v) {									\
+#define __STD_LOG_PRINT_STRING_CLS()										\
+	template <class _E, class _Tr, class _Alloc>							\
+	Log& winx_call print(const basic_string<_E, _Tr, _Alloc>& v) {			\
 		return printString(v);												\
 	}																		\
-	__STD_LOG_FMT_PRINT_EX(DataT, v.c_str())
+	template <class _E, class _Tr, class _Alloc, class _E2>					\
+	Log& winx_call print(													\
+			const basic_string<_E, _Tr, _Alloc>&v, const _E2* fmt) {		\
+		return trace(fmt, v.c_str());										\
+	}
 
 #define __STD_LOG_PRINT_INT64()	        									\
 	Log& winx_call print(__int64 v) {									    \
@@ -122,8 +121,7 @@ __NS_STD_BEGIN
 	__STD_LOG_PRINT_CHAR(unsigned char)										\
 	__STD_LOG_PRINT_STRING(const char*)										\
 	__STD_LOG_PRINT_STRING(const WCHAR*)									\
-	__STD_LOG_PRINT_STRING_CLS(std::basic_string<char>)						\
-	__STD_LOG_PRINT_STRING_CLS(std::basic_string<WCHAR>)					\
+	__STD_LOG_PRINT_STRING_CLS()											\
 	__STD_LOG_PRINT_INT(signed int, unsigned int)							\
 	__STD_LOG_PRINT_INT(signed short, unsigned short)						\
 	__STD_LOG_PRINT_INT(signed long, unsigned long)						    \
@@ -282,7 +280,8 @@ public:
 		return __printString(first, last, *first);
 	}
 
-	Log& winx_call printString(const basic_string<char>& s)
+	template <class _Tr, class _Alloc>
+	Log& winx_call printString(const basic_string<char, _Tr, _Alloc>& s)
 	{
 		if (m_stg)
 			m_stg.put(s.c_str(), s.size());
@@ -296,7 +295,8 @@ public:
 		return *this;
 	}
 	
-	Log& winx_call printString(const basic_string<WCHAR>& s)
+	template <class _Tr, class _Alloc>
+	Log& winx_call printString(const basic_string<WCHAR, _Tr, _Alloc>& s)
 	{
 		return trace("%S", s.c_str());
 	}

@@ -91,8 +91,6 @@ private:
 private:
 	typedef BasicString _Myt;
 	typedef std::char_traits<value_type> _Tr;
-	typedef std::basic_string<value_type> _StlString;
-	typedef std::vector<value_type> _StringBuilderBase;
 
 public:
 	typedef _Tr traits_type;
@@ -148,8 +146,8 @@ public:
 	{
 	}
 
-	template <_WINX_ALLOC_TEMPLATE_ARGS>
-	BasicString(_WINX_ALLOC_TYPE& alloc, const _StlString& b)
+	template <_WINX_ALLOC_TEMPLATE_ARGS, class _Tr, class _Alloc2>
+	BasicString(_WINX_ALLOC_TYPE& alloc, const basic_string<_E, _Tr, _Alloc2>& b)
 		: m_length(b.length()), m_pszBuf(_makeBuf(alloc, b.data(), m_length))
 	{
 	}
@@ -215,8 +213,8 @@ public:
 		return *this;
 	}
 
-	template <_WINX_ALLOC_TEMPLATE_ARGS>
-	_Myt& winx_call assign(_WINX_ALLOC_TYPE& alloc, const _StlString& b)
+	template <_WINX_ALLOC_TEMPLATE_ARGS, class _Tr, class _Alloc2>
+	_Myt& winx_call assign(_WINX_ALLOC_TYPE& alloc, const basic_string<_E, _Tr, _Alloc2>& b)
 	{
 		m_length = b.length();
 		m_pszBuf = _makeBuf(alloc, b.data(), m_length);
@@ -267,12 +265,14 @@ public:
 		m_length = 0;
 	}
 
-	static _Myt winx_call cast(const _StlString& src)
+	template <class _Tr, class _Alloc2>
+	static _Myt winx_call cast(const basic_string<_E, _Tr, _Alloc2>& src)
 	{
 		return _Myt(src.data(), src.length());
 	}
 
-	static _Myt winx_call cast(const _StringBuilderBase& builder)
+	template <class _Alloc2>
+	static _Myt winx_call cast(const vector<_E, _Alloc2>& builder)
 	{
 		return _Myt(_ConvIt(builder.begin()), builder.size());
 	}
@@ -310,8 +310,8 @@ public:
 	bool winx_call empty() const
 		{return m_length == 0; }
 
-	_StlString winx_call stl_str() const
-		{return _StlString(m_pszBuf, m_length);	}
+	basic_string<_E> winx_call stl_str() const
+		{return basic_string<_E>(m_pszBuf, m_length);	}
 
 public:
 	const_iterator winx_call find(const _E ch, const_iterator from) const
@@ -565,7 +565,8 @@ public:
 		return std::compare(begin(), end(), b.begin(), b.end());
 	}
 
-	int winx_call compare(const _StlString& b) const
+	template <class _Tr, class _Alloc2>
+	int winx_call compare(const basic_string<_E, _Tr, _Alloc2>& b) const
 	{
 		return std::compare(begin(), end(), b.begin(), b.end());
 	}
