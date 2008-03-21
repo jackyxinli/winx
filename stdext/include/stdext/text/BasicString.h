@@ -43,6 +43,31 @@ __NS_STD_BEGIN
 
 // -------------------------------------------------------------------------
 
+template <class _E>
+class CompareNoCase
+{
+};
+
+template <>
+class CompareNoCase<char>
+{
+public:
+	int winx_call operator()(int c1, int c2) const {
+		return toupper(c1) - toupper(c2);
+	}
+};
+
+template <>
+class CompareNoCase<wchar_t>
+{
+public:
+	int winx_call operator()(wchar_t c1, wchar_t c2) const {
+		return towupper(c1) - towupper(c2);
+	}
+};
+
+// -------------------------------------------------------------------------
+
 inline void winx_call __Xran()
 	{ throw std::out_of_range("invalid string position"); }
 
@@ -310,10 +335,15 @@ public:
 	bool winx_call empty() const
 		{return m_length == 0; }
 
+public:
+	// 将String转为STL string。这个操作比较费时。
+
 	basic_string<_E> winx_call stl_str() const
 		{return basic_string<_E>(m_pszBuf, m_length);	}
 
 public:
+	// 在字符串中查找子串（正向查找）。
+
 	const_iterator winx_call find(const _E ch, const_iterator from) const
 	{
 		return std::find(from, end(), ch);
@@ -355,6 +385,8 @@ public:
 	}
 
 public:
+	// 在字符串中查找子串（反向查找）。
+
 	const_iterator winx_call rfind(const _E ch, const_iterator from) const
 	{
 		return std::rfind(from, rend(), ch);
@@ -396,6 +428,8 @@ public:
 	}
 
 public:
+	// 查找某个集合中的字符在字符串中第一次出现的位置（正向查找）。
+
 	const_iterator winx_call find_first_of(const _E ch, const_iterator from) const
 	{
 		return std::find(from, end(), ch);
@@ -437,6 +471,8 @@ public:
 	}
 
 public:
+	// 查找某个集合中的字符在字符串中第一次出现的位置（反向查找）。
+
 	const_reverse_iterator winx_call find_last_of(const _E ch, const_reverse_iterator from) const
 	{
 		return std::find(from, rend(), ch);
@@ -478,6 +514,8 @@ public:
 	}
 
 public:
+	// 在字符串中查找不在集合中出现的第一个字符的位置（正向查找）。
+
 	const_iterator winx_call find_first_not_of(const _E ch, const_iterator from) const
 	{
 		return std::find_not(from, end(), ch);
@@ -519,6 +557,8 @@ public:
 	}
 
 public:
+	// 在字符串中查找不在集合中出现的第一个字符的位置（反向查找）。
+
 	const_reverse_iterator winx_call find_last_not_of(const _E ch, const_reverse_iterator from) const
 	{
 		return std::find_not(from, rend(), ch);
@@ -560,6 +600,8 @@ public:
 	}
 
 public:
+	// 比较两个字符串。
+	
 	int winx_call compare(const _Myt& b) const
 	{
 		return std::compare(begin(), end(), b.begin(), b.end());
@@ -599,6 +641,84 @@ public:
 	int winx_call compare(size_type from, size_type count, const _E* b) const
 	{
 		return substr(from, count).compare(b);
+	}
+
+public:
+	// 比较两个字符串（传入单字符的比较函数）。
+	
+	template <class _Compr>
+	int winx_call compare_by(const _Myt& b, _Compr cmp) const
+	{
+		return std::compare(begin(), end(), b.begin(), b.end(), cmp);
+	}
+
+	template <class _Tr, class _Alloc2, class _Compr>
+	int winx_call compare_by(const basic_string<_E, _Tr, _Alloc2>& b, _Compr cmp) const
+	{
+		return std::compare(begin(), end(), b.begin(), b.end(), cmp);
+	}
+
+	template <class _Compr>
+	int winx_call compare_by(const _E* b, size_type blen, _Compr cmp) const
+	{
+		return std::compare(begin(), end(), b, b + blen, cmp);
+	}
+
+	template <class _Compr>
+	int winx_call compare_by(const _E* b, _Compr cmp) const
+	{
+		return std::compare(begin(), end(), b, std::end(b), cmp);
+	}
+
+private:
+	typedef CompareNoCase<_E> _ComareNoCase;
+
+public:
+	// 比较两个字符串（忽略大小写）。
+
+	int winx_call icompare(const _Myt& b) const
+	{
+		return compare_by(b, _ComareNoCase());
+	}
+
+	template <class _Tr, class _Alloc2>
+	int winx_call icompare(const basic_string<_E, _Tr, _Alloc2>& b) const
+	{
+		return compare_by(b, _ComareNoCase());
+	}
+
+	int winx_call icompare(const _E* b, size_type blen) const
+	{
+		return compare_by(b, blen, _ComareNoCase());
+	}
+
+	int winx_call icompare(const _E* b) const
+	{
+		return compare_by(b, _ComareNoCase());
+	}
+
+public:
+	// 判断是否包含指定的串。
+
+	bool winx_call contains(const _Myt& b) const
+	{
+		return find(b) != end();
+	}
+
+	template <class _Tr, class _Alloc2>
+	bool winx_call contains(const basic_string<_E, _Tr, _Alloc2>& b) const
+	{
+		return find(b) != end();
+	}
+
+	bool winx_call contains(const _E* b, size_type blen) const
+	{
+		return find(b, blen) != end();
+	}
+
+	bool winx_call contains(const _E* b) const
+	{
+		return find(b) != end();
 	}
 };
 
@@ -694,7 +814,8 @@ class TestBasicString : public TestCase
 {
 	WINX_TEST_SUITE(TestBasicString);
 		WINX_TEST(testConstructor);
-		WINX_TEST(testFind)
+		WINX_TEST(testFind);
+		WINX_TEST(testICompare);
 	WINX_TEST_SUITE_END();
 
 public:
@@ -711,6 +832,13 @@ public:
 		AssertExp(*it == 'e');
 
 		doTestFind(log);
+	}
+
+	void testICompare(LogT& log)
+	{
+		std::String a("Hello", 5);
+		std::String b("hEllO", 5);
+		AssertExp(a.icompare(b) == 0);
 	}
 
 	void testConstructor(LogT& log)

@@ -234,6 +234,23 @@ inline _InputIt winx_call find_digit_or_csymbol(
 // -------------------------------------------------------------------------
 // compare
 
+template<class _InputIt1, class _InputIt2, class _Compr>
+inline int winx_call compare(
+	_InputIt1 first1, _InputIt1 last1, _InputIt2 first2, _InputIt2 last2, _Compr cmp)
+{
+	for (;; ++first1, ++first2)
+	{
+		if (first1 == last1)
+			return first2 == last2 ? 0 : -1;
+		if (first2 == last2)
+			return 1;
+		int res = cmp(*first1, *first2);
+		if (res != 0)
+			return res;
+	}
+	return 0;
+}
+
 template<class _InputIt1, class _InputIt2>
 inline int winx_call compare(
 	_InputIt1 first1, _InputIt1 last1, _InputIt2 first2, _InputIt2 last2)
