@@ -53,10 +53,10 @@ typedef std::basic_string<char> tstring;
 // -------------------------------------------------------------------------
 // trim
 
-template <class _E>
-inline void winx_call trim(std::basic_string<_E>& str, const _E* blanks)
+template <class _E, class _Tr, class _Alloc>
+inline void winx_call trim(std::basic_string<_E, _Tr, _Alloc>& str, const _E* blanks)
 {
-	typedef std::basic_string<_E> StringT;
+	typedef std::basic_string<_E, _Tr, _Alloc> StringT;
 	typedef typename StringT::size_type size_type;
 
 	size_type pos1 = str.find_first_not_of(blanks);
@@ -71,13 +71,15 @@ inline void winx_call trim(std::basic_string<_E>& str, const _E* blanks)
 		str = str.substr(pos1, count);
 }
 
-inline void winx_call trim(std::basic_string<char>& str)
+template <class _Tr, class _Alloc>
+inline void winx_call trim(std::basic_string<char, _Tr, _Alloc>& str)
 {
 	const char blanks[] = { ' ', '\t', '\r', '\n', '\0' };
 	trim(str, blanks);
 }
 
-inline void winx_call trim(std::basic_string<WCHAR>& str)
+template <class _Tr, class _Alloc>
+inline void winx_call trim(std::basic_string<WCHAR, _Tr, _Alloc>& str)
 {
 	const WCHAR blanks[] =
 	{

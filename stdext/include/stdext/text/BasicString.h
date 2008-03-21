@@ -621,8 +621,8 @@ template <class _E> __forceinline
     bool winx_call operator==(const _E* a, const BasicString<_E>& b)
     {return (b.compare(a) == 0); }
 
-template <class _E> __forceinline
-    bool winx_call operator==(const basic_string<_E>& a, const BasicString<_E>& b)
+template <class _E, class _Tr, class _Alloc> __forceinline
+    bool winx_call operator==(const basic_string<_E, _Tr, _Alloc>& a, const BasicString<_E>& b)
     {return (b.compare(a) == 0); }
 
 template <class _E, class _T2> __forceinline
@@ -633,8 +633,8 @@ template <class _E> __forceinline
     bool winx_call operator!=(const _E* a, const BasicString<_E>& b)
     {return (b.compare(a) != 0); }
 
-template <class _E> __forceinline
-    bool winx_call operator!=(const basic_string<_E>& a, const BasicString<_E>& b)
+template <class _E, class _Tr, class _Alloc> __forceinline
+    bool winx_call operator!=(const basic_string<_E, _Tr, _Alloc>& a, const BasicString<_E>& b)
     {return (b.compare(a) != 0); }
 
 template <class _E, class _T2> __forceinline
@@ -645,8 +645,8 @@ template <class _E> __forceinline
     bool winx_call operator<(const _E* a, const BasicString<_E>& b)
     {return (b.compare(a) > 0); }
 
-template <class _E> __forceinline
-    bool winx_call operator<(const basic_string<_E>& a, const BasicString<_E>& b)
+template <class _E, class _Tr, class _Alloc> __forceinline
+    bool winx_call operator<(const basic_string<_E, _Tr, _Alloc>& a, const BasicString<_E>& b)
     {return (b.compare(a) > 0); }
 
 template <class _E, class _T2> __forceinline
@@ -657,8 +657,8 @@ template <class _E> __forceinline
     bool winx_call operator>(const _E* a, const BasicString<_E>& b)
     {return (b < a); }
 
-template <class _E> __forceinline
-    bool winx_call operator>(const basic_string<_E>& a, const BasicString<_E>& b)
+template <class _E, class _Tr, class _Alloc> __forceinline
+    bool winx_call operator>(const basic_string<_E, _Tr, _Alloc>& a, const BasicString<_E>& b)
     {return (b < a); }
 
 template <class _E, class _T2> __forceinline
@@ -669,8 +669,8 @@ template <class _E> __forceinline
     bool winx_call operator<=(const _E* a, const BasicString<_E>& b)
     {return (!(b < a)); }
 
-template <class _E> __forceinline
-    bool winx_call operator<=(const basic_string<_E>& a, const BasicString<_E>& b)
+template <class _E, class _Tr, class _Alloc> __forceinline
+    bool winx_call operator<=(const basic_string<_E, _Tr, _Alloc>& a, const BasicString<_E>& b)
     {return (!(b < a)); }
 
 template <class _E, class _T2> __forceinline
@@ -681,8 +681,8 @@ template <class _E> __forceinline
     bool winx_call operator>=(const _E* a, const BasicString<_E>& b)
     {return (!(a < b)); }
 
-template <class _E> __forceinline
-    bool winx_call operator>=(const basic_string<_E>& a, const BasicString<_E>& b)
+template <class _E, class _Tr, class _Alloc> __forceinline
+    bool winx_call operator>=(const basic_string<_E, _Tr, _Alloc>& a, const BasicString<_E>& b)
     {return (!(a < b)); }
 
 // -------------------------------------------------------------------------

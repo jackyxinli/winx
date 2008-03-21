@@ -49,12 +49,14 @@ public:
 	{
 	}
 
-	TempString(const std::basic_string<_E>& s)
+	template <class _Tr, class _Alloc>
+	TempString(const std::basic_string<_E, _Tr, _Alloc>& s)
 		: _Base(_ConvIt(s.begin()), s.length())
 	{
 	}
 
-	TempString(const std::vector<_E>& s)
+	template <class _Alloc>
+	TempString(const std::vector<_E, _Alloc>& s)
 		: _Base(_ConvIt(s.begin()), s.size())
 	{
 	}

@@ -59,7 +59,8 @@ public:
 	{
 		initPattern(p);
 	}
-	RefFinder(const std::basic_string<_E>& str) : m_str_find(NULL)
+	template <class _Tr, class _Alloc>
+	RefFinder(const std::basic_string<_E, _Tr, _Alloc>& str) : m_str_find(NULL)
 	{
 		initPattern(str.c_str(), str.size());
 	}
@@ -97,7 +98,8 @@ public:
 		return initPattern(p, std::char_traits<_E>::length(p));
 	}
 
-	HRESULT winx_call initPattern(const std::basic_string<_E>& str)
+	template <class _Tr, class _Alloc>
+	HRESULT winx_call initPattern(const std::basic_string<_E, _Tr, _Alloc>& str)
 	{
 		return initPattern(str.c_str(), str.size());
 	}

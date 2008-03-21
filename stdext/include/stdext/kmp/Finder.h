@@ -228,7 +228,8 @@ public:
 	@arg [in] strPattern	The pattern string object.
 	@see Finder, initPattern, getPattern
 	@*/
-	Finder(const std::basic_string<_E>& strPattern) : m_str_find(NULL)
+	template <class _Tr, class _Alloc>
+	Finder(const std::basic_string<_E, _Tr, _Alloc>& strPattern) : m_str_find(NULL)
 	{
 		initPattern(strPattern.c_str(), strPattern.size());
 	}
@@ -291,7 +292,8 @@ public:
 	@arg [in] strPattern	The pattern string object.
 	@see Finder, initPattern, getPattern
 	@*/
-	HRESULT winx_call initPattern(const std::basic_string<_E>& strPattern)
+	template <class _Tr, class _Alloc>
+	HRESULT winx_call initPattern(const std::basic_string<_E, _Tr, _Alloc>& strPattern)
 	{
 		return initPattern(strPattern.c_str(), strPattern.size());
 	}
@@ -521,7 +523,8 @@ public:
 	@arg [in] strPattern	The pattern string object.
 	@see std::kmp::Finder
 	@*/
-	NoCaseFinder(const std::basic_string<_E>& strPattern) : BaseClass(strPattern) {}
+	template <class _Tr, class _Alloc>
+	NoCaseFinder(const std::basic_string<_E, _Tr, _Alloc>& strPattern) : BaseClass(strPattern) {}
 };
 
 // -------------------------------------------------------------------------
