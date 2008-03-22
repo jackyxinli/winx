@@ -232,10 +232,10 @@ inline _InputIt winx_call find_digit_or_csymbol(
 }
 
 // -------------------------------------------------------------------------
-// compare
+// compare_by
 
 template<class _InputIt1, class _InputIt2, class _Compr>
-inline int winx_call compare(
+inline int winx_call compare_by(
 	_InputIt1 first1, _InputIt1 last1, _InputIt2 first2, _InputIt2 last2, _Compr cmp)
 {
 	for (;; ++first1, ++first2)
@@ -248,8 +248,26 @@ inline int winx_call compare(
 		if (res != 0)
 			return res;
 	}
-	return 0;
 }
+
+template<class _InputIt, class _E, class _Compr>
+inline int winx_call compare_by(
+	_InputIt first, _InputIt last, const _E* str, _Compr cmp)
+{
+	for (;; ++first, ++str)
+	{
+		if (first == last)
+			return *str == 0 ? 0 : -1;
+		int res = cmp(*first, *str);
+		if (res != 0)
+			return res;
+		if (*str == 0)
+			return 1;
+	}
+}
+
+// -------------------------------------------------------------------------
+// compare
 
 template<class _InputIt1, class _InputIt2>
 inline int winx_call compare(
@@ -281,14 +299,69 @@ inline int winx_call compare(
 	}
 }
 
-__forceinline int compare(const char* src, const char* dst)
+__forceinline int winx_call compare(const char* src, const char* dst)
 {
 	return strcmp(src, dst);
 }
 
-__forceinline int compare(const wchar_t* src, const wchar_t* dst)
+__forceinline int winx_call compare(const wchar_t* src, const wchar_t* dst)
 {
 	return wcscmp(src, dst);
+}
+
+// -------------------------------------------------------------------------
+// replace
+
+template <class _Container, class _RandIterator>
+void winx_call replace(
+	_Container& container,
+	typename _Container::iterator first,
+	typename _Container::iterator last,
+	_RandIterator bfirst, _RandIterator blast)
+{
+	typedef typename _Container::size_type size_type;
+	typedef typename _Container::difference_type difference_type;
+
+	const size_type cchDelete = last - first;
+	const size_type cchInsert = blast - bfirst;
+	const difference_type delta = cchInsert - cchDelete;
+	if (delta > 0)
+	{
+		std::copy(bfirst, bfirst + cchDelete, first);
+		container.insert(last, bfirst + cchDelete, blast);
+	}
+	else
+	{
+		std::copy(bfirst, blast, first);
+		if (delta)
+			container.erase(last + delta, last);
+	}
+}
+
+template <class _Container, class _RandIterator>
+void winx_call replace(
+	_Container& container,
+	typename _Container::iterator first,
+	typename _Container::iterator last,
+	typename _Container::size_type count,
+	const typename _Container::value_type& val)
+{
+	typedef typename _Container::size_type size_type;
+	typedef typename _Container::difference_type difference_type;
+
+	const size_type cchDelete = last - first;
+	const difference_type delta = count - cchDelete;
+	if (delta > 0)
+	{
+		std::fill_n(first, cchDelete, ch);
+		container.insert(last, delta, ch);
+	}
+	else
+	{
+		std::fill_n(first, count, ch);
+		if (delta)
+			container.erase(last + delta, last);
+	}
 }
 
 // -------------------------------------------------------------------------

@@ -30,44 +30,6 @@
 __NS_STD_BEGIN
 
 // -------------------------------------------------------------------------
-// class TempString
-
-template <class _E>
-class TempString : public BasicString<_E>
-{
-private:
-	typedef BasicString<_E> _Base;
-
-public:
-	TempString(const _E* szVal)
-		: _Base(szVal, std::length(szVal))
-	{
-	}
-
-	TempString(const _E* szVal, size_t len)
-		: _Base(szVal, len)
-	{
-	}
-
-	template <class _Tr, class _Alloc>
-	TempString(const std::basic_string<_E, _Tr, _Alloc>& s)
-		: _Base(_ConvIt(s.begin()), s.length())
-	{
-	}
-
-	template <class _Alloc>
-	TempString(const std::vector<_E, _Alloc>& s)
-		: _Base(_ConvIt(s.begin()), s.size())
-	{
-	}
-
-	TempString(const BasicString<_E>& s)
-		: _Base(s)
-	{
-	}
-};
-
-// -------------------------------------------------------------------------
 // concat
 
 template <class AllocT, class StringT>

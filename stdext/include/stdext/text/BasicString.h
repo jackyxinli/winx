@@ -19,29 +19,18 @@
 #ifndef __STDEXT_TEXT_BASICSTRING_H__
 #define __STDEXT_TEXT_BASICSTRING_H__
 
-#ifndef __STDEXT_BASIC_H__
-#include "../Basic.h"
+#ifndef __STDEXT_TEXT_TEMPSTRING_H__
+#include "TempString.h"
 #endif
 
 #ifndef __STDEXT_MEMORY_H__
 #include "../Memory.h"
 #endif
 
-#ifndef __STD_VECTOR_H__
-#include "../../std/vector.h"
-#endif
-
-#ifndef __STD_STRING_H__
-#include "../../std/string.h"
-#endif
-
-#ifndef __STDEXT_TEXT_BASICALGO_H__
-#include "BasicAlgo.h"
-#endif
-
 __NS_STD_BEGIN
 
 // -------------------------------------------------------------------------
+// class CompareNoCase
 
 template <class _E>
 class CompareNoCase
@@ -67,60 +56,83 @@ public:
 };
 
 // -------------------------------------------------------------------------
+// _WINX_FIND_OPS
 
-inline void winx_call __Xran()
-	{ throw std::out_of_range("invalid string position"); }
+#define _WINX_FIND_OPS(It, findOp, findC, findS, Bgn, End, Const)			\
+																			\
+	It winx_call findOp(const _E ch, It from) Const							\
+		{return findC(from, End(), ch); }									\
+																			\
+	It winx_call findOp(const _E ch) Const									\
+		{return findC(Bgn(), End(), ch); }									\
+																			\
+	It winx_call findOp(const _String pattern, It from) Const				\
+		{return findS(from, End(), pattern.begin(), pattern.end()); }		\
+																			\
+	It winx_call findOp(const _String pattern) Const						\
+		{return findS(Bgn(), End(), pattern.begin(), pattern.end()); }		\
+																			\
+	It winx_call findOp(const _E* pattern, size_type len, It from) Const	\
+		{return findS(from, End(), pattern, pattern + len); }				\
+																			\
+	It winx_call findOp(const _E* pattern, size_type len) Const				\
+		{return findS(Bgn(), End(), pattern, pattern + len); }
+
+#define _WINX_FIND_CONST(findOp, findC, findS)								\
+	_WINX_FIND_OPS(const_iterator, findOp, findC, findS, begin, end, const)
+
+#define _WINX_FIND_NONCONST(findOp, findC, findS)							\
+	_WINX_FIND_OPS(iterator, findOp, findC, findS, begin, end, _WINX_NOTHING)
+
+#define _WINX_RFIND_CONST(findOp, findC, findS)								\
+	_WINX_FIND_OPS(const_reverse_iterator, findOp, findC, findS, rbegin, rend, const)
+
+#define _WINX_RFIND_NONCONST(findOp, findC, findS)							\
+	_WINX_FIND_OPS(reverse_iterator, findOp, findC, findS, rbegin, rend, _WINX_NOTHING)
+
+#define _WINX_NOTHING	/* nothing */
+
+#define _WINX_FIND_ALL(findOp, findC, findS)								\
+	_WINX_FIND_CONST(findOp, findC, findS)									\
+	_WINX_FIND_NONCONST(findOp, findC, findS)	
+
+#define _WINX_RFIND_ALL(findOp, findC, findS)								\
+	_WINX_RFIND_CONST(findOp, findC, findS)									\
+	_WINX_RFIND_NONCONST(findOp, findC, findS)	
+
+// -------------------------------------------------------------------------
+// class BasicString
 
 #ifndef _WINX_ALLOC_TYPE
 #define _WINX_ALLOC_TEMPLATE_ARGS		class _Alloc, int _MemBlockSize
 #define _WINX_ALLOC_TYPE				std::AutoFreeAllocT<_Alloc, _MemBlockSize>
 #endif
 
-// -------------------------------------------------------------------------
-// class BasicString
-
 template <class _E>
-class BasicString
+class BasicString : public TempString<_E>
 {
-public:
-	typedef size_t size_type;
-	typedef ptrdiff_t difference_type;
-
-	typedef const _E* pointer;
-	typedef const _E* const_pointer;
-	typedef const _E& reference;
-	typedef const _E& const_reference;
-	typedef _E value_type;
-
-	typedef const _E* iterator;
-	typedef const _E* const_iterator;
-
-#if defined(X_CC_VC6)
-	typedef std::reverse_iterator<const_iterator, value_type,
-		const_reference, const_pointer, difference_type>
-			const_reverse_iterator;
-	typedef std::reverse_iterator<iterator, value_type,
-		reference, pointer, difference_type>
-			reverse_iterator;
-#else
-	typedef std::reverse_iterator<const_iterator>
-			const_reverse_iterator;
-	typedef std::reverse_iterator<iterator>
-			reverse_iterator;
-#endif
-
 private:
-    size_type m_length;
-    const value_type* m_pszBuf;
-	
-private:
+	typedef TempString<_E> _Base;
+	typedef TempString<_E> _String;
 	typedef BasicString _Myt;
-	typedef std::char_traits<value_type> _Tr;
 
 public:
-	typedef _Tr traits_type;
+	typedef typename _Base::size_type size_type;
+	typedef typename _Base::difference_type difference_type;
+	typedef typename _Base::value_type value_type;
 
-public:
+	typedef typename _Base::iterator iterator;
+	typedef typename _Base::reverse_iterator reverse_iterator;
+
+private:
+	template <class AllocT>
+	static const value_type* _makeBuf(AllocT& alloc, const _String& s)
+	{
+		value_type* psz = (value_type*)alloc.allocate(s.size() * sizeof(value_type));
+		std::copy(s.begin(), s.end(), psz);
+		return psz;
+	}
+
 	template <class AllocT, class Iterator>
 	static const value_type* _makeBuf(AllocT& alloc, Iterator first, size_type cch)
 	{
@@ -138,111 +150,56 @@ public:
 	}
 
 public:
-	BasicString()
-		: m_length(0)
-	{
-	}
-
-	BasicString(const value_type* pszVal, size_type cch)
-		: m_length(cch), m_pszBuf(pszVal)
-	{
-	}
-
-	BasicString(const _Myt& src, size_type from, size_type cch = (size_type)-1)
-	{
+	BasicString() {}
+	BasicString(const _E* pszVal, size_type cch) : _Base(pszVal, cch) {}
+	BasicString(const _Myt& src, size_type from, size_type cch = (size_type)-1) {
 		assign(src, from, cch);
 	}
 
 	template <_WINX_ALLOC_TEMPLATE_ARGS>
-	BasicString(_WINX_ALLOC_TYPE& alloc, const value_type* pszVal, size_type cch)
-		: m_length(cch), m_pszBuf(_makeBuf(alloc, pszVal, length))
-	{
+	BasicString(_WINX_ALLOC_TYPE& alloc, const _String s) {
+		assign(alloc, s);
 	}
 
 	template <_WINX_ALLOC_TEMPLATE_ARGS>
-	BasicString(_WINX_ALLOC_TYPE& alloc, const value_type* pszVal)
-		: m_length(_Tr::length(pszVal)), m_pszBuf(_makeBuf(alloc, pszVal, m_length))
-	{
+	BasicString(_WINX_ALLOC_TYPE& alloc, const value_type* pszVal, size_type cch) {
+		assign(alloc, pszVal, cch);
 	}
 
 	template <_WINX_ALLOC_TEMPLATE_ARGS>
-	BasicString(_WINX_ALLOC_TYPE& alloc, const _Myt& b)
-		: m_length(b.size()), m_pszBuf(_makeBuf(alloc, b.data(), m_length))
-	{
-	}
-
-	template <_WINX_ALLOC_TEMPLATE_ARGS, class _Tr, class _Alloc2>
-	BasicString(_WINX_ALLOC_TYPE& alloc, const basic_string<_E, _Tr, _Alloc2>& b)
-		: m_length(b.length()), m_pszBuf(_makeBuf(alloc, b.data(), m_length))
-	{
-	}
-
-	template <_WINX_ALLOC_TEMPLATE_ARGS>
-	BasicString(_WINX_ALLOC_TYPE& alloc, size_type count, value_type ch)
-		: m_length(count), m_pszBuf(_makeBuf(alloc, count, ch))
-	{
+	BasicString(_WINX_ALLOC_TYPE& alloc, size_type count, value_type ch) {
+		assign(alloc, count, ch);
 	}
 
 	template <_WINX_ALLOC_TEMPLATE_ARGS, class Iterator>
-	BasicString(_WINX_ALLOC_TYPE& alloc, Iterator first, Iterator last)
-		: m_length(std::distance(first, last)), m_pszBuf(_makeBuf(alloc, first, m_length))
-	{
+	BasicString(_WINX_ALLOC_TYPE& alloc, Iterator first, Iterator last) {
+		assign(alloc, first, last);
 	}
 
 public:
-	_Myt& winx_call attach(const value_type* pszVal)
-	{
-		m_length = _Tr::length(pszVal);
-		m_pszBuf = pszVal;
-		return *this;
-	}
-
-	_Myt& winx_call attach(const value_type* pszVal, size_type cch)
-	{
-		m_length = cch;
-		m_pszBuf = pszVal;
-		return *this;
-	}
-
 	_Myt& winx_call assign(const _Myt& src, size_type from, size_type cch = (size_type)-1)
 	{
-		if (src.size() < from)
-			__Xran();
 		size_type cchMax = src.size() - from;
+		if ((difference_type)cchMax < 0)
+			__Xran();
 		m_length = (cchMax < cch ? cchMax : cch);
 		m_pszBuf = src.m_pszBuf + from;
 		return *this;
 	}
 
 	template <_WINX_ALLOC_TEMPLATE_ARGS>
-	_Myt& winx_call assign(_WINX_ALLOC_TYPE& alloc, const value_type* pszVal, size_type cch)
+	_Myt& winx_call assign(_WINX_ALLOC_TYPE& alloc, const _String s)
+	{
+		m_length = s.size();
+		m_pszBuf = _makeBuf(alloc, s);
+		return *this;
+	}
+
+	template <_WINX_ALLOC_TEMPLATE_ARGS>
+	_Myt& winx_call assign(_WINX_ALLOC_TYPE& alloc, const _E* pszVal, size_type cch)
 	{
 		m_length = cch;
-		m_pszBuf = _makeBuf(alloc, pszVal, length);
-		return *this;
-	}
-
-	template <_WINX_ALLOC_TEMPLATE_ARGS>
-	_Myt& winx_call assign(_WINX_ALLOC_TYPE& alloc, const value_type* pszVal)
-	{
-		m_length = _Tr::length(pszVal);
-		m_pszBuf = _makeBuf(alloc, pszVal, m_length);
-		return *this;
-	}
-
-	template <_WINX_ALLOC_TEMPLATE_ARGS>
-	_Myt& winx_call assign(_WINX_ALLOC_TYPE& alloc, const _Myt& b)
-	{
-		m_length = b.size();
-		m_pszBuf = _makeBuf(alloc, b.data(), m_length);
-		return *this;
-	}
-
-	template <_WINX_ALLOC_TEMPLATE_ARGS, class _Tr, class _Alloc2>
-	_Myt& winx_call assign(_WINX_ALLOC_TYPE& alloc, const basic_string<_E, _Tr, _Alloc2>& b)
-	{
-		m_length = b.length();
-		m_pszBuf = _makeBuf(alloc, b.data(), m_length);
+		m_pszBuf = _makeBuf(alloc, pszVal, cch);
 		return *this;
 	}
 
@@ -268,28 +225,6 @@ public:
 		return _Myt(*this, from, count);
 	}
 
-	template <class LogT>
-	void winx_call trace(LogT& log) const
-	{
-		log.printString(m_pszBuf, m_pszBuf + m_length);
-	}
-
-	void winx_call swap(_Myt& b)
-	{
-		std::swap(m_length, b.m_length);
-		std::swap(m_pszBuf, b.m_pszBuf);
-	}
-
-	void winx_call clear()
-	{
-		m_length = 0;
-	}
-
-	void winx_call erase()
-	{
-		m_length = 0;
-	}
-
 	template <class _Tr, class _Alloc2>
 	static _Myt winx_call cast(const basic_string<_E, _Tr, _Alloc2>& src)
 	{
@@ -303,372 +238,59 @@ public:
 	}
 
 public:
-	const_iterator winx_call begin() const
-		{return m_pszBuf; }
-
-	const_iterator winx_call end() const
-		{return m_pszBuf + m_length; }
-	
-	const_reverse_iterator winx_call rbegin() const
-		{return (const_reverse_iterator(end())); }
-	
-	const_reverse_iterator winx_call rend() const
-		{return (const_reverse_iterator(begin())); }
-	
-	const_reference winx_call at(size_type i) const
-		{if (i <= m_length)
-			__Xran();
-		return m_pszBuf[i]; }
-	
-	const_reference winx_call operator[](size_type i) const
-		{return m_pszBuf[i]; }
-	
-	const value_type* winx_call data() const
-		{return m_pszBuf; }
-	
-	size_type winx_call length() const
-		{return m_length; }
-	
-	size_type winx_call size() const
-		{return m_length; }
-	
-	bool winx_call empty() const
-		{return m_length == 0; }
-
-public:
-	// 将String转为STL string。这个操作比较费时。
-
-	basic_string<_E> winx_call stl_str() const
-		{return basic_string<_E>(m_pszBuf, m_length);	}
-
-public:
 	// 在字符串中查找子串（正向查找）。
+	_WINX_FIND_CONST(find, std::find, std::search)
 
-	const_iterator winx_call find(const _E ch, const_iterator from) const
-	{
-		return std::find(from, end(), ch);
-	}
-
-	const_iterator winx_call find(const _E ch) const
-	{
-		return std::find(begin(), end(), ch);
-	}
-
-	const_iterator winx_call find(const _Myt& pattern, const_iterator from) const
-	{
-		return std::search(from, end(), pattern.begin(), pattern.end());
-	}
-	
-	const_iterator winx_call find(const _Myt& pattern) const
-	{
-		return std::search(begin(), end(), pattern.begin(), pattern.end());
-	}
-
-	const_iterator winx_call find(const _E* pattern, const_iterator from) const
-	{
-		return std::search(from, end(), pattern, std::end(pattern));
-	}
-
-	const_iterator winx_call find(const _E* pattern) const
-	{
-		return std::search(begin(), end(), pattern, pattern + _Tr::length(pattern));
-	}
-
-	const_iterator winx_call find(const _E* pattern, size_type len, const_iterator from) const
-	{
-		return std::search(from, end(), pattern, pattern + len);
-	}
-
-	const_iterator winx_call find(const _E* pattern, size_type len) const
-	{
-		return std::search(begin(), end(), pattern, pattern + len);
-	}
-
-public:
 	// 在字符串中查找子串（反向查找）。
+	_WINX_FIND_CONST(rfind, std::rfind, std::find_end)
 
-	const_iterator winx_call rfind(const _E ch, const_iterator from) const
-	{
-		return std::rfind(from, rend(), ch);
-	}
-
-	const_iterator winx_call rfind(const _E ch) const
-	{
-		return std::rfind(begin(), end(), ch);
-	}
-
-	const_iterator winx_call rfind(const _Myt& pattern, const_iterator from) const
-	{
-		return std::find_end(from, end(), pattern.begin(), pattern.end());
-	}
-	
-	const_iterator winx_call rfind(const _Myt& pattern) const
-	{
-		return std::find_end(begin(), end(), pattern.begin(), pattern.end());
-	}
-
-	const_iterator winx_call rfind(const _E* pattern, const_iterator from) const
-	{
-		return std::find_end(from, end(), pattern, std::end(pattern));
-	}
-
-	const_iterator winx_call rfind(const _E* pattern) const
-	{
-		return std::find_end(begin(), end(), pattern, std::end(pattern));
-	}
-
-	const_iterator winx_call rfind(const _E* pattern, size_type len, const_iterator from) const
-	{
-		return std::find_end(from, end(), pattern, pattern+len);
-	}
-
-	const_iterator winx_call rfind(const _E* pattern, size_type len) const
-	{
-		return std::find_end(begin(), end(), pattern, pattern+len);
-	}
-
-public:
 	// 查找某个集合中的字符在字符串中第一次出现的位置（正向查找）。
+	_WINX_FIND_CONST(find_first_of, std::find, std::find_first_of)
 
-	const_iterator winx_call find_first_of(const _E ch, const_iterator from) const
-	{
-		return std::find(from, end(), ch);
-	}
-
-	const_iterator winx_call find_first_of(const _E ch) const
-	{
-		return std::find(begin(), end(), ch);
-	}
-
-	const_iterator winx_call find_first_of(const _Myt& pattern, const_iterator from) const
-	{
-		return std::find_first_of(from, end(), pattern.begin(), pattern.end());
-	}
-	
-	const_iterator winx_call find_first_of(const _Myt& pattern) const
-	{
-		return std::find_first_of(begin(), end(), pattern.begin(), pattern.end());
-	}
-
-	const_iterator winx_call find_first_of(const _E* pattern, const_iterator from) const
-	{
-		return std::find_first_of(from, end(), pattern, pattern + _Tr::length(pattern));
-	}
-
-	const_iterator winx_call find_first_of(const _E* pattern) const
-	{
-		return std::find_first_of(begin(), end(), pattern, pattern + _Tr::length(pattern));
-	}
-
-	const_iterator winx_call find_first_of(const _E* pattern, size_type len, const_iterator from) const
-	{
-		return std::find_first_of(from, end(), pattern, pattern + len);
-	}
-
-	const_iterator winx_call find_first_of(const _E* pattern, size_type len) const
-	{
-		return std::find_first_of(begin(), end(), pattern, pattern + len);
-	}
-
-public:
 	// 查找某个集合中的字符在字符串中第一次出现的位置（反向查找）。
+	_WINX_RFIND_CONST(find_last_of, std::find, std::find_first_of)
 
-	const_reverse_iterator winx_call find_last_of(const _E ch, const_reverse_iterator from) const
-	{
-		return std::find(from, rend(), ch);
-	}
-
-	const_reverse_iterator winx_call find_last_of(const _E ch) const
-	{
-		return std::find(rbegin(), rend(), ch);
-	}
-
-	const_reverse_iterator winx_call find_last_of(const _Myt& pattern, const_reverse_iterator from) const
-	{
-		return std::find_first_of(from, rend(), pattern.begin(), pattern.end());
-	}
-	
-	const_reverse_iterator winx_call find_last_of(const _Myt& pattern) const
-	{
-		return std::find_first_of(rbegin(), rend(), pattern.begin(), pattern.end());
-	}
-
-	const_reverse_iterator winx_call find_last_of(const _E* pattern, const_reverse_iterator from) const
-	{
-		return std::find_first_of(from, rend(), pattern, pattern + _Tr::length(pattern));
-	}
-
-	const_reverse_iterator winx_call find_last_of(const _E* pattern) const
-	{
-		return std::find_first_of(rbegin(), rend(), pattern, pattern + _Tr::length(pattern));
-	}
-
-	const_reverse_iterator winx_call find_last_of(const _E* pattern, size_type len, const_reverse_iterator from) const
-	{
-		return std::find_first_of(from, rend(), pattern, pattern + len);
-	}
-
-	const_reverse_iterator winx_call find_last_of(const _E* pattern, size_type len) const
-	{
-		return std::find_first_of(rbegin(), rend(), pattern, pattern + len);
-	}
-
-public:
 	// 在字符串中查找不在集合中出现的第一个字符的位置（正向查找）。
+	_WINX_FIND_CONST(find_first_not_of, std::find_not, std::find_first_not_of)
 
-	const_iterator winx_call find_first_not_of(const _E ch, const_iterator from) const
-	{
-		return std::find_not(from, end(), ch);
-	}
-
-	const_iterator winx_call find_first_not_of(const _E ch) const
-	{
-		return std::find_not(begin(), end(), ch);
-	}
-
-	const_iterator winx_call find_first_not_of(const _Myt& pattern, const_iterator from) const
-	{
-		return std::find_first_not_of(from, end(), pattern.begin(), pattern.end());
-	}
-	
-	const_iterator winx_call find_first_not_of(const _Myt& pattern) const
-	{
-		return std::find_first_not_of(begin(), end(), pattern.begin(), pattern.end());
-	}
-
-	const_iterator winx_call find_first_not_of(const _E* pattern, const_iterator from) const
-	{
-		return std::find_first_not_of(from, end(), pattern, pattern + _Tr::length(pattern));
-	}
-
-	const_iterator winx_call find_first_not_of(const _E* pattern) const
-	{
-		return std::find_first_not_of(begin(), end(), pattern, pattern + _Tr::length(pattern));
-	}
-
-	const_iterator winx_call find_first_not_of(const _E* pattern, size_type len, const_iterator from) const
-	{
-		return std::find_first_not_of(from, end(), pattern, pattern + len);
-	}
-
-	const_iterator winx_call find_first_not_of(const _E* pattern, size_type len) const
-	{
-		return std::find_first_not_of(begin(), end(), pattern, pattern + len);
-	}
-
-public:
 	// 在字符串中查找不在集合中出现的第一个字符的位置（反向查找）。
-
-	const_reverse_iterator winx_call find_last_not_of(const _E ch, const_reverse_iterator from) const
-	{
-		return std::find_not(from, rend(), ch);
-	}
-
-	const_reverse_iterator winx_call find_last_not_of(const _E ch) const
-	{
-		return std::find_not(rbegin(), rend(), ch);
-	}
-
-	const_reverse_iterator winx_call find_last_not_of(const _Myt& pattern, const_reverse_iterator from) const
-	{
-		return std::find_first_not_of(from, rend(), pattern.begin(), pattern.end());
-	}
-	
-	const_reverse_iterator winx_call find_last_not_of(const _Myt& pattern) const
-	{
-		return std::find_first_not_of(rbegin(), rend(), pattern.begin(), pattern.end());
-	}
-
-	const_reverse_iterator winx_call find_last_not_of(const _E* pattern, const_reverse_iterator from) const
-	{
-		return std::find_first_not_of(from, rend(), pattern, pattern + _Tr::length(pattern));
-	}
-
-	const_reverse_iterator winx_call find_last_not_of(const _E* pattern) const
-	{
-		return std::find_first_not_of(rbegin(), rend(), pattern, pattern + _Tr::length(pattern));
-	}
-
-	const_reverse_iterator winx_call find_last_not_of(const _E* pattern, size_type len, const_reverse_iterator from) const
-	{
-		return std::find_first_not_of(from, rend(), pattern, pattern + len);
-	}
-
-	const_reverse_iterator winx_call find_last_not_of(const _E* pattern, size_type len) const
-	{
-		return std::find_first_not_of(rbegin(), rend(), pattern, pattern + len);
-	}
+	_WINX_RFIND_CONST(find_last_not_of, std::find_not, std::find_first_not_of)
 
 public:
 	// 比较两个字符串。
 	
-	int winx_call compare(const _Myt& b) const
-	{
-		return std::compare(begin(), end(), b.begin(), b.end());
-	}
-
-	template <class _Tr, class _Alloc2>
-	int winx_call compare(const basic_string<_E, _Tr, _Alloc2>& b) const
-	{
-		return std::compare(begin(), end(), b.begin(), b.end());
-	}
+	int winx_call compare(const _String& b) const
+		{return std::compare(begin(), end(), b.begin(), b.end()); }
 
 	int winx_call compare(const _E* b, size_type blen) const
-	{
-		return std::compare(begin(), end(), b, b + blen);
-	}
+		{return std::compare(begin(), end(), b, b + blen); }
 
 	int winx_call compare(const _E* b) const
-	{
-		return std::compare(begin(), end(), b);
-	}
+		{return std::compare(begin(), end(), b); }
 
-	int winx_call compare(size_type from, size_type count, const _Myt& b) const
-	{
-		return substr(from, count).compare(b);
-	}
-
-	int winx_call compare(size_type from, size_type count, const _Myt& b, size_type bfrom, size_type bcount) const
-	{
-		return substr(from, count).compare(b.substr(bfrom, bcount));
-	}
+	int winx_call compare(size_type from, size_type count, const _String b) const
+		{return substr(from, count).compare(b); }
 
 	int winx_call compare(size_type from, size_type count, const _E* b, size_type blen) const
-	{
-		return substr(from, count).compare(b, blen);
-	}
+		{return substr(from, count).compare(b, blen); }
 
 	int winx_call compare(size_type from, size_type count, const _E* b) const
-	{
-		return substr(from, count).compare(b);
-	}
+		{return substr(from, count).compare(b); }
 
 public:
 	// 比较两个字符串（传入单字符的比较函数）。
 	
 	template <class _Compr>
-	int winx_call compare_by(const _Myt& b, _Compr cmp) const
-	{
-		return std::compare(begin(), end(), b.begin(), b.end(), cmp);
-	}
-
-	template <class _Tr, class _Alloc2, class _Compr>
-	int winx_call compare_by(const basic_string<_E, _Tr, _Alloc2>& b, _Compr cmp) const
-	{
-		return std::compare(begin(), end(), b.begin(), b.end(), cmp);
-	}
+	int winx_call compare_by(const _String& b, _Compr cmp) const
+		{return std::compare_by(begin(), end(), b.begin(), b.end(), cmp); }
 
 	template <class _Compr>
 	int winx_call compare_by(const _E* b, size_type blen, _Compr cmp) const
-	{
-		return std::compare(begin(), end(), b, b + blen, cmp);
-	}
+		{return std::compare_by(begin(), end(), b, b + blen, cmp); }
 
 	template <class _Compr>
 	int winx_call compare_by(const _E* b, _Compr cmp) const
-	{
-		return std::compare(begin(), end(), b, std::end(b), cmp);
-	}
+		{return std::compare_by(begin(), end(), b, cmp); }
 
 private:
 	typedef CompareNoCase<_E> _ComareNoCase;
@@ -676,50 +298,23 @@ private:
 public:
 	// 比较两个字符串（忽略大小写）。
 
-	int winx_call icompare(const _Myt& b) const
-	{
-		return compare_by(b, _ComareNoCase());
-	}
-
-	template <class _Tr, class _Alloc2>
-	int winx_call icompare(const basic_string<_E, _Tr, _Alloc2>& b) const
-	{
-		return compare_by(b, _ComareNoCase());
-	}
+	int winx_call icompare(const _String b) const
+		{return compare_by(b, _ComareNoCase()); }
 
 	int winx_call icompare(const _E* b, size_type blen) const
-	{
-		return compare_by(b, blen, _ComareNoCase());
-	}
+		{return compare_by(b, blen, _ComareNoCase()); }
 
 	int winx_call icompare(const _E* b) const
-	{
-		return compare_by(b, _ComareNoCase());
-	}
+		{return compare_by(b, _ComareNoCase()); }
 
 public:
 	// 判断是否包含指定的串。
 
-	bool winx_call contains(const _Myt& b) const
-	{
-		return find(b) != end();
-	}
-
-	template <class _Tr, class _Alloc2>
-	bool winx_call contains(const basic_string<_E, _Tr, _Alloc2>& b) const
-	{
-		return find(b) != end();
-	}
+	bool winx_call contains(const _String b) const
+		{return find(b) != end(); }
 
 	bool winx_call contains(const _E* b, size_type blen) const
-	{
-		return find(b, blen) != end();
-	}
-
-	bool winx_call contains(const _E* b) const
-	{
-		return find(b) != end();
-	}
+		{return find(b, blen) != end(); }
 };
 
 typedef BasicString<char> String;
@@ -746,6 +341,12 @@ template <class _E, class _Tr, class _Alloc> __forceinline
     bool winx_call operator==(const basic_string<_E, _Tr, _Alloc>& a, const BasicString<_E>& b)
     {return (b.compare(a) == 0); }
 
+template <class _E, class _Alloc> __forceinline
+    bool winx_call operator==(const vector<_E, _Alloc>& a, const BasicString<_E>& b)
+    {return (b.compare(a) == 0); }
+
+// -------------------------------------------------------------------------
+
 template <class _E, class _T2> __forceinline
     bool winx_call operator!=(const BasicString<_E>& a, const _T2& b)
     {return (a.compare(b) != 0); }
@@ -757,6 +358,12 @@ template <class _E> __forceinline
 template <class _E, class _Tr, class _Alloc> __forceinline
     bool winx_call operator!=(const basic_string<_E, _Tr, _Alloc>& a, const BasicString<_E>& b)
     {return (b.compare(a) != 0); }
+
+template <class _E, class _Alloc> __forceinline
+    bool winx_call operator!=(const vector<_E, _Alloc>& a, const BasicString<_E>& b)
+    {return (b.compare(a) != 0); }
+
+// -------------------------------------------------------------------------
 
 template <class _E, class _T2> __forceinline
     bool winx_call operator<(const BasicString<_E>& a, const _T2& b)
@@ -770,6 +377,12 @@ template <class _E, class _Tr, class _Alloc> __forceinline
     bool winx_call operator<(const basic_string<_E, _Tr, _Alloc>& a, const BasicString<_E>& b)
     {return (b.compare(a) > 0); }
 
+template <class _E, class _Alloc> __forceinline
+    bool winx_call operator<(const vector<_E, _Alloc>& a, const BasicString<_E>& b)
+    {return (b.compare(a) > 0); }
+
+// -------------------------------------------------------------------------
+
 template <class _E, class _T2> __forceinline
     bool winx_call operator>(const BasicString<_E>& a, const _T2& b)
     {return (b < a); }
@@ -782,29 +395,45 @@ template <class _E, class _Tr, class _Alloc> __forceinline
     bool winx_call operator>(const basic_string<_E, _Tr, _Alloc>& a, const BasicString<_E>& b)
     {return (b < a); }
 
-template <class _E, class _T2> __forceinline
-    bool winx_call operator<=(const BasicString<_E>& a, const _T2& b)
-    {return (!(b < a)); }
+template <class _E, class _Alloc> __forceinline
+    bool winx_call operator>(const vector<_E, _Alloc>& a, const BasicString<_E>& b)
+    {return (b < a); }
 
-template <class _E> __forceinline
-    bool winx_call operator<=(const _E* a, const BasicString<_E>& b)
-    {return (!(b < a)); }
-
-template <class _E, class _Tr, class _Alloc> __forceinline
-    bool winx_call operator<=(const basic_string<_E, _Tr, _Alloc>& a, const BasicString<_E>& b)
-    {return (!(b < a)); }
+// -------------------------------------------------------------------------
 
 template <class _E, class _T2> __forceinline
-    bool winx_call operator>=(const BasicString<_E>& a, const _T2& b)
-    {return (!(a < b)); }
+	bool winx_call operator<=(const BasicString<_E>& a, const _T2& b)
+	{return (!(b < a)); }
 
 template <class _E> __forceinline
-    bool winx_call operator>=(const _E* a, const BasicString<_E>& b)
-    {return (!(a < b)); }
+	bool winx_call operator<=(const _E* a, const BasicString<_E>& b)
+	{return (!(b < a)); }
 
 template <class _E, class _Tr, class _Alloc> __forceinline
-    bool winx_call operator>=(const basic_string<_E, _Tr, _Alloc>& a, const BasicString<_E>& b)
-    {return (!(a < b)); }
+	bool winx_call operator<=(const basic_string<_E, _Tr, _Alloc>& a, const BasicString<_E>& b)
+	{return (!(b < a)); }
+
+template <class _E, class _Alloc> __forceinline
+	bool winx_call operator<=(const vector<_E, _Alloc>& a, const BasicString<_E>& b)
+	{return (!(b < a)); }
+
+// -------------------------------------------------------------------------
+
+template <class _E, class _T2> __forceinline
+	bool winx_call operator>=(const BasicString<_E>& a, const _T2& b)
+	{return (!(a < b)); }
+
+template <class _E> __forceinline
+	bool winx_call operator>=(const _E* a, const BasicString<_E>& b)
+	{return (!(a < b)); }
+
+template <class _E, class _Tr, class _Alloc> __forceinline
+	bool winx_call operator>=(const basic_string<_E, _Tr, _Alloc>& a, const BasicString<_E>& b)
+	{return (!(a < b)); }
+
+template <class _E, class _Alloc> __forceinline
+	bool winx_call operator>=(const vector<_E, _Alloc>& a, const BasicString<_E>& b)
+	{return (!(a < b)); }
 
 // -------------------------------------------------------------------------
 // class TestBasicString
@@ -819,10 +448,6 @@ class TestBasicString : public TestCase
 	WINX_TEST_SUITE_END();
 
 public:
-	void doTestFind(LogT& log)
-	{
-	}
-	
 	void testFind(LogT& log)
 	{
 		const std::String a1("Hello", 5);
@@ -831,7 +456,15 @@ public:
 		AssertExp(it != a1.end());
 		AssertExp(*it == 'e');
 
-		doTestFind(log);
+		it = a1.find('e');
+		AssertExp(it != a1.end());
+		AssertExp(*it == 'e');
+
+		std::vector<char> pattern(2, 'l');
+		it = a1.find(pattern);
+		AssertExp(it != a1.end());
+		AssertExp(*it == 'l');
+		AssertExp(*(it+1) == 'l');
 	}
 
 	void testICompare(LogT& log)
