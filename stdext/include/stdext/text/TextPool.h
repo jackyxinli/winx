@@ -211,7 +211,7 @@ public:
 		return *this;
 	}
 
-	_Myt winx_call replace(iterator first, iterator last, const _String s)
+	_Myt& winx_call replace(iterator first, iterator last, const _String s)
 	{
 		std::replace(_WINX_TP_BASE, first, last, s.begin(), s.end());
 		return *this;
