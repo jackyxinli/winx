@@ -46,6 +46,9 @@ public:																		\
 	using _Base::rend;														\
 	using _Base::size
 
+#define _WINX_BCB_BASE														\
+	*static_cast<_Base*>(this)
+
 // -------------------------------------------------------------------------
 // class BasicStringBuilder
 
@@ -70,15 +73,15 @@ public:
 	explicit BasicStringBuilder(const _String s)
 		: _Base(s.begin(), s.end()) {}
 
-	explicit BasicStringBuilder(size_type cch, _E ch)
+	BasicStringBuilder(size_type cch, _E ch)
 		: _Base(cch, ch) {}
+
+	BasicStringBuilder(const _E* s, size_type count) 
+		: _Base(s, s+count) {} 
 
 	template <class _InputIterator>
 	BasicStringBuilder(_InputIterator first, _InputIterator last)
 		: _Base(first, last) {}
-
-	BasicStringBuilder(const _E* s, size_type count) 
-		: _Base(s, s+count) {} 
 
 public:
 	BasicString<_E> winx_call cast_str() const {
@@ -195,7 +198,7 @@ public:
 		iterator first, iterator last,
 		_RandIterator bfirst, _RandIterator blast)
 	{
-		std::replace(*static_cast<_Base*>(this), first, last, bfirst, blast);
+		std::replace(_WINX_BCB_BASE, first, last, bfirst, blast);
 		return *this;
 	}
 
@@ -203,20 +206,20 @@ public:
 	_Myt& winx_call replace(
 		iterator first, iterator last, size_type count, _E ch)
 	{
-		std::replace(*static_cast<_Base*>(this), first, last, count, ch);
+		std::replace(_WINX_BCB_BASE, first, last, count, ch);
 		return *this;
 	}
 
 	_Myt& winx_call replace(
 		iterator first, iterator last, const _E* s, size_type cch)
 	{
-		std::replace(*static_cast<_Base*>(this), first, last, s, s + cch);
+		std::replace(_WINX_BCB_BASE, first, last, s, s + cch);
 		return *this;
 	}
 
 	_Myt winx_call replace(iterator first, iterator last, const _String s)
 	{
-		std::replace(*static_cast<_Base*>(this), first, last, s.begin(), s.end());
+		std::replace(_WINX_BCB_BASE, first, last, s.begin(), s.end());
 		return *this;
 	}
 
@@ -320,27 +323,27 @@ typedef BasicStringBuilder<WCHAR> WStringBuilder;
 
 template <class _E, class _T2> __forceinline
 bool winx_call operator==(const BasicStringBuilder<_E>& a, const _T2& b)
-	{return a.cast_str() == b; }
+	{return a.compare(b) == 0; }
 
 template <class _E, class _T2> __forceinline
 bool winx_call operator!=(const BasicStringBuilder<_E>& a, const _T2& b)
-	{return a.cast_str() != b; }
+	{return a.compare(b) != 0; }
 
 template <class _E, class _T2> __forceinline
 bool winx_call operator<(const BasicStringBuilder<_E>& a, const _T2& b)
-	{return a.cast_str() < b; }
+	{return a.compare(b) < 0; }
 
 template <class _E, class _T2> __forceinline
 bool winx_call operator>(const BasicStringBuilder<_E>& a, const _T2& b)
-	{return a.cast_str() > b; }
+	{return a.compare(b) > 0; }
 
 template <class _E, class _T2> __forceinline
 bool winx_call operator<=(const BasicStringBuilder<_E>& a, const _T2& b)
-	{return a.cast_str() <= b; }
+	{return a.compare(b) <= 0; }
 
 template <class _E, class _T2> __forceinline
 bool winx_call operator>=(const BasicStringBuilder<_E>& a, const _T2& b)
-	{return a.cast_str() >= b; }
+	{return a.compare(b) >= 0; }
 
 // -------------------------------------------------------------------------
 // class TestStringBuilder

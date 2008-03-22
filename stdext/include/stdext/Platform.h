@@ -230,15 +230,15 @@
 // -------------------------------------------------------------------------
 // --> STL Detection
 
-#if defined(__STL_CONFIG_H) || defined(USE_SGISTL)
-#	define X_STL_SGI
+#if defined(USE_SGISTL)
+#	define X_STL_SGI	// SGI STL
 #elif defined(X_CC_VC6)
 #	define X_STL_P_J_Plauger
 #	define X_STL_VC6
 #elif defined(X_CC_VC_NET_GE2005)
-#	define X_STL_NET // STL.NET
+#	define X_STL_NET	// STL.NET
 #elif defined(X_CC_GCC)
-#	define X_STL_GCC
+#	define X_STL_GCC	// SGI STL (for GCC)
 #	define X_STL_SGI_GCC
 #else
 #	define X_STL_UNKNOWN

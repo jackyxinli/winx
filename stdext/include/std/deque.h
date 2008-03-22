@@ -35,6 +35,69 @@
 	#endif
 #endif
 
+#ifndef __STD_ALGORITHM_H__
+#include "algorithm.h"
+#endif
+
+// -------------------------------------------------------------------------
+
+#if defined(X_STL_VC6)
+
+#define _WINX_DEQUE_USING_BASE												\
+public:																		\
+	using _Base::begin;														\
+	using _Base::end;														\
+	using _Base::assign;													\
+	using _Base::insert;													\
+	using _Base::resize
+
+namespace std {
+
+template<class _Ty, class _A = allocator<_Ty> >
+class _Deque : public std::deque<_Ty, _A>
+{
+private:
+	typedef std::deque<_Ty, _A> _Base;
+	_WINX_DEQUE_USING_BASE;
+
+public:
+	typedef typename _Base::iterator iterator;
+
+public:
+	explicit _Deque(const _A& _Al = _A())
+		: _Base(_Al) {}
+	
+	explicit _Deque(size_type _N, const _Ty& _V = _Ty(), const _A& _Al = _A())
+		: _Base(_N, _V, _Al) {}
+
+	template <class _Iterator>
+	_Deque(_Iterator _F, _Iterator _L, const _A& _Al = _A())
+		: _Base(_Al)
+	{
+		std::copy(_F, _L, std::back_insert_iterator<_Base>(*this));
+	}
+
+public:
+	template <class _Iterator>
+	void assign(_Iterator first, _Iterator last)
+	{
+		_Base::resize(std::distance(first, last));
+		std::copy(first, last, begin());
+	}
+
+	template <class _Iterator>
+	void insert(iterator it, _Iterator first, _Iterator last)
+	{
+		std::copy(first, last, std::insert_iterator<_Base>(*this, it));
+	}
+};
+
+#define deque	_Deque
+
+}; // namespace std
+
+#endif
+
 // -------------------------------------------------------------------------
 // $Log: deque.h,v $
 
