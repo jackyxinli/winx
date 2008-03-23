@@ -92,9 +92,11 @@ public:
 	}
 };
 
-#define deque	_Deque
-
 }; // namespace std
+
+#else
+
+#define _Deque	deque
 
 #endif
 
