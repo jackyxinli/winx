@@ -79,6 +79,7 @@ class TestDeque : public TestCase
 {
 	WINX_TEST_SUITE(TestDeque);
 		WINX_TEST(testDeque);
+		WINX_TEST(testCompare);
 	WINX_TEST_SUITE_END();
 
 public:
@@ -91,6 +92,67 @@ public:
 		coll.push_back(2);
 		coll.push_back(3);
 		AssertExp(coll.size() == 3);
+	}
+
+public:
+	enum { N = 40000 };
+
+	void doStlDeque(LogT& log)
+	{
+		typedef std::deque<int> DequeT;
+		log.print("===== std::deque =====\n");
+		std::PerformanceCounter counter;
+		{
+			DequeT coll;
+			for (int i = 0; i < N; ++i)
+				coll.push_back(i);
+		}
+		counter.trace(log);
+	}
+
+	void doDeque(LogT& log)
+	{
+		typedef std::Deque<int> DequeT;
+		log.print("===== std::Deque (ScopeAlloc) =====\n");
+		std::PerformanceCounter counter;
+		{
+			std::BlockPool recycle;
+			std::ScopeAlloc alloc(recycle);
+			DequeT coll(alloc);
+			for (int i = 0; i < N; ++i)
+				coll.push_back(i);
+		}
+		counter.trace(log);
+	}
+
+	void doShareAllocDeque(LogT& log)
+	{
+		typedef std::Deque<int> DequeT;
+		std::BlockPool recycle;
+		log.newline();
+		for (int i = 0; i < 5; ++i)
+		{
+			log.print("===== doShareAllocDeque =====\n");
+			std::PerformanceCounter counter;
+			{
+				std::ScopeAlloc alloc(recycle);
+				DequeT coll(alloc);
+				for (int i = 0; i < N; ++i)
+					coll.push_back(i);
+			}
+			counter.trace(log);
+		}
+	}
+
+	void testCompare(LogT& log)
+	{
+		for (int i = 0; i < 5; ++i)
+		{
+			log.newline();
+			doStlDeque(log);
+			doDeque(log);
+		}
+		doShareAllocDeque(log);
 	}
 };
 

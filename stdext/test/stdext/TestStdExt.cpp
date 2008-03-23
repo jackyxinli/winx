@@ -81,7 +81,7 @@ void testSgiHashMap();
 
 void testStdExt()
 {
-	WINX_TEST_APP(std::ErrorLog, "TestSgiDeque", "");
+	WINX_TEST_APP(std::ErrorLog, "TestDeque", "");
 //	testSgiHashMap();
 
 	WINX_TEST_CLASS(TestFinder);
