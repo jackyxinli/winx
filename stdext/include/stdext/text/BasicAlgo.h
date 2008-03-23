@@ -338,7 +338,7 @@ void winx_call replace(
 	}
 }
 
-template <class _Container, class _RandIterator>
+template <class _Container>
 void winx_call replace(
 	_Container& container,
 	typename _Container::iterator first,
