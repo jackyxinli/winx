@@ -265,8 +265,8 @@ protected:
 
 // Specialization for instanceless allocators.
 template <class _Tp, class _Alloc>
-class _Deque_alloc_base<_Tp, _Alloc, true>
-{
+class _Deque_alloc_base_unused {
+	typedef _Deque_alloc_base_unused _Deque_alloc_base; // <_Tp, _Alloc, true> {
 public:
   typedef typename _Alloc_traits<_Tp,_Alloc>::allocator_type allocator_type;
   allocator_type get_allocator() const { return allocator_type(); }
@@ -615,7 +615,7 @@ public:
     _M_fill_assign(__n, __val);
   }
 
-#ifdef __STL_MEMBER_TEMPLATES
+#if 1 // def __STL_MEMBER_TEMPLATES
 
   template <class _InputIterator>
   void assign(_InputIterator __first, _InputIterator __last) {
