@@ -54,9 +54,15 @@ namespace __STD
 // -------------------------------------------------------------------------
 // slist
 
-#ifndef __SGI_STL_SLIST_H
-#include "../../../../stl/slist.h"
-#endif 
+#if defined(X_STL_GCC)
+	#ifndef _SLIST
+	#include <ext/slist>
+	#endif 
+#else
+	#ifndef __SGI_STL_SLIST_H
+	#include "../../../../stl/slist.h"
+	#endif 
+#endif
 
 // -------------------------------------------------------------------------
 // $Log: list.h,v $

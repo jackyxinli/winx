@@ -59,6 +59,9 @@ private:
 	typedef StlAlloc<ValT, AllocT> _Alloc;
 	typedef _WINX_BASE_HASHSET(ValT, HashCompT, AllocT) _Base;
 
+	HashSet(const HashSet&);
+	void operator=(const HashSet&);
+
 public:
 	typedef typename _Base::size_type size_type;
 
@@ -114,6 +117,9 @@ public:
 private:
 	typedef StlAlloc<ValT, AllocT> _Alloc;
 	typedef _WINX_BASE_HASHMULTISET(ValT, HashCompT, AllocT) _Base;
+
+	HashMultiSet(const HashMultiSet&);
+	void operator=(const HashMultiSet&);
 
 public:
 	typedef typename _Base::size_type size_type;

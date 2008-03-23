@@ -27,8 +27,8 @@
 #include "StringAlgo.h"
 #endif
 
-#ifndef __STD_DEQUE_H__
-#include "../../std/deque.h"
+#ifndef __STDEXT_DEQUE_H__
+#include "Deque.h"
 #endif
 
 __NS_STD_BEGIN
@@ -52,11 +52,11 @@ public:																		\
 // -------------------------------------------------------------------------
 // class TextPool
 
-template <class _E>
-class TextPool : public std::deque<_E>
+template <class _E, class _Alloc = ScopeAlloc>
+class TextPool : public std::Deque<_E, _Alloc>
 {
 private:
-	typedef std::deque<_E> _Base;
+	typedef std::Deque<_E, _Alloc> _Base;
 	typedef TempString<_E> _String;
 	typedef TextPool _Myt;
 	_WINX_TP_USING_DEQUE;
@@ -68,20 +68,21 @@ public:
 	typedef typename _Base::const_iterator const_iterator;
 
 public:
-	TextPool() {}
+	TextPool(_Alloc& alloc)
+		: _Base(alloc) {}
 
-	explicit TextPool(const _String s)
-		: _Base(s.begin(), s.end()) {}
+	explicit TextPool(_Alloc& alloc, const _String s)
+		: _Base(alloc, s.begin(), s.end()) {}
 
-	TextPool(size_type cch, _E ch)
-		: _Base(cch, ch) {}
+	TextPool(_Alloc& alloc, size_type cch, _E ch)
+		: _Base(alloc, cch, ch) {}
 
-	TextPool(const _E* s, size_type count) 
-		: _Base(s, s+count) {} 
+	TextPool(_Alloc& alloc, const _E* s, size_type count) 
+		: _Base(alloc, s, s+count) {} 
 
 	template <class _InputIterator>
-	TextPool(_InputIterator first, _InputIterator last)
-		: _Base(first, last) {}
+	TextPool(_Alloc& alloc, _InputIterator first, _InputIterator last)
+		: _Base(alloc, first, last) {}
 
 public:
 	template <class AllocT>
@@ -120,7 +121,7 @@ public:
 
 	_Myt& winx_call assign(const _Base& s)
     {
-		_WINX_TP_BASE = s;
+		_Base::copy(s);
 		return *this;
 	}
 
@@ -204,12 +205,14 @@ public:
 		return *this;
 	}
 
+#if !defined(X_CC_VC6) // bug: vc++ 6.0 can't compile this function!?
 	_Myt& winx_call replace(
 		iterator first, iterator last, const _E* s, size_type cch)
 	{
 		std::replace(_WINX_TP_BASE, first, last, s, s + cch);
 		return *this;
 	}
+#endif
 
 	_Myt& winx_call replace(iterator first, iterator last, const _String s)
 	{
@@ -328,36 +331,36 @@ public:
 
 // -------------------------------------------------------------------------
 
-template <class _E, class _T2> __forceinline
-bool winx_call operator==(const TextPool<_E>& a, const _T2& b)
+template <class _E, class _Alloc, class _T2> __forceinline
+bool winx_call operator==(const TextPool<_E, _Alloc>& a, const _T2& b)
 	{return a.compare(b) == 0; }
 
-template <class _E> __forceinline
-bool winx_call operator==(const BasicString<_E>& a, const TextPool<_E>& b)
+template <class _E, class _Alloc> __forceinline
+bool winx_call operator==(const BasicString<_E>& a, const TextPool<_E, _Alloc>& b)
 	{return b.compare(a) == 0; }
 
-template <class _E> __forceinline
-bool winx_call operator==(const BasicString<_E>& a, TextPool<_E>& b)
+template <class _E, class _Alloc> __forceinline
+bool winx_call operator==(const BasicString<_E>& a, TextPool<_E, _Alloc>& b)
 	{return b.compare(a) == 0; }
 
-template <class _E, class _T2> __forceinline
-bool winx_call operator!=(const TextPool<_E>& a, const _T2& b)
+template <class _E, class _Alloc, class _T2> __forceinline
+bool winx_call operator!=(const TextPool<_E, _Alloc>& a, const _T2& b)
 	{return a.compare(b) != 0; }
 
-template <class _E, class _T2> __forceinline
-bool winx_call operator<(const TextPool<_E>& a, const _T2& b)
+template <class _E, class _Alloc, class _T2> __forceinline
+bool winx_call operator<(const TextPool<_E, _Alloc>& a, const _T2& b)
 	{return a.compare(b) < 0; }
 
-template <class _E, class _T2> __forceinline
-bool winx_call operator>(const TextPool<_E>& a, const _T2& b)
+template <class _E, class _Alloc, class _T2> __forceinline
+bool winx_call operator>(const TextPool<_E, _Alloc>& a, const _T2& b)
 	{return a.compare(b) > 0; }
 
-template <class _E, class _T2> __forceinline
-bool winx_call operator<=(const TextPool<_E>& a, const _T2& b)
+template <class _E, class _Alloc, class _T2> __forceinline
+bool winx_call operator<=(const TextPool<_E, _Alloc>& a, const _T2& b)
 	{return a.compare(b) <= 0; }
 
-template <class _E, class _T2> __forceinline
-bool winx_call operator>=(const TextPool<_E>& a, const _T2& b)
+template <class _E, class _Alloc, class _T2> __forceinline
+bool winx_call operator>=(const TextPool<_E, _Alloc>& a, const _T2& b)
 	{return a.compare(b) >= 0; }
 
 // -------------------------------------------------------------------------
@@ -380,19 +383,19 @@ public:
 		std::BlockPool recycle;
 		std::ScopeAlloc alloc(recycle);
 
-		std::TextPool<char> a1('a');
+		std::TextPool<char> a1(alloc, 'a');
 		AssertExp(a1.size() == 1 && a1[0] == 'a');
 
-		std::TextPool<char> a2(3, 'a');
+		std::TextPool<char> a2(alloc, 3, 'a');
 		AssertExp(a2 == "aaa");
 
-		std::TextPool<char> a("Hello");
+		std::TextPool<char> a(alloc, "Hello");
 		AssertExp(a == "Hello");
 
-		std::TextPool<char> b("Hello", 4);
+		std::TextPool<char> b(alloc, "Hello", 4);
 		AssertExp(b == "Hell");
 
-		std::TextPool<char> c(b.begin(), b.end());
+		std::TextPool<char> c(alloc, b.begin(), b.end());
 		std::String d = c.str(alloc);
 		AssertExp(d == b && b == d);
 	}
@@ -402,7 +405,7 @@ public:
 		std::BlockPool recycle;
 		std::ScopeAlloc alloc(recycle);
 
-		std::TextPool<char> a("Hello");
+		std::TextPool<char> a(alloc, "Hello");
 		AssertExp(a.substr(alloc, 1, 3) == "ell");
 		AssertExp(a.substr(alloc, 1) == "ello");
 		AssertExp(a.substr(alloc, 5) == "");
@@ -410,7 +413,10 @@ public:
 
 	void testAssign(LogT& log)
 	{
-		std::TextPool<char> a;
+		std::BlockPool recycle;
+		std::ScopeAlloc alloc(recycle);
+
+		std::TextPool<char> a(alloc);
 		
 		a.assign('a');
 		AssertExp(a == "a");
@@ -421,14 +427,14 @@ public:
 		a.assign("Hello");
 		AssertExp(a == "Hello");
 
-		std::TextPool<char> b;
+		std::TextPool<char> b(alloc);
 		b.assign("Hello", 2);
 		AssertExp(b == "He");
 
 		a.assign(b);
 		AssertExp(a == "He");
 
-		a = a;
+		a.assign(a);
 		AssertExp(a == "He");
 
 		std::string t = "Hello, world!";
@@ -438,7 +444,10 @@ public:
 
 	void testAppend(LogT& log)
 	{
-		std::TextPool<char> a("Hello");
+		std::BlockPool recycle;
+		std::ScopeAlloc alloc(recycle);
+
+		std::TextPool<char> a(alloc, "Hello");
 		a.append(3, '!');
 		AssertExp(a == "Hello!!!");
 
@@ -448,7 +457,7 @@ public:
 		a.append(' ').append(std::string("world"));
 		AssertExp(a == "Hello!!!! world");
 	
-		a.append(std::TextPool<char>('!'));
+		a.append(std::TextPool<char>(alloc, '!'));
 		AssertExp(a == "Hello!!!! world!");
 		
 		a.append(std::vector<char>(2, '!'));
@@ -460,7 +469,10 @@ public:
 
 	void testReplace(LogT& log)
 	{
-		std::TextPool<char> a("Hello!!!! world! Good!");
+		std::BlockPool recycle;
+		std::ScopeAlloc alloc(recycle);
+
+		std::TextPool<char> a(alloc, "Hello!!!! world! Good!");
 		std::TextPool<char>::iterator it = a.find("!!!!");
 		AssertExp(it != a.end());
 		AssertExp(*(it-1) == 'o' && *it == '!');

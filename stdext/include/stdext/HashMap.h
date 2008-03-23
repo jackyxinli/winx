@@ -57,6 +57,9 @@ public:
 private:
 	typedef StlAlloc<DataT, AllocT> _Alloc;
 	typedef _WINX_BASE_HASHMAP(KeyT, DataT, HashCompT, AllocT) _Base;
+	
+	HashMap(const HashMap&);
+	void operator=(const HashMap&);
 
 public:
 	typedef typename _Base::size_type size_type;
@@ -112,6 +115,9 @@ public:
 private:
 	typedef StlAlloc<DataT, AllocT> _Alloc;
 	typedef _WINX_BASE_HASHMULTIMAP(KeyT, DataT, HashCompT, AllocT) _Base;
+
+	HashMultiMap(const HashMultiMap&);
+	void operator=(const HashMultiMap&);
 
 public:
 	typedef typename _Base::size_type size_type;

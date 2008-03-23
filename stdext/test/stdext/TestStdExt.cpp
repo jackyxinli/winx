@@ -17,6 +17,7 @@
 // $Id: TestStdExt.cpp,v 1.8 2006/12/03 07:52:55 xushiwei Exp $
 // -----------------------------------------------------------------------*/
 
+#define SGI_DEQUE_UNITTEST
 #define STD_FILTER_TEST_CASE
 #define STD_NO_TASKALLOC
 //#define USES_APR
@@ -35,6 +36,7 @@
 #include <stdext/AOP.h>
 #include <stdext/Set.h>
 #include <stdext/List.h>
+#include <stdext/Deque.h>
 #include <stdext/String.h>
 #include <stdext/text/TextPool.h>
 #include <stdext/text/Rope.h>
@@ -79,7 +81,7 @@ void testSgiHashMap();
 
 void testStdExt()
 {
-	WINX_TEST_APP(std::ErrorLog, "TestTextPool", "");
+	WINX_TEST_APP(std::ErrorLog, "TestSgiDeque", "");
 //	testSgiHashMap();
 
 	WINX_TEST_CLASS(TestFinder);
@@ -116,6 +118,8 @@ void testStdExt()
 	WINX_TEST_CLASS(std::TestList);
 	WINX_TEST_CLASS(std::TestSlist);
 	WINX_TEST_CLASS(std::TestDclList);
+	WINX_TEST_CLASS(std::TestDeque);
+	WINX_TEST_CLASS(TestSgiDeque);
 
 	//Memory.h
 	WINX_TEST_CLASS(std::TestAutoFreeAlloc);

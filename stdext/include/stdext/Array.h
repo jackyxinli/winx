@@ -47,6 +47,9 @@ private:
 	Type m_data[nElement];
 	UINT m_size;
 
+	Array(const Array&);
+	void operator=(const Array&);
+
 public:
 	typedef Type value_type;
 	typedef UINT size_type;

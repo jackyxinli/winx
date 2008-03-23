@@ -43,6 +43,9 @@ private:
 	typedef StlAlloc<ValT, AllocT> _Alloc;
 	typedef std::list<ValT, _Alloc> _Base;
 
+	List(const List&);
+	void operator=(const List&);
+
 public:
     typedef typename _Base::size_type size_type;
     
@@ -72,6 +75,9 @@ class Slist : public stdext::slist< ValT, StlAlloc<ValT, AllocT> >
 private:
 	typedef StlAlloc<ValT, AllocT> _Alloc;
 	typedef stdext::slist<ValT, _Alloc> _Base;
+
+	Slist(const Slist&);
+	void operator=(const Slist&);
 
 public:
     typedef typename _Base::size_type size_type;

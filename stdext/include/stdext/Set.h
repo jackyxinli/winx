@@ -43,6 +43,9 @@ private:
 	typedef StlAlloc<KeyT, AllocT> _Alloc;
 	typedef std::set<KeyT, PredT, _Alloc> _Base;
 
+	Set(const Set&);
+	void operator=(const Set&);
+
 public:
 	explicit Set(AllocT& alloc, const PredT& pred = PredT())
 		: _Base(pred, alloc)
@@ -69,6 +72,9 @@ class MultiSet : public std::multiset< KeyT, PredT, StlAlloc<KeyT, AllocT> >
 private:
 	typedef StlAlloc<KeyT, AllocT> _Alloc;
 	typedef std::multiset<KeyT, PredT, _Alloc> _Base;
+
+	MultiSet(const MultiSet&);
+	void operator=(const MultiSet&);
 
 public:
 	explicit MultiSet(AllocT& alloc, const PredT& pred = PredT())

@@ -43,6 +43,9 @@ private:
 	typedef StlAlloc<DataT, AllocT> _Alloc;
 	typedef std::map<KeyT, DataT, PredT, _Alloc> _Base;
 
+	Map(const Map&);
+	void operator=(const Map&);
+
 public:
 	explicit Map(AllocT& alloc, const PredT& pred = PredT())
 		: _Base(pred, alloc)
@@ -69,6 +72,9 @@ class MultiMap : public std::multimap< KeyT, DataT, PredT, StlAlloc<DataT, Alloc
 private:
 	typedef StlAlloc<DataT, AllocT> _Alloc;
 	typedef std::multimap<KeyT, DataT, PredT, _Alloc> _Base;
+
+	MultiMap(const MultiMap&);
+	void operator=(const MultiMap&);
 
 public:
 	explicit MultiMap(AllocT& alloc, const PredT& pred = PredT())
