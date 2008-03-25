@@ -68,10 +68,10 @@ public:
 	typedef typename _Base::const_iterator const_iterator;
 
 public:
-	TextPool(_Alloc& alloc)
+	explicit TextPool(_Alloc& alloc)
 		: _Base(alloc) {}
 
-	explicit TextPool(_Alloc& alloc, const _String s)
+	TextPool(_Alloc& alloc, const _String s)
 		: _Base(alloc, s.begin(), s.end()) {}
 
 	TextPool(_Alloc& alloc, size_type cch, _E ch)
