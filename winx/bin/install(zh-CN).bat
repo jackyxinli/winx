@@ -1,6 +1,6 @@
 @echo off
 
-if "%MSDEVDIR%"=="" then goto error
+if "%MSDEVDIR%"=="" goto error
 if not exist "%MSDEVDIR%\Template" md "%MSDEVDIR%\Template" 
 echo on
 copy zh-CN\winxwiz60.awx "%MSDEVDIR%\Template"
