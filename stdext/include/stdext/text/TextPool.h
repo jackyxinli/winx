@@ -187,7 +187,7 @@ public:
 		return *this;
 	}
 
-public:
+#if !defined(X_CC_VC6) // (bug) vc++ 6.0
 	template <class _RandIterator>
 	_Myt& winx_call replace(
 		iterator first, iterator last,
@@ -196,8 +196,8 @@ public:
 		std::replace(_WINX_TP_BASE, first, last, bfirst, blast);
 		return *this;
 	}
+#endif
 
-	template <class _RandIterator>
 	_Myt& winx_call replace(
 		iterator first, iterator last, size_type count, _E ch)
 	{
@@ -205,14 +205,12 @@ public:
 		return *this;
 	}
 
-#if !defined(X_CC_VC6) // bug: vc++ 6.0 can't compile this function!?
 	_Myt& winx_call replace(
 		iterator first, iterator last, const _E* s, size_type cch)
 	{
 		std::replace(_WINX_TP_BASE, first, last, s, s + cch);
 		return *this;
 	}
-#endif
 
 	_Myt& winx_call replace(iterator first, iterator last, const _String s)
 	{

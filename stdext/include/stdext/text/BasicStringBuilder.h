@@ -202,7 +202,6 @@ public:
 		return *this;
 	}
 
-	template <class _RandIterator>
 	_Myt& winx_call replace(
 		iterator first, iterator last, size_type count, _E ch)
 	{
