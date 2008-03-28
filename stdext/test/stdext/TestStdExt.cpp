@@ -106,22 +106,28 @@ void testStdExt()
 	WINX_TEST_CLASS(std::TestBasicString);
 	WINX_TEST_CLASS(std::TestStringBuilder);
 	WINX_TEST_CLASS(std::TestTextPool);
+#ifndef NO_SGISTL
 	WINX_TEST_CLASS(std::TestRope);
+#endif
 	WINX_TEST_CLASS(std::TestRand);
 
 	//Collection
 	WINX_TEST_CLASS(std::TestPriorityArray);
 	WINX_TEST_CLASS(std::TestMap);
 	WINX_TEST_CLASS(std::TestSet);
+#ifndef _WINX_NO_HASH_MAP
 	WINX_TEST_CLASS(std::TestHashMap);
 	WINX_TEST_CLASS(std::TestHashSet);
-	WINX_TEST_CLASS(std::TestList);
+#endif
+#ifndef _WINX_NO_SLIST
 	WINX_TEST_CLASS(std::TestSlist);
-	WINX_TEST_CLASS(std::TestDclList);
-	WINX_TEST_CLASS(std::TestDeque);
-#if defined(X_CC_VC6)
+#endif
+#if defined(X_CC_VC6) && !defined(NO_SGISTL)
 	WINX_TEST_CLASS(TestSgiDeque);
 #endif
+	WINX_TEST_CLASS(std::TestList);
+	WINX_TEST_CLASS(std::TestDclList);
+	WINX_TEST_CLASS(std::TestDeque);
 
 	//Memory.h
 	WINX_TEST_CLASS(std::TestAutoFreeAlloc);

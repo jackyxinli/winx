@@ -27,6 +27,8 @@
 #include "../std/hash_set.h"
 #endif
 
+#ifndef _WINX_NO_HASH_SET
+
 #ifndef __STDEXT_HASH_H__
 #include "Hash.h"
 #endif
@@ -258,5 +260,7 @@ public:
 // $Log: HashSet.h,v $
 
 __NS_STD_END
+
+#endif // _WINX_NO_HASH_SET
 
 #endif /* __STDEXT_HASHSET_H__ */

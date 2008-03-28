@@ -28,6 +28,9 @@
 #pragma push_macro("max")
 #undef min
 #undef max
+#elif defined(min)
+#undef min
+#undef max
 #endif
 
 // -------------------------------------------------------------------------

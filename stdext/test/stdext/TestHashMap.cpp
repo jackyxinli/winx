@@ -17,7 +17,7 @@
 // $Id: TestHashMap.cpp,v 1.8 2006/12/03 07:52:55 xushiwei Exp $
 // -----------------------------------------------------------------------*/
 
-#if defined(_MSC_VER) && (_MSC_VER <= 1200)
+#if defined(_MSC_VER) && (_MSC_VER <= 1200) && !defined(NO_SGISTL)
 
 #pragma warning(disable:4010)
 

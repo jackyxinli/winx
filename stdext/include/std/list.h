@@ -39,6 +39,8 @@
 	#if !defined(_SLIST)
 	#include <ext/slist>
 	#endif
+#elif defined(NO_SGISTL)
+	#define _WINX_NO_SLIST
 #else
 	#ifndef __SGI_STL_SLIST_H
 	#include "../stdext/sgi/list.h"

@@ -4,7 +4,7 @@
 
 # TARGTYPE "Win32 (x86) Console Application" 0x0103
 
-CFG=TestStdExt - Win32 Release
+CFG=TestStdExt - Win32 DebugNoSgiStl
 !MESSAGE This is not a valid makefile. To build this project using NMAKE,
 !MESSAGE use the Export Makefile command and run
 !MESSAGE 
@@ -13,7 +13,7 @@ CFG=TestStdExt - Win32 Release
 !MESSAGE You can specify a configuration when running NMAKE
 !MESSAGE by defining the macro CFG on the command line. For example:
 !MESSAGE 
-!MESSAGE NMAKE /f "TestStdExt.mak" CFG="TestStdExt - Win32 Release"
+!MESSAGE NMAKE /f "TestStdExt.mak" CFG="TestStdExt - Win32 DebugNoSgiStl"
 !MESSAGE 
 !MESSAGE Possible choices for configuration are:
 !MESSAGE 
@@ -21,6 +21,7 @@ CFG=TestStdExt - Win32 Release
 !MESSAGE "TestStdExt - Win32 Debug" (based on "Win32 (x86) Console Application")
 !MESSAGE "TestStdExt - Win32 ReleaseStaticLib" (based on "Win32 (x86) Console Application")
 !MESSAGE "TestStdExt - Win32 ReleaseST" (based on "Win32 (x86) Console Application")
+!MESSAGE "TestStdExt - Win32 DebugNoSgiStl" (based on "Win32 (x86) Console Application")
 !MESSAGE 
 
 # Begin Project
@@ -130,6 +131,31 @@ LINK32=link.exe
 # ADD BASE LINK32 kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /nologo /subsystem:console /debug /machine:I386 /libpath:"../../../winsdk/lib" /libpath:"../../../pthreads-w32/lib" /libpath:"../../../boost\libs\regex\build\vc6" /libpath:"../../../apr/LibR"
 # ADD LINK32 kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /nologo /subsystem:console /debug /machine:I386 /libpath:"../../../winsdk/lib" /libpath:"../../../pthreads-w32/lib" /libpath:"../../../boost\libs\regex\build\vc6" /libpath:"../../../apr/Release"
 
+!ELSEIF  "$(CFG)" == "TestStdExt - Win32 DebugNoSgiStl"
+
+# PROP BASE Use_MFC 0
+# PROP BASE Use_Debug_Libraries 1
+# PROP BASE Output_Dir "TestStdExt___Win32_DebugNoSgiStl"
+# PROP BASE Intermediate_Dir "TestStdExt___Win32_DebugNoSgiStl"
+# PROP BASE Ignore_Export_Lib 0
+# PROP BASE Target_Dir ""
+# PROP Use_MFC 0
+# PROP Use_Debug_Libraries 1
+# PROP Output_Dir "DebugNoSgiStl"
+# PROP Intermediate_Dir "DebugNoSgiStl"
+# PROP Ignore_Export_Lib 0
+# PROP Target_Dir ""
+# ADD BASE CPP /nologo /MDd /W3 /Gm /GX /ZI /Od /I "../../include" /I "../../../stdext/include" /I "../../../boost" /D "WIN32" /D "_DEBUG" /D "_CONSOLE" /D "_MBCS" /D "APR_DECLARE_STATIC" /FD /GZ /Zm200 /c
+# ADD CPP /nologo /MDd /W3 /Gm /GX /ZI /Od /I "../../include" /I "../../../stdext/include" /I "../../../boost" /D "WIN32" /D "_DEBUG" /D "_CONSOLE" /D "_MBCS" /D "APR_DECLARE_STATIC" /D "NO_SGISTL" /FD /GZ /Zm200 /c
+# ADD BASE RSC /l 0x804 /d "_DEBUG"
+# ADD RSC /l 0x804 /d "_DEBUG"
+BSC32=bscmake.exe
+# ADD BASE BSC32 /nologo
+# ADD BSC32 /nologo
+LINK32=link.exe
+# ADD BASE LINK32 kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /nologo /subsystem:console /debug /machine:I386 /pdbtype:sept /libpath:"../../../winsdk/lib" /libpath:"../../../pthreads-w32/lib" /libpath:"../../../boost\libs\regex\build\vc6" /libpath:"../../../apr/Debug" /libpath:"../../../apr/LibD"
+# ADD LINK32 kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /nologo /subsystem:console /debug /machine:I386 /pdbtype:sept /libpath:"../../../winsdk/lib" /libpath:"../../../pthreads-w32/lib" /libpath:"../../../boost\libs\regex\build\vc6" /libpath:"../../../apr/Debug" /libpath:"../../../apr/LibD"
+
 !ENDIF 
 
 # Begin Target
@@ -138,6 +164,7 @@ LINK32=link.exe
 # Name "TestStdExt - Win32 Debug"
 # Name "TestStdExt - Win32 ReleaseStaticLib"
 # Name "TestStdExt - Win32 ReleaseST"
+# Name "TestStdExt - Win32 DebugNoSgiStl"
 # Begin Group "src"
 
 # PROP Default_Filter ""
@@ -176,6 +203,21 @@ SOURCE=.\TestBoostRegEx.cpp
 # Begin Source File
 
 SOURCE=.\TestHashMap.cpp
+
+!IF  "$(CFG)" == "TestStdExt - Win32 Release"
+
+!ELSEIF  "$(CFG)" == "TestStdExt - Win32 Debug"
+
+!ELSEIF  "$(CFG)" == "TestStdExt - Win32 ReleaseStaticLib"
+
+!ELSEIF  "$(CFG)" == "TestStdExt - Win32 ReleaseST"
+
+!ELSEIF  "$(CFG)" == "TestStdExt - Win32 DebugNoSgiStl"
+
+# ADD BASE CPP /D "NO_SGISTL"
+
+!ENDIF 
+
 # End Source File
 # Begin Source File
 

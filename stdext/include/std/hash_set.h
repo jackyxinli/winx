@@ -33,6 +33,8 @@
 	#ifndef _HASH_SET
 	#include <ext/hash_set>
 	#endif
+#elif defined(NO_SGISTL)
+	#define _WINX_NO_HASH_SET
 #else
 	#ifndef __SGI_HASH_SET_H__
 	#include "../stdext/sgi/hash_set.h"

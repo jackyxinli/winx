@@ -27,6 +27,8 @@
 #include "../std/hash_map.h"
 #endif
 
+#ifndef _WINX_NO_HASH_MAP
+
 #ifndef __STDEXT_HASH_H__
 #include "Hash.h"
 #endif
@@ -262,5 +264,7 @@ public:
 // $Log: HashMap.h,v $
 
 __NS_STD_END
+
+#endif // _WINX_NO_HASH_MAP
 
 #endif /* __STDEXT_HASHMAP_H__ */

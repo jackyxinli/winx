@@ -23,6 +23,8 @@
 #include "../Basic.h"
 #endif
 
+#if !defined(NO_SGISTL)
+
 #ifndef __SGI_ROPE_H__
 #include "../sgi/rope.h"
 #endif
@@ -96,5 +98,7 @@ public:
 // $Log: Rope.h,v $
 
 __NS_STD_END
+
+#endif // !defined(NO_SGISTL)
 
 #endif /* __STDEXT_TEXT_ROPE_H__ */

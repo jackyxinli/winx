@@ -24,11 +24,19 @@
 #endif
 
 #if defined(X_CC_VC6)
-	#ifndef __SGI_DEQUE_H__
-	#include "sgi/deque.h"
+	#if defined(NO_SGISTL)
+		#ifndef __STD_DEQUE_H__
+		#include "../std/deque.h"
+		#endif
+		#define _WINX_DEQUE_BASE(DataT, AllocT) \
+			std::_Deque<DataT, StlAlloc<DataT, AllocT> >
+	#else
+		#ifndef __SGI_DEQUE_H__
+		#include "sgi/deque.h"
+		#endif
+		#define _WINX_DEQUE_BASE(DataT, AllocT) \
+			stdext::deque<DataT, StlAlloc<DataT, AllocT> >
 	#endif
-	#define _WINX_DEQUE_BASE(DataT, AllocT) \
-		stdext::deque<DataT, StlAlloc<DataT, AllocT> >
 #else
 	#if !defined(_DEQUE) && !defined(_DEQUE_)
 	#include <deque>

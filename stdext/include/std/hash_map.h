@@ -33,6 +33,8 @@
 	#ifndef _HASH_MAP
 	#include <ext/hash_map>
 	#endif
+#elif defined(NO_SGISTL)
+	#define _WINX_NO_HASH_MAP
 #else
 	#ifndef __SGI_HASH_MAP_H__
 	#include "../stdext/sgi/hash_map.h"

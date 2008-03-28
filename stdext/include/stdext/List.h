@@ -69,6 +69,8 @@ public:
 // -------------------------------------------------------------------------
 // class Slist
 
+#ifndef _WINX_NO_SLIST
+
 template <class ValT, class AllocT = ScopeAlloc>
 class Slist : public stdext::slist< ValT, StlAlloc<ValT, AllocT> >
 {
@@ -98,6 +100,8 @@ public:
 	{
 	}
 };
+
+#endif // _WINX_NO_SLIST
 
 // -------------------------------------------------------------------------
 // class DclList: Doubly-circularly-linked list
@@ -349,6 +353,8 @@ public:
 // -------------------------------------------------------------------------
 // class TestSlist
 
+#ifndef _WINX_NO_SLIST
+
 template <class LogT>
 class TestSlist : public TestCase
 {
@@ -371,6 +377,8 @@ public:
 		}
 	}
 };
+
+#endif // _WINX_NO_SLIST
 
 // -------------------------------------------------------------------------
 // class TestDclList
