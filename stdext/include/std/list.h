@@ -41,7 +41,7 @@
 	#endif
 #else
 	#ifndef __SGI_STL_SLIST_H
-	#include "../../../stl/slist.h"
+	#include "../stdext/sgi/list.h"
 	#endif 
 #endif
 

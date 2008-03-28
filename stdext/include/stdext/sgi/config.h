@@ -54,6 +54,13 @@
 
 #define __STL_USE_NAMESPACES
 
+#define __STL_BEGIN_NAMESPACE namespace __STD {
+#define __STL_END_NAMESPACE }
+#define __STL_USE_NAMESPACE_FOR_RELOPS
+#define __STL_BEGIN_RELOPS_NAMESPACE namespace __STD { namespace rel_ops {
+#define __STL_END_RELOPS_NAMESPACE } }
+#define __STD_RELOPS __STD::rel_ops
+
 #if defined(X_STL_GCC)
 #define __STD __gnu_cxx
 	#define __STL_CLASS_PARTIAL_SPECIALIZATION
@@ -76,16 +83,43 @@
 	#ifndef _IOSTREAM
 	#include <iostream>
 	#endif
+#elif defined(X_CC_VC_NET)
+#define __STD stdext
+	#undef typename
+	#define __value	___value
+	#define __STL_FUNCTION_TMPL_PARTIAL_ORDER
+	#define __STL_MEMBER_TEMPLATES
+	#define __STL_HAS_NAMESPACES
+	#undef	__STL_TEMPLATE_NULL
+	#define __STL_TEMPLATE_NULL template<>
+	#define __STL_USE_NEW_IOSTREAMS
+	#define __SGI_STDEXCEPT
+	#define _BACKWARD_NEW_H 1
+	#define _BACKWARD_IOSTREAM_H 1
+	#ifndef _NEW_
+	#include <new>
+	#endif
+	#ifndef __TYPE_TRAITS_H
+	#include "../../../../stl/type_traits.h"
+	#endif
+	#ifndef __CONCEPT_CHECKS_H
+	#include "../../../../stl/concept_checks.h"
+	#endif
+	namespace __STD {
+		using std::streamoff;
+		using std::streampos;
+		using std::istream;
+		using std::basic_ostream;
+		using std::basic_istream;
+		using std::basic_streambuf;
+		using std::allocator;
+		using std::exception;
+		using std::range_error;
+		using std::length_error;
+	}
 #else
 #define __STD stdext
 #endif
-
-#define __STL_BEGIN_NAMESPACE namespace __STD {
-#define __STL_END_NAMESPACE }
-#define __STL_USE_NAMESPACE_FOR_RELOPS
-#define __STL_BEGIN_RELOPS_NAMESPACE namespace __STD { namespace rel_ops {
-#define __STL_END_RELOPS_NAMESPACE } }
-#define __STD_RELOPS __STD::rel_ops
 
 // -------------------------------------------------------------------------
 
@@ -107,13 +141,16 @@ namespace __STD
 	{
 		enum { _S_instanceless = 0 };
 		typedef _Tp value_type;
-		typedef typename _Alloc::template rebind<value_type>::other
-			allocator_type;
+		typedef typename _Alloc::template rebind<value_type>::other allocator_type;
 	};
 #endif
 }
 
 // -------------------------------------------------------------------------
+
+#ifndef __SGI_ITERATOR_H__
+#include "iterator.h"
+#endif
 
 #ifndef __SGI_ALGORITHM_H__
 #include "algorithm.h"

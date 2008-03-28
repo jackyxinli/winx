@@ -26,6 +26,10 @@
 	#ifndef __SGI_GCC_ITERATOR_H__
 	#include "gcc/iterator.h"
 	#endif
+#elif defined(X_STL_NET)
+	#ifndef __SGI_VC8_ITERATOR_H__
+	#include "vc8/iterator.h"
+	#endif
 #else
 	#ifndef __SGI_STL_ITERATOR
 	#include "../../../../stl/iterator"

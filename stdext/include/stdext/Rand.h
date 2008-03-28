@@ -23,6 +23,13 @@
 #include "Basic.h"
 #endif
 
+#if defined(X_CC_VC_NET)
+#pragma push_macro("min")
+#pragma push_macro("max")
+#undef min
+#undef max
+#endif
+
 // -------------------------------------------------------------------------
 // class BasicRand
 
@@ -298,6 +305,11 @@ typedef BasicRand<boost::mt19937> Mt19937Rand;
 #endif
 
 __NS_STD_END
+
+#if defined(X_CC_VC_NET)
+#pragma pop_macro("min")
+#pragma pop_macro("max")
+#endif
 
 // -------------------------------------------------------------------------
 // class RandGen/Rand

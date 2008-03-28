@@ -30,7 +30,7 @@
 	#define _WINX_DEQUE_BASE(DataT, AllocT) \
 		stdext::deque<DataT, StlAlloc<DataT, AllocT> >
 #else
-	#if !defined(_DEQUE)
+	#if !defined(_DEQUE) && !defined(_DEQUE_)
 	#include <deque>
 	#endif
 	#define _WINX_DEQUE_BASE(DataT, AllocT) \

@@ -28,7 +28,7 @@
 #endif
 
 #ifndef __STDEXT_DEQUE_H__
-#include "Deque.h"
+#include "../Deque.h"
 #endif
 
 __NS_STD_BEGIN
@@ -52,11 +52,11 @@ public:																		\
 // -------------------------------------------------------------------------
 // class TextPool
 
-template <class _E, class _Alloc = ScopeAlloc>
-class TextPool : public std::Deque<_E, _Alloc>
+template <class _E, class _AllocT = ScopeAlloc>
+class TextPool : public Deque<_E, _AllocT>
 {
 private:
-	typedef std::Deque<_E, _Alloc> _Base;
+	typedef Deque<_E, _AllocT> _Base;
 	typedef TempString<_E> _String;
 	typedef TextPool _Myt;
 	_WINX_TP_USING_DEQUE;
@@ -68,20 +68,20 @@ public:
 	typedef typename _Base::const_iterator const_iterator;
 
 public:
-	explicit TextPool(_Alloc& alloc)
+	explicit TextPool(_AllocT& alloc)
 		: _Base(alloc) {}
 
-	TextPool(_Alloc& alloc, const _String s)
+	TextPool(_AllocT& alloc, const _String s)
 		: _Base(alloc, s.begin(), s.end()) {}
 
-	TextPool(_Alloc& alloc, size_type cch, _E ch)
+	TextPool(_AllocT& alloc, size_type cch, _E ch)
 		: _Base(alloc, cch, ch) {}
 
-	TextPool(_Alloc& alloc, const _E* s, size_type count) 
+	TextPool(_AllocT& alloc, const _E* s, size_type count) 
 		: _Base(alloc, s, s+count) {} 
 
 	template <class _InputIterator>
-	TextPool(_Alloc& alloc, _InputIterator first, _InputIterator last)
+	TextPool(_AllocT& alloc, _InputIterator first, _InputIterator last)
 		: _Base(alloc, first, last) {}
 
 public:
@@ -329,36 +329,36 @@ public:
 
 // -------------------------------------------------------------------------
 
-template <class _E, class _Alloc, class _T2> __forceinline
-bool winx_call operator==(const TextPool<_E, _Alloc>& a, const _T2& b)
+template <class _E, class _AllocT, class _T2> __forceinline
+bool winx_call operator==(const TextPool<_E, _AllocT>& a, const _T2& b)
 	{return a.compare(b) == 0; }
 
-template <class _E, class _Alloc> __forceinline
-bool winx_call operator==(const BasicString<_E>& a, const TextPool<_E, _Alloc>& b)
+template <class _E, class _AllocT> __forceinline
+bool winx_call operator==(const BasicString<_E>& a, const TextPool<_E, _AllocT>& b)
 	{return b.compare(a) == 0; }
 
-template <class _E, class _Alloc> __forceinline
-bool winx_call operator==(const BasicString<_E>& a, TextPool<_E, _Alloc>& b)
+template <class _E, class _AllocT> __forceinline
+bool winx_call operator==(const BasicString<_E>& a, TextPool<_E, _AllocT>& b)
 	{return b.compare(a) == 0; }
 
-template <class _E, class _Alloc, class _T2> __forceinline
-bool winx_call operator!=(const TextPool<_E, _Alloc>& a, const _T2& b)
+template <class _E, class _AllocT, class _T2> __forceinline
+bool winx_call operator!=(const TextPool<_E, _AllocT>& a, const _T2& b)
 	{return a.compare(b) != 0; }
 
-template <class _E, class _Alloc, class _T2> __forceinline
-bool winx_call operator<(const TextPool<_E, _Alloc>& a, const _T2& b)
+template <class _E, class _AllocT, class _T2> __forceinline
+bool winx_call operator<(const TextPool<_E, _AllocT>& a, const _T2& b)
 	{return a.compare(b) < 0; }
 
-template <class _E, class _Alloc, class _T2> __forceinline
-bool winx_call operator>(const TextPool<_E, _Alloc>& a, const _T2& b)
+template <class _E, class _AllocT, class _T2> __forceinline
+bool winx_call operator>(const TextPool<_E, _AllocT>& a, const _T2& b)
 	{return a.compare(b) > 0; }
 
-template <class _E, class _Alloc, class _T2> __forceinline
-bool winx_call operator<=(const TextPool<_E, _Alloc>& a, const _T2& b)
+template <class _E, class _AllocT, class _T2> __forceinline
+bool winx_call operator<=(const TextPool<_E, _AllocT>& a, const _T2& b)
 	{return a.compare(b) <= 0; }
 
-template <class _E, class _Alloc, class _T2> __forceinline
-bool winx_call operator>=(const TextPool<_E, _Alloc>& a, const _T2& b)
+template <class _E, class _AllocT, class _T2> __forceinline
+bool winx_call operator>=(const TextPool<_E, _AllocT>& a, const _T2& b)
 	{return a.compare(b) >= 0; }
 
 // -------------------------------------------------------------------------

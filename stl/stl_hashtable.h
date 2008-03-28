@@ -637,7 +637,7 @@ value_type(const _Hashtable_iterator<_Val,_Key,_HF,_ExK,_EqK,_All>&)
 
 template <class _Val, class _Key, class _HF, class _ExK, class _EqK, 
           class _All>
-inline hashtable<_Val,_Key,_HF,_ExK,_EqK,_All>::difference_type*
+inline typename hashtable<_Val,_Key,_HF,_ExK,_EqK,_All>::difference_type*
 distance_type(const _Hashtable_iterator<_Val,_Key,_HF,_ExK,_EqK,_All>&)
 {
   return (hashtable<_Val,_Key,_HF,_ExK,_EqK,_All>::difference_type*) 0;
@@ -662,7 +662,7 @@ value_type(const _Hashtable_const_iterator<_Val,_Key,_HF,_ExK,_EqK,_All>&)
 
 template <class _Val, class _Key, class _HF, class _ExK, class _EqK, 
           class _All>
-inline hashtable<_Val,_Key,_HF,_ExK,_EqK,_All>::difference_type*
+inline typename hashtable<_Val,_Key,_HF,_ExK,_EqK,_All>::difference_type*
 distance_type(const _Hashtable_const_iterator<_Val,_Key,_HF,_ExK,_EqK,_All>&)
 {
   return (hashtable<_Val,_Key,_HF,_ExK,_EqK,_All>::difference_type*) 0;

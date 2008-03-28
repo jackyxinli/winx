@@ -81,7 +81,7 @@ void testSgiHashMap();
 
 void testStdExt()
 {
-	WINX_TEST_APP(std::ErrorLog, "TestDeque", "");
+	WINX_TEST_APP(std::ErrorLog, "TestTextPool", "");
 //	testSgiHashMap();
 
 	WINX_TEST_CLASS(TestFinder);
@@ -119,7 +119,9 @@ void testStdExt()
 	WINX_TEST_CLASS(std::TestSlist);
 	WINX_TEST_CLASS(std::TestDclList);
 	WINX_TEST_CLASS(std::TestDeque);
+#if defined(X_CC_VC6)
 	WINX_TEST_CLASS(TestSgiDeque);
+#endif
 
 	//Memory.h
 	WINX_TEST_CLASS(std::TestAutoFreeAlloc);
