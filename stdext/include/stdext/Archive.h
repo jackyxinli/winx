@@ -19,109 +19,37 @@
 #ifndef __STDEXT_ARCHIVE_H__
 #define __STDEXT_ARCHIVE_H__
 
-#if (0)
-#define BYTESWAP
-#define __BYTESWAP__
-#endif
-
-#ifndef __STDEXT_BASIC_H__
-#include "Basic.h"
-#endif
-
-#if defined(STD_NO_WINSDK)
-#ifndef __STDEXT_WINAPI_OLE2_H__
-#include "winapi/ole2.h"
-#endif
-#endif
-
-// -------------------------------------------------------------------------
-// WINX_BYTESWAP
-
-#if defined(BYTESWAP) || defined(__BYTESWAP__)
-#define WINX_BYTESWAP
-#endif
-
-#if !defined(WINX_BYTESWAP)
-	#define _WinxByteSwap(val)
-	#define _WinxByteSwap16(val)
-	#define _WinxByteSwap32(val)
-	#define _WinxByteSwapStruct(val)
-	#define _WinxByteSwap16Array(val)
-	#define _WinxByteSwap32Array(val)
-	#define _WinxByteSwapStructArray(val)
-#else
-	#error "todo: BYTESWAP support"
-#endif
-
 // -------------------------------------------------------------------------
 
-#ifndef __STDEXT_ARCHIVE_SIMPLEARCHIVE_H__
-#include "archive/SimpleArchive.h"
+#ifndef __STDEXT_ARCHIVE_BASIC_H__
+#include "archive/Basic.h"
 #endif
 
-#if defined(_ATL_VER)
-#ifndef __STDEXT_ARCHIVE_REGARCHIVE_H__
-#include "archive/RegArchive.h"
-#endif
+#ifndef __STDEXT_ARCHIVE_WRITER_H__
+#include "archive/Writer.h"
 #endif
 
-#ifndef __STDEXT_ARCHIVE_STREAMARCHIVE_H__
-#include "archive/StreamArchive.h"
+#ifndef __STDEXT_ARCHIVE_READER_H__
+#include "archive/Reader.h"
 #endif
 
-#ifndef __STDEXT_ARCHIVE_STDIOARCHIVE_H__
-#include "archive/StdioArchive.h"
+#ifndef __STDEXT_ARCHIVE_WRITEARCHIVE_H__
+#include "archive/WriteArchive.h"
 #endif
 
-#ifndef __STDEXT_ARCHIVE_RECORDARCHIVE_H__
-#include "archive/RecordArchive.h"
+#ifndef __STDEXT_ARCHIVE_READARCHIVE_H__
+#include "archive/ReadArchive.h"
 #endif
 
-// -------------------------------------------------------------------------
-// isStgWritable
+#ifndef __STDEXT_ARCHIVE_STDIO_H__
+#include "archive/Stdio.h"
+#endif
 
-__NS_STD_BEGIN
-
-inline BOOL winx_call isStgWritable(IStorage* pstg)
-{
-	STATSTG statstg;
-	pstg->Stat(&statstg, STATFLAG_NONAME);
-	return statstg.grfMode & (STGM_READWRITE|STGM_WRITE);
-}
-
-inline BOOL winx_call isStgWritable(IStream* pstm)
-{
-	STATSTG statstg;
-	pstm->Stat(&statstg, STATFLAG_NONAME);
-	return statstg.grfMode & (STGM_READWRITE|STGM_WRITE);
-}
-
-__NS_STD_END
-
-// -------------------------------------------------------------------------
-// WriteArchive/ReadArchive
-
-__NS_STD_BEGIN
-
-typedef SimpleWriteArchive WriteArchive;
-typedef SimpleReadArchive ReadArchive;
-
-__NS_STD_END
+#ifndef __STDEXT_ARCHIVE_STREAM_H__
+#include "archive/Stream.h"
+#endif
 
 // -------------------------------------------------------------------------
 // $Log: Archive.h,v $
-// Revision 1.2  2006/11/30 03:19:17  xushiwei
-// STL-Extension:
-//  ULargeInteger, LargeInteger, ReadArchiveImpl, WriteArchiveImpl
-//  StreamArchive(StreamWriteArchive, StreamReadArchive, MemStreamWriteArchive, MemStreamReadArchive)
-//  StdioArchive(StdioWriteArchive, StdioReadArchive)
-//
-// Revision 1.1  2006/10/18 12:13:39  xushiwei
-// stdext as independent component
-//
-// Revision 1.1  2006/08/26 03:19:44  xushiwei
-// STL-Extension:
-//   Archive(SimpleWriteArchive, SimpleReadArchive, MemSeqWriteArchive, RegWriteArchive, RegReadArchive)
-//
 
 #endif /* __STDEXT_ARCHIVE_H__ */

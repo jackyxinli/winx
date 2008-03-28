@@ -37,22 +37,21 @@ template <class LogT>
 class TestFinder : public TestCase
 {
 public:
-	WINX_TEST_SUITE(TestFinder)
-		WINX_TEST(testSearchInCStr)
-		WINX_TEST(testSearchInArchive)
-		WINX_TEST(testSearchInDeque)
-		WINX_TEST(testSearchInFStream)
+	WINX_TEST_SUITE(TestFinder);
+		WINX_TEST(testSearchInCStr);
+		WINX_TEST(testSearchInArchive);
+		WINX_TEST(testSearchInDeque);
+		WINX_TEST(testSearchInFStream);
 	WINX_TEST_SUITE_END();
-
-public:
-	void setUp() {}
-	void tearDown() {}
 
 public:
 	void testSearchInArchive(LogT& log)
 	{
+		std::BlockPool recycle;
+		std::ScopeAlloc alloc(recycle);
+
 		std::string line;
-		std::StdioReadArchive ar(__FILE__);
+		std::StdioReader ar(alloc, __FILE__);
 
 		std::kmp::Finder<char> finder("std::kmp::Finder<char>");
 		HRESULT hr = finder.next(ar);
@@ -104,12 +103,5 @@ public:
 
 // -------------------------------------------------------------------------
 // $Log: TestFinder.h,v $
-// Revision 1.2  2006/12/03 07:52:27  xushiwei
-// TestFinder
-//
-// Revision 1.1  2006/12/02 08:00:45  xushiwei
-// STL-Extension:
-//  KMP-String-Find-Algorithm(class std::kmp::Finder/CaseFinder/NoCaseFinder)
-//
 
 #endif /* __STDEXT_KMP_TESTFINDER_H__ */

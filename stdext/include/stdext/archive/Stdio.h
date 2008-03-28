@@ -16,10 +16,24 @@
 // 
 // $Id: StdioArchive.h,v 1.3 2007/01/10 09:36:12 xushiwei Exp $
 // -----------------------------------------------------------------------*/
-#ifndef __STDEXT_ARCHIVE_STDIOARCHIVE_H__
-#define __STDEXT_ARCHIVE_STDIOARCHIVE_H__
+#ifndef __STDEXT_ARCHIVE_STDIO_H__
+#define __STDEXT_ARCHIVE_STDIO_H__
 
-// -------------------------------------------------------------------------
+#ifndef __STDEXT_ARCHIVE_WRITER_H__
+#include "Writer.h"
+#endif
+
+#ifndef __STDEXT_ARCHIVE_READER_H__
+#include "Reader.h"
+#endif
+
+#ifndef __STDEXT_ARCHIVE_WRITEARCHIVE_H__
+#include "WriteArchive.h"
+#endif
+
+#ifndef __STDEXT_ARCHIVE_READARCHIVE_H__
+#include "ReadArchive.h"
+#endif
 
 #if !defined(STD_NO_MSVCRT)
 	#ifndef _INC_IO
@@ -29,10 +43,6 @@
 	#ifndef __STDEXT_MSVCRT_H__
 	#include "../msvcrt.h"
 	#endif
-#endif
-
-#ifndef __STDEXT_ARCHIVE_ARCHIVEIMPL_H__
-#include "ArchiveImpl.h"
 #endif
 
 __NS_STD_BEGIN
@@ -179,37 +189,48 @@ public:
 
 // -------------------------------------------------------------------------
 
-typedef WriteArchiveImpl<FILE*, StdioAdapter> StdioWriteArchive;
-typedef ReadArchiveImpl<FILE*, StdioAdapter> StdioReadArchive;
+typedef WriteArchive<FILE*, StdioAdapter> StdioWriteArchive;
+typedef Writer<StdioWriteArchive> StdioWriter;
+
+typedef ReadArchive<FILE*, StdioAdapter> StdioReadArchive;
+typedef Reader<StdioReadArchive> StdioReader;
 
 // -------------------------------------------------------------------------
 // class TestStdioArchive
 
 template <class LogT>
-class TestStdioArchive
+class TestStdioArchive : public TestCase
 {
+	WINX_TEST_SUITE(TestStdioArchive);
+		WINX_TEST(testBasic);
+	WINX_TEST_SUITE_END();
+
 public:
-	void doTest(LogT& log)
+	void testBasic(LogT& log)
 	{
+		std::BlockPool recycle;
+		std::ScopeAlloc alloc(recycle);
+
 		{
-			StdioWriteArchive ar(L"/__test__.txt");
+			std::StdioWriter ar(alloc, L"/__test__.txt");
 			ar.put("hello\n");
+			ar.put('\n');
 		}
 		{
 			char szBuf[100];
-			StdioReadArchive ar("/__test__.txt");
+			std::StdioReader ar(alloc, "/__test__.txt");
 			size_t cch = ar.get(szBuf, countof(szBuf));
 			szBuf[cch] = '\0';
 			log.print(szBuf);
 		}
 		{
-			StdioWriteArchive ar;
+			std::StdioWriter ar(alloc);
 			ar.open("/__test__.txt");
 			ar.put("you're welcome!\n");
 		}
 		{
 			char szBuf[100];
-			StdioReadArchive ar;
+			std::StdioReader ar(alloc);
 			ar.open(L"/__test__.txt");
 			size_t cch = ar.get(szBuf, countof(szBuf));
 			szBuf[cch] = '\0';
@@ -217,13 +238,13 @@ public:
 		}
 		{
 			char szBuf[100];
-			StdioWriteArchive ar("/__test__.txt");
+			std::StdioWriter ar(alloc, "/__test__.txt");
 			ar.put(_itoa(13242, szBuf, 10));
 			ar.put(' ');
 			ar.put(_itoa(1111, szBuf, 10));
 		}
 		{
-			StdioReadArchive ar("/__test__.txt");
+			std::StdioReader ar(alloc, "/__test__.txt");
 			unsigned val;
 			ar.scan_uint(val);
 			log.print(val).newline();
@@ -252,4 +273,4 @@ public:
 
 __NS_STD_END
 
-#endif /* __STDEXT_ARCHIVE_STDIOARCHIVE_H__ */
+#endif /* __STDEXT_ARCHIVE_STDIO_H__ */

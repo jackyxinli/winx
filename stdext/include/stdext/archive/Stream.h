@@ -9,18 +9,30 @@
 // of this license. You must not remove this notice, or any other, from
 // this software.
 // 
-// Module: stdext/archive/StreamArchive.h
+// Module: stdext/archive/Stream.h
 // Creator: xushiwei
 // Email: xushiweizh@gmail.com
 // Date: 2006-11-29 20:06:28
 // 
-// $Id: StreamArchive.h,v 1.3 2006/12/03 05:30:27 xushiwei Exp $
+// $Id: Stream.h,v 1.3 2006/12/03 05:30:27 xushiwei Exp $
 // -----------------------------------------------------------------------*/
-#ifndef __STDEXT_ARCHIVE_STREAMARCHIVE_H__
-#define __STDEXT_ARCHIVE_STREAMARCHIVE_H__
+#ifndef __STDEXT_ARCHIVE_STREAM_H__
+#define __STDEXT_ARCHIVE_STREAM_H__
 
-#ifndef __STDEXT_ARCHIVE_ARCHIVEIMPL_H__
-#include "ArchiveImpl.h"
+#ifndef __STDEXT_ARCHIVE_WRITER_H__
+#include "Writer.h"
+#endif
+
+#ifndef __STDEXT_ARCHIVE_READER_H__
+#include "Reader.h"
+#endif
+
+#ifndef __STDEXT_ARCHIVE_WRITEARCHIVE_H__
+#include "WriteArchive.h"
+#endif
+
+#ifndef __STDEXT_ARCHIVE_READARCHIVE_H__
+#include "ReadArchive.h"
 #endif
 
 #ifndef __STDEXT_LARGEINTEGER_H__
@@ -91,7 +103,7 @@ public:
 	{
 		m_pStrm = NULL;
 	}
-	IStreamAdapter(const IStreamAdapter& rhs, BOOL do_clone)
+	IStreamAdapter(const IStreamAdapter& rhs, bool do_clone)
 	{
 		if (do_clone)
 		{
@@ -312,34 +324,33 @@ public:
 
 // -------------------------------------------------------------------------
 
-typedef WriteArchiveImpl<IStream*, IStreamAdapter> StreamWriteArchive;
-typedef ReadArchiveImpl<IStream*, IStreamAdapter> StreamReadArchive;
+typedef WriteArchive<IStream*, IStreamAdapter> StreamWriteArchive;
+typedef Writer<StreamWriteArchive> StreamWriter;
+
+typedef ReadArchive<IStream*, IStreamAdapter> StreamReadArchive;
+typedef Reader<StreamReadArchive> StreamReader;
 
 // -------------------------------------------------------------------------
-// class MemStreamWriteArchive
+// class MemStreamWriter
 
-class MemStreamWriteArchive : public StreamWriteArchive
+class MemStreamWriter : public StreamWriter
 {
 private:
-	typedef StreamWriteArchive BaseClass;
+	typedef StreamWriter _Base;
 
 public:
-	MemStreamWriteArchive(size_type nBufSize = default_buffer_size, char_type* lpBuf = NULL)
-		: BaseClass(nBufSize, lpBuf)
+	template <class AllocT>
+	explicit MemStreamWriter(AllocT& alloc)
+		: _Base(alloc)
 	{
 		CreateStreamOnHGlobal(NULL, FALSE, &m_handle);
 	}
-	~MemStreamWriteArchive()
+	~MemStreamWriter()
 	{
 		close();
 	}
 
 public:
-	size_type winx_call write(const void* lpBuf, size_type nMax)
-	{
-		return put((const char_type*)lpBuf, nMax);
-	}
-
 	void winx_call close()
 	{
 		if (m_handle.good())
@@ -369,25 +380,25 @@ public:
 };
 
 // -------------------------------------------------------------------------
-// class MemStreamReadArchive
+// class MemStreamReader
 
-class MemStreamReadArchive : public StreamReadArchive
+class MemStreamReader : public StreamReader
 {
 private:
-	typedef StreamReadArchive BaseClass;
+	typedef StreamReader _Base;
 
 public:
-	MemStreamReadArchive(HGLOBAL hgbl, size_type nBufSize = default_buffer_size, char_type* lpBuf = NULL)
-		: BaseClass(nBufSize, lpBuf)
+	template <class AllocT>
+	explicit MemStreamReader(AllocT& alloc)
+		: _Base(alloc) {}
+
+	template <class AllocT>
+	MemStreamReader(AllocT& alloc, HGLOBAL hgbl)
+		: _Base(alloc)
 	{
 		CreateStreamOnHGlobal(hgbl, FALSE, &m_handle);
 	}
 
-	MemStreamReadArchive(size_type nBufSize = default_buffer_size, char_type* lpBuf = NULL)
-		: BaseClass(nBufSize, lpBuf)
-	{
-	}
-	
 public:
 	HRESULT winx_call open(HGLOBAL hgbl, BOOL fDeleteOnRelease = FALSE)
 	{
@@ -395,36 +406,38 @@ public:
 			return E_ACCESSDENIED;
 		return CreateStreamOnHGlobal(hgbl, fDeleteOnRelease, &m_handle);
 	}
-
-	size_type winx_call read(void* lpBuf, size_type nMax)
-	{
-		return get((char_type*)lpBuf, nMax);
-	}
 };
 
 // -------------------------------------------------------------------------
 // class TestStreamArchive
 
 template <class LogT>
-class TestStreamArchive
+class TestStreamArchive : public TestCase
 {
+	WINX_TEST_SUITE(TestStreamArchive);
+		WINX_TEST(testBasic);
+	WINX_TEST_SUITE_END();
+
 public:
-	void doTest(LogT& log)
+	void testBasic(LogT& log)
 	{
+		std::BlockPool recycle;
+		std::ScopeAlloc alloc(recycle);
+
 		{
-			StreamWriteArchive ar(L"/__test__.txt");
+			std::StreamWriter ar(alloc, L"/__test__.txt");
 			ar.put("hello world\n");
 		}
 		{
 			char szBuf[100];
-			StreamReadArchive ar("/__test__.txt");
+			std::StreamReader ar(alloc, "/__test__.txt");
 			ar.seek(6);
 			size_t cch = ar.get(szBuf, countof(szBuf));
 			szBuf[cch] = '\0';
 			printf(szBuf);
 		}
 		{
-			StreamWriteArchive ar;
+			std::StreamWriter ar(alloc);
 			ar.open("/__test__.txt");
 			ar.put("you're welcome!\n");
 			ar.seek(3);
@@ -432,7 +445,7 @@ public:
 		}
 		{
 			char szBuf[100];
-			StreamReadArchive ar;
+			std::StreamReader ar(alloc);
 			ar.open(L"/__test__.txt");
 			size_t cch = ar.get(szBuf, countof(szBuf));
 			szBuf[cch] = '\0';
@@ -442,20 +455,8 @@ public:
 };
 
 // -------------------------------------------------------------------------
-// $Log: StreamArchive.h,v $
-// Revision 1.3  2006/12/03 05:30:27  xushiwei
-// WINX_USE_DEFSDK support
-//
-// Revision 1.2  2006/12/02 06:47:16  xushiwei
-// modify details
-//
-// Revision 1.1  2006/11/30 03:19:24  xushiwei
-// STL-Extension:
-//  ULargeInteger, LargeInteger, ReadArchiveImpl, WriteArchiveImpl
-//  StreamArchive(StreamWriteArchive, StreamReadArchive, MemStreamWriteArchive, MemStreamReadArchive)
-//  StdioArchive(StdioWriteArchive, StdioReadArchive)
-//
+// $Log: Stream.h,v $
 
 __NS_STD_END
 
-#endif /* __STDEXT_ARCHIVE_STREAMARCHIVE_H__ */
+#endif /* __STDEXT_ARCHIVE_STREAM_H__ */

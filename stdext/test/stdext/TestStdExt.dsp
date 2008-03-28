@@ -196,6 +196,42 @@ SOURCE=..\..\include\stdext\text\TempString.h
 SOURCE=..\..\include\stdext\text\TextPool.h
 # End Source File
 # End Group
+# Begin Group "archive"
+
+# PROP Default_Filter ""
+# Begin Source File
+
+SOURCE=..\..\include\stdext\Archive.h
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\include\stdext\archive\Basic.h
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\include\stdext\archive\ReadArchive.h
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\include\stdext\archive\Reader.h
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\include\stdext\archive\Stdio.h
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\include\stdext\archive\Stream.h
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\include\stdext\archive\WriteArchive.h
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\include\stdext\archive\Writer.h
+# End Source File
+# End Group
 # Begin Source File
 
 SOURCE=.\TestBoostRegEx.cpp
@@ -203,21 +239,6 @@ SOURCE=.\TestBoostRegEx.cpp
 # Begin Source File
 
 SOURCE=.\TestHashMap.cpp
-
-!IF  "$(CFG)" == "TestStdExt - Win32 Release"
-
-!ELSEIF  "$(CFG)" == "TestStdExt - Win32 Debug"
-
-!ELSEIF  "$(CFG)" == "TestStdExt - Win32 ReleaseStaticLib"
-
-!ELSEIF  "$(CFG)" == "TestStdExt - Win32 ReleaseST"
-
-!ELSEIF  "$(CFG)" == "TestStdExt - Win32 DebugNoSgiStl"
-
-# ADD BASE CPP /D "NO_SGISTL"
-
-!ENDIF 
-
 # End Source File
 # Begin Source File
 
