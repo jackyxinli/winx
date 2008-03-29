@@ -34,12 +34,15 @@ class ReadArchive
 public:
 	enum { endch = StreamHandle::endch };
 
+	typedef size_t size_type;
+	typedef ptrdiff_t difference_type;
+
    	typedef typename StreamHandle::int_type	int_type;
 	typedef typename StreamHandle::char_type char_type;
 	typedef typename StreamHandle::uchar_type uchar_type;
+
 	typedef typename StreamHandle::pos_type	pos_type;
 	typedef typename StreamHandle::off_type	off_type;
-	typedef typename StreamHandle::size_type size_type;
 	
 protected:
 	char_type*	m_lpBufStart;

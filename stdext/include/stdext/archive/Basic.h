@@ -123,6 +123,74 @@ public:
 };
 
 // -------------------------------------------------------------------------
+// class ArchiveCharTraits
+
+template <class CharT>
+class ArchiveCharTraits
+{
+};
+
+template <>
+class ArchiveCharTraits<char>
+{
+public:
+	typedef char char_type;
+	typedef unsigned char uchar_type;
+	typedef int int_type;
+
+	enum { endch = -1 };
+};
+
+template <>
+class ArchiveCharTraits<WCHAR>
+{
+public:
+	typedef WCHAR char_type;
+	typedef WCHAR uchar_type;
+	typedef int int_type;
+
+	enum { endch = -1 };
+};
+
+// -------------------------------------------------------------------------
+// class ArchiveIteratorTraits
+
+template <class Iterator>
+class ArchiveIteratorTraits
+{
+public:
+	typedef typename Iterator::value_type char_type;
+};
+
+template <>
+class ArchiveIteratorTraits<char*>
+{
+public:
+	typedef char char_type;
+};
+
+template <>
+class ArchiveIteratorTraits<const char*>
+{
+public:
+	typedef char char_type;
+};
+
+template <>
+class ArchiveIteratorTraits<WCHAR*>
+{
+public:
+	typedef WCHAR char_type;
+};
+
+template <>
+class ArchiveIteratorTraits<const WCHAR*>
+{
+public:
+	typedef WCHAR char_type;
+};
+
+// -------------------------------------------------------------------------
 // WINX_BYTESWAP
 
 #if defined(BYTESWAP) || defined(__BYTESWAP__)

@@ -9,12 +9,12 @@
 // of this license. You must not remove this notice, or any other, from
 // this software.
 // 
-// Module: stdext/archive/StdioArchive.h
+// Module: stdext/archive/Stdio.h
 // Creator: xushiwei
 // Email: xushiweizh@gmail.com
 // Date: 2006-11-29 21:07:06
 // 
-// $Id: StdioArchive.h,v 1.3 2007/01/10 09:36:12 xushiwei Exp $
+// $Id: Stdio.h,v 1.3 2007/01/10 09:36:12 xushiwei Exp $
 // -----------------------------------------------------------------------*/
 #ifndef __STDEXT_ARCHIVE_STDIO_H__
 #define __STDEXT_ARCHIVE_STDIO_H__
@@ -222,6 +222,7 @@ public:
 			size_t cch = ar.get(szBuf, countof(szBuf));
 			szBuf[cch] = '\0';
 			log.print(szBuf);
+			AssertExp(strcmp(szBuf, "hello\n\n") == 0);
 		}
 		{
 			std::StdioWriter ar(alloc);
@@ -235,6 +236,7 @@ public:
 			size_t cch = ar.get(szBuf, countof(szBuf));
 			szBuf[cch] = '\0';
 			log.print(szBuf);
+			AssertExp(strcmp(szBuf, "you're welcome!\n") == 0);
 		}
 		{
 			char szBuf[100];
@@ -248,28 +250,16 @@ public:
 			unsigned val;
 			ar.scan_uint(val);
 			log.print(val).newline();
+			AssertExp(val == 13242);
 			ar.scan_uint(val, 2);
 			log.print(val).newline();
+			AssertExp(val == 15);
 		}
 	}
 };
 
 // -------------------------------------------------------------------------
-// $Log: StdioArchive.h,v $
-// Revision 1.3  2007/01/10 09:36:12  xushiwei
-// StdioArchive::size
-//
-// Revision 1.2  2006/12/01 05:38:28  xushiwei
-// STL-Extension: class ArchiveImpl -
-//  put16i/get16i, put32i/get32i, put_struct/get_struct, read/write
-//  scan_uint, get_uint, get_not_if/getnws, skip_if/skipws
-//
-// Revision 1.1  2006/11/30 03:19:24  xushiwei
-// STL-Extension:
-//  ULargeInteger, LargeInteger, ReadArchiveImpl, WriteArchiveImpl
-//  StreamArchive(StreamWriteArchive, StreamReadArchive, MemStreamWriteArchive, MemStreamReadArchive)
-//  StdioArchive(StdioWriteArchive, StdioReadArchive)
-//
+// $Log: Stdio.h,v $
 
 __NS_STD_END
 

@@ -209,6 +209,14 @@ SOURCE=..\..\include\stdext\archive\Basic.h
 # End Source File
 # Begin Source File
 
+SOURCE=..\..\include\stdext\archive\Mem.h
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\include\stdext\archive\MemArchive.h
+# End Source File
+# Begin Source File
+
 SOURCE=..\..\include\stdext\archive\ReadArchive.h
 # End Source File
 # Begin Source File

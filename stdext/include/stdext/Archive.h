@@ -49,6 +49,14 @@
 #include "archive/Stream.h"
 #endif
 
+#ifndef __STDEXT_ARCHIVE_MEMARCHIVE_H__
+#include "archive/MemArchive.h"
+#endif
+
+#ifndef __STDEXT_ARCHIVE_MEM_H__
+#include "archive/Mem.h"
+#endif
+
 // -------------------------------------------------------------------------
 // $Log: Archive.h,v $
 

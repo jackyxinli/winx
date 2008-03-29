@@ -25,8 +25,6 @@
 //#define STD_NO_MSVCRT
 //#define STD_NO_WINSDK
 #include <stdext.h>
-#include <stdext/Archive.h>
-#include <stdext/kmp/TestFinder.h>
 #include <stdext/FileMapping.h>
 #include <stdext/ScopeDebug.h>
 #include <stdext/Registry.h>
@@ -42,6 +40,8 @@
 #include <stdext/text/Rope.h>
 #include <stdext/codepage/CP1252.h>
 #include <stdext/Rand.h>
+#include <stdext/Archive.h>
+#include <stdext/kmp/TestFinder.h>
 #include <stdext/tchar.h>
 #pragma comment(lib, "shlwapi.lib")
 
@@ -81,7 +81,7 @@ void testSgiHashMap();
 
 void testStdExt()
 {
-	WINX_TEST_APP(std::ErrorLog, "TestFinder", "");
+	WINX_TEST_APP(std::ErrorLog, "TestMemArchive", "");
 //	testSgiHashMap();
 
 	WINX_TEST_CLASS(TestFinder);
@@ -95,6 +95,7 @@ void testStdExt()
 	WINX_TEST_CLASS(std::TestFileMapping);
 	WINX_TEST_CLASS(std::TestStreamArchive);
 	WINX_TEST_CLASS(std::TestStdioArchive);
+	WINX_TEST_CLASS(std::TestMemArchive);
 	WINX_TEST_CLASS(std::TestLog);
 	WINX_TEST_CLASS(std::TestFileBuf);
 

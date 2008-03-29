@@ -49,6 +49,10 @@ public:
 	Reader(AllocT& alloc, const InitArgT& file)
 		: _Base(alloc, file) {}
 
+	template <class AllocT, class InitArgT1, class InitArgT2>
+	Reader(AllocT& alloc, const InitArgT1& arg1, const InitArgT2& arg2)
+		: _Base(alloc, arg1, arg2) {}
+
 public:
 	size_type winx_call read(void* lpBuf, size_type nMax)
 	{
