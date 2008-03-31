@@ -432,6 +432,16 @@ do {																		\
 #define WINX_NULL_PTHIS		(static_cast<FinalClass*>(0))
 #endif
 
+#ifndef WINX_BASE
+#define WINX_BASE			(*static_cast<BaseClass*>(this))
+#define WINX_PBASE			(static_cast<BaseClass*>(this))
+#endif
+
+#ifndef WINX_BASECLASS
+#define WINX_BASECLASS(Type)												\
+	typedef Type BaseClass;
+#endif
+
 // -------------------------------------------------------------------------
 // class NullClass
 

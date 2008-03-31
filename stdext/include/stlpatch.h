@@ -31,10 +31,10 @@
 #include "stdext/patch/string.h"
 #endif
 
-// -------------------------------------------------------------------------
-// _ConvIt - vector iterator convert
-
 namespace std {
+
+// -------------------------------------------------------------------------
+// _ConvIt - convert a vector/string iterator to pointer
 
 #if !defined(_MSC_VER)
 
@@ -48,28 +48,34 @@ namespace std {
 
 template <class _It>
 __forceinline typename _It::pointer _ConvIt(_It it)
-	{ return it._Myptr; }
+	{return it._Myptr; }
 	
 #elif defined(X_STL_GCC) || defined(X_STL_SGI) // sgi-stl
 
 template <class _It>
 __forceinline typename _It::pointer _ConvIt(_It it)
-	{ return &*it; }
+	{return &*it; }
 
 #else
 
 template <class _It>
 __forceinline _It _ConvIt(_It it)
-	{ return it; }
+	{return it; }
 
 #endif
 
-} // namespace std
+// -------------------------------------------------------------------------
+// resize
+
+template <class _Container>
+__forceinline 
+typename _Container::value_type* resize(_Container& container, size_t newSize)
+	{container.resize(newSize);
+	 return _ConvIt(container.begin()); }
 
 // -------------------------------------------------------------------------
 // $Log: stlpatch.h,v $
-// Revision 1.1  2006/12/22 10:19:55  xushiwei
-// STL-Patch: std::basic_string::_Split function bugfix (vc6)
-//
+
+} // namespace std
 
 #endif /* __STLPATCH_H__ */

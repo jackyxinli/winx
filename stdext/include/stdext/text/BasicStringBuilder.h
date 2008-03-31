@@ -46,9 +46,6 @@ public:																		\
 	using _Base::rend;														\
 	using _Base::size
 
-#define _WINX_BCB_BASE														\
-	*static_cast<_Base*>(this)
-
 // -------------------------------------------------------------------------
 // class BasicStringBuilder
 
@@ -56,7 +53,7 @@ template <class _E>
 class BasicStringBuilder : public std::vector<_E>
 {
 private:
-	typedef std::vector<_E> _Base;
+	typedef std::vector<_E> _Base, BaseClass;
 	typedef TempString<_E> _String;
 	typedef BasicStringBuilder _Myt;
 	_WINX_BSB_USING_VECTOR;
@@ -198,27 +195,27 @@ public:
 		iterator first, iterator last,
 		_RandIterator bfirst, _RandIterator blast)
 	{
-		std::replace(_WINX_BCB_BASE, first, last, bfirst, blast);
+		std::replace(WINX_BASE, first, last, bfirst, blast);
 		return *this;
 	}
 
 	_Myt& winx_call replace(
 		iterator first, iterator last, size_type count, _E ch)
 	{
-		std::replace(_WINX_BCB_BASE, first, last, count, ch);
+		std::replace(WINX_BASE, first, last, count, ch);
 		return *this;
 	}
 
 	_Myt& winx_call replace(
 		iterator first, iterator last, const _E* s, size_type cch)
 	{
-		std::replace(_WINX_BCB_BASE, first, last, s, s + cch);
+		std::replace(WINX_BASE, first, last, s, s + cch);
 		return *this;
 	}
 
 	_Myt& winx_call replace(iterator first, iterator last, const _String s)
 	{
-		std::replace(_WINX_BCB_BASE, first, last, s.begin(), s.end());
+		std::replace(WINX_BASE, first, last, s.begin(), s.end());
 		return *this;
 	}
 

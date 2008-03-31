@@ -225,6 +225,11 @@ public:
 		return m_pos - m_first;
 	}
 
+	Iterator winx_call position() const
+	{
+		return m_pos;
+	}
+
 	void winx_call seek(pos_type offset)
 	{
 		if (offset > size())

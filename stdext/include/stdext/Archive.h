@@ -57,6 +57,16 @@
 #include "archive/Mem.h"
 #endif
 
+#ifndef __STDEXT_ARCHIVE_WINREG_H__
+#include "archive/WinReg.h"
+#endif
+
+/*
+#ifndef __STDEXT_ARCHIVE_RECORD_H__
+#include "archive/Record.h"
+#endif
+*/
+
 // -------------------------------------------------------------------------
 // $Log: Archive.h,v $
 

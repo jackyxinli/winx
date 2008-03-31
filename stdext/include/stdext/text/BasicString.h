@@ -436,6 +436,45 @@ template <class _E, class _Alloc> __forceinline
 	{return (!(a < b)); }
 
 // -------------------------------------------------------------------------
+// class OutputBasicString
+
+template <class DataT, class AllocT>
+class OutputBasicString
+{
+private:
+	AllocT& m_alloc;
+	BasicString<DataT>& m_str;
+
+public:
+	typedef DataT* pointer;
+	typedef DataT* iterator;
+	typedef DataT value_type;
+
+public:
+	OutputBasicString(AllocT& alloc, BasicString<DataT>& s)
+		: m_alloc(alloc), m_str(s) {
+	}
+
+	void winx_call resize(size_t newSize) {
+		m_str.attach(STD_NEW_ARRAY(m_alloc, DataT, newSize), newSize);
+	}
+
+	iterator winx_call begin() {
+		return (iterator)m_str.data();
+	}
+
+	iterator winx_call end() {
+		return (iterator)m_str.end();
+	}
+
+	iterator winx_call erase(iterator it) {
+		std::copy(it + 1, end(), it);
+		m_str.attach(m_str.data(), m_str.size() - 1);
+		return it;
+	}
+};
+
+// -------------------------------------------------------------------------
 // class TestBasicString
 
 template <class LogT>

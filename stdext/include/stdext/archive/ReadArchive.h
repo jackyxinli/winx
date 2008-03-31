@@ -226,7 +226,7 @@ public:
 
 	void winx_call reget(size_type offset, char_type* lpBuf, size_type cch)
 	{
-		WINX_ASSERT((int)offset > 0 && offset >= cch);
+		WINX_ASSERT((int)offset >= 0 && offset >= cch);
 		
 		if (offset <= (size_type)(UINT)(m_lpBufCur - m_lpBufStart))
 		{

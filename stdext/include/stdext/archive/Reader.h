@@ -19,8 +19,12 @@
 #ifndef __STDEXT_ARCHIVE_READER_H__
 #define __STDEXT_ARCHIVE_READER_H__
 
-#ifndef __STDEXT_CHARTYPE_H__
-#include "../CharType.h"
+#ifndef __STDEXT_ARCHIVE_BASIC_H__
+#include "Basic.h"
+#endif
+
+#ifndef __STDEXT_TEXT_BASICSTRING_H__
+#include "../text/BasicString.h"
 #endif
 
 __NS_STD_BEGIN
@@ -32,13 +36,17 @@ template <class BaseArchive>
 class Reader : public BaseArchive
 {
 private:
-	typedef BaseArchive _Base;
+	typedef BaseArchive _Base, BaseClass;
 	typedef Reader _Myt;
 
 public:
-	typedef typename _Base::size_type size_type;
-	typedef typename _Base::char_type char_type;
-	typedef typename _Base::int_type int_type;
+	typedef size_t size_type;
+	typedef char char_type;
+	typedef unsigned char uchar_type;
+	typedef UINT16 word_type;
+	typedef UINT32 dword_type;
+	typedef int int_type;
+	typedef unsigned uint_type;
 
 public:
 	template <class AllocT>
@@ -46,14 +54,62 @@ public:
 		: _Base(alloc) {}
 
 	template <class AllocT, class InitArgT>
-	Reader(AllocT& alloc, const InitArgT& file)
+	Reader(AllocT& alloc, InitArgT file)
 		: _Base(alloc, file) {}
 
 	template <class AllocT, class InitArgT1, class InitArgT2>
-	Reader(AllocT& alloc, const InitArgT1& arg1, const InitArgT2& arg2)
+	Reader(AllocT& alloc, InitArgT1 arg1, InitArgT2 arg2)
 		: _Base(alloc, arg1, arg2) {}
 
+//
+// ======== access binary data ========
+//
 public:
+	// get a binary string
+
+	template <class AllocT>
+	HRESULT winx_call gets(AllocT& alloc, BasicString<char_type>& s)
+	{
+		OutputBasicString<char_type, AllocT> s1(alloc, s);
+		return gets(s1);
+	}
+
+	template <class StringT>
+	HRESULT winx_call gets(StringT& s)
+	{
+		HRESULT hr;
+		uint_type cch = _Base::get();
+		if (cch < 254) {
+			/* nothing todo */
+		}
+		else if (cch == 254) {
+			UINT16 cch2;
+			hr = get16i(cch2);
+			if (hr != S_OK)
+				return hr;
+			cch = cch2;
+		}
+		else if (cch == 255) {
+			INT32 cch4;
+			hr = get32i(cch4);
+			if (hr != S_OK && cch4 < 0)
+				return STG_E_READFAULT;
+			cch = cch4;
+		}
+		else {
+			return E_UNEXPECTED;
+		}
+		UINT cbRead = get(std::resize(s, cch), cch);
+		if (cbRead != cch)
+			return STG_E_READFAULT;
+		if ( !(cch & 1) )
+			_Base::get(); // padding
+		return S_OK;
+	}
+
+public:
+	// get binary data
+	
 	size_type winx_call read(void* lpBuf, size_type nMax)
 	{
 		return get( (char*)lpBuf, nMax );
@@ -191,92 +247,54 @@ public:
 	}
 #endif // !defined(WINX_BYTESWAP)
 
+//
+// ======== access text data ========
+//
 public:
-	HRESULT winx_call scan_uint(unsigned& val, unsigned radix = 10)
-	{
-		int_type ch = getnws();
-		unsigned dig = DigitTable::toDigit(ch);
-		if (dig < radix)
-		{
-			val = get_uint(radix, dig);
-			return S_OK;
-		}
-		else
-		{
-			unget(ch);
-			return STG_E_READFAULT;
-		}
-	}
-
-	unsigned winx_call get_uint(unsigned radix = 10, unsigned preval = 0)
-	{
-		unsigned dig;
-		int_type ch;
-		while ( (dig = DigitTable::toDigit(ch = get())) < radix )
-			preval = preval * radix + dig;
-		unget(ch);
-		return preval;
-	}
-
-	template <class _Cond>
-	int_type winx_call get_not_if(const _Cond& cond)
-	{
-		int_type ch;
-		while (	cond(ch = get()) );
-		return ch;
-	}
+	template <class ConditionT>
+	int_type winx_call get_first_not_of(ConditionT cond)
+		{return std::get_first_not_of(WINX_BASE, cond); }
 
 	int_type winx_call getnws()
-	{
-		int_type ch;
-		while (	::isspace(ch = get()) );
-		return ch;
-	}
+		{return std::get_nws(WINX_BASE); }
 
-	template <class _Cond>
-	size_type winx_call skip_if(const _Cond& cond)
-	{
-		WINX_ASSERT( !cond(endch) );
+	size_type winx_call skip_eol()
+		{return std::skip_eol(WINX_BASE); }
 
-		size_type count = 0;
-		int_type ch;
-		while ( cond(ch = get()) )
-			++count;
-		unget(ch);
-		return count;
-	}
+	template <class ConditionT>
+	size_type winx_call skip_while(ConditionT cond)
+		{return std::skip_while(WINX_BASE, cond); }
 
 	void winx_call skipws()
-	{
-		int_type ch;
-		while (	::isspace(ch = get()) );
-		unget(ch);
-	}
+		{std::skip_ws(WINX_BASE); }
 
-	void winx_call skip_eol()
+	unsigned winx_call get_uint(unsigned preval = 0, unsigned radix = 10)
+		{return std::get_uint(WINX_BASE, preval, radix); }
+
+	HRESULT winx_call scan_uint(unsigned& val, unsigned radix = 10)
+		{return std::scan_uint(WINX_BASE, val, radix); }
+
+	template <class StringT, class ConditionT>
+	size_type winx_call get_while(StringT& s, ConditionT cond)
+		{return std::get_while(WINX_BASE, s, cond); }
+
+	template <class AllocT, class ConditionT>
+	size_type winx_call get_while(
+		AllocT& alloc, BasicString<char_type>& s, ConditionT cond)
 	{
-		int_type ch = get();
-		if (ch == 0x0a)
-		{
-			ch = get();
-			if (ch != 0x0d)
-				unget(ch);
-		}
-		else if (ch == 0x0d)
-		{
-			ch = get();
-			if (ch != 0x0a)
-				unget(ch);
-		}
+		OutputBasicString<char_type, AllocT> s1(alloc, s);
+		return std::get_while(WINX_BASE, s1, cond);
 	}
 
 	template <class StringT>
-	void winx_call getline(StringT& str)
+	size_type winx_call getline(StringT& s)
+		{return std::get_line(WINX_BASE, s); }
+
+	template <class AllocT>
+	size_type winx_call getline(AllocT& alloc, BasicString<char_type>& s)
 	{
-		size_type count = skip_if(CharType::NotIsEOL());
-		str.resize(count);
-		reget(count, &str[0], count);
-		skip_eol();
+		OutputBasicString<char_type, AllocT> s1(alloc, s);
+		return std::get_line(WINX_BASE, s1);
 	}
 };
 

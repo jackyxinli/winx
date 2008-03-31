@@ -421,35 +421,94 @@ class TestStreamArchive : public TestCase
 public:
 	void testBasic(LogT& log)
 	{
+		typedef std::StreamReader ReaderT;
+		typedef std::StreamWriter WriterT;
+
+		const char stg[] = "/__teststream__.txt";
+
 		std::BlockPool recycle;
 		std::ScopeAlloc alloc(recycle);
 
+		WINX_USES_CONVERSION;
 		{
-			std::StreamWriter ar(alloc, L"/__test__.txt");
-			ar.put("hello world\n");
+			WriterT ar(alloc, WINX_A2W(stg));
+			ar.put("hello\n");
+			ar.put('!');
+			ar.put('\n');
 		}
 		{
 			char szBuf[100];
-			std::StreamReader ar(alloc, "/__test__.txt");
-			ar.seek(6);
+			ReaderT ar(alloc, stg);
 			size_t cch = ar.get(szBuf, countof(szBuf));
 			szBuf[cch] = '\0';
-			printf(szBuf);
+			AssertExp(strcmp(szBuf, "hello\n!\n") == 0);
 		}
 		{
-			std::StreamWriter ar(alloc);
-			ar.open("/__test__.txt");
+			ReaderT ar(alloc, stg);
+			std::string s1;
+			ar.getline(s1);
+			AssertExp(s1 == "hello");
+			std::vector<char> s2;
+			ar.getline(s2);
+			AssertExp(s2 == std::String(alloc, "!"));
+			std::String s3;
+			ar.getline(alloc, s3);
+			AssertExp(s3.empty());
+		}
+		// ------------------------------------
+		{
+			WriterT ar(alloc);
+			ar.open(stg);
 			ar.put("you're welcome!\n");
-			ar.seek(3);
-			ar.put(" are welcome!\n");
 		}
 		{
 			char szBuf[100];
-			std::StreamReader ar(alloc);
-			ar.open(L"/__test__.txt");
+			ReaderT ar(alloc);
+			ar.open(WINX_A2W(stg));
 			size_t cch = ar.get(szBuf, countof(szBuf));
 			szBuf[cch] = '\0';
-			printf(szBuf);
+			AssertExp(strcmp(szBuf, "you're welcome!\n") == 0);
+		}
+		// ------------------------------------
+		{
+			char szBuf[100];
+			WriterT ar(alloc, stg);
+			ar.put(_itoa(13242, szBuf, 10));
+			ar.put(' ');
+			ar.put(_itoa(1111, szBuf, 10));
+		}
+		{
+			ReaderT ar(alloc, stg);
+			unsigned val;
+			ar.scan_uint(val);
+			AssertExp(val == 13242);
+			ar.scan_uint(val, 2);
+			AssertExp(val == 15);
+		}
+		// ------------------------------------
+		{
+			WriterT ar(alloc, stg);
+			ar.puts("Hello!");
+			ar.puts(std::string("World"));
+			ar.puts(std::vector<char>(255, '!'));
+			ar.puts(std::vector<char>(65537, '?'));
+		}
+		{
+			ReaderT ar(alloc, stg);
+			std::string s1;
+			AssertExp(ar.gets(s1) == S_OK);
+			AssertExp(s1 == "Hello!");
+			std::vector<char> s2;
+			AssertExp(ar.gets(s2) == S_OK);
+			AssertExp(std::compare(s2.begin(), s2.end(), "World") == 0);
+			std::String s3;
+			AssertExp(ar.gets(alloc, s3) == S_OK);
+			AssertExp(s3 == std::String(alloc, 255, '!'));
+			std::String s4;
+			AssertExp(ar.gets(alloc, s4) == S_OK);
+			AssertExp(s4 == std::String(alloc, 65537, '?'));
+			std::String s5;
+			AssertExp(ar.gets(alloc, s5) != S_OK);
 		}
 	}
 };

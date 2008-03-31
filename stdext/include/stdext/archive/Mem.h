@@ -135,7 +135,6 @@ class TestMemArchive : public TestCase
 			ReaderT ar(alloc, &stg);
 			size_t cch = ar.get(szBuf, countof(szBuf));
 			szBuf[cch] = '\0';
-			log.print(szBuf);
 			AssertExp(strcmp(szBuf, "hello\n\n") == 0);
 		}
 		stg.erase(stg.begin(), stg.end());
@@ -149,7 +148,6 @@ class TestMemArchive : public TestCase
 			ReaderT ar(alloc, stg.begin(), stg.end());
 			size_t cch = ar.get(szBuf, countof(szBuf));
 			szBuf[cch] = '\0';
-			log.print(szBuf);
 			AssertExp(strcmp(szBuf, "you're welcome!\n") == 0);
 		}
 		stg.erase(stg.begin(), stg.end());
@@ -164,11 +162,34 @@ class TestMemArchive : public TestCase
 			ReaderT ar(alloc, &stg);
 			unsigned val;
 			ar.scan_uint(val);
-			log.print(val).newline();
 			AssertExp(val == 13242);
 			ar.scan_uint(val, 2);
-			log.print(val).newline();
 			AssertExp(val == 15);
+		}
+		stg.erase(stg.begin(), stg.end());
+		{
+			WriterT ar(alloc, &stg);
+			ar.puts("Hello");
+			ar.puts(std::string("World!"));
+			ar.puts(std::vector<char>(256, '!'));
+			ar.puts(std::vector<char>(65537, '?'));
+		}
+		{
+			ReaderT ar(alloc, &stg);
+			std::string s1;
+			AssertExp(ar.gets(s1) == S_OK);
+			AssertExp(s1 == "Hello");
+			std::vector<char> s2;
+			AssertExp(ar.gets(s2) == S_OK);
+			AssertExp(std::compare(s2.begin(), s2.end(), "World!") == 0);
+			std::String s3;
+			AssertExp(ar.gets(alloc, s3) == S_OK);
+			AssertExp(s3 == std::String(alloc, 256, '!'));
+			std::String s4;
+			AssertExp(ar.gets(alloc, s4) == S_OK);
+			AssertExp(s4 == std::String(alloc, 65537, '?'));
+			std::String s5;
+			AssertExp(ar.gets(alloc, s5) != S_OK);
 		}
 	}
 };

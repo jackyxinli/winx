@@ -208,52 +208,81 @@ class TestStdioArchive : public TestCase
 public:
 	void testBasic(LogT& log)
 	{
+		typedef std::StdioReader ReaderT;
+		typedef std::StdioWriter WriterT;
+
+		const char stg[] = "/__teststdio__.txt";
+
 		std::BlockPool recycle;
 		std::ScopeAlloc alloc(recycle);
 
+		WINX_USES_CONVERSION;
 		{
-			std::StdioWriter ar(alloc, L"/__test__.txt");
+			WriterT ar(alloc, WINX_A2W(stg));
 			ar.put("hello\n");
 			ar.put('\n');
 		}
 		{
 			char szBuf[100];
-			std::StdioReader ar(alloc, "/__test__.txt");
+			ReaderT ar(alloc, stg);
 			size_t cch = ar.get(szBuf, countof(szBuf));
 			szBuf[cch] = '\0';
-			log.print(szBuf);
 			AssertExp(strcmp(szBuf, "hello\n\n") == 0);
 		}
+		// ------------------------------------
 		{
-			std::StdioWriter ar(alloc);
-			ar.open("/__test__.txt");
+			WriterT ar(alloc);
+			ar.open(stg);
 			ar.put("you're welcome!\n");
 		}
 		{
 			char szBuf[100];
-			std::StdioReader ar(alloc);
-			ar.open(L"/__test__.txt");
+			ReaderT ar(alloc);
+			ar.open(WINX_A2W(stg));
 			size_t cch = ar.get(szBuf, countof(szBuf));
 			szBuf[cch] = '\0';
-			log.print(szBuf);
 			AssertExp(strcmp(szBuf, "you're welcome!\n") == 0);
 		}
+		// ------------------------------------
 		{
 			char szBuf[100];
-			std::StdioWriter ar(alloc, "/__test__.txt");
+			WriterT ar(alloc, stg);
 			ar.put(_itoa(13242, szBuf, 10));
 			ar.put(' ');
 			ar.put(_itoa(1111, szBuf, 10));
 		}
 		{
-			std::StdioReader ar(alloc, "/__test__.txt");
+			ReaderT ar(alloc, stg);
 			unsigned val;
 			ar.scan_uint(val);
-			log.print(val).newline();
 			AssertExp(val == 13242);
 			ar.scan_uint(val, 2);
-			log.print(val).newline();
 			AssertExp(val == 15);
+		}
+		// ------------------------------------
+		{
+			WriterT ar(alloc, stg);
+			ar.puts("Hello");
+			ar.puts(std::string("World"));
+			ar.puts(std::vector<char>(255, '!'));
+			ar.puts(std::vector<char>(65538, '?'));
+		}
+		{
+			ReaderT ar(alloc, stg);
+			std::string s1;
+			AssertExp(ar.gets(s1) == S_OK);
+			AssertExp(s1 == "Hello");
+			std::vector<char> s2;
+			AssertExp(ar.gets(s2) == S_OK);
+			AssertExp(std::compare(s2.begin(), s2.end(), "World") == 0);
+			std::String s3;
+			AssertExp(ar.gets(alloc, s3) == S_OK);
+			AssertExp(s3 == std::String(alloc, 255, '!'));
+			std::String s4;
+			AssertExp(ar.gets(alloc, s4) == S_OK);
+			AssertExp(s4 == std::String(alloc, 65538, '?'));
+			std::String s5;
+			AssertExp(ar.gets(alloc, s5) != S_OK);
 		}
 	}
 };

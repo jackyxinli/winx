@@ -46,9 +46,6 @@ public:																		\
 	using _Base::rend;														\
 	using _Base::size
 
-#define _WINX_TP_BASE														\
-	*static_cast<_Base*>(this)
-
 // -------------------------------------------------------------------------
 // class TextPool
 
@@ -56,7 +53,7 @@ template <class _E, class _AllocT = ScopeAlloc>
 class TextPool : public Deque<_E, _AllocT>
 {
 private:
-	typedef Deque<_E, _AllocT> _Base;
+	typedef Deque<_E, _AllocT> _Base, BaseClass;
 	typedef TempString<_E> _String;
 	typedef TextPool _Myt;
 	_WINX_TP_USING_DEQUE;
@@ -193,7 +190,7 @@ public:
 		iterator first, iterator last,
 		_RandIterator bfirst, _RandIterator blast)
 	{
-		std::replace(_WINX_TP_BASE, first, last, bfirst, blast);
+		std::replace(WINX_BASE, first, last, bfirst, blast);
 		return *this;
 	}
 #endif
@@ -201,20 +198,20 @@ public:
 	_Myt& winx_call replace(
 		iterator first, iterator last, size_type count, _E ch)
 	{
-		std::replace(_WINX_TP_BASE, first, last, count, ch);
+		std::replace(WINX_BASE, first, last, count, ch);
 		return *this;
 	}
 
 	_Myt& winx_call replace(
 		iterator first, iterator last, const _E* s, size_type cch)
 	{
-		std::replace(_WINX_TP_BASE, first, last, s, s + cch);
+		std::replace(WINX_BASE, first, last, s, s + cch);
 		return *this;
 	}
 
 	_Myt& winx_call replace(iterator first, iterator last, const _String s)
 	{
-		std::replace(_WINX_TP_BASE, first, last, s.begin(), s.end());
+		std::replace(WINX_BASE, first, last, s.begin(), s.end());
 		return *this;
 	}
 
