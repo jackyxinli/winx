@@ -74,8 +74,8 @@ public:
 		: _Base(_F, _L, _Al) {}
 
 public:
-	void winx_call copy(const Deque& _From) {
-		_Base::operator=(_From);
+	void winx_call copy(const _Base& from) {
+		_Base::operator=(from);
 	}
 };
 

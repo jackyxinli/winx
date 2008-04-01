@@ -144,6 +144,11 @@ public:
 		if (m_size)
 			--m_size;
 	}
+
+	void winx_call copy(const Array& from)
+	{
+		std::copy(from.begin(), from.end(), begin());
+	}
 };
 
 // -------------------------------------------------------------------------

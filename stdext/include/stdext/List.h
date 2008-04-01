@@ -64,6 +64,10 @@ public:
 		: _Base(aFirst, aLast, alloc)
 	{
 	}
+
+	void winx_call copy(const _Base& from) {
+		_Base::operator=(from);
+	}
 };
 
 // -------------------------------------------------------------------------
@@ -98,6 +102,10 @@ public:
 	Slist(AllocT& alloc, Iterator aFirst, Iterator aLast)
 		: _Base(aFirst, aLast, alloc)
 	{
+	}
+
+	void winx_call copy(const _Base& from) {
+		_Base::operator=(from);
 	}
 };
 

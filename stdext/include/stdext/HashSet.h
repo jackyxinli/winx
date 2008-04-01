@@ -96,6 +96,10 @@ public:
 	{
 	}
 #endif
+
+	void winx_call copy(const _Base& from) {
+		_Base::operator=(from);
+	}
 };
 
 // -------------------------------------------------------------------------

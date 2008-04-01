@@ -57,6 +57,10 @@ public:
 		: _Base(first, last, pred, alloc)
 	{
 	}
+
+	void winx_call copy(const _Base& from) {
+		_Base::operator=(from);
+	}
 };
 
 // -------------------------------------------------------------------------
@@ -86,6 +90,10 @@ public:
 	MultiSet(AllocT& alloc, Iterator first, Iterator last, const PredT& pred = PredT())
 		: _Base(first, last, pred, alloc)
 	{
+	}
+
+	void winx_call copy(const _Base& from) {
+		_Base::operator=(from);
 	}
 };
 

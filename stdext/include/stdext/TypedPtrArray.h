@@ -43,27 +43,28 @@ __NS_STD_BEGIN
 // class TypedPtrArray
 
 #define __STDEXT_PTRARRAY_USING												\
-private:																	\
-	typedef std::vector<void*> BaseClass;									\
-	typedef TypedPtrArray<_PtrType> _Myt;									\
-																			\
-	TypedPtrArray(const TypedPtrArray&);									\
-	void operator=(const TypedPtrArray&);									\
-																			\
 public:																		\
-	using BaseClass::size;													\
-	using BaseClass::resize;												\
-	using BaseClass::empty;													\
-	using BaseClass::reserve;												\
-	using BaseClass::pop_back;												\
-	using BaseClass::clear;
+	using _Base::size;														\
+	using _Base::resize;													\
+	using _Base::empty;														\
+	using _Base::reserve;													\
+	using _Base::pop_back;													\
+	using _Base::clear
 
 template <class _PtrType>
 class TypedPtrArray : private std::vector<void*>
 {
-	__STDEXT_PTRARRAY_USING
+private:
+	typedef std::vector<void*> _Base;
+	typedef TypedPtrArray<_PtrType> _Myt;
+	__STDEXT_PTRARRAY_USING;
+
+private:
+	TypedPtrArray(const TypedPtrArray&);
+	void operator=(const TypedPtrArray&);
+
 public:
-	typedef BaseClass::size_type size_type;
+	typedef _Base::size_type size_type;
 	typedef _PtrType value_type;
 	
 	typedef value_type* pointer;
@@ -75,31 +76,23 @@ public:
 	typedef pointer iterator;
 	typedef const_pointer const_iterator;
 
-#if (0)
-	size_t size();
-	bool empty();
-	void reserve(size_type n);
-	void pop_back();
-	void clear();
-#endif
-
 	TypedPtrArray() {}
 
 	VOID winx_call swap(_Myt& o)
 	{
-		BaseClass::swap((BaseClass&)o);
+		_Base::swap((_Base&)o);
 	}
 
 	void winx_call binary_insert(value_type val)
 	{
-		BaseClass::insert(
-			std::lower_bound(BaseClass::begin(), BaseClass::end(), (void*)val), val);
+		_Base::insert(
+			std::lower_bound(_Base::begin(), _Base::end(), (void*)val), val);
 	}
 	
 	const_iterator winx_call binary_find(value_type val) const
 	{
-		BaseClass::iterator itEnd = BaseClass::end();
-		BaseClass::iterator it = std::lower_bound(BaseClass::begin(), itEnd, (void*)val);
+		_Base::iterator itEnd = _Base::end();
+		_Base::iterator it = std::lower_bound(_Base::begin(), itEnd, (void*)val);
 		if (it != itEnd && (*it) == val)
 			return it;
 		else
@@ -108,11 +101,11 @@ public:
 
 	size_type winx_call erase_unique(value_type val, size_type iEraseFrom = 0)
 	{
-		for (size_type i = iEraseFrom; i < BaseClass::size(); ++i)
+		for (size_type i = iEraseFrom; i < _Base::size(); ++i)
 		{
-			if (BaseClass::at(i) == (void*)val)
+			if (_Base::at(i) == (void*)val)
 			{
-				BaseClass::erase(BaseClass::begin() + i);
+				_Base::erase(_Base::begin() + i);
 				return 1;
 			}
 		}
@@ -122,11 +115,11 @@ public:
 	template <class _Ty, class _Equal>
 	size_type winx_call erase_unique(_Ty val, _Equal eq, size_type iEraseFrom = 0)
 	{
-		for (size_type i = iEraseFrom; i < BaseClass::size(); ++i)
+		for (size_type i = iEraseFrom; i < _Base::size(); ++i)
 		{
-			if (eq((value_type)BaseClass::at(i), val))
+			if (eq((value_type)_Base::at(i), val))
 			{
-				BaseClass::erase(BaseClass::begin() + i);
+				_Base::erase(_Base::begin() + i);
 				return 1;
 			}
 		}
@@ -135,74 +128,78 @@ public:
 
 	bool winx_call pop_back(value_type* val)
 	{
-		if (BaseClass::empty())
+		if (_Base::empty())
 			return false;
 		else
 		{
-			*val = (value_type)BaseClass::back();
-			BaseClass::pop_back();
+			*val = (value_type)_Base::back();
+			_Base::pop_back();
 			return true;
 		}
 	}
 
 	void winx_call push_back(value_type val)
-		{ BaseClass::push_back(val); }
+		{ _Base::push_back(val); }
 	
 	const_reference winx_call at(size_type i) const
-		{ return (const_reference)BaseClass::at(i); }
+		{ return (const_reference)_Base::at(i); }
 
 	reference winx_call at(size_type i)
-		{ return (reference)BaseClass::at(i); }
+		{ return (reference)_Base::at(i); }
 
 	reference winx_call front()
-		{ return (reference)BaseClass::front(); }
+		{ return (reference)_Base::front(); }
 
 	const_reference winx_call front() const
-		{ return (const_reference)BaseClass::front(); }
+		{ return (const_reference)_Base::front(); }
 
 	reference winx_call back()
-		{ return (reference)BaseClass::back(); }
+		{ return (reference)_Base::back(); }
 
 	const_reference winx_call back() const
-		{ return (const_reference)BaseClass::back(); }
+		{ return (const_reference)_Base::back(); }
 
 	iterator winx_call begin()
-		{ return (iterator)_ConvIt(BaseClass::begin()); }
+		{ return (iterator)_ConvIt(_Base::begin()); }
 
 	iterator winx_call end()
-		{ return (iterator)_ConvIt(BaseClass::end()); }
+		{ return (iterator)_ConvIt(_Base::end()); }
 
 	const_iterator winx_call begin() const
-		{ return (const_iterator)_ConvIt(BaseClass::begin()); }
+		{ return (const_iterator)_ConvIt(_Base::begin()); }
 
 	const_iterator winx_call end() const
-		{ return (const_iterator)_ConvIt(BaseClass::end()); }
+		{ return (const_iterator)_ConvIt(_Base::end()); }
+
+	void winx_call copy(const _Myt& from) {
+		_Base::operator=(from);
+	}
 };
 
 // -------------------------------------------------------------------------
 // class InterfaceArray
 
 #define __STDEXT_INTERFACE_ARRAY_USING										\
-private:																	\
-	typedef std::vector<void*> BaseClass;									\
-	typedef Interface* _PtrType;											\
-	typedef InterfaceArray<Interface> _Myt;									\
-																			\
-	InterfaceArray(const InterfaceArray&);									\
-	void operator=(const InterfaceArray&);									\
-																			\
 public:																		\
-	using BaseClass::size;													\
-	using BaseClass::empty;													\
-	using BaseClass::reserve;
-
+	using _Base::size;														\
+	using _Base::empty;														\
+	using _Base::reserve
 
 template <class Interface>
 class InterfaceArray : private std::vector<void*>
 {
-	__STDEXT_INTERFACE_ARRAY_USING
+private:
+	typedef std::vector<void*> _Base;
+	typedef Interface* _PtrType;
+	typedef InterfaceArray<Interface> _Myt;
+	__STDEXT_INTERFACE_ARRAY_USING;
+
+private:
+	InterfaceArray(const InterfaceArray&);
+	void operator=(const InterfaceArray&);
+
 public:
-	typedef BaseClass::size_type size_type;
+	typedef _Base::size_type size_type;
 	typedef _PtrType value_type;
 	
 	typedef value_type* pointer;
@@ -214,32 +211,26 @@ public:
 	typedef pointer iterator;
 	typedef const_pointer const_iterator;
 
-#if (0)
-	size_t size();
-	bool empty();
-	void reserve(size_type n);
-#endif
-
 	InterfaceArray() {}
 	~InterfaceArray() { clear(); }
 
 	void winx_call swap(const _Myt& o)
 	{
-		BaseClass::swap((BaseClass&)o);
+		_Base::swap((_Base&)o);
 	}
 
 	void winx_call binary_insert(value_type val)
 	{
-		BaseClass::insert(
-			std::lower_bound(BaseClass::begin(), BaseClass::end(), (void*)val), val);
+		_Base::insert(
+			std::lower_bound(_Base::begin(), _Base::end(), (void*)val), val);
 		if (val)
 			val->AddRef();
 	}
 	
 	const_iterator winx_call binary_find(value_type val) const
 	{
-		BaseClass::const_iterator itEnd = BaseClass::end();
-		BaseClass::const_iterator it = std::lower_bound(BaseClass::begin(), itEnd, (void*)val);
+		_Base::const_iterator itEnd = _Base::end();
+		_Base::const_iterator it = std::lower_bound(_Base::begin(), itEnd, (void*)val);
 		if (it != itEnd && (*it) == val)
 			return it;
 		else
@@ -248,23 +239,23 @@ public:
 
 	bool winx_call exist(value_type val) const
 	{
-		BaseClass::const_iterator itEnd = BaseClass::end();
-		return std::find(BaseClass::begin(), itEnd, (void*)val) != itEnd;
+		_Base::const_iterator itEnd = _Base::end();
+		return std::find(_Base::begin(), itEnd, (void*)val) != itEnd;
 	}
 
 	const_iterator winx_call find(value_type val) const
 	{
-		return std::find(BaseClass::begin(), BaseClass::end(), (void*)val);
+		return std::find(_Base::begin(), _Base::end(), (void*)val);
 	}
 
 	size_type winx_call insert_unique(value_type val)
 	{
-		BaseClass::iterator itEnd = BaseClass::end();
-		BaseClass::iterator it = std::find(BaseClass::begin(), itEnd, (void*)val);
+		_Base::iterator itEnd = _Base::end();
+		_Base::iterator it = std::find(_Base::begin(), itEnd, (void*)val);
 		if (it != itEnd)
 			return 0;
 
-		BaseClass::push_back(val);
+		_Base::push_back(val);
 		if (val)
 			val->AddRef();
 		return 1;
@@ -272,12 +263,12 @@ public:
 
 	size_type winx_call erase_unique(value_type val)
 	{
-		BaseClass::iterator itEnd = BaseClass::end();
-		BaseClass::iterator it = std::find(BaseClass::begin(), itEnd, (void*)val);
+		_Base::iterator itEnd = _Base::end();
+		_Base::iterator it = std::find(_Base::begin(), itEnd, (void*)val);
 		if (it == itEnd)
 			return 0;
 
-		BaseClass::erase(it);
+		_Base::erase(it);
 		if (val)
 			val->Release();
 		return 1;
@@ -285,13 +276,13 @@ public:
 	
 	size_type winx_call erase_unique(value_type val, size_type iEraseFrom)
 	{
-		for (size_type i = iEraseFrom; i < BaseClass::size(); ++i)
+		for (size_type i = iEraseFrom; i < _Base::size(); ++i)
 		{
-			if (BaseClass::at(i) == (void*)val)
+			if (_Base::at(i) == (void*)val)
 			{
 				if (val)
 					val->Release();
-				BaseClass::erase(BaseClass::begin() + i);
+				_Base::erase(_Base::begin() + i);
 				return 1;
 			}
 		}
@@ -302,16 +293,16 @@ public:
 	size_type winx_call erase_unique(
 		_Ty val, _Equal eq, size_type iEraseFrom = 0, value_type* itemDetach = NULL)
 	{
-		for (size_type i = iEraseFrom; i < BaseClass::size(); ++i)
+		for (size_type i = iEraseFrom; i < _Base::size(); ++i)
 		{
-			value_type item = (value_type)BaseClass::at(i);
+			value_type item = (value_type)_Base::at(i);
 			if (eq(item, val))
 			{
 				if (itemDetach)
 					*itemDetach = item;
 				else if (item)
 					item->Release();
-				BaseClass::erase(BaseClass::begin() + i);
+				_Base::erase(_Base::begin() + i);
 				return 1;
 			}
 		}
@@ -320,69 +311,69 @@ public:
 
 	bool winx_call pop_back(value_type* val)
 	{
-		if (BaseClass::empty())
+		if (_Base::empty())
 			return false;
 		else
 		{
-			*val = (value_type)BaseClass::back();
-			BaseClass::pop_back();
+			*val = (value_type)_Base::back();
+			_Base::pop_back();
 			return true;
 		}
 	}
 	
 	void winx_call pop_back()
 	{
-		value_type val = (value_type)BaseClass::back();
-		BaseClass::pop_back();
+		value_type val = (value_type)_Base::back();
+		_Base::pop_back();
 		if (val)
 			val->Release();
 	}
 
 	void winx_call push_back(value_type val)
 	{
-		BaseClass::push_back(val);
+		_Base::push_back(val);
 		if (val)
 			val->AddRef();
 	}
 
 	void winx_call attach_push_back(value_type val)
 	{
-		BaseClass::push_back(val);
+		_Base::push_back(val);
 	}
 	
 	void winx_call attach_insert(size_type pos, value_type val)
 	{
-		BaseClass::insert(BaseClass::begin() + pos, val);
+		_Base::insert(_Base::begin() + pos, val);
 	}
 
 	void winx_call resize(size_type n)
 	{
-		for (size_type i = n; i < BaseClass::size(); ++i)
+		for (size_type i = n; i < _Base::size(); ++i)
 		{
-			value_type item = (value_type)BaseClass::at(i);
+			value_type item = (value_type)_Base::at(i);
 			if (item)
 				item->Release();
 		}
-		BaseClass::resize(n);
+		_Base::resize(n);
 	}
 
 	void winx_call clear()
 	{
-		for (BaseClass::iterator it = BaseClass::begin(); it != BaseClass::end(); ++it)
+		for (_Base::iterator it = _Base::begin(); it != _Base::end(); ++it)
 		{
 			value_type item = (value_type)*it;
 			if (item)
 				item->Release();
 		}
-		BaseClass::clear();
+		_Base::clear();
 	}
 
 	template <class _Ty>
 	long winx_call item(size_type i, _Ty* val)
 	{
-		if (i < BaseClass::size())
+		if (i < _Base::size())
 		{
-			*val = (value_type)BaseClass::at(i);
+			*val = (value_type)_Base::at(i);
 			if (*val)
 				(*val)->AddRef();
 			return 0;
@@ -391,45 +382,38 @@ public:
 	}
 
 	const_reference winx_call at(size_type i) const
-		{ return (const_reference)BaseClass::at(i); }
+		{ return (const_reference)_Base::at(i); }
 
 	reference winx_call at(size_type i)
-		{ return (reference)BaseClass::at(i); }
+		{ return (reference)_Base::at(i); }
 
 	reference winx_call front()
-		{ return (reference)BaseClass::front(); }
+		{ return (reference)_Base::front(); }
 
 	const_reference winx_call front() const
-		{ return (const_reference)BaseClass::front(); }
+		{ return (const_reference)_Base::front(); }
 
 	reference winx_call back()
-		{ return (reference)BaseClass::back(); }
+		{ return (reference)_Base::back(); }
 
 	const_reference winx_call back() const
-		{ return (const_reference)BaseClass::back(); }
+		{ return (const_reference)_Base::back(); }
 
 	iterator winx_call begin()
-		{ return (iterator)_ConvIt(BaseClass::begin()); }
+		{ return (iterator)_ConvIt(_Base::begin()); }
 
 	iterator winx_call end()
-		{ return (iterator)_ConvIt(BaseClass::end()); }
+		{ return (iterator)_ConvIt(_Base::end()); }
 
 	const_iterator winx_call begin() const
-		{ return (const_iterator)_ConvIt(BaseClass::begin()); }
+		{ return (const_iterator)_ConvIt(_Base::begin()); }
 
 	const_iterator winx_call end() const
-		{ return (const_iterator)_ConvIt(BaseClass::end()); }
+		{ return (const_iterator)_ConvIt(_Base::end()); }
 };
 
 // -------------------------------------------------------------------------
 // $Log: TypedPtrArray.h,v $
-// Revision 1.1  2006/10/18 12:13:39  xushiwei
-// stdext as independent component
-//
-// Revision 1.1  2006/09/03 04:30:02  xushiwei
-// STL-Extension:
-//   Container: TypedPtrArray, InterfaceArray
-//
 
 __NS_STD_END
 

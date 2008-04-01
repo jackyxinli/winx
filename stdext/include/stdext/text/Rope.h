@@ -67,6 +67,10 @@ public:
 		: _Base(first, last, alloc)
 	{
 	}
+
+	void winx_call copy(const _Base& from) {
+		_Base::operator=(from);
+	}
 };
 
 // -------------------------------------------------------------------------
@@ -91,6 +95,10 @@ public:
 
 		std::Rope<char> b(alloc, "aaaabcdefg");
 		AssertExp(a.compare(b) == 0);
+
+		std::Rope<char> c(alloc);
+		c.copy(b);
+		AssertExp(c == b);
 	}
 };
 
