@@ -58,11 +58,17 @@ private:
 	typedef BasicStringBuilder _Myt;
 	_WINX_BSB_USING_VECTOR;
 
+private:
+	BasicStringBuilder(const BasicStringBuilder&);
+	void operator=(const BasicStringBuilder&);
+	
 public:
 	typedef typename _Base::size_type size_type;
 	typedef typename _Base::difference_type difference_type;
 	typedef typename _Base::iterator iterator;
 	typedef typename _Base::const_iterator const_iterator;
+	typedef typename _Base::reverse_iterator reverse_iterator;
+	typedef typename _Base::const_reverse_iterator const_reverse_iterator;
 
 public:
 	BasicStringBuilder() {}
@@ -155,6 +161,11 @@ public:
 	{
 		_Base::assign(s.begin(), s.end());
 		return *this;
+	}
+	
+	void winx_call copy(const _Base& s)
+	{
+		_Base::operator=(s);
 	}
 
 public:
@@ -410,7 +421,7 @@ public:
 		a.assign(b);
 		AssertExp(a.cast_str() == "He");
 
-		a = a;
+		a.copy(a);
 		AssertExp(a.cast_str() == "He");
 
 		std::string t = "Hello, world!";
@@ -430,7 +441,8 @@ public:
 		a.append(' ').append(std::string("world"));
 		AssertExp(a == "Hello!!!! world");
 	
-		a.append(std::StringBuilder('!'));
+		std::StringBuilder temp('!');
+		a.append(temp);
 		AssertExp(a == "Hello!!!! world!");
 		
 		a.append(std::vector<char>(2, '!'));

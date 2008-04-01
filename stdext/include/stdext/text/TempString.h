@@ -19,8 +19,8 @@
 #ifndef __STDEXT_TEXT_TEMPSTRING_H__
 #define __STDEXT_TEXT_TEMPSTRING_H__
 
-#ifndef __STDEXT_BASIC_H__
-#include "../Basic.h"
+#ifndef __STDEXT_MEMORY_H__
+#include "../Memory.h"
 #endif
 
 #ifndef __STD_VECTOR_H__
@@ -179,10 +179,10 @@ public:
 
 __NS_STD_END
 
-STD_NO_DESTRUCTOR(TempString<char>);
-STD_NO_DESTRUCTOR(TempString<WCHAR>);
-STD_NO_DESTRUCTOR(TempString<int>);
-STD_NO_DESTRUCTOR(TempString<short>);
+STD_NO_DESTRUCTOR(std::TempString<char>);
+STD_NO_DESTRUCTOR(std::TempString<WCHAR>);
+STD_NO_DESTRUCTOR(std::TempString<int>);
+STD_NO_DESTRUCTOR(std::TempString<short>);
 
 // -------------------------------------------------------------------------
 // $Log: TempString.h,v $

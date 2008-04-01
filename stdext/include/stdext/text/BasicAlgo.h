@@ -353,12 +353,12 @@ void winx_call replace(
 	const difference_type delta = count - cchDelete;
 	if (delta > 0)
 	{
-		std::fill_n(first, cchDelete, ch);
-		container.insert(last, delta, ch);
+		std::fill_n(first, cchDelete, val);
+		container.insert(last, delta, val);
 	}
 	else
 	{
-		std::fill_n(first, count, ch);
+		std::fill_n(first, count, val);
 		if (delta)
 			container.erase(last + delta, last);
 	}

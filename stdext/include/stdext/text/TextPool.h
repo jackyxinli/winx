@@ -63,6 +63,8 @@ public:
 	typedef typename _Base::difference_type difference_type;
 	typedef typename _Base::iterator iterator;
 	typedef typename _Base::const_iterator const_iterator;
+	typedef typename _Base::reverse_iterator reverse_iterator;
+	typedef typename _Base::const_reverse_iterator const_reverse_iterator;
 
 public:
 	explicit TextPool(_AllocT& alloc)
@@ -179,6 +181,12 @@ public:
 	}
 
 	_Myt& winx_call operator+=(const _String s)
+	{
+		_Base::insert(end(), s.begin(), s.end());
+		return *this;
+	}
+
+	_Myt& winx_call operator+=(const _Base& s)
 	{
 		_Base::insert(end(), s.begin(), s.end());
 		return *this;
@@ -452,7 +460,8 @@ public:
 		a.append(' ').append(std::string("world"));
 		AssertExp(a == "Hello!!!! world");
 	
-		a.append(std::TextPool<char>(alloc, '!'));
+		std::TextPool<char> temp(alloc, '!');
+		a.append(temp);
 		AssertExp(a == "Hello!!!! world!");
 		
 		a.append(std::vector<char>(2, '!'));

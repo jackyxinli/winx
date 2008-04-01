@@ -23,10 +23,6 @@
 #include "TempString.h"
 #endif
 
-#ifndef __STDEXT_MEMORY_H__
-#include "../Memory.h"
-#endif
-
 __NS_STD_BEGIN
 
 // -------------------------------------------------------------------------
@@ -61,34 +57,34 @@ public:
 #define _WINX_FIND_OPS(It, findOp, findC, findS, Bgn, End, Const)			\
 																			\
 	It winx_call findOp(const _E ch, It from) Const							\
-		{return findC(from, End(), ch); }									\
+		{return findC(from, End, ch); }										\
 																			\
 	It winx_call findOp(const _E ch) Const									\
-		{return findC(Bgn(), End(), ch); }									\
+		{return findC(Bgn, End, ch); }										\
 																			\
 	It winx_call findOp(const _String pattern, It from) Const				\
-		{return findS(from, End(), pattern.begin(), pattern.end()); }		\
+		{return findS(from, End, pattern.begin(), pattern.end()); }			\
 																			\
 	It winx_call findOp(const _String pattern) Const						\
-		{return findS(Bgn(), End(), pattern.begin(), pattern.end()); }		\
+		{return findS(Bgn, End, pattern.begin(), pattern.end()); }			\
 																			\
 	It winx_call findOp(const _E* pattern, size_type len, It from) Const	\
-		{return findS(from, End(), pattern, pattern + len); }				\
+		{return findS(from, End, pattern, pattern + len); }					\
 																			\
 	It winx_call findOp(const _E* pattern, size_type len) Const				\
-		{return findS(Bgn(), End(), pattern, pattern + len); }
+		{return findS(Bgn, End, pattern, pattern + len); }
 
 #define _WINX_FIND_CONST(findOp, findC, findS)								\
-	_WINX_FIND_OPS(const_iterator, findOp, findC, findS, begin, end, const)
+	_WINX_FIND_OPS(const_iterator, findOp, findC, findS, begin(), end(), const)
 
 #define _WINX_FIND_NONCONST(findOp, findC, findS)							\
-	_WINX_FIND_OPS(iterator, findOp, findC, findS, begin, end, _WINX_NOTHING)
+	_WINX_FIND_OPS(iterator, findOp, findC, findS, begin(), end(), _WINX_NOTHING)
 
 #define _WINX_RFIND_CONST(findOp, findC, findS)								\
-	_WINX_FIND_OPS(const_reverse_iterator, findOp, findC, findS, rbegin, rend, const)
+	_WINX_FIND_OPS(const_reverse_iterator, findOp, findC, findS, rbegin(), rend(), const)
 
 #define _WINX_RFIND_NONCONST(findOp, findC, findS)							\
-	_WINX_FIND_OPS(reverse_iterator, findOp, findC, findS, rbegin, rend, _WINX_NOTHING)
+	_WINX_FIND_OPS(reverse_iterator, findOp, findC, findS, rbegin(), rend(), _WINX_NOTHING)
 
 #define _WINX_NOTHING	/* nothing */
 
@@ -99,6 +95,13 @@ public:
 #define _WINX_RFIND_ALL(findOp, findC, findS)								\
 	_WINX_RFIND_CONST(findOp, findC, findS)									\
 	_WINX_RFIND_NONCONST(findOp, findC, findS)	
+
+#define _WINX_BASICSTRING_USING												\
+public:																		\
+	using _Base::begin;														\
+	using _Base::end;														\
+	using _Base::rbegin;													\
+	using _Base::rend
 
 // -------------------------------------------------------------------------
 // class BasicString
@@ -115,6 +118,11 @@ private:
 	typedef TempString<_E> _Base;
 	typedef TempString<_E> _String;
 	typedef BasicString _Myt;
+	_WINX_BASICSTRING_USING;
+	
+protected:
+	using _Base::m_pszBuf;
+	using _Base::m_length;
 
 public:
 	typedef typename _Base::size_type size_type;
@@ -122,7 +130,9 @@ public:
 	typedef typename _Base::value_type value_type;
 
 	typedef typename _Base::iterator iterator;
+	typedef typename _Base::const_iterator const_iterator;
 	typedef typename _Base::reverse_iterator reverse_iterator;
+	typedef typename _Base::const_reverse_iterator const_reverse_iterator;
 
 private:
 	template <class AllocT>
