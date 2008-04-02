@@ -23,6 +23,10 @@
 #include "stdext/Platform.h"
 #endif
 
+#if !defined(_STDLIB_H) && !defined(_INC_STDLIB)
+#include <stdlib.h>
+#endif
+
 // -------------------------------------------------------------------------
 
 #pragma warning(disable:4786)
@@ -69,7 +73,7 @@ __forceinline _It _ConvIt(_It it)
 
 template <class _Container>
 __forceinline 
-typename _Container::value_type* resize(_Container& container, unsigned int newSize)
+typename _Container::value_type* resize(_Container& container, size_t newSize)
 	{container.resize(newSize);
 	 return _ConvIt(container.begin()); }
 
