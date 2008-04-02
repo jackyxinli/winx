@@ -31,11 +31,17 @@ __NS_STD_BEGIN
 template <class Handle, class StreamHandle, class CacheT = ArchiveCache>
 class ReadArchive
 {
+private:
+	typedef typename CacheT::allocator_type AllocatorT;
+
 public:
 	enum { endch = StreamHandle::endch };
+	enum { cacheSize = CacheT::cacheSize };
+	enum { roundSize = CacheT::roundSize };
 
 	typedef size_t size_type;
 	typedef ptrdiff_t difference_type;
+	typedef typename CacheT::allocator_type allocator_type;
 
    	typedef typename StreamHandle::int_type	int_type;
 	typedef typename StreamHandle::char_type char_type;
@@ -51,60 +57,60 @@ protected:
 	char_type*	m_lpBufMax;
 
 	StreamHandle m_handle;
-	CacheT m_alloc;
+	AllocatorT& m_alloc;
 
 private:
 	ReadArchive(const ReadArchive&);
 	void operator=(const ReadArchive&);
 	
 public:
-	template <class AllocT>
-	explicit ReadArchive(AllocT& alloc)
+	explicit ReadArchive(AllocatorT& alloc)
 		: m_alloc(alloc)
 	{
-		m_lpBufStart = (char_type*)m_alloc.item_alloc();
-		m_nBufSize	 = m_alloc.alloc_size() / sizeof(char_type);
+		m_lpBufStart = STD_NEW_ARRAY(alloc, char_type, cacheSize);
+		m_nBufSize	 = cacheSize;
 		m_lpBufCur	 = m_lpBufMax = m_lpBufStart;
 		// 读状态：m_lpBufMax - m_lpBufCur 为已经读入预读的数据！
 	}
 
-	template <class AllocT>
-	ReadArchive(AllocT& alloc, Handle hFile)
+	ReadArchive(AllocatorT& alloc, Handle hFile, pos_type pos = 0)
 		: m_alloc(alloc)
 	{
-		m_lpBufStart = (char_type*)m_alloc.item_alloc();
-		m_nBufSize	 = m_alloc.alloc_size() / sizeof(char_type);
+		m_lpBufStart = STD_NEW_ARRAY(alloc, char_type, cacheSize);
+		m_nBufSize	 = cacheSize;
 		m_lpBufCur	 = m_lpBufMax = m_lpBufStart;
-		m_handle.open_handle(hFile);
+		m_handle.open_handle(hFile, pos);
 	}
 
-	template <class AllocT>
-	ReadArchive(AllocT& alloc, LPCWSTR szFile)
+	ReadArchive(AllocatorT& alloc, LPCWSTR szFile)
 		: m_alloc(alloc)
 	{
-		m_lpBufStart = (char_type*)m_alloc.item_alloc();
-		m_nBufSize	 = m_alloc.alloc_size() / sizeof(char_type);
+		m_lpBufStart = STD_NEW_ARRAY(alloc, char_type, cacheSize);
+		m_nBufSize	 = cacheSize;
 		m_lpBufCur	 = m_lpBufMax = m_lpBufStart;
 		m_handle.open_to_read(szFile);
 	}
 
-	template <class AllocT>
-	ReadArchive(AllocT& alloc, LPCSTR szFile)
+	ReadArchive(AllocatorT& alloc, LPCSTR szFile)
 		: m_alloc(alloc)
 	{
-		m_lpBufStart = (char_type*)m_alloc.item_alloc();
-		m_nBufSize	 = m_alloc.alloc_size() / sizeof(char_type);
+		m_lpBufStart = STD_NEW_ARRAY(alloc, char_type, cacheSize);
+		m_nBufSize	 = cacheSize;
 		m_lpBufCur	 = m_lpBufMax = m_lpBufStart;
 		m_handle.open_to_read(szFile);
 	}
 
-	template <class AllocT>
-	ReadArchive(AllocT& alloc, const ReadArchive& rhs)
+	ReadArchive(AllocatorT& alloc, const ReadArchive& rhs)
 		: m_alloc(alloc), m_handle(rhs.m_handle, /* fClone=*/ true)
 	{
-		m_lpBufStart = (char_type*)m_alloc.item_alloc();
-		m_nBufSize	 = m_alloc.alloc_size() / sizeof(char_type);
+		m_lpBufStart = STD_NEW_ARRAY(alloc, char_type, cacheSize);
+		m_nBufSize	 = cacheSize;
 		m_lpBufCur	 = m_lpBufMax = m_lpBufStart;
+	}
+
+	~ReadArchive()
+	{
+		m_alloc.destroyArray(m_lpBufStart, m_nBufSize);
 	}
 
 public:
@@ -161,6 +167,44 @@ public:
 			m_lpBufCur = m_lpBufMax = m_lpBufStart;
 		}
 		return nMax;
+	}
+
+	const char_type* winx_call get(size_type nMax)
+	{
+		if (m_lpBufCur + nMax <= m_lpBufMax)
+		{
+			const char_type* p = m_lpBufCur;
+			m_lpBufCur += nMax;
+			return p;
+		}
+		else
+		{
+			const size_type cbRest = m_lpBufMax - m_lpBufCur;
+			if (nMax > m_cbBufSize)
+			{
+				const size_type cbBufSize = ROUND(nMax, roundSize);
+				char_type* lpNewBuf = STD_NEW_ARRAY(m_alloc, char_type, cbBufSize);
+				copyMemory(lpNewBuf, m_lpBufCur, cbRest);
+				m_alloc.destroyArray(m_lpBufStart, m_cbBufSize);
+				m_lpBufStart = lpNewBuf;
+				m_cbBufSize = cbBufSize;
+			}
+			else
+			{
+				copyMemory(m_lpBufStart, m_lpBufCur, cbRest);
+			}
+
+			const size_type cbRead = m_handle.get(m_lpBufStart + cbRest, m_cbBufSize - cbRest);
+			if (cbRead + cbRest < nMax)
+			{
+				m_lpBufCur = m_lpBufMax;
+				return NULL; // 失败！
+			}
+
+			m_lpBufMax = m_lpBufStart + (cbRead + cbRest);
+			m_lpBufCur = m_lpBufStart + nMax;
+			return m_lpBufStart;
+		}
 	}
 
 	size_type winx_call get(char_type* lpBuf, size_type nMax)
@@ -294,10 +338,10 @@ public:
 		return m_handle.open_to_read(szFile);
 	}
 
-	void winx_call open_handle(Handle hFile)
+	void winx_call open_handle(Handle hFile, pos_type pos = 0)
 	{
 		if (!m_handle.good())
-			m_handle.open_handle(hFile);
+			m_handle.open_handle(hFile, pos);
 	}
 
 	void winx_call close()

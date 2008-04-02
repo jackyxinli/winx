@@ -149,6 +149,18 @@ public:
 	void winx_call open_handle(IStream* pStrm)
 	{
 		WINX_ASSERT(m_pStrm == NULL);
+		WINX_ASSERT(tell() == 0);
+
+		m_pStrm = pStrm;
+		if(pStrm)
+			pStrm->AddRef();
+	}
+
+	void winx_call open_handle(IStream* pStrm, const pos_type& pos)
+	{
+		WINX_ASSERT(m_pStrm == NULL);
+		WINX_ASSERT(tell() == pos);
+
 		m_pStrm = pStrm;
 		if(pStrm)
 			pStrm->AddRef();
@@ -221,7 +233,7 @@ public:
 			_WINX_STREAM_THROW_IO_ERROR(hr);
 		}
 	}
-	
+
 	pos_type winx_call tell() const
 	{
 		ULARGE_INTEGER dlibPos;

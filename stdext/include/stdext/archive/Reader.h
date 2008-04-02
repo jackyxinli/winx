@@ -274,6 +274,28 @@ public:
 	HRESULT winx_call scan_uint(unsigned& val, unsigned radix = 10)
 		{return std::scan_uint(WINX_BASE, val, radix); }
 
+	template <class StringT>
+	size_type winx_call get_csymbol(StringT& s)
+		{return std::get_csymbol(WINX_BASE, s); }
+
+	template <class AllocT>
+	size_type winx_call get_csymbol(AllocT& alloc, BasicString<char_type>& s)
+	{
+		OutputBasicString<char_type, AllocT> s1(alloc, s);
+		return std::get_csymbol(WINX_BASE, s1);
+	}
+
+	template <class StringT>
+	HRESULT winx_call scan_csymbol(StringT& s)
+		{return std::scan_csymbol(WINX_BASE, s); }
+
+	template <class AllocT>
+	HRESULT winx_call scan_csymbol(AllocT& alloc, BasicString<char_type>& s)
+	{
+		OutputBasicString<char_type, AllocT> s1(alloc, s);
+		return std::scan_csymbol(WINX_BASE, s1);
+	}
+
 	template <class StringT, class ConditionT>
 	size_type winx_call get_while(StringT& s, ConditionT cond)
 		{return std::get_while(WINX_BASE, s, cond); }
@@ -295,7 +317,7 @@ public:
 	{
 		OutputBasicString<char_type, AllocT> s1(alloc, s);
 		return std::get_line(WINX_BASE, s1);
-	}
+	}	
 };
 
 // -------------------------------------------------------------------------

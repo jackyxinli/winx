@@ -313,7 +313,7 @@ __forceinline int winx_call compare(const wchar_t* src, const wchar_t* dst)
 // replace
 
 template <class _Container, class _RandIterator>
-void winx_call replace(
+inline void winx_call replace(
 	_Container& container,
 	typename _Container::iterator first,
 	typename _Container::iterator last,
@@ -339,7 +339,7 @@ void winx_call replace(
 }
 
 template <class _Container>
-void winx_call replace(
+inline void winx_call replace(
 	_Container& container,
 	typename _Container::iterator first,
 	typename _Container::iterator last,

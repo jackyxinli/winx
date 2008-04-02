@@ -34,6 +34,12 @@
 __NS_STD_BEGIN
 
 // -------------------------------------------------------------------------
+// class MemReader
+
+typedef MemReadArchive<const char*> PointerReadArchive;
+typedef Reader<PointerReadArchive> MemReader;
+
+// -------------------------------------------------------------------------
 // class VectorReader/VectorWriter
 
 typedef std::vector<char> CharVector;

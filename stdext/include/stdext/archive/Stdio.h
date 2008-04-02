@@ -243,6 +243,17 @@ public:
 			szBuf[cch] = '\0';
 			AssertExp(strcmp(szBuf, "you're welcome!\n") == 0);
 		}
+		{
+			ReaderT ar(alloc, stg);
+			std::String sym;
+			AssertExp(ar.get_csymbol(alloc, sym) == sym.size());
+			AssertExp(sym == "you");
+			AssertExp(ar.get() == '\'');
+			AssertExp(ar.get_csymbol(alloc, sym) == sym.size());
+			AssertExp(sym == "re");
+			AssertExp(ar.scan_csymbol(alloc, sym) == S_OK);
+			AssertExp(sym == "welcome");
+		}
 		// ------------------------------------
 		{
 			char szBuf[100];

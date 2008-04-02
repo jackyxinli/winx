@@ -19,41 +19,22 @@
 #ifndef __STDEXT_ARCHIVE_RECORD_H__
 #define __STDEXT_ARCHIVE_RECORD_H__
 
-#ifndef __STDEXT_ARCHIVE_DIRECTBUFFER_H__
-#include "DirectBuffer.h"
-#endif
-
 __NS_STD_BEGIN
 
 #pragma pack(1)
-
-// -------------------------------------------------------------------------
-// DirectReadBuffer Algorithms
-
-template <class DirectReadBufferT, class HeaderT>
-inline typename DirectReadBufferT::const_pointer
-	winx_call next_record(DirectReadBufferT& ar, HeaderT& hdr)
-{
-	const HeaderT* hdr0 = (const HeaderT*)ar.read(sizeof(HeaderT));
-	if (hdr0 == NULL)
-		return NULL;
-
-	hdr = *hdr0;
-	_WinxByteSwapStruct(hdr);
-
-	return ar.read(hdr.cbData);
-}
 
 // =========================================================================
 // class MemRecordArchive
 
 struct RecordHeaderType
 {
+	enum { recIdEOF = 0 };
+
 	UINT32 recId;
 	UINT32 cbData;
 };
 
-template <class BaseWriter, class HeaderT = RecordHeaderType, int recIdEOF = 0>
+template <class BaseWriter, class HeaderT = RecordHeaderType>
 class RecordWriter : public BaseWriter
 {
 private:
@@ -62,6 +43,8 @@ private:
 public:
 	typedef HeaderT header_type;
 	typedef typename _Base::pos_type pos_type;
+
+	enum { recIdEOF = HeaderT::recIdEOF };
 
 private:
 	UINT m_recId;
@@ -107,58 +90,88 @@ public:
 };
 
 // =========================================================================
-// class RecordReader
+// class RecordInfo
 
-template <class DirectReadBufferT, class HeaderT = RecordHeaderType>
-class RecordReader : private DirectReadBufferT
+template <class HeaderT>
+struct RecordInfo : public HeaderT
 {
-private:
-	typedef DirectReadBufferT _Base, BaseClass;
+	const char* rgData;
 
 public:
-	typedef HeaderT header_type;
-
-	typedef typename DirectReadBufferT::char_type char_type;
-	typedef typename DirectReadBufferT::const_pointer const_pointer;
+	using HeaderT::cbData;
 
 public:
-	RecordReader()
-	{
+	typedef char value_type;
+	typedef size_t size_type;
+	typedef ptrdiff_t difference_type;
+
+	typedef const char* pointer;
+	typedef const char* const_pointer;
+	typedef const char* iterator;
+	typedef const char* const_iterator;
+
+	const_iterator winx_call begin() const {
+		return rgData;
 	}
 
-	template <class InitArgT1, class InitArgT2>
-	RecordReader(InitArgT1 arg1, InitArgT2 arg2)
-		: _Base(arg1, arg2)
-	{
+	const_iterator winx_call end() const {
+		return rgData + cbData;
 	}
 
-public:
-	const_pointer winx_call next(OUT HeaderT& hdr)
-	{
-		return std::next_record(WINX_BASE, hdr);
+	size_type winx_call size() const {
+		return cbSize;
 	}
 };
 
-// =========================================================================
-// class TestRecord
+// -------------------------------------------------------------------------
+// class RecordReader
 
-template <class LogT>
-class TestRecord : public TestCase
+template <class ReadArchiveT, class HeaderT = RecordHeaderType>
+class RecordReader : private ReadArchiveT
 {
-	WINX_TEST_SUITE(TestRecord);
-		WINX_TEST(testBasic);
-	WINX_TEST_SUITE_END();
+private:
+	typedef ReadArchiveT _Base, BaseClass;
 
 public:
-	void testBasic(LogT& log)
-	{
-		typedef std::RecordWriter<std::VectorWriter> RecordWriterT;
+	typedef HeaderT header_type;
+	typedef RecordInfo<HeaderT> record_info;
+	typedef typename ReadArchiveT::char_type char_type;
 
-		std::CharVector stg;
+	enum { recIdEOF = HeaderT::recIdEOF };
+
+public:
+	template <class AllocT>
+	explicit RecordReader(AllocT& alloc)
+		: _Base(alloc) {}
+
+	template <class AllocT, class InitArgT>
+	RecordReader(AllocT& alloc, InitArgT file)
+		: _Base(alloc, file) {}
+
+	template <class AllocT, class InitArgT1, class InitArgT2>
+	RecordReader(AllocT& alloc, InitArgT1 arg1, InitArgT2 arg2)
+		: _Base(alloc, arg1, arg2) {}
+
+public:
+	const char_type* winx_call next_record(header_type& hdr)
+	{
+		const HeaderT* hdr0 = (const HeaderT*)_Base::get(sizeof(HeaderT));
+		if (hdr0 == NULL)
 		{
-			RecordWriterT ar(&stg);
-			//@@todo
+			hdr.recId = recIdEOF;
+			hdr.cbData = 0;
+			return NULL;
 		}
+
+		hdr = *hdr0;
+		_WinxByteSwapStruct(hdr);
+		return _Base::get(hdr.cbData);
+	}
+
+	const char_type* winx_call next(record_info& info)
+	{
+		info.rgData = next_record(info);
+		return info.rgData;
 	}
 };
 

@@ -75,7 +75,7 @@ public:
 
 	pos_type winx_call tell() const
 	{
-		m_pos - m_stg->begin();
+		return m_pos - m_stg->begin();
 	}
 
 	void winx_call seek(pos_type offset)
@@ -253,6 +253,20 @@ public:
 		else {
 			m_pos += nMax;
 			return nMax;
+		}
+	}
+
+	const char_type* winx_call get(size_type nMax)
+	{
+		const size_type nRest = m_last - m_pos;
+		if (nRest < nMax) {
+			m_pos = m_last;
+			return NULL;
+		}
+		else {
+			const char_type* rgData = _ConvIt(m_pos);
+			m_pos += nMax;
+			return rgData;
 		}
 	}
 

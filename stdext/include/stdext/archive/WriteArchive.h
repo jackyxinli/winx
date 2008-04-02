@@ -32,12 +32,20 @@ template <class Handle, class StreamHandle, class CacheT = ArchiveCache>
 class WriteArchive
 {
 private:
+	typedef typename CacheT::allocator_type AllocatorT;
+
+private:
 	WriteArchive(const WriteArchive&);
 	void operator=(const WriteArchive&);
 
 public:
+	enum { cacheSize = CacheT::cacheSize };
+	enum { roundSize = CacheT::roundSize };
+
+public:
 	typedef size_t size_type;
 	typedef ptrdiff_t difference_type;
+	typedef typename CacheT::allocator_type allocator_type;
 
 	typedef typename StreamHandle::int_type	int_type;
 	typedef typename StreamHandle::char_type char_type;
@@ -52,48 +60,44 @@ protected:
 	char_type*	m_lpBufMax;
 
 	StreamHandle m_handle;
-	CacheT m_alloc;
+	AllocatorT& m_alloc;
 	
 public:
-	template <class AllocT>
-	explicit WriteArchive(AllocT& alloc)
+	explicit WriteArchive(AllocatorT& alloc)
 		: m_alloc(alloc)
 	{
-		m_lpBufStart = (char_type*)m_alloc.item_alloc();
-		m_nBufSize	 = m_alloc.alloc_size() / sizeof(char_type);
+		m_lpBufStart = STD_NEW_ARRAY(alloc, char_type, cacheSize);
+		m_nBufSize	 = cacheSize;
 		m_lpBufCur	 = m_lpBufStart;
 		m_lpBufMax	 = m_lpBufStart + m_nBufSize;
 		// m_lpBufCur - m_lpBufStart为已经写入数据的缓存！
 	}
 
-	template <class AllocT>
-	WriteArchive(AllocT& alloc, Handle hFile)
+	WriteArchive(AllocatorT& alloc, Handle hFile)
 		: m_alloc(alloc)
 	{
-		m_lpBufStart = (char_type*)m_alloc.item_alloc();
-		m_nBufSize	 = m_alloc.alloc_size() / sizeof(char_type);
+		m_lpBufStart = STD_NEW_ARRAY(alloc, char_type, cacheSize);
+		m_nBufSize	 = cacheSize;
 		m_lpBufCur	 = m_lpBufStart;
 		m_lpBufMax	 = m_lpBufStart + m_nBufSize;
 		m_handle.open_handle(hFile);
 	}
 
-	template <class AllocT>
-	WriteArchive(AllocT& alloc, LPCWSTR szFile)
+	WriteArchive(AllocatorT& alloc, LPCWSTR szFile)
 		: m_alloc(alloc)
 	{
-		m_lpBufStart = (char_type*)m_alloc.item_alloc();
-		m_nBufSize	 = m_alloc.alloc_size() / sizeof(char_type);
+		m_lpBufStart = STD_NEW_ARRAY(alloc, char_type, cacheSize);
+		m_nBufSize	 = cacheSize;
 		m_lpBufCur	 = m_lpBufStart;
 		m_lpBufMax	 = m_lpBufStart + m_nBufSize;
 		m_handle.open_to_write(szFile);
 	}
 
-	template <class AllocT>
-	WriteArchive(AllocT& alloc, LPCSTR szFile)
+	WriteArchive(AllocatorT& alloc, LPCSTR szFile)
 		: m_alloc(alloc)
 	{
-		m_lpBufStart = (char_type*)m_alloc.item_alloc();
-		m_nBufSize	 = m_alloc.alloc_size() / sizeof(char_type);
+		m_lpBufStart = STD_NEW_ARRAY(alloc, char_type, cacheSize);
+		m_nBufSize	 = cacheSize;
 		m_lpBufCur	 = m_lpBufStart;
 		m_lpBufMax	 = m_lpBufStart + m_nBufSize;
 		m_handle.open_to_write(szFile);
@@ -105,7 +109,7 @@ public:
 		{
 			m_handle.put(m_lpBufStart, (size_type)(m_lpBufCur - m_lpBufStart));
 		}
-		m_alloc.item_free(m_lpBufStart);
+		m_alloc.destroyArray(m_lpBufStart, m_nBufSize);
 	}
 
 	void winx_call clear_cache() throw(IoException)

@@ -32,6 +32,14 @@
 #include "../memory/ScopeAlloc.h"
 #endif
 
+#ifndef ARCHIVE_CACHE_SIZE
+#define ARCHIVE_CACHE_SIZE	4096
+#endif
+
+#ifndef ARCHIVE_ROUND_SIZE
+#define ARCHIVE_ROUND_SIZE	4096
+#endif
+
 __NS_STD_BEGIN
 
 // -------------------------------------------------------------------------
@@ -91,39 +99,13 @@ public:
 // -------------------------------------------------------------------------
 // class ArchiveCache
 
-#ifndef ARCHIVE_CACHE_SIZE
-#define ARCHIVE_CACHE_SIZE	4096
-#endif
-
 class ArchiveCache
 {
 public:
-	typedef size_t size_type;
-
-private:
-	ScopeAlloc& m_alloc;
-	const size_type m_item_size;
-
-public:
-	ArchiveCache(ScopeAlloc& alloc, size_type cb = ARCHIVE_CACHE_SIZE)
-		: m_alloc(alloc), m_item_size(cb)
-	{
-	}
-
-	void* winx_call item_alloc()
-	{
-		return m_alloc.allocate(m_item_size);
-	}
-
-	void winx_call item_free(void* p)
-	{
-		m_alloc.deallocate(p, m_item_size);	
-	}
-
-	size_type winx_call alloc_size() const
-	{
-		return m_item_size;
-	}
+	typedef ScopeAlloc allocator_type;
+	
+	enum { cacheSize = ARCHIVE_CACHE_SIZE };
+	enum { roundSize = ARCHIVE_ROUND_SIZE };
 };
 
 // -------------------------------------------------------------------------
@@ -276,6 +258,16 @@ inline size_t winx_call skip_eol(ReadArchiveT& ar)
 	}
 }
 
+template <class ReadArchiveT>
+inline void winx_call skip_ws(ReadArchiveT& ar)
+{
+	typedef typename ReadArchiveT::int_type int_type;
+
+	int_type ch;
+	while (	::isspace(ch = ar.get()) );
+	ar.unget(ch);
+}
+
 template <class ReadArchiveT, class ConditionT>
 inline size_t winx_call skip_while(ReadArchiveT& ar, ConditionT cond)
 {
@@ -293,13 +285,18 @@ inline size_t winx_call skip_while(ReadArchiveT& ar, ConditionT cond)
 }
 
 template <class ReadArchiveT>
-inline void winx_call skip_ws(ReadArchiveT& ar)
+inline size_t winx_call skip_csymbol(ReadArchiveT& ar)
 {
 	typedef typename ReadArchiveT::int_type int_type;
 
-	int_type ch;
-	while (	::isspace(ch = ar.get()) );
-	ar.unget(ch);
+	int_type ch = ar.get();
+	if ( CharType::isCSymbolFirstChar(ch) ) {
+		return skip_while(ar, CharType::IsCSymbolNextChar()) + 1;
+	}
+	else {
+		ar.unget(ch);
+		return 0;
+	}
 }
 
 //
@@ -307,9 +304,10 @@ inline void winx_call skip_ws(ReadArchiveT& ar)
 //
 
 template <class ReadArchiveT, class StringT, class ConditionT>
-inline size_t winx_call get_while(ReadArchiveT& ar, StringT& s, ConditionT cond)
+inline size_t winx_call get_while(
+	ReadArchiveT& ar, StringT& s, ConditionT cond, size_t count = 0)
 {
-	size_t count = skip_while(ar, cond);
+	count += skip_while(ar, cond);
 	ar.reget(count, std::resize(s, count), count);
 	return count;
 }
@@ -318,6 +316,14 @@ template <class ReadArchiveT, class StringT>
 inline size_t winx_call get_line(ReadArchiveT& ar, StringT& s)
 {
 	return get_while(ar, s, CharType::NotIsEOL()) + skip_eol(ar);
+}
+
+template <class ReadArchiveT, class StringT>
+inline size_t winx_call get_csymbol(ReadArchiveT& ar, StringT& s)
+{
+	size_t count = skip_csymbol(ar);
+	ar.reget(count, std::resize(s, count), count);
+	return count;
 }
 
 template <class ReadArchiveT, class UIntType>
@@ -350,6 +356,13 @@ inline HRESULT winx_call scan_uint(ReadArchiveT& ar, UIntType& val, unsigned rad
 		ar.unget(ch);
 		return E_UNEXPECTED;
 	}
+}
+
+template <class ReadArchiveT, class StringT>
+inline HRESULT winx_call scan_csymbol(ReadArchiveT& ar, StringT& s)
+{
+	skip_ws(ar);
+	return get_csymbol(ar, s) ? S_OK : E_UNEXPECTED;
 }
 
 // -------------------------------------------------------------------------

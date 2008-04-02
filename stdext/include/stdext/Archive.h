@@ -66,6 +66,69 @@
 #endif
 
 // -------------------------------------------------------------------------
+// class TestRecord
+
+__NS_STD_BEGIN
+
+template <class LogT>
+class TestRecord : public TestCase
+{
+	WINX_TEST_SUITE(TestRecord);
+		WINX_TEST(testBasic);
+	WINX_TEST_SUITE_END();
+
+public:
+	void testBasic(LogT& log)
+	{
+		typedef std::RecordWriter<std::VectorWriter> RecordWriterT;
+		typedef std::RecordReader<std::VectorReadArchive> RecordReaderT;
+
+		std::BlockPool recycle;
+		std::ScopeAlloc alloc(recycle);
+	
+		std::CharVector stg;
+		{
+			RecordWriterT ar(alloc, &stg);
+			
+			ar.beginRecord(23);
+			ar.puts("Hello, world!");
+			ar.put("You're welcome!\n");
+			ar.endRecord();
+
+			ar.beginRecord(99);
+			ar.put16i(32);
+			ar.put("123");
+			ar.endRecord();
+		}
+		{
+			RecordReaderT reader(alloc, &stg);
+			RecordReaderT::record_info info;
+
+			AssertExp(reader.next(info));
+			AssertExp(info.recId == 23);
+			std::MemReader ar1(alloc, &info);
+			std::String s;
+			AssertExp(ar1.gets(alloc, s) == S_OK);
+			AssertExp(s == "Hello, world!");
+			ar1.getline(alloc, s);
+			AssertExp(s == "You're welcome!");
+			AssertExp(ar1.get() == std::MemReader::endch);
+
+			AssertExp(reader.next(info));
+			AssertExp(info.recId == 99);
+			std::MemReader ar2(alloc, &info);
+			UINT16 w;
+			AssertExp(ar2.get16i(w) == S_OK);
+			AssertExp(w == 32);
+			AssertExp(ar2.get_uint() == 123);
+			AssertExp(ar2.get() == std::MemReader::endch);
+		}
+	}
+};
+
+__NS_STD_END
+
+// -------------------------------------------------------------------------
 // $Log: Archive.h,v $
 
 #endif /* __STDEXT_ARCHIVE_H__ */
