@@ -42,8 +42,8 @@ public:
 
 	typedef typename BaseStg::value_type char_type;
 	typedef typename ArchiveCharTraits<char_type>::int_type int_type;
-	typedef typename size_type pos_type;
-	typedef typename difference_type off_type;
+	typedef size_type pos_type;
+	typedef difference_type off_type;
 	
 protected:
 	typedef typename BaseStg::iterator InnerPosT;

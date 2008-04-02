@@ -54,11 +54,27 @@ template <class _It>
 __forceinline typename _It::pointer _ConvIt(_It it)
 	{return it._Myptr; }
 	
+template <class _Ty>
+__forceinline _Ty* _ConvIt(_Ty* it)
+	{return it;}
+
+template <class _Ty>
+__forceinline const _Ty* _ConvIt(const _Ty* it)
+	{return it;}
+
 #elif defined(X_STL_GCC) || defined(X_STL_SGI) // sgi-stl
 
 template <class _It>
 __forceinline typename _It::pointer _ConvIt(_It it)
 	{return &*it; }
+
+template <class _Ty>
+__forceinline _Ty* _ConvIt(_Ty* it)
+	{return it;}
+
+template <class _Ty>
+__forceinline const _Ty* _ConvIt(const _Ty* it)
+	{return it;}
 
 #else
 

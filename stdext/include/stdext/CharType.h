@@ -440,26 +440,6 @@ public:
 
 // -------------------------------------------------------------------------
 // $Log: CharType.h,v $
-// Revision 1.4  2006/12/03 07:51:57  xushiwei
-// IsEOL/NotIsEOL
-//
-// Revision 1.2  2006/12/01 05:32:54  xushiwei
-// STL-Extension: class DigitTable
-//
-// Revision 1.1  2006/10/18 12:13:39  xushiwei
-// stdext as independent component
-//
-// Revision 1.2  2006/09/26 07:51:00  xushiwei
-// STL-Extension:
-//  TestCase(WINX_TEST_APP, WINX_TEST_CLASS, WINX_TEST_SUITE, WINX_TEST, WINX_TEST_SUITE_END)
-//  UnitTestAssert(AssertExp, AssertEq, AssertEqBuf)
-//
-// Revision 1.1  2006/08/19 04:40:48  xushiwei
-// STL-Extension:
-//   Memory(AutoFreeAlloc, RecycleBuffer, AutoArray, etc)
-//   String Algorithm(trim, match, compare, etc), Container(SimpleMultiMap), CharType(isCSymbolFirstChar, etc)
-//   Log(OutputLog, ErrorLog, FileLog, StringLog), PerformanceCounter, Diagnost(WINX_ASSERT, WINX_RUN_TEST, etc)
-//
 
 __NS_STD_END
 

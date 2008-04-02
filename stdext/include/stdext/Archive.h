@@ -21,6 +21,10 @@
 
 // -------------------------------------------------------------------------
 
+#ifndef __STDEXT_BASIC_H__
+#include "Basic.h"
+#endif
+
 #ifndef __STDEXT_ARCHIVE_BASIC_H__
 #include "archive/Basic.h"
 #endif
@@ -45,24 +49,28 @@
 #include "archive/Stdio.h"
 #endif
 
-#ifndef __STDEXT_ARCHIVE_STREAM_H__
-#include "archive/Stream.h"
-#endif
-
 #ifndef __STDEXT_ARCHIVE_MEMARCHIVE_H__
 #include "archive/MemArchive.h"
+#endif
+
+#ifndef __STDEXT_ARCHIVE_RECORD_H__
+#include "archive/Record.h"
 #endif
 
 #ifndef __STDEXT_ARCHIVE_MEM_H__
 #include "archive/Mem.h"
 #endif
 
+#if defined(X_OS_WINDOWS)
+
+#ifndef __STDEXT_ARCHIVE_STREAM_H__
+#include "archive/Stream.h"
+#endif
+
 #ifndef __STDEXT_ARCHIVE_WINREG_H__
 #include "archive/WinReg.h"
 #endif
 
-#ifndef __STDEXT_ARCHIVE_RECORD_H__
-#include "archive/Record.h"
 #endif
 
 // -------------------------------------------------------------------------

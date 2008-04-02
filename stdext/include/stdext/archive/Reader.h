@@ -99,7 +99,7 @@ public:
 		else {
 			return E_UNEXPECTED;
 		}
-		UINT cbRead = get(std::resize(s, cch), cch);
+		size_type cbRead = _Base::get(std::resize(s, cch), cch);
 		if (cbRead != cch)
 			return STG_E_READFAULT;
 		if ( !(cch & 1) )
@@ -112,12 +112,12 @@ public:
 	
 	size_type winx_call read(void* lpBuf, size_type nMax)
 	{
-		return get( (char*)lpBuf, nMax );
+		return _Base::get( (char*)lpBuf, nMax );
 	}
 
 	HRESULT winx_call get16i(UINT16& val)
 	{
-		UINT cbRead = get( (char*)&val, sizeof(val) );
+		UINT cbRead =  _Base::get( (char*)&val, sizeof(val) );
 		if (cbRead != sizeof(val))
 			return STG_E_READFAULT;
 
@@ -127,7 +127,7 @@ public:
 	
 	HRESULT winx_call get16i(INT16& val)
 	{
-		UINT cbRead = get( (char*)&val, sizeof(val) );
+		UINT cbRead =  _Base::get( (char*)&val, sizeof(val) );
 		if (cbRead != sizeof(val))
 			return STG_E_READFAULT;
 		
@@ -137,7 +137,7 @@ public:
 
 	HRESULT winx_call get32i(UINT32& val)
 	{
-		UINT cbRead = get( (char*)&val, sizeof(val) );
+		UINT cbRead =  _Base::get( (char*)&val, sizeof(val) );
 		if (cbRead != sizeof(val))
 			return STG_E_READFAULT;
 		
@@ -147,7 +147,7 @@ public:
 
 	HRESULT winx_call get32i(INT32& val)
 	{
-		UINT cbRead = get( (char*)&val, sizeof(val) );
+		UINT cbRead =  _Base::get( (char*)&val, sizeof(val) );
 		if (cbRead != sizeof(val))
 			return STG_E_READFAULT;
 		
@@ -158,7 +158,7 @@ public:
 	template <class StrucType>
 	HRESULT winx_call get_struct(StrucType& val)
 	{
-		UINT cbRead = get( (char*)&val, sizeof(val) );
+		UINT cbRead =  _Base::get( (char*)&val, sizeof(val) );
 		if (cbRead != sizeof(val))
 			return STG_E_READFAULT;
 		
@@ -207,7 +207,7 @@ public:
 	HRESULT winx_call get16i(IN UINT16 warray[], IN UINT count)
 	{
 		UINT cbToRead = sizeof(UINT16) * count;
-		UINT cbRead = get( (char*)warray, cbToRead );
+		UINT cbRead =  _Base::get( (char*)warray, cbToRead );
 		if (cbRead != cbToRead)
 			return STG_E_READFAULT;
 		return S_OK;
@@ -215,7 +215,7 @@ public:
 	HRESULT winx_call get16i(IN INT16 warray[], IN UINT count)
 	{
 		UINT cbToRead = sizeof(INT16) * count;
-		UINT cbRead = get( (char*)warray, cbToRead );
+		UINT cbRead =  _Base::get( (char*)warray, cbToRead );
 		if (cbRead != cbToRead)
 			return STG_E_READFAULT;
 		return S_OK;
@@ -223,7 +223,7 @@ public:
 	HRESULT get32i(IN UINT32 dwarray[], IN UINT count)
 	{
 		UINT cbToRead = sizeof(UINT32) * count;
-		UINT cbRead = get( (char*)dwarray, cbToRead );
+		UINT cbRead =  _Base::get( (char*)dwarray, cbToRead );
 		if (cbRead != cbToRead)
 			return STG_E_READFAULT;
 		return S_OK;
@@ -231,7 +231,7 @@ public:
 	HRESULT get32i(IN INT32 dwarray[], IN UINT count)
 	{
 		UINT cbToRead = sizeof(INT32) * count;
-		UINT cbRead = get( (char*)dwarray, cbToRead );
+		UINT cbRead =  _Base::get( (char*)dwarray, cbToRead );
 		if (cbRead != cbToRead)
 			return STG_E_READFAULT;
 		return S_OK;
@@ -240,7 +240,7 @@ public:
 	HRESULT get_struct(StrucType* array, UINT count)
 	{
 		UINT cbToRead = sizeof(StrucType) * count;
-		UINT cbRead = get( (char*)array, cbToRead );
+		UINT cbRead =  _Base::get( (char*)array, cbToRead );
 		if (cbRead != cbToRead)
 			return STG_E_READFAULT;
 		return S_OK;

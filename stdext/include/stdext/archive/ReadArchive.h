@@ -180,21 +180,21 @@ public:
 		else
 		{
 			const size_type cbRest = m_lpBufMax - m_lpBufCur;
-			if (nMax > m_cbBufSize)
+			if (nMax > m_nBufSize)
 			{
 				const size_type cbBufSize = ROUND(nMax, roundSize);
 				char_type* lpNewBuf = STD_NEW_ARRAY(m_alloc, char_type, cbBufSize);
 				copyMemory(lpNewBuf, m_lpBufCur, cbRest);
-				m_alloc.destroyArray(m_lpBufStart, m_cbBufSize);
+				m_alloc.destroyArray(m_lpBufStart, m_nBufSize);
 				m_lpBufStart = lpNewBuf;
-				m_cbBufSize = cbBufSize;
+				m_nBufSize = cbBufSize;
 			}
 			else
 			{
 				copyMemory(m_lpBufStart, m_lpBufCur, cbRest);
 			}
 
-			const size_type cbRead = m_handle.get(m_lpBufStart + cbRest, m_cbBufSize - cbRest);
+			const size_type cbRead = m_handle.get(m_lpBufStart + cbRest, m_nBufSize - cbRest);
 			if (cbRead + cbRest < nMax)
 			{
 				m_lpBufCur = m_lpBufMax;

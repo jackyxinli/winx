@@ -90,6 +90,10 @@ SOURCE=.\TestBasic.cpp
 # End Source File
 # Begin Source File
 
+SOURCE=.\TestArchive.cpp
+# End Source File
+# Begin Source File
+
 SOURCE=.\TestCase.cpp
 # End Source File
 # Begin Source File

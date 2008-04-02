@@ -98,9 +98,6 @@ struct RecordInfo : public HeaderT
 	const char* rgData;
 
 public:
-	using HeaderT::cbData;
-
-public:
 	typedef char value_type;
 	typedef size_t size_type;
 	typedef ptrdiff_t difference_type;
@@ -115,11 +112,11 @@ public:
 	}
 
 	const_iterator winx_call end() const {
-		return rgData + cbData;
+		return rgData + HeaderT::cbData;
 	}
 
 	size_type winx_call size() const {
-		return cbSize;
+		return HeaderT::cbData;
 	}
 };
 
