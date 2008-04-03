@@ -185,6 +185,10 @@ SOURCE=..\..\include\stdext\text\BasicStringBuilder.h
 # End Source File
 # Begin Source File
 
+SOURCE=..\..\include\stdext\text\Rope.h
+# End Source File
+# Begin Source File
+
 SOURCE=..\..\include\stdext\text\StringAlgo.h
 # End Source File
 # Begin Source File
@@ -217,6 +221,10 @@ SOURCE=..\..\include\stdext\archive\MemArchive.h
 # End Source File
 # Begin Source File
 
+SOURCE=..\..\include\stdext\archive\Posix.h
+# End Source File
+# Begin Source File
+
 SOURCE=..\..\include\stdext\archive\ReadArchive.h
 # End Source File
 # Begin Source File
@@ -225,11 +233,23 @@ SOURCE=..\..\include\stdext\archive\Reader.h
 # End Source File
 # Begin Source File
 
+SOURCE=..\..\include\stdext\archive\Record.h
+# End Source File
+# Begin Source File
+
 SOURCE=..\..\include\stdext\archive\Stdio.h
 # End Source File
 # Begin Source File
 
 SOURCE=..\..\include\stdext\archive\Stream.h
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\include\stdext\archive\WinReg.h
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\include\stdext\registry\WinRegistry.h
 # End Source File
 # Begin Source File
 

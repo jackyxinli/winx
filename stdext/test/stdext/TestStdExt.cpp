@@ -81,12 +81,13 @@ void testSgiHashMap();
 
 void testStdExt()
 {
-	WINX_TEST_APP(std::ErrorLog, "TestMemArchive", "");
+	WINX_TEST_APP(std::ErrorLog, "TestPosixArchive", "");
 //	testSgiHashMap();
 
 	WINX_TEST_CLASS(TestFinder);
 #if !defined(STD_NO_WINSDK)
 	WINX_TEST_CLASS(std::TestWinRegKey);
+	WINX_TEST_CLASS(std::TestWinReg);
 #endif
 	WINX_TEST_CLASS(std::TestErrorGuard);
 	WINX_TEST_CLASS(std::TestScopeLog);
@@ -95,7 +96,9 @@ void testStdExt()
 	WINX_TEST_CLASS(std::TestFileMapping);
 	WINX_TEST_CLASS(std::TestStreamArchive);
 	WINX_TEST_CLASS(std::TestStdioArchive);
+	WINX_TEST_CLASS(std::TestPosixArchive);
 	WINX_TEST_CLASS(std::TestMemArchive);
+	WINX_TEST_CLASS(std::TestRecord);
 	WINX_TEST_CLASS(std::TestLog);
 	WINX_TEST_CLASS(std::TestFileBuf);
 

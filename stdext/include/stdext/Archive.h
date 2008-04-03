@@ -49,6 +49,10 @@
 #include "archive/Stdio.h"
 #endif
 
+#ifndef __STDEXT_ARCHIVE_POSIX_H__
+#include "archive/Posix.h"
+#endif
+
 #ifndef __STDEXT_ARCHIVE_MEMARCHIVE_H__
 #include "archive/MemArchive.h"
 #endif
@@ -130,6 +134,8 @@ public:
 			AssertExp(w == 32);
 			AssertExp(ar2.get_uint() == 123);
 			AssertExp(ar2.get() == std::MemReader::endch);
+
+			AssertExp(!reader.next(info));
 		}
 	}
 };
