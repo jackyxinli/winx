@@ -35,14 +35,8 @@
 #include "ReadArchive.h"
 #endif
 
-#if !defined(STD_NO_MSVCRT)
-	#ifndef _INC_IO
-	#include <io.h>
-	#endif
-#else
-	#ifndef __STDEXT_MSVCRT_H__
-	#include "../msvcrt.h"
-	#endif
+#ifndef __STDEXT_ARCHIVE_POSIX_CONFIG_H__
+#include "posix/Config.h"
 #endif
 
 __NS_STD_BEGIN

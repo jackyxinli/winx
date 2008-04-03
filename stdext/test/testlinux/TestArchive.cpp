@@ -26,6 +26,7 @@ using namespace std;
 WINX_AUTORUN_CLASS(TestRecord, std::ErrorLog);
 WINX_AUTORUN_CLASS(TestMemArchive, std::ErrorLog);
 WINX_AUTORUN_CLASS(TestStdioArchive, std::ErrorLog);
+WINX_AUTORUN_CLASS(TestPosixArchive, std::ErrorLog);
 
 // -------------------------------------------------------------------------
 // $Log: TestArchive.cpp,v $

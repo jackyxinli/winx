@@ -56,22 +56,6 @@
 // Visual C++ Special
 
 //
-// io.h
-//
-#if defined(STD_NO_MSVCRT)
-#ifndef _SYS_STAT_H
-#include <sys/stat.h>
-#endif
-inline long _filelength(int fd)
-{
-    struct stat s;
-    if (fstat(fd, &s) < 0)
-        return 0;
-    return s.st_size;
-}
-#endif // defined(STD_NO_MSVCRT)
-
-//
 // stdlib.h
 //
 

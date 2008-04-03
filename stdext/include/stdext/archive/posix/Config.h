@@ -35,7 +35,16 @@
 #include <fcntl.h>
 #endif
 
+#ifndef _INC_STAT
+#include <sys/stat.h>
+#endif
+
 typedef long __off_t;
+
+inline int fsync(int fd)
+{
+	return _commit(fd);
+}
 
 #elif defined(X_OS_LINUX)
 // -------------------------------------------------------------------------
@@ -53,7 +62,28 @@ typedef long __off_t;
 #include <unistd.h>
 #endif
 
-// -------------------------------------------------------------------------
+#ifndef O_BINARY
+#define O_BINARY	0
+#endif
+
+inline __off_t _filelength(int fd)
+{
+    struct stat s;
+    if (fstat(fd, &s) < 0)
+        return 0;
+    return s.st_size;
+}
+
+inline __off_t tell(int fd)
+{
+	return lseek(fd, 0, SEEK_CUR);
+}
+
+inline int _commit(int fd)
+{
+	return fsync(fd);
+}
+// -------------------------------------------------------------------------
 // $Log: Config.h,v $
 
 #endif
