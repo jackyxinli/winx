@@ -59,7 +59,6 @@ int APIENTRY WinMain(HINSTANCE hInstance,
                      LPSTR     lpCmdLine,
                      int       nCmdShow)
 {
-	winx::MsgBoxTrace("%d\n", _MSC_VER);
 	CComAppInit com;
 	CHelloDlg dlg;
 	dlg.DoModal();
