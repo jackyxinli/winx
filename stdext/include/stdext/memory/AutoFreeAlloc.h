@@ -158,13 +158,6 @@ public:
 		return m_end -= cb;
 	}
 
-	void* winx_call reserve(size_t cb)
-	{
-		void* p = allocate(cb);
-		m_end += cb;
-		return p;
-	}
-
 	void* winx_call allocate(size_t cb, DestructorType fn)
 	{
 		_DestroyNode* pNode = (_DestroyNode*)allocate(sizeof(_DestroyNode) + cb);
