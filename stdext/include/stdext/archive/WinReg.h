@@ -23,51 +23,45 @@
 #include "../registry/WinRegistry.h"
 #endif
 
+#ifndef __STDEXT_TCHAR_H__
+#include "../tchar.h"
+#endif
+
 __NS_STD_BEGIN
 
 // -------------------------------------------------------------------------
-// RegWriteString
-// --> 千万注意 (对于ATL低版本而言): 
-//	由于使用了A2W/W2A，RegReadString/RegWriteString这两个函数不能inline
+// class WinRegHelper
 
 #define _WINX_REG_STRING_PREFIX	'N'
 
-template <class RegKeyType, class StringT>
-HRESULT winx_call RegWriteString(
-	RegKeyType& regKey, UINT index, const StringT& str)
+template <class CharT>
+class WinRegHelper
 {
-	TCHAR szName[16];
-	szName[0] = _WINX_REG_STRING_PREFIX;
+public:
+	template <class RegKeyType, class StringT>
+	static HRESULT winx_call putString(
+		RegKeyType& regKey, UINT index, const StringT& str)
+	{
+		CharT szName[16];
+		szName[0] = _WINX_REG_STRING_PREFIX;
+		std::tchar::itoa(index, szName+1, 10);
 
-#if defined(UNICODE) || defined(_UNICODE)
-	_itow(index, szName+1, 10);
-#else
-	_itoa(index, szName+1, 10);
-#endif
+		LONG lRes = regKey.putString(szName, str);
+		return HRESULT_FROM_WIN32(lRes);
+	}
 
-	LONG lRes = regKey.putString(szName, str);
-	return HRESULT_FROM_WIN32(lRes);
-}
+	template <class RegKeyType, class StringT>
+	static HRESULT winx_call getString(
+		RegKeyType& regKey, UINT index, StringT& str)
+	{
+		CharT szName[16];
+		szName[0] = _WINX_REG_STRING_PREFIX;
+		std::tchar::itoa(index, szName+1, 10);
 
-// -------------------------------------------------------------------------
-// RegReadString
-
-template <class RegKeyType, class StringT>
-HRESULT winx_call RegReadString(
-	RegKeyType& regKey, UINT index, StringT& str)
-{
-	TCHAR szName[16];
-	szName[0] = _WINX_REG_STRING_PREFIX;
-
-#if defined(UNICODE) || defined(_UNICODE)
-	_itow(index, szName+1, 10);
-#else
-	_itoa(index, szName+1, 10);
-#endif
-
-	LONG lRes = regKey.getString(szName, str);
-	return HRESULT_FROM_WIN32(lRes);
-}
+		LONG lRes = regKey.getString(szName, str);
+		return HRESULT_FROM_WIN32(lRes);
+	}
+};
 
 // -------------------------------------------------------------------------
 // class WinRegWriter
@@ -120,10 +114,14 @@ public:
 			lpszClass, dwOptions, samDesired, lpSecAttr, lpdwDisposition));
 	}
 
-	template <class StringT>
-	HRESULT winx_call puts(const StringT& str)
+	HRESULT winx_call puts(const TempString<char> str)
 	{
-		return RegWriteString(m_regKey, ++m_nCount, str);
+		return WinRegHelper<char>::putString(m_regKey, ++m_nCount, str);
+	}
+
+	HRESULT winx_call wputs(const TempString<WCHAR> str)
+	{
+		return WinRegHelper<WCHAR>::putString(m_regKey, ++m_nCount, str);
 	}
 
 	int winx_call good() const
@@ -171,19 +169,26 @@ public:
 		return HRESULT_FROM_WIN32(m_regKey.open(hKeyParent, lpszKeyName));
 	}
 
-	template <class AllocT>
-	HRESULT winx_call gets(AllocT& alloc, BasicString<TCHAR>& s)
+	template <class AllocT, class CharT>
+	HRESULT winx_call gets(AllocT& alloc, BasicString<CharT>& s)
 	{
-		OutputBasicString<TCHAR, AllocT> s1(alloc, s);
-		return gets(s1);
+		OutputBasicString<CharT, AllocT> s1(alloc, s);
+		return WinRegHelper<CharT>::getString(m_regKey, ++m_nCount, s1);
 	}
 
 	template <class StringT>
 	HRESULT winx_call gets(StringT& str)
 	{
-		return RegReadString(m_regKey, ++m_nCount, str);
+		typedef typename StringT::value_type CharT;
+		return WinRegHelper<CharT>::getString(m_regKey, ++m_nCount, str);
 	}
-	
+
+	template <class StringT>
+	HRESULT winx_call wgets(StringT& str)
+	{
+		return gets(str);
+	}
+
 	int winx_call good() const {
 		return m_regKey != NULL;
 	}
@@ -208,7 +213,7 @@ public:
 		std::ScopeAlloc alloc(recycle);
 		{
 			std::WinRegWriter ar(HKEY_CURRENT_USER, _WINX_TEST_WINREG_KEY);
-			ar.puts("Hello");
+			ar.wputs(L"Hello");
 			ar.puts(std::string("World!"));
 			ar.puts(std::vector<char>(256, '!'));
 			ar.puts(std::vector<char>(65537, '?'));
@@ -218,9 +223,9 @@ public:
 			std::string s1;
 			AssertExp(ar.gets(s1) == S_OK);
 			AssertExp(s1 == "Hello");
-			std::vector<char> s2;
-			AssertExp(ar.gets(s2) == S_OK);
-			AssertExp(std::compare(s2.begin(), s2.end(), "World!") == 0);
+			std::vector<WCHAR> s2;
+			AssertExp(ar.wgets(s2) == S_OK);
+			AssertExp(std::compare(s2.begin(), s2.end(), L"World!") == 0);
 			std::String s3;
 			AssertExp(ar.gets(alloc, s3) == S_OK);
 			AssertExp(s3 == std::String(alloc, 256, '!'));

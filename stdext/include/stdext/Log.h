@@ -873,31 +873,6 @@ public:
 
 // =========================================================================
 // $Log: Log.h,v $
-// Revision 1.7  2007/01/10 09:32:25  xushiwei
-// move UnitTest Assert(AssertExp, AssertFail, etc) from Log.h to TestCase.h
-//
-// Revision 1.6  2006/12/24 10:16:34  xushiwei
-// STL-Extension: MultiStorage(select)
-//
-// Revision 1.3  2006/12/20 08:58:51  xushiwei
-// STL-Extension: Container(Array), Log(MultiStorage, MultiLog)
-//
-// Revision 1.6  2006/09/26 08:34:56  xushiwei
-// STL-Extension:
-//  TestCase(WINX_TEST_APP, WINX_TEST_CLASS, WINX_TEST_SUITE, WINX_TEST, WINX_TEST_SUITE_END)
-//  UnitTestAssert(AssertExp, AssertEq, AssertEqBuf, AssertMsg, AssertFail)
-//
-// Revision 1.3  2006/09/02 01:45:55  xushiwei
-// STL-Extension:
-//   Log: print RECT, SIZE
-//   Memory: HeapMemAlloc - DefaultDynamicAlloc
-//
-// Revision 1.2  2006/08/19 04:40:48  xushiwei
-// STL-Extension:
-//   Memory(AutoFreeAlloc, RecycleBuffer, AutoArray, etc)
-//   String Algorithm(trim, match, compare, etc), Container(SimpleMultiMap), CharType(isCSymbolFirstChar, etc)
-//   Log(OutputLog, ErrorLog, FileLog, StringLog), PerformanceCounter, Diagnost(WINX_ASSERT, WINX_RUN_TEST, etc)
-//
 
 __NS_STD_END
 

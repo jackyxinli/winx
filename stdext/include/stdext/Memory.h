@@ -29,10 +29,6 @@
 #include "memory/AutoFreeAlloc.h"
 #endif
 
-#ifndef __STDEXT_MEMORY_AUTOARRAY_H__
-#include "memory/AutoArray.h"
-#endif
-
 #ifndef __STDEXT_MEMORY_RECYCLEBUFFER_H__
 #include "memory/RecycleBuffer.h"
 #endif
@@ -319,14 +315,5 @@ __NS_STD_END
 
 // -------------------------------------------------------------------------
 // $Log: Memory.h,v $
-// Revision 1.1  2006/10/18 12:13:39  xushiwei
-// stdext as independent component
-//
-// Revision 1.2  2006/08/19 04:40:48  xushiwei
-// STL-Extension:
-//   Memory(AutoFreeAlloc, RecycleBuffer, AutoArray, etc)
-//   String Algorithm(trim, match, compare, etc), Container(SimpleMultiMap), CharType(isCSymbolFirstChar, etc)
-//   Log(OutputLog, ErrorLog, FileLog, StringLog), PerformanceCounter, Diagnost(WINX_ASSERT, WINX_RUN_TEST, etc)
-//
 
 #endif /* __STDEXT_MEMORY_H__ */

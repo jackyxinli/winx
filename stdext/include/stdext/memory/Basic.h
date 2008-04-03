@@ -451,19 +451,5 @@ __NS_STD_END
 
 // =========================================================================
 // $Log: Basic.h,v $
-// Revision 1.2  2006/12/02 06:44:45  xushiwei
-// bugfix
-//
-// Revision 1.3  2006/09/02 01:45:57  xushiwei
-// STL-Extension:
-//   Log: print RECT, SIZE
-//   Memory: HeapMemAlloc - DefaultDynamicAlloc
-//
-// Revision 1.2  2006/08/19 04:40:48  xushiwei
-// STL-Extension:
-//   Memory(AutoFreeAlloc, RecycleBuffer, AutoArray, etc)
-//   String Algorithm(trim, match, compare, etc), Container(SimpleMultiMap), CharType(isCSymbolFirstChar, etc)
-//   Log(OutputLog, ErrorLog, FileLog, StringLog), PerformanceCounter, Diagnost(WINX_ASSERT, WINX_RUN_TEST, etc)
-//
 
 #endif /* __STDEXT_MEMORY_BASIC_H__ */

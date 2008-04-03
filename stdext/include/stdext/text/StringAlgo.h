@@ -30,6 +30,74 @@
 __NS_STD_BEGIN
 
 // -------------------------------------------------------------------------
+// codepage_t
+
+enum codepage_t
+{
+	cp_auto		= 0,
+	cp_utf7		= 65000,
+	cp_utf8		= 65001,
+	cp_shiftjis	= 932,
+	cp_gbk		= 936,
+	cp_big5		= 950,
+};
+
+// -------------------------------------------------------------------------
+// iconv
+
+template <class StringT>
+inline void winx_call iconv(
+	codepage_t from, const char* str, size_t count, StringT& dest)
+{
+	int cch2 = MultiByteToWideChar(from, 0, str, cch, NULL, 0);
+	WCHAR* str2 = std::resize(dest, cch2);
+	MultiByteToWideChar(from, 0, str, cch, str2, cch2);
+}
+
+template <class StringT>
+inline void winx_call iconv(
+	const WCHAR* str, size_t cch, codepage_t to, StringT& dest)
+{
+	int cch2 = WideCharToMultiByte(to, 0, str, cch, NULL, 0, NULL, NULL);
+	char* str2 = std::resize(dest, cch2);
+	WideCharToMultiByte(to, 0, str, cch, str2, cch2, NULL, NULL);
+}
+
+template <class AllocT>
+inline BasicString<WCHAR> winx_call iconv(
+	AllocT& alloc, codepage_t from, const char* str, size_t cch)
+{
+	int cch2 = MultiByteToWideChar(from, 0, str, cch, NULL, 0);
+	WCHAR* str2 = STD_ALLOC_ARRAY(alloc, WCHAR, cch2);
+	MultiByteToWideChar(from, 0, str, cch, str2, cch2);
+	return BasicString<WCHAR>(str2, cch2);
+}
+
+template <class AllocT>
+inline BasicString<char> winx_call iconv(
+	AllocT& alloc, const WCHAR* str, size_t cch, codepage_t to)
+{
+	int cch2 = WideCharToMultiByte(to, 0, str, cch, NULL, 0, NULL, NULL);
+	char* str2 = STD_ALLOC_ARRAY(alloc, char, cch2);
+	WideCharToMultiByte(to, 0, str, cch, str2, cch2, NULL, NULL);
+	return BasicString<char>(str2, cch2);
+}
+
+template <class AllocT>
+__forceinline BasicString<WCHAR> winx_call iconv(
+	AllocT& alloc, codepage_t from, const TempString<char>& str)
+{
+	return iconv(alloc, from, str.data(), str.size());
+}
+
+template <class AllocT>
+__forceinline BasicString<char> winx_call iconv(
+	AllocT& alloc, const TempString<WCHAR>& str, codepage_t to)
+{
+	return iconv(alloc, str.data(), str.size(), to);
+}
+
+// -------------------------------------------------------------------------
 // concat
 
 template <class AllocT, class StringT>
@@ -77,9 +145,22 @@ class TestStringAlgo : public TestCase
 {
 	WINX_TEST_SUITE(TestStringAlgo);
 		WINX_TEST(testConcat);
+		WINX_TEST(testIconv);
 	WINX_TEST_SUITE_END();
 
 public:
+	void testIconv(LogT& log)
+	{
+		std::BlockPool recycle;
+		std::ScopeAlloc alloc(recycle);
+
+		std::WString s1 = std::iconv(alloc, std::cp_auto, "Hello, world!");
+		AssertExp(s1 == L"Hello, world!");
+
+		std::String s2 = std::iconv(alloc, s1, std::cp_utf8);
+		AssertExp(s2 == "Hello, world!");
+	}
+
 	void testConcat(LogT& log)
 	{
 		std::BlockPool recycle;

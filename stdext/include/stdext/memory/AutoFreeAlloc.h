@@ -158,6 +158,13 @@ public:
 		return m_end -= cb;
 	}
 
+	void* winx_call reserve(size_t cb)
+	{
+		void* p = allocate(cb);
+		m_end += cb;
+		return p;
+	}
+
 	void* winx_call allocate(size_t cb, DestructorType fn)
 	{
 		_DestroyNode* pNode = (_DestroyNode*)allocate(sizeof(_DestroyNode) + cb);
@@ -227,17 +234,6 @@ public:
 
 // -------------------------------------------------------------------------
 // $Log: AutoFreeAlloc.h,v $
-// Revision 1.3  2006/09/26 07:51:00  xushiwei
-// STL-Extension:
-//  TestCase(WINX_TEST_APP, WINX_TEST_CLASS, WINX_TEST_SUITE, WINX_TEST, WINX_TEST_SUITE_END)
-//  UnitTestAssert(AssertExp, AssertEq, AssertEqBuf)
-//
-// Revision 1.2  2006/08/19 04:40:48  xushiwei
-// STL-Extension:
-//   Memory(AutoFreeAlloc, RecycleBuffer, AutoArray, etc)
-//   String Algorithm(trim, match, compare, etc), Container(SimpleMultiMap), CharType(isCSymbolFirstChar, etc)
-//   Log(OutputLog, ErrorLog, FileLog, StringLog), PerformanceCounter, Diagnost(WINX_ASSERT, WINX_RUN_TEST, etc)
-//
 
 __NS_STD_END
 

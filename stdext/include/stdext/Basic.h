@@ -476,25 +476,5 @@ namespace stdext = __gnu_cxx;
 
 // -------------------------------------------------------------------------
 // $Log: Basic.h,v $
-// Revision 1.6  2007/01/10 09:38:10  xushiwei
-// STD_ISOCPP_FOR
-//
-// Revision 1.5  2006/12/20 08:55:14  xushiwei
-// STL-Extension: Container(Array), Log(MultiStorage, MultiLog)
-//
-// Revision 1.4  2006/09/26 07:51:00  xushiwei
-// STL-Extension:
-//  TestCase(WINX_TEST_APP, WINX_TEST_CLASS, WINX_TEST_SUITE, WINX_TEST, WINX_TEST_SUITE_END)
-//  UnitTestAssert(AssertExp, AssertEq, AssertEqBuf)
-//
-// Revision 1.3  2006/08/26 09:12:37  xushiwei
-// vs2005 support
-//
-// Revision 1.2  2006/08/19 04:40:48  xushiwei
-// STL-Extension:
-//   Memory(AutoFreeAlloc, RecycleBuffer, AutoArray, etc)
-//   String Algorithm(trim, match, compare, etc), Container(SimpleMultiMap), CharType(isCSymbolFirstChar, etc)
-//   Log(OutputLog, ErrorLog, FileLog, StringLog), PerformanceCounter, Diagnost(WINX_ASSERT, WINX_RUN_TEST, etc)
-//
 
 #endif /* __STDEXT_BASIC_H__ */

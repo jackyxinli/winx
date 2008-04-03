@@ -301,18 +301,6 @@ public:
 
 // -------------------------------------------------------------------------
 // $Log: Storage.h,v $
-// Revision 1.4  2006/12/22 10:17:16  xushiwei
-// STL-Extension: MultiStorage(select)
-//
-// Revision 1.2  2006/12/20 08:41:43  xushiwei
-// STL-Extension: Container(Array), Log(MultiStorage, MultiLog)
-//
-// Revision 1.1  2006/08/19 04:40:48  xushiwei
-// STL-Extension:
-//   Memory(AutoFreeAlloc, RecycleBuffer, AutoArray, etc)
-//   String Algorithm(trim, match, compare, etc), Container(SimpleMultiMap), CharType(isCSymbolFirstChar, etc)
-//   Log(OutputLog, ErrorLog, FileLog, StringLog), PerformanceCounter, Diagnost(WINX_ASSERT, WINX_RUN_TEST, etc)
-//
 
 __NS_STD_END
 

@@ -36,14 +36,14 @@ private:
 	typedef Writer _Myt;
 
 public:
-	typedef size_t size_type;
-	typedef char char_type;
-	typedef unsigned char uchar_type;
-	typedef UINT16 word_type;
-	typedef UINT32 dword_type;
+	typedef _Base::char_type char_type;
+	typedef _Base::uchar_type uchar_type;
+
+	typedef _Base::size_type size_type;
 
 private:
-	typedef TempString<char_type> _String;
+	typedef TempString<char> _String;
+	typedef TempString<WCHAR> _StringW;
 	
 public:
 	Writer() {}
@@ -79,7 +79,7 @@ public:
 
 	__forceinline size_type winx_call put(uchar_type ch) throw(IoException)
 	{
-		return _Base::put((char_type)ch);
+		return _Base::put(ch);
 	}
 
 public:
@@ -93,27 +93,48 @@ public:
 	// string => (Buf,Len):string0 paddingIf(isEven(Len)).
 	//
 	void winx_call puts(
-		const char_type* lpBuf, size_type cch) throw(IoException)
+		const char* lpBuf, size_type cch) throw(IoException)
 	{
 		if (cch < 254) {
-			put( (uchar_type)cch );
+			_Base::put( (UINT8)cch );
 		}
 		else if (cch < 65536) {
-			put( (uchar_type)254 );
-			put16i( (word_type)cch );
+			_Base::put( (UINT8)254 );
+			put16i( (UINT16)cch );
 		}
 		else {
-			put( (uchar_type)255 );
-			put32i( (dword_type)cch );
+			_Base::put( (UINT8)255 );
+			put32i( (UINT32)cch );
 		}
 		put( lpBuf, cch );
 		if ( !(cch & 1) )
-			put( (uchar_type)0 );
+			_Base::put( (UINT8)0 );
 	}
 
 	void winx_call puts(_String s) throw(IoException)
 	{
 		puts(s.data(), s.size());
+	}
+
+	//
+	// string => Len:word test(Len < 65535) Buf:word[Len];
+	// string => 65535:word Len:dword Buf:word[Len];
+	//
+	void winx_call wputs(const WCHAR* s, size_type cch) throw(IoException)
+	{
+		if (cch < 65535) {
+			put16i( (UINT16)cch );
+		}
+		else {
+			put16i( (UINT16)65535 );
+			put32i( (UINT32)cch );
+		}
+		put16i( s, cch );
+	}
+
+	void winx_call wputs(_StringW s) throw(IoException)
+	{
+		wputs(s.data(), s.size());
 	}
 
 public:

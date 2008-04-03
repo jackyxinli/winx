@@ -40,13 +40,11 @@ private:
 	typedef Reader _Myt;
 
 public:
-	typedef size_t size_type;
-	typedef char char_type;
-	typedef unsigned char uchar_type;
-	typedef UINT16 word_type;
-	typedef UINT32 dword_type;
-	typedef int int_type;
-	typedef unsigned uint_type;
+	typedef typename _Base::char_type char_type;
+	typedef typename _Base::uchar_type uchar_type;
+	typedef typename _Base::int_type int_type;
+
+	typedef typename _Base::size_type size_type;
 
 public:
 	Reader() {}
@@ -70,9 +68,9 @@ public:
 	// get a binary string
 
 	template <class AllocT2>
-	HRESULT winx_call gets(AllocT2& alloc, BasicString<char_type>& s)
+	HRESULT winx_call gets(AllocT2& alloc, BasicString<char>& s)
 	{
-		OutputBasicString<char_type, AllocT2> s1(alloc, s);
+		OutputBasicString<char, AllocT2> s1(alloc, s);
 		return gets(s1);
 	}
 
@@ -80,7 +78,7 @@ public:
 	HRESULT winx_call gets(StringT& s)
 	{
 		HRESULT hr;
-		uint_type cch = _Base::get();
+		size_type cch = _Base::get();
 		if (cch < 254) {
 			/* nothing todo */
 		}
@@ -107,6 +105,35 @@ public:
 		if ( !(cch & 1) )
 			_Base::get(); // padding
 		return S_OK;
+	}
+
+	template <class AllocT2>
+	HRESULT winx_call wgets(AllocT2& alloc, BasicString<WCHAR>& s)
+	{
+		OutputBasicString<WCHAR, AllocT2> s1(alloc, s);
+		return wgets(s1);
+	}
+
+	template <class StringT>
+	HRESULT winx_call wgets(StringT& s)
+	{
+		size_type cch;
+		UINT16 cch2;
+		HRESULT hr = get16i(cch2);
+		if (hr != S_OK) {
+			return hr;
+		}
+		else if (cch2 == 65535) {
+			INT32 cch4;
+			hr = get32i(cch4);
+			if (hr != S_OK && cch4 < 0)
+				return STG_E_READFAULT;
+			cch = cch4;
+		}
+		else {
+			cch = cch2;
+		}
+		return get16i(std::resize(s, cch), cch);
 	}
 
 public:
@@ -319,7 +346,7 @@ public:
 	{
 		OutputBasicString<char_type, AllocT2> s1(alloc, s);
 		return std::get_line(WINX_BASE, s1);
-	}	
+	}
 };
 
 // -------------------------------------------------------------------------

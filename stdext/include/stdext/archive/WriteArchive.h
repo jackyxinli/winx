@@ -49,6 +49,7 @@ public:
 
 	typedef typename StreamHandle::int_type	int_type;
 	typedef typename StreamHandle::char_type char_type;
+	typedef typename StreamHandle::uchar_type uchar_type;
 
 	typedef typename StreamHandle::pos_type	pos_type;
 	typedef typename StreamHandle::off_type	off_type;

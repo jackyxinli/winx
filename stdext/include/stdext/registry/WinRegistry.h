@@ -162,52 +162,83 @@ public:
 		return (::RegDeleteValue(m_hKey, (LPTSTR)lpszValue));
 	}
 
-public:
-	LONG winx_call putString(
-		__in_z LPCTSTR pszValueName,
-		__in_z LPCTSTR pszValue,
-		__in DWORD dwType = REG_SZ)
+private:
+	LONG winx_call __putString(
+		__in_z const WCHAR* pszValueName,
+		__in_z const WCHAR* pszValue,
+		__in DWORD dwLen,
+		__in DWORD dwType)
 	{
 		WINX_ASSERT(m_hKey != NULL);
 		WINX_ASSERT(pszValue != NULL);
 		WINX_ASSERT((dwType == REG_SZ) || (dwType == REG_EXPAND_SZ));
-
-		return ::RegSetValueEx(
+		return ::RegSetValueExW(
 			m_hKey, pszValueName, NULL, dwType,
 			reinterpret_cast<const BYTE*>(pszValue),
-			(std::length(pszValue)+1) * sizeof(TCHAR));
+			dwLen * sizeof(WCHAR));
 	}
 
-	LONG winx_call putString(
-		__in_z LPCTSTR pszValueName,
-		__in const basic_string<TCHAR>& strValue,
-		__in DWORD dwType = REG_SZ)
+	LONG winx_call __putString(
+		__in_z const char* pszValueName,
+		__in_z const char* pszValue,
+		__in DWORD dwLen,
+		__in DWORD dwType)
 	{
 		WINX_ASSERT(m_hKey != NULL);
+		WINX_ASSERT(pszValue != NULL);
 		WINX_ASSERT((dwType == REG_SZ) || (dwType == REG_EXPAND_SZ));
-
-		return ::RegSetValueEx(
+		return ::RegSetValueExA(
 			m_hKey, pszValueName, NULL, dwType,
-			reinterpret_cast<const BYTE*>(strValue.c_str()),
-			(strValue.size()+1) * sizeof(TCHAR));
+			reinterpret_cast<const BYTE*>(pszValue),
+			dwLen);
 	}
 
-	LONG winx_call putString(
-		__in_z LPCTSTR pszValueName,
-		__in const TempString<TCHAR> strValue,
-		__in DWORD dwType = REG_SZ)
+	template <class CharT>
+	LONG winx_call __putString(
+		__in_z const CharT* pszValueName,
+		__in const TempString<CharT>& strValue,
+		__in DWORD dwType)
 	{
-		WINX_ASSERT(m_hKey != NULL);
-		WINX_ASSERT((dwType == REG_SZ) || (dwType == REG_EXPAND_SZ));
-
-		std::vector<TCHAR> s;
+		std::vector<CharT> s;
 		s.reserve(strValue.size() + 1);
 		s.insert(s.end(), strValue.begin(), strValue.end());
 		s.push_back(0);
-		return ::RegSetValueEx(
-			m_hKey, pszValueName, NULL, dwType,
-			reinterpret_cast<const BYTE*>(_ConvIt(s.begin())),
-			s.size() * sizeof(TCHAR));
+		return __putString(pszValueName, _ConvIt(s.begin()), s.size(), dwType);
+	}
+
+public:
+	template <class CharT>
+	LONG winx_call putString(
+		__in_z const CharT* pszValueName,
+		__in_z const CharT* pszValue,
+		__in DWORD dwType = REG_SZ)
+	{
+		return __putString(pszValueName, pszValue, std::length(pszValue)+1, dwType);
+	}
+
+	template <class CharT>
+	LONG winx_call putString(
+		__in_z const CharT* pszValueName,
+		__in const basic_string<CharT>& strValue,
+		__in DWORD dwType = REG_SZ)
+	{
+		return __putString(pszValueName, strValue.c_str(), strValue.size()+1, dwType);
+	}
+
+	LONG winx_call putString(
+		__in_z LPCSTR pszValueName,
+		__in const TempString<char> strValue,
+		__in DWORD dwType = REG_SZ)
+	{
+		return __putString(pszValueName, strValue, dwType);
+	}
+
+	LONG winx_call putString(
+		__in_z LPCWSTR pszValueName,
+		__in const TempString<WCHAR> strValue,
+		__in DWORD dwType = REG_SZ)
+	{
+		return __putString(pszValueName, strValue, dwType);
 	}
 
 	LONG winx_call putBinary(LPCTSTR pszValueName, const void* pData, ULONG nBytes)
@@ -255,31 +286,51 @@ public:
 public:
 	template <class StringT>
 	LONG winx_call getString(
-		__in_z_opt LPCTSTR pszValueName,
+		__in_z_opt LPCWSTR pszValueName,
 		__out StringT& strValue)
 	{
 		DWORD dwType;
 		ULONG nBytes = 0;
-		LONG lRes = ::RegQueryValueEx(m_hKey, pszValueName, NULL, &dwType, NULL, &nBytes);
+		LONG lRes = ::RegQueryValueExW(m_hKey, pszValueName, NULL, &dwType, NULL, &nBytes);
 		if (lRes != ERROR_SUCCESS)
 			return lRes;
 		if(dwType != REG_SZ && dwType != REG_EXPAND_SZ || nBytes < 2)
 			return ERROR_INVALID_DATA;
 		
-		TCHAR* pszData = std::resize(strValue, nBytes/sizeof(TCHAR));
-		lRes = ::RegQueryValueEx(
+		WCHAR* pszData = std::resize(strValue, nBytes/sizeof(WCHAR));
+		lRes = ::RegQueryValueExW(
 			m_hKey, pszValueName, NULL, &dwType, (BYTE*)pszData, &nBytes);
 		strValue.erase(strValue.end() - 1);
 		return lRes;
 	}
 
-	template <class AllocT>
+	template <class StringT>
 	LONG winx_call getString(
-		__in_z_opt LPCTSTR pszValueName,
-		__in AllocT& alloc,
-		__out BasicString<TCHAR>& strValue)
+		__in_z_opt LPCSTR pszValueName,
+		__out StringT& strValue)
 	{
-		OutputBasicString<TCHAR, AllocT> s1(alloc, strValue);
+		DWORD dwType;
+		ULONG nBytes = 0;
+		LONG lRes = ::RegQueryValueExA(m_hKey, pszValueName, NULL, &dwType, NULL, &nBytes);
+		if (lRes != ERROR_SUCCESS)
+			return lRes;
+		if(dwType != REG_SZ && dwType != REG_EXPAND_SZ || nBytes < 2)
+			return ERROR_INVALID_DATA;
+		
+		char* pszData = std::resize(strValue, nBytes);
+		lRes = ::RegQueryValueExA(
+			m_hKey, pszValueName, NULL, &dwType, (BYTE*)pszData, &nBytes);
+		strValue.erase(strValue.end() - 1);
+		return lRes;
+	}
+
+	template <class AllocT, class CharT>
+	LONG winx_call getString(
+		__in_z_opt const CharT* pszValueName,
+		__in AllocT& alloc,
+		__out BasicString<CharT>& strValue)
+	{
+		OutputBasicString<CharT, AllocT> s1(alloc, strValue);
 		return getString(pszValueName, s1);
 	}
 

@@ -186,7 +186,7 @@ public:
 				const size_type cbBufSize = ROUND(nMax, roundSize);
 				char_type* lpNewBuf = STD_ALLOC_ARRAY(m_alloc, char_type, cbBufSize);
 				copyMemory(lpNewBuf, m_lpBufCur, cbRest);
-				m_alloc.destroyArray(m_lpBufStart, m_nBufSize);
+				m_alloc.deallocate(m_lpBufStart, m_nBufSize);
 				m_lpBufStart = lpNewBuf;
 				m_nBufSize = cbBufSize;
 			}
