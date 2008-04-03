@@ -51,7 +51,7 @@ public:
 		std::ScopeAlloc alloc(recycle);
 
 		std::string line;
-		std::StdioReader ar(alloc, __FILE__);
+		std::StdioReader ar(__FILE__);
 
 		std::kmp::Finder<char> finder("std::kmp::Finder<char>");
 		HRESULT hr = finder.next(ar);

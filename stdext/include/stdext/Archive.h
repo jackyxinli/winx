@@ -78,6 +78,19 @@
 #endif
 
 // -------------------------------------------------------------------------
+// class FileReader/FileWriter
+
+__NS_STD_BEGIN
+
+typedef PosixReadArchive FileReadArchive;
+typedef Reader<FileReadArchive> FileReader;
+
+typedef PosixWriteArchive FileWriteArchive;
+typedef Writer<FileWriteArchive> FileWriter;
+
+__NS_STD_END
+
+// -------------------------------------------------------------------------
 // class TestRecord
 
 __NS_STD_BEGIN
@@ -100,7 +113,7 @@ public:
 	
 		std::CharVector stg;
 		{
-			RecordWriterT ar(alloc, &stg);
+			RecordWriterT ar(&stg);
 			
 			ar.beginRecord(23);
 			ar.puts("Hello, world!");
@@ -113,12 +126,12 @@ public:
 			ar.endRecord();
 		}
 		{
-			RecordReaderT reader(alloc, &stg);
+			RecordReaderT reader(&stg);
 			RecordReaderT::record_info info;
 
 			AssertExp(reader.next(info));
 			AssertExp(info.recId == 23);
-			std::MemReader ar1(alloc, &info);
+			std::MemReader ar1(&info);
 			std::String s;
 			AssertExp(ar1.gets(alloc, s) == S_OK);
 			AssertExp(s == "Hello, world!");
@@ -128,7 +141,7 @@ public:
 
 			AssertExp(reader.next(info));
 			AssertExp(info.recId == 99);
-			std::MemReader ar2(alloc, &info);
+			std::MemReader ar2(&info);
 			UINT16 w;
 			AssertExp(ar2.get16i(w) == S_OK);
 			AssertExp(w == 32);

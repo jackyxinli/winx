@@ -228,14 +228,14 @@ public:
 
 		WINX_USES_CONVERSION;
 		{
-			WriterT ar(alloc, stg);
+			WriterT ar(stg);
 			AssertExp(ar.good());
 			ar.put("hello\n");
 			ar.put('\n');
 		}
 		{
 			char szBuf[100];
-			ReaderT ar(alloc, stg);
+			ReaderT ar(stg);
 			AssertExp(ar.good());
 			size_t cch = ar.get(szBuf, countof(szBuf));
 			szBuf[cch] = '\0';
@@ -243,14 +243,14 @@ public:
 		}
 		// ------------------------------------
 		{
-			WriterT ar(alloc);
+			WriterT ar;
 			ar.open(WINX_A2W(stg));
 			AssertExp(ar.good());
 			ar.put("you're welcome!\n");
 		}
 		{
 			char szBuf[100];
-			ReaderT ar(alloc);
+			ReaderT ar;
 			ar.open(WINX_A2W(stg));
 			AssertExp(ar.good());
 			size_t cch = ar.get(szBuf, countof(szBuf));
@@ -258,7 +258,7 @@ public:
 			AssertExp(strcmp(szBuf, "you're welcome!\n") == 0);
 		}
 		{
-			ReaderT ar(alloc, stg);
+			ReaderT ar(stg);
 			std::String sym;
 			AssertExp(ar.get_csymbol(alloc, sym) == sym.size());
 			AssertExp(sym == "you");
@@ -271,13 +271,13 @@ public:
 		// ------------------------------------
 		{
 			char szBuf[100];
-			WriterT ar(alloc, stg);
+			WriterT ar(stg);
 			ar.put(_itoa(13242, szBuf, 10));
 			ar.put(' ');
 			ar.put(_itoa(1111, szBuf, 10));
 		}
 		{
-			ReaderT ar(alloc, stg);
+			ReaderT ar(stg);
 			unsigned val;
 			ar.scan_uint(val);
 			AssertExp(val == 13242);
@@ -286,14 +286,14 @@ public:
 		}
 		// ------------------------------------
 		{
-			WriterT ar(alloc, stg);
+			WriterT ar(stg);
 			ar.puts("Hello");
 			ar.puts(std::string("World"));
 			ar.puts(std::vector<char>(255, '!'));
 			ar.puts(std::vector<char>(65538, '?'));
 		}
 		{
-			ReaderT ar(alloc, stg);
+			ReaderT ar(stg);
 			std::string s1;
 			AssertExp(ar.gets(s1) == S_OK);
 			AssertExp(s1 == "Hello");

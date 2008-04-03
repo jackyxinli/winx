@@ -19,9 +19,9 @@
 #ifndef __STDEXT_MSVCRT_SPECSTRINGS_H__
 #define __STDEXT_MSVCRT_SPECSTRINGS_H__
 
-#if !defined(__specstrings)
-
 // -------------------------------------------------------------------------
+
+#if !defined(__specstrings)
 
 #define __null
 #define __notnull
@@ -59,8 +59,6 @@
 #define __ecount(size)
 #define __bcount(size)
 #define __in
-#define __in_z
-#define __in_z_opt
 #define __in_ecount(size)
 #define __in_bcount(size)
 #define __out
@@ -68,7 +66,6 @@
 #define __out_ecount(size)
 #define __out_bcount(size)
 #define __out_ecount_part(size,length)
-#define __out_ecount_part_z_opt(size,length)
 #define __out_bcount_part(size,length)
 #define __out_ecount_full(size)
 #define __out_bcount_full(size)
@@ -92,7 +89,6 @@
 #define __out_bcount_part_opt(size,length)
 #define __out_ecount_full_opt(size)
 #define __out_bcount_full_opt(size)
-#define __out_ecount_part_z(size,length)
 #define __inout_opt
 #define __inout_ecount_opt(size)
 #define __inout_bcount_opt(size)
@@ -181,9 +177,27 @@
 #define __deref_opt_inout_ecount_full_opt(size)
 #define __deref_opt_inout_bcount_full_opt(size)
 
+#endif // !defined(__specstrings)
+
+// -------------------------------------------------------------------------
+
+#ifndef __in_z
+#define __in_z
+#endif
+
+#ifndef __in_z_opt
+#define __in_z_opt
+#endif
+
+#ifndef __out_ecount_part_z
+#define __out_ecount_part_z(size,length)
+#endif
+
+#ifndef __out_ecount_part_z_opt
+#define __out_ecount_part_z_opt(size,length)
+#endif
+
 // -------------------------------------------------------------------------
 // $Log: $
-
-#endif // !defined(__specstrings)
 
 #endif /* __STDEXT_MSVCRT_SPECSTRINGS_H__ */

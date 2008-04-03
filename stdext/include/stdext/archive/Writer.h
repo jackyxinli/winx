@@ -46,13 +46,19 @@ private:
 	typedef TempString<char_type> _String;
 	
 public:
-	template <class AllocT>
-	explicit Writer(AllocT& alloc)
-		: _Base(alloc) {}
+	Writer() {}
 
-	template <class AllocT, class InitArgT>
-	Writer(AllocT& alloc, InitArgT file)
-		: _Base(alloc, file) {}
+	template <class InitArgT>
+	explicit Writer(InitArgT file)
+		: _Base(file) {}
+
+	template <class InitArgT1, class InitArgT2>
+	Writer(InitArgT1 arg1, InitArgT2 arg2)
+		: _Base(arg1, arg2) {}
+
+	template <class InitArgT1, class InitArgT2, class InitArgT3>
+	Writer(InitArgT1 arg1, InitArgT2 arg2, InitArgT3 arg3)
+		: _Base(arg1, arg2, arg3) {}
 
 public:
 	__forceinline size_type winx_call put(

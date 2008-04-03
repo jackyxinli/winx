@@ -103,23 +103,6 @@ public:
 	{
 		m_pStrm = NULL;
 	}
-	IStreamAdapter(const IStreamAdapter& rhs, bool do_clone)
-	{
-		if (do_clone)
-		{
-			m_pStrm = NULL;
-			if (rhs.m_pStrm)
-			{
-				rhs.m_pStrm->Clone(&m_pStrm);
-			}
-		}
-		else
-		{
-			m_pStrm = rhs.m_pStrm;
-			if (m_pStrm)
-				m_pStrm->AddRef();
-		}
-	}
 	~IStreamAdapter()
 	{
 		if (m_pStrm)
@@ -188,6 +171,14 @@ public:
 	{
 		WINX_ASSERT(m_pStrm == NULL);
 		return SHCreateStreamOnFileA(szFile, STGM_CREATE|STGM_WRITE|STGM_SHARE_EXCLUSIVE, &m_pStrm);
+	}
+
+	void winx_call copy(const IStreamAdapter& rhs)
+	{
+		WINX_ASSERT(m_pStrm == NULL);
+		m_pStrm = NULL;
+		if (rhs.m_pStrm)
+			rhs.m_pStrm->Clone(&m_pStrm);
 	}
 
 	void winx_call close()
@@ -351,9 +342,7 @@ private:
 	typedef StreamWriter _Base;
 
 public:
-	template <class AllocT>
-	explicit MemStreamWriter(AllocT& alloc)
-		: _Base(alloc)
+	MemStreamWriter()
 	{
 		CreateStreamOnHGlobal(NULL, FALSE, &m_handle);
 	}
@@ -400,13 +389,9 @@ private:
 	typedef StreamReader _Base;
 
 public:
-	template <class AllocT>
-	explicit MemStreamReader(AllocT& alloc)
-		: _Base(alloc) {}
+	MemStreamReader() {}
 
-	template <class AllocT>
-	MemStreamReader(AllocT& alloc, HGLOBAL hgbl)
-		: _Base(alloc)
+	explicit MemStreamReader(HGLOBAL hgbl)
 	{
 		CreateStreamOnHGlobal(hgbl, FALSE, &m_handle);
 	}
@@ -443,20 +428,20 @@ public:
 
 		WINX_USES_CONVERSION;
 		{
-			WriterT ar(alloc, WINX_A2W(stg));
+			WriterT ar(WINX_A2W(stg));
 			ar.put("hello\n");
 			ar.put('!');
 			ar.put('\n');
 		}
 		{
 			char szBuf[100];
-			ReaderT ar(alloc, stg);
+			ReaderT ar(stg);
 			size_t cch = ar.get(szBuf, countof(szBuf));
 			szBuf[cch] = '\0';
 			AssertExp(strcmp(szBuf, "hello\n!\n") == 0);
 		}
 		{
-			ReaderT ar(alloc, stg);
+			ReaderT ar(stg);
 			std::string s1;
 			ar.getline(s1);
 			AssertExp(s1 == "hello");
@@ -469,13 +454,13 @@ public:
 		}
 		// ------------------------------------
 		{
-			WriterT ar(alloc);
+			WriterT ar;
 			ar.open(stg);
 			ar.put("you're welcome!\n");
 		}
 		{
 			char szBuf[100];
-			ReaderT ar(alloc);
+			ReaderT ar;
 			ar.open(WINX_A2W(stg));
 			size_t cch = ar.get(szBuf, countof(szBuf));
 			szBuf[cch] = '\0';
@@ -484,13 +469,13 @@ public:
 		// ------------------------------------
 		{
 			char szBuf[100];
-			WriterT ar(alloc, stg);
+			WriterT ar(stg);
 			ar.put(_itoa(13242, szBuf, 10));
 			ar.put(' ');
 			ar.put(_itoa(1111, szBuf, 10));
 		}
 		{
-			ReaderT ar(alloc, stg);
+			ReaderT ar(stg);
 			unsigned val;
 			ar.scan_uint(val);
 			AssertExp(val == 13242);
@@ -499,14 +484,14 @@ public:
 		}
 		// ------------------------------------
 		{
-			WriterT ar(alloc, stg);
+			WriterT ar(stg);
 			ar.puts("Hello!");
 			ar.puts(std::string("World"));
 			ar.puts(std::vector<char>(255, '!'));
 			ar.puts(std::vector<char>(65537, '?'));
 		}
 		{
-			ReaderT ar(alloc, stg);
+			ReaderT ar(stg);
 			std::string s1;
 			AssertExp(ar.gets(s1) == S_OK);
 			AssertExp(s1 == "Hello!");

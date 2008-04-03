@@ -32,7 +32,7 @@ template <class Handle, class StreamHandle, class CacheT = ArchiveCache>
 class WriteArchive
 {
 private:
-	typedef typename CacheT::allocator_type AllocatorT;
+	typedef typename CacheT::allocator_type AllocT;
 
 private:
 	WriteArchive(const WriteArchive&);
@@ -60,10 +60,10 @@ protected:
 	char_type*	m_lpBufMax;
 
 	StreamHandle m_handle;
-	AllocatorT& m_alloc;
+	AllocT m_alloc;
 	
 public:
-	explicit WriteArchive(AllocatorT& alloc)
+	explicit WriteArchive(AllocT alloc = AllocT())
 		: m_alloc(alloc)
 	{
 		m_lpBufStart = STD_NEW_ARRAY(alloc, char_type, cacheSize);
@@ -73,7 +73,7 @@ public:
 		// m_lpBufCur - m_lpBufStart为已经写入数据的缓存！
 	}
 
-	WriteArchive(AllocatorT& alloc, Handle hFile)
+	explicit WriteArchive(Handle hFile, AllocT alloc = AllocT())
 		: m_alloc(alloc)
 	{
 		m_lpBufStart = STD_NEW_ARRAY(alloc, char_type, cacheSize);
@@ -83,7 +83,7 @@ public:
 		m_handle.open_handle(hFile);
 	}
 
-	WriteArchive(AllocatorT& alloc, LPCWSTR szFile)
+	explicit WriteArchive(LPCWSTR szFile, AllocT alloc = AllocT())
 		: m_alloc(alloc)
 	{
 		m_lpBufStart = STD_NEW_ARRAY(alloc, char_type, cacheSize);
@@ -93,7 +93,7 @@ public:
 		m_handle.open_to_write(szFile);
 	}
 
-	WriteArchive(AllocatorT& alloc, LPCSTR szFile)
+	explicit WriteArchive(LPCSTR szFile, AllocT alloc = AllocT())
 		: m_alloc(alloc)
 	{
 		m_lpBufStart = STD_NEW_ARRAY(alloc, char_type, cacheSize);

@@ -32,7 +32,7 @@ template <class Handle, class StreamHandle, class CacheT = ArchiveCache>
 class ReadArchive
 {
 private:
-	typedef typename CacheT::allocator_type AllocatorT;
+	typedef typename CacheT::allocator_type AllocT;
 
 public:
 	enum { endch = StreamHandle::endch };
@@ -57,60 +57,61 @@ protected:
 	char_type*	m_lpBufMax;
 
 	StreamHandle m_handle;
-	AllocatorT& m_alloc;
+	AllocT m_alloc;
 
 private:
 	ReadArchive(const ReadArchive&);
 	void operator=(const ReadArchive&);
 	
 public:
-	explicit ReadArchive(AllocatorT& alloc)
+	explicit ReadArchive(AllocT alloc = AllocT())
 		: m_alloc(alloc)
 	{
-		m_lpBufStart = STD_NEW_ARRAY(alloc, char_type, cacheSize);
+		m_lpBufStart = STD_ALLOC_ARRAY(alloc, char_type, cacheSize);
 		m_nBufSize	 = cacheSize;
 		m_lpBufCur	 = m_lpBufMax = m_lpBufStart;
 		// 读状态：m_lpBufMax - m_lpBufCur 为已经读入预读的数据！
 	}
 
-	ReadArchive(AllocatorT& alloc, Handle hFile, pos_type pos = 0)
+	explicit ReadArchive(Handle hFile, pos_type pos = 0, AllocT alloc = AllocT())
 		: m_alloc(alloc)
 	{
-		m_lpBufStart = STD_NEW_ARRAY(alloc, char_type, cacheSize);
+		m_lpBufStart = STD_ALLOC_ARRAY(alloc, char_type, cacheSize);
 		m_nBufSize	 = cacheSize;
 		m_lpBufCur	 = m_lpBufMax = m_lpBufStart;
 		m_handle.open_handle(hFile, pos);
 	}
 
-	ReadArchive(AllocatorT& alloc, LPCWSTR szFile)
+	explicit ReadArchive(LPCWSTR szFile, AllocT alloc = AllocT())
 		: m_alloc(alloc)
 	{
-		m_lpBufStart = STD_NEW_ARRAY(alloc, char_type, cacheSize);
+		m_lpBufStart = STD_ALLOC_ARRAY(alloc, char_type, cacheSize);
 		m_nBufSize	 = cacheSize;
 		m_lpBufCur	 = m_lpBufMax = m_lpBufStart;
 		m_handle.open_to_read(szFile);
 	}
 
-	ReadArchive(AllocatorT& alloc, LPCSTR szFile)
+	explicit ReadArchive(LPCSTR szFile, AllocT alloc = AllocT())
 		: m_alloc(alloc)
 	{
-		m_lpBufStart = STD_NEW_ARRAY(alloc, char_type, cacheSize);
+		m_lpBufStart = STD_ALLOC_ARRAY(alloc, char_type, cacheSize);
 		m_nBufSize	 = cacheSize;
 		m_lpBufCur	 = m_lpBufMax = m_lpBufStart;
 		m_handle.open_to_read(szFile);
 	}
 
-	ReadArchive(AllocatorT& alloc, const ReadArchive& rhs)
-		: m_alloc(alloc), m_handle(rhs.m_handle, /* fClone=*/ true)
+	ReadArchive(const ReadArchive& rhs, bool fClone, AllocT alloc = AllocT())
+		: m_alloc(alloc)
 	{
-		m_lpBufStart = STD_NEW_ARRAY(alloc, char_type, cacheSize);
+		m_lpBufStart = STD_ALLOC_ARRAY(alloc, char_type, cacheSize);
 		m_nBufSize	 = cacheSize;
 		m_lpBufCur	 = m_lpBufMax = m_lpBufStart;
+		m_handle.copy(rhs.m_handle);
 	}
 
 	~ReadArchive()
 	{
-		m_alloc.destroyArray(m_lpBufStart, m_nBufSize);
+		m_alloc.deallocate(m_lpBufStart, m_nBufSize);
 	}
 
 public:
@@ -183,7 +184,7 @@ public:
 			if (nMax > m_nBufSize)
 			{
 				const size_type cbBufSize = ROUND(nMax, roundSize);
-				char_type* lpNewBuf = STD_NEW_ARRAY(m_alloc, char_type, cbBufSize);
+				char_type* lpNewBuf = STD_ALLOC_ARRAY(m_alloc, char_type, cbBufSize);
 				copyMemory(lpNewBuf, m_lpBufCur, cbRest);
 				m_alloc.destroyArray(m_lpBufStart, m_nBufSize);
 				m_lpBufStart = lpNewBuf;

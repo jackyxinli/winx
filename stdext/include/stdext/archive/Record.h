@@ -51,16 +51,27 @@ private:
 	pos_type m_offset;
 	
 public:
-	template <class AllocT>
-	explicit RecordWriter(AllocT& alloc)
-		: _Base(alloc)
+	RecordWriter() {
+		m_recId = recIdEOF;
+	}
+
+	template <class InitArgT>
+	explicit RecordWriter(InitArgT file)
+		: _Base(file)
 	{
 		m_recId = recIdEOF;
 	}
 
-	template <class AllocT, class InitArgT>
-	RecordWriter(AllocT& alloc, InitArgT file)
-		: _Base(alloc, file)
+	template <class InitArgT1, class InitArgT2>
+	RecordWriter(InitArgT1 arg1, InitArgT2 arg2)
+		: _Base(arg1, arg2)
+	{
+		m_recId = recIdEOF;
+	}
+
+	template <class InitArgT1, class InitArgT2, class InitArgT3>
+	RecordWriter(InitArgT1 arg1, InitArgT2 arg2, InitArgT3 arg3)
+		: _Base(arg1, arg2, arg3)
 	{
 		m_recId = recIdEOF;
 	}
@@ -137,17 +148,20 @@ public:
 	enum { recIdEOF = HeaderT::recIdEOF };
 
 public:
-	template <class AllocT>
-	explicit RecordReader(AllocT& alloc)
-		: _Base(alloc) {}
+	RecordReader()
+		: {}
 
-	template <class AllocT, class InitArgT>
-	RecordReader(AllocT& alloc, InitArgT file)
-		: _Base(alloc, file) {}
+	template <class InitArgT>
+	explicit RecordReader(InitArgT file)
+		: _Base(file) {}
 
-	template <class AllocT, class InitArgT1, class InitArgT2>
-	RecordReader(AllocT& alloc, InitArgT1 arg1, InitArgT2 arg2)
-		: _Base(alloc, arg1, arg2) {}
+	template <class InitArgT1, class InitArgT2>
+	RecordReader(InitArgT1 arg1, InitArgT2 arg2)
+		: _Base(arg1, arg2) {}
+
+	template <class InitArgT1, class InitArgT2, class InitArgT3>
+	RecordReader(InitArgT1 arg1, InitArgT2 arg2, InitArgT3 arg3)
+		: _Base(arg1, arg2, arg3) {}
 
 public:
 	const char_type* winx_call next_record(header_type& hdr)

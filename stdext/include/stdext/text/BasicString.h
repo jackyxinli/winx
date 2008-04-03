@@ -330,6 +330,12 @@ public:
 typedef BasicString<char> String;
 typedef BasicString<WCHAR> WString;
 
+#if defined(UNICODE) || defined(_UNICODE)
+typedef WString TString;
+#else
+typedef String TString;
+#endif
+
 __NS_STD_END
 
 STD_NO_DESTRUCTOR(String);

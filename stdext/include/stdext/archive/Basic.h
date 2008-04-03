@@ -102,7 +102,7 @@ public:
 class ArchiveCache
 {
 public:
-	typedef ScopeAlloc allocator_type;
+	typedef DefaultStaticAlloc allocator_type;
 	
 	enum { cacheSize = ARCHIVE_CACHE_SIZE };
 	enum { roundSize = ARCHIVE_ROUND_SIZE };

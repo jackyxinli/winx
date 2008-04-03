@@ -52,14 +52,12 @@ protected:
 	InnerPosT m_pos;
 
 public:
-	template <class AllocT>
-	explicit MemWriteArchive(AllocT& /* alloc */)
+	MemWriteArchive()
 		: m_stg(NULL)
 	{
 	}
 
-	template <class AllocT>
-	MemWriteArchive(AllocT& alloc, BaseStg* stg)
+	explicit MemWriteArchive(BaseStg* stg)
 		: m_stg(stg)
 	{
 		m_pos = stg->begin();
@@ -203,14 +201,13 @@ private:
 	void operator=(const MemReadArchive&);
 	
 public:
-	template <class AllocT>
-	MemReadArchive(AllocT& /* alloc */, Iterator first, Iterator last)
+	MemReadArchive(Iterator first, Iterator last)
 		: m_pos(first), m_first(m_pos), m_last(last)
 	{
 	}
 
-	template <class AllocT, class ContainerT>
-	MemReadArchive(AllocT& /* alloc */, const ContainerT* cont)
+	template <class ContainerT>
+	explicit MemReadArchive(const ContainerT* cont)
 		: m_pos(cont->begin()), m_first(m_pos), m_last(cont->end())
 	{
 	}

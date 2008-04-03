@@ -49,17 +49,19 @@ public:
 	typedef unsigned uint_type;
 
 public:
-	template <class AllocT>
-	explicit Reader(AllocT& alloc)
-		: _Base(alloc) {}
+	Reader() {}
 
-	template <class AllocT, class InitArgT>
-	Reader(AllocT& alloc, InitArgT file)
-		: _Base(alloc, file) {}
+	template <class InitArgT>
+	explicit Reader(InitArgT file)
+		: _Base(file) {}
 
-	template <class AllocT, class InitArgT1, class InitArgT2>
-	Reader(AllocT& alloc, InitArgT1 arg1, InitArgT2 arg2)
-		: _Base(alloc, arg1, arg2) {}
+	template <class InitArgT1, class InitArgT2>
+	Reader(InitArgT1 arg1, InitArgT2 arg2)
+		: _Base(arg1, arg2) {}
+
+	template <class InitArgT1, class InitArgT2, class InitArgT3>
+	Reader(InitArgT1 arg1, InitArgT2 arg2, InitArgT3 arg3)
+		: _Base(arg1, arg2, arg3) {}
 
 //
 // ======== access binary data ========
@@ -67,10 +69,10 @@ public:
 public:
 	// get a binary string
 
-	template <class AllocT>
-	HRESULT winx_call gets(AllocT& alloc, BasicString<char_type>& s)
+	template <class AllocT2>
+	HRESULT winx_call gets(AllocT2& alloc, BasicString<char_type>& s)
 	{
-		OutputBasicString<char_type, AllocT> s1(alloc, s);
+		OutputBasicString<char_type, AllocT2> s1(alloc, s);
 		return gets(s1);
 	}
 
@@ -278,10 +280,10 @@ public:
 	size_type winx_call get_csymbol(StringT& s)
 		{return std::get_csymbol(WINX_BASE, s); }
 
-	template <class AllocT>
-	size_type winx_call get_csymbol(AllocT& alloc, BasicString<char_type>& s)
+	template <class AllocT2>
+	size_type winx_call get_csymbol(AllocT2& alloc, BasicString<char_type>& s)
 	{
-		OutputBasicString<char_type, AllocT> s1(alloc, s);
+		OutputBasicString<char_type, AllocT2> s1(alloc, s);
 		return std::get_csymbol(WINX_BASE, s1);
 	}
 
@@ -289,10 +291,10 @@ public:
 	HRESULT winx_call scan_csymbol(StringT& s)
 		{return std::scan_csymbol(WINX_BASE, s); }
 
-	template <class AllocT>
-	HRESULT winx_call scan_csymbol(AllocT& alloc, BasicString<char_type>& s)
+	template <class AllocT2>
+	HRESULT winx_call scan_csymbol(AllocT2& alloc, BasicString<char_type>& s)
 	{
-		OutputBasicString<char_type, AllocT> s1(alloc, s);
+		OutputBasicString<char_type, AllocT2> s1(alloc, s);
 		return std::scan_csymbol(WINX_BASE, s1);
 	}
 
@@ -300,11 +302,11 @@ public:
 	size_type winx_call get_while(StringT& s, ConditionT cond)
 		{return std::get_while(WINX_BASE, s, cond); }
 
-	template <class AllocT, class ConditionT>
+	template <class AllocT2, class ConditionT>
 	size_type winx_call get_while(
-		AllocT& alloc, BasicString<char_type>& s, ConditionT cond)
+		AllocT2& alloc, BasicString<char_type>& s, ConditionT cond)
 	{
-		OutputBasicString<char_type, AllocT> s1(alloc, s);
+		OutputBasicString<char_type, AllocT2> s1(alloc, s);
 		return std::get_while(WINX_BASE, s1, cond);
 	}
 
@@ -312,10 +314,10 @@ public:
 	size_type winx_call getline(StringT& s)
 		{return std::get_line(WINX_BASE, s); }
 
-	template <class AllocT>
-	size_type winx_call getline(AllocT& alloc, BasicString<char_type>& s)
+	template <class AllocT2>
+	size_type winx_call getline(AllocT2& alloc, BasicString<char_type>& s)
 	{
-		OutputBasicString<char_type, AllocT> s1(alloc, s);
+		OutputBasicString<char_type, AllocT2> s1(alloc, s);
 		return std::get_line(WINX_BASE, s1);
 	}	
 };
