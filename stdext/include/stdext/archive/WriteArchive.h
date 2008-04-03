@@ -66,7 +66,7 @@ public:
 	explicit WriteArchive(AllocT alloc = AllocT())
 		: m_alloc(alloc)
 	{
-		m_lpBufStart = STD_NEW_ARRAY(alloc, char_type, cacheSize);
+		m_lpBufStart = STD_ALLOC_ARRAY(alloc, char_type, cacheSize);
 		m_nBufSize	 = cacheSize;
 		m_lpBufCur	 = m_lpBufStart;
 		m_lpBufMax	 = m_lpBufStart + m_nBufSize;
@@ -76,7 +76,7 @@ public:
 	explicit WriteArchive(Handle hFile, AllocT alloc = AllocT())
 		: m_alloc(alloc)
 	{
-		m_lpBufStart = STD_NEW_ARRAY(alloc, char_type, cacheSize);
+		m_lpBufStart = STD_ALLOC_ARRAY(alloc, char_type, cacheSize);
 		m_nBufSize	 = cacheSize;
 		m_lpBufCur	 = m_lpBufStart;
 		m_lpBufMax	 = m_lpBufStart + m_nBufSize;
@@ -86,7 +86,7 @@ public:
 	explicit WriteArchive(LPCWSTR szFile, AllocT alloc = AllocT())
 		: m_alloc(alloc)
 	{
-		m_lpBufStart = STD_NEW_ARRAY(alloc, char_type, cacheSize);
+		m_lpBufStart = STD_ALLOC_ARRAY(alloc, char_type, cacheSize);
 		m_nBufSize	 = cacheSize;
 		m_lpBufCur	 = m_lpBufStart;
 		m_lpBufMax	 = m_lpBufStart + m_nBufSize;
@@ -96,7 +96,7 @@ public:
 	explicit WriteArchive(LPCSTR szFile, AllocT alloc = AllocT())
 		: m_alloc(alloc)
 	{
-		m_lpBufStart = STD_NEW_ARRAY(alloc, char_type, cacheSize);
+		m_lpBufStart = STD_ALLOC_ARRAY(alloc, char_type, cacheSize);
 		m_nBufSize	 = cacheSize;
 		m_lpBufCur	 = m_lpBufStart;
 		m_lpBufMax	 = m_lpBufStart + m_nBufSize;
@@ -109,7 +109,7 @@ public:
 		{
 			m_handle.put(m_lpBufStart, (size_type)(m_lpBufCur - m_lpBufStart));
 		}
-		m_alloc.destroyArray(m_lpBufStart, m_nBufSize);
+		m_alloc.deallocate(m_lpBufStart, m_nBufSize);
 	}
 
 	void winx_call clear_cache() throw(IoException)
