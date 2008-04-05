@@ -113,7 +113,7 @@ inline VOID winx_call SaveACHistory(
 	IN const ACHistoryType& acHis)
 {
 	for (ACHistoryType::const_iterator it = acHis.begin(); it != acHis.end(); ++it)
-		ar.put(*it);
+		ar.wputs(*it);
 }
 
 template <class ArchiveType, class ACHistoryType>
@@ -123,7 +123,7 @@ inline VOID winx_call LoadACHistory(
 {
 	typedef typename ACHistoryType::value_type ACString;
 	ACString str;
-	while (ar.get(str) == S_OK)
+	while (ar.wgets(str) == S_OK)
 		acHis.push_back(str);
 }
 
@@ -132,7 +132,7 @@ inline HRESULT SaveACHistoryToFile(
 	IN const StringType& szFile, 
 	IN const ACHistoryType& acHis)
 {
-	std::WriteArchive ar;
+	std::FileWriter ar;
 	HRESULT hr = ar.open(szFile);
 	if (SUCCEEDED(hr))
 		SaveACHistory(ar, acHis);
@@ -144,7 +144,7 @@ inline HRESULT LoadACHistoryFromFile(
 	IN const StringType& szFile,
 	IN OUT ACHistoryType& acHis)
 {
-	std::ReadArchive ar;
+	std::FileReader ar;
 	HRESULT hr = ar.open(szFile);
 	if (SUCCEEDED(hr))
 		LoadACHistory(ar, acHis);
@@ -155,16 +155,10 @@ template <class ACHistoryType>
 inline HRESULT SaveACHistoryToRegistry(
 	IN HKEY hKeyParent,
 	IN LPCTSTR lpszKeyName,
-	IN const ACHistoryType& acHis,
-	IN LPTSTR lpszClass = REG_NONE,
-	IN DWORD dwOptions = REG_OPTION_NON_VOLATILE,
-	IN REGSAM samDesired = KEY_ALL_ACCESS,
-	IN LPSECURITY_ATTRIBUTES lpSecAttr = NULL,
-	IN LPDWORD lpdwDisposition = NULL)
+	IN const ACHistoryType& acHis)
 {
-	std::RegWriteArchive ar;
-	HRESULT hr = ar.open(hKeyParent, lpszKeyName, 
-		lpszClass, dwOptions, samDesired, lpSecAttr, lpdwDisposition);
+	std::WinRegWriter ar;
+	HRESULT hr = ar.open(hKeyParent, lpszKeyName);
 	if (SUCCEEDED(hr))
 		SaveACHistory(ar, acHis);
 	return hr;
@@ -174,11 +168,10 @@ template <class ACHistoryType>
 inline HRESULT LoadACHistoryFromRegistry(
 	IN HKEY hKeyParent,
 	IN LPCTSTR lpszKeyName,
-	IN OUT ACHistoryType& acHis,
-	IN REGSAM samDesired = KEY_ALL_ACCESS)
+	IN OUT ACHistoryType& acHis)
 {
-	std::RegReadArchive ar;
-	HRESULT hr = ar.open(hKeyParent, lpszKeyName, samDesired);
+	std::WinRegReader ar;
+	HRESULT hr = ar.open(hKeyParent, lpszKeyName);
 	if (SUCCEEDED(hr))
 		LoadACHistory(ar, acHis);
 	return hr;
@@ -187,7 +180,7 @@ inline HRESULT LoadACHistoryFromRegistry(
 // =========================================================================
 // class ACHistory
 
-typedef UniString ACString;
+typedef std::basic_string<WCHAR> ACString;
 
 template <class CollType>
 class ACHistoryImpl : public CollType, public EnumStringSTLImpl<CollType>
@@ -277,26 +270,19 @@ public:
 
 	HRESULT winx_call SaveToRegistry(
 		IN HKEY hKeyParent,
-		IN LPCTSTR lpszKeyName,
-		IN LPTSTR lpszClass = REG_NONE,
-		IN DWORD dwOptions = REG_OPTION_NON_VOLATILE,
-		IN REGSAM samDesired = KEY_ALL_ACCESS,
-		IN LPSECURITY_ATTRIBUTES lpSecAttr = NULL,
-		IN LPDWORD lpdwDisposition = NULL) const
+		IN LPCTSTR lpszKeyName) const
 	{
 		return SaveACHistoryToRegistry(
 			hKeyParent, lpszKeyName,
-			*static_cast<const CollType*>(this),
-			lpszClass, dwOptions, samDesired, lpSecAttr, lpdwDisposition);
+			*static_cast<const CollType*>(this));
 	}	
 
 	HRESULT winx_call LoadFromRegistry(
 		IN HKEY hKeyParent,
-		IN LPCTSTR lpszKeyName,
-		IN REGSAM samDesired = KEY_ALL_ACCESS)
+		IN LPCTSTR lpszKeyName)
 	{
 		return LoadACHistoryFromRegistry(
-			hKeyParent, lpszKeyName, *static_cast<CollType*>(this), samDesired);
+			hKeyParent, lpszKeyName, *static_cast<CollType*>(this));
 	}
 };
 
