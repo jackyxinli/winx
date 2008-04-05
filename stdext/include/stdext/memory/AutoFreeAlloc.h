@@ -26,16 +26,21 @@
 __NS_STD_BEGIN
 
 // -------------------------------------------------------------------------
-// class AutoFreeAlloc
+// class AutoFreeAllocT
 
-template <class _Alloc, int _MemBlockSize = MEMORY_BLOCK_SIZE>
+template <class _Policy>
 class AutoFreeAllocT
 {
+private:
+	typedef typename _Policy::allocator_type _Alloc;
+
 public:
-	enum { MemBlockSize = _MemBlockSize };
+	enum { MemBlockSize = _Policy::MemBlockSize };
 	enum { HeaderSize = sizeof(void*) };
 	enum { BlockSize = MemBlockSize - HeaderSize };
 	enum { IsAutoFreeAllocator = 1 };
+
+	typedef _Alloc allocator_type;
 
 private:
 	struct _MemBlock
@@ -180,7 +185,17 @@ public:
 	__STD_FAKE_DBG_ALLOCATE();
 };
 
-typedef AutoFreeAllocT<DefaultStaticAlloc> AutoFreeAlloc;
+// -------------------------------------------------------------------------
+// class AutoFreeAlloc
+
+class StdAlloc
+{
+public:
+	enum { MemBlockSize = MEMORY_BLOCK_SIZE };
+	typedef DefaultStaticAlloc allocator_type;
+};
+
+typedef AutoFreeAllocT<StdAlloc> AutoFreeAlloc;
 
 // -------------------------------------------------------------------------
 // class TestAutoFreeAlloc

@@ -146,11 +146,24 @@ public:
 
 typedef BlockPoolT<SingleThreadModel> BlockPoolST;
 typedef ProxyAlloc<BlockPoolST> ProxyBlockPoolST;
-typedef AutoFreeAllocT<ProxyBlockPoolST> ScopeAllocST;
 
 typedef BlockPoolT<MultiThreadModel> BlockPoolMT;
 typedef ProxyAlloc<BlockPoolMT> ProxyBlockPoolMT;
-typedef AutoFreeAllocT<ProxyBlockPoolMT> ScopeAllocMT;
+
+class ProxyST : public StdAlloc
+{
+public:
+	typedef ProxyBlockPoolST allocator_type;
+};
+
+class ProxyMT : public StdAlloc
+{
+public:
+	typedef ProxyBlockPoolMT allocator_type;
+};
+
+typedef AutoFreeAllocT<ProxyST> ScopeAllocST;
+typedef AutoFreeAllocT<ProxyMT> ScopeAllocMT;
 
 #if defined(_MT)
 typedef BlockPoolMT BlockPool;
@@ -191,7 +204,7 @@ public:
 	void testBasic(LogT& log)
 	{
 		std::BlockPool recycle;
-		std::AutoFreeAllocT<std::ProxyBlockPool> alloc(recycle);
+		std::ScopeAlloc alloc(recycle);
 		alloc.allocate(1024);
 		alloc.allocate(1024);
 		alloc.allocate(23);
