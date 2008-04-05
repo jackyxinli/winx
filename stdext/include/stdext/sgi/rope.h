@@ -77,9 +77,15 @@
 #define __GC
 #define GC_REGISTER_FINALIZER(a0, a1, a2, a3, a4)
 
+#pragma warning(disable:4521)
+#pragma warning(disable:4522)
+
 #ifndef __SGI_STL_ROPE_H
 #include "../../../../stl/rope.h"
 #endif
+
+#pragma warning(default:4521) // multiple copy constructors specified
+#pragma warning(default:4522) // multiple assignment operators specified
 
 #undef __GC
 #undef GC_REGISTER_FINALIZER
