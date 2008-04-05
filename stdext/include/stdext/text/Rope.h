@@ -19,59 +19,63 @@
 #ifndef __STDEXT_TEXT_ROPE_H__
 #define __STDEXT_TEXT_ROPE_H__
 
-#ifndef __STDEXT_BASIC_H__
-#include "../Basic.h"
-#endif
-
-#if !defined(NO_SGISTL)
-
-#ifndef __SGI_ROPE_H__
-#include "../sgi/rope.h"
+#ifndef __STDEXT_TEXT_SGI_ROPE_H__
+#include "sgi/Rope.h"
 #endif
 
 __NS_STD_BEGIN
 
 // -------------------------------------------------------------------------
-// class Rope
 
-template <class CharT, class AllocT = ScopeAlloc>
-class Rope : public stdext::rope<CharT, StlAlloc<CharT, AllocT> >
-{
-private:
-	typedef StlAlloc<CharT, AllocT> _Alloc;
-	typedef stdext::rope<CharT, _Alloc> _Base;
+template <class _E, class _AllocT, class _T2> __forceinline
+bool winx_call operator==(const Rope<_E, _AllocT>& a, const _T2& b)
+	{return a.compare(b) == 0; }
 
-public:
-	explicit Rope(AllocT& alloc)
-		: _Base(alloc)
-	{
-	}
+template <class _E, class _AllocT> __forceinline
+bool winx_call operator==(const BasicString<_E>& a, const Rope<_E, _AllocT>& b)
+	{return b.compare(a) == 0; }
 
-	Rope(AllocT& alloc, const CharT* src)
-		: _Base(src, alloc)
-	{
-	}
+template <class _E, class _AllocT> __forceinline
+bool winx_call operator==(const BasicString<_E>& a, Rope<_E, _AllocT>& b)
+	{return b.compare(a) == 0; }
 
-	Rope(AllocT& alloc, const CharT* src, size_t len)
-		: _Base(src, len, alloc)
-	{
-	}
+template <class _E, class _AllocT> __forceinline
+bool winx_call operator==(const _E* a, const Rope<_E, _AllocT>& b)
+	{return b.compare(a) == 0; }
 
-	Rope(AllocT& alloc, size_t count, CharT ch)
-		: _Base(count, ch, alloc)
-	{
-	}
+template <class _E, class _AllocT> __forceinline
+bool winx_call operator==(const _E* a, Rope<_E, _AllocT>& b)
+	{return b.compare(a) == 0; }
 
-	template <class Iterator>
-	Rope(AllocT& alloc, Iterator first, Iterator last)
-		: _Base(first, last, alloc)
-	{
-	}
+// -------------------------------------------------------------------------
 
-	void winx_call copy(const _Base& from) {
-		_Base::operator=(from);
-	}
-};
+template <class _E, class _AllocT, class _T2> __forceinline
+bool winx_call operator!=(const Rope<_E, _AllocT>& a, const _T2& b)
+	{return a.compare(b) != 0; }
+
+// -------------------------------------------------------------------------
+
+template <class _E, class _AllocT, class _T2> __forceinline
+bool winx_call operator<(const Rope<_E, _AllocT>& a, const _T2& b)
+	{return a.compare(b) < 0; }
+
+// -------------------------------------------------------------------------
+
+template <class _E, class _AllocT, class _T2> __forceinline
+bool winx_call operator>(const Rope<_E, _AllocT>& a, const _T2& b)
+	{return a.compare(b) > 0; }
+
+// -------------------------------------------------------------------------
+
+template <class _E, class _AllocT, class _T2> __forceinline
+bool winx_call operator<=(const Rope<_E, _AllocT>& a, const _T2& b)
+	{return a.compare(b) <= 0; }
+
+// -------------------------------------------------------------------------
+
+template <class _E, class _AllocT, class _T2> __forceinline
+bool winx_call operator>=(const Rope<_E, _AllocT>& a, const _T2& b)
+	{return a.compare(b) >= 0; }
 
 // -------------------------------------------------------------------------
 // class TestRope
@@ -80,24 +84,52 @@ template <class LogT>
 class TestRope : public TestCase
 {
 	WINX_TEST_SUITE(TestRope);
-		WINX_TEST(test);
+		WINX_TEST(testBasic);
+		WINX_TEST(testSequenceBuffer);
 	WINX_TEST_SUITE_END();
 
 public:
-	void test(LogT& log)
+	void testSequenceBuffer(LogT& log)
 	{
 		std::BlockPool recycle;
 		std::ScopeAlloc alloc(recycle);
 
 		std::Rope<char> a(alloc);
-		a.append(4, 'a');
+		{
+			std::SequenceBuffer<std::Rope<char>, 8> input(a);
+			input.append("Hello");
+			input.append(", ");
+			input.append("world!");
+			input.append(1, '!');
+			input.append(4, '?');
+		}
+		AssertExp(a == "Hello, world!!????");
+		{
+			std::SequenceBuffer<std::Rope<char>, 16> input(a);
+			input.append("You");
+			input.append("'re");
+			input.append(" welcome!");
+			input.append(2, ' ');
+		}
+		AssertExp(a == "You're welcome!  Hello, world!!????");
+	}
+
+	void testBasic(LogT& log)
+	{
+		std::BlockPool recycle;
+		std::ScopeAlloc alloc(recycle);
+
+		std::Rope<char> a(alloc);
+		a.append(20, 'a');
 		a.append("bcdefg");
 
-		std::Rope<char> b(alloc, "aaaabcdefg");
+		std::Rope<char> b(a);
+		b.erase(b.size() - 7, 7);
+		b.append("abcdefg");
 		AssertExp(a.compare(b) == 0);
 
 		std::Rope<char> c(alloc);
-		c.copy(b);
+		c.copy(a);
 		AssertExp(c == b);
 	}
 };
@@ -106,7 +138,5 @@ public:
 // $Log: Rope.h,v $
 
 __NS_STD_END
-
-#endif // !defined(NO_SGISTL)
 
 #endif /* __STDEXT_TEXT_ROPE_H__ */
