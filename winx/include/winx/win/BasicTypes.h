@@ -120,16 +120,10 @@ inline CString winx_call LoadString(UINT nID, HINSTANCE hInst = GetThisModule())
 }
 
 // =========================================================================
-// class String
+// class AnsiString/UniString
 
 typedef std::basic_string<char> AnsiString;
 typedef std::basic_string<WCHAR> UniString;
-
-#if defined(UNICODE)
-typedef UniString String;
-#else
-typedef AnsiString String;
-#endif
 
 // =========================================================================
 // class CWaitCursor

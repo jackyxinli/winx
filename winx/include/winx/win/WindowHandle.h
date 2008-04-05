@@ -191,32 +191,59 @@ inline CString winx_call GetWindowText(HWND hWnd)
 	return str;
 }
 
-inline int winx_call GetWindowText(HWND hWnd, AnsiString& rString)
+template <class AllocT>
+inline std::TString winx_call GetWindowText(AllocT& alloc, HWND hWnd)
+{
+	int nLen = ::GetWindowTextLength(hWnd);
+	if (nLen)
+	{
+		TCHAR* psz = STD_NEW_ARRAY(alloc, TCHAR, nLen+1);
+		::GetWindowText(hWnd, psz, nLen+1);
+		return std::TString(psz, nLen);
+	}
+	return std::TString();
+}
+
+template <class StringT>
+inline int winx_call GetWindowTextAnsi(HWND hWnd, StringT& rString)
 {
 	WINX_ASSERT(::IsWindow(hWnd));
 	
 	int nLen = ::GetWindowTextLengthA(hWnd);
 	if (nLen)
 	{
-		rString.resize(nLen);
-		return ::GetWindowTextA(hWnd, &rString[0], nLen+1);
+		int ret = ::GetWindowTextA(hWnd, std::resize(rString, nLen+1), nLen+1);
+		rString.erase(rString.end() - 1);
+		return ret;
 	}
-	rString.erase();
+	rString = StringT();
 	return 0;
 }
 
-inline int winx_call GetWindowText(HWND hWnd, UniString& rString)
+template <class StringT>
+inline int winx_call GetWindowTextUni(HWND hWnd, StringT& rString)
 {
 	WINX_ASSERT(::IsWindow(hWnd));
 	
 	int nLen = ::GetWindowTextLengthW(hWnd);
 	if (nLen)
 	{
-		rString.resize(nLen);
-		return ::GetWindowTextW(hWnd, &rString[0], nLen+1);
+		int ret = ::GetWindowTextW(hWnd, std::resize(rString, nLen+1), nLen+1);
+		rString.erase(rString.end() - 1);
+		return ret;
 	}
-	rString.erase();
+	rString = StringT();
 	return 0;
+}
+
+__forceinline int winx_call GetWindowText(HWND hWnd, AnsiString& rString)
+{
+	return GetWindowTextAnsi(hWnd, rString);
+}
+
+__forceinline int winx_call GetWindowText(HWND hWnd, UniString& rString)
+{
+	return GetWindowTextUni(hWnd, rString);
 }
 
 inline CString winx_call GetDlgItemText(HWND hDlg, int nID)
