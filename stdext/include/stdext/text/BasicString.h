@@ -107,8 +107,8 @@ public:																		\
 // class BasicString
 
 #ifndef _WINX_ALLOC_TYPE
-#define _WINX_ALLOC_TEMPLATE_ARGS		class _Alloc, int _MemBlockSize
-#define _WINX_ALLOC_TYPE				std::AutoFreeAllocT<_Alloc, _MemBlockSize>
+#define _WINX_ALLOC_TEMPLATE_ARGS		class _Policy
+#define _WINX_ALLOC_TYPE				std::AutoFreeAllocT<_Policy>
 #endif
 
 template <class _E>
