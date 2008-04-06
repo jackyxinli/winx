@@ -66,6 +66,19 @@ class CharProducer {
         // have runtime descriptions.
 };
 
+// The following should be treated as private, at least for now.
+template<class _CharT>
+class _Rope_char_consumer {
+    public:
+        // If we had member templates, these should not be virtual.
+        // For now we need to use run-time parametrization where
+        // compile-time would do.  Hence this should all be private
+        // for now.
+        // The symmetry with CharProducer is accidental and temporary.
+        virtual ~_Rope_char_consumer() {}
+        virtual bool operator()(const _CharT* __buffer, size_t __len) = 0;
+};
+
 template <class _CharT>
 class _Rope_rep_base
 {
@@ -248,7 +261,7 @@ template<class _CharT, class _Alloc> class _Rope_iterator_base;
 template<class _CharT, class _Alloc> class _Rope_iterator;
 template<class _CharT, class _Alloc> class _Rope_const_iterator;
 
-template <class _CharT, class _Alloc>
+template <class _CharT, class _Alloc = ScopeAlloc>
 class Rope : public _Rope_base<_CharT> {
     public:
         typedef _CharT value_type;
@@ -272,7 +285,6 @@ class Rope : public _Rope_base<_CharT> {
 
     protected:
         typedef _Rope_base<_CharT> _Base;
-        typedef typename _Base::allocator_type allocator_type;
         using _Base::_M_tree_ptr;
 
         static bool _S_is0(_CharT __c) { return __c == _S_eos((_CharT*)0); }
@@ -281,10 +293,10 @@ class Rope : public _Rope_base<_CharT> {
                 // concatenate.
 
         typedef _Rope_RopeRep<_CharT> _RopeRep;
-        typedef _Rope_RopeConcatenation<_CharT,_Alloc> _RopeConcatenation;
-        typedef _Rope_RopeLeaf<_CharT,_Alloc> _RopeLeaf;
-        typedef _Rope_RopeFunction<_CharT,_Alloc> _RopeFunction;
-        typedef _Rope_RopeSubstring<_CharT,_Alloc> _RopeSubstring;
+        typedef _Rope_RopeConcatenation<_CharT> _RopeConcatenation;
+        typedef _Rope_RopeLeaf<_CharT> _RopeLeaf;
+        typedef _Rope_RopeFunction<_CharT> _RopeFunction;
+        typedef _Rope_RopeSubstring<_CharT> _RopeSubstring;
 
         // Retrieve a character at the indicated position.
         static _CharT _S_fetch(_RopeRep* __r, size_type __pos);
@@ -296,7 +308,7 @@ class Rope : public _Rope_base<_CharT> {
                                 size_t __begin, size_t __end);
                                 // begin and end are assumed to be in range.
 
-		typedef _Rope_RopeRep<_CharT,_Alloc>* _Self_destruct_ptr;
+		typedef _Rope_RopeRep<_CharT>* _Self_destruct_ptr;
 
         // _Result is counted in refcount.
 		static _RopeRep* _S_substring(_RopeRep* __base,
@@ -342,77 +354,43 @@ class Rope : public _Rope_base<_CharT> {
         // Allocate and construct a RopeLeaf using the supplied allocator
         // Takes ownership of s instead of copying.
         static _RopeLeaf* _S_new_RopeLeaf(const _CharT *__s,
-                                          size_t __size, allocator_type __a)
+                                          size_t __size, _Alloc& __a)
         {
-#           ifdef __STL_USE_STD_ALLOCATORS
-              _RopeLeaf* __space = _LAllocator(__a).allocate(1);
-#           else
-              _RopeLeaf* __space = _L_allocate(1);
-#           endif
-            return new(__space) _RopeLeaf(__s, __size, __a);
+			return STD_NEW(__a, _RopeLeaf)(__s, __size);
         }
 
         static _RopeConcatenation* _S_new_RopeConcatenation(
                         _RopeRep* __left, _RopeRep* __right,
-                        allocator_type __a)
+                        _Alloc& __a)
         {
-#           ifdef __STL_USE_STD_ALLOCATORS
-              _RopeConcatenation* __space = _CAllocator(__a).allocate(1);
-#           else
-              _RopeConcatenation* __space = _C_allocate(1);
-#           endif
-            return new(__space) _RopeConcatenation(__left, __right, __a);
+            return STD_NEW(__a, _RopeConcatenation)(__left, __right);
         }
 
         static _RopeFunction* _S_new_RopeFunction(CharProducer<_CharT>* __f,
-                size_t __size, bool __d, allocator_type __a)
+                size_t __size, bool __d, _Alloc& __a)
         {
-#           ifdef __STL_USE_STD_ALLOCATORS
-              _RopeFunction* __space = _FAllocator(__a).allocate(1);
-#           else
-              _RopeFunction* __space = _F_allocate(1);
-#           endif
-            return new(__space) _RopeFunction(__f, __size, __d, __a);
+            return STD_NEW(__a, _RopeFunction)(__f, __size, __d);
         }
 
         static _RopeSubstring* _S_new_RopeSubstring(
-                _Rope_RopeRep<_CharT,_Alloc>* __b, size_t __s,
-                size_t __l, allocator_type __a)
+                _Rope_RopeRep<_CharT>* __b, size_t __s,
+                size_t __l, _Alloc& __a)
         {
-#           ifdef __STL_USE_STD_ALLOCATORS
-              _RopeSubstring* __space = _SAllocator(__a).allocate(1);
-#           else
-              _RopeSubstring* __space = _S_allocate(1);
-#           endif
-            return new(__space) _RopeSubstring(__b, __s, __l, __a);
+            return STD_NEW(__a, _RopeSubstring)(__b, __s, __l);
         }
 
-#       ifdef __STL_USE_STD_ALLOCATORS
-          static
-          _RopeLeaf* _S_RopeLeaf_from_unowned_char_ptr(const _CharT *__s,
-                       size_t __size, allocator_type __a)
-#         define __STL_ROPE_FROM_UNOWNED_CHAR_PTR(__s, __size, __a)                 _S_RopeLeaf_from_unowned_char_ptr(__s, __size, __a)     
-#       else
-          static
-          _RopeLeaf* _S_RopeLeaf_from_unowned_char_ptr2(const _CharT* __s,
-                                                        size_t __size)
-#         define __STL_ROPE_FROM_UNOWNED_CHAR_PTR(__s, __size, __a)                _S_RopeLeaf_from_unowned_char_ptr2(__s, __size)
-#       endif
+#define __STL_ROPE_FROM_UNOWNED_CHAR_PTR(__s, __size, __a)	\
+	_S_RopeLeaf_from_unowned_char_ptr(__s, __size, __a)     
+
+		static _RopeLeaf* _S_RopeLeaf_from_unowned_char_ptr(const _CharT *__s,
+                       size_t __size, _Alloc& __a)
         {
             if (0 == __size) return 0;
-#           ifdef __STL_USE_STD_ALLOCATORS
-              _CharT* __buf = __a.allocate(_S_rounded_up_size(__size));
-#           else
-              _CharT* __buf = _Data_allocate(_S_rounded_up_size(__size));
-              allocator_type __a = allocator_type();
-#           endif
+            _CharT* __buf = __a.allocate(_S_rounded_up_size(__size));
 
             uninitialized_copy_n(__s, __size, __buf);
             _S_cond_store_eos(__buf[__size]);
-            __STL_TRY {
-              return _S_new_RopeLeaf(__buf, __size, __a);
-            }
-            __STL_UNWIND(_RopeRep::__STL_FREE_STRING(__buf, __size, __a))
+            return _S_new_RopeLeaf(__buf, __size, __a);
         }
             
 
@@ -542,10 +520,7 @@ class Rope : public _Rope_base<_CharT> {
             _CharT* __buf = _Data_allocate(_S_rounded_up_size(1));
 
             construct(__buf, __c);
-            __STL_TRY {
-                _M_tree_ptr = _S_new_RopeLeaf(__buf, 1, __a);
-            }
-            __STL_UNWIND(_RopeRep::__STL_FREE_STRING(__buf, 1, __a))
+			_M_tree_ptr = _S_new_RopeLeaf(__buf, 1, __a);
         }
 
         Rope(size_t __n, _CharT __c,

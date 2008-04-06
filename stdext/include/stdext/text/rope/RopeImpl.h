@@ -1,3 +1,24 @@
+/* -------------------------------------------------------------------------
+// WINX: a C++ template GUI library - MOST SIMPLE BUT EFFECTIVE
+// 
+// This file is a part of the WINX Library.
+// The use and distribution terms for this software are covered by the
+// Common Public License 1.0 (http://opensource.org/licenses/cpl.php)
+// which can be found in the file CPL.txt at this distribution. By using
+// this software in any fashion, you are agreeing to be bound by the terms
+// of this license. You must not remove this notice, or any other, from
+// this software.
+// 
+// Module: stdext/text/rope/Rope.h
+// Creator: xushiwei
+// Email: xushiweizh@gmail.com
+// Date: 2006-8-18 18:56:07
+// 
+// $Id: Rope.h,v 1.1 2006/10/18 12:13:39 xushiwei Exp $
+// -----------------------------------------------------------------------*/
+#ifndef __STDEXT_TEXT_ROPE_ROPEIMPL_H__
+#define __STDEXT_TEXT_ROPE_ROPEIMPL_H__
+
 /*
  * Copyright (c) 1997
  * Silicon Graphics Computer Systems, Inc.
@@ -15,254 +36,11 @@
  *   You should not attempt to use it directly.
  */
 
-# include <stdio.h>     
-
-#ifdef __STL_USE_NEW_IOSTREAMS 
-# include <iostream>
-#else /* __STL_USE_NEW_IOSTREAMS */
-# include <iostream.h>
-#endif /* __STL_USE_NEW_IOSTREAMS */
-
-#ifdef __STL_USE_EXCEPTIONS
-#include "stdexcept"
-#endif
-
-__STL_BEGIN_NAMESPACE
+__NS_STD_BEGIN
 
 #if defined(__sgi) && !defined(__GNUC__) && (_MIPS_SIM != _MIPS_SIM_ABI32)
 #pragma set woff 1174
 #endif
-
-// Set buf_start, buf_end, and buf_ptr appropriately, filling tmp_buf
-// if necessary.  Assumes _M_path_end[leaf_index] and leaf_pos are correct.
-// Results in a valid buf_ptr if the iterator can be legitimately
-// dereferenced.
-template <class _CharT, class _Alloc>
-void _Rope_iterator_base<_CharT,_Alloc>::_S_setbuf( 
-  _Rope_iterator_base<_CharT,_Alloc>& __x)
-{
-    const _RopeRep* __leaf = __x._M_path_end[__x._M_leaf_index];
-    size_t __leaf_pos = __x._M_leaf_pos;
-    size_t __pos = __x._M_current_pos;
-
-    switch(__leaf->_M_tag) {
-	case _RopeRep::_S_leaf:
-	    __x._M_buf_start = 
-	      ((_Rope_RopeLeaf<_CharT,_Alloc>*)__leaf)->_M_data;
-	    __x._M_buf_ptr = __x._M_buf_start + (__pos - __leaf_pos);
-	    __x._M_buf_end = __x._M_buf_start + __leaf->_M_size;
-	    break;
-	case _RopeRep::_S_function:
-	case _RopeRep::_S_substringfn:
-	    {
-		size_t __len = _S_iterator_buf_len;
-		size_t __buf_start_pos = __leaf_pos;
-		size_t __leaf_end = __leaf_pos + __leaf->_M_size;
-		CharProducer<_CharT>* __fn =
-			((_Rope_RopeFunction<_CharT,_Alloc>*)__leaf)->_M_fn;
-
-		if (__buf_start_pos + __len <= __pos) {
-		    __buf_start_pos = __pos - __len/4;
-		    if (__buf_start_pos + __len > __leaf_end) {
-			__buf_start_pos = __leaf_end - __len;
-		    }
-		}
-		if (__buf_start_pos + __len > __leaf_end) {
-		    __len = __leaf_end - __buf_start_pos;
-		}
-		(*__fn)(__buf_start_pos - __leaf_pos, __len, __x._M_tmp_buf);
-		__x._M_buf_ptr = __x._M_tmp_buf + (__pos - __buf_start_pos);
-		__x._M_buf_start = __x._M_tmp_buf;
-		__x._M_buf_end = __x._M_tmp_buf + __len;
-	    }
-	    break;
-	default:
-	    __stl_assert(0);
-    }
-}
-
-// Set path and buffer inside a Rope iterator.  We assume that 
-// pos and root are already set.
-template <class _CharT, class _Alloc>
-void _Rope_iterator_base<_CharT,_Alloc>::_S_setcache
-(_Rope_iterator_base<_CharT,_Alloc>& __x)
-{
-    const _RopeRep* __path[_RopeRep::_S_max_rope_depth+1];
-    const _RopeRep* __curr_rope;
-    int __curr_depth = -1;  /* index into path    */
-    size_t __curr_start_pos = 0;
-    size_t __pos = __x._M_current_pos;
-    unsigned char __dirns = 0; // Bit vector marking right turns in the path
-
-    __stl_assert(__pos <= __x._M_root->_M_size);
-    if (__pos >= __x._M_root->_M_size) {
-	__x._M_buf_ptr = 0;
-	return;
-    }
-    __curr_rope = __x._M_root;
-    for(;;) {
-	++__curr_depth;
-	__stl_assert(__curr_depth <= _RopeRep::_S_max_rope_depth);
-	__path[__curr_depth] = __curr_rope;
-	switch(__curr_rope->_M_tag) {
-	  case _RopeRep::_S_leaf:
-	  case _RopeRep::_S_function:
-	  case _RopeRep::_S_substringfn:
-	    __x._M_leaf_pos = __curr_start_pos;
-	    goto done;
-	  case _RopeRep::_S_concat:
-	    {
-		_Rope_RopeConcatenation<_CharT,_Alloc>* __c =
-			(_Rope_RopeConcatenation<_CharT,_Alloc>*)__curr_rope;
-		_RopeRep* __left = __c->_M_left;
-		size_t __left_len = __left->_M_size;
-		
-		__dirns <<= 1;
-		if (__pos >= __curr_start_pos + __left_len) {
-		    __dirns |= 1;
-		    __curr_rope = __c->_M_right;
-		    __curr_start_pos += __left_len;
-		} else {
-		    __curr_rope = __left;
-		}
-	    }
-	    break;
-	}
-    }
-  done:
-    // Copy last section of path into _M_path_end.
-      {
-	int __i = -1;
-	int __j = __curr_depth + 1 - _S_path_cache_len;
-
-	if (__j < 0) __j = 0;
-	while (__j <= __curr_depth) {
-	    __x._M_path_end[++__i] = __path[__j++];
-	}
-	__x._M_leaf_index = __i;
-      }
-      __x._M_path_directions = __dirns;
-      _S_setbuf(__x);
-}
-
-// Specialized version of the above.  Assumes that
-// the path cache is valid for the previous position.
-template <class _CharT, class _Alloc>
-void _Rope_iterator_base<_CharT,_Alloc>::_S_setcache_for_incr
-(_Rope_iterator_base<_CharT,_Alloc>& __x)
-{
-    int __current_index = __x._M_leaf_index;
-    const _RopeRep* __current_node = __x._M_path_end[__current_index];
-    size_t __len = __current_node->_M_size;
-    size_t __node_start_pos = __x._M_leaf_pos;
-    unsigned char __dirns = __x._M_path_directions;
-    _Rope_RopeConcatenation<_CharT,_Alloc>* __c;
-
-    __stl_assert(__x._M_current_pos <= __x._M_root->_M_size);
-    if (__x._M_current_pos - __node_start_pos < __len) {
-	/* More stuff in this leaf, we just didn't cache it. */
-	_S_setbuf(__x);
-	return;
-    }
-    __stl_assert(__node_start_pos + __len == __x._M_current_pos);
-    //  node_start_pos is starting position of last_node.
-    while (--__current_index >= 0) {
-	if (!(__dirns & 1) /* Path turned left */) 
-	  break;
-	__current_node = __x._M_path_end[__current_index];
-	__c = (_Rope_RopeConcatenation<_CharT,_Alloc>*)__current_node;
-	// Otherwise we were in the right child.  Thus we should pop
-	// the concatenation node.
-	__node_start_pos -= __c->_M_left->_M_size;
-	__dirns >>= 1;
-    }
-    if (__current_index < 0) {
-	// We underflowed the cache. Punt.
-	_S_setcache(__x);
-	return;
-    }
-    __current_node = __x._M_path_end[__current_index];
-    __c = (_Rope_RopeConcatenation<_CharT,_Alloc>*)__current_node;
-    // current_node is a concatenation node.  We are positioned on the first
-    // character in its right child.
-    // node_start_pos is starting position of current_node.
-    __node_start_pos += __c->_M_left->_M_size;
-    __current_node = __c->_M_right;
-    __x._M_path_end[++__current_index] = __current_node;
-    __dirns |= 1;
-    while (_RopeRep::_S_concat == __current_node->_M_tag) {
-	++__current_index;
-	if (_S_path_cache_len == __current_index) {
-	    int __i;
-	    for (__i = 0; __i < _S_path_cache_len-1; __i++) {
-		__x._M_path_end[__i] = __x._M_path_end[__i+1];
-	    }
-	    --__current_index;
-	}
-	__current_node =
-	    ((_Rope_RopeConcatenation<_CharT,_Alloc>*)__current_node)->_M_left;
-	__x._M_path_end[__current_index] = __current_node;
-	__dirns <<= 1;
-	// node_start_pos is unchanged.
-    }
-    __x._M_leaf_index = __current_index;
-    __x._M_leaf_pos = __node_start_pos;
-    __x._M_path_directions = __dirns;
-    _S_setbuf(__x);
-}
-
-template <class _CharT, class _Alloc>
-void _Rope_iterator_base<_CharT,_Alloc>::_M_incr(size_t __n) {
-    _M_current_pos += __n;
-    if (0 != _M_buf_ptr) {
-        size_t __chars_left = _M_buf_end - _M_buf_ptr;
-        if (__chars_left > __n) {
-            _M_buf_ptr += __n;
-        } else if (__chars_left == __n) {
-            _M_buf_ptr += __n;
-            _S_setcache_for_incr(*this);
-        } else {
-            _M_buf_ptr = 0;
-        }
-    }
-}
-
-template <class _CharT, class _Alloc>
-void _Rope_iterator_base<_CharT,_Alloc>::_M_decr(size_t __n) {
-    if (0 != _M_buf_ptr) {
-        size_t __chars_left = _M_buf_ptr - _M_buf_start;
-        if (__chars_left >= __n) {
-            _M_buf_ptr -= __n;
-        } else {
-            _M_buf_ptr = 0;
-        }
-    }
-    _M_current_pos -= __n;
-}
-
-template <class _CharT, class _Alloc>
-void _Rope_iterator<_CharT,_Alloc>::_M_check() {
-    if (_M_root_rope->_M_tree_ptr != _M_root) {
-        // _Rope was modified.  Get things fixed up.
-        _M_root = _M_root_rope->_M_tree_ptr;
-        _M_buf_ptr = 0;
-    }
-}
-
-template <class _CharT, class _Alloc>
-inline 
-_Rope_const_iterator<_CharT, _Alloc>::_Rope_const_iterator(
-  const _Rope_iterator<_CharT,_Alloc>& __x)
-: _Rope_iterator_base<_CharT,_Alloc>(__x) 
-{ }
-
-template <class _CharT, class _Alloc>
-inline _Rope_iterator<_CharT,_Alloc>::_Rope_iterator(
-  Rope<_CharT,_Alloc>& __r, size_t __pos)
-: _Rope_iterator_base<_CharT,_Alloc>(__r._M_tree_ptr, __pos), 
-  _M_root_rope(&__r)
-{
-}
 
 template <class _CharT, class _Alloc>
 inline size_t 
@@ -289,12 +67,8 @@ Rope<_CharT,_Alloc>::_S_leaf_concat_char_iter
     uninitialized_copy_n(__r->_M_data, __old_len, __new_data);
     uninitialized_copy_n(__iter, __len, __new_data + __old_len);
     _S_cond_store_eos(__new_data[__old_len + __len]);
-    __STL_TRY {
 	__result = _S_new_RopeLeaf(__new_data, __old_len + __len,
 				   __r->get_allocator());
-    }
-    __STL_UNWIND(_RopeRep::__STL_FREE_STRING(__new_data, __old_len + __len,
-					     __r->get_allocator()));
     return __result;
 }
 
@@ -480,11 +254,7 @@ Rope<_CharT,_Alloc>::_S_substring(_RopeRep* __base,
 		if (__result_len > __lazy_threshold) goto lazy;
 		__section = (_CharT*)
 			__base->_Data_allocate(_S_rounded_up_size(__result_len));
-		__STL_TRY {
 		  (*(__f->_M_fn))(__start, __result_len, __section);
-                }
-		__STL_UNWIND(_RopeRep::__STL_FREE_STRING(
-	               __section, __result_len, __base->get_allocator()));
 		_S_cond_store_eos(__section[__result_len]);
 		return _S_new_RopeLeaf(__section, __result_len,
 				       __base->get_allocator());
@@ -828,7 +598,7 @@ Rope<_CharT,_Alloc>::_S_dump(_RopeRep* __r, int __indent)
 template <class _CharT, class _Alloc>
 const unsigned long
 Rope<_CharT,_Alloc>::_S_min_len[
-  _Rope_RopeRep<_CharT,_Alloc>::_S_max_rope_depth + 1] = {
+  _Rope_RopeRep<_CharT>::_S_max_rope_depth + 1] = {
 /* 0 */1, /* 1 */2, /* 2 */3, /* 3 */5, /* 4 */8, /* 5 */13, /* 6 */21,
 /* 7 */34, /* 8 */55, /* 9 */89, /* 10 */144, /* 11 */233, /* 12 */377,
 /* 13 */610, /* 14 */987, /* 15 */1597, /* 16 */2584, /* 17 */4181,
@@ -1036,15 +806,12 @@ Rope<_CharT, _Alloc>::Rope(size_t __n, _CharT __c,
     __exponent = __n / __exponentiate_threshold;
     __rest = __n % __exponentiate_threshold;
     if (0 == __rest) {
-	__remainder = 0;
+		__remainder = 0;
     } else {
-	__rest_buffer = _Data_allocate(_S_rounded_up_size(__rest));
-	uninitialized_fill_n(__rest_buffer, __rest, __c);
-	_S_cond_store_eos(__rest_buffer[__rest]);
-	__STL_TRY {
+		__rest_buffer = _Data_allocate(_S_rounded_up_size(__rest));
+		uninitialized_fill_n(__rest_buffer, __rest, __c);
+		_S_cond_store_eos(__rest_buffer[__rest]);
 	    __remainder = _S_new_RopeLeaf(__rest_buffer, __rest, __a);
-        }
-	__STL_UNWIND(_RopeRep::__STL_FREE_STRING(__rest_buffer, __rest, __a))
     }
     __remainder_rope._M_tree_ptr = __remainder;
     if (__exponent != 0) {
@@ -1054,12 +821,8 @@ Rope<_CharT, _Alloc>::Rope(size_t __n, _CharT __c,
 	Rope __base_rope(get_allocator());
 	uninitialized_fill_n(__base_buffer, __exponentiate_threshold, __c);
 	_S_cond_store_eos(__base_buffer[__exponentiate_threshold]);
-	__STL_TRY {
-          __base_leaf = _S_new_RopeLeaf(__base_buffer,
-                                        __exponentiate_threshold, __a);
-        }
-	__STL_UNWIND(_RopeRep::__STL_FREE_STRING(__base_buffer, 
-	                                         __exponentiate_threshold, __a))
+    __base_leaf = _S_new_RopeLeaf(__base_buffer,
+                                    __exponentiate_threshold, __a);
 	__base_rope._M_tree_ptr = __base_leaf;
  	if (1 == __exponent) {
 	  __result = __base_rope;
@@ -1135,8 +898,9 @@ inline void rotate(
 #pragma reset woff 1174
 #endif
 
-__STL_END_NAMESPACE
+__NS_STD_END
 
-// Local Variables:
-// mode:C++
-// End:
+// -------------------------------------------------------------------------
+// $Log: Rope.h,v $
+
+#endif /* __STDEXT_TEXT_ROPE_ROPEIMPL_H__ */
