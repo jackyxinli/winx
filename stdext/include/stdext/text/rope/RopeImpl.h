@@ -66,7 +66,6 @@ Rope<_CharT,_Alloc>::_S_leaf_concat_char_iter
     
     uninitialized_copy_n(__r->_M_data, __old_len, __new_data);
     uninitialized_copy_n(__iter, __len, __new_data + __old_len);
-    _S_cond_store_eos(__new_data[__old_len + __len]);
 	__result = _S_new_RopeLeaf(__new_data, __old_len + __len,
 				   __r->get_allocator());
     return __result;
@@ -83,9 +82,6 @@ Rope<_CharT,_Alloc>::_S_tree_concat (_RopeRep* __left, _RopeRep* __right)
       _S_new_RopeConcatenation(__left, __right, __left->get_allocator());
     size_t __depth = __result->_M_depth;
     
-#   ifdef __STL_USE_STD_ALLOCATORS
-      __stl_assert(__left->get_allocator() == __right->get_allocator());
-#   endif
     if (__depth > 20 && (__result->_M_size < 1000 ||
 			 __depth > _RopeRep::_S_max_rope_depth)) {
         _RopeRep* __balanced;
@@ -175,7 +171,7 @@ Rope<_CharT,_Alloc>::_S_concat(_RopeRep* __left, _RopeRep* __right)
 template <class _CharT, class _Alloc>
 typename Rope<_CharT,_Alloc>::_RopeRep*
 Rope<_CharT,_Alloc>::_S_substring(_RopeRep* __base, 
-                               size_t __start, size_t __endp1)
+                               size_t __start, size_t __endp1, _Alloc& __a)
 {
     if (0 == __base) return 0;
     size_t __len = __base->_M_size;
@@ -201,15 +197,15 @@ Rope<_CharT,_Alloc>::_S_substring(_RopeRep* __base,
 		_RopeRep* __result;
 
 		if (__adj_endp1 <= __left_len) {
-		    return _S_substring(__left, __start, __endp1);
+		    return _S_substring(__left, __start, __endp1, __a);
 		} else if (__start >= __left_len) {
 		    return _S_substring(__right, __start - __left_len,
-				  __adj_endp1 - __left_len);
+				  __adj_endp1 - __left_len, __a);
 		}
 		_Self_destruct_ptr __left_result(
-		  _S_substring(__left, __start, __left_len));
+		  _S_substring(__left, __start, __left_len, __a));
 		_Self_destruct_ptr __right_result(
-		  _S_substring(__right, 0, __endp1 - __left_len));
+		  _S_substring(__right, 0, __endp1 - __left_len, __a));
 		__result = _S_concat(__left_result, __right_result);
 		return __result;
 	    }
@@ -222,8 +218,7 @@ Rope<_CharT,_Alloc>::_S_substring(_RopeRep* __base,
 		__result_len = __adj_endp1 - __start;
 		if (__result_len > __lazy_threshold) goto lazy;
 		const _CharT* __section = __l->_M_data + __start;
-		__result = _S_new_RopeLeaf(__section, __result_len,
-				  __base->get_allocator());
+		__result = _S_new_RopeLeaf(__section, __result_len, __a);
 		return __result;
 	    }
 	case _RopeRep::_S_substringfn:
@@ -238,7 +233,7 @@ Rope<_CharT,_Alloc>::_S_substring(_RopeRep* __base,
 			_S_new_RopeSubstring(__old->_M_base,
 					  __start + __old->_M_start,
 					  __adj_endp1 - __start,
-					  __base->get_allocator());
+					  __a);
 		    return __result;
 
 		} // *** else fall through: ***
@@ -252,12 +247,9 @@ Rope<_CharT,_Alloc>::_S_substring(_RopeRep* __base,
 		__result_len = __adj_endp1 - __start;
 
 		if (__result_len > __lazy_threshold) goto lazy;
-		__section = (_CharT*)
-			__base->_Data_allocate(_S_rounded_up_size(__result_len));
+		__section = (_CharT*)__a.allocate(_S_rounded_up_size(__result_len));
 		  (*(__f->_M_fn))(__start, __result_len, __section);
-		_S_cond_store_eos(__section[__result_len]);
-		return _S_new_RopeLeaf(__section, __result_len,
-				       __base->get_allocator());
+		return _S_new_RopeLeaf(__section, __result_len, __a);
 	    }
     }
     /*NOTREACHED*/
@@ -265,8 +257,7 @@ Rope<_CharT,_Alloc>::_S_substring(_RopeRep* __base,
   lazy:
     {
 	// Create substring node.
-	return _S_new_RopeSubstring(__base, __start, __adj_endp1 - __start,
-			       __base->get_allocator());
+	return _S_new_RopeSubstring(__base, __start, __adj_endp1 - __start, __a);
     }
 }
 
@@ -788,17 +779,16 @@ Rope<_CharT,_Alloc>::_S_compare (const _RopeRep* __left,
 }
 
 template <class _CharT, class _Alloc>
-Rope<_CharT, _Alloc>::Rope(size_t __n, _CharT __c,
-			   const allocator_type& __a)
-: _Base(__a)
+Rope<_CharT, _Alloc>::Rope(_Alloc& __a, size_t __n, _CharT __c)
+: _M_alloc(&__a)
 {
-    Rope<_CharT,_Alloc> __result(get_allocator());
+    Rope<_CharT,_Alloc> __result(__a);
     const size_t __exponentiate_threshold = 32;
     size_t __exponent;
     size_t __rest;
     _CharT* __rest_buffer;
     _RopeRep* __remainder;
-    Rope<_CharT,_Alloc> __remainder_rope(get_allocator());
+    Rope<_CharT,_Alloc> __remainder_rope(__a);
 
     if (0 == __n)
       return;
@@ -820,7 +810,6 @@ Rope<_CharT, _Alloc>::Rope(size_t __n, _CharT __c,
 	_RopeLeaf* __base_leaf;
 	Rope __base_rope(get_allocator());
 	uninitialized_fill_n(__base_buffer, __exponentiate_threshold, __c);
-	_S_cond_store_eos(__base_buffer[__exponentiate_threshold]);
     __base_leaf = _S_new_RopeLeaf(__base_buffer,
                                     __exponentiate_threshold, __a);
 	__base_rope._M_tree_ptr = __base_leaf;
@@ -828,7 +817,7 @@ Rope<_CharT, _Alloc>::Rope(size_t __n, _CharT __c,
 	  __result = __base_rope;
 	} else {
 	  __result = power(__base_rope, __exponent,
-			   _Rope_Concat_fn<_CharT,_Alloc>(get_allocator())
+			   _Rope_Concat_fn<_CharT,_Alloc>(__a)
 			   );
 	}
 	if (0 != __remainder) {
