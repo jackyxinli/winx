@@ -27,10 +27,6 @@
 #include "RopeRep.h"
 #endif
 
-#ifndef __STDEXT_TEXT_ROPE_ROPEITER_H__
-#include "RopeIter.h"
-#endif
-
 /*
  * Copyright (c) 1997-1998
  * Silicon Graphics Computer Systems, Inc.
@@ -62,9 +58,8 @@ __NS_STD_BEGIN
 
 template<class _CharT, class _Alloc> class _Rope_char_ref_proxy;
 template<class _CharT, class _Alloc> class _Rope_char_ptr_proxy;
-template<class _CharT, class _Alloc> class _Rope_iterator_base;
-template<class _CharT, class _Alloc> class _Rope_iterator;
-template<class _CharT, class _Alloc> class _Rope_const_iterator;
+template<class _CharT> class _Rope_const_iterator;
+template<class _CharT> class _Rope_iterator;
 
 template <class _CharT, class _Alloc = ScopeAlloc>
 class Rope {
@@ -74,17 +69,14 @@ class Rope {
         typedef size_t size_type;
         typedef _CharT const_reference;
         typedef const _CharT* const_pointer;
-        typedef _Rope_iterator<_CharT,_Alloc> iterator;
-        typedef _Rope_const_iterator<_CharT,_Alloc> const_iterator;
+        typedef _Rope_iterator<_CharT> iterator;
+        typedef _Rope_const_iterator<_CharT> const_iterator;
         typedef _Rope_char_ref_proxy<_CharT,_Alloc> reference;
         typedef _Rope_char_ptr_proxy<_CharT,_Alloc> pointer;
 
         friend struct _Rope_RopeRep<_CharT>;
         friend struct _Rope_RopeSubstring<_CharT>;
 
-        friend class _Rope_iterator<_CharT,_Alloc>;
-        friend class _Rope_const_iterator<_CharT,_Alloc>;
-        friend class _Rope_iterator_base<_CharT,_Alloc>;
         friend class _Rope_char_ptr_proxy<_CharT,_Alloc>;
         friend class _Rope_char_ref_proxy<_CharT,_Alloc>;
 
@@ -92,7 +84,6 @@ class Rope {
         _Rope_RopeRep<_CharT>* _M_tree_ptr;
 		_Alloc* _M_alloc;
 
-        static bool _S_is0(_CharT __c) { return __c == _S_eos((_CharT*)0); }
         enum { _S_copy_max = 23 };
                 // For strings shorter than _S_copy_max, we copy to
                 // concatenate.
@@ -104,7 +95,9 @@ class Rope {
         typedef _Rope_RopeSubstring<_CharT> _RopeSubstring;
 
         // Retrieve a character at the indicated position.
-        static _CharT _S_fetch(_RopeRep* __r, size_type __pos);
+        static _CharT _S_fetch(_RopeRep* __r, size_type __pos) {
+			return _RopeRep::_S_fetch(__r, __pos);
+		}
 
         static bool _S_apply_to_pieces(
                                 // should be template parameter
@@ -216,9 +209,6 @@ class Rope {
 
         private:
 
-        static size_t _S_char_ptr_len(const _CharT* __s);
-                        // slightly generalized strlen
-
         Rope(_Alloc& __a, _RopeRep* __t)
           : _M_alloc(&__a), _M_tree_ptr(__t) {}
 
@@ -287,9 +277,14 @@ class Rope {
             return _S_compare(_M_tree_ptr, __y._M_tree_ptr);
         }
 
+		int winx_call compare(TempString<_CharT> s) const { //@@todo
+			const Rope b(*_M_alloc, s.begin(), s.end());
+			return compare(b);
+		}
+
         Rope(_Alloc& __a, const _CharT* __s)
         : _M_alloc(&__a),
-		  _M_tree_ptr(__STL_ROPE_FROM_UNOWNED_CHAR_PTR(__s, _S_char_ptr_len(__s), __a))
+		  _M_tree_ptr(__STL_ROPE_FROM_UNOWNED_CHAR_PTR(__s, std::length(__s), __a))
         { }
 
         Rope(_Alloc& __a, const _CharT* __s, size_t __len)
@@ -521,7 +516,7 @@ class Rope {
         }
 
         Rope& append(const _CharT* __c_string) {
-            size_t __len = _S_char_ptr_len(__c_string);
+            size_t __len = std::length(__c_string);
             append(__c_string, __len);
             return(*this);
         }
@@ -611,7 +606,7 @@ class Rope {
         }
 
         void insert(size_t __p, const _CharT* __c_string) {
-            insert(__p, __c_string, _S_char_ptr_len(__c_string));
+            insert(__p, __c_string, std::length(__c_string));
         }
 
         void insert(size_t __p, _CharT __c) {
@@ -834,7 +829,7 @@ class Rope {
         size_type find(const _CharT* __s, size_type __pos = 0) const {
             size_type __result_pos;
             const_iterator __result = search(const_begin() + __pos, const_end(),
-                                           __s, __s + _S_char_ptr_len(__s));
+				__s, __s + std::length(__s));
             __result_pos = __result.index();
 #           ifndef __STL_OLD_ROPE_SEMANTICS
                 if (__result_pos == size()) __result_pos = npos;
@@ -926,7 +921,13 @@ const typename Rope<_CharT, _Alloc>::size_type Rope<_CharT, _Alloc>::npos =
 
 __NS_STD_END
 
+#ifndef __STDEXT_TEXT_ROPE_ROPEITER_H__
+#include "RopeIter.h"
+#endif
+
+#ifndef __STDEXT_TEXT_ROPE_ROPEIMPL_H__
 #include "RopeImpl.h"
+#endif
 
 // -------------------------------------------------------------------------
 // $Log: Rope.h,v $

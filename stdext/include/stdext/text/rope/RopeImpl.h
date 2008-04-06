@@ -64,16 +64,6 @@ inline Rope<_CharT,_Alloc> identity_element(const _Rope_Concat_fn<_CharT, _Alloc
     return Rope<_CharT,_Alloc>(r.m_alloc);
 }
 
-template <class _CharT, class _Alloc>
-inline size_t 
-Rope<_CharT,_Alloc>::_S_char_ptr_len(const _CharT* __s)
-{
-    const _CharT* __p = __s;
-
-    while (!_S_is0(*__p)) { ++__p; }
-    return (__p - __s);
-}
-
 // Concatenate a C string onto a leaf Rope by copying the Rope data.
 // Used for short ropes.
 template <class _CharT, class _Alloc>
@@ -708,45 +698,6 @@ Rope<_CharT,_Alloc>::_S_add_leaf_to_forest(_RopeRep* __r, _RopeRep** __forest)
 	    // refcount is OK since __insertee is now dead.
 	    return;
 	}
-    }
-}
-
-template <class _CharT, class _Alloc>
-_CharT
-Rope<_CharT,_Alloc>::_S_fetch(_RopeRep* __r, size_type __i)
-{
-    __stl_assert(__i < __r->_M_size);
-    for(;;) {
-      switch(__r->_M_tag) {
-	case _RopeRep::_S_concat:
-	    {
-		_RopeConcatenation* __c = (_RopeConcatenation*)__r;
-		_RopeRep* __left = __c->_M_left;
-		size_t __left_len = __left->_M_size;
-
-		if (__i >= __left_len) {
-		    __i -= __left_len;
-		    __r = __c->_M_right;
-		} else {
-		    __r = __left;
-		}
-	    }
-	    break;
-	case _RopeRep::_S_leaf:
-	    {
-		_RopeLeaf* __l = (_RopeLeaf*)__r;
-		return __l->_M_data[__i];
-	    }
-	case _RopeRep::_S_function:
-	case _RopeRep::_S_substringfn:
-	    {
-		_RopeFunction* __f = (_RopeFunction*)__r;
-		_CharT __result;
-
-		(*(__f->_M_fn))(__i, 1, &__result);
-		return __result;
-	    }
-      }
     }
 }
 

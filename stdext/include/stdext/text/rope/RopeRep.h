@@ -54,28 +54,22 @@ class _Rope_char_consumer {
         virtual bool operator()(const _CharT* __buffer, size_t __len) = 0;
 };
 
-template <class _CharT>
-class _Rope_rep_base
-{
-public:
-  _Rope_rep_base(size_t __size) : _M_size(__size) {}
-  size_t _M_size;
-};
-
 template<class _CharT>
-struct _Rope_RopeRep : public _Rope_rep_base<_CharT>
+struct _Rope_RopeRep
 {
     public:
     enum { _S_max_rope_depth = 45 };
     enum _Tag {_S_leaf, _S_concat, _S_substringfn, _S_function};
+	size_t _M_size;
     _Tag _M_tag:8;
     bool _M_is_balanced:8;
     unsigned char _M_depth;
 
     _Rope_RopeRep(_Tag __t, int __d, bool __b, size_t __size)
-        : _Rope_rep_base<_CharT>(__size),
-          _M_tag(__t), _M_is_balanced(__b), _M_depth(__d)
-    {}
+        : _M_size(__size),
+          _M_tag(__t), _M_is_balanced(__b), _M_depth(__d) {}
+
+	static _CharT _S_fetch(_Rope_RopeRep* __r, size_t __i);
 };
 
 template<class _CharT>
@@ -214,6 +208,49 @@ struct _Rope_RopeSubstring : public _Rope_RopeFunction<_CharT>,
         _M_tag = _S_substringfn;
     }
 };
+
+template <class _CharT>
+_CharT _Rope_RopeRep<_CharT>::_S_fetch(_Rope_RopeRep<_CharT>* __r, size_t __i)
+{
+	typedef _Rope_RopeRep<_CharT> _RopeRep;
+	typedef _Rope_RopeConcatenation<_CharT> _RopeConcatenation;
+	typedef _Rope_RopeLeaf<_CharT> _RopeLeaf;
+	typedef _Rope_RopeFunction<_CharT> _RopeFunction;
+	typedef _Rope_RopeSubstring<_CharT> _RopeSubstring;
+    __stl_assert(__i < __r->_M_size);
+    for(;;) {
+      switch(__r->_M_tag) {
+	case _RopeRep::_S_concat:
+	    {
+		_RopeConcatenation* __c = (_RopeConcatenation*)__r;
+		_RopeRep* __left = __c->_M_left;
+		size_t __left_len = __left->_M_size;
+
+		if (__i >= __left_len) {
+		    __i -= __left_len;
+		    __r = __c->_M_right;
+		} else {
+		    __r = __left;
+		}
+	    }
+	    break;
+	case _RopeRep::_S_leaf:
+	    {
+		_RopeLeaf* __l = (_RopeLeaf*)__r;
+		return __l->_M_data[__i];
+	    }
+	case _RopeRep::_S_function:
+	case _RopeRep::_S_substringfn:
+	    {
+		_RopeFunction* __f = (_RopeFunction*)__r;
+		_CharT __result;
+
+		(*(__f->_M_fn))(__i, 1, &__result);
+		return __result;
+	    }
+      }
+    }
+}
 
 // -------------------------------------------------------------------------
 // $Log: RopeRep.h,v $
