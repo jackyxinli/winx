@@ -19,6 +19,12 @@
 #ifndef __STDEXT_TEXT_ROPE_ROPE_H__
 #define __STDEXT_TEXT_ROPE_ROPE_H__
 
+#ifndef __SGI_NUMERIC_H__
+#include "../../sgi/numeric.h"
+#endif
+
+#define GC_REGISTER_FINALIZER(a0, a1, a2, a3, a4) //@@todo
+
 /*
  * Copyright (c) 1997-1998
  * Silicon Graphics Computer Systems, Inc.
@@ -45,8 +51,6 @@
 #if defined(__sgi) && !defined(__GNUC__) && (_MIPS_SIM != _MIPS_SIM_ABI32)
 #pragma set woff 1174
 #endif
-
-#define GC_REGISTER_FINALIZER(a0, a1, a2, a3, a4) //@@todo
 
 __NS_STD_BEGIN
 
@@ -300,18 +304,18 @@ class Rope {
                                     size_t __start, size_t __endp1, _Alloc& __a);
 
         static _RopeRep* _S_concat_char_iter(_RopeRep* __r,
-                                          const _CharT* __iter, size_t __slen);
+                                          const _CharT* __iter, size_t __slen, _Alloc& __a);
                 // Concatenate Rope and char ptr, copying __s.
                 // Should really take an arbitrary iterator.
                 // Result is counted in refcount.
         static _RopeRep* _S_destr_concat_char_iter(_RopeRep* __r,
-                                          const _CharT* __iter, size_t __slen)
+                                          const _CharT* __iter, size_t __slen, _Alloc& __a)
                 // As above, but one reference to __r is about to be
                 // destroyed.  Thus the pieces may be recycled if all
                 // relevent reference counts are 1.
-                { return _S_concat_char_iter(__r, __iter, __slen); }
+                { return _S_concat_char_iter(__r, __iter, __slen, __a); }
 
-        static _RopeRep* _S_concat(_RopeRep* __left, _RopeRep* __right);
+        static _RopeRep* _S_concat(_RopeRep* __left, _RopeRep* __right, _Alloc& __a);
                 // General concatenation on _RopeRep.  _Result
                 // has refcount of 1.  Adjusts argument refcounts.
 
@@ -371,8 +375,7 @@ class Rope {
                        size_t __size, _Alloc& __a)
         {
             if (0 == __size) return 0;
-            _CharT* __buf = __a.allocate(_S_rounded_up_size(__size));
-
+            _CharT* __buf = STD_ALLOC_ARRAY(__a, _CharT, _S_rounded_up_size(__size));
             uninitialized_copy_n(__s, __size, __buf);
             return _S_new_RopeLeaf(__buf, __size, __a);
         }
@@ -390,7 +393,7 @@ class Rope {
         // Concatenation helper functions
         static _RopeLeaf*
         _S_leaf_concat_char_iter(_RopeLeaf* __r,
-                                 const _CharT* __iter, size_t __slen);
+                                 const _CharT* __iter, size_t __slen, _Alloc& __a);
                 // Concatenate by copying leaf.
                 // should take an arbitrary iterator
                 // result has refcount 1.
@@ -431,9 +434,9 @@ class Rope {
 
         // Assumes the result is not empty.
         static _RopeRep* _S_concat_and_set_balanced(_RopeRep* __left,
-                                                     _RopeRep* __right)
+                                                     _RopeRep* __right, _Alloc& __a)
         {
-            _RopeRep* __result = _S_concat(__left, __right);
+            _RopeRep* __result = _S_concat(__left, __right, __a);
             if (_S_is_balanced(__result)) __result->_M_is_balanced = true;
             return __result;
         }
@@ -443,7 +446,7 @@ class Rope {
         // usually decrement the reference count of __r.
         // The result is within height 2 of balanced by the above
         // definition.
-        static _RopeRep* _S_balance(_RopeRep* __r);
+        static _RopeRep* _S_balance(_RopeRep* __r, _Alloc& __a);
 
         // Add all unbalanced subtrees to the forest of balanceed trees.
         // Used only by balance.
@@ -501,7 +504,7 @@ class Rope {
         Rope(_Alloc& __a, _CharT __c)
         : _M_alloc(&__a)
         {
-            _CharT* __buf = _Data_allocate(_S_rounded_up_size(1));
+            _CharT* __buf = STD_ALLOC_ARRAY(__a, _CharT, _S_rounded_up_size(1));
             construct(__buf, __c);
 			_M_tree_ptr = _S_new_RopeLeaf(__buf, 1, __a);
         }
@@ -547,7 +550,7 @@ class Rope {
             _RopeRep* __old = _M_tree_ptr;
             _RopeRep* __left =
 				__STL_ROPE_FROM_UNOWNED_CHAR_PTR(&__x, 1, get_allocator());
-			_M_tree_ptr = _S_concat(__left, _M_tree_ptr);
+			_M_tree_ptr = _S_concat(__left, _M_tree_ptr, *_M_alloc);
         }
 
         void pop_front()
@@ -696,7 +699,7 @@ class Rope {
         // forward iterator with value_type _CharT.
         Rope& append(const _CharT* __iter, size_t __n) {
             _RopeRep* __result = 
-              _S_destr_concat_char_iter(_M_tree_ptr, __iter, __n);
+              _S_destr_concat_char_iter(_M_tree_ptr, __iter, __n, *_M_alloc);
             _M_tree_ptr = __result;
             return *this;
         }
@@ -709,7 +712,7 @@ class Rope {
 
         Rope& append(const _CharT* __s, const _CharT* __e) {
             _RopeRep* __result =
-                _S_destr_concat_char_iter(_M_tree_ptr, __s, __e - __s);
+                _S_destr_concat_char_iter(_M_tree_ptr, __s, __e - __s, *_M_alloc);
             _M_tree_ptr = __result;
             return *this;
         }
@@ -719,7 +722,7 @@ class Rope {
             _Self_destruct_ptr __appendee(_S_substring(
               __s._M_root, __s._M_current_pos, __e._M_current_pos));
             _RopeRep* __result = 
-              _S_concat(_M_tree_ptr, (_RopeRep*)__appendee);
+              _S_concat(_M_tree_ptr, (_RopeRep*)__appendee, *_M_alloc);
             _M_tree_ptr = __result;
             return *this;
         }
@@ -731,10 +734,8 @@ class Rope {
             return *this;
         }
 
-        Rope& append() { return append(_CharT()); }  // XXX why?
-
         Rope& append(const Rope& __y) {
-            _RopeRep* __result = _S_concat(_M_tree_ptr, __y._M_tree_ptr);
+            _RopeRep* __result = _S_concat(_M_tree_ptr, __y._M_tree_ptr, *_M_alloc);
             _M_tree_ptr = __result;
             return *this;
         }
@@ -761,10 +762,10 @@ class Rope {
             _RopeRep* __result;
 
             if (0 == __r) {
-                __result = _S_concat(__left, __right);
+                __result = _S_concat(__left, __right, __a);
             } else {
-                _Self_destruct_ptr __left_result(_S_concat(__left, __r));
-                __result = _S_concat(__left_result, __right);
+                _Self_destruct_ptr __left_result(_S_concat(__left, __r, __a));
+                __result = _S_concat(__left_result, __right, __a);
             }
             return __result;
         }
@@ -789,7 +790,7 @@ class Rope {
                 // _S_ destr_concat_char_iter should be safe here.
                 // But as it stands it's probably not a win, since __left
                 // is likely to have additional references.
-            _RopeRep* __result = _S_concat(__left_result, __right);
+            _RopeRep* __result = _S_concat(__left_result, __right, *_M_alloc);
             _M_tree_ptr = __result;
         }
 
@@ -899,7 +900,7 @@ class Rope {
 
         // Erase, (position, size) variant.
         void erase(size_t __p, size_t __n) {
-            _RopeRep* __result = replace(_M_tree_ptr, __p, __p + __n, 0);
+            _RopeRep* __result = replace(_M_tree_ptr, __p, __p + __n, 0, *_M_alloc);
             _M_tree_ptr = __result;
         }
 
