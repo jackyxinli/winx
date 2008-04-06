@@ -19,8 +19,22 @@
 #ifndef __STDEXT_TEXT_ROPE_H__
 #define __STDEXT_TEXT_ROPE_H__
 
+#if defined(USE_SGISTL_ROPE) && !defined(NO_SGISTL)
+
 #ifndef __STDEXT_TEXT_SGI_ROPE_H__
 #include "sgi/Rope.h"
+#endif
+
+#else
+
+#ifndef __STDEXT_TEXT_ROPE_SEQUENCEBUFFER_H__
+#include "rope/SequenceBuffer.h"
+#endif
+
+#ifndef __STDEXT_TEXT_ROPE_ROPE_H__
+#include "rope/Rope.h"
+#endif
+
 #endif
 
 __NS_STD_BEGIN

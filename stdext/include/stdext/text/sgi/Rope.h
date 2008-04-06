@@ -40,6 +40,9 @@ class SequenceBuffer : public stdext::sequence_buffer<_Sequence, _Buf_sz>
 private:
 	typedef stdext::sequence_buffer<_Sequence, _Buf_sz> _Base;
 
+	SequenceBuffer(const SequenceBuffer&);
+	void operator=(const SequenceBuffer&);
+
 protected:
 	using _Base::_M_buffer;
 	using _Base::_M_buf_count;
@@ -49,34 +52,33 @@ public:
 	typedef typename _Base::value_type value_type;
 
 public:
-	using _Base::append;
-
-public:
     SequenceBuffer() {}
     SequenceBuffer(_Sequence& __s) : _Base(__s) {}
 
-    void winx_call append(const value_type* __s, size_t __len)
+    SequenceBuffer& winx_call append(const value_type* __s, size_t __len)
 	{
 		_Base::append((value_type*)__s, __len);
+		return *this;
 	}
 
-	void winx_call append(TempString<value_type> s)
+	SequenceBuffer& winx_call append(TempString<value_type> s)
 	{
-		append(s.data(), s.size());
+		return append(s.data(), s.size());
 	}
 
-    void winx_call append(size_t __len, const value_type& __val)
-    {
-        if (__len + _M_buf_count <= _Buf_sz) {
+	SequenceBuffer& winx_call append(size_t __len, const value_type& __val)
+	{
+		if (__len + _M_buf_count <= _Buf_sz) {
 			std::fill_n(_M_buffer + _M_buf_count, __len, __val);
-            _M_buf_count += __len;
-        } else if (0 == _M_buf_count) {
-            _M_prefix->append(__len, __val);
-        } else {
+			_M_buf_count += __len;
+		} else if (0 == _M_buf_count) {
+			_M_prefix->append(__len, __val);
+		} else {
 			_Base::flush();
-            append(__len, __val);
-        }
-    }
+			append(__len, __val);
+		}
+		return *this;
+	}
 };
 
 // -------------------------------------------------------------------------
