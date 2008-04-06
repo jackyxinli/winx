@@ -459,33 +459,6 @@ class Rope {
             return const_reverse_iterator(begin());
         }
 
-#if defined(__STL_MEMBER_TEMPLATES) && defined(__STL_FUNCTION_TMPL_PARTIAL_ORDER)
-        template<class _CharT2, class _Alloc2>
-        friend Rope<_CharT2,_Alloc2>
-        operator+ (const Rope<_CharT2,_Alloc2>& __left,
-                   const Rope<_CharT2,_Alloc2>& __right);
-        
-        template<class _CharT2, class _Alloc2>
-        friend Rope<_CharT2,_Alloc2>
-        operator+ (const Rope<_CharT2,_Alloc2>& __left,
-                   const _CharT2* __right);
-        
-        template<class _CharT2, class _Alloc2>
-        friend Rope<_CharT2,_Alloc2>
-        operator+ (const Rope<_CharT2,_Alloc2>& __left, _CharT2 __right);
-#else
-        friend Rope<_CharT,_Alloc> __STD_QUALIFIER
-        operator+ __STL_NULL_TMPL_ARGS (const Rope<_CharT,_Alloc>& __left,
-                                        const Rope<_CharT,_Alloc>& __right);
-        
-        friend Rope<_CharT,_Alloc> __STD_QUALIFIER
-        operator+ __STL_NULL_TMPL_ARGS (const Rope<_CharT,_Alloc>& __left,
-                                        const _CharT* __right);
-        
-        friend Rope<_CharT,_Alloc> __STD_QUALIFIER
-        operator+ __STL_NULL_TMPL_ARGS (const Rope<_CharT,_Alloc>& __left,
-                                        _CharT __right);
-#endif        
         // The symmetric cases are intentionally omitted, since they're presumed
         // to be less common, and we don't handle them as well.
 
