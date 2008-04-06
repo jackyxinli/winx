@@ -816,7 +816,7 @@ Rope<_CharT,_Alloc>::_S_dump(_RopeRep* __r, int __indent)
 	    bool __too_big = __r->_M_size > __prefix->_M_size;
 
 	    _S_flatten(__prefix, __buffer);
-	    __buffer[__prefix->_M_size] = _S_eos((_CharT*)0); 
+	    __buffer[__prefix->_M_size] = _CharT(); 
 	    printf("%s%sn", 
 	           (char*)__buffer, __too_big? "...n" : "n");
 	} else {
@@ -1017,39 +1017,6 @@ Rope<_CharT,_Alloc>::_S_compare (const _RopeRep* __left,
     }
 }
 
-// Assignment to reference proxies.
-template <class _CharT, class _Alloc>
-_Rope_char_ref_proxy<_CharT, _Alloc>&
-_Rope_char_ref_proxy<_CharT, _Alloc>::operator= (_CharT __c) {
-    _RopeRep* __old = _M_root->_M_tree_ptr;
-    _Self_destruct_ptr __left(
-      _My_rope::_S_substring(__old, 0, _M_pos));
-    _Self_destruct_ptr __right(
-      _My_rope::_S_substring(__old, _M_pos+1, __old->_M_size));
-    _Self_destruct_ptr __result_left(
-      _My_rope::_S_destr_concat_char_iter(__left, &__c, 1));
-
-    _RopeRep* __result =
-		_My_rope::_S_concat(__result_left, __right);
-    _M_root->_M_tree_ptr = __result;
-    return *this;
-}
-
-template <class _CharT, class _Alloc>
-inline _Rope_char_ref_proxy<_CharT, _Alloc>::operator _CharT () const
-{
-    if (_M_current_valid) {
-	return _M_current;
-    } else {
-        return _My_rope::_S_fetch(_M_root->_M_tree_ptr, _M_pos);
-    }
-}
-template <class _CharT, class _Alloc>
-_Rope_char_ptr_proxy<_CharT, _Alloc>
-_Rope_char_ref_proxy<_CharT, _Alloc>::operator& () const {
-    return _Rope_char_ptr_proxy<_CharT, _Alloc>(*this);
-}
-
 template <class _CharT, class _Alloc>
 Rope<_CharT, _Alloc>::Rope(size_t __n, _CharT __c,
 			   const allocator_type& __a)
@@ -1098,11 +1065,7 @@ Rope<_CharT, _Alloc>::Rope(size_t __n, _CharT __c,
 	  __result = __base_rope;
 	} else {
 	  __result = power(__base_rope, __exponent,
-#ifdef _WINX_GC_ALLOCATOR
 			   _Rope_Concat_fn<_CharT,_Alloc>(get_allocator())
-#else
-			   _Rope_Concat_fn<_CharT,_Alloc>()
-#endif
 			   );
 	}
 	if (0 != __remainder) {
@@ -1112,23 +1075,6 @@ Rope<_CharT, _Alloc>::Rope(size_t __n, _CharT __c,
 	__result = __remainder_rope;
     }
     _M_tree_ptr = __result._M_tree_ptr;
-}
-
-template<class _CharT, class _Alloc>
-  _CharT Rope<_CharT,_Alloc>::_S_empty_c_str[1];
-
-template<class _CharT, class _Alloc>
-const _CharT* Rope<_CharT,_Alloc>::replace_with_c_str() {
-    if (0 == _M_tree_ptr) {
-        _S_empty_c_str[0] = _S_eos((_CharT*)0);
-        return _S_empty_c_str;
-    }
-    size_t __s = size();
-    _CharT* __result = _Data_allocate(_S_rounded_up_size(__s));
-    _S_flatten(_M_tree_ptr, __result);
-    __result[__s] = _S_eos((_CharT*)0);
-    _M_tree_ptr = _S_new_RopeLeaf(__result, __s, get_allocator());
-    return(__result);
 }
 
 // Algorithm specializations.  More should be added.

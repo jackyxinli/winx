@@ -90,9 +90,9 @@ struct _Rope_RopeRep : public _Rope_rep_base<_CharT>
     {}
 };
 
-template<class _CharT, class _Alloc>
-struct _Rope_RopeLeaf : public _Rope_RopeRep<_CharT,_Alloc> {
-  typedef _Rope_RopeRep<_CharT,_Alloc> _Base;
+template<class _CharT>
+struct _Rope_RopeLeaf : public _Rope_RopeRep<_CharT> {
+  typedef _Rope_RopeRep<_CharT> _Base;
   public:
   	using _Base::_S_leaf;
   public:
@@ -111,46 +111,41 @@ struct _Rope_RopeLeaf : public _Rope_RopeRep<_CharT,_Alloc> {
         }
 		return __size_with_eos;
     }
-    __GC_CONST _CharT* _M_data; /* Not necessarily 0 terminated. */
+    const _CharT* _M_data;		/* Not necessarily 0 terminated. */
                                 /* The allocated size is         */
                                 /* _S_rounded_up_size(size), except */
                                 /* in the GC case, in which it   */
                                 /* doesn't matter.               */
-    typedef typename _Rope_rep_base<_CharT,_Alloc>::allocator_type
-                        allocator_type;
-    _Rope_RopeLeaf(__GC_CONST _CharT* __d, size_t __size, allocator_type __a)
-        : _Rope_RopeRep<_CharT,_Alloc>(_S_leaf, 0, true, __size, __a),
+    _Rope_RopeLeaf(const _CharT* __d, size_t __size)
+        : _Rope_RopeRep<_CharT>(_S_leaf, 0, true, __size),
           _M_data(__d)
     {
 		__stl_assert(__size > 0);
 	}
 };
 
-template<class _CharT, class _Alloc>
-struct _Rope_RopeConcatenation : public _Rope_RopeRep<_CharT,_Alloc> {
-  typedef _Rope_RopeRep<_CharT,_Alloc> _Base;
+template<class _CharT>
+struct _Rope_RopeConcatenation : public _Rope_RopeRep<_CharT> {
+  typedef _Rope_RopeRep<_CharT> _Base;
   public:
   	using _Base::_S_concat;
   public:
-    _Rope_RopeRep<_CharT,_Alloc>* _M_left;
-    _Rope_RopeRep<_CharT,_Alloc>* _M_right;
-    typedef typename _Rope_rep_base<_CharT,_Alloc>::allocator_type
-                        allocator_type;
-    _Rope_RopeConcatenation(_Rope_RopeRep<_CharT,_Alloc>* __l,
-                             _Rope_RopeRep<_CharT,_Alloc>* __r,
-                             allocator_type __a)
+    _Rope_RopeRep<_CharT>* _M_left;
+    _Rope_RopeRep<_CharT>* _M_right;
+    _Rope_RopeConcatenation(_Rope_RopeRep<_CharT>* __l,
+                             _Rope_RopeRep<_CharT>* __r)
 
-      : _Rope_RopeRep<_CharT,_Alloc>(_S_concat,
+      : _Rope_RopeRep<_CharT>(_S_concat,
                                      max(__l->_M_depth, __r->_M_depth) + 1,
                                      false,
-                                     __l->_M_size + __r->_M_size, __a),
+                                     __l->_M_size + __r->_M_size),
         _M_left(__l), _M_right(__r)
       {}
 };
 
-template<class _CharT, class _Alloc>
-struct _Rope_RopeFunction : public _Rope_RopeRep<_CharT,_Alloc> {
-  typedef _Rope_RopeRep<_CharT,_Alloc> _Base;
+template<class _CharT>
+struct _Rope_RopeFunction : public _Rope_RopeRep<_CharT> {
+  typedef _Rope_RopeRep<_CharT> _Base;
   public:
   	using _Base::_S_function;
   public:
@@ -163,11 +158,9 @@ struct _Rope_RopeFunction : public _Rope_RopeRep<_CharT,_Alloc> {
       static void _S_fn_finalization_proc(void * __tree, void *) {
         delete ((_Rope_RopeFunction *)__tree) -> _M_fn;
       }
-    typedef typename _Rope_rep_base<_CharT,_Alloc>::allocator_type
-                                        allocator_type;
     _Rope_RopeFunction(CharProducer<_CharT>* __f, size_t __size,
-                        bool __d, allocator_type __a)
-      : _Rope_RopeRep<_CharT,_Alloc>(_S_function, 0, true, __size, __a)
+                        bool __d)
+      : _Rope_RopeRep<_CharT>(_S_function, 0, true, __size)
       , _M_fn(__f)
     {
         __stl_assert(__size > 0);
@@ -184,10 +177,10 @@ struct _Rope_RopeFunction : public _Rope_RopeRep<_CharT,_Alloc> {
 // RopeFunction, whose CharProducer points back to the Rope itself.
 // In all cases except repeated substring operations and
 // deallocation, we treat the __result as a RopeFunction.
-template<class _CharT, class _Alloc>
-struct _Rope_RopeSubstring : public _Rope_RopeFunction<_CharT,_Alloc>,
+template<class _CharT>
+struct _Rope_RopeSubstring : public _Rope_RopeFunction<_CharT>,
                              public CharProducer<_CharT> {
-  typedef _Rope_RopeFunction<_CharT,_Alloc> _Base;
+  typedef _Rope_RopeFunction<_CharT> _Base;
   public:
   	using _Base::_S_function;
   	using _Base::_S_substringfn;
@@ -195,7 +188,7 @@ struct _Rope_RopeSubstring : public _Rope_RopeFunction<_CharT,_Alloc>,
   	using _Base::_M_tag;
   public:
     // XXX this whole class should be rewritten.
-    _Rope_RopeRep<_CharT,_Alloc>* _M_base;      // not 0
+    _Rope_RopeRep<_CharT>* _M_base;      // not 0
     size_t _M_start;
     virtual void operator()(size_t __start_pos, size_t __req_len,
                             _CharT* __buffer) {
@@ -212,7 +205,7 @@ struct _Rope_RopeSubstring : public _Rope_RopeFunction<_CharT,_Alloc>,
               break;
             case _S_leaf:
               {
-                __GC_CONST _CharT* __s =
+                const _CharT* __s =
                         ((_Rope_RopeLeaf<_CharT,_Alloc>*)_M_base)->_M_data;
                 uninitialized_copy_n(__s + __start_pos + _M_start, __req_len,
                                      __buffer);
@@ -222,11 +215,8 @@ struct _Rope_RopeSubstring : public _Rope_RopeFunction<_CharT,_Alloc>,
               __stl_assert(false);
         }
     }
-    typedef typename _Rope_rep_base<_CharT,_Alloc>::allocator_type
-        allocator_type;
-    _Rope_RopeSubstring(_Rope_RopeRep<_CharT,_Alloc>* __b, size_t __s,
-                          size_t __l, allocator_type __a)
-      : _Rope_RopeFunction<_CharT,_Alloc>(this, __l, false, __a),
+    _Rope_RopeSubstring(_Rope_RopeRep<_CharT>* __b, size_t __s, size_t __l)
+      : _Rope_RopeFunction<_CharT,_Alloc>(this, __l, false),
         CharProducer<_CharT>(),
         _M_base(__b),
         _M_start(__s)
@@ -237,583 +227,29 @@ struct _Rope_RopeSubstring : public _Rope_RopeFunction<_CharT,_Alloc>,
     }
 };
 
-// Dereferencing a nonconst iterator has to return something
-// that behaves almost like a reference.  It's not possible to
-// return an actual reference since assignment requires extra
-// work.  And we would get into the same problems as with the
-// CD2 version of basic_string.
-template<class _CharT, class _Alloc>
-class _Rope_char_ref_proxy {
-    friend class Rope<_CharT,_Alloc>;
-    friend class _Rope_iterator<_CharT,_Alloc>;
-    friend class _Rope_char_ptr_proxy<_CharT,_Alloc>;
-    typedef _Rope_RopeRep<_CharT,_Alloc>* _Self_destruct_ptr;
-    typedef _Rope_RopeRep<_CharT,_Alloc> _RopeRep;
-    typedef Rope<_CharT,_Alloc> _My_rope;
-    size_t _M_pos;
-    _CharT _M_current;
-    bool _M_current_valid;
-    _My_rope* _M_root;     // The whole Rope.
-  public:
-    _Rope_char_ref_proxy(_My_rope* __r, size_t __p)
-      :  _M_pos(__p), _M_current_valid(false), _M_root(__r) {}
-    _Rope_char_ref_proxy(const _Rope_char_ref_proxy& __x)
-      : _M_pos(__x._M_pos), _M_current_valid(false), _M_root(__x._M_root) {}
-        // Don't preserve cache if the reference can outlive the
-        // expression.  We claim that's not possible without calling
-        // a copy constructor or generating reference to a proxy
-        // reference.  We declare the latter to have undefined semantics.
-    _Rope_char_ref_proxy(_My_rope* __r, size_t __p, _CharT __c)
-      : _M_pos(__p), _M_current(__c), _M_current_valid(true), _M_root(__r) {}
-    inline operator _CharT () const;
-    _Rope_char_ref_proxy& operator= (_CharT __c);
-    _Rope_char_ptr_proxy<_CharT,_Alloc> operator& () const;
-    _Rope_char_ref_proxy& operator= (const _Rope_char_ref_proxy& __c) {
-        return operator=((_CharT)__c); 
-    }
-};
-
-#ifdef __STL_FUNCTION_TMPL_PARTIAL_ORDER
-    template<class _CharT, class __Alloc>
-    inline void swap(_Rope_char_ref_proxy <_CharT, __Alloc > __a,
-                     _Rope_char_ref_proxy <_CharT, __Alloc > __b) {
-        _CharT __tmp = __a;
-        __a = __b;
-        __b = __tmp;
-    }
-#else
-// There is no really acceptable way to handle this.  The default
-// definition of swap doesn't work for proxy references.
-// It can't really be made to work, even with ugly hacks, since
-// the only unusual operation it uses is the copy constructor, which
-// is needed for other purposes.  We provide a macro for
-// full specializations, and instantiate the most common case.
-# define _ROPE_SWAP_SPECIALIZATION(_CharT, __Alloc)     inline void swap(_Rope_char_ref_proxy <_CharT, __Alloc > __a,                      _Rope_char_ref_proxy <_CharT, __Alloc > __b) {         _CharT __tmp = __a;         __a = __b;         __b = __tmp;     }
-
-_ROPE_SWAP_SPECIALIZATION(char,__STL_DEFAULT_ALLOCATOR(char))
-
-#endif /* !__STL_FUNCTION_TMPL_PARTIAL_ORDER */
-
-template<class _CharT, class _Alloc>
-class _Rope_char_ptr_proxy {
-    // XXX this class should be rewritten.
-    friend class _Rope_char_ref_proxy<_CharT,_Alloc>;
-    size_t _M_pos;
-    Rope<_CharT,_Alloc>* _M_root;     // The whole Rope.
-  public:
-    _Rope_char_ptr_proxy(const _Rope_char_ref_proxy<_CharT,_Alloc>& __x) 
-      : _M_pos(__x._M_pos), _M_root(__x._M_root) {}
-    _Rope_char_ptr_proxy(const _Rope_char_ptr_proxy& __x)
-      : _M_pos(__x._M_pos), _M_root(__x._M_root) {}
-    _Rope_char_ptr_proxy() {}
-    _Rope_char_ptr_proxy(_CharT* __x) : _M_root(0), _M_pos(0) {
-        __stl_assert(0 == __x);
-    }
-    _Rope_char_ptr_proxy& 
-    operator= (const _Rope_char_ptr_proxy& __x) {
-        _M_pos = __x._M_pos;
-        _M_root = __x._M_root;
-        return *this;
-    }
-#ifdef __STL_MEMBER_TEMPLATES
-    template<class _CharT2, class _Alloc2>
-    friend bool operator== (const _Rope_char_ptr_proxy<_CharT2,_Alloc2>& __x,
-                            const _Rope_char_ptr_proxy<_CharT2,_Alloc2>& __y);
-#else
-    friend bool operator==  __STL_NULL_TMPL_ARGS
-                (const _Rope_char_ptr_proxy<_CharT,_Alloc>& __x,
-                 const _Rope_char_ptr_proxy<_CharT,_Alloc>& __y);
-#endif
-    _Rope_char_ref_proxy<_CharT,_Alloc> operator*() const {
-        return _Rope_char_ref_proxy<_CharT,_Alloc>(_M_root, _M_pos);
-    }
-};
-
-
-// Rope iterators:
-// Unlike in the C version, we cache only part of the stack
-// for Rope iterators, since they must be efficiently copyable.
-// When we run out of cache, we have to reconstruct the iterator
-// value.
-// Pointers from iterators are not included in reference counts.
-// Iterators are assumed to be thread private.  Ropes can
-// be shared.
-
-#if defined(__sgi) && !defined(__GNUC__) && (_MIPS_SIM != _MIPS_SIM_ABI32)
-#pragma set woff 1375
-#endif
-
-template<class _CharT, class _Alloc>
-class _Rope_iterator_base
-  : public random_access_iterator<_CharT, ptrdiff_t> {
-    friend class Rope<_CharT,_Alloc>;
-  public:
-    typedef _Alloc _allocator_type; // used in _Rope_rotate, VC++ workaround
-    typedef _Rope_RopeRep<_CharT,_Alloc> _RopeRep;
-        // Borland doesnt want this to be protected.
-  protected:
-    enum { _S_path_cache_len = 4 }; // Must be <= 9.
-    enum { _S_iterator_buf_len = 15 };
-    size_t _M_current_pos;
-    _RopeRep* _M_root;     // The whole Rope.
-    size_t _M_leaf_pos;    // Starting position for current leaf
-    __GC_CONST _CharT* _M_buf_start;
-                        // Buffer possibly
-                        // containing current char.
-    __GC_CONST _CharT* _M_buf_ptr;
-                        // Pointer to current char in buffer.
-                        // != 0 ==> buffer valid.
-    __GC_CONST _CharT* _M_buf_end;
-                        // One past __last valid char in buffer.
-    // What follows is the path cache.  We go out of our
-    // way to make this compact.
-    // Path_end contains the bottom section of the path from
-    // the root to the current leaf.
-    const _RopeRep* _M_path_end[_S_path_cache_len];
-    int _M_leaf_index;     // Last valid __pos in path_end;
-                        // _M_path_end[0] ... _M_path_end[leaf_index-1]
-                        // point to concatenation nodes.
-    unsigned char _M_path_directions;
-                          // (path_directions >> __i) & 1 is 1
-                          // iff we got from _M_path_end[leaf_index - __i - 1]
-                          // to _M_path_end[leaf_index - __i] by going to the
-                          // __right. Assumes path_cache_len <= 9.
-    _CharT _M_tmp_buf[_S_iterator_buf_len];
-                        // Short buffer for surrounding chars.
-                        // This is useful primarily for 
-                        // RopeFunctions.  We put the buffer
-                        // here to avoid locking in the
-                        // multithreaded case.
-    // The cached path is generally assumed to be valid
-    // only if the buffer is valid.
-    static void _S_setbuf(_Rope_iterator_base& __x);
-                                        // Set buffer contents given
-                                        // path cache.
-    static void _S_setcache(_Rope_iterator_base& __x);
-                                        // Set buffer contents and
-                                        // path cache.
-    static void _S_setcache_for_incr(_Rope_iterator_base& __x);
-                                        // As above, but assumes path
-                                        // cache is valid for previous posn.
-    _Rope_iterator_base() {}
-    _Rope_iterator_base(_RopeRep* __root, size_t __pos)
-      : _M_current_pos(__pos), _M_root(__root), _M_buf_ptr(0) {}
-    void _M_incr(size_t __n);
-    void _M_decr(size_t __n);
-  public:
-    size_t index() const { return _M_current_pos; }
-    _Rope_iterator_base(const _Rope_iterator_base& __x) {
-        if (0 != __x._M_buf_ptr) {
-            *this = __x;
-        } else {
-            _M_current_pos = __x._M_current_pos;
-            _M_root = __x._M_root;
-            _M_buf_ptr = 0;
-        }
-    }
-};
-
-template<class _CharT, class _Alloc> class _Rope_iterator;
-
-template<class _CharT, class _Alloc>
-class _Rope_const_iterator : public _Rope_iterator_base<_CharT,_Alloc> {
-    friend class Rope<_CharT,_Alloc>;
-    typedef _Rope_iterator_base<_CharT,_Alloc> _Base;
-  protected:
-    using _Base::_M_current_pos;
-    using _Base::_M_root;
-    using _Base::_M_buf_ptr;
-    using _Base::_M_buf_end;
-    using _Base::_M_incr;
-    using _Base::_M_decr;
-  protected:
-#   ifdef __STL_HAS_NAMESPACES
-      typedef _Rope_RopeRep<_CharT,_Alloc> _RopeRep;
-      // The one from the base class may not be directly visible.
-#   endif
-    _Rope_const_iterator(const _RopeRep* __root, size_t __pos):
-                   _Rope_iterator_base<_CharT,_Alloc>(
-                     const_cast<_RopeRep*>(__root), __pos)
-                   // Only nonconst iterators modify root ref count
-    {}
-  public:
-    typedef _CharT reference;   // Really a value.  Returning a reference
-                                // Would be a mess, since it would have
-                                // to be included in refcount.
-    typedef const _CharT* pointer;
-
-  public:
-    _Rope_const_iterator() {};
-    _Rope_const_iterator(const _Rope_const_iterator& __x) :
-                                _Rope_iterator_base<_CharT,_Alloc>(__x) { }
-    _Rope_const_iterator(const _Rope_iterator<_CharT,_Alloc>& __x);
-    _Rope_const_iterator(const Rope<_CharT,_Alloc>& __r, size_t __pos) :
-        _Rope_iterator_base<_CharT,_Alloc>(__r._M_tree_ptr, __pos) {}
-    _Rope_const_iterator& operator= (const _Rope_const_iterator& __x) {
-        if (0 != __x._M_buf_ptr) {
-            *(static_cast<_Rope_iterator_base<_CharT,_Alloc>*>(this)) = __x;
-        } else {
-            _M_current_pos = __x._M_current_pos;
-            _M_root = __x._M_root;
-            _M_buf_ptr = 0;
-        }
-        return(*this);
-    }
-    reference operator*() {
-        if (0 == _M_buf_ptr) _S_setcache(*this);
-        return *_M_buf_ptr;
-    }
-    _Rope_const_iterator& operator++() {
-        __GC_CONST _CharT* __next;
-        if (0 != _M_buf_ptr && (__next = _M_buf_ptr + 1) < _M_buf_end) {
-            _M_buf_ptr = __next;
-            ++_M_current_pos;
-        } else {
-            _M_incr(1);
-        }
-        return *this;
-    }
-    _Rope_const_iterator& operator+=(ptrdiff_t __n) {
-        if (__n >= 0) {
-            _M_incr(__n);
-        } else {
-            _M_decr(-__n);
-        }
-        return *this;
-    }
-    _Rope_const_iterator& operator--() {
-        _M_decr(1);
-        return *this;
-    }
-    _Rope_const_iterator& operator-=(ptrdiff_t __n) {
-        if (__n >= 0) {
-            _M_decr(__n);
-        } else {
-            _M_incr(-__n);
-        }
-        return *this;
-    }
-    _Rope_const_iterator operator++(int) {
-        size_t __old_pos = _M_current_pos;
-        _M_incr(1);
-        return _Rope_const_iterator<_CharT,_Alloc>(_M_root, __old_pos);
-        // This makes a subsequent dereference expensive.
-        // Perhaps we should instead copy the iterator
-        // if it has a valid cache?
-    }
-    _Rope_const_iterator operator--(int) {
-        size_t __old_pos = _M_current_pos;
-        _M_decr(1);
-        return _Rope_const_iterator<_CharT,_Alloc>(_M_root, __old_pos);
-    }
-#if defined(__STL_MEMBER_TEMPLATES) && defined(__STL_FUNCTION_TMPL_PARTIAL_ORDER)
-    template<class _CharT2, class _Alloc2>
-    friend _Rope_const_iterator<_CharT2,_Alloc2> operator-
-        (const _Rope_const_iterator<_CharT2,_Alloc2>& __x,
-         ptrdiff_t __n);
-    template<class _CharT2, class _Alloc2>
-    friend _Rope_const_iterator<_CharT2,_Alloc2> operator+
-        (const _Rope_const_iterator<_CharT2,_Alloc2>& __x,
-         ptrdiff_t __n);
-    template<class _CharT2, class _Alloc2>
-    friend _Rope_const_iterator<_CharT2,_Alloc2> operator+
-        (ptrdiff_t __n,
-         const _Rope_const_iterator<_CharT2,_Alloc2>& __x);
-#else
-    friend _Rope_const_iterator<_CharT,_Alloc> operator- __STL_NULL_TMPL_ARGS
-        (const _Rope_const_iterator<_CharT,_Alloc>& __x,
-         ptrdiff_t __n);
-    friend _Rope_const_iterator<_CharT,_Alloc> operator+ __STL_NULL_TMPL_ARGS
-        (const _Rope_const_iterator<_CharT,_Alloc>& __x,
-         ptrdiff_t __n);
-    friend _Rope_const_iterator<_CharT,_Alloc> operator+ __STL_NULL_TMPL_ARGS
-        (ptrdiff_t __n,
-         const _Rope_const_iterator<_CharT,_Alloc>& __x);
-#endif
-
-    reference operator[](size_t __n) {
-        return Rope<_CharT,_Alloc>::_S_fetch(_M_root, _M_current_pos + __n);
-    }
-
-#if defined(__STL_MEMBER_TEMPLATES) && defined(__STL_FUNCTION_TMPL_PARTIAL_ORDER)
-    template<class _CharT2, class _Alloc2>
-    friend bool operator==
-        (const _Rope_const_iterator<_CharT2,_Alloc2>& __x,
-         const _Rope_const_iterator<_CharT2,_Alloc2>& __y);
-    template<class _CharT2, class _Alloc2>
-    friend bool operator< 
-        (const _Rope_const_iterator<_CharT2,_Alloc2>& __x,
-         const _Rope_const_iterator<_CharT2,_Alloc2>& __y);
-    template<class _CharT2, class _Alloc2>
-    friend ptrdiff_t operator-
-        (const _Rope_const_iterator<_CharT2,_Alloc2>& __x,
-         const _Rope_const_iterator<_CharT2,_Alloc2>& __y);
-#else
-    friend bool operator== __STL_NULL_TMPL_ARGS
-        (const _Rope_const_iterator<_CharT,_Alloc>& __x,
-         const _Rope_const_iterator<_CharT,_Alloc>& __y);
-    friend bool operator< __STL_NULL_TMPL_ARGS
-        (const _Rope_const_iterator<_CharT,_Alloc>& __x,
-         const _Rope_const_iterator<_CharT,_Alloc>& __y);
-    friend ptrdiff_t operator- __STL_NULL_TMPL_ARGS
-        (const _Rope_const_iterator<_CharT,_Alloc>& __x,
-         const _Rope_const_iterator<_CharT,_Alloc>& __y);
-#endif
-};
-
-template<class _CharT, class _Alloc>
-class _Rope_iterator : public _Rope_iterator_base<_CharT,_Alloc> {
-    friend class Rope<_CharT,_Alloc>;
-    typedef _Rope_iterator_base<_CharT,_Alloc> _Base;
-  protected:
-    using _Base::_M_current_pos;
-    using _Base::_M_root;
-    using _Base::_M_buf_ptr;
-    using _Base::_M_buf_end;
-    using _Base::_M_incr;
-    using _Base::_M_decr;
-#   ifdef __STL_HAS_NAMESPACES
-      typedef _Rope_RopeRep<_CharT,_Alloc> _RopeRep;
-      // The one from the base class may not be directly visible.
-#   endif
-  protected:
-    Rope<_CharT,_Alloc>* _M_root_rope;
-        // root is treated as a cached version of this,
-        // and is used to detect changes to the underlying
-        // Rope.
-        // Root is included in the reference count.
-        // This is necessary so that we can detect changes reliably.
-        // Unfortunately, it requires careful bookkeeping for the
-        // nonGC case.
-    _Rope_iterator(Rope<_CharT,_Alloc>* __r, size_t __pos)
-      : _Rope_iterator_base<_CharT,_Alloc>(__r->_M_tree_ptr, __pos),
-        _M_root_rope(__r) 
-       { if (!(__r -> empty()))_S_setcache(*this); }
-
-    void _M_check();
-  public:
-    typedef _Rope_char_ref_proxy<_CharT,_Alloc>  reference;
-    typedef _Rope_char_ref_proxy<_CharT,_Alloc>* pointer;
-
-  public:
-    Rope<_CharT,_Alloc>& container() { return *_M_root_rope; }
-    _Rope_iterator() {
-        _M_root = 0;  // Needed for reference counting.
-    };
-    _Rope_iterator(const _Rope_iterator& __x) :
-        _Rope_iterator_base<_CharT,_Alloc>(__x) {
-        _M_root_rope = __x._M_root_rope;
-    }
-    _Rope_iterator(Rope<_CharT,_Alloc>& __r, size_t __pos);
-    _Rope_iterator& operator= (const _Rope_iterator& __x) {
-        _RopeRep* __old = _M_root;
-        if (0 != __x._M_buf_ptr) {
-            _M_root_rope = __x._M_root_rope;
-            *(static_cast<_Rope_iterator_base<_CharT,_Alloc>*>(this)) = __x;
-        } else {
-            _M_current_pos = __x._M_current_pos;
-            _M_root = __x._M_root;
-            _M_root_rope = __x._M_root_rope;
-            _M_buf_ptr = 0;
-        }
-        return(*this);
-    }
-    reference operator*() {
-        _M_check();
-        if (0 == _M_buf_ptr) {
-            return _Rope_char_ref_proxy<_CharT,_Alloc>(
-               _M_root_rope, _M_current_pos);
-        } else {
-            return _Rope_char_ref_proxy<_CharT,_Alloc>(
-               _M_root_rope, _M_current_pos, *_M_buf_ptr);
-        }
-    }
-    _Rope_iterator& operator++() {
-        _M_incr(1);
-        return *this;
-    }
-    _Rope_iterator& operator+=(ptrdiff_t __n) {
-        if (__n >= 0) {
-            _M_incr(__n);
-        } else {
-            _M_decr(-__n);
-        }
-        return *this;
-    }
-    _Rope_iterator& operator--() {
-        _M_decr(1);
-        return *this;
-    }
-    _Rope_iterator& operator-=(ptrdiff_t __n) {
-        if (__n >= 0) {
-            _M_decr(__n);
-        } else {
-            _M_incr(-__n);
-        }
-        return *this;
-    }
-    _Rope_iterator operator++(int) {
-        size_t __old_pos = _M_current_pos;
-        _M_incr(1);
-        return _Rope_iterator<_CharT,_Alloc>(_M_root_rope, __old_pos);
-    }
-    _Rope_iterator operator--(int) {
-        size_t __old_pos = _M_current_pos;
-        _M_decr(1);
-        return _Rope_iterator<_CharT,_Alloc>(_M_root_rope, __old_pos);
-    }
-    reference operator[](ptrdiff_t __n) {
-        return _Rope_char_ref_proxy<_CharT,_Alloc>(
-          _M_root_rope, _M_current_pos + __n);
-    }
-
-#if defined(__STL_MEMBER_TEMPLATES) && defined(__STL_FUNCTION_TMPL_PARTIAL_ORDER)
-    template<class _CharT2, class _Alloc2>
-    friend bool operator==
-        (const _Rope_iterator<_CharT2,_Alloc2>& __x,
-         const _Rope_iterator<_CharT2,_Alloc2>& __y);
-    template<class _CharT2, class _Alloc2>
-    friend bool operator<
-        (const _Rope_iterator<_CharT2,_Alloc2>& __x,
-         const _Rope_iterator<_CharT2,_Alloc2>& __y);
-    template<class _CharT2, class _Alloc2>
-    friend ptrdiff_t operator-
-        (const _Rope_iterator<_CharT2,_Alloc2>& __x,
-         const _Rope_iterator<_CharT2,_Alloc2>& __y);
-    template<class _CharT2, class _Alloc2>
-    friend _Rope_iterator<_CharT2,_Alloc2> operator-
-        (const _Rope_iterator<_CharT2,_Alloc2>& __x,
-         ptrdiff_t __n);
-    template<class _CharT2, class _Alloc2>
-    friend _Rope_iterator<_CharT2,_Alloc2> operator+
-        (const _Rope_iterator<_CharT2,_Alloc2>& __x,
-         ptrdiff_t __n);
-    template<class _CharT2, class _Alloc2>
-    friend _Rope_iterator<_CharT2,_Alloc2> operator+
-        (ptrdiff_t __n,
-         const _Rope_iterator<_CharT2,_Alloc2>& __x);
-#else
-    friend bool operator== __STL_NULL_TMPL_ARGS
-        (const _Rope_iterator<_CharT,_Alloc>& __x,
-         const _Rope_iterator<_CharT,_Alloc>& __y);
-    friend bool operator< __STL_NULL_TMPL_ARGS
-        (const _Rope_iterator<_CharT,_Alloc>& __x,
-         const _Rope_iterator<_CharT,_Alloc>& __y);
-    friend ptrdiff_t operator- __STL_NULL_TMPL_ARGS
-        (const _Rope_iterator<_CharT,_Alloc>& __x,
-         const _Rope_iterator<_CharT,_Alloc>& __y);
-    friend _Rope_iterator<_CharT,_Alloc> operator- __STL_NULL_TMPL_ARGS
-        (const _Rope_iterator<_CharT,_Alloc>& __x,
-         ptrdiff_t __n);
-    friend _Rope_iterator<_CharT,_Alloc> operator+ __STL_NULL_TMPL_ARGS
-        (const _Rope_iterator<_CharT,_Alloc>& __x,
-         ptrdiff_t __n);
-    friend _Rope_iterator<_CharT,_Alloc> operator+ __STL_NULL_TMPL_ARGS
-        (ptrdiff_t __n,
-         const _Rope_iterator<_CharT,_Alloc>& __x);
-#endif
-};
-
-#if defined(__sgi) && !defined(__GNUC__) && (_MIPS_SIM != _MIPS_SIM_ABI32)
-#pragma reset woff 1375
-#endif
-
 //  The Rope base class encapsulates
 //  the differences between SGI-style allocators and standard-conforming
 //  allocators.
 
-#ifdef __STL_USE_STD_ALLOCATORS
-
-// Base class for ordinary allocators.
-template <class _CharT, class _Allocator, bool _IsStatic>
-class _Rope_alloc_base {
-public:
-  typedef _Rope_RopeRep<_CharT,_Allocator> _RopeRep;
-  typedef typename _Alloc_traits<_CharT,_Allocator>::allocator_type
-          allocator_type;
-  allocator_type get_allocator() const { return _M_data_allocator; }
-  _Rope_alloc_base(_RopeRep *__t, const allocator_type& __a)
-        : _M_tree_ptr(__t), _M_data_allocator(__a) {}
-  _Rope_alloc_base(const allocator_type& __a)
-        : _M_data_allocator(__a) {}
-  
-protected:
-  // The only data members of a Rope:
-    allocator_type _M_data_allocator;
-    _RopeRep* _M_tree_ptr;
-
-# define __ROPE_DEFINE_ALLOC(_Tp, __name)         typedef typename           _Alloc_traits<_Tp,_Allocator>::allocator_type __name##Allocator;         _Tp* __name##_allocate(size_t __n) const           { return __name##Allocator(_M_data_allocator).allocate(__n); }         void __name##_deallocate(_Tp *__p, size_t __n) const                 { __name##Allocator(_M_data_allocator).deallocate(__p, __n); }
-  __ROPE_DEFINE_ALLOCS(_Allocator)
-# undef __ROPE_DEFINE_ALLOC
-};
-
-// Specialization for allocators that have the property that we don't
-//  actually have to store an allocator object.  
-template <class _CharT, class _Allocator>
-#if defined(__STL_CLASS_PARTIAL_SPECIALIZATION) //@@by xushiwei
-class _Rope_alloc_base<_CharT,_Allocator,true> {
-#else
-class _Rope_alloc_base_unused {
-	typedef _Rope_alloc_base_unused _Rope_alloc_base; // <_CharT,_Allocator,true> {
-#endif
-public:
-  typedef _Rope_RopeRep<_CharT,_Allocator> _RopeRep;
-  typedef typename _Alloc_traits<_CharT,_Allocator>::allocator_type
-          allocator_type;
-  allocator_type get_allocator() const { return allocator_type(); }
-  _Rope_alloc_base(_RopeRep *__t, const allocator_type&)
-                : _M_tree_ptr(__t) {}
-  _Rope_alloc_base(const allocator_type&) {}
-  
-protected:
-  // The only data member of a Rope:
-    _RopeRep *_M_tree_ptr;
-
-# define __ROPE_DEFINE_ALLOC(_Tp, __name)         typedef typename           _Alloc_traits<_Tp,_Allocator>::_Alloc_type __name##Alloc;         typedef typename           _Alloc_traits<_Tp,_Allocator>::allocator_type __name##Allocator;         static _Tp* __name##_allocate(size_t __n)           { return __name##Alloc::allocate(__n); }         static void __name##_deallocate(_Tp *__p, size_t __n)           { __name##Alloc::deallocate(__p, __n); }
-  __ROPE_DEFINE_ALLOCS(_Allocator)
-# undef __ROPE_DEFINE_ALLOC
-};
-
-template <class _CharT, class _Alloc>
-struct _Rope_base 
-  : public _Rope_alloc_base<_CharT,_Alloc,
-                            _Alloc_traits<_CharT,_Alloc>::_S_instanceless>
-{
-  typedef _Rope_alloc_base<_CharT,_Alloc,
-                            _Alloc_traits<_CharT,_Alloc>::_S_instanceless>
-          _Base;
-  typedef typename _Base::allocator_type allocator_type;
-  typedef _Rope_RopeRep<_CharT,_Alloc> _RopeRep;
-        // The one in _Base may not be visible due to template rules.
-  _Rope_base(_RopeRep* __t, const allocator_type& __a) : _Base(__t, __a) {}
-  _Rope_base(const allocator_type& __a) : _Base(__a) {}
-};    
-
-#else /* !__STL_USE_STD_ALLOCATORS */
-
-template <class _CharT, class _Alloc> 
+template <class _CharT> 
 class _Rope_base {
 public:
-  typedef _Rope_RopeRep<_CharT, _Alloc> _RopeRep;
-  typedef _Alloc allocator_type;
-  static allocator_type get_allocator() { return allocator_type(); }
-  _Rope_base(_RopeRep * __t, const allocator_type&) : _M_tree_ptr(__t) {}
-  _Rope_base(const allocator_type&) {}
+  typedef _Rope_RopeRep<_CharT> _RopeRep;
+  _Rope_base(_RopeRep * __t) : _M_tree_ptr(__t) {}
 
 protected:
   // The only data member of a Rope:
     _RopeRep* _M_tree_ptr;
-
-# define __ROPE_DEFINE_ALLOC(_Tp, __name)         typedef simple_alloc<_Tp, _Alloc> __name##Alloc;         static _Tp* __name##_allocate(size_t __n)                 { return __name##Alloc::allocate(__n); }         static void __name##_deallocate(_Tp *__p, size_t __n)                 { __name##Alloc::deallocate(__p, __n); }
-  __ROPE_DEFINE_ALLOCS(_Alloc)
-# undef __ROPE_DEFINE_ALLOC
 };
 
-#endif /* __STL_USE_STD_ALLOCATORS */
-
+template<class _CharT, class _Alloc> class _Rope_char_ref_proxy;
+template<class _CharT, class _Alloc> class _Rope_char_ptr_proxy;
+template<class _CharT, class _Alloc> class _Rope_iterator_base;
+template<class _CharT, class _Alloc> class _Rope_iterator;
+template<class _CharT, class _Alloc> class _Rope_const_iterator;
 
 template <class _CharT, class _Alloc>
-class Rope : public _Rope_base<_CharT,_Alloc> {
+class Rope : public _Rope_base<_CharT> {
     public:
         typedef _CharT value_type;
         typedef ptrdiff_t difference_type;
@@ -825,36 +261,26 @@ class Rope : public _Rope_base<_CharT,_Alloc> {
         typedef _Rope_char_ref_proxy<_CharT,_Alloc> reference;
         typedef _Rope_char_ptr_proxy<_CharT,_Alloc> pointer;
 
+        friend struct _Rope_RopeRep<_CharT>;
+        friend struct _Rope_RopeSubstring<_CharT>;
+
         friend class _Rope_iterator<_CharT,_Alloc>;
         friend class _Rope_const_iterator<_CharT,_Alloc>;
-        friend struct _Rope_RopeRep<_CharT,_Alloc>;
         friend class _Rope_iterator_base<_CharT,_Alloc>;
         friend class _Rope_char_ptr_proxy<_CharT,_Alloc>;
         friend class _Rope_char_ref_proxy<_CharT,_Alloc>;
-        friend struct _Rope_RopeSubstring<_CharT,_Alloc>;
 
     protected:
-        typedef _Rope_base<_CharT,_Alloc> _Base;
+        typedef _Rope_base<_CharT> _Base;
         typedef typename _Base::allocator_type allocator_type;
-#       ifdef __STL_USE_NAMESPACES
-          using _Base::_M_tree_ptr;
-#       endif
-#       ifdef __STL_USE_STD_ALLOCATORS
-          using _Base::get_allocator;
-          typedef typename _Base::_LAllocator _LAllocator;
-          typedef typename _Base::_CAllocator _CAllocator;
-          typedef typename _Base::_FAllocator _FAllocator;
-#       endif
-        typedef __GC_CONST _CharT* _Cstrptr;
-
-        static _CharT _S_empty_c_str[1];
+        using _Base::_M_tree_ptr;
 
         static bool _S_is0(_CharT __c) { return __c == _S_eos((_CharT*)0); }
         enum { _S_copy_max = 23 };
                 // For strings shorter than _S_copy_max, we copy to
                 // concatenate.
 
-        typedef _Rope_RopeRep<_CharT,_Alloc> _RopeRep;
+        typedef _Rope_RopeRep<_CharT> _RopeRep;
         typedef _Rope_RopeConcatenation<_CharT,_Alloc> _RopeConcatenation;
         typedef _Rope_RopeLeaf<_CharT,_Alloc> _RopeLeaf;
         typedef _Rope_RopeFunction<_CharT,_Alloc> _RopeFunction;
@@ -915,7 +341,7 @@ class Rope : public _Rope_base<_CharT,_Alloc> {
                 
         // Allocate and construct a RopeLeaf using the supplied allocator
         // Takes ownership of s instead of copying.
-        static _RopeLeaf* _S_new_RopeLeaf(__GC_CONST _CharT *__s,
+        static _RopeLeaf* _S_new_RopeLeaf(const _CharT *__s,
                                           size_t __size, allocator_type __a)
         {
 #           ifdef __STL_USE_STD_ALLOCATORS
@@ -1012,11 +438,7 @@ class Rope : public _Rope_base<_CharT,_Alloc> {
         static size_t _S_char_ptr_len(const _CharT* __s);
                         // slightly generalized strlen
 
-#ifndef _WINX_GC_ALLOCATOR //@@by xushiwei
-        Rope(_RopeRep* __t, const allocator_type& __a = allocator_type())
-#else
         Rope(_RopeRep* __t, const allocator_type& __a)
-#endif
           : _Base(__t,__a) { }
 
 
@@ -1084,11 +506,7 @@ class Rope : public _Rope_base<_CharT,_Alloc> {
             return _S_compare(_M_tree_ptr, __y._M_tree_ptr);
         }
 
-#ifndef _WINX_GC_ALLOCATOR
-        Rope(const _CharT* __s, const allocator_type& __a = allocator_type())
-#else
         Rope(const _CharT* __s, const allocator_type& __a)
-#endif
         : _Base(__STL_ROPE_FROM_UNOWNED_CHAR_PTR(__s, _S_char_ptr_len(__s),
                                                  __a),__a)
         { }
@@ -1133,12 +551,8 @@ class Rope : public _Rope_base<_CharT,_Alloc> {
         Rope(size_t __n, _CharT __c,
              const allocator_type& __a = allocator_type());
 
-#ifndef _WINX_GC_ALLOCATOR
-        Rope(const allocator_type& __a = allocator_type())
-#else
         Rope(const allocator_type& __a)
-#endif
-        : _Base(0, __a) {}
+	        : _Base(0, __a) {}
 
         // Construct a Rope from a function that can compute its members
         Rope(CharProducer<_CharT> *__fn, size_t __len, bool __delete_fn,
@@ -1149,11 +563,7 @@ class Rope : public _Rope_base<_CharT,_Alloc> {
                0 : _S_new_RopeFunction(__fn, __len, __delete_fn, __a);
         }
 
-#ifndef _WINX_GC_ALLOCATOR
-		Rope(const Rope& __x, const allocator_type& __a = allocator_type())
-#else
 		Rope(const Rope& __x, const allocator_type& __a)
-#endif
 		   : _Base(__x._M_tree_ptr, __a)
         {
         }
@@ -1241,14 +651,6 @@ class Rope : public _Rope_base<_CharT,_Alloc> {
         void dump() {
             _S_dump(_M_tree_ptr);
         }
-
-        // Convert to 0 terminated string in new allocated memory.
-        // Embedded 0s in the input do not terminate the copy.
-        const _CharT* c_str() const;
-
-        // As above, but lso use the flattened representation as the
-        // the new Rope representation.
-        const _CharT* replace_with_c_str();
 
         _CharT operator[] (size_type __pos) const {
             return _S_fetch(_M_tree_ptr, __pos);
@@ -1772,323 +1174,6 @@ class Rope : public _Rope_base<_CharT,_Alloc> {
 template <class _CharT, class _Alloc>
 const typename Rope<_CharT, _Alloc>::size_type Rope<_CharT, _Alloc>::npos =
                         (size_type)(-1);
-
-template <class _CharT, class _Alloc>
-inline bool operator== (const _Rope_const_iterator<_CharT,_Alloc>& __x,
-                        const _Rope_const_iterator<_CharT,_Alloc>& __y) {
-  return (__x._M_current_pos == __y._M_current_pos && 
-          __x._M_root == __y._M_root);
-}
-
-template <class _CharT, class _Alloc>
-inline bool operator< (const _Rope_const_iterator<_CharT,_Alloc>& __x,
-                       const _Rope_const_iterator<_CharT,_Alloc>& __y) {
-  return (__x._M_current_pos < __y._M_current_pos);
-}
-
-#ifdef __STL_FUNCTION_TMPL_PARTIAL_ORDER
-
-template <class _CharT, class _Alloc>
-inline bool operator!= (const _Rope_const_iterator<_CharT,_Alloc>& __x,
-                        const _Rope_const_iterator<_CharT,_Alloc>& __y) {
-  return !(__x == __y);
-}
-
-template <class _CharT, class _Alloc>
-inline bool operator> (const _Rope_const_iterator<_CharT,_Alloc>& __x,
-                       const _Rope_const_iterator<_CharT,_Alloc>& __y) {
-  return __y < __x;
-}
-
-template <class _CharT, class _Alloc>
-inline bool operator<= (const _Rope_const_iterator<_CharT,_Alloc>& __x,
-                        const _Rope_const_iterator<_CharT,_Alloc>& __y) {
-  return !(__y < __x);
-}
-
-template <class _CharT, class _Alloc>
-inline bool operator>= (const _Rope_const_iterator<_CharT,_Alloc>& __x,
-                        const _Rope_const_iterator<_CharT,_Alloc>& __y) {
-  return !(__x < __y);
-}
-
-#endif /* __STL_FUNCTION_TMPL_PARTIAL_ORDER */
-
-template <class _CharT, class _Alloc>
-inline ptrdiff_t operator-(const _Rope_const_iterator<_CharT,_Alloc>& __x,
-                           const _Rope_const_iterator<_CharT,_Alloc>& __y) {
-  return (ptrdiff_t)__x._M_current_pos - (ptrdiff_t)__y._M_current_pos;
-}
-
-template <class _CharT, class _Alloc>
-inline _Rope_const_iterator<_CharT,_Alloc>
-operator-(const _Rope_const_iterator<_CharT,_Alloc>& __x, ptrdiff_t __n) {
-  return _Rope_const_iterator<_CharT,_Alloc>(
-            __x._M_root, __x._M_current_pos - __n);
-}
-
-template <class _CharT, class _Alloc>
-inline _Rope_const_iterator<_CharT,_Alloc>
-operator+(const _Rope_const_iterator<_CharT,_Alloc>& __x, ptrdiff_t __n) {
-  return _Rope_const_iterator<_CharT,_Alloc>(
-           __x._M_root, __x._M_current_pos + __n);
-}
-
-template <class _CharT, class _Alloc>
-inline _Rope_const_iterator<_CharT,_Alloc>
-operator+(ptrdiff_t __n, const _Rope_const_iterator<_CharT,_Alloc>& __x) {
-  return _Rope_const_iterator<_CharT,_Alloc>(
-           __x._M_root, __x._M_current_pos + __n);
-}
-
-template <class _CharT, class _Alloc>
-inline bool operator== (const _Rope_iterator<_CharT,_Alloc>& __x,
-                        const _Rope_iterator<_CharT,_Alloc>& __y) {
-  return (__x._M_current_pos == __y._M_current_pos && 
-          __x._M_root_rope == __y._M_root_rope);
-}
-
-template <class _CharT, class _Alloc>
-inline bool operator< (const _Rope_iterator<_CharT,_Alloc>& __x,
-                       const _Rope_iterator<_CharT,_Alloc>& __y) {
-  return (__x._M_current_pos < __y._M_current_pos);
-}
-
-#ifdef __STL_FUNCTION_TMPL_PARTIAL_ORDER
-
-template <class _CharT, class _Alloc>
-inline bool operator!= (const _Rope_iterator<_CharT,_Alloc>& __x,
-                        const _Rope_iterator<_CharT,_Alloc>& __y) {
-  return !(__x == __y);
-}
-
-template <class _CharT, class _Alloc>
-inline bool operator> (const _Rope_iterator<_CharT,_Alloc>& __x,
-                       const _Rope_iterator<_CharT,_Alloc>& __y) {
-  return __y < __x;
-}
-
-template <class _CharT, class _Alloc>
-inline bool operator<= (const _Rope_iterator<_CharT,_Alloc>& __x,
-                        const _Rope_iterator<_CharT,_Alloc>& __y) {
-  return !(__y < __x);
-}
-
-template <class _CharT, class _Alloc>
-inline bool operator>= (const _Rope_iterator<_CharT,_Alloc>& __x,
-                        const _Rope_iterator<_CharT,_Alloc>& __y) {
-  return !(__x < __y);
-}
-
-#endif /* __STL_FUNCTION_TMPL_PARTIAL_ORDER */
-
-template <class _CharT, class _Alloc>
-inline ptrdiff_t operator-(const _Rope_iterator<_CharT,_Alloc>& __x,
-                           const _Rope_iterator<_CharT,_Alloc>& __y) {
-  return (ptrdiff_t)__x._M_current_pos - (ptrdiff_t)__y._M_current_pos;
-}
-
-template <class _CharT, class _Alloc>
-inline _Rope_iterator<_CharT,_Alloc>
-operator-(const _Rope_iterator<_CharT,_Alloc>& __x,
-          ptrdiff_t __n) {
-  return _Rope_iterator<_CharT,_Alloc>(
-    __x._M_root_rope, __x._M_current_pos - __n);
-}
-
-template <class _CharT, class _Alloc>
-inline _Rope_iterator<_CharT,_Alloc>
-operator+(const _Rope_iterator<_CharT,_Alloc>& __x,
-          ptrdiff_t __n) {
-  return _Rope_iterator<_CharT,_Alloc>(
-    __x._M_root_rope, __x._M_current_pos + __n);
-}
-
-template <class _CharT, class _Alloc>
-inline _Rope_iterator<_CharT,_Alloc>
-operator+(ptrdiff_t __n, const _Rope_iterator<_CharT,_Alloc>& __x) {
-  return _Rope_iterator<_CharT,_Alloc>(
-    __x._M_root_rope, __x._M_current_pos + __n);
-}
-
-template <class _CharT, class _Alloc>
-inline
-Rope<_CharT,_Alloc>
-operator+ (const Rope<_CharT,_Alloc>& __left,
-           const Rope<_CharT,_Alloc>& __right)
-{
-#   ifdef __STL_USE_STD_ALLOCATORS
-        __stl_assert(__left.get_allocator() == __right.get_allocator());
-#   endif
-    return Rope<_CharT,_Alloc>(
-      Rope<_CharT,_Alloc>::_S_concat(__left._M_tree_ptr, __right._M_tree_ptr),
-	  __left.get_allocator());
-    // Inlining this should make it possible to keep __left and
-    // __right in registers.
-}
-
-template <class _CharT, class _Alloc>
-inline
-Rope<_CharT,_Alloc>&
-operator+= (Rope<_CharT,_Alloc>& __left, 
-      const Rope<_CharT,_Alloc>& __right)
-{
-    __left.append(__right);
-    return __left;
-}
-
-template <class _CharT, class _Alloc>
-inline
-Rope<_CharT,_Alloc>
-operator+ (const Rope<_CharT,_Alloc>& __left,
-           const _CharT* __right) {
-    size_t __rlen = Rope<_CharT,_Alloc>::_S_char_ptr_len(__right);
-    return Rope<_CharT,_Alloc>(
-      Rope<_CharT,_Alloc>::_S_concat_char_iter(
-        __left._M_tree_ptr, __right, __rlen),
-		__left.get_allocator()); 
-}
-
-template <class _CharT, class _Alloc>
-inline
-Rope<_CharT,_Alloc>&
-operator+= (Rope<_CharT,_Alloc>& __left,
-            const _CharT* __right) {
-    __left.append(__right);
-    return __left;
-}
-
-template <class _CharT, class _Alloc>
-inline
-Rope<_CharT,_Alloc>
-operator+ (const Rope<_CharT,_Alloc>& __left, _CharT __right) {
-    return Rope<_CharT,_Alloc>(
-      Rope<_CharT,_Alloc>::_S_concat_char_iter(
-        __left._M_tree_ptr, &__right, 1));
-}
-
-template <class _CharT, class _Alloc>
-inline
-Rope<_CharT,_Alloc>&
-operator+= (Rope<_CharT,_Alloc>& __left, _CharT __right) {
-    __left.append(__right);
-    return __left;
-}
-
-template <class _CharT, class _Alloc>
-bool
-operator< (const Rope<_CharT,_Alloc>& __left, 
-           const Rope<_CharT,_Alloc>& __right) {
-    return __left.compare(__right) < 0;
-}
-        
-template <class _CharT, class _Alloc>
-bool
-operator== (const Rope<_CharT,_Alloc>& __left, 
-            const Rope<_CharT,_Alloc>& __right) {
-    return __left.compare(__right) == 0;
-}
-
-template <class _CharT, class _Alloc>
-inline bool operator== (const _Rope_char_ptr_proxy<_CharT,_Alloc>& __x,
-                        const _Rope_char_ptr_proxy<_CharT,_Alloc>& __y) {
-        return (__x._M_pos == __y._M_pos && __x._M_root == __y._M_root);
-}
-
-#ifdef __STL_FUNCTION_TMPL_PARTIAL_ORDER
-
-template <class _CharT, class _Alloc>
-inline bool
-operator!= (const Rope<_CharT,_Alloc>& __x, const Rope<_CharT,_Alloc>& __y) {
-  return !(__x == __y);
-}
-
-template <class _CharT, class _Alloc>
-inline bool
-operator> (const Rope<_CharT,_Alloc>& __x, const Rope<_CharT,_Alloc>& __y) {
-  return __y < __x;
-}
-
-template <class _CharT, class _Alloc>
-inline bool
-operator<= (const Rope<_CharT,_Alloc>& __x, const Rope<_CharT,_Alloc>& __y) {
-  return !(__y < __x);
-}
-
-template <class _CharT, class _Alloc>
-inline bool
-operator>= (const Rope<_CharT,_Alloc>& __x, const Rope<_CharT,_Alloc>& __y) {
-  return !(__x < __y);
-}
-
-template <class _CharT, class _Alloc>
-inline bool operator!= (const _Rope_char_ptr_proxy<_CharT,_Alloc>& __x,
-                        const _Rope_char_ptr_proxy<_CharT,_Alloc>& __y) {
-  return !(__x == __y);
-}
-
-#endif /* __STL_FUNCTION_TMPL_PARTIAL_ORDER */
-
-#ifdef __STL_USE_NEW_IOSTREAMS
-  template<class _CharT, class _Traits, class _Alloc>
-  basic_ostream<_CharT, _Traits>& operator<<
-                                        (basic_ostream<_CharT, _Traits>& __o,
-                                         const Rope<_CharT, _Alloc>& __r);
-#else
-  template<class _CharT, class _Alloc>
-  ostream& operator<< (ostream& __o, const Rope<_CharT, _Alloc>& __r);
-#endif
-        
-typedef Rope<char> crope;
-typedef Rope<wchar_t> wrope;
-
-inline crope::reference __mutable_reference_at(crope& __c, size_t __i)
-{
-    return __c.mutable_reference_at(__i);
-}
-
-inline wrope::reference __mutable_reference_at(wrope& __c, size_t __i)
-{
-    return __c.mutable_reference_at(__i);
-}
-
-#ifdef __STL_FUNCTION_TMPL_PARTIAL_ORDER
-
-template <class _CharT, class _Alloc>
-inline void swap(Rope<_CharT,_Alloc>& __x, Rope<_CharT,_Alloc>& __y) {
-  __x.swap(__y);
-}
-
-#else
-
-inline void swap(crope __x, crope __y) { __x.swap(__y); }
-inline void swap(wrope __x, wrope __y) { __x.swap(__y); }
-
-#endif /* __STL_FUNCTION_TMPL_PARTIAL_ORDER */
-
-// Hash functions should probably be revisited later:
-__STL_TEMPLATE_NULL struct hash<crope>
-{
-  size_t operator()(const crope& __str) const
-  {
-    size_t __size = __str.size();
-
-    if (0 == __size) return 0;
-    return 13*__str[0] + 5*__str[__size - 1] + __size;
-  }
-};
-
-
-__STL_TEMPLATE_NULL struct hash<wrope>
-{
-  size_t operator()(const wrope& __str) const
-  {
-    size_t __size = __str.size();
-
-    if (0 == __size) return 0;
-    return 13*__str[0] + 5*__str[__size - 1] + __size;
-  }
-};
 
 #if defined(__sgi) && !defined(__GNUC__) && (_MIPS_SIM != _MIPS_SIM_ABI32)
 #pragma reset woff 1174
