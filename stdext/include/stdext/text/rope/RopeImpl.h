@@ -516,7 +516,7 @@ Rope<_CharT,_Alloc>::_S_flatten(_RopeRep* __r, _CharT* __buffer)
 	case _RopeRep::_S_leaf:
 	    {
 		_RopeLeaf* __l = (_RopeLeaf*)__r;
-		return copy_n(__l->_M_data, __l->_M_size, __buffer).second;
+		return stdext::copy_n(__l->_M_data, __l->_M_size, __buffer).second;
 	    }
 	case _RopeRep::_S_function:
 	case _RopeRep::_S_substringfn:

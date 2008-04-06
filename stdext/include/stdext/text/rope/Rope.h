@@ -322,34 +322,34 @@ class Rope {
 
 		Rope& winx_call operator=(TempString<_CharT> s)
 		{
-			Rope b(s.begin(), s.end(), *_M_alloc);
+			Rope b(*_M_alloc, s.begin(), s.end());
 			return operator=(b);
 		}
 
-        void clear()
+        void winx_call clear()
         {
             _M_tree_ptr = 0;
         }
 
-        void push_back(_CharT __x)
+        void winx_call push_back(_CharT __x)
         {
             _RopeRep* __old = _M_tree_ptr;
             _M_tree_ptr = _S_destr_concat_char_iter(_M_tree_ptr, &__x, 1);
         }
 
-        void pop_back()
+        void winx_call pop_back()
         {
             _RopeRep* __old = _M_tree_ptr;
             _M_tree_ptr = 
               _S_substring(_M_tree_ptr, 0, _M_tree_ptr->_M_size - 1);
         }
 
-        _CharT back() const
+        _CharT winx_call back() const
         {
             return _S_fetch(_M_tree_ptr, _M_tree_ptr->_M_size - 1);
         }
 
-        void push_front(_CharT __x)
+        void winx_call push_front(_CharT __x)
         {
             _RopeRep* __old = _M_tree_ptr;
             _RopeRep* __left =
@@ -357,26 +357,26 @@ class Rope {
 			_M_tree_ptr = _S_concat(__left, _M_tree_ptr, *_M_alloc);
         }
 
-        void pop_front()
+        void winx_call pop_front()
         {
             _RopeRep* __old = _M_tree_ptr;
             _M_tree_ptr = _S_substring(_M_tree_ptr, 1, _M_tree_ptr->_M_size);
         }
 
-        _CharT front() const
+        _CharT winx_call front() const
         {
             return _S_fetch(_M_tree_ptr, 0);
         }
 
-        void balance()
+        void winx_call balance()
         {
             _RopeRep* __old = _M_tree_ptr;
             _M_tree_ptr = _S_balance(_M_tree_ptr, *_M_alloc);
         }
 
-        void copy(_CharT* __buffer) const {
+        _CharT* winx_call copy(_CharT* __buffer) const {
             destroy(__buffer, __buffer + size());
-            _S_flatten(_M_tree_ptr, __buffer);
+            return _S_flatten(_M_tree_ptr, __buffer);
         }
 
         // This is the copy function from the standard, but
@@ -384,57 +384,56 @@ class Rope {
         // rest of the interface.
         // Note that this guaranteed not to compile if the draft standard
         // order is assumed.
-        size_type copy(size_type __pos, size_type __n, _CharT* __buffer) const 
+        _CharT* winx_call copy(size_type __pos, size_type __n, _CharT* __buffer) const 
         {
             size_t __size = size();
             size_t __len = (__pos + __n > __size? __size - __pos : __n);
 
             destroy(__buffer, __buffer + __len);
-            _S_flatten(_M_tree_ptr, __pos, __len, __buffer);
-            return __len;
+            return _S_flatten(_M_tree_ptr, __pos, __len, __buffer);
         }
 
         // Print to stdout, exposing structure.  May be useful for
         // performance debugging.
-        void dump() {
+        void winx_call dump() {
             _S_dump(_M_tree_ptr);
         }
 
-        _CharT operator[] (size_type __pos) const {
+        _CharT winx_call operator[] (size_type __pos) const {
             return _S_fetch(_M_tree_ptr, __pos);
         }
 
-        _CharT at(size_type __pos) const {
+        _CharT winx_call at(size_type __pos) const {
            // if (__pos >= size()) throw out_of_range;  // XXX
            return (*this)[__pos];
         }
 
-        const_iterator begin() const {
+        const_iterator winx_call begin() const {
             return(const_iterator(_M_tree_ptr, 0));
         }
 
         // An easy way to get a const iterator from a non-const container.
-        const_iterator const_begin() const {
+        const_iterator winx_call const_begin() const {
             return(const_iterator(_M_tree_ptr, 0));
         }
 
-        const_iterator end() const {
+        const_iterator winx_call end() const {
             return(const_iterator(_M_tree_ptr, size()));
         }
 
-        const_iterator const_end() const {
+        const_iterator winx_call const_end() const {
             return(const_iterator(_M_tree_ptr, size()));
         }
 
-        size_type size() const { 
+        size_type winx_call size() const { 
             return(0 == _M_tree_ptr? 0 : _M_tree_ptr->_M_size);
         }
 
-        size_type length() const {
+        size_type winx_call length() const {
             return size();
         }
 
-        size_type max_size() const {
+        size_type winx_call max_size() const {
             return _S_min_len[_RopeRep::_S_max_rope_depth-1] - 1;
             //  Guarantees that the result can be sufficirntly
             //  balanced.  Longer ropes will probably still work,
@@ -448,19 +447,19 @@ class Rope {
                                  difference_type>  const_reverse_iterator;
 #     endif /* __STL_CLASS_PARTIAL_SPECIALIZATION */ 
 
-        const_reverse_iterator rbegin() const {
+        const_reverse_iterator winx_call rbegin() const {
             return const_reverse_iterator(end());
         }
 
-        const_reverse_iterator const_rbegin() const {
+        const_reverse_iterator winx_call const_rbegin() const {
             return const_reverse_iterator(end());
         }
 
-        const_reverse_iterator rend() const {
+        const_reverse_iterator winx_call rend() const {
             return const_reverse_iterator(begin());
         }
 
-        const_reverse_iterator const_rend() const {
+        const_reverse_iterator winx_call const_rend() const {
             return const_reverse_iterator(begin());
         }
 
@@ -497,27 +496,27 @@ class Rope {
         // The following should really be templatized.
         // The first argument should be an input iterator or
         // forward iterator with value_type _CharT.
-        Rope& append(const _CharT* __iter, size_t __n) {
+        Rope& winx_call append(const _CharT* __iter, size_t __n) {
             _RopeRep* __result = 
               _S_destr_concat_char_iter(_M_tree_ptr, __iter, __n, *_M_alloc);
             _M_tree_ptr = __result;
             return *this;
         }
 
-        Rope& append(const _CharT* __c_string) {
+        Rope& winx_call append(const _CharT* __c_string) {
             size_t __len = std::length(__c_string);
             append(__c_string, __len);
             return(*this);
         }
 
-        Rope& append(const _CharT* __s, const _CharT* __e) {
+        Rope& winx_call append(const _CharT* __s, const _CharT* __e) {
             _RopeRep* __result =
                 _S_destr_concat_char_iter(_M_tree_ptr, __s, __e - __s, *_M_alloc);
             _M_tree_ptr = __result;
             return *this;
         }
 
-        Rope& append(const_iterator __s, const_iterator __e) {
+        Rope& winx_call append(const_iterator __s, const_iterator __e) {
             __stl_assert(__s._M_root == __e._M_root);
             _Self_destruct_ptr __appendee(_S_substring(
               __s._M_root, __s._M_current_pos, __e._M_current_pos));
@@ -527,32 +526,32 @@ class Rope {
             return *this;
         }
 
-        Rope& append(_CharT __c) {
+        Rope& winx_call append(_CharT __c) {
             _RopeRep* __result = 
               _S_destr_concat_char_iter(_M_tree_ptr, &__c, 1);
             _M_tree_ptr = __result;
             return *this;
         }
 
-        Rope& append(const Rope& __y) {
+        Rope& winx_call append(const Rope& __y) {
             _RopeRep* __result = _S_concat(_M_tree_ptr, __y._M_tree_ptr, *_M_alloc);
             _M_tree_ptr = __result;
             return *this;
         }
 
-        Rope& append(size_t __n, _CharT __c) {
+        Rope& winx_call append(size_t __n, _CharT __c) {
             Rope<_CharT,_Alloc> __last(*_M_alloc, __n, __c);
             return append(__last);
         }
 
-        void swap(Rope& __b) {
+        void winx_call swap(Rope& __b) {
 			std::swap(_M_alloc, __b._M_alloc);
 			std::swap(_M_tree_ptr, __b._M_tree_ptr);
         }
 
     protected:
         // Result is included in refcount.
-        static _RopeRep* replace(_RopeRep* __old, size_t __pos1,
+        static _RopeRep* winx_call replace(_RopeRep* __old, size_t __pos1,
                                   size_t __pos2, _RopeRep* __r, _Alloc& __a) {
             if (0 == __old) { return __r; }
             _Self_destruct_ptr __left(
@@ -571,18 +570,18 @@ class Rope {
         }
 
     public:
-        void insert(size_t __p, const Rope& __r) {
+        void winx_call insert(size_t __p, const Rope& __r) {
             _RopeRep* __result = 
 				replace(_M_tree_ptr, __p, __p, __r._M_tree_ptr);
             _M_tree_ptr = __result;
         }
 
-        void insert(size_t __p, size_t __n, _CharT __c) {
+        void winx_call insert(size_t __p, size_t __n, _CharT __c) {
             Rope<_CharT,_Alloc> __r(__n,__c);
             insert(__p, __r);
         }
 
-        void insert(size_t __p, const _CharT* __i, size_t __n) {
+        void winx_call insert(size_t __p, const _CharT* __i, size_t __n) {
             _Self_destruct_ptr __left(_S_substring(_M_tree_ptr, 0, __p));
             _Self_destruct_ptr __right(_S_substring(_M_tree_ptr, __p, size()));
             _Self_destruct_ptr __left_result(
@@ -594,31 +593,31 @@ class Rope {
             _M_tree_ptr = __result;
         }
 
-        void insert(size_t __p, const _CharT* __c_string) {
+        void winx_call insert(size_t __p, const _CharT* __c_string) {
             insert(__p, __c_string, std::length(__c_string));
         }
 
-        void insert(size_t __p, _CharT __c) {
+        void winx_call insert(size_t __p, _CharT __c) {
             insert(__p, &__c, 1);
         }
 
-        void insert(size_t __p) {
+        void winx_call insert(size_t __p) {
             _CharT __c = _CharT();
             insert(__p, &__c, 1);
         }
 
-        void insert(size_t __p, const _CharT* __i, const _CharT* __j) {
+        void winx_call insert(size_t __p, const _CharT* __i, const _CharT* __j) {
             Rope __r(__i, __j);
             insert(__p, __r);
         }
 
-        void insert(size_t __p, const const_iterator& __i,
+        void winx_call insert(size_t __p, const const_iterator& __i,
                               const const_iterator& __j) {
             Rope __r(__i, __j);
             insert(__p, __r);
         }
 
-        void insert(size_t __p, const iterator& __i,
+        void winx_call insert(size_t __p, const iterator& __i,
                               const iterator& __j) {
             Rope __r(__i, __j);
             insert(__p, __r);
@@ -626,187 +625,187 @@ class Rope {
 
         // (position, length) versions of replace operations:
 
-        void replace(size_t __p, size_t __n, const Rope& __r) {
+        void winx_call replace(size_t __p, size_t __n, const Rope& __r) {
             _RopeRep* __result = 
               replace(_M_tree_ptr, __p, __p + __n, __r._M_tree_ptr);
             _M_tree_ptr = __result;
         }
 
-        void replace(size_t __p, size_t __n, 
+        void winx_call replace(size_t __p, size_t __n, 
                      const _CharT* __i, size_t __i_len) {
             Rope __r(__i, __i_len);
             replace(__p, __n, __r);
         }
 
-        void replace(size_t __p, size_t __n, _CharT __c) {
+        void winx_call replace(size_t __p, size_t __n, _CharT __c) {
             Rope __r(__c);
             replace(__p, __n, __r);
         }
 
-        void replace(size_t __p, size_t __n, const _CharT* __c_string) {
+        void winx_call replace(size_t __p, size_t __n, const _CharT* __c_string) {
             Rope __r(__c_string);
             replace(__p, __n, __r);
         }
 
-        void replace(size_t __p, size_t __n, 
+        void winx_call replace(size_t __p, size_t __n, 
                      const _CharT* __i, const _CharT* __j) {
             Rope __r(__i, __j);
             replace(__p, __n, __r);
         }
 
-        void replace(size_t __p, size_t __n,
+        void winx_call replace(size_t __p, size_t __n,
                      const const_iterator& __i, const const_iterator& __j) {
             Rope __r(__i, __j);
             replace(__p, __n, __r);
         }
 
-        void replace(size_t __p, size_t __n,
+        void winx_call replace(size_t __p, size_t __n,
                      const iterator& __i, const iterator& __j) {
             Rope __r(__i, __j);
             replace(__p, __n, __r);
         }
 
         // Single character variants:
-        void replace(size_t __p, _CharT __c) {
+        void winx_call replace(size_t __p, _CharT __c) {
             iterator __i(this, __p);
             *__i = __c;
         }
 
-        void replace(size_t __p, const Rope& __r) {
+        void winx_call replace(size_t __p, const Rope& __r) {
             replace(__p, 1, __r);
         }
 
-        void replace(size_t __p, const _CharT* __i, size_t __i_len) {
+        void winx_call replace(size_t __p, const _CharT* __i, size_t __i_len) {
             replace(__p, 1, __i, __i_len);
         }
 
-        void replace(size_t __p, const _CharT* __c_string) {
+        void winx_call replace(size_t __p, const _CharT* __c_string) {
             replace(__p, 1, __c_string);
         }
 
-        void replace(size_t __p, const _CharT* __i, const _CharT* __j) {
+        void winx_call replace(size_t __p, const _CharT* __i, const _CharT* __j) {
             replace(__p, 1, __i, __j);
         }
 
-        void replace(size_t __p, const const_iterator& __i,
+        void winx_call replace(size_t __p, const const_iterator& __i,
                                const const_iterator& __j) {
             replace(__p, 1, __i, __j);
         }
 
-        void replace(size_t __p, const iterator& __i,
+        void winx_call replace(size_t __p, const iterator& __i,
                                const iterator& __j) {
             replace(__p, 1, __i, __j);
         }
 
         // Erase, (position, size) variant.
-        void erase(size_t __p, size_t __n) {
+        void winx_call erase(size_t __p, size_t __n) {
             _RopeRep* __result = replace(_M_tree_ptr, __p, __p + __n, 0, *_M_alloc);
             _M_tree_ptr = __result;
         }
 
         // Erase, single character
-        void erase(size_t __p) {
+        void winx_call erase(size_t __p) {
             erase(__p, __p + 1);
         }
 
         // Insert, iterator variants.  
-        iterator insert(const iterator& __p, const Rope& __r)
+        iterator winx_call insert(const iterator& __p, const Rope& __r)
                 { insert(__p.index(), __r); return __p; }
-        iterator insert(const iterator& __p, size_t __n, _CharT __c)
+        iterator winx_call insert(const iterator& __p, size_t __n, _CharT __c)
                 { insert(__p.index(), __n, __c); return __p; }
-        iterator insert(const iterator& __p, _CharT __c) 
+        iterator winx_call insert(const iterator& __p, _CharT __c) 
                 { insert(__p.index(), __c); return __p; }
-        iterator insert(const iterator& __p ) 
+        iterator winx_call insert(const iterator& __p ) 
                 { insert(__p.index()); return __p; }
-        iterator insert(const iterator& __p, const _CharT* c_string) 
+        iterator winx_call insert(const iterator& __p, const _CharT* c_string) 
                 { insert(__p.index(), c_string); return __p; }
-        iterator insert(const iterator& __p, const _CharT* __i, size_t __n)
+        iterator winx_call insert(const iterator& __p, const _CharT* __i, size_t __n)
                 { insert(__p.index(), __i, __n); return __p; }
-        iterator insert(const iterator& __p, const _CharT* __i, 
+        iterator winx_call insert(const iterator& __p, const _CharT* __i, 
                         const _CharT* __j)
                 { insert(__p.index(), __i, __j);  return __p; }
-        iterator insert(const iterator& __p,
+        iterator winx_call insert(const iterator& __p,
                         const const_iterator& __i, const const_iterator& __j)
                 { insert(__p.index(), __i, __j); return __p; }
-        iterator insert(const iterator& __p,
+        iterator winx_call insert(const iterator& __p,
                         const iterator& __i, const iterator& __j)
                 { insert(__p.index(), __i, __j); return __p; }
 
         // Replace, range variants.
-        void replace(const iterator& __p, const iterator& __q,
+        void winx_call replace(const iterator& __p, const iterator& __q,
                      const Rope& __r)
                 { replace(__p.index(), __q.index() - __p.index(), __r); }
-        void replace(const iterator& __p, const iterator& __q, _CharT __c)
+        void winx_call replace(const iterator& __p, const iterator& __q, _CharT __c)
                 { replace(__p.index(), __q.index() - __p.index(), __c); }
-        void replace(const iterator& __p, const iterator& __q,
+        void winx_call replace(const iterator& __p, const iterator& __q,
                      const _CharT* __c_string)
                 { replace(__p.index(), __q.index() - __p.index(), __c_string); }
-        void replace(const iterator& __p, const iterator& __q,
+        void winx_call replace(const iterator& __p, const iterator& __q,
                      const _CharT* __i, size_t __n)
                 { replace(__p.index(), __q.index() - __p.index(), __i, __n); }
-        void replace(const iterator& __p, const iterator& __q,
+        void winx_call replace(const iterator& __p, const iterator& __q,
                      const _CharT* __i, const _CharT* __j)
                 { replace(__p.index(), __q.index() - __p.index(), __i, __j); }
-        void replace(const iterator& __p, const iterator& __q,
+        void winx_call replace(const iterator& __p, const iterator& __q,
                      const const_iterator& __i, const const_iterator& __j)
                 { replace(__p.index(), __q.index() - __p.index(), __i, __j); }
-        void replace(const iterator& __p, const iterator& __q,
+        void winx_call replace(const iterator& __p, const iterator& __q,
                      const iterator& __i, const iterator& __j)
                 { replace(__p.index(), __q.index() - __p.index(), __i, __j); }
 
         // Replace, iterator variants.
-        void replace(const iterator& __p, const Rope& __r)
+        void winx_call replace(const iterator& __p, const Rope& __r)
                 { replace(__p.index(), __r); }
-        void replace(const iterator& __p, _CharT __c)
+        void winx_call replace(const iterator& __p, _CharT __c)
                 { replace(__p.index(), __c); }
-        void replace(const iterator& __p, const _CharT* __c_string)
+        void winx_call replace(const iterator& __p, const _CharT* __c_string)
                 { replace(__p.index(), __c_string); }
-        void replace(const iterator& __p, const _CharT* __i, size_t __n)
+        void winx_call replace(const iterator& __p, const _CharT* __i, size_t __n)
                 { replace(__p.index(), __i, __n); }
-        void replace(const iterator& __p, const _CharT* __i, const _CharT* __j)
+        void winx_call replace(const iterator& __p, const _CharT* __i, const _CharT* __j)
                 { replace(__p.index(), __i, __j); }
-        void replace(const iterator& __p, const_iterator __i, 
+        void winx_call replace(const iterator& __p, const_iterator __i, 
                      const_iterator __j)
                 { replace(__p.index(), __i, __j); }
-        void replace(const iterator& __p, iterator __i, iterator __j)
+        void winx_call replace(const iterator& __p, iterator __i, iterator __j)
                 { replace(__p.index(), __i, __j); }
 
         // Iterator and range variants of erase
-        iterator erase(const iterator& __p, const iterator& __q) {
+        iterator winx_call erase(const iterator& __p, const iterator& __q) {
             size_t __p_index = __p.index();
             erase(__p_index, __q.index() - __p_index);
             return iterator(this, __p_index);
         }
-        iterator erase(const iterator& __p) {
+        iterator winx_call erase(const iterator& __p) {
             size_t __p_index = __p.index();
             erase(__p_index, 1);
             return iterator(this, __p_index);
         }
 
-        Rope substr(size_t __start, size_t __len = 1) const {
+        Rope winx_call substr(size_t __start, size_t __len = 1) const {
             return Rope<_CharT,_Alloc>(
                         _S_substring(_M_tree_ptr, __start, __start + __len));
         }
 
-        Rope substr(iterator __start, iterator __end) const {
+        Rope winx_call substr(iterator __start, iterator __end) const {
             return Rope<_CharT,_Alloc>(
                 _S_substring(_M_tree_ptr, __start.index(), __end.index()));
         }
         
-        Rope substr(iterator __start) const {
+        Rope winx_call substr(iterator __start) const {
             size_t __pos = __start.index();
             return Rope<_CharT,_Alloc>(
                         _S_substring(_M_tree_ptr, __pos, __pos + 1));
         }
         
-        Rope substr(const_iterator __start, const_iterator __end) const {
+        Rope winx_call substr(const_iterator __start, const_iterator __end) const {
             // This might eventually take advantage of the cache in the
             // iterator.
             return Rope<_CharT,_Alloc>(
               _S_substring(_M_tree_ptr, __start.index(), __end.index()));
         }
 
-        Rope<_CharT,_Alloc> substr(const_iterator __start) {
+        Rope<_CharT,_Alloc> winx_call substr(const_iterator __start) {
             size_t __pos = __start.index();
             return Rope<_CharT,_Alloc>(
               _S_substring(_M_tree_ptr, __pos, __pos + 1));
@@ -814,8 +813,8 @@ class Rope {
 
         static const size_type npos;
 
-        size_type find(_CharT __c, size_type __pos = 0) const;
-        size_type find(const _CharT* __s, size_type __pos = 0) const {
+        size_type winx_call find(_CharT __c, size_type __pos = 0) const;
+        size_type winx_call find(const _CharT* __s, size_type __pos = 0) const {
             size_type __result_pos;
             const_iterator __result = search(const_begin() + __pos, const_end(),
 				__s, __s + std::length(__s));
@@ -826,11 +825,11 @@ class Rope {
             return __result_pos;
         }
 
-        iterator mutable_begin() {
+        iterator winx_call mutable_begin() {
             return(iterator(this, 0));
         }
 
-        iterator mutable_end() {
+        iterator winx_call mutable_end() {
             return(iterator(this, size()));
         }
 
@@ -841,63 +840,23 @@ class Rope {
                                  difference_type>  reverse_iterator;
 #     endif /* __STL_CLASS_PARTIAL_SPECIALIZATION */ 
 
-        reverse_iterator mutable_rbegin() {
+        reverse_iterator winx_call mutable_rbegin() {
             return reverse_iterator(mutable_end());
         }
 
-        reverse_iterator mutable_rend() {
+        reverse_iterator winx_call mutable_rend() {
             return reverse_iterator(mutable_begin());
         }
 
-        reference mutable_reference_at(size_type __pos) {
+        reference winx_call mutable_reference_at(size_type __pos) {
             return reference(this, __pos);
         }
 
-#       ifdef __STD_STUFF
-            reference operator[] (size_type __pos) {
-                return _char_ref_proxy(this, __pos);
-            }
+        void winx_call reserve(size_type __res_arg = 0) {}
 
-            reference at(size_type __pos) {
-                // if (__pos >= size()) throw out_of_range;  // XXX
-                return (*this)[__pos];
-            }
-
-            void resize(size_type __n, _CharT __c) {}
-            void resize(size_type __n) {}
-            void reserve(size_type __res_arg = 0) {}
-            size_type capacity() const {
-                return max_size();
-            }
-
-          // Stuff below this line is dangerous because it's error prone.
-          // I would really like to get rid of it.
-            // copy function with funny arg ordering.
-              size_type copy(_CharT* __buffer, size_type __n, 
-                             size_type __pos = 0) const {
-                return copy(__pos, __n, __buffer);
-              }
-
-            iterator end() { return mutable_end(); }
-
-            iterator begin() { return mutable_begin(); }
-
-            reverse_iterator rend() { return mutable_rend(); }
-
-            reverse_iterator rbegin() { return mutable_rbegin(); }
-
-#       else
-
-            const_iterator end() { return const_end(); }
-
-            const_iterator begin() { return const_begin(); }
-
-            const_reverse_iterator rend() { return const_rend(); }
-  
-            const_reverse_iterator rbegin() { return const_rbegin(); }
-
-#       endif
-        
+        size_type winx_call capacity() const {
+            return max_size();
+        }
 };
 
 template <class _CharT, class _Alloc>
