@@ -877,6 +877,10 @@ __NS_STD_END
 #include "RopeImpl.h"
 #endif
 
+#ifndef __STDEXT_TEXT_ROPE_CHARPROXY_H__
+#include "CharProxy.h"
+#endif
+
 // -------------------------------------------------------------------------
 // $Log: Rope.h,v $
 
