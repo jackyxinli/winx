@@ -19,6 +19,14 @@
 #ifndef __STDEXT_TEXT_ROPE_H__
 #define __STDEXT_TEXT_ROPE_H__
 
+#ifndef __STDEXT_HASH_H__
+#include "../Hash.h"
+#endif
+
+#ifdef STD_UNITTEST
+#include "../HashMap.h"
+#endif
+
 #if defined(USE_SGISTL_ROPE) && !defined(NO_SGISTL)
 
 #ifndef __STDEXT_TEXT_SGI_ROPE_H__
@@ -107,7 +115,36 @@ bool winx_call operator>=(const Rope<_E, _AllocT>& a, const _T2& b)
 	{return a.compare(b) >= 0; }
 
 // -------------------------------------------------------------------------
+// Hash of Rope class
+
+template <>
+class Hash< Rope<char> >
+{
+public:
+  size_t winx_call operator()(const Rope<char>& __str) const
+  {
+    size_t __size = __str.size();
+    if (0 == __size) return 0;
+    return 13*__str[0] + 5*__str[__size - 1] + __size;
+  }
+};
+
+template <>
+class Hash< Rope<WCHAR> >
+{
+public:
+  size_t winx_call operator()(const Rope<WCHAR>& __str) const
+  {
+    size_t __size = __str.size();
+    if (0 == __size) return 0;
+    return 13*__str[0] + 5*__str[__size - 1] + __size;
+  }
+};
+
+// -------------------------------------------------------------------------
 // class TestRope
+
+#if defined(STD_UNITTEST)
 
 template <class LogT>
 class TestRope : public TestCase
@@ -115,9 +152,27 @@ class TestRope : public TestCase
 	WINX_TEST_SUITE(TestRope);
 		WINX_TEST(testBasic);
 		WINX_TEST(testSequenceBuffer);
+		WINX_TEST(testHash);
 	WINX_TEST_SUITE_END();
 
 public:
+	void testHash(LogT& log)
+	{
+		typedef std::Rope<char> KeyT;
+
+		std::BlockPool recycle;
+		std::ScopeAlloc alloc(recycle);
+
+		std::HashMap<KeyT, int> cont(alloc);
+		
+		KeyT a(alloc, "Hello");
+		cont[a] = 1;
+
+		KeyT b(alloc, "Hello");
+		AssertExp(cont.find(b) != cont.end());
+		AssertExp(cont[b] == 1);
+	}
+
 	void testSequenceBuffer(LogT& log)
 	{
 		std::BlockPool recycle;
@@ -169,6 +224,8 @@ public:
 		AssertExp(c == "ybc");
 	}
 };
+
+#endif // defined(STD_UNITTEST)
 
 // -------------------------------------------------------------------------
 // $Log: Rope.h,v $

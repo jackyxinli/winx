@@ -24,6 +24,7 @@
 #define STD_NO_MSVCRT
 #define STD_ISOCPP_FOR
 #define STD_EXIT
+#define STD_UNITTEST // Run unit testcases
 #define STATIC_ASSERT
 #define ASSERT_ONCE
 #define ASSERT_DERIVE
