@@ -618,10 +618,6 @@ class _Rope_iterator : public _Rope_iterator_base<_CharT> {
 #endif
 };
 
-#if defined(__sgi) && !defined(__GNUC__) && (_MIPS_SIM != _MIPS_SIM_ABI32)
-#pragma reset woff 1375
-#endif
-
 template <class _CharT, class _Alloc>
 void _Rope_iterator<_CharT,_Alloc>::_M_check() {
     if (_M_root_rope->_M_tree_ptr != _M_root) {

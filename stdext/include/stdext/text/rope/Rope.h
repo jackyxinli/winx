@@ -50,10 +50,6 @@
 // valid.  Thus ropes can be logically copied by just copying
 // a pointer value.
 
-#if defined(__sgi) && !defined(__GNUC__) && (_MIPS_SIM != _MIPS_SIM_ABI32)
-#pragma set woff 1174
-#endif
-
 __NS_STD_BEGIN
 
 template<class _CharT, class _Alloc> class _Rope_char_ref_proxy;
@@ -862,10 +858,6 @@ class Rope {
 template <class _CharT, class _Alloc>
 const typename Rope<_CharT, _Alloc>::size_type Rope<_CharT, _Alloc>::npos =
                         (size_type)(-1);
-
-#if defined(__sgi) && !defined(__GNUC__) && (_MIPS_SIM != _MIPS_SIM_ABI32)
-#pragma reset woff 1174
-#endif
 
 __NS_STD_END
 

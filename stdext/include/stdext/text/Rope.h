@@ -40,6 +40,21 @@
 __NS_STD_BEGIN
 
 // -------------------------------------------------------------------------
+// Rope::operator+ & Rope::operator+=
+
+template <class _E, class _AllocT, class _T2> __forceinline
+Rope<_E,_AllocT> operator+(Rope<_E,_AllocT> __left, const _T2& __right)
+{
+	return __left.append(__right);
+}
+
+template <class _E, class _AllocT, class _T2> __forceinline
+Rope<_E,_AllocT>& operator+=(Rope<_E,_AllocT>& __left, const _T2& __right)
+{
+    return __left.append(__right);
+}
+
+// -------------------------------------------------------------------------
 
 template <class _E, class _AllocT, class _T2> __forceinline
 bool winx_call operator==(const Rope<_E, _AllocT>& a, const _T2& b)
@@ -107,6 +122,7 @@ public:
 	{
 		std::BlockPool recycle;
 		std::ScopeAlloc alloc(recycle);
+		char buffer[256];
 
 		std::Rope<char> a(alloc);
 		{
@@ -117,15 +133,17 @@ public:
 			input.append(1, '!');
 			input.append(4, '?');
 		}
+		*a.copy(buffer) = '\0';
 		AssertExp(a == "Hello, world!!????");
 		{
 			std::SequenceBuffer<std::Rope<char>, 16> input(a);
+			input.append(2, ' ');
 			input.append("You");
 			input.append("'re");
 			input.append(" welcome!");
-			input.append(2, ' ');
 		}
-		AssertExp(a == "You're welcome!  Hello, world!!????");
+		*a.copy(buffer) = '\0';
+		AssertExp(a == "Hello, world!!????  You're welcome!");
 	}
 
 	void testBasic(LogT& log)

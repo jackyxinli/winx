@@ -36,11 +36,10 @@
  *   You should not attempt to use it directly.
  */
 
-__NS_STD_BEGIN
+// -------------------------------------------------------------------------
+// stdext::identity_element
 
-#if defined(__sgi) && !defined(__GNUC__) && (_MIPS_SIM != _MIPS_SIM_ABI32)
-#pragma set woff 1174
-#endif
+__NS_STD_BEGIN
 
 // Some helpers, so we can use power on ropes.
 // See below for why this isn't local to the implementation.
@@ -53,16 +52,27 @@ struct _Rope_Concat_fn : public binary_function<
 	_Rope_Concat_fn(_Alloc& alloc) : m_alloc(alloc) {}
 
 	Rope<_CharT,_Alloc> operator()(
-		const Rope<_CharT,_Alloc>& __x, const Rope<_CharT,_Alloc>& __y) {
-		return __x + __y;
+		Rope<_CharT,_Alloc> __x, const Rope<_CharT,_Alloc>& __y) {
+		return __x.append(__y);
 	}
 };
 
+__NS_STD_END
+
+namespace __STD {
+
 template <class _CharT, class _Alloc>
-inline Rope<_CharT,_Alloc> identity_element(const _Rope_Concat_fn<_CharT, _Alloc>& r)
+inline std::Rope<_CharT,_Alloc>
+	identity_element(const std::_Rope_Concat_fn<_CharT, _Alloc>& r)
 {
-    return Rope<_CharT,_Alloc>(r.m_alloc);
+    return std::Rope<_CharT,_Alloc>(r.m_alloc);
 }
+
+} // namespace __STD
+
+// -------------------------------------------------------------------------
+
+__NS_STD_BEGIN
 
 // Concatenate a C string onto a leaf Rope by copying the Rope data.
 // Used for short ropes.
@@ -777,10 +787,8 @@ Rope<_CharT, _Alloc>::Rope(_Alloc& __a, size_t __n, _CharT __c)
  	if (1 == __exponent) {
 		__result = __base_rope;
 	} else {
-		__result = __base_rope;
-		//@@todo
-		//__result = stdext::power(
-		//	__base_rope, __exponent, _Rope_Concat_fn<_CharT,_Alloc>(__a));
+		__result = stdext::power(
+			__base_rope, __exponent, _Rope_Concat_fn<_CharT,_Alloc>(__a));
 	}
 	if (0 != __remainder) {
 	  __result.append(__remainder_rope);
@@ -790,10 +798,6 @@ Rope<_CharT, _Alloc>::Rope(_Alloc& __a, size_t __n, _CharT __c)
     }
     _M_tree_ptr = __result._M_tree_ptr;
 }
-
-#if defined(__sgi) && !defined(__GNUC__) && (_MIPS_SIM != _MIPS_SIM_ABI32)
-#pragma reset woff 1174
-#endif
 
 __NS_STD_END
 
