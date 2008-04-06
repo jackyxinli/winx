@@ -620,7 +620,7 @@ Rope<_CharT,_Alloc>::_S_balance(_RopeRep* __r, _Alloc& __a)
 
     for (__i = 0; __i <= _RopeRep::_S_max_rope_depth; ++__i) 
       __forest[__i] = 0;
-      _S_add_to_forest(__r, __forest);
+      _S_add_to_forest(__r, __forest, __a);
       for (__i = 0; __i <= _RopeRep::_S_max_rope_depth; ++__i) 
         if (0 != __forest[__i]) {
 	  __result = _S_concat(__forest[__i], __result, __a);
@@ -638,25 +638,25 @@ Rope<_CharT,_Alloc>::_S_balance(_RopeRep* __r, _Alloc& __a)
 
 template <class _CharT, class _Alloc>
 void
-Rope<_CharT,_Alloc>::_S_add_to_forest(_RopeRep* __r, _RopeRep** __forest)
+Rope<_CharT,_Alloc>::_S_add_to_forest(_RopeRep* __r, _RopeRep** __forest, _Alloc& __a)
 {
     if (__r->_M_is_balanced) {
-	_S_add_leaf_to_forest(__r, __forest);
+	_S_add_leaf_to_forest(__r, __forest, __a);
 	return;
     }
     __stl_assert(__r->_M_tag == _RopeRep::_S_concat);
     {
 	_RopeConcatenation* __c = (_RopeConcatenation*)__r;
 
-	_S_add_to_forest(__c->_M_left, __forest);
-	_S_add_to_forest(__c->_M_right, __forest);
+	_S_add_to_forest(__c->_M_left, __forest, __a);
+	_S_add_to_forest(__c->_M_right, __forest, __a);
     }
 }
 
 
 template <class _CharT, class _Alloc>
 void
-Rope<_CharT,_Alloc>::_S_add_leaf_to_forest(_RopeRep* __r, _RopeRep** __forest)
+Rope<_CharT,_Alloc>::_S_add_leaf_to_forest(_RopeRep* __r, _RopeRep** __forest, _Alloc& __a)
 {
     _RopeRep* __insertee;   		// included in refcount
     _RopeRep* __too_tiny = 0;    	// included in refcount
@@ -665,12 +665,12 @@ Rope<_CharT,_Alloc>::_S_add_leaf_to_forest(_RopeRep* __r, _RopeRep** __forest)
 
     for (__i = 0; __s >= _S_min_len[__i+1]/* not this bucket */; ++__i) {
 	if (0 != __forest[__i]) {
-	    __too_tiny = _S_concat_and_set_balanced(__forest[__i], __too_tiny);
+	    __too_tiny = _S_concat_and_set_balanced(__forest[__i], __too_tiny, __a);
 	    __forest[__i] = 0;
 	}
     }
     {
-	__insertee = _S_concat_and_set_balanced(__too_tiny, __r);
+	__insertee = _S_concat_and_set_balanced(__too_tiny, __r, __a);
     }
     // Too_tiny dead, and no longer included in refcount.
     // Insertee is live and included.
@@ -678,7 +678,7 @@ Rope<_CharT,_Alloc>::_S_add_leaf_to_forest(_RopeRep* __r, _RopeRep** __forest)
     __stl_assert(__insertee->_M_depth <= __r->_M_depth + 1);
     for (;; ++__i) {
 	if (0 != __forest[__i]) {
-	    __insertee = _S_concat_and_set_balanced(__forest[__i], __insertee);
+	    __insertee = _S_concat_and_set_balanced(__forest[__i], __insertee, __a);
 	    __forest[__i] = 0;
 	    __stl_assert(_S_is_almost_balanced(__insertee));
 	}

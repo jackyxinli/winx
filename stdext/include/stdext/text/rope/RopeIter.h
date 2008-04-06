@@ -30,6 +30,9 @@ __NS_STD_BEGIN
 // Iterators are assumed to be thread private.  Ropes can
 // be shared.
 
+// -------------------------------------------------------------------------
+// class _Rope_iterator_base
+
 template <class _CharT>
 class _Rope_iterator_base
   : public random_access_iterator<_CharT, ptrdiff_t> {
@@ -97,6 +100,9 @@ class _Rope_iterator_base
         }
     }
 };
+
+// -------------------------------------------------------------------------
+// class _Rope_const_iterator
 
 template<class _CharT>
 class _Rope_const_iterator : public _Rope_iterator_base<_CharT> {
@@ -182,7 +188,77 @@ class _Rope_const_iterator : public _Rope_iterator_base<_CharT> {
     reference operator[](size_t __n) {
         return Rope<_CharT,_Alloc>::_S_fetch(_M_root, _M_current_pos + __n);
     }
+
+  public:
+	template <class _CharT>
+	inline bool operator== (const _Rope_const_iterator<_CharT>& __y) const {
+	  return (_M_current_pos == __y._M_current_pos && 
+			  _M_root == __y._M_root);
+	}
+	template <class _CharT>
+	inline bool operator< (const _Rope_const_iterator<_CharT>& __y) const {
+	  return (_M_current_pos < __y._M_current_pos);
+	}
 };
+
+/* @@todo
+template <class _CharT>
+inline bool operator!= (const _Rope_const_iterator<_CharT>& __x,
+						const _Rope_const_iterator<_CharT>& __y) {
+  return !(__x == __y);
+}
+*/
+
+template <class _CharT>
+inline bool operator> (const _Rope_const_iterator<_CharT>& __x,
+                       const _Rope_const_iterator<_CharT>& __y) {
+  return __y < __x;
+}
+
+template <class _CharT>
+inline bool operator<= (const _Rope_const_iterator<_CharT>& __x,
+                        const _Rope_const_iterator<_CharT>& __y) {
+  return !(__y < __x);
+}
+
+template <class _CharT>
+inline bool operator>= (const _Rope_const_iterator<_CharT>& __x,
+                        const _Rope_const_iterator<_CharT>& __y) {
+  return !(__x < __y);
+}
+
+// -------------------------------------------------------------------------
+// _Rope_const_iterator::operator+/operator-
+
+template <class _CharT>
+inline ptrdiff_t operator-(const _Rope_const_iterator<_CharT>& __x,
+                           const _Rope_const_iterator<_CharT>& __y) {
+  return (ptrdiff_t)__x._M_current_pos - (ptrdiff_t)__y._M_current_pos;
+}
+
+template <class _CharT>
+inline _Rope_const_iterator<_CharT>
+operator-(const _Rope_const_iterator<_CharT>& __x, ptrdiff_t __n) {
+  return _Rope_const_iterator<_CharT>(
+            __x._M_root, __x._M_current_pos - __n);
+}
+
+template <class _CharT>
+inline _Rope_const_iterator<_CharT>
+operator+(const _Rope_const_iterator<_CharT>& __x, ptrdiff_t __n) {
+  return _Rope_const_iterator<_CharT>(
+           __x._M_root, __x._M_current_pos + __n);
+}
+
+template <class _CharT>
+inline _Rope_const_iterator<_CharT>
+operator+(ptrdiff_t __n, const _Rope_const_iterator<_CharT>& __x) {
+  return _Rope_const_iterator<_CharT>(
+           __x._M_root, __x._M_current_pos + __n);
+}
+
+// -------------------------------------------------------------------------
+// class _Rope_iterator
 
 /*
 template<class _CharT>

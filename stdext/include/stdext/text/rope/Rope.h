@@ -243,10 +243,10 @@ class Rope {
 
         // Add all unbalanced subtrees to the forest of balanceed trees.
         // Used only by balance.
-        static void _S_add_to_forest(_RopeRep*__r, _RopeRep** __forest);
+        static void _S_add_to_forest(_RopeRep*__r, _RopeRep** __forest, _Alloc& __a);
         
         // Add __r to forest, assuming __r is already balanced.
-        static void _S_add_leaf_to_forest(_RopeRep* __r, _RopeRep** __forest);
+        static void _S_add_leaf_to_forest(_RopeRep* __r, _RopeRep** __forest, _Alloc& __a);
 
         // Print to stdout, exposing structure
         static void _S_dump(_RopeRep* __r, int __indent = 0);
