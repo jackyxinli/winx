@@ -364,7 +364,7 @@ void _Rope_iterator_base<_CharT,_Alloc>::_S_setbuf(
 		size_t __buf_start_pos = __leaf_pos;
 		size_t __leaf_end = __leaf_pos + __leaf->_M_size;
 		CharProducer<_CharT>* __fn =
-			((_Rope_RopeFunction<_CharT,_Alloc>*)__leaf)->_M_fn;
+			((_Rope_RopeFunction<_CharT>*)__leaf)->_M_fn;
 
 		if (__buf_start_pos + __len <= __pos) {
 		    __buf_start_pos = __pos - __len/4;

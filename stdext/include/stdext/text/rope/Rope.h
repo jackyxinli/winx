@@ -136,19 +136,6 @@ class Rope {
 
 
    protected:
-
-        static size_t _S_rounded_up_size(size_t __n) {
-            return _RopeLeaf::_S_rounded_up_size(__n);
-        }
-
-        static size_t _S_allocated_capacity(size_t __n) {
-            if (_S_is_basic_char_type((_CharT*)0)) {
-                return _S_rounded_up_size(__n) - 1;
-            } else {
-                return _S_rounded_up_size(__n);
-            }
-        }
-                
         // Allocate and construct a RopeLeaf using the supplied allocator
         // Takes ownership of s instead of copying.
         static _RopeLeaf* _S_new_RopeLeaf(const _CharT *__s,
@@ -184,7 +171,7 @@ class Rope {
                        size_t __size, _Alloc& __a)
         {
             if (0 == __size) return 0;
-            _CharT* __buf = STD_ALLOC_ARRAY(__a, _CharT, _S_rounded_up_size(__size));
+            _CharT* __buf = STD_ALLOC_ARRAY(__a, _CharT, __size);
             uninitialized_copy_n(__s, __size, __buf);
             return _S_new_RopeLeaf(__buf, __size, __a);
         }
@@ -197,7 +184,7 @@ class Rope {
         // Does not increment left and right ref counts even though
         // they are referenced.
         static _RopeRep*
-        _S_tree_concat(_RopeRep* __left, _RopeRep* __right);
+        _S_tree_concat(_RopeRep* __left, _RopeRep* __right, _Alloc& __a);
 
         // Concatenation helper functions
         static _RopeLeaf*
@@ -315,7 +302,7 @@ class Rope {
         Rope(_Alloc& __a, _CharT __c)
         : _M_alloc(&__a)
         {
-            _CharT* __buf = STD_ALLOC_ARRAY(__a, _CharT, _S_rounded_up_size(1));
+            _CharT* __buf = STD_ALLOC_ARRAY(__a, _CharT, 1);
             construct(__buf, __c);
 			_M_tree_ptr = _S_new_RopeLeaf(__buf, 1, __a);
         }
@@ -378,7 +365,7 @@ class Rope {
         void balance()
         {
             _RopeRep* __old = _M_tree_ptr;
-            _M_tree_ptr = _S_balance(_M_tree_ptr);
+            _M_tree_ptr = _S_balance(_M_tree_ptr, *_M_alloc);
         }
 
 		void copy(Rope& __r) {

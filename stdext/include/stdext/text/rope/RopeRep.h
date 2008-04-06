@@ -78,21 +78,6 @@ struct _Rope_RopeLeaf : public _Rope_RopeRep<_CharT> {
   public:
   	using _Base::_S_leaf;
   public:
-    // Apparently needed by VC++
-    // The data fields of leaves are allocated with some
-    // extra space, to accomodate future growth and for basic
-    // character types, to hold a trailing eos character.
-    enum { _S_alloc_granularity = 8 };
-    static size_t _S_rounded_up_size(size_t __n) {
-        size_t __size_with_eos;
-             
-        if (_S_is_basic_char_type((_CharT*)0)) {
-            __size_with_eos = __n + 1;
-        } else {
-            __size_with_eos = __n;
-        }
-		return __size_with_eos;
-    }
     const _CharT* _M_data;		/* Not necessarily 0 terminated. */
                                 /* The allocated size is         */
                                 /* _S_rounded_up_size(size), except */
@@ -140,8 +125,7 @@ struct _Rope_RopeFunction : public _Rope_RopeRep<_CharT> {
       static void _S_fn_finalization_proc(void * __tree, void *) {
         delete ((_Rope_RopeFunction *)__tree) -> _M_fn;
       }
-    _Rope_RopeFunction(CharProducer<_CharT>* __f, size_t __size,
-                        bool __d)
+    _Rope_RopeFunction(CharProducer<_CharT>* __f, size_t __size, bool __d)
       : _Rope_RopeRep<_CharT>(_S_function, 0, true, __size)
       , _M_fn(__f)
     {
@@ -168,6 +152,7 @@ struct _Rope_RopeSubstring : public _Rope_RopeFunction<_CharT>,
   	using _Base::_S_substringfn;
   	using _Base::_S_leaf;
   	using _Base::_M_tag;
+	using _Base::_M_fn;
   public:
     // XXX this whole class should be rewritten.
     _Rope_RopeRep<_CharT>* _M_base;      // not 0
@@ -179,7 +164,7 @@ struct _Rope_RopeSubstring : public _Rope_RopeFunction<_CharT>,
             case _S_substringfn:
               {
                 CharProducer<_CharT>* __fn =
-                        ((_Rope_RopeFunction<_CharT,_Alloc>*)_M_base)->_M_fn;
+                        ((_Rope_RopeFunction<_CharT>*)_M_base)->_M_fn;
                 __stl_assert(__start_pos + __req_len <= _M_size);
                 __stl_assert(_M_start + _M_size <= _M_base->_M_size);
                 (*__fn)(__start_pos + _M_start, __req_len, __buffer);
@@ -188,7 +173,7 @@ struct _Rope_RopeSubstring : public _Rope_RopeFunction<_CharT>,
             case _S_leaf:
               {
                 const _CharT* __s =
-                        ((_Rope_RopeLeaf<_CharT,_Alloc>*)_M_base)->_M_data;
+                        ((_Rope_RopeLeaf<_CharT>*)_M_base)->_M_data;
                 uninitialized_copy_n(__s + __start_pos + _M_start, __req_len,
                                      __buffer);
               }
@@ -197,8 +182,9 @@ struct _Rope_RopeSubstring : public _Rope_RopeFunction<_CharT>,
               __stl_assert(false);
         }
     }
+
     _Rope_RopeSubstring(_Rope_RopeRep<_CharT>* __b, size_t __s, size_t __l)
-      : _Rope_RopeFunction<_CharT,_Alloc>(this, __l, false),
+      : _Rope_RopeFunction<_CharT>(NULL, __l, false),
         CharProducer<_CharT>(),
         _M_base(__b),
         _M_start(__s)
@@ -206,6 +192,7 @@ struct _Rope_RopeSubstring : public _Rope_RopeFunction<_CharT>,
         __stl_assert(__l > 0);
         __stl_assert(__s + __l <= __b->_M_size);
         _M_tag = _S_substringfn;
+		_M_fn = (CharProducer<_CharT>*)this;
     }
 };
 
