@@ -143,8 +143,12 @@ public:
 		AssertExp(a.compare(b) == 0);
 
 		std::Rope<char> c(alloc);
-		c.copy(a);
+		c = a;
 		AssertExp(c == b);
+
+		c = "abc";
+		c.mutable_reference_at(0) = 'y';
+		AssertExp(c == "ybc");
 	}
 };
 

@@ -84,12 +84,12 @@ public:
 // -------------------------------------------------------------------------
 // class Rope
 
-template <class CharT, class AllocT = ScopeAlloc>
-class Rope : public stdext::rope<CharT, StlAlloc<CharT, AllocT> >
+template <class _CharT, class AllocT = ScopeAlloc>
+class Rope : public stdext::rope<_CharT, StlAlloc<_CharT, AllocT> >
 {
 private:
-	typedef StlAlloc<CharT, AllocT> _Alloc;
-	typedef stdext::rope<CharT, _Alloc> _Base;
+	typedef StlAlloc<_CharT, AllocT> _Alloc;
+	typedef stdext::rope<_CharT, _Alloc> _Base;
 
 public:
 	using _Base::compare;
@@ -99,17 +99,17 @@ public:
 	{
 	}
 
-	Rope(AllocT& alloc, const CharT* src)
+	Rope(AllocT& alloc, const _CharT* src)
 		: _Base(src, alloc)
 	{
 	}
 
-	Rope(AllocT& alloc, const CharT* src, size_t len)
+	Rope(AllocT& alloc, const _CharT* src, size_t len)
 		: _Base(src, len, alloc)
 	{
 	}
 
-	Rope(AllocT& alloc, size_t count, CharT ch)
+	Rope(AllocT& alloc, size_t count, _CharT ch)
 		: _Base(count, ch, alloc)
 	{
 	}
@@ -120,16 +120,18 @@ public:
 	{
 	}
 
-	void winx_call copy(const _Base& from)
-	{
-		_Base::operator=(from);
-	}
-
 public:
-	int winx_call compare(TempString<CharT> s) const
+	int winx_call compare(TempString<_CharT> s) const
 	{
 		_Base b(s.begin(), s.end(), _Base::get_allocator());
 		return _Base::compare(b);
+	}
+
+	Rope& winx_call operator=(TempString<_CharT> s)
+	{
+		_Base b(s.begin(), s.end(), _Base::get_allocator());
+		_Base::operator=(b);
+		return *this;
 	}
 };
 

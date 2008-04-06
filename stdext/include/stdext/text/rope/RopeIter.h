@@ -407,13 +407,13 @@ class _Rope_const_iterator : public _Rope_iterator_base<_CharT> {
 	}
 };
 
-/* @@todo
+#ifdef __STL_FUNCTION_TMPL_PARTIAL_ORDER
+
 template <class _CharT>
-inline bool operator!= (const _Rope_const_iterator<_CharT>& __x,
-						const _Rope_const_iterator<_CharT>& __y) {
+__forceinline bool operator!= (const _Rope_const_iterator<_CharT>& __x,
+							   const _Rope_const_iterator<_CharT>& __y) {
   return !(__x == __y);
 }
-*/
 
 template <class _CharT>
 inline bool operator> (const _Rope_const_iterator<_CharT>& __x,
@@ -432,6 +432,8 @@ inline bool operator>= (const _Rope_const_iterator<_CharT>& __x,
                         const _Rope_const_iterator<_CharT>& __y) {
   return !(__x < __y);
 }
+
+#endif
 
 // -------------------------------------------------------------------------
 // _Rope_const_iterator::operator+/operator-

@@ -320,6 +320,12 @@ class Rope {
                0 : _S_new_RopeFunction(__fn, __len, __delete_fn, __a);
         }
 
+		Rope& winx_call operator=(TempString<_CharT> s)
+		{
+			Rope b(s.begin(), s.end(), *_M_alloc);
+			return operator=(b);
+		}
+
         void clear()
         {
             _M_tree_ptr = 0;
@@ -367,10 +373,6 @@ class Rope {
             _RopeRep* __old = _M_tree_ptr;
             _M_tree_ptr = _S_balance(_M_tree_ptr, *_M_alloc);
         }
-
-		void copy(Rope& __r) {
-			*this = __r;
-		}
 
         void copy(_CharT* __buffer) const {
             destroy(__buffer, __buffer + size());
