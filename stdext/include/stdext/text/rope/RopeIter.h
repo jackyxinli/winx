@@ -73,13 +73,13 @@ class _Rope_iterator_base : public random_access_iterator<_CharT, ptrdiff_t> {
                         // multithreaded case.
     // The cached path is generally assumed to be valid
     // only if the buffer is valid.
-    static void _S_setbuf(_Rope_iterator_base& __x);
+    static void winx_call _S_setbuf(_Rope_iterator_base& __x);
                                         // Set buffer contents given
                                         // path cache.
-    static void _S_setcache(_Rope_iterator_base& __x);
+    static void winx_call _S_setcache(_Rope_iterator_base& __x);
                                         // Set buffer contents and
                                         // path cache.
-    static void _S_setcache_for_incr(_Rope_iterator_base& __x);
+    static void winx_call _S_setcache_for_incr(_Rope_iterator_base& __x);
                                         // As above, but assumes path
                                         // cache is valid for previous posn.
     _Rope_iterator_base() {}
@@ -116,7 +116,7 @@ class _Rope_iterator_base : public random_access_iterator<_CharT, ptrdiff_t> {
 // Results in a valid buf_ptr if the iterator can be legitimately
 // dereferenced.
 template <class _CharT>
-void _Rope_iterator_base<_CharT>::_S_setbuf( 
+void winx_call _Rope_iterator_base<_CharT>::_S_setbuf( 
   _Rope_iterator_base<_CharT>& __x)
 {
     const _RopeRep* __leaf = __x._M_path_end[__x._M_leaf_index];
@@ -162,8 +162,8 @@ void _Rope_iterator_base<_CharT>::_S_setbuf(
 // Set path and buffer inside a Rope iterator.  We assume that 
 // pos and root are already set.
 template <class _CharT>
-void _Rope_iterator_base<_CharT>::_S_setcache
-(_Rope_iterator_base<_CharT>& __x)
+void winx_call _Rope_iterator_base<_CharT>::_S_setcache(
+	_Rope_iterator_base<_CharT>& __x)
 {
     const _RopeRep* __path[_RopeRep::_S_max_rope_depth+1];
     const _RopeRep* __curr_rope;
@@ -226,7 +226,8 @@ void _Rope_iterator_base<_CharT>::_S_setcache
 // Specialized version of the above.  Assumes that
 // the path cache is valid for the previous position.
 template <class _CharT>
-void _Rope_iterator_base<_CharT>::_S_setcache_for_incr(_Rope_iterator_base<_CharT>& __x)
+void winx_call _Rope_iterator_base<_CharT>::_S_setcache_for_incr(
+	_Rope_iterator_base<_CharT>& __x)
 {
     int __current_index = __x._M_leaf_index;
     const _RopeRep* __current_node = __x._M_path_end[__current_index];
@@ -346,7 +347,7 @@ class _Rope_iterator : public _Rope_iterator_base<_CharT> {
     typedef _Rope_char_ref_proxy<_CharT,_Alloc>* pointer;
 
   public:
-    Rope<_CharT,_Alloc>& container() const { return *_M_root_rope; }
+    Rope<_CharT,_Alloc>& winx_call container() const { return *_M_root_rope; }
     _Rope_iterator() {
         _M_root = 0;  // Needed for reference counting.
     };
@@ -359,7 +360,8 @@ class _Rope_iterator : public _Rope_iterator_base<_CharT> {
         _M_root_rope(__r)
        { if (!(__r ->empty()))_S_setcache(*this); }
     _Rope_iterator(Rope<_CharT,_Alloc>& __r, size_t __pos);
-    _Rope_iterator& operator= (const _Rope_iterator& __x) {
+
+    _Rope_iterator& winx_call operator= (const _Rope_iterator& __x) {
         _RopeRep* __old = _M_root;
         if (0 != __x._M_buf_ptr) {
             _M_root_rope = __x._M_root_rope;
@@ -372,7 +374,7 @@ class _Rope_iterator : public _Rope_iterator_base<_CharT> {
         }
         return(*this);
     }
-    reference operator*() {
+    reference winx_call operator*() {
         _M_check();
         if (0 == _M_buf_ptr) {
             return _Rope_char_ref_proxy<_CharT,_Alloc>(
@@ -382,11 +384,11 @@ class _Rope_iterator : public _Rope_iterator_base<_CharT> {
                _M_root_rope, _M_current_pos, *_M_buf_ptr);
         }
     }
-    _Rope_iterator& operator++() {
+    _Rope_iterator& winx_call operator++() {
         _M_incr(1);
         return *this;
     }
-    _Rope_iterator& operator+=(ptrdiff_t __n) {
+    _Rope_iterator& winx_call operator+=(ptrdiff_t __n) {
         if (__n >= 0) {
             _M_incr(__n);
         } else {
@@ -394,11 +396,11 @@ class _Rope_iterator : public _Rope_iterator_base<_CharT> {
         }
         return *this;
     }
-    _Rope_iterator& operator--() {
+    _Rope_iterator& winx_call operator--() {
         _M_decr(1);
         return *this;
     }
-    _Rope_iterator& operator-=(ptrdiff_t __n) {
+    _Rope_iterator& winx_call operator-=(ptrdiff_t __n) {
         if (__n >= 0) {
             _M_decr(__n);
         } else {
@@ -406,27 +408,27 @@ class _Rope_iterator : public _Rope_iterator_base<_CharT> {
         }
         return *this;
     }
-    _Rope_iterator operator++(int) {
+    _Rope_iterator winx_call operator++(int) {
         size_t __old_pos = _M_current_pos;
         _M_incr(1);
         return _Rope_iterator<_CharT,_Alloc>(_M_root_rope, __old_pos);
     }
-    _Rope_iterator operator--(int) {
+    _Rope_iterator winx_call operator--(int) {
         size_t __old_pos = _M_current_pos;
         _M_decr(1);
         return _Rope_iterator<_CharT,_Alloc>(_M_root_rope, __old_pos);
     }
-    reference operator[](ptrdiff_t __n) {
+    reference winx_call operator[](ptrdiff_t __n) {
         return _Rope_char_ref_proxy<_CharT,_Alloc>(
           _M_root_rope, _M_current_pos + __n);
     }
 
   public:
-	bool operator== (const _Rope_iterator& __y) const {
+	bool winx_call operator== (const _Rope_iterator& __y) const {
 	  return (_M_current_pos == __y._M_current_pos && 
 			  _M_root_rope == __y._M_root_rope);
 	}
-	bool operator< (const _Rope_iterator& __y) const {
+	bool winx_call operator< (const _Rope_iterator& __y) const {
 	  return (_M_current_pos < __y._M_current_pos);
 	}
 };
@@ -540,7 +542,7 @@ class _Rope_const_iterator : public _Rope_iterator_base<_CharT> {
 	_Rope_const_iterator(const _Rope_iterator<_CharT,_Alloc>& __x)
 		: _Base(__x, __x.container()._M_tree_ptr)  {}
 
-    _Rope_const_iterator& operator= (const _Rope_const_iterator& __x) {
+    _Rope_const_iterator& winx_call operator= (const _Rope_const_iterator& __x) {
         if (0 != __x._M_buf_ptr) {
             *(static_cast<_Rope_iterator_base<_CharT>*>(this)) = __x;
         } else {
@@ -552,7 +554,7 @@ class _Rope_const_iterator : public _Rope_iterator_base<_CharT> {
     }
 
 	template <class _Alloc>
-	_Rope_const_iterator& operator= (const _Rope_iterator<_CharT,_Alloc>& __x) {
+	_Rope_const_iterator& winx_call operator= (const _Rope_iterator<_CharT,_Alloc>& __x) {
 		_RopeRep* __new_root = __x.container()._M_tree_ptr;
         if (__new_root == _M_root) {
             *(static_cast<_Rope_iterator_base<_CharT>*>(this)) = __x;
@@ -564,12 +566,12 @@ class _Rope_const_iterator : public _Rope_iterator_base<_CharT> {
         return(*this);
     }
 
-    reference operator*() {
+    reference winx_call operator*() {
         if (0 == _M_buf_ptr)
 			_S_setcache(*this);
         return *_M_buf_ptr;
     }
-    _Rope_const_iterator& operator++() {
+    _Rope_const_iterator& winx_call operator++() {
         const _CharT* __next;
         if (0 != _M_buf_ptr && (__next = _M_buf_ptr + 1) < _M_buf_end) {
             _M_buf_ptr = __next;
@@ -579,7 +581,7 @@ class _Rope_const_iterator : public _Rope_iterator_base<_CharT> {
         }
         return *this;
     }
-	_Rope_const_iterator& operator+=(ptrdiff_t __n) {
+	_Rope_const_iterator& winx_call operator+=(ptrdiff_t __n) {
 		if (__n >= 0) {
 			_M_incr(__n);
 		} else {
@@ -587,11 +589,11 @@ class _Rope_const_iterator : public _Rope_iterator_base<_CharT> {
 		}
 		return *this;
 	}
-	_Rope_const_iterator& operator--() {
+	_Rope_const_iterator& winx_call operator--() {
 		_M_decr(1);
 		return *this;
 	}
-	_Rope_const_iterator& operator-=(ptrdiff_t __n) {
+	_Rope_const_iterator& winx_call operator-=(ptrdiff_t __n) {
         if (__n >= 0) {
             _M_decr(__n);
         } else {
@@ -599,7 +601,7 @@ class _Rope_const_iterator : public _Rope_iterator_base<_CharT> {
         }
         return *this;
     }
-    _Rope_const_iterator operator++(int) {
+    _Rope_const_iterator winx_call operator++(int) {
         size_t __old_pos = _M_current_pos;
         _M_incr(1);
         return _Rope_const_iterator<_CharT>(_M_root, __old_pos);
@@ -607,23 +609,23 @@ class _Rope_const_iterator : public _Rope_iterator_base<_CharT> {
         // Perhaps we should instead copy the iterator
         // if it has a valid cache?
     }
-    _Rope_const_iterator operator--(int) {
+    _Rope_const_iterator winx_call operator--(int) {
         size_t __old_pos = _M_current_pos;
         _M_decr(1);
         return _Rope_const_iterator<_CharT>(_M_root, __old_pos);
     }
-    reference operator[](size_t __n) {
+    reference winx_call operator[](size_t __n) {
         return Rope<_CharT,_Alloc>::_S_fetch(_M_root, _M_current_pos + __n);
     }
 
   public:
 	template <class _CharT>
-	inline bool operator== (const _Rope_const_iterator<_CharT>& __y) const {
+	inline bool winx_call operator== (const _Rope_const_iterator<_CharT>& __y) const {
 	  return (_M_current_pos == __y._M_current_pos && 
 			  _M_root == __y._M_root);
 	}
 	template <class _CharT>
-	inline bool operator< (const _Rope_const_iterator<_CharT>& __y) const {
+	inline bool winx_call operator< (const _Rope_const_iterator<_CharT>& __y) const {
 	  return (_M_current_pos < __y._M_current_pos);
 	}
 };
@@ -638,25 +640,25 @@ class _Rope_const_iterator : public _Rope_iterator_base<_CharT> {
 // _Rope_const_iterator::operator<cmp>
 
 template <class _CharT>
-__forceinline bool operator!= (_ROPE_CONST_ITER_ARG __x,
+__forceinline bool winx_call operator!= (_ROPE_CONST_ITER_ARG __x,
 							   _ROPE_CONST_ITER_ARG __y) {
   return !(__x == __y);
 }
 
 template <class _CharT>
-inline bool operator> (const _Rope_const_iterator<_CharT>& __x,
+inline bool winx_call operator> (const _Rope_const_iterator<_CharT>& __x,
                        const _Rope_const_iterator<_CharT>& __y) {
   return __y < __x;
 }
 
 template <class _CharT>
-inline bool operator<= (const _Rope_const_iterator<_CharT>& __x,
+inline bool winx_call operator<= (const _Rope_const_iterator<_CharT>& __x,
                         const _Rope_const_iterator<_CharT>& __y) {
   return !(__y < __x);
 }
 
 template <class _CharT>
-inline bool operator>= (const _Rope_const_iterator<_CharT>& __x,
+inline bool winx_call operator>= (const _Rope_const_iterator<_CharT>& __x,
                         const _Rope_const_iterator<_CharT>& __y) {
   return !(__x < __y);
 }
@@ -665,28 +667,28 @@ inline bool operator>= (const _Rope_const_iterator<_CharT>& __x,
 // _Rope_const_iterator::operator+/operator-
 
 template <class _CharT>
-inline ptrdiff_t operator-(const _Rope_const_iterator<_CharT>& __x,
+inline ptrdiff_t winx_call operator-(const _Rope_const_iterator<_CharT>& __x,
                            const _Rope_const_iterator<_CharT>& __y) {
   return (ptrdiff_t)__x.index() - (ptrdiff_t)__y.index();
 }
 
 template <class _CharT>
 inline _Rope_const_iterator<_CharT>
-operator-(const _Rope_const_iterator<_CharT>& __x, ptrdiff_t __n) {
+winx_call operator-(const _Rope_const_iterator<_CharT>& __x, ptrdiff_t __n) {
   return _Rope_const_iterator<_CharT>(
             __x.get_root(), __x.index() - __n);
 }
 
 template <class _CharT>
 inline _Rope_const_iterator<_CharT>
-operator+(const _Rope_const_iterator<_CharT>& __x, ptrdiff_t __n) {
+winx_call operator+(const _Rope_const_iterator<_CharT>& __x, ptrdiff_t __n) {
   return _Rope_const_iterator<_CharT>(
            __x.get_root(), __x.index() + __n);
 }
 
 template <class _CharT>
 inline _Rope_const_iterator<_CharT>
-operator+(ptrdiff_t __n, const _Rope_const_iterator<_CharT>& __x) {
+winx_call operator+(ptrdiff_t __n, const _Rope_const_iterator<_CharT>& __x) {
   return _Rope_const_iterator<_CharT>(
            __x.get_root(), __x.index() + __n);
 }
