@@ -359,7 +359,7 @@ typedef CharTypeT<void> CharType;
 // -------------------------------------------------------------------------
 // class TestCharType
 
-#ifdef __STDEXT_LOG_H__
+#if defined(STD_UNITTEST)
 
 template <class LogT>
 class TestCharType
@@ -436,7 +436,7 @@ public:
 	}
 };
 
-#endif
+#endif // defined(STD_UNITTEST)
 
 // -------------------------------------------------------------------------
 // $Log: CharType.h,v $

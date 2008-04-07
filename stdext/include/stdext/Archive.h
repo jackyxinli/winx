@@ -93,6 +93,8 @@ __NS_STD_END
 // -------------------------------------------------------------------------
 // class TestRecord
 
+#if defined(STD_UNITTEST)
+
 __NS_STD_BEGIN
 
 template <class LogT>
@@ -154,6 +156,8 @@ public:
 };
 
 __NS_STD_END
+
+#endif // defined(STD_UNITTEST)
 
 // -------------------------------------------------------------------------
 // $Log: Archive.h,v $

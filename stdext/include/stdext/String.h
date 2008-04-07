@@ -133,7 +133,7 @@ inline void winx_call replaceText(
 // -------------------------------------------------------------------------
 // class TestString
 
-#if defined(X_CC_VC)
+#if defined(STD_UNITTEST)
 
 template <class LogT>
 class TestString : public TestCase
@@ -166,7 +166,7 @@ public:
 	}
 };
 
-#endif
+#endif // defined(STD_UNITTEST)
 
 // -------------------------------------------------------------------------
 // $Log: String.h,v $

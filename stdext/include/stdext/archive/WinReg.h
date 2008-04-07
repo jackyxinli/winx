@@ -197,6 +197,8 @@ public:
 // -------------------------------------------------------------------------
 // class TestWinReg
 
+#if defined(STD_UNITTEST)
+
 #define _WINX_TEST_WINREG_KEY	WINX_TEXT("Software\\winx\\TestStdExt\\TestWinReg")
 
 template <class LogT>
@@ -237,6 +239,8 @@ public:
 		}
 	}
 };
+
+#endif // defined(STD_UNITTEST)
 
 // -------------------------------------------------------------------------
 // $Log: WinReg.h,v $

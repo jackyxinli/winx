@@ -200,6 +200,8 @@ typedef AutoFreeAllocT<StdAlloc> AutoFreeAlloc;
 // -------------------------------------------------------------------------
 // class TestAutoFreeAlloc
 
+#if defined(STD_UNITTEST)
+
 template <class LogT>
 class TestAutoFreeAlloc : public TestCase
 {
@@ -239,6 +241,8 @@ public:
 		int* i2 = STD_NEW_ARRAY(alloc, int, 80);
 	}
 };
+
+#endif // defined(STD_UNITTEST)
 
 // -------------------------------------------------------------------------
 // $Log: AutoFreeAlloc.h,v $

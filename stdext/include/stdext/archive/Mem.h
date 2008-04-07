@@ -86,6 +86,8 @@ typedef DequeReader TextPoolReader;
 // -------------------------------------------------------------------------
 // class TestMemArchive
 
+#if defined(STD_UNITTEST)
+
 template <class LogT>
 class TestMemArchive : public TestCase
 {
@@ -199,6 +201,8 @@ class TestMemArchive : public TestCase
 		}
 	}
 };
+
+#endif // defined(STD_UNITTEST)
 
 // -------------------------------------------------------------------------
 // $Log: Mem.h,v $

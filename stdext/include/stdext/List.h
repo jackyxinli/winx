@@ -329,6 +329,8 @@ public:
 // -------------------------------------------------------------------------
 // class TestList
 
+#if defined(STD_UNITTEST)
+
 template <class LogT>
 class TestList : public TestCase
 {
@@ -358,8 +360,12 @@ public:
 	}
 };
 
+#endif // defined(STD_UNITTEST)
+
 // -------------------------------------------------------------------------
 // class TestSlist
+
+#if defined(STD_UNITTEST)
 
 #ifndef _WINX_NO_SLIST
 
@@ -388,8 +394,12 @@ public:
 
 #endif // _WINX_NO_SLIST
 
+#endif // defined(STD_UNITTEST)
+
 // -------------------------------------------------------------------------
 // class TestDclList
+
+#if defined(STD_UNITTEST)
 
 template <class LogT>
 class TestDclList : public TestCase
@@ -470,6 +480,8 @@ public:
 		print2(log, coll);
 	}
 };
+
+#endif // defined(STD_UNITTEST)
 
 // -------------------------------------------------------------------------
 // $Log: List.h,v $

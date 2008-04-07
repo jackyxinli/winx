@@ -136,7 +136,7 @@ public:																		\
 // -------------------------------------------------------------------------
 // class TestEvent
 
-#if defined(__STDEXT_TESTCASE_H__) && defined(__STDEXT_MEMORY_SCOPEALLOC_H__)
+#if defined(STD_UNITTEST)
 
 __NS_STD_BEGIN
 
@@ -261,7 +261,7 @@ public:
 
 __NS_STD_END
 
-#endif // defined(__STDEXT_TESTCASE_H__)
+#endif // defined(STD_UNITTEST)
 
 // -------------------------------------------------------------------------
 // $Log: $

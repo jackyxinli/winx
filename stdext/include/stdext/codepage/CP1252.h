@@ -123,6 +123,8 @@ typedef CP1252T<void> CP1252;
 // -------------------------------------------------------------------------
 // class TestCP1252
 
+#if defined(STD_UNITTEST)
+
 template <class LogT>
 class TestCP1252 : public TestCase
 {
@@ -144,6 +146,8 @@ public:
 		}
 	}
 };
+
+#endif // defined(STD_UNITTEST)
 
 // -------------------------------------------------------------------------
 // $Log: CP1252.h,v $

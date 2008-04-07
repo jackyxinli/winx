@@ -69,6 +69,8 @@
 #include "Memory.h"
 #endif
 
+#if defined(STD_UNITTEST)
+
 template <class LogT>
 class TestAprPools : public TestCase
 {
@@ -235,6 +237,8 @@ public:
 		}
 	}
 };
+
+#endif // defined(STD_UNITTEST)
 
 // -------------------------------------------------------------------------
 // $Log: apr_pools.h,v $

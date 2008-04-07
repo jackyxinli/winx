@@ -84,7 +84,7 @@ __NS_STD_END
 // -------------------------------------------------------------------------
 // class TestEventContainer
 
-#if defined(__STDEXT_TESTCASE_H__)
+#if defined(STD_UNITTEST)
 
 #ifndef __STDEXT_AOP_EVENT_H__
 #include "Event.h"
@@ -209,7 +209,7 @@ public:
 
 __NS_STD_END
 
-#endif // defined(__STDEXT_TESTCASE_H__)
+#endif // defined(STD_UNITTEST)
 
 // -------------------------------------------------------------------------
 // $Log: $

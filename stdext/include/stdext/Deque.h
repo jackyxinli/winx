@@ -82,6 +82,8 @@ public:
 // -------------------------------------------------------------------------
 // class TestDeque
 
+#if defined(STD_UNITTEST)
+
 template <class LogT>
 class TestDeque : public TestCase
 {
@@ -163,6 +165,8 @@ public:
 		doShareAllocDeque(log);
 	}
 };
+
+#endif // defined(STD_UNITTEST)
 
 // -------------------------------------------------------------------------
 // $Log: Deque.h,v $

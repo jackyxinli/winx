@@ -204,6 +204,8 @@ typedef Reader<StdioReadArchive> StdioReader;
 // -------------------------------------------------------------------------
 // class TestStdioArchive
 
+#if defined(STD_UNITTEST)
+
 template <class LogT>
 class TestStdioArchive : public TestCase
 {
@@ -303,6 +305,8 @@ public:
 		}
 	}
 };
+
+#endif // defined(STD_UNITTEST)
 
 // -------------------------------------------------------------------------
 // $Log: Stdio.h,v $

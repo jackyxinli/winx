@@ -54,6 +54,8 @@
 // -------------------------------------------------------------------------
 // class TestPool
 
+#if defined(STD_UNITTEST)
+
 template <class LogT>
 class TestPool : public TestCase
 {
@@ -90,13 +92,9 @@ public:
 	}
 };
 
+#endif // defined(STD_UNITTEST)
+
 // -------------------------------------------------------------------------
 // $Log: Pool.h,v $
-// Revision 1.2  2006/12/14 09:15:33  xushiwei
-// work together with boost
-//
-// Revision 1.1  2006/11/23 05:13:13  xushiwei
-// boost::pool, boost::object_pool
-//
 
 #endif /* __STDEXT_MEMORY_POOL_H__ */

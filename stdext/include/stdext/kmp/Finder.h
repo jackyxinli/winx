@@ -27,8 +27,8 @@
 #include <ctype.h>
 #endif
 
-#ifndef _STRING_
-#include <string>
+#ifndef __STD_STRING_H__
+#include "../std/string.h"
 #endif
 
 #define __STD_KMP			std::kmp::

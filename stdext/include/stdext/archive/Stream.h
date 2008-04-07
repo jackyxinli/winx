@@ -408,6 +408,8 @@ public:
 // -------------------------------------------------------------------------
 // class TestStreamArchive
 
+#if defined(STD_UNITTEST)
+
 template <class LogT>
 class TestStreamArchive : public TestCase
 {
@@ -509,6 +511,8 @@ public:
 		}
 	}
 };
+
+#endif // defined(STD_UNITTEST)
 
 // -------------------------------------------------------------------------
 // $Log: Stream.h,v $

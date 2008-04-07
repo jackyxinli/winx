@@ -42,6 +42,8 @@
 // -------------------------------------------------------------------------
 // class TestRegEx
 
+#if defined(STD_UNITTEST)
+
 template <class LogT>
 class TestRegEx : public TestCase
 {
@@ -59,6 +61,8 @@ public:
 	{
 	}
 };
+
+#endif // defined(STD_UNITTEST)
 
 // -------------------------------------------------------------------------
 // $Log: $

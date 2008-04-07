@@ -178,6 +178,8 @@ typedef ScopeAllocST ScopeAlloc;
 // -------------------------------------------------------------------------
 // class TestScopeAlloc
 
+#if defined(STD_UNITTEST)
+
 template <class LogT>
 class TestScopeAlloc : public TestCase
 {
@@ -250,6 +252,8 @@ public:
 		}
 	}
 };
+
+#endif // defined(STD_UNITTEST)
 
 // -------------------------------------------------------------------------
 // $Log: $

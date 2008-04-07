@@ -493,6 +493,8 @@ public:
 // -------------------------------------------------------------------------
 // class TestBasicString
 
+#if defined(STD_UNITTEST)
+
 template <class LogT>
 class TestBasicString : public TestCase
 {
@@ -560,6 +562,8 @@ public:
 		AssertExp(a6.substr(1, 1) == "2");
 	}
 };
+
+#endif // defined(STD_UNITTEST)
 
 // -------------------------------------------------------------------------
 // $Log: BasicString.h,v $

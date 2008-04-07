@@ -33,6 +33,8 @@
 
 // -------------------------------------------------------------------------
 
+#if defined(STD_UNITTEST)
+
 template <class LogT>
 class TestFinder : public TestCase
 {
@@ -100,6 +102,8 @@ public:
 		AssertExp(dest.end() - itFind == 3);
 	}
 };
+
+#endif // defined(STD_UNITTEST)
 
 // -------------------------------------------------------------------------
 // $Log: TestFinder.h,v $

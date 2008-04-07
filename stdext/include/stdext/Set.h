@@ -100,6 +100,8 @@ public:
 // -------------------------------------------------------------------------
 // class TestSet
 
+#if defined(STD_UNITTEST)
+
 template <class LogT>
 class TestSet : public TestCase
 {
@@ -232,6 +234,8 @@ public:
 		doShareAllocSet(log);
 	}
 };
+
+#endif // defined(STD_UNITTEST)
 
 // -------------------------------------------------------------------------
 // $Log: Set.h,v $

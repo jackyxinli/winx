@@ -369,6 +369,8 @@ bool winx_call operator>=(const TextPool<_E, _AllocT>& a, const _T2& b)
 // -------------------------------------------------------------------------
 // class TestTextPool
 
+#if defined(STD_UNITTEST)
+
 template <class LogT>
 class TestTextPool : public TestCase
 {
@@ -498,6 +500,8 @@ public:
 		AssertExp(a == "Hello, world!!! #");
 	}
 };
+
+#endif // defined(STD_UNITTEST)
 
 // -------------------------------------------------------------------------
 // $Log: TextPool.h,v $

@@ -208,6 +208,8 @@ typedef Reader<PosixReadArchive> PosixReader;
 // -------------------------------------------------------------------------
 // class TestPosixArchive
 
+#if defined(STD_UNITTEST)
+
 template <class LogT>
 class TestPosixArchive : public TestCase
 {
@@ -311,6 +313,8 @@ public:
 		}
 	}
 };
+
+#endif // defined(STD_UNITTEST)
 
 // -------------------------------------------------------------------------
 // $Log: Posix.h,v $

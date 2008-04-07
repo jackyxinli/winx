@@ -140,6 +140,8 @@ WINX_VARGS_TFUNC_EP1_REF(
 // -------------------------------------------------------------------------
 // class TestStringAlgo
 
+#if defined(STD_UNITTEST)
+
 template <class LogT>
 class TestStringAlgo : public TestCase
 {
@@ -188,6 +190,8 @@ public:
 		AssertExp(result4 == "Hello!!! world!!!");
 	}
 };
+
+#endif // defined(STD_UNITTEST)
 
 // -------------------------------------------------------------------------
 // $Log: StringAlgo.h,v $

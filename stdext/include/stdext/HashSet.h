@@ -164,6 +164,8 @@ public:
 // -------------------------------------------------------------------------
 // class TestHashSet
 
+#if defined(STD_UNITTEST)
+
 template <class LogT>
 class TestHashSet : public TestCase
 {
@@ -259,6 +261,8 @@ public:
 		doShareAllocSet(log);
 	}
 };
+
+#endif // defined(STD_UNITTEST)
 
 // -------------------------------------------------------------------------
 // $Log: HashSet.h,v $

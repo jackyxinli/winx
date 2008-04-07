@@ -188,6 +188,8 @@ __NS_STD_END
 // -------------------------------------------------------------------------
 // class TestCompareAllocators
 
+#if defined(STD_UNITTEST)
+
 #ifndef __STDEXT_COUNTER_H__
 #include "Counter.h"
 #endif
@@ -312,6 +314,8 @@ public:
 };
 
 __NS_STD_END
+
+#endif // defined(STD_UNITTEST)
 
 // -------------------------------------------------------------------------
 // $Log: Memory.h,v $

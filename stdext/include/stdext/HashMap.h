@@ -162,6 +162,8 @@ public:
 // -------------------------------------------------------------------------
 // class TestHashMap
 
+#if defined(STD_UNITTEST)
+
 template <class LogT>
 class TestHashMap : public TestCase
 {
@@ -263,6 +265,8 @@ public:
 		doShareAllocMap(log);
 	}
 };
+
+#endif // defined(STD_UNITTEST)
 
 // -------------------------------------------------------------------------
 // $Log: HashMap.h,v $

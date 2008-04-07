@@ -35,14 +35,8 @@
 #include <stdarg.h>
 #endif
 
-#if defined(X_STL_SGI)
-	#ifndef __SGI_STL_STRING
-	#include "../../../stl/string"
-	#endif
-#else
-	#ifndef _STRING_
-	#include <string>
-	#endif
+#ifndef __STD_STRING_H__
+#include "../std/string.h"
 #endif
 
 __NS_STD_BEGIN
@@ -801,6 +795,8 @@ public:
 // =========================================================================
 // class TestLog
 
+#if defined(STD_UNITTEST)
+
 template <class LogT>
 class TestLog : public TestCase
 {
@@ -895,6 +891,8 @@ public:
 		mlog.storage().select(sel2);
 	}
 };
+
+#endif // defined(STD_UNITTEST)
 
 // =========================================================================
 // $Log: Log.h,v $
