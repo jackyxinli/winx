@@ -99,7 +99,7 @@ class _Rope_char_ptr_proxy {
       : _M_pos(__x._M_pos), _M_root(__x._M_root) {}
     _Rope_char_ptr_proxy() {}
     _Rope_char_ptr_proxy(_CharT* __x) : _M_root(0), _M_pos(0) {
-        __stl_assert(0 == __x);
+        WINX_ASSERT(0 == __x);
     }
     _Rope_char_ptr_proxy& 
     operator= (const _Rope_char_ptr_proxy& __x) {

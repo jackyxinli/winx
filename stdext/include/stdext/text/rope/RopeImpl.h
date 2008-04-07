@@ -265,7 +265,7 @@ Rope<_CharT,_Alloc>::_S_substring(_RopeRep* __base,
 	    }
     }
     /*NOTREACHED*/
-    __stl_assert(false);
+    WINX_ASSERT(false);
   lazy:
     {
 	// Create substring node.
@@ -360,7 +360,7 @@ bool Rope<_CharT, _Alloc>::_S_apply_to_pieces(
 		return __result;
 	    }
 	default:
-	    __stl_assert(false);
+	    WINX_ASSERT(false);
 	    /*NOTREACHED*/
 	    return false;
     }
@@ -419,7 +419,7 @@ Rope<_CharT,_Alloc>::_S_flatten(_RopeRep* __r, _CharT* __buffer)
 		return __buffer + __f->_M_size;
 	    }
 	default:
-	    __stl_assert(false);
+	    WINX_ASSERT(false);
 	    /*NOTREACHED*/
 	    return 0;
     }
@@ -535,7 +535,7 @@ Rope<_CharT,_Alloc>::_S_add_to_forest(_RopeRep* __r, _RopeRep** __forest, _Alloc
 	_S_add_leaf_to_forest(__r, __forest, __a);
 	return;
     }
-    __stl_assert(__r->_M_tag == _RopeRep::_S_concat);
+    WINX_ASSERT(__r->_M_tag == _RopeRep::_S_concat);
     {
 	_RopeConcatenation* __c = (_RopeConcatenation*)__r;
 
@@ -565,16 +565,16 @@ Rope<_CharT,_Alloc>::_S_add_leaf_to_forest(_RopeRep* __r, _RopeRep** __forest, _
     }
     // Too_tiny dead, and no longer included in refcount.
     // Insertee is live and included.
-    __stl_assert(_S_is_almost_balanced(__insertee));
-    __stl_assert(__insertee->_M_depth <= __r->_M_depth + 1);
+    WINX_ASSERT(_S_is_almost_balanced(__insertee));
+    WINX_ASSERT(__insertee->_M_depth <= __r->_M_depth + 1);
     for (;; ++__i) {
 	if (0 != __forest[__i]) {
 	    __insertee = _S_concat_and_set_balanced(__forest[__i], __insertee, __a);
 	    __forest[__i] = 0;
-	    __stl_assert(_S_is_almost_balanced(__insertee));
+	    WINX_ASSERT(_S_is_almost_balanced(__insertee));
 	}
-	__stl_assert(_S_min_len[__i] <= __insertee->_M_size);
-	__stl_assert(__forest[__i] == 0);
+	WINX_ASSERT(_S_min_len[__i] <= __insertee->_M_size);
+	WINX_ASSERT(__forest[__i] == 0);
 	if (__i == _RopeRep::_S_max_rope_depth || 
 	      __insertee->_M_size < _S_min_len[__i+1]) {
 	    __forest[__i] = __insertee;

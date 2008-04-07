@@ -170,12 +170,18 @@ public:
 		*(it+1) = 'f';
 		*(it+2) = 'g';
 		AssertExp(a == "efglo");
+		
 		std::Rope<char>::const_iterator it2 = it;
 		AssertExp(*it == 'e');
 		AssertExp(*it2 == 'e');
 		AssertExp(*(it2+1) == 'f');
+		
 		std::copy(b.begin(), b.end(), it);
 		AssertExp(a == "abclo");
+
+		std::Rope<char>::const_iterator it3;
+		it3 = it;
+		AssertExp(*it3 == 'a');
 
 		char buffer[256];
 		*std::copy(it, a.mutable_end(), buffer) = '\0';

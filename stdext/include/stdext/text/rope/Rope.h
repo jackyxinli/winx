@@ -73,6 +73,7 @@ class Rope {
         friend struct _Rope_RopeRep<_CharT>;
         friend struct _Rope_RopeSubstring<_CharT>;
 
+		friend class _Rope_const_iterator<_CharT>;
 		friend class _Rope_iterator<_CharT, _Alloc>;
         friend class _Rope_char_ptr_proxy<_CharT,_Alloc>;
         friend class _Rope_char_ref_proxy<_CharT,_Alloc>;
@@ -487,7 +488,7 @@ class Rope {
         }
 
         Rope& winx_call append(const_iterator __s, const_iterator __e) {
-            __stl_assert(__s._M_root == __e._M_root);
+            WINX_ASSERT(__s._M_root == __e._M_root);
             _Self_destruct_ptr __appendee(_S_substring(
               __s._M_root, __s._M_current_pos, __e._M_current_pos));
             _RopeRep* __result = 

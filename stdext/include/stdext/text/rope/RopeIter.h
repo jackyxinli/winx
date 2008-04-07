@@ -34,8 +34,7 @@ __NS_STD_BEGIN
 // class _Rope_iterator_base
 
 template <class _CharT>
-class _Rope_iterator_base
-  : public random_access_iterator<_CharT, ptrdiff_t> {
+class _Rope_iterator_base : public random_access_iterator<_CharT, ptrdiff_t> {
   public:
     typedef _Rope_RopeRep<_CharT> _RopeRep;
         // Borland doesnt want this to be protected.
@@ -86,13 +85,13 @@ class _Rope_iterator_base
     _Rope_iterator_base() {}
     _Rope_iterator_base(_RopeRep* __root, size_t __pos)
       : _M_current_pos(__pos), _M_root(__root), _M_buf_ptr(0) {}
-    void _M_incr(size_t __n);
-    void _M_decr(size_t __n);
+    void winx_call _M_incr(size_t __n);
+    void winx_call _M_decr(size_t __n);
   public:
-	_RopeRep* get_root() const { return _M_root; }
-    size_t index() const { return _M_current_pos; }
+	_RopeRep* winx_call get_root() const { return _M_root; }
+    size_t winx_call index() const { return _M_current_pos; }
     _Rope_iterator_base(const _Rope_iterator_base& __x) {
-        if (0 != __x._M_buf_ptr) {
+        if (0 != _M_buf_ptr) {
             *this = __x;
         } else {
             _M_current_pos = __x._M_current_pos;
@@ -100,6 +99,16 @@ class _Rope_iterator_base
             _M_buf_ptr = 0;
         }
     }
+	_Rope_iterator_base(const _Rope_iterator_base& __x, _RopeRep* __new_root) {
+		if (__x._M_root == __new_root) {
+			*this = __x;
+		}
+		else {
+            _M_current_pos = __x._M_current_pos;
+            _M_root = __new_root;
+            _M_buf_ptr = 0;
+		}
+	}
 };
 
 // Set buf_start, buf_end, and buf_ptr appropriately, filling tmp_buf
@@ -146,7 +155,7 @@ void _Rope_iterator_base<_CharT>::_S_setbuf(
 	    }
 	    break;
 	default:
-	    __stl_assert(0);
+	    WINX_ASSERT(0);
     }
 }
 
@@ -163,7 +172,7 @@ void _Rope_iterator_base<_CharT>::_S_setcache
     size_t __pos = __x._M_current_pos;
     unsigned char __dirns = 0; // Bit vector marking right turns in the path
 
-    __stl_assert(__pos <= __x._M_root->_M_size);
+    WINX_ASSERT(__pos <= __x._M_root->_M_size);
     if (__pos >= __x._M_root->_M_size) {
 	__x._M_buf_ptr = 0;
 	return;
@@ -171,7 +180,7 @@ void _Rope_iterator_base<_CharT>::_S_setcache
     __curr_rope = __x._M_root;
     for(;;) {
 	++__curr_depth;
-	__stl_assert(__curr_depth <= _RopeRep::_S_max_rope_depth);
+	WINX_ASSERT(__curr_depth <= _RopeRep::_S_max_rope_depth);
 	__path[__curr_depth] = __curr_rope;
 	switch(__curr_rope->_M_tag) {
 	  case _RopeRep::_S_leaf:
@@ -226,13 +235,13 @@ void _Rope_iterator_base<_CharT>::_S_setcache_for_incr(_Rope_iterator_base<_Char
     unsigned char __dirns = __x._M_path_directions;
     _Rope_RopeConcatenation<_CharT>* __c;
 
-    __stl_assert(__x._M_current_pos <= __x._M_root->_M_size);
+    WINX_ASSERT(__x._M_current_pos <= __x._M_root->_M_size);
     if (__x._M_current_pos - __node_start_pos < __len) {
 	// More stuff in this leaf, we just didn't cache it.
 	_S_setbuf(__x);
 	return;
     }
-    __stl_assert(__node_start_pos + __len == __x._M_current_pos);
+    WINX_ASSERT(__node_start_pos + __len == __x._M_current_pos);
     //  node_start_pos is starting position of last_node.
     while (--__current_index >= 0) {
 	if (!(__dirns & 1)) // Path turned left 
@@ -280,7 +289,7 @@ void _Rope_iterator_base<_CharT>::_S_setcache_for_incr(_Rope_iterator_base<_Char
 }
 
 template <class _CharT>
-void _Rope_iterator_base<_CharT>::_M_incr(size_t __n) {
+void winx_call _Rope_iterator_base<_CharT>::_M_incr(size_t __n) {
     _M_current_pos += __n;
     if (0 != _M_buf_ptr) {
         size_t __chars_left = _M_buf_end - _M_buf_ptr;
@@ -296,7 +305,7 @@ void _Rope_iterator_base<_CharT>::_M_incr(size_t __n) {
 }
 
 template <class _CharT>
-void _Rope_iterator_base<_CharT>::_M_decr(size_t __n) {
+void winx_call _Rope_iterator_base<_CharT>::_M_decr(size_t __n) {
     if (0 != _M_buf_ptr) {
         size_t __chars_left = _M_buf_ptr - _M_buf_start;
         if (__chars_left >= __n) {
@@ -331,7 +340,7 @@ class _Rope_iterator : public _Rope_iterator_base<_CharT> {
         // This is necessary so that we can detect changes reliably.
         // Unfortunately, it requires careful bookkeeping for the
         // nonGC case.
-    void _M_check();
+    void winx_call _M_check();
   public:
     typedef _Rope_char_ref_proxy<_CharT,_Alloc>  reference;
     typedef _Rope_char_ref_proxy<_CharT,_Alloc>* pointer;
@@ -341,8 +350,8 @@ class _Rope_iterator : public _Rope_iterator_base<_CharT> {
     _Rope_iterator() {
         _M_root = 0;  // Needed for reference counting.
     };
-    _Rope_iterator(const _Rope_iterator& __x) :
-        _Rope_iterator_base<_CharT>(__x) {
+    _Rope_iterator(const _Rope_iterator& __x)
+      : _Base(__x) {
         _M_root_rope = __x._M_root_rope;
     }
     _Rope_iterator(Rope<_CharT,_Alloc>* __r, size_t __pos)
@@ -431,7 +440,7 @@ inline _Rope_iterator<_CharT,_Alloc>::_Rope_iterator(
 }
 
 template <class _CharT, class _Alloc>
-inline void _Rope_iterator<_CharT,_Alloc>::_M_check()
+inline void winx_call _Rope_iterator<_CharT,_Alloc>::_M_check()
 {
     if (_M_root_rope->_M_tree_ptr != _M_root) {
         // _Rope was modified.  Get things fixed up.
@@ -521,13 +530,15 @@ class _Rope_const_iterator : public _Rope_iterator_base<_CharT> {
 
   public:
     _Rope_const_iterator() {};
-    _Rope_const_iterator(const _Rope_const_iterator& __x) : _Base(__x) {}
+    _Rope_const_iterator(const _Rope_const_iterator& __x)
+		: _Base(__x) {}
     _Rope_const_iterator(const _RopeRep* __root, size_t __pos)
 		: _Base(const_cast<_RopeRep*>(__root), __pos) {}
     _Rope_const_iterator(_RopeRep* __r, size_t __pos) : _Base(__r, __pos) {}
 
 	template <class _Alloc>
-	_Rope_const_iterator(const _Rope_iterator<_CharT,_Alloc>& __x) : _Base(__x)  {}
+	_Rope_const_iterator(const _Rope_iterator<_CharT,_Alloc>& __x)
+		: _Base(__x, __x.container()._M_tree_ptr)  {}
 
     _Rope_const_iterator& operator= (const _Rope_const_iterator& __x) {
         if (0 != __x._M_buf_ptr) {
@@ -539,6 +550,20 @@ class _Rope_const_iterator : public _Rope_iterator_base<_CharT> {
         }
         return(*this);
     }
+
+	template <class _Alloc>
+	_Rope_const_iterator& operator= (const _Rope_iterator<_CharT,_Alloc>& __x) {
+		_RopeRep* __new_root = __x.container()._M_tree_ptr;
+        if (__new_root == _M_root) {
+            *(static_cast<_Rope_iterator_base<_CharT>*>(this)) = __x;
+        } else {
+            _M_current_pos = __x.index();
+            _M_root = __new_root;
+            _M_buf_ptr = 0;
+        }
+        return(*this);
+    }
+
     reference operator*() {
         if (0 == _M_buf_ptr)
 			_S_setcache(*this);

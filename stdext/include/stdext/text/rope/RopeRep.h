@@ -87,7 +87,7 @@ struct _Rope_RopeLeaf : public _Rope_RopeRep<_CharT> {
         : _Rope_RopeRep<_CharT>(_S_leaf, 0, true, __size),
           _M_data(__d)
     {
-		__stl_assert(__size > 0);
+		WINX_ASSERT(__size > 0);
 	}
 };
 
@@ -129,7 +129,7 @@ struct _Rope_RopeFunction : public _Rope_RopeRep<_CharT> {
       : _Rope_RopeRep<_CharT>(_S_function, 0, true, __size)
       , _M_fn(__f)
     {
-        __stl_assert(__size > 0);
+        WINX_ASSERT(__size > 0);
         if (__d) {
             GC_REGISTER_FINALIZER(
               this, _Rope_RopeFunction::_S_fn_finalization_proc, 0, 0, 0);
@@ -165,8 +165,8 @@ struct _Rope_RopeSubstring : public _Rope_RopeFunction<_CharT>,
               {
                 CharProducer<_CharT>* __fn =
                         ((_Rope_RopeFunction<_CharT>*)_M_base)->_M_fn;
-                __stl_assert(__start_pos + __req_len <= _M_size);
-                __stl_assert(_M_start + _M_size <= _M_base->_M_size);
+                WINX_ASSERT(__start_pos + __req_len <= _M_size);
+                WINX_ASSERT(_M_start + _M_size <= _M_base->_M_size);
                 (*__fn)(__start_pos + _M_start, __req_len, __buffer);
               }
               break;
@@ -179,7 +179,7 @@ struct _Rope_RopeSubstring : public _Rope_RopeFunction<_CharT>,
               }
               break;
             default:
-              __stl_assert(false);
+              WINX_ASSERT(false);
         }
     }
 
@@ -189,8 +189,8 @@ struct _Rope_RopeSubstring : public _Rope_RopeFunction<_CharT>,
         _M_base(__b),
         _M_start(__s)
     {
-        __stl_assert(__l > 0);
-        __stl_assert(__s + __l <= __b->_M_size);
+        WINX_ASSERT(__l > 0);
+        WINX_ASSERT(__s + __l <= __b->_M_size);
         _M_tag = _S_substringfn;
 		_M_fn = (CharProducer<_CharT>*)this;
     }
@@ -204,7 +204,7 @@ _CharT _Rope_RopeRep<_CharT>::_S_fetch(_Rope_RopeRep<_CharT>* __r, size_t __i)
 	typedef _Rope_RopeLeaf<_CharT> _RopeLeaf;
 	typedef _Rope_RopeFunction<_CharT> _RopeFunction;
 	typedef _Rope_RopeSubstring<_CharT> _RopeSubstring;
-    __stl_assert(__i < __r->_M_size);
+    WINX_ASSERT(__i < __r->_M_size);
     for(;;) {
       switch(__r->_M_tag) {
 	case _RopeRep::_S_concat:
