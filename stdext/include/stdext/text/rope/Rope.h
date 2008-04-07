@@ -52,6 +52,29 @@
 
 __NS_STD_BEGIN
 
+// -------------------------------------------------------------------------
+// class _Rope_insert_char_consumer
+
+template <class _CharT, class _Insert_ostream>
+class _Rope_insert_char_consumer
+{
+private:
+	_Insert_ostream& _M_o;
+
+public:
+	_Rope_insert_char_consumer(_Insert_ostream& __writer) 
+	  : _M_o(__writer) {}
+
+	bool winx_call operator()(const _CharT* __leaf, size_t __n)
+	{
+		_M_o.write(__leaf, __n);
+		return true;
+	}
+};
+
+// -------------------------------------------------------------------------
+// class Rope
+
 template<class _CharT, class _Alloc> class _Rope_char_ref_proxy;
 template<class _CharT, class _Alloc> class _Rope_char_ptr_proxy;
 template<class _CharT, class _Alloc> class _Rope_iterator;
@@ -93,34 +116,34 @@ class Rope {
         typedef _Rope_RopeSubstring<_CharT> _RopeSubstring;
 
         // Retrieve a character at the indicated position.
-        static _CharT _S_fetch(_RopeRep* __r, size_type __pos) {
+        static _CharT winx_call _S_fetch(_RopeRep* __r, size_type __pos) {
 			return _RopeRep::_S_fetch(__r, __pos);
 		}
 
 		typedef _Rope_RopeRep<_CharT>* _Self_destruct_ptr;
 
         // _Result is counted in refcount.
-		static _RopeRep* _S_substring(_RopeRep* __base,
+		static _RopeRep* winx_call _S_substring(_RopeRep* __base,
                                     size_t __start, size_t __endp1, _Alloc& __a);
 
-        static _RopeRep* _S_concat_char_iter(_RopeRep* __r,
+        static _RopeRep* winx_call _S_concat_char_iter(_RopeRep* __r,
                                           const _CharT* __iter, size_t __slen, _Alloc& __a);
                 // Concatenate Rope and char ptr, copying __s.
                 // Should really take an arbitrary iterator.
                 // Result is counted in refcount.
-        static _RopeRep* _S_destr_concat_char_iter(_RopeRep* __r,
+        static _RopeRep* winx_call _S_destr_concat_char_iter(_RopeRep* __r,
                                           const _CharT* __iter, size_t __slen, _Alloc& __a)
                 // As above, but one reference to __r is about to be
                 // destroyed.  Thus the pieces may be recycled if all
                 // relevent reference counts are 1.
                 { return _S_concat_char_iter(__r, __iter, __slen, __a); }
 
-        static _RopeRep* _S_concat(_RopeRep* __left, _RopeRep* __right, _Alloc& __a);
+        static _RopeRep* winx_call _S_concat(_RopeRep* __left, _RopeRep* __right, _Alloc& __a);
                 // General concatenation on _RopeRep.  _Result
                 // has refcount of 1.  Adjusts argument refcounts.
 
 		template <class _RopeCharConsumer>
-        static bool _S_apply_to_pieces(
+        static bool winx_call _S_apply_to_pieces(
             _Alloc& __a, _RopeCharConsumer& __c, 
 			const _RopeRep* __r, size_t __begin, size_t __end)
 		{
@@ -175,35 +198,51 @@ class Rope {
 		}
 
    public:
-	   template <class _RopeCharConsumer>
-       void apply_to_pieces(size_t __begin, size_t __end, _RopeCharConsumer& __c) const
-	   {
-            _S_apply_to_pieces(*_M_alloc, __c, _M_tree_ptr, __begin, __end);
-       }
+		template <class _RopeCharConsumer>
+		void winx_call apply_to_pieces(
+			size_t __begin, size_t __end, _RopeCharConsumer& __c) const
+		{
+			_S_apply_to_pieces(*_M_alloc, __c, _M_tree_ptr, __begin, __end);
+		}
+
+		template <class _RopeCharConsumer>
+		void winx_call apply_to_pieces(_RopeCharConsumer& __c) const
+		{
+			_S_apply_to_pieces(*_M_alloc, __c, _M_tree_ptr, 0, size());
+		}
+
+   public:
+		template <class _OStream>
+		_OStream& winx_call trace(_OStream& __os) const
+		{
+			_Rope_insert_char_consumer<_CharT, _OStream> __consumer(__os);
+			apply_to_pieces(__consumer);
+			return __os;
+		}
 
    protected:
         // Allocate and construct a RopeLeaf using the supplied allocator
         // Takes ownership of s instead of copying.
-        static _RopeLeaf* _S_new_RopeLeaf(const _CharT *__s,
+        static _RopeLeaf* winx_call _S_new_RopeLeaf(const _CharT *__s,
                                           size_t __size, _Alloc& __a)
         {
 			return STD_NEW(__a, _RopeLeaf)(__s, __size);
         }
 
-        static _RopeConcatenation* _S_new_RopeConcatenation(
+        static _RopeConcatenation* winx_call _S_new_RopeConcatenation(
                         _RopeRep* __left, _RopeRep* __right,
                         _Alloc& __a)
         {
             return STD_NEW(__a, _RopeConcatenation)(__left, __right);
         }
 
-        static _RopeFunction* _S_new_RopeFunction(CharProducer<_CharT>* __f,
+        static _RopeFunction* winx_call _S_new_RopeFunction(CharProducer<_CharT>* __f,
                 size_t __size, bool __d, _Alloc& __a)
         {
             return STD_NEW(__a, _RopeFunction)(__f, __size, __d);
         }
 
-        static _RopeSubstring* _S_new_RopeSubstring(
+        static _RopeSubstring* winx_call _S_new_RopeSubstring(
                 _Rope_RopeRep<_CharT>* __b, size_t __s,
                 size_t __l, _Alloc& __a)
         {
@@ -213,7 +252,7 @@ class Rope {
 #define __STL_ROPE_FROM_UNOWNED_CHAR_PTR(__s, __size, __a)	\
 	_S_RopeLeaf_from_unowned_char_ptr(__s, __size, __a)     
 
-		static _RopeLeaf* _S_RopeLeaf_from_unowned_char_ptr(const _CharT *__s,
+		static _RopeLeaf* winx_call _S_RopeLeaf_from_unowned_char_ptr(const _CharT *__s,
                        size_t __size, _Alloc& __a)
         {
             if (0 == __size) return 0;
@@ -230,11 +269,11 @@ class Rope {
         // Does not increment left and right ref counts even though
         // they are referenced.
         static _RopeRep*
-        _S_tree_concat(_RopeRep* __left, _RopeRep* __right, _Alloc& __a);
+        winx_call _S_tree_concat(_RopeRep* __left, _RopeRep* __right, _Alloc& __a);
 
         // Concatenation helper functions
         static _RopeLeaf*
-        _S_leaf_concat_char_iter(_RopeLeaf* __r,
+        winx_call _S_leaf_concat_char_iter(_RopeLeaf* __r,
                                  const _CharT* __iter, size_t __slen, _Alloc& __a);
                 // Concatenate by copying leaf.
                 // should take an arbitrary iterator
@@ -249,30 +288,30 @@ class Rope {
         // Copy __r to the _CharT buffer.
         // Returns __buffer + __r->_M_size.
         // Assumes that buffer is uninitialized.
-        static _CharT* _S_flatten(_RopeRep* __r, _CharT* __buffer);
+        static _CharT* winx_call _S_flatten(_RopeRep* __r, _CharT* __buffer);
 
         // Again, with explicit starting position and length.
         // Assumes that buffer is uninitialized.
-        static _CharT* _S_flatten(_RopeRep* __r,
+        static _CharT* winx_call _S_flatten(_RopeRep* __r,
                                   size_t __start, size_t __len,
                                   _CharT* __buffer, _Alloc& __a);
 
         static const unsigned long 
           _S_min_len[_RopeRep::_S_max_rope_depth + 1];
 
-        static bool _S_is_balanced(_RopeRep* __r)
+        static bool winx_call _S_is_balanced(_RopeRep* __r)
                 { return (__r->_M_size >= _S_min_len[__r->_M_depth]); }
 
-        static bool _S_is_almost_balanced(_RopeRep* __r)
+        static bool winx_call _S_is_almost_balanced(_RopeRep* __r)
                 { return (__r->_M_depth == 0 ||
                           __r->_M_size >= _S_min_len[__r->_M_depth - 1]); }
 
-        static bool _S_is_roughly_balanced(_RopeRep* __r)
+        static bool winx_call _S_is_roughly_balanced(_RopeRep* __r)
                 { return (__r->_M_depth <= 1 ||
                           __r->_M_size >= _S_min_len[__r->_M_depth - 2]); }
 
         // Assumes the result is not empty.
-        static _RopeRep* _S_concat_and_set_balanced(_RopeRep* __left,
+        static _RopeRep* winx_call _S_concat_and_set_balanced(_RopeRep* __left,
                                                      _RopeRep* __right, _Alloc& __a)
         {
             _RopeRep* __result = _S_concat(__left, __right, __a);
@@ -285,28 +324,28 @@ class Rope {
         // usually decrement the reference count of __r.
         // The result is within height 2 of balanced by the above
         // definition.
-        static _RopeRep* _S_balance(_RopeRep* __r, _Alloc& __a);
+        static _RopeRep* winx_call _S_balance(_RopeRep* __r, _Alloc& __a);
 
         // Add all unbalanced subtrees to the forest of balanceed trees.
         // Used only by balance.
-        static void _S_add_to_forest(_RopeRep*__r, _RopeRep** __forest, _Alloc& __a);
+        static void winx_call _S_add_to_forest(_RopeRep*__r, _RopeRep** __forest, _Alloc& __a);
         
         // Add __r to forest, assuming __r is already balanced.
-        static void _S_add_leaf_to_forest(_RopeRep* __r, _RopeRep** __forest, _Alloc& __a);
+        static void winx_call _S_add_leaf_to_forest(_RopeRep* __r, _RopeRep** __forest, _Alloc& __a);
 
         // Print to stdout, exposing structure
-        static void _S_dump(_RopeRep* __r, int __indent = 0);
+        static void winx_call _S_dump(_RopeRep* __r, int __indent = 0);
 
         // Return -1, 0, or 1 if __x < __y, __x == __y, or __x > __y resp.
-        static int _S_compare(const _RopeRep* __x, const _RopeRep* __y);
+        static int winx_call _S_compare(const _RopeRep* __x, const _RopeRep* __y);
 
    public:
-        bool empty() const { return 0 == _M_tree_ptr; }
+        bool winx_call empty() const { return 0 == _M_tree_ptr; }
 
         // Comparison member function.  This is public only for those
         // clients that need a ternary comparison.  Others
         // should use the comparison operators below.
-        int compare(const Rope& __y) const {
+        int winx_call compare(const Rope& __y) const {
             return _S_compare(_M_tree_ptr, __y._M_tree_ptr);
         }
 

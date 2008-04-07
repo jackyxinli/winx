@@ -267,6 +267,14 @@ public:
 		c = "abc";
 		c.mutable_reference_at(0) = 'y';
 		AssertExp(c == "ybc");
+
+		log.printObj(c).newline();
+
+#if defined(_OSTREAM_)
+		using namespace std;
+		c.trace(log);
+		c.trace(cout) << "\n";
+#endif
 	}
 };
 

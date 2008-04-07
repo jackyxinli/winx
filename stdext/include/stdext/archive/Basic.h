@@ -366,6 +366,22 @@ inline HRESULT winx_call scan_csymbol(ReadArchiveT& ar, StringT& s)
 }
 
 // -------------------------------------------------------------------------
+// put_n
+
+template <class _OStream, class _CharT>
+inline void winx_call put_n_(_OStream& __o, size_t __n, const _CharT& __val)
+{
+    for (size_t __i = 0; __i < __n; __i++)
+		__o.put(__val);
+}
+
+template <class _OStream, class _CharT>
+inline void winx_call put_n(_OStream& __o, size_t __n, const _CharT& __val)
+{
+	__o.put(__n, __val);
+}
+
+// -------------------------------------------------------------------------
 // $Log: Basic.h,v $
 
 __NS_STD_END

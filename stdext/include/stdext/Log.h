@@ -185,6 +185,27 @@ public:
 			m_stg.put(ch);
 		return *this;
 	}
+
+	Log& winx_call put(size_t count, char ch)
+	{
+		if (m_stg)
+			m_stg.put(count, ch);
+		return *this;
+	}
+
+	Log& winx_call put(char ch)
+	{
+		if (m_stg)
+			m_stg.put(ch);
+		return *this;
+	}
+
+	Log& winx_call write(const char* s, size_t count)
+	{
+		if (m_stg)
+			m_stg.put(s, count);
+		return *this;
+	}
 	
 	Log& winx_call repeat(char ch)
 	{
@@ -254,7 +275,7 @@ private:
 	Log& winx_call __printString(_It first, _It last, char)
 	{
 		if (m_stg)
-			m_stg.put(&*first, last-first);
+			m_stg.put(_ConvIt(first), last - first);
 		return *this;
 	}
 	
@@ -262,7 +283,7 @@ private:
 	Log& winx_call __printString(_It first, _It last, unsigned char)
 	{
 		if (m_stg)
-			m_stg.put((char*)&*first, last-first);
+			m_stg.put((char*)_ConvIt(first), last-first);
 		return *this;
 	}
 
@@ -651,6 +672,10 @@ public:
 
 	Log& winx_call trace(const char* fmt, ...)		{ return *this; }
 	Log& winx_call trace(const WCHAR* fmt, ...)		{ return *this; }
+
+	Log& winx_call put(char ch)						{ return *this; }
+	Log& winx_call put(size_t count, char ch)		{ return *this; }
+	Log& winx_call write(const char*, size_t)		{ return *this; }
 
 public:
 	template <class DataT>

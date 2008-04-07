@@ -171,6 +171,78 @@ LINK32=link.exe
 # Begin Group "text"
 
 # PROP Default_Filter ""
+# Begin Group "sgi"
+
+# PROP Default_Filter ""
+# Begin Source File
+
+SOURCE=..\..\..\stl\deque.h
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\include\stdext\text\sgi\Rope.h
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\stl\rope.h
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\stl\ropeimpl.h
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\stl\stl_deque.h
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\stl\stl_rope.h
+# End Source File
+# End Group
+# Begin Group "rope"
+
+# PROP Default_Filter ""
+# Begin Group "bak"
+
+# PROP Default_Filter ""
+# Begin Source File
+
+SOURCE=..\..\include\stdext\text\rope\bak\RopeFwd.h
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\include\stdext\text\rope\bak\RopeOperators.h
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\include\stdext\text\rope\bak\Stream.h
+# End Source File
+# End Group
+# Begin Source File
+
+SOURCE=..\..\include\stdext\text\rope\CharProxy.h
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\include\stdext\text\rope\Rope.h
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\include\stdext\text\rope\RopeImpl.h
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\include\stdext\text\rope\RopeIter.h
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\include\stdext\text\rope\RopeRep.h
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\include\stdext\text\rope\SequenceBuffer.h
+# End Source File
+# End Group
 # Begin Source File
 
 SOURCE=..\..\include\stdext\text\BasicAlgo.h
@@ -260,6 +332,38 @@ SOURCE=..\..\include\stdext\archive\WriteArchive.h
 SOURCE=..\..\include\stdext\archive\Writer.h
 # End Source File
 # End Group
+# Begin Group "allocator"
+
+# PROP Default_Filter ""
+# Begin Source File
+
+SOURCE=..\..\include\stdext\memory\apr_pools.h
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\include\stdext\memory\AutoFreeAlloc.h
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\include\stdext\memory\Basic.h
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\include\stdext\memory\Pool.h
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\include\stdext\memory\RecycleBuffer.h
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\include\stdext\memory\ScopeAlloc.h
+# End Source File
+# End Group
+# Begin Source File
+
+SOURCE=..\..\include\stdext\msvcrt.h
+# End Source File
 # Begin Source File
 
 SOURCE=.\TestBoostRegEx.cpp
@@ -281,9 +385,5 @@ SOURCE=.\TestStdExt.cpp
 SOURCE=.\TestStdNew.cpp
 # End Source File
 # End Group
-# Begin Source File
-
-SOURCE=..\..\include\stdext\msvcrt.h
-# End Source File
 # End Target
 # End Project

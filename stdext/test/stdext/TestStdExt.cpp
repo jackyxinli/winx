@@ -18,6 +18,7 @@
 // -----------------------------------------------------------------------*/
 
 #define SGI_DEQUE_UNITTEST
+#define STD_UNITTEST
 #define STD_FILTER_TEST_CASE
 #define STD_NO_TASKALLOC
 //#define USES_APR
@@ -81,7 +82,7 @@ void testSgiHashMap();
 
 void testStdExt()
 {
-	WINX_TEST_APP(std::ErrorLog, "TestPosixArchive", "");
+	WINX_TEST_APP(std::ErrorLog, "TestRope", "");
 //	testSgiHashMap();
 
 	WINX_TEST_CLASS(TestFinder);
@@ -135,7 +136,6 @@ void testStdExt()
 
 	//Memory.h
 	WINX_TEST_CLASS(std::TestAutoFreeAlloc);
-	WINX_TEST_CLASS(std::TestAutoArray);
 	WINX_TEST_CLASS(std::TestScopeAlloc);
 	WINX_TEST_CLASS(std::TestCompareAllocators);
 	WINX_TEST_CLASS(std::TestEvent);
