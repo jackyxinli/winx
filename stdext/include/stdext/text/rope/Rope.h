@@ -97,13 +97,6 @@ class Rope {
 			return _RopeRep::_S_fetch(__r, __pos);
 		}
 
-        static bool _S_apply_to_pieces(
-                                // should be template parameter
-                                _Rope_char_consumer<_CharT>& __c,
-                                const _RopeRep* __r,
-                                size_t __begin, size_t __end);
-                                // begin and end are assumed to be in range.
-
 		typedef _Rope_RopeRep<_CharT>* _Self_destruct_ptr;
 
         // _Result is counted in refcount.
@@ -126,12 +119,67 @@ class Rope {
                 // General concatenation on _RopeRep.  _Result
                 // has refcount of 1.  Adjusts argument refcounts.
 
-   public:
-        void apply_to_pieces( size_t __begin, size_t __end,
-                              _Rope_char_consumer<_CharT>& __c) const {
-            _S_apply_to_pieces(__c, _M_tree_ptr, __begin, __end);
-        }
+		template <class _RopeCharConsumer>
+        static bool _S_apply_to_pieces(
+            _Alloc& __a, _RopeCharConsumer& __c, 
+			const _RopeRep* __r, size_t __begin, size_t __end)
+		{
+			if (0 == __r)
+				return true;
+			switch(__r->_M_tag)
+			{
+			case _RopeRep::_S_concat:
+				{
+					_RopeConcatenation* __conc = (_RopeConcatenation*)__r;
+					_RopeRep* __left =  __conc->_M_left;
+					size_t __left_len = __left->_M_size;
+					if (__begin < __left_len) {
+						size_t __left_end = min(__left_len, __end);
+						if (!_S_apply_to_pieces(__a, __c, __left, __begin, __left_end))
+							return false;
+					}
+					if (__end > __left_len) {
+						_RopeRep* __right =  __conc->_M_right;
+						size_t __right_start = max(__left_len, __begin);
+						if (!_S_apply_to_pieces(__a, __c, __right,
+							__right_start - __left_len,
+							__end - __left_len)) {
+							return false;
+						}
+					}
+				}
+				return true;
+			case _RopeRep::_S_leaf:
+				{
+					_RopeLeaf* __l = (_RopeLeaf*)__r;
+					return __c(__l->_M_data + __begin, __end - __begin);
+				}
+			case _RopeRep::_S_function:
+			case _RopeRep::_S_substringfn:
+				{
+					_RopeFunction* __f = (_RopeFunction*)__r;
+					size_t __len = __end - __begin;
+					bool __result = false;
+					_CharT* __buffer = STD_ALLOC_ARRAY(__a, _CharT, __len);
+					__STL_TRY {
+						(*(__f->_M_fn))(__begin, __len, __buffer);
+						__result = __c(__buffer, __len);
+					}
+					__STL_UNWIND(0)
+					return __result;
+				}
+			default:
+				WINX_ASSERT(false); /*NOTREACHED*/
+				return false;
+			}
+		}
 
+   public:
+	   template <class _RopeCharConsumer>
+       void apply_to_pieces(size_t __begin, size_t __end, _RopeCharConsumer& __c) const
+	   {
+            _S_apply_to_pieces(*_M_alloc, __c, _M_tree_ptr, __begin, __end);
+       }
 
    protected:
         // Allocate and construct a RopeLeaf using the supplied allocator
@@ -207,7 +255,7 @@ class Rope {
         // Assumes that buffer is uninitialized.
         static _CharT* _S_flatten(_RopeRep* __r,
                                   size_t __start, size_t __len,
-                                  _CharT* __buffer);
+                                  _CharT* __buffer, _Alloc& __a);
 
         static const unsigned long 
           _S_min_len[_RopeRep::_S_max_rope_depth + 1];
@@ -332,7 +380,7 @@ class Rope {
         void winx_call push_back(_CharT __x)
         {
             _RopeRep* __old = _M_tree_ptr;
-            _M_tree_ptr = _S_destr_concat_char_iter(_M_tree_ptr, &__x, 1);
+            _M_tree_ptr = _S_destr_concat_char_iter(_M_tree_ptr, &__x, 1, *_M_alloc);
         }
 
         void winx_call pop_back()
@@ -351,7 +399,7 @@ class Rope {
         {
             _RopeRep* __old = _M_tree_ptr;
             _RopeRep* __left =
-				__STL_ROPE_FROM_UNOWNED_CHAR_PTR(&__x, 1, get_allocator());
+				__STL_ROPE_FROM_UNOWNED_CHAR_PTR(&__x, 1, *_M_alloc);
 			_M_tree_ptr = _S_concat(__left, _M_tree_ptr, *_M_alloc);
         }
 
@@ -388,7 +436,7 @@ class Rope {
             size_t __len = (__pos + __n > __size? __size - __pos : __n);
 
             destroy(__buffer, __buffer + __len);
-            return _S_flatten(_M_tree_ptr, __pos, __len, __buffer);
+            return _S_flatten(_M_tree_ptr, __pos, __len, __buffer, *_M_alloc);
         }
 
         // Print to stdout, exposing structure.  May be useful for

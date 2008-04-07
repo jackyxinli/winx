@@ -274,7 +274,7 @@ Rope<_CharT,_Alloc>::_S_substring(_RopeRep* __base,
 }
 
 template<class _CharT>
-class _Rope_flatten_char_consumer : public _Rope_char_consumer<_CharT> {
+class _Rope_flatten_char_consumer {
     private:
 	_CharT* _M_buf_ptr;
     public:
@@ -282,7 +282,6 @@ class _Rope_flatten_char_consumer : public _Rope_char_consumer<_CharT> {
 	_Rope_flatten_char_consumer(_CharT* __buffer) {
 	    _M_buf_ptr = __buffer;
 	};
-	~_Rope_flatten_char_consumer() {}
 	bool operator() (const _CharT* __leaf, size_t __n) {
 	    uninitialized_copy_n(__leaf, __n, _M_buf_ptr);
 	    _M_buf_ptr += __n;
@@ -291,14 +290,13 @@ class _Rope_flatten_char_consumer : public _Rope_char_consumer<_CharT> {
 };
 	    
 template<class _CharT>
-class _Rope_find_char_char_consumer : public _Rope_char_consumer<_CharT> {
+class _Rope_find_char_char_consumer {
     private:
 	_CharT _M_pattern;
     public:
 	size_t _M_count;  // Number of nonmatching characters
 	_Rope_find_char_char_consumer(_CharT __p) 
 	  : _M_pattern(__p), _M_count(0) {}
-	~_Rope_find_char_char_consumer() {}
 	bool operator() (const _CharT* __leaf, size_t __n) {
 	    size_t __i;
 	    for (__i = 0; __i < __n; __i++) {
@@ -311,69 +309,13 @@ class _Rope_find_char_char_consumer : public _Rope_char_consumer<_CharT> {
 };
 
 template <class _CharT, class _Alloc>
-bool Rope<_CharT, _Alloc>::_S_apply_to_pieces(
-				_Rope_char_consumer<_CharT>& __c,
-				const _RopeRep* __r,
-				size_t __begin, size_t __end)
-{
-    if (0 == __r) return true;
-    switch(__r->_M_tag) {
-	case _RopeRep::_S_concat:
-	    {
-		_RopeConcatenation* __conc = (_RopeConcatenation*)__r;
-		_RopeRep* __left =  __conc->_M_left;
-		size_t __left_len = __left->_M_size;
-		if (__begin < __left_len) {
-		    size_t __left_end = min(__left_len, __end);
-		    if (!_S_apply_to_pieces(__c, __left, __begin, __left_end))
-			return false;
-		}
-		if (__end > __left_len) {
-		    _RopeRep* __right =  __conc->_M_right;
-		    size_t __right_start = max(__left_len, __begin);
-		    if (!_S_apply_to_pieces(__c, __right,
-					 __right_start - __left_len,
-					 __end - __left_len)) {
-			return false;
-		    }
-		}
-	    }
-	    return true;
-	case _RopeRep::_S_leaf:
-	    {
-		_RopeLeaf* __l = (_RopeLeaf*)__r;
-		return __c(__l->_M_data + __begin, __end - __begin);
-	    }
-	case _RopeRep::_S_function:
-	case _RopeRep::_S_substringfn:
-	    {
-		_RopeFunction* __f = (_RopeFunction*)__r;
-		size_t __len = __end - __begin;
-		bool __result = false;
-		_CharT* __buffer =
-		  (_CharT*)__r->get_allocator()._Charalloc(__len * sizeof(_CharT));
-		__STL_TRY {
-		  (*(__f->_M_fn))(__begin, __len, __buffer);
-		  __result = __c(__buffer, __len);
-		}
-		__STL_UNWIND(0)
-		return __result;
-	    }
-	default:
-	    WINX_ASSERT(false);
-	    /*NOTREACHED*/
-	    return false;
-    }
-}
-
-template <class _CharT, class _Alloc>
 _CharT*
 Rope<_CharT,_Alloc>::_S_flatten(_RopeRep* __r,
 				 size_t __start, size_t __len,
-				 _CharT* __buffer)
+				 _CharT* __buffer, _Alloc& __a)
 {
     _Rope_flatten_char_consumer<_CharT> __c(__buffer);
-    _S_apply_to_pieces(__c, __r, __start, __start + __len);
+    _S_apply_to_pieces(__a, __c, __r, __start, __start + __len);
     return(__buffer + __len);
 }
 
@@ -382,7 +324,7 @@ size_t
 Rope<_CharT,_Alloc>::find(_CharT __pattern, size_t __start) const
 {
     _Rope_find_char_char_consumer<_CharT> __c(__pattern);
-    _S_apply_to_pieces(__c, _M_tree_ptr, __start, size());
+    _S_apply_to_pieces(*_M_alloc, __c, _M_tree_ptr, __start, size());
     size_type __result_pos = __start + __c._M_count;
 #   ifndef __STL_OLD_ROPE_SEMANTICS
 	if (__result_pos == size()) __result_pos = npos;

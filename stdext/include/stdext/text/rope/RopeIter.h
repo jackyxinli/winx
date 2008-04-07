@@ -34,7 +34,8 @@ __NS_STD_BEGIN
 // class _Rope_iterator_base
 
 template <class _CharT>
-class _Rope_iterator_base : public random_access_iterator<_CharT, ptrdiff_t> {
+class _Rope_iterator_base : public
+	std::iterator<std::random_access_iterator_tag, _CharT> {
   public:
     typedef _Rope_RopeRep<_CharT> _RopeRep;
         // Borland doesnt want this to be protected.

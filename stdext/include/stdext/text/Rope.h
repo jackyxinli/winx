@@ -154,9 +154,22 @@ class TestRope : public TestCase
 		WINX_TEST(testSequenceBuffer);
 		WINX_TEST(testHash);
 		WINX_TEST(testIterator);
+		WINX_TEST(testFind);
 	WINX_TEST_SUITE_END();
 
 public:
+	void testFind(LogT& log)
+	{
+		std::BlockPool recycle;
+		std::ScopeAlloc alloc(recycle);
+
+		std::Rope<char> a(alloc);
+		a.push_back('b');
+		a.push_front('a');
+		AssertExp(a == "ab");
+		AssertExp(a.find("b") == 1);
+	}
+
 	void testIterator(LogT& log) // slowly (not recommended)
 	{
 		std::BlockPool recycle;

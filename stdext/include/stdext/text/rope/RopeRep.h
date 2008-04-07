@@ -41,19 +41,6 @@ class CharProducer {
         // have runtime descriptions.
 };
 
-// The following should be treated as private, at least for now.
-template<class _CharT>
-class _Rope_char_consumer {
-    public:
-        // If we had member templates, these should not be virtual.
-        // For now we need to use run-time parametrization where
-        // compile-time would do.  Hence this should all be private
-        // for now.
-        // The symmetry with CharProducer is accidental and temporary.
-        virtual ~_Rope_char_consumer() {}
-        virtual bool operator()(const _CharT* __buffer, size_t __len) = 0;
-};
-
 template<class _CharT>
 struct _Rope_RopeRep
 {
