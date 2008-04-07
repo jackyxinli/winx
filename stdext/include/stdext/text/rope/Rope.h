@@ -54,8 +54,8 @@ __NS_STD_BEGIN
 
 template<class _CharT, class _Alloc> class _Rope_char_ref_proxy;
 template<class _CharT, class _Alloc> class _Rope_char_ptr_proxy;
+template<class _CharT, class _Alloc> class _Rope_iterator;
 template<class _CharT> class _Rope_const_iterator;
-template<class _CharT> class _Rope_iterator;
 
 template <class _CharT, class _Alloc = ScopeAlloc>
 class Rope {
@@ -65,7 +65,7 @@ class Rope {
         typedef size_t size_type;
         typedef _CharT const_reference;
         typedef const _CharT* const_pointer;
-        typedef _Rope_iterator<_CharT> iterator;
+        typedef _Rope_iterator<_CharT, _Alloc> iterator;
         typedef _Rope_const_iterator<_CharT> const_iterator;
         typedef _Rope_char_ref_proxy<_CharT,_Alloc> reference;
         typedef _Rope_char_ptr_proxy<_CharT,_Alloc> pointer;
@@ -73,6 +73,7 @@ class Rope {
         friend struct _Rope_RopeRep<_CharT>;
         friend struct _Rope_RopeSubstring<_CharT>;
 
+		friend class _Rope_iterator<_CharT, _Alloc>;
         friend class _Rope_char_ptr_proxy<_CharT,_Alloc>;
         friend class _Rope_char_ref_proxy<_CharT,_Alloc>;
 

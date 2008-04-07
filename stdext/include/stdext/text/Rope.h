@@ -153,9 +153,35 @@ class TestRope : public TestCase
 		WINX_TEST(testBasic);
 		WINX_TEST(testSequenceBuffer);
 		WINX_TEST(testHash);
+		WINX_TEST(testIterator);
 	WINX_TEST_SUITE_END();
 
 public:
+	void testIterator(LogT& log) // slowly (not recommended)
+	{
+		std::BlockPool recycle;
+		std::ScopeAlloc alloc(recycle);
+
+		std::Rope<char> a(alloc, "Hello");
+		std::Rope<char> b(alloc, "abc");
+
+		std::Rope<char>::iterator it = a.mutable_begin();
+		*it = 'e';
+		*(it+1) = 'f';
+		*(it+2) = 'g';
+		AssertExp(a == "efglo");
+		std::Rope<char>::const_iterator it2 = it;
+		AssertExp(*it == 'e');
+		AssertExp(*it2 == 'e');
+		AssertExp(*(it2+1) == 'f');
+		std::copy(b.begin(), b.end(), it);
+		AssertExp(a == "abclo");
+
+		char buffer[256];
+		*std::copy(it, a.mutable_end(), buffer) = '\0';
+		AssertExp(strcmp(buffer, "abclo") == 0);
+	}
+
 	void testHash(LogT& log)
 	{
 		typedef std::Rope<char> KeyT;

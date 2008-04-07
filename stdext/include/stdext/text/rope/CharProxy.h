@@ -32,7 +32,7 @@ __NS_STD_BEGIN
 template<class _CharT, class _Alloc>
 class _Rope_char_ref_proxy
 {
-    friend class _Rope_iterator<_CharT>;
+    friend class _Rope_iterator<_CharT, _Alloc>;
     friend class _Rope_char_ptr_proxy<_CharT,_Alloc>;
     friend class Rope<_CharT,_Alloc>;
 
