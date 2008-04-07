@@ -202,22 +202,6 @@ SOURCE=..\..\..\stl\stl_rope.h
 # Begin Group "rope"
 
 # PROP Default_Filter ""
-# Begin Group "bak"
-
-# PROP Default_Filter ""
-# Begin Source File
-
-SOURCE=..\..\include\stdext\text\rope\bak\RopeFwd.h
-# End Source File
-# Begin Source File
-
-SOURCE=..\..\include\stdext\text\rope\bak\RopeOperators.h
-# End Source File
-# Begin Source File
-
-SOURCE=..\..\include\stdext\text\rope\bak\Stream.h
-# End Source File
-# End Group
 # Begin Source File
 
 SOURCE=..\..\include\stdext\text\rope\CharProxy.h

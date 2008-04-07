@@ -51,7 +51,7 @@ struct _Rope_Concat_fn : public binary_function<
 	_Alloc& m_alloc;
 	_Rope_Concat_fn(_Alloc& alloc) : m_alloc(alloc) {}
 
-	Rope<_CharT,_Alloc> operator()(
+	Rope<_CharT,_Alloc> winx_call operator()(
 		Rope<_CharT,_Alloc> __x, const Rope<_CharT,_Alloc>& __y) {
 		return __x.append(__y);
 	}
@@ -77,8 +77,8 @@ __NS_STD_BEGIN
 // Concatenate a C string onto a leaf Rope by copying the Rope data.
 // Used for short ropes.
 template <class _CharT, class _Alloc>
-typename Rope<_CharT,_Alloc>::_RopeLeaf*
-Rope<_CharT,_Alloc>::_S_leaf_concat_char_iter
+inline typename Rope<_CharT,_Alloc>::_RopeLeaf*
+winx_call Rope<_CharT,_Alloc>::_S_leaf_concat_char_iter
 		(_RopeLeaf* __r, const _CharT* __iter, size_t __len, _Alloc& __a)
 {
     size_t __old_len = __r->_M_size;
@@ -96,8 +96,8 @@ Rope<_CharT,_Alloc>::_S_leaf_concat_char_iter
 // Does not increment (nor decrement on exception) child reference counts.
 // Result has ref count 1.
 template <class _CharT, class _Alloc>
-typename Rope<_CharT,_Alloc>::_RopeRep*
-Rope<_CharT,_Alloc>::_S_tree_concat (_RopeRep* __left, _RopeRep* __right, _Alloc& __a)
+inline typename Rope<_CharT,_Alloc>::_RopeRep*
+winx_call Rope<_CharT,_Alloc>::_S_tree_concat (_RopeRep* __left, _RopeRep* __right, _Alloc& __a)
 {
     _RopeConcatenation* __result =
       _S_new_RopeConcatenation(__left, __right, __a);
@@ -115,7 +115,8 @@ Rope<_CharT,_Alloc>::_S_tree_concat (_RopeRep* __left, _RopeRep* __right, _Alloc
 }
 
 template <class _CharT, class _Alloc>
-typename Rope<_CharT,_Alloc>::_RopeRep* Rope<_CharT,_Alloc>::_S_concat_char_iter
+inline typename Rope<_CharT,_Alloc>::_RopeRep* 
+winx_call Rope<_CharT,_Alloc>::_S_concat_char_iter
 		(_RopeRep* __r, const _CharT*__s, size_t __slen, _Alloc& __a)
 {
     _RopeRep* __result;
@@ -147,8 +148,8 @@ typename Rope<_CharT,_Alloc>::_RopeRep* Rope<_CharT,_Alloc>::_S_concat_char_iter
 }
 
 template <class _CharT, class _Alloc>
-typename Rope<_CharT,_Alloc>::_RopeRep*
-Rope<_CharT,_Alloc>::_S_concat(_RopeRep* __left, _RopeRep* __right, _Alloc& __a)
+inline typename Rope<_CharT,_Alloc>::_RopeRep*
+winx_call Rope<_CharT,_Alloc>::_S_concat(_RopeRep* __left, _RopeRep* __right, _Alloc& __a)
 {
     if (0 == __left) {
 	return __right;
@@ -181,8 +182,8 @@ Rope<_CharT,_Alloc>::_S_concat(_RopeRep* __left, _RopeRep* __right, _Alloc& __a)
 }
 
 template <class _CharT, class _Alloc>
-typename Rope<_CharT,_Alloc>::_RopeRep*
-Rope<_CharT,_Alloc>::_S_substring(_RopeRep* __base, 
+inline typename Rope<_CharT,_Alloc>::_RopeRep*
+winx_call Rope<_CharT,_Alloc>::_S_substring(_RopeRep* __base, 
                                size_t __start, size_t __endp1, _Alloc& __a)
 {
     if (0 == __base) return 0;
@@ -282,7 +283,7 @@ class _Rope_flatten_char_consumer {
 	_Rope_flatten_char_consumer(_CharT* __buffer) {
 	    _M_buf_ptr = __buffer;
 	};
-	bool operator() (const _CharT* __leaf, size_t __n) {
+	bool winx_call operator() (const _CharT* __leaf, size_t __n) {
 	    uninitialized_copy_n(__leaf, __n, _M_buf_ptr);
 	    _M_buf_ptr += __n;
 	    return true;
@@ -297,7 +298,7 @@ class _Rope_find_char_char_consumer {
 	size_t _M_count;  // Number of nonmatching characters
 	_Rope_find_char_char_consumer(_CharT __p) 
 	  : _M_pattern(__p), _M_count(0) {}
-	bool operator() (const _CharT* __leaf, size_t __n) {
+	bool winx_call operator() (const _CharT* __leaf, size_t __n) {
 	    size_t __i;
 	    for (__i = 0; __i < __n; __i++) {
 		if (__leaf[__i] == _M_pattern) {
@@ -309,8 +310,7 @@ class _Rope_find_char_char_consumer {
 };
 
 template <class _CharT, class _Alloc>
-_CharT*
-Rope<_CharT,_Alloc>::_S_flatten(_RopeRep* __r,
+inline _CharT* winx_call Rope<_CharT,_Alloc>::_S_flatten(_RopeRep* __r,
 				 size_t __start, size_t __len,
 				 _CharT* __buffer, _Alloc& __a)
 {
@@ -320,8 +320,7 @@ Rope<_CharT,_Alloc>::_S_flatten(_RopeRep* __r,
 }
 
 template <class _CharT, class _Alloc>
-size_t
-Rope<_CharT,_Alloc>::find(_CharT __pattern, size_t __start) const
+inline size_t winx_call Rope<_CharT,_Alloc>::find(_CharT __pattern, size_t __start) const
 {
     _Rope_find_char_char_consumer<_CharT> __c(__pattern);
     _S_apply_to_pieces(*_M_alloc, __c, _M_tree_ptr, __start, size());
@@ -333,8 +332,7 @@ Rope<_CharT,_Alloc>::find(_CharT __pattern, size_t __start) const
 }
 
 template <class _CharT, class _Alloc>
-_CharT*
-Rope<_CharT,_Alloc>::_S_flatten(_RopeRep* __r, _CharT* __buffer)
+inline _CharT* winx_call Rope<_CharT,_Alloc>::_S_flatten(_RopeRep* __r, _CharT* __buffer)
 {
     if (0 == __r) return __buffer;
     switch(__r->_M_tag) {
@@ -370,8 +368,7 @@ Rope<_CharT,_Alloc>::_S_flatten(_RopeRep* __r, _CharT* __buffer)
 
 // This needs work for _CharT != char
 template <class _CharT, class _Alloc>
-void
-Rope<_CharT,_Alloc>::_S_dump(_RopeRep* __r, int __indent)
+inline void winx_call Rope<_CharT,_Alloc>::_S_dump(_RopeRep* __r, int __indent)
 {
     for (int __i = 0; __i < __indent; __i++) putchar(' ');
     if (0 == __r) {
@@ -439,8 +436,8 @@ Rope<_CharT,_Alloc>::_S_min_len[
 // These are Fibonacci numbers < 2**32.
 
 template <class _CharT, class _Alloc>
-typename Rope<_CharT,_Alloc>::_RopeRep*
-Rope<_CharT,_Alloc>::_S_balance(_RopeRep* __r, _Alloc& __a)
+inline typename Rope<_CharT,_Alloc>::_RopeRep*
+winx_call Rope<_CharT,_Alloc>::_S_balance(_RopeRep* __r, _Alloc& __a)
 {
     _RopeRep* __forest[_RopeRep::_S_max_rope_depth + 1];
     _RopeRep* __result = 0;
@@ -470,8 +467,8 @@ Rope<_CharT,_Alloc>::_S_balance(_RopeRep* __r, _Alloc& __a)
 
 
 template <class _CharT, class _Alloc>
-void
-Rope<_CharT,_Alloc>::_S_add_to_forest(_RopeRep* __r, _RopeRep** __forest, _Alloc& __a)
+inline void winx_call Rope<_CharT,_Alloc>::_S_add_to_forest(
+	_RopeRep* __r, _RopeRep** __forest, _Alloc& __a)
 {
     if (__r->_M_is_balanced) {
 	_S_add_leaf_to_forest(__r, __forest, __a);
@@ -488,8 +485,8 @@ Rope<_CharT,_Alloc>::_S_add_to_forest(_RopeRep* __r, _RopeRep** __forest, _Alloc
 
 
 template <class _CharT, class _Alloc>
-void
-Rope<_CharT,_Alloc>::_S_add_leaf_to_forest(_RopeRep* __r, _RopeRep** __forest, _Alloc& __a)
+inline void winx_call Rope<_CharT,_Alloc>::_S_add_leaf_to_forest(
+	_RopeRep* __r, _RopeRep** __forest, _Alloc& __a)
 {
     _RopeRep* __insertee;   		// included in refcount
     _RopeRep* __too_tiny = 0;    	// included in refcount
@@ -531,8 +528,7 @@ Rope<_CharT,_Alloc>::_S_add_leaf_to_forest(_RopeRep* __r, _RopeRep** __forest, _
 // We do a little more work to avoid dealing with Rope iterators for
 // flat strings.
 template <class _CharT, class _Alloc>
-int
-Rope<_CharT,_Alloc>::_S_compare (const _RopeRep* __left, 
+inline int winx_call Rope<_CharT,_Alloc>::_S_compare (const _RopeRep* __left, 
                                  const _RopeRep* __right)
 {
     size_t __left_len;
@@ -575,8 +571,8 @@ Rope<_CharT,_Alloc>::_S_compare (const _RopeRep* __left,
 }
 
 template <class _CharT, class _Alloc>
-Rope<_CharT, _Alloc>::Rope(_Alloc& __a, size_t __n, _CharT __c)
-: _M_alloc(&__a)
+inline Rope<_CharT, _Alloc>::Rope(_Alloc& __a, size_t __n, _CharT __c)
+	: _M_alloc(&__a)
 {
     Rope<_CharT,_Alloc> __result(__a);
     const size_t __exponentiate_threshold = 32;
