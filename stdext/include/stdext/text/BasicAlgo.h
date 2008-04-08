@@ -378,6 +378,8 @@ inline xchar* winx_call strecpy(xchar* pszDest, const xchar* pszSrc)
 	return pszDest;
 }
 
+namespace tchar { using std::strecpy; }
+
 // -------------------------------------------------------------------------
 // $Log: BasicAlgo.h,v $
 

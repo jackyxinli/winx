@@ -23,6 +23,12 @@
 #include "Basic.h"
 #endif
 
+#ifndef __STD_HASH_H__
+#include "../std/hash.h"
+#endif
+
+#ifndef _WINX_NO_HASH
+
 __NS_STD_BEGIN
 
 // -------------------------------------------------------------------------
@@ -159,5 +165,7 @@ struct _HashComp : public stdext::hash_compare<KeyT, typename HashCompT::key_pre
 //
 
 __NS_STD_END
+
+#endif // _WINX_NO_HASH
 
 #endif /* __STDEXT_HASH_H__ */

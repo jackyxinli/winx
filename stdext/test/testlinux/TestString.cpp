@@ -17,6 +17,7 @@
 // $Id: TestString.cpp,v 1.8 2006/12/03 07:52:55 xushiwei Exp $
 // -----------------------------------------------------------------------*/
 
+#define STD_UNITTEST
 #include <stdext/text/BasicString.h>
 #include <stdext/text/BasicStringBuilder.h>
 #include <stdext/text/TextPool.h>

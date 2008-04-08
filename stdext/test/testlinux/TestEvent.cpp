@@ -17,6 +17,7 @@
 // $Id: TestBasic.cpp,v 1.8 2006/12/03 07:52:55 xushiwei Exp $
 // -----------------------------------------------------------------------*/
 
+#define STD_UNITTEST
 #define WINX_USE_DEFINE_IID
 #include <stdext/Basic.h>
 #include <stdext/Memory.h>

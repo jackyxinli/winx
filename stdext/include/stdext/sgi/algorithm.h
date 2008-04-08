@@ -19,6 +19,10 @@
 #ifndef __SGI_ALGORITHM_H__
 #define __SGI_ALGORITHM_H__
 
+#ifndef __SGI_CONFIG_H__
+#include "config.h"
+#endif
+
 // -------------------------------------------------------------------------
 // algorithm.h
 

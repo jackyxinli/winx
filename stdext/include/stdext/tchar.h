@@ -19,10 +19,6 @@
 #ifndef __STDEXT_TCHAR_H__
 #define __STDEXT_TCHAR_H__
 
-#ifndef __STDEXT_TEXT_BASICALGO_H__
-#include "text/BasicAlgo.h"
-#endif
-
 #ifndef _INC_LIMITS
 #include <limits.h>
 #endif
@@ -58,8 +54,6 @@ namespace tchar {
 #include "tchar/strspn.h"
 #include "tchar/strstr.h"
 #include "tchar/strupr.h"
-
-using std::strecpy;
 
 }; // namespace tchar
 

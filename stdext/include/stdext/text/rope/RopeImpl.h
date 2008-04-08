@@ -63,7 +63,7 @@ namespace __STD {
 
 template <class _CharT, class _Alloc>
 inline std::Rope<_CharT,_Alloc>
-	identity_element(const std::_Rope_Concat_fn<_CharT, _Alloc>& r)
+	winx_call identity_element(const std::_Rope_Concat_fn<_CharT, _Alloc>& r)
 {
     return std::Rope<_CharT,_Alloc>(r.m_alloc);
 }
@@ -86,8 +86,8 @@ winx_call Rope<_CharT,_Alloc>::_S_leaf_concat_char_iter
 		STD_ALLOC_ARRAY(__a, _CharT, __old_len + __len);
     _RopeLeaf* __result;
     
-    uninitialized_copy_n(__r->_M_data, __old_len, __new_data);
-    uninitialized_copy_n(__iter, __len, __new_data + __old_len);
+    stdext::uninitialized_copy_n(__r->_M_data, __old_len, __new_data);
+    stdext::uninitialized_copy_n(__iter, __len, __new_data + __old_len);
 	__result = _S_new_RopeLeaf(__new_data, __old_len + __len, __a);
     return __result;
 }
@@ -284,7 +284,7 @@ class _Rope_flatten_char_consumer {
 	    _M_buf_ptr = __buffer;
 	};
 	bool winx_call operator() (const _CharT* __leaf, size_t __n) {
-	    uninitialized_copy_n(__leaf, __n, _M_buf_ptr);
+	    stdext::uninitialized_copy_n(__leaf, __n, _M_buf_ptr);
 	    _M_buf_ptr += __n;
 	    return true;
 	}
@@ -542,13 +542,13 @@ inline int winx_call Rope<_CharT,_Alloc>::_S_compare (const _RopeRep* __left,
 	_RopeLeaf* __l = (_RopeLeaf*) __left;
 	if (_RopeRep::_S_leaf == __right->_M_tag) {
 	    _RopeLeaf* __r = (_RopeLeaf*) __right;
-	    return lexicographical_compare_3way(
+	    return stdext::lexicographical_compare_3way(
 			__l->_M_data, __l->_M_data + __left_len,
 			__r->_M_data, __r->_M_data + __right_len);
 	} else {
 	    const_iterator __rstart(__right, 0);
 	    const_iterator __rend(__right, __right_len);
-	    return lexicographical_compare_3way(
+	    return stdext::lexicographical_compare_3way(
 			__l->_M_data, __l->_M_data + __left_len,
 			__rstart, __rend);
 	}
@@ -557,13 +557,13 @@ inline int winx_call Rope<_CharT,_Alloc>::_S_compare (const _RopeRep* __left,
 	const_iterator __lend(__left, __left_len);
 	if (_RopeRep::_S_leaf == __right->_M_tag) {
 	    _RopeLeaf* __r = (_RopeLeaf*) __right;
-	    return lexicographical_compare_3way(
+	    return stdext::lexicographical_compare_3way(
 				   __lstart, __lend,
 				   __r->_M_data, __r->_M_data + __right_len);
 	} else {
 	    const_iterator __rstart(__right, 0);
 	    const_iterator __rend(__right, __right_len);
-	    return lexicographical_compare_3way(
+	    return stdext::lexicographical_compare_3way(
 				   __lstart, __lend,
 				   __rstart, __rend);
 	}

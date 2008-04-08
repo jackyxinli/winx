@@ -33,6 +33,10 @@
 #include <ext/algorithm>
 #endif
 
+#ifndef _EXT_MEMORY
+#include <ext/memory>
+#endif
+
 #ifndef __SGI_STL_ALGORITHM
 	#define __SGI_STL_ALGORITHM
 #endif

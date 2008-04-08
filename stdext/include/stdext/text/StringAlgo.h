@@ -47,7 +47,7 @@ enum codepage_t
 
 template <class StringT>
 inline void winx_call iconv(
-	codepage_t from, const char* str, size_t count, StringT& dest)
+	codepage_t from, const char* str, size_t cch, StringT& dest)
 {
 	int cch2 = MultiByteToWideChar(from, 0, str, cch, NULL, 0);
 	WCHAR* str2 = std::resize(dest, cch2);

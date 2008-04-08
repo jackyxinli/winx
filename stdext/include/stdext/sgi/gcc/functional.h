@@ -29,6 +29,10 @@
 #include <functional>
 #endif
 
+#if !defined(_EXT_FUNCTIONAL)
+#include <ext/functional>
+#endif
+
 namespace __STD
 {
 	using std::binary_function;

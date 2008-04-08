@@ -19,6 +19,10 @@
 #ifndef __SGI_FUNCTIONAL_H__
 #define __SGI_FUNCTIONAL_H__
 
+#ifndef __SGI_CONFIG_H__
+#include "config.h"
+#endif
+
 // -------------------------------------------------------------------------
 // functional.h
 

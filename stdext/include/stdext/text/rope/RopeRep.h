@@ -140,6 +140,7 @@ struct _Rope_RopeSubstring : public _Rope_RopeFunction<_CharT>,
   	using _Base::_S_leaf;
   	using _Base::_M_tag;
 	using _Base::_M_fn;
+	using _Base::_M_size;
   public:
     // XXX this whole class should be rewritten.
     _Rope_RopeRep<_CharT>* _M_base;      // not 0
@@ -161,7 +162,7 @@ struct _Rope_RopeSubstring : public _Rope_RopeFunction<_CharT>,
               {
                 const _CharT* __s =
                         ((_Rope_RopeLeaf<_CharT>*)_M_base)->_M_data;
-                uninitialized_copy_n(__s + __start_pos + _M_start, __req_len,
+                stdext::uninitialized_copy_n(__s + __start_pos + _M_start, __req_len,
                                      __buffer);
               }
               break;

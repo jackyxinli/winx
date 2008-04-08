@@ -148,8 +148,7 @@ public:
 	enum { recIdEOF = HeaderT::recIdEOF };
 
 public:
-	RecordReader()
-		: {}
+	RecordReader() {}
 
 	template <class InitArgT>
 	explicit RecordReader(InitArgT file)

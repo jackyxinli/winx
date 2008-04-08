@@ -9,48 +9,39 @@
 // of this license. You must not remove this notice, or any other, from
 // this software.
 // 
-// Module: TestMemory.cpp
+// Module: std/hash.h
 // Creator: xushiwei
 // Email: xushiweizh@gmail.com
-// Date: 2006-8-18 13:57:28
+// Date: 2006-8-18 18:56:07
 // 
-// $Id: TestMemory.cpp,v 1.8 2006/12/03 07:52:55 xushiwei Exp $
+// $Id: hash.h,v 1.1 2006/10/18 12:13:39 xushiwei Exp $
 // -----------------------------------------------------------------------*/
+#ifndef __STD_HASH_H__
+#define __STD_HASH_H__
 
-#define STD_UNITTEST
-#include <stdext/Memory.h>
-
-// -------------------------------------------------------------------------
-// TestCase
-
-void testAutoFreeAlloc()
-{
-    std::AutoFreeAlloc alloc;
-    int* a = STD_NEW(alloc, int);
-    int* b = STD_NEW_ARRAY(alloc, int, 100);
-    int* c = STD_ALLOC(alloc, int);
-    int* d = STD_ALLOC_ARRAY(alloc, int, 100);
-    
-    std::AutoFreeAlloc* suballoc = STD_NEW(alloc, std::AutoFreeAlloc);
-    int* e = STD_NEW(*suballoc, int);
-}
-
-void testScopeAlloc()
-{
-    std::BlockPool recycle;
-    std::ScopeAlloc alloc(recycle);
-    int* a = STD_NEW(alloc, int);
-    // ... --> same as std::AutoFreeAlloc
-}
-
-void testMemory()
-{
-    testAutoFreeAlloc();
-    testScopeAlloc();
-}
-
-WINX_AUTORUN(testMemory);
+#ifndef __STDEXT_PLATFORM_H__
+#include "../stdext/Platform.h"
+#endif
 
 // -------------------------------------------------------------------------
-// $Log: TestMemory.cpp,v $
-//
+
+#if defined(X_STL_NET)
+	#ifndef _HASH_MAP_
+	#include <hash_map>
+	#endif
+#elif defined(X_STL_GCC)
+	#ifndef _HASH_FUN_H
+	#include <ext/hash_fun.h>
+	#endif
+#elif defined(NO_SGISTL)
+	#define _WINX_NO_HASH
+#else
+	#ifndef __SGI_HASH_MAP_H__
+	#include "../stdext/sgi/hash_map.h"
+	#endif
+#endif
+
+// -------------------------------------------------------------------------
+// $Log: hash.h,v $
+
+#endif /* __STD_HASH_H__ */

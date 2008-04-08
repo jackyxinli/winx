@@ -19,6 +19,10 @@
 #ifndef __SGI_NUMERIC_H__
 #define __SGI_NUMERIC_H__
 
+#ifndef __SGI_CONFIG_H__
+#include "config.h"
+#endif
+
 // -------------------------------------------------------------------------
 // numeric.h
 

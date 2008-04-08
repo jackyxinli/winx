@@ -23,8 +23,25 @@
 #include "../../sgi/numeric.h"
 #endif
 
+#ifndef __SGI_ALGORITHM_H__
+#include "../../sgi/algorithm.h"
+#endif
+
+#ifndef __SGI_FUNCTIONAL_H__
+#include "../../sgi/functional.h"
+#endif
+
 #ifndef __STDEXT_TEXT_ROPE_ROPEREP_H__
 #include "RopeRep.h"
+#endif
+
+#ifndef __STL_TRY
+#define __STL_TRY try
+#define __STL_CATCH_ALL catch(...)
+#define __STL_THROW(x) throw x
+#define __STL_RETHROW throw
+#define __STL_NOTHROW throw()
+#define __STL_UNWIND(action) catch(...) { action; throw; }
 #endif
 
 /*
@@ -257,7 +274,7 @@ class Rope {
         {
             if (0 == __size) return 0;
             _CharT* __buf = STD_ALLOC_ARRAY(__a, _CharT, __size);
-            uninitialized_copy_n(__s, __size, __buf);
+            stdext::uninitialized_copy_n(__s, __size, __buf);
             return _S_new_RopeLeaf(__buf, __size, __a);
         }
             
@@ -460,7 +477,7 @@ class Rope {
         }
 
         _CharT* winx_call copy(_CharT* __buffer) const {
-			stdext::destroy(__buffer, __buffer + size());
+			std::destroyArray(__buffer, size());
             return _S_flatten(_M_tree_ptr, __buffer);
         }
 
@@ -474,7 +491,7 @@ class Rope {
             size_t __size = size();
             size_t __len = (__pos + __n > __size? __size - __pos : __n);
 
-            destroy(__buffer, __buffer + __len);
+            std::destroyArray(__buffer, __len);
             return _S_flatten(_M_tree_ptr, __pos, __len, __buffer, *_M_alloc);
         }
 
@@ -525,7 +542,7 @@ class Rope {
             //  but it's harder to make guarantees.
         }
 
-#     if defined(__STL_CLASS_PARTIAL_SPECIALIZATION) || defined(X_CC_VC_NET)
+#     if defined(__STL_CLASS_PARTIAL_SPECIALIZATION) || !defined(X_CC_VC6)
         typedef reverse_iterator<const_iterator> const_reverse_iterator;
 #     else /* __STL_CLASS_PARTIAL_SPECIALIZATION */
         typedef reverse_iterator<const_iterator, value_type, const_reference,
@@ -891,7 +908,7 @@ class Rope {
             return(iterator(this, size()));
         }
 
-#     if defined(__STL_CLASS_PARTIAL_SPECIALIZATION) || defined(X_CC_VC_NET)
+#     if defined(__STL_CLASS_PARTIAL_SPECIALIZATION) || !defined(X_CC_VC6)
         typedef reverse_iterator<iterator> reverse_iterator;
 #     else /* __STL_CLASS_PARTIAL_SPECIALIZATION */
         typedef reverse_iterator<iterator, value_type, reference,

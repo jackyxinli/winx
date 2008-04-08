@@ -616,16 +616,14 @@ class _Rope_const_iterator : public _Rope_iterator_base<_CharT> {
         return _Rope_const_iterator<_CharT>(_M_root, __old_pos);
     }
     reference winx_call operator[](size_t __n) {
-        return Rope<_CharT,_Alloc>::_S_fetch(_M_root, _M_current_pos + __n);
+        return _RopeRep::_S_fetch(_M_root, _M_current_pos + __n);
     }
 
   public:
-	template <class _CharT>
 	inline bool winx_call operator== (const _Rope_const_iterator<_CharT>& __y) const {
 	  return (_M_current_pos == __y._M_current_pos && 
 			  _M_root == __y._M_root);
 	}
-	template <class _CharT>
 	inline bool winx_call operator< (const _Rope_const_iterator<_CharT>& __y) const {
 	  return (_M_current_pos < __y._M_current_pos);
 	}
