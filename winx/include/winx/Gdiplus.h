@@ -45,7 +45,7 @@
 #include "../../../winsdk/include/GdiPlus.h"
 #endif
 
-#elif !defined(WINX_VC6)
+#elif defined(WINX_USE_DEFSDK) || !defined(WINX_VC6)
 
 #ifndef _GDIPLUS_H
 #include <GdiPlus.h>
