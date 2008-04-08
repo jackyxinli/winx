@@ -126,6 +126,8 @@ __NS_STD_BEGIN
 // =========================================================================
 // class Log
 
+#pragma warning(disable:4996) // XXX  was declared deprecated
+
 template <class Storage>
 class Log
 {
@@ -592,6 +594,8 @@ public:
 
 	__STD_LOG_PRINT_CTYPES()
 };
+
+#pragma warning(default:4996) // XXX  was declared deprecated
 
 // =========================================================================
 // class OutputLog, ErrorLog, FileLog

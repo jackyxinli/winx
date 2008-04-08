@@ -42,6 +42,8 @@
 
 __NS_STD_BEGIN
 
+#pragma warning(disable:4996) // XXX  was declared deprecated
+
 inline void _ReportCountLeak(unsigned nRef, const char* szClass, const char* szFile, int nLine)
 {
 	char szBuf[1024];
@@ -58,6 +60,8 @@ inline void _ReportCountLeak(unsigned nRef, const char* szClass, const char* szF
 	sprintf(szBuf, "%s (%d) is leaked\n", szClass, nRef);
 	OutputDebugStringA(szBuf);
 }
+
+#pragma warning(default:4996) // XXX  was declared deprecated
 
 class _CountChecker
 {

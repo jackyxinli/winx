@@ -36,10 +36,10 @@ private:
 	typedef Writer _Myt;
 
 public:
-	typedef _Base::char_type char_type;
-	typedef _Base::uchar_type uchar_type;
+	typedef typename _Base::char_type char_type;
+	typedef typename _Base::uchar_type uchar_type;
 
-	typedef _Base::size_type size_type;
+	typedef typename _Base::size_type size_type;
 
 private:
 	typedef TempString<char> _String;

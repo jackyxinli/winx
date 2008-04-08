@@ -153,6 +153,8 @@ typedef WinFileBufT<DefaultStaticAlloc> WinFileBuf;
 // -------------------------------------------------------------------------
 // class FILEFileBuf
 
+#pragma warning(disable:4996) // XXX  was declared deprecated
+
 template <class _Alloc>
 class FILEFileBufT : public AutoBufferT<_Alloc>
 {
@@ -200,6 +202,8 @@ public:
 		return read(WINX_W2CA(file));
 	}
 };
+
+#pragma warning(default:4996) // XXX  was declared deprecated
 
 typedef FILEFileBufT<DefaultStaticAlloc> FILEFileBuf;
 

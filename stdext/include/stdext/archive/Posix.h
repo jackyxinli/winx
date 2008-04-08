@@ -44,6 +44,8 @@ __NS_STD_BEGIN
 // -------------------------------------------------------------------------
 // class PosixAdapter
 
+#pragma warning(disable:4996) // XXX  was declared deprecated
+
 class PosixAdapter
 {
 public:
@@ -197,6 +199,8 @@ public:
 	}
 };
 
+#pragma warning(default:4996) // XXX  was declared deprecated
+
 // -------------------------------------------------------------------------
 
 typedef WriteArchive<int, PosixAdapter> PosixWriteArchive;
@@ -209,6 +213,8 @@ typedef Reader<PosixReadArchive> PosixReader;
 // class TestPosixArchive
 
 #if defined(STD_UNITTEST)
+
+#pragma warning(disable:4996) // XXX  was declared deprecated
 
 template <class LogT>
 class TestPosixArchive : public TestCase
@@ -313,6 +319,8 @@ public:
 		}
 	}
 };
+
+#pragma warning(default:4996) // XXX  was declared deprecated
 
 #endif // defined(STD_UNITTEST)
 

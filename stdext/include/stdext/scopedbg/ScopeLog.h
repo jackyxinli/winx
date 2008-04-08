@@ -275,6 +275,8 @@ public:
 // =========================================================================
 // class ThreadLog
 
+#pragma warning(disable:4996) // XXX  was declared deprecated
+
 class ThreadLogName
 {
 public:
@@ -303,6 +305,8 @@ public:
 		return szFile;
 	}
 };
+
+#pragma warning(default:4996) // XXX  was declared deprecated
 
 template <class LogT, class NameT = ThreadLogName>
 class ThreadLog

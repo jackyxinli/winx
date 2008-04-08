@@ -48,6 +48,8 @@ typedef ThreadLogInit<FileScopeLog>	ThreadFileScopeLogInit;
 // =========================================================================
 // class ExceptionGuard
 
+#pragma warning(disable:4996) // XXX  was declared deprecated
+
 class _ExceptionGuardBase
 {
 private:
@@ -97,6 +99,8 @@ public:
 		}
 	}
 };
+
+#pragma warning(default:4996) // XXX  was declared deprecated
 
 typedef CheckException<_ExceptionGuardBase> ExceptionGuard;
 

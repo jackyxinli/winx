@@ -410,6 +410,8 @@ public:
 
 #if defined(STD_UNITTEST)
 
+#pragma warning(disable:4996) // XXX  was declared deprecated
+
 template <class LogT>
 class TestStreamArchive : public TestCase
 {
@@ -511,6 +513,8 @@ public:
 		}
 	}
 };
+
+#pragma warning(default:4996) // XXX  was declared deprecated
 
 #endif // defined(STD_UNITTEST)
 

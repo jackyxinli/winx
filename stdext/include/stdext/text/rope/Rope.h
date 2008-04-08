@@ -460,7 +460,7 @@ class Rope {
         }
 
         _CharT* winx_call copy(_CharT* __buffer) const {
-            destroy(__buffer, __buffer + size());
+			stdext::destroy(__buffer, __buffer + size());
             return _S_flatten(_M_tree_ptr, __buffer);
         }
 

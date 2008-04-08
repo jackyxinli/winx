@@ -34,20 +34,20 @@
 #define VERIFY_OK
 #endif
 
-#ifndef __STDEXT_PLATFORM_H__
-#include "Platform.h"
-#endif
-
-#ifndef __STLPATCH_H__
-#include "../stlpatch.h"
-#endif
-
 #ifndef _CRT_SECURE_NO_DEPRECATE
 #define _CRT_SECURE_NO_DEPRECATE
 #endif
 
+#ifndef __STDC_WANT_SECURE_LIB__
+#define __STDC_WANT_SECURE_LIB__ 0
+#endif
+
 #ifndef _SECURE_SCL
 #define _SECURE_SCL 0
+#endif
+
+#ifndef _SECURE_ATL
+#define _SECURE_ATL	0
 #endif
 
 #if !defined(_WIN32)
@@ -56,6 +56,14 @@
 
 #if !defined(_MSC_VER)
 #define STD_NO_MSVCRT
+#endif
+
+#ifndef __STDEXT_PLATFORM_H__
+#include "Platform.h"
+#endif
+
+#ifndef __STLPATCH_H__
+#include "../stlpatch.h"
 #endif
 
 // -------------------------------------------------------------------------

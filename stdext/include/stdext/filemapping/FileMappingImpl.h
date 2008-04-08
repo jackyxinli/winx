@@ -605,6 +605,10 @@ typedef FileMappingT<FileMappingReadWrite> FileMapping;
 // -------------------------------------------------------------------------
 // class TestFileMapping
 
+#if defined(STD_UNITTEST)
+
+#pragma warning(disable:4996) // XXX  was declared deprecated
+
 template <class LogT>
 class TestFileMapping
 {
@@ -776,6 +780,10 @@ public:
 		AssertExp(strcmp(buf, "1234\n") == 0);
 	}
 };
+
+#pragma warning(default:4996) // XXX  was declared deprecated
+
+#endif // defined(STD_UNITTEST)
 
 // -------------------------------------------------------------------------
 // $Log: $

@@ -52,8 +52,8 @@ namespace std {
 
 template <class _It>
 __forceinline typename _It::pointer _ConvIt(_It it)
-	{return it._Myptr; }
-	
+	{return (typename _It::pointer)it._Myptr; }
+
 template <class _Ty>
 __forceinline _Ty* _ConvIt(_Ty* it)
 	{return it;}

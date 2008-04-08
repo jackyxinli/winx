@@ -59,60 +59,60 @@ Rope<_E,_AllocT> operator+(Rope<_E,_AllocT> __left, const _T2& __right)
 template <class _E, class _AllocT, class _T2> __forceinline
 Rope<_E,_AllocT>& operator+=(Rope<_E,_AllocT>& __left, const _T2& __right)
 {
-    return __left.append(__right);
+	return __left.append(__right);
 }
 
 // -------------------------------------------------------------------------
 
 template <class _E, class _AllocT, class _T2> __forceinline
 bool winx_call operator==(const Rope<_E, _AllocT>& a, const _T2& b)
-	{return a.compare(b) == 0; }
+{return a.compare(b) == 0; }
 
 template <class _E, class _AllocT> __forceinline
 bool winx_call operator==(const BasicString<_E>& a, const Rope<_E, _AllocT>& b)
-	{return b.compare(a) == 0; }
+{return b.compare(a) == 0; }
 
 template <class _E, class _AllocT> __forceinline
 bool winx_call operator==(const BasicString<_E>& a, Rope<_E, _AllocT>& b)
-	{return b.compare(a) == 0; }
+{return b.compare(a) == 0; }
 
 template <class _E, class _AllocT> __forceinline
 bool winx_call operator==(const _E* a, const Rope<_E, _AllocT>& b)
-	{return b.compare(a) == 0; }
+{return b.compare(a) == 0; }
 
 template <class _E, class _AllocT> __forceinline
 bool winx_call operator==(const _E* a, Rope<_E, _AllocT>& b)
-	{return b.compare(a) == 0; }
+{return b.compare(a) == 0; }
 
 // -------------------------------------------------------------------------
 
 template <class _E, class _AllocT, class _T2> __forceinline
 bool winx_call operator!=(const Rope<_E, _AllocT>& a, const _T2& b)
-	{return a.compare(b) != 0; }
+{return a.compare(b) != 0; }
 
 // -------------------------------------------------------------------------
 
 template <class _E, class _AllocT, class _T2> __forceinline
 bool winx_call operator<(const Rope<_E, _AllocT>& a, const _T2& b)
-	{return a.compare(b) < 0; }
+{return a.compare(b) < 0; }
 
 // -------------------------------------------------------------------------
 
 template <class _E, class _AllocT, class _T2> __forceinline
 bool winx_call operator>(const Rope<_E, _AllocT>& a, const _T2& b)
-	{return a.compare(b) > 0; }
+{return a.compare(b) > 0; }
 
 // -------------------------------------------------------------------------
 
 template <class _E, class _AllocT, class _T2> __forceinline
 bool winx_call operator<=(const Rope<_E, _AllocT>& a, const _T2& b)
-	{return a.compare(b) <= 0; }
+{return a.compare(b) <= 0; }
 
 // -------------------------------------------------------------------------
 
 template <class _E, class _AllocT, class _T2> __forceinline
 bool winx_call operator>=(const Rope<_E, _AllocT>& a, const _T2& b)
-	{return a.compare(b) >= 0; }
+{return a.compare(b) >= 0; }
 
 // -------------------------------------------------------------------------
 // Hash of Rope class
@@ -121,30 +121,32 @@ template <>
 class Hash< Rope<char> >
 {
 public:
-  size_t winx_call operator()(const Rope<char>& __str) const
-  {
-    size_t __size = __str.size();
-    if (0 == __size) return 0;
-    return 13*__str[0] + 5*__str[__size - 1] + __size;
-  }
+	size_t winx_call operator()(const Rope<char>& __str) const
+	{
+		size_t __size = __str.size();
+		if (0 == __size) return 0;
+		return 13*__str[0] + 5*__str[__size - 1] + __size;
+	}
 };
 
 template <>
 class Hash< Rope<WCHAR> >
 {
 public:
-  size_t winx_call operator()(const Rope<WCHAR>& __str) const
-  {
-    size_t __size = __str.size();
-    if (0 == __size) return 0;
-    return 13*__str[0] + 5*__str[__size - 1] + __size;
-  }
+	size_t winx_call operator()(const Rope<WCHAR>& __str) const
+	{
+		size_t __size = __str.size();
+		if (0 == __size) return 0;
+		return 13*__str[0] + 5*__str[__size - 1] + __size;
+	}
 };
 
 // -------------------------------------------------------------------------
 // class TestRope
 
 #if defined(STD_UNITTEST)
+
+#pragma warning(disable:4996) // XXX  was declared deprecated
 
 template <class LogT>
 class TestRope : public TestCase
@@ -277,6 +279,8 @@ public:
 #endif
 	}
 };
+
+#pragma warning(default:4996) // XXX  was declared deprecated
 
 #endif // defined(STD_UNITTEST)
 

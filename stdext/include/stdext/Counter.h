@@ -19,6 +19,8 @@
 #ifndef __STDEXT_COUNTER_H__
 #define __STDEXT_COUNTER_H__
 
+#pragma warning(disable:4996) // XXX  was declared deprecated
+
 #ifndef __STDEXT_BASIC_H__
 #include "Basic.h"
 #endif
@@ -148,5 +150,7 @@ public:
 // $Log: Counter.h,v $
 
 __NS_STD_END
+
+#pragma warning(default:4996) // XXX  was declared deprecated
 
 #endif /* __STDEXT_COUNTER_H__ */
