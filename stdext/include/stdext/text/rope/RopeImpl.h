@@ -74,6 +74,8 @@ inline std::Rope<_CharT,_Alloc>
 
 __NS_STD_BEGIN
 
+using __STD::identity_element;
+
 // Concatenate a C string onto a leaf Rope by copying the Rope data.
 // Used for short ropes.
 template <class _CharT, class _Alloc>
