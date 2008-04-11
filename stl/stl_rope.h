@@ -303,10 +303,6 @@ template<class _CharT, class _Alloc>
 struct _Rope_Concat_fn
        : public binary_function<rope<_CharT,_Alloc>, rope<_CharT,_Alloc>,
                                      rope<_CharT,_Alloc> > {
-#ifdef _WINX_GC_ALLOCATOR
-		_Alloc m_alloc;
-		_Rope_Concat_fn(_Alloc alloc) : m_alloc(alloc) {}
-#endif
         rope<_CharT,_Alloc> operator() (const rope<_CharT,_Alloc>& __x,
                                 const rope<_CharT,_Alloc>& __y) {
                     return __x + __y;
@@ -316,14 +312,11 @@ struct _Rope_Concat_fn
 template <class _CharT, class _Alloc>
 inline
 rope<_CharT,_Alloc>
-identity_element(const _Rope_Concat_fn<_CharT, _Alloc>& r)
+identity_element(_Rope_Concat_fn<_CharT, _Alloc>)
 {
-#ifdef _WINX_GC_ALLOCATOR
-    return rope<_CharT,_Alloc>(r.m_alloc);
-#else
-	return rope<_CharT,_Alloc>();
-#endif
+    return rope<_CharT,_Alloc>();
 }
+
 
 //
 // What follows should really be local to rope.  Unfortunately,
@@ -392,7 +385,7 @@ public:
 protected:
     allocator_type _M_data_allocator;
 
-# define __ROPE_DEFINE_ALLOC(_Tp, __name) public: typedef typename _Alloc_traits<_Tp,_Allocator>::allocator_type __name##Allocator;         /*static*/ _Tp * __name##_allocate(size_t __n)           { return __name##Allocator(_M_data_allocator).allocate(__n); }         void __name##_deallocate(_Tp* __p, size_t __n)           { __name##Allocator(_M_data_allocator).deallocate(__p, __n); }
+# define __ROPE_DEFINE_ALLOC(_Tp, __name)         typedef typename           _Alloc_traits<_Tp,_Allocator>::allocator_type __name##Allocator;         /*static*/ _Tp * __name##_allocate(size_t __n)           { return __name##Allocator(_M_data_allocator).allocate(__n); }         void __name##_deallocate(_Tp* __p, size_t __n)           { __name##Allocator(_M_data_allocator).deallocate(__p, __n); }
   __ROPE_DEFINE_ALLOCS(_Allocator);
 # undef __ROPE_DEFINE_ALLOC
 };
@@ -400,12 +393,7 @@ protected:
 // Specialization for allocators that have the property that we don't
 //  actually have to store an allocator object.  
 template <class _CharT, class _Allocator>
-#if defined(__STL_CLASS_PARTIAL_SPECIALIZATION) //@@by xushiwei
 class _Rope_rep_alloc_base<_CharT,_Allocator,true> {
-#else
-class _Rope_rep_alloc_base_unused { 
-	typedef _Rope_rep_alloc_base_unused _Rope_rep_alloc_base; //<_CharT,_Allocator,true> {
-#endif
 public:
   typedef typename _Alloc_traits<_CharT,_Allocator>::allocator_type
           allocator_type;
@@ -540,10 +528,6 @@ struct _Rope_RopeRep : public _Rope_rep_base<_CharT,_Alloc>
 
 template<class _CharT, class _Alloc>
 struct _Rope_RopeLeaf : public _Rope_RopeRep<_CharT,_Alloc> {
-  typedef _Rope_RopeRep<_CharT,_Alloc> _Base;
-  public:
-  	using _Base::_S_leaf;
-  	using _Base::_M_c_string;
   public:
     // Apparently needed by VC++
     // The data fields of leaves are allocated with some
@@ -598,9 +582,6 @@ struct _Rope_RopeLeaf : public _Rope_RopeRep<_CharT,_Alloc> {
 
 template<class _CharT, class _Alloc>
 struct _Rope_RopeConcatenation : public _Rope_RopeRep<_CharT,_Alloc> {
-  typedef _Rope_RopeRep<_CharT,_Alloc> _Base;
-  public:
-  	using _Base::_S_concat;
   public:
     _Rope_RopeRep<_CharT,_Alloc>* _M_left;
     _Rope_RopeRep<_CharT,_Alloc>* _M_right;
@@ -627,9 +608,6 @@ struct _Rope_RopeConcatenation : public _Rope_RopeRep<_CharT,_Alloc> {
 
 template<class _CharT, class _Alloc>
 struct _Rope_RopeFunction : public _Rope_RopeRep<_CharT,_Alloc> {
-  typedef _Rope_RopeRep<_CharT,_Alloc> _Base;
-  public:
-  	using _Base::_S_function;
   public:
     char_producer<_CharT>* _M_fn;
 #   ifndef __GC
@@ -684,12 +662,6 @@ struct _Rope_RopeFunction : public _Rope_RopeRep<_CharT,_Alloc> {
 template<class _CharT, class _Alloc>
 struct _Rope_RopeSubstring : public _Rope_RopeFunction<_CharT,_Alloc>,
                              public char_producer<_CharT> {
-  typedef _Rope_RopeFunction<_CharT,_Alloc> _Base;
-  public:
-  	using _Base::_S_function;
-  	using _Base::_S_substringfn;
-  	using _Base::_S_leaf;
-  	using _Base::_M_tag;
   public:
     // XXX this whole class should be rewritten.
     _Rope_RopeRep<_CharT,_Alloc>* _M_base;      // not 0
@@ -959,14 +931,6 @@ template<class _CharT, class _Alloc> class _Rope_iterator;
 template<class _CharT, class _Alloc>
 class _Rope_const_iterator : public _Rope_iterator_base<_CharT,_Alloc> {
     friend class rope<_CharT,_Alloc>;
-    typedef _Rope_iterator_base<_CharT,_Alloc> _Base;
-  protected:
-    using _Base::_M_current_pos;
-    using _Base::_M_root;
-    using _Base::_M_buf_ptr;
-    using _Base::_M_buf_end;
-    using _Base::_M_incr;
-    using _Base::_M_decr;
   protected:
 #   ifdef __STL_HAS_NAMESPACES
       typedef _Rope_RopeRep<_CharT,_Alloc> _RopeRep;
@@ -1105,18 +1069,6 @@ class _Rope_const_iterator : public _Rope_iterator_base<_CharT,_Alloc> {
 template<class _CharT, class _Alloc>
 class _Rope_iterator : public _Rope_iterator_base<_CharT,_Alloc> {
     friend class rope<_CharT,_Alloc>;
-    typedef _Rope_iterator_base<_CharT,_Alloc> _Base;
-  protected:
-    using _Base::_M_current_pos;
-    using _Base::_M_root;
-    using _Base::_M_buf_ptr;
-    using _Base::_M_buf_end;
-    using _Base::_M_incr;
-    using _Base::_M_decr;
-#   ifdef __STL_HAS_NAMESPACES
-      typedef _Rope_RopeRep<_CharT,_Alloc> _RopeRep;
-      // The one from the base class may not be directly visible.
-#   endif
   protected:
     rope<_CharT,_Alloc>* _M_root_rope;
         // root is treated as a cached version of this,
@@ -1298,12 +1250,7 @@ protected:
 // Specialization for allocators that have the property that we don't
 //  actually have to store an allocator object.  
 template <class _CharT, class _Allocator>
-#if defined(__STL_CLASS_PARTIAL_SPECIALIZATION) //@@by xushiwei
 class _Rope_alloc_base<_CharT,_Allocator,true> {
-#else
-class _Rope_alloc_base_unused {
-	typedef _Rope_alloc_base_unused _Rope_alloc_base; // <_CharT,_Allocator,true> {
-#endif
 public:
   typedef _Rope_RopeRep<_CharT,_Allocator> _RopeRep;
   typedef typename _Alloc_traits<_CharT,_Allocator>::allocator_type
@@ -1387,12 +1334,6 @@ class rope : public _Rope_base<_CharT,_Alloc> {
 #       ifdef __STL_USE_NAMESPACES
           using _Base::_M_tree_ptr;
 #       endif
-#       ifdef __STL_USE_STD_ALLOCATORS
-          using _Base::get_allocator;
-          typedef typename _Base::_LAllocator _LAllocator;
-          typedef typename _Base::_CAllocator _CAllocator;
-          typedef typename _Base::_FAllocator _FAllocator;
-#       endif
         typedef __GC_CONST _CharT* _Cstrptr;
 
         static _CharT _S_empty_c_str[1];
@@ -1450,7 +1391,7 @@ class rope : public _Rope_base<_CharT,_Alloc> {
 #       endif
 
         // _Result is counted in refcount.
-		static _RopeRep* _S_substring(_RopeRep* __base,
+        static _RopeRep* _S_substring(_RopeRep* __base,
                                     size_t __start, size_t __endp1);
 
         static _RopeRep* _S_concat_char_iter(_RopeRep* __r,
@@ -1599,11 +1540,7 @@ class rope : public _Rope_base<_CharT,_Alloc> {
         static size_t _S_char_ptr_len(const _CharT* __s);
                         // slightly generalized strlen
 
-#ifndef _WINX_GC_ALLOCATOR //@@by xushiwei
         rope(_RopeRep* __t, const allocator_type& __a = allocator_type())
-#else
-        rope(_RopeRep* __t, const allocator_type& __a)
-#endif
           : _Base(__t,__a) { }
 
 
@@ -1671,11 +1608,7 @@ class rope : public _Rope_base<_CharT,_Alloc> {
             return _S_compare(_M_tree_ptr, __y._M_tree_ptr);
         }
 
-#ifndef _WINX_GC_ALLOCATOR
         rope(const _CharT* __s, const allocator_type& __a = allocator_type())
-#else
-        rope(const _CharT* __s, const allocator_type& __a)
-#endif
         : _Base(__STL_ROPE_FROM_UNOWNED_CHAR_PTR(__s, _S_char_ptr_len(__s),
                                                  __a),__a)
         { }
@@ -1720,11 +1653,7 @@ class rope : public _Rope_base<_CharT,_Alloc> {
         rope(size_t __n, _CharT __c,
              const allocator_type& __a = allocator_type());
 
-#ifndef _WINX_GC_ALLOCATOR
         rope(const allocator_type& __a = allocator_type())
-#else
-        rope(const allocator_type& __a)
-#endif
         : _Base(0, __a) {}
 
         // Construct a rope from a function that can compute its members
@@ -1736,12 +1665,8 @@ class rope : public _Rope_base<_CharT,_Alloc> {
                0 : _S_new_RopeFunction(__fn, __len, __delete_fn, __a);
         }
 
-#ifndef _WINX_GC_ALLOCATOR
-		rope(const rope& __x, const allocator_type& __a = allocator_type())
-#else
-		rope(const rope& __x, const allocator_type& __a)
-#endif
-		   : _Base(__x._M_tree_ptr, __a)
+        rope(const rope& __x, const allocator_type& __a = allocator_type())
+        : _Base(__x._M_tree_ptr, __a)
         {
             _S_ref(_M_tree_ptr);
         }
@@ -1913,7 +1838,7 @@ class rope : public _Rope_base<_CharT,_Alloc> {
             //  but it's harder to make guarantees.
         }
 
-#     if defined(__STL_CLASS_PARTIAL_SPECIALIZATION) || defined(X_CC_VC_NET)
+#     ifdef __STL_CLASS_PARTIAL_SPECIALIZATION
         typedef reverse_iterator<const_iterator> const_reverse_iterator;
 #     else /* __STL_CLASS_PARTIAL_SPECIALIZATION */
         typedef reverse_iterator<const_iterator, value_type, const_reference,
@@ -2026,7 +1951,7 @@ class rope : public _Rope_base<_CharT,_Alloc> {
         }
 
         rope& append(size_t __n, _CharT __c) {
-            rope<_CharT,_Alloc> __last(__n, __c, get_allocator());
+            rope<_CharT,_Alloc> __last(__n, __c);
             return append(__last);
         }
 
@@ -2334,7 +2259,7 @@ class rope : public _Rope_base<_CharT,_Alloc> {
             return(iterator(this, size()));
         }
 
-#     if defined(__STL_CLASS_PARTIAL_SPECIALIZATION) || defined(X_CC_VC_NET)
+#     ifdef __STL_CLASS_PARTIAL_SPECIALIZATION
         typedef reverse_iterator<iterator> reverse_iterator;
 #     else /* __STL_CLASS_PARTIAL_SPECIALIZATION */
         typedef reverse_iterator<iterator, value_type, reference,
@@ -2401,7 +2326,7 @@ class rope : public _Rope_base<_CharT,_Alloc> {
 };
 
 template <class _CharT, class _Alloc>
-const typename rope<_CharT, _Alloc>::size_type rope<_CharT, _Alloc>::npos =
+const rope<_CharT, _Alloc>::size_type rope<_CharT, _Alloc>::npos =
                         (size_type)(-1);
 
 template <class _CharT, class _Alloc>
@@ -2552,8 +2477,7 @@ operator+ (const rope<_CharT,_Alloc>& __left,
         __stl_assert(__left.get_allocator() == __right.get_allocator());
 #   endif
     return rope<_CharT,_Alloc>(
-      rope<_CharT,_Alloc>::_S_concat(__left._M_tree_ptr, __right._M_tree_ptr),
-	  __left.get_allocator());
+      rope<_CharT,_Alloc>::_S_concat(__left._M_tree_ptr, __right._M_tree_ptr));
     // Inlining this should make it possible to keep __left and
     // __right in registers.
 }
@@ -2576,8 +2500,7 @@ operator+ (const rope<_CharT,_Alloc>& __left,
     size_t __rlen = rope<_CharT,_Alloc>::_S_char_ptr_len(__right);
     return rope<_CharT,_Alloc>(
       rope<_CharT,_Alloc>::_S_concat_char_iter(
-        __left._M_tree_ptr, __right, __rlen),
-		__left.get_allocator()); 
+        __left._M_tree_ptr, __right, __rlen)); 
 }
 
 template <class _CharT, class _Alloc>
