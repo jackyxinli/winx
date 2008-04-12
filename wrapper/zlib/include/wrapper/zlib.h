@@ -32,10 +32,10 @@
 #endif
 
 // -------------------------------------------------------------------------
-// ZlibCompress
+// zlibCompress
 
 template <class AllocT>
-inline HRESULT winx_call ZlibCompress(
+inline HRESULT winx_call zlibCompress(
 	AllocT& alloc, const void* pSrc, size_t cbSize,
 	void** ppBuf, size_t* pcbAfterCompress, int method = Z_DEFAULT_COMPRESSION)
 {
@@ -73,10 +73,10 @@ inline HRESULT winx_call ZlibCompress(
 }
 
 // -------------------------------------------------------------------------
-// ZlibDecompress
+// zlibDecompress
 
 template <class AllocT>
-inline HRESULT winx_call ZlibDecompress(
+inline HRESULT winx_call zlibDecompress(
 	AllocT& alloc, const void* pSrc, size_t cbSize, size_t cbOrgSize,
 	void** ppBuf, UINT nErrLevel = 0)
 {
