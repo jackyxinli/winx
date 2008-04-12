@@ -177,6 +177,15 @@ public:
 		return allocate(cb);
 	}
 
+	void* winx_call reallocate(void* p, size_t oldSize, size_t newSize)
+	{
+		if (oldSize >= newSize)
+			return p;
+		void* p2 = allocate(newSize);
+		memcpy(p2, p, oldSize);
+		return p2;
+	}
+
 	void winx_call deallocate(void* p, size_t cb)
 	{
 		// no action
