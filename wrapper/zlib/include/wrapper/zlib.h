@@ -42,7 +42,7 @@ inline HRESULT winx_call zlibCompress(
 	WINX_ASSERT(Z_OK == S_OK && sizeof(size_t) >= sizeof(uLongf));
 
 	uLongf const cbAfterCompress0 = cbSize + cbSize/1000 + (12 + 4); // 4 是额外加的
-	Bytef* const pDest = (Bytef*)alloc.allocate(cbAfterCompress);
+	Bytef* const pDest = (Bytef*)alloc.allocate(cbAfterCompress0);
 	
 	HRESULT hr;
 	uLongf cbAfterCompress = cbAfterCompress0;
@@ -88,7 +88,7 @@ inline HRESULT winx_call zlibDecompress(
 	HRESULT hr;
 	try
 	{
-		hr = uncompress(pDest, &cbDecodeSize, (const Bytef*)pSrc, cbSize, nErrLevel);
+		hr = uncompress(pDest, &cbDecodeSize, (const Bytef*)pSrc, cbSize); //, nErrLevel);
 		WINX_ASSERT(hr == Z_OK);
 		if (cbDecodeSize !=	cbOrgSize)
 		{
@@ -109,7 +109,7 @@ inline HRESULT winx_call zlibDecompress(
 	}
 	
 lzExit:
-	alloc.deallocate(pDest);
+	alloc.deallocate(pDest, cbOrgSize);
 	return hr;
 }
 
