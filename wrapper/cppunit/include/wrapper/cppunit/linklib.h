@@ -24,8 +24,8 @@
 #if !defined(__Linked_cppunit)
 #define __Linked_cppunit
 #if defined(X_CC_BC)
-#	if defined(X_OS_WINDOWS)
-#		if defined(USES_KSKERN)
+#	if defined(_WIN32)
+#		if defined(USES_KERN)
 #			pragma link "cppunitk_bcb.lib"
 #		else
 #			pragma link "cppunit_bcb.lib"

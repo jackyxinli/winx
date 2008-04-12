@@ -40,9 +40,17 @@
 // -------------------------------------------------------------------------
 // class TestCase
 
-class TestCase : public TestFixture
-{
-};
+#if defined(STD_NO_GLOBAL_TESTCASE)
+
+class TestCase : public TestFixture {};
+
+#else
+
+class CppUnitTestCase : public TestFixture {};
+
+#define TestCase CppUnitTestCase
+
+#endif
 
 // -------------------------------------------------------------------------
 // _CppUnit_GetModuleHandleEx

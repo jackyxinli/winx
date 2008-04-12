@@ -22,6 +22,7 @@
 #if (0)
 #define STD_NO_WINSDK
 #define STD_NO_MSVCRT
+#define STD_NO_GLOBAL_TESTCASE
 #define STD_ISOCPP_FOR
 #define STD_EXIT
 #define STD_UNITTEST // Run unit testcases
@@ -469,7 +470,9 @@ __NS_STD_END
 #include "TestCase.h"
 #endif
 
+#if !defined(STD_NO_GLOBAL_TESTCASE)
 typedef std::TestCase TestCase;
+#endif
 
 // -------------------------------------------------------------------------
 // Log class
