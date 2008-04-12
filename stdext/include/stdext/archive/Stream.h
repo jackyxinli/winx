@@ -39,6 +39,11 @@
 #include "../LargeInteger.h"
 #endif
 
+#if !defined(__Linked_shlwapi)
+#define __Linked_shlwapi
+	#pragma comment(lib, "shlwapi")
+#endif
+
 #if !defined(STD_NO_WINSDK)
 	#if !defined(WINX_USE_WINSDK)
 		#if !defined(_MSC_VER) || (_MSC_VER <= 1200)

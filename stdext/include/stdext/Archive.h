@@ -19,6 +19,10 @@
 #ifndef __STDEXT_ARCHIVE_H__
 #define __STDEXT_ARCHIVE_H__
 
+#if (0)
+#define STD_STREAM_ARCHIVE
+#endif
+
 // -------------------------------------------------------------------------
 
 #ifndef __STDEXT_BASIC_H__
@@ -67,9 +71,11 @@
 
 #if defined(X_OS_WINDOWS)
 
-#ifndef __STDEXT_ARCHIVE_STREAM_H__
-#include "archive/Stream.h"
-#endif
+#if defined(STD_STREAM_ARCHIVE)
+	#ifndef __STDEXT_ARCHIVE_STREAM_H__
+	#include "archive/Stream.h"
+	#endif
+#endif // defined(STD_STREAM_ARCHIVE)
 
 #ifndef __STDEXT_ARCHIVE_WINREG_H__
 #include "archive/WinReg.h"

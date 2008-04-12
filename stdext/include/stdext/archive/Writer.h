@@ -19,6 +19,10 @@
 #ifndef __STDEXT_ARCHIVE_WRITER_H__
 #define __STDEXT_ARCHIVE_WRITER_H__
 
+#ifndef __STDEXT_ARCHIVE_BASIC_H__
+#include "Basic.h"
+#endif
+
 #ifndef __STDEXT_TEXT_TEMPSTRING_H__
 #include "../text/TempString.h"
 #endif
