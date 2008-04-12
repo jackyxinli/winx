@@ -21,13 +21,25 @@
 #include <docx/Basic.h>
 
 // -------------------------------------------------------------------------
+
+#include "dexpr.h"
+
+inline void testDExpr()
+{
+	DPlaceholder x;
+	std::vector<double> vec(10, 1.0);
+	std::transform(vec.begin(), vec.end(), vec.begin(), x/(2.0+x));
+}
+
+// -------------------------------------------------------------------------
 // main
 
 int main()
 {
 	WINX_TEST_APP(std::ErrorLog, "TestDocxBasic", "");
 
-	WINX_TEST_CLASS(docx::TestDocxBasic);
+//	WINX_TEST_CLASS(docx::TestDocxBasic);
+	testDExpr();
 	return 0;
 }
 

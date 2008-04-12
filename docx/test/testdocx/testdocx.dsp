@@ -92,5 +92,9 @@ LINK32=link.exe
 SOURCE=.\testdocx.cpp
 # End Source File
 # End Group
+# Begin Source File
+
+SOURCE=.\dexpr.h
+# End Source File
 # End Target
 # End Project
