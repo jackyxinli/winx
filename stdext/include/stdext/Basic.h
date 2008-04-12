@@ -329,6 +329,12 @@ do {																		\
 #define WINX_REPORT(msg)	WINX_ASSERT(!msg)
 #endif
 
+#if defined(REPORT_ONCE)
+#define WINX_REPORT_ONCE(msg)	REPORT_ONCE(msg)
+#else
+#define WINX_REPORT_ONCE(msg)	WINX_ASSERT_ONCE(!msg)
+#endif
+
 #if defined(VERIFY)
 #define WINX_VERIFY(e)		VERIFY(e)
 #elif defined(_DEBUG)
