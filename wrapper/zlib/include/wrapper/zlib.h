@@ -24,11 +24,19 @@
 #endif
 
 #ifndef ZLIB_H
-#include "../../../../zlib/zlib.h"
+#include "zlib/zlib.h"
 #endif
 
 #ifndef S_ZIP_NONEED_COMPRESSION
 #define S_ZIP_NONEED_COMPRESSION	0x80
+#endif
+
+// -------------------------------------------------------------------------
+// Link zlib.lib
+
+#if !defined(__Linked_zlib)
+#define __Linked_zlib
+#pragma comment(lib, "zlib1")
 #endif
 
 // -------------------------------------------------------------------------
