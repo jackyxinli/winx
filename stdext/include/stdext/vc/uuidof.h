@@ -214,6 +214,10 @@ struct _WinxDbgGuidTraits<TheClass>											\
 #define DEFINE_CLSID_ALTER(ComClass)	DEFINE_GUID_ALTER(ComClass, CLSID_##ComClass)
 #endif
 
+#ifndef interface
+#define interface	struct
+#endif
+
 interface IUnknown;
 interface IClassFactory;
 interface IMalloc;

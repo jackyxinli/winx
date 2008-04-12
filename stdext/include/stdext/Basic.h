@@ -169,7 +169,7 @@ inline int _winx_null_func(int nLevel, const void* fmt, ...) { return 0; }
 // -------------------------------------------------------------------------
 // winsdk & msvcrt
 
-#if defined(X_CC_GCC)
+#if defined(WINX_GCC)
 typedef unsigned long long __uint64;
 #else
 typedef unsigned __int64 __uint64;
@@ -207,6 +207,12 @@ typedef signed short INT16, *PINT16;
 typedef unsigned char UINT8, *PUINT8;
 typedef unsigned short UINT16, *PUINT16;
 #endif
+
+#if !defined(WINX_VC_NET)
+#ifndef __w64
+#define __w64
+#endif
+#endif // !defined(WINX_VC_NET)
 
 #ifndef __STDEXT_MSVCRT_H__
 #include "msvcrt.h"
