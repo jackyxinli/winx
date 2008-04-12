@@ -65,13 +65,13 @@ inline HMODULE _CppUnit_GetModuleHandleEx(LPCVOID lpAddress)
 // -------------------------------------------------------------------------
 // _CppUnit_GetModuleName
 
-inline VOID _DummyFunction() {}
+inline VOID _CppUnit_DummyFunction() {}
 
 inline LPCWSTR _CppUnit_GetModuleName()
 {
 	static WCHAR szModule[_MAX_PATH];
 	static int cch = GetModuleFileNameW(
-		_CppUnit_GetModuleHandleEx((void*)_DummyFunction), szModule, _MAX_PATH);
+		_CppUnit_GetModuleHandleEx((void*)_CppUnit_DummyFunction), szModule, _MAX_PATH);
 	return szModule;
 }
 
