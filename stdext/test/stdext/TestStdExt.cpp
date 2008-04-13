@@ -19,8 +19,9 @@
 
 #define SGI_DEQUE_UNITTEST
 #define STD_UNITTEST
-#define STD_FILTER_TEST_CASE
 #define STD_NO_TASKALLOC
+#define STD_FILTER_TEST_CASE
+//#define STD_AUTORUN_SETUP
 //#define USES_APR
 //#define USES_BOOST
 //#define STD_NO_MSVCRT
@@ -42,6 +43,7 @@
 #include <stdext/codepage/CP1252.h>
 #include <stdext/Rand.h>
 #include <stdext/Archive.h>
+#include <stdext/archive/Stream.h>
 #include <stdext/kmp/TestFinder.h>
 #include <stdext/tchar.h>
 #pragma comment(lib, "shlwapi.lib")
@@ -158,23 +160,3 @@ WINX_AUTORUN(testStdExt);
 
 // -------------------------------------------------------------------------
 // $Log: TestStdExt.cpp,v $
-// Revision 1.8  2006/12/03 07:52:55  xushiwei
-// TestFinder
-//
-// Revision 1.6  2006/11/30 03:43:19  xushiwei
-// TestStreamArchive, TestStdioArchive, TestPool (boost::pool)
-//
-// Revision 1.4  2006/09/26 08:05:07  xushiwei
-// TestFileBuf
-//
-// Revision 1.3  2006/09/26 07:51:34  xushiwei
-// STL-Extension:
-//  TestCase(WINX_TEST_APP, WINX_TEST_CLASS, WINX_TEST_SUITE, WINX_TEST, WINX_TEST_SUITE_END)
-//  UnitTestAssert(AssertExp, AssertEq, AssertEqBuf)
-//
-// Revision 1.2  2006/08/19 04:47:32  xushiwei
-// STL-Extension:
-//   Memory(AutoFreeAlloc, RecycleBuffer, AutoArray, etc)
-//   String Algorithm(trim, match, compare, etc), Container(SimpleMultiMap), CharType(isCSymbolFirstChar, etc)
-//   Log(OutputLog, ErrorLog, FileLog, StringLog), PerformanceCounter, Diagnost(WINX_ASSERT, WINX_TEST_CLASS, etc)
-//

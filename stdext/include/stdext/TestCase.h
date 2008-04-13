@@ -31,8 +31,21 @@
 #include <stdio.h>
 #endif
 
-#if defined(_DEBUG)
+#if (0)
+#define STD_AUTORUN_SETUP
 #define STD_FILTER_TEST_CASE
+#endif
+
+#if defined(STD_AUTORUN_SETUP)
+#define WINX_AUTORUN_SETUP
+#endif
+
+#if defined(_DEBUG) || defined(STD_FILTER_TEST_CASE)
+#define WINX_FILTER_TEST_CASE
+#endif
+
+#if defined(WINX_AUTORUN_SETUP)
+extern void setUp();
 #endif
 
 __NS_STD_BEGIN
@@ -58,7 +71,7 @@ public:
 
 	void winx_call select(LPCSTR testClass = "", LPCSTR testCase = "")
 	{
-#if defined(STD_FILTER_TEST_CASE)
+#if defined(WINX_FILTER_TEST_CASE)
 		WINX_ASSERT(testClass != NULL);
 		WINX_ASSERT(testCase != NULL);
 		
@@ -75,7 +88,7 @@ public:
 public:
 	bool winx_call runableTestClass(LPCSTR testClass)
 	{
-#if defined(STD_FILTER_TEST_CASE)
+#if defined(WINX_FILTER_TEST_CASE)
 		if (strstr(testClass, szTestClassSel) == NULL)
 			return false;
 #endif
@@ -86,7 +99,7 @@ public:
 
 	bool winx_call runableTestCase(LPCSTR testCase)
 	{
-#if defined(STD_FILTER_TEST_CASE)
+#if defined(WINX_FILTER_TEST_CASE)
 		if (*szTestCaseSel != 0 && strcmp(testCase, szTestCaseSel) != 0)
 			return false;
 #endif
@@ -242,18 +255,25 @@ bool winx_call isEqBuf(_It1 a1, _It2 a2, size_t count)
 // WINX_SELECT_RUN, WINX_AUTORUN, WINX_AUTORUN_CLASS
 
 template <int n>
-struct __SelectFun
+struct __AutoRunUtil
 {
 	static const char* _g_name;
+#if defined(WINX_AUTORUN_SETUP)
+	static int doSetUp() {
+		::setUp();
+		return 0;
+	}
+#endif
 };
 
-#define WINX_SELECT_RUN(szFun)												\
-	template <> const char* std::__SelectFun<0>::_g_name = szFun
-
 template <class FunT>
-int __autoRun(FunT Fun, const char* szFun)
+inline int __autoRun(FunT Fun, const char* szFun)
 {
-	const char* szSelFun = __SelectFun<0>::_g_name;
+	typedef __AutoRunUtil<0> _Util;
+#if defined(WINX_AUTORUN_SETUP)
+	static int init = _Util::doSetUp();
+#endif
+	const char* szSelFun = _Util::_g_name;
 	if (szSelFun == NULL || strstr(szFun, szSelFun))
 	{
 		printf("------------------------- %s -------------------------\n", szFun);
@@ -261,6 +281,9 @@ int __autoRun(FunT Fun, const char* szFun)
 	}
 	return 0;
 }
+
+#define WINX_SELECT_RUN(szFun)												\
+	template <> const char* std::__AutoRunUtil<0>::_g_name = szFun
 
 #define WINX_AUTORUN(Fun)													\
 	static int __g_autoRun_ ## Fun = std::__autoRun(Fun, #Fun)
