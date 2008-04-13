@@ -79,8 +79,8 @@ public:
 
 	LONG winx_call create(
 		__in HKEY hKeyParent,
-		__in_z LPCTSTR lpszKeyName,
-		__in_z LPTSTR lpszClass = REG_NONE,
+		__in_z LPCSTR lpszKeyName,
+		__in_z LPSTR lpszClass = REG_NONE,
 		__in DWORD dwOptions = REG_OPTION_NON_VOLATILE,
 		__in REGSAM samDesired = KEY_READ | KEY_WRITE,
 		__in_opt LPSECURITY_ATTRIBUTES lpSecAttr = NULL,
@@ -89,7 +89,31 @@ public:
 		WINX_ASSERT(hKeyParent != NULL);
 		DWORD dw;
 		HKEY hKey = NULL;
-		LONG lRes = ::RegCreateKeyEx(hKeyParent, lpszKeyName, 0,
+		LONG lRes = ::RegCreateKeyExA(hKeyParent, lpszKeyName, 0,
+			lpszClass, dwOptions, samDesired, NULL, &hKey, &dw);
+		if (lpdwDisposition != NULL)
+			*lpdwDisposition = dw;
+		if (lRes == ERROR_SUCCESS)
+		{
+			lRes = close();
+			m_hKey = hKey;
+		}
+		return (lRes);
+	}
+
+	LONG winx_call create(
+		__in HKEY hKeyParent,
+		__in_z LPCWSTR lpszKeyName,
+		__in_z LPWSTR lpszClass = REG_NONE,
+		__in DWORD dwOptions = REG_OPTION_NON_VOLATILE,
+		__in REGSAM samDesired = KEY_READ | KEY_WRITE,
+		__in_opt LPSECURITY_ATTRIBUTES lpSecAttr = NULL,
+		__in_opt LPDWORD lpdwDisposition = NULL)
+	{
+		WINX_ASSERT(hKeyParent != NULL);
+		DWORD dw;
+		HKEY hKey = NULL;
+		LONG lRes = ::RegCreateKeyExW(hKeyParent, lpszKeyName, 0,
 			lpszClass, dwOptions, samDesired, NULL, &hKey, &dw);
 		if (lpdwDisposition != NULL)
 			*lpdwDisposition = dw;
@@ -103,12 +127,29 @@ public:
 
 	LONG winx_call open(
 		__in HKEY hKeyParent,
-		__in_z LPCTSTR lpszKeyName,
+		__in_z LPCSTR lpszKeyName,
 		__in REGSAM samDesired = KEY_ALL_ACCESS)
 	{
 		WINX_ASSERT(hKeyParent != NULL);
 		HKEY hKey = NULL;
-		LONG lRes = RegOpenKeyEx(hKeyParent, lpszKeyName, 0, samDesired, &hKey);
+		LONG lRes = RegOpenKeyExA(hKeyParent, lpszKeyName, 0, samDesired, &hKey);
+		if (lRes == ERROR_SUCCESS)
+		{
+			lRes = close();
+			WINX_ASSERT(lRes == ERROR_SUCCESS);
+			m_hKey = hKey;
+		}
+		return (lRes);
+	}
+
+	LONG winx_call open(
+		__in HKEY hKeyParent,
+		__in_z LPCWSTR lpszKeyName,
+		__in REGSAM samDesired = KEY_ALL_ACCESS)
+	{
+		WINX_ASSERT(hKeyParent != NULL);
+		HKEY hKey = NULL;
+		LONG lRes = RegOpenKeyExW(hKeyParent, lpszKeyName, 0, samDesired, &hKey);
 		if (lRes == ERROR_SUCCESS)
 		{
 			lRes = close();
@@ -498,13 +539,16 @@ private:
 
 public:
 	WinRegReadKey() {}
+
+	template <class CharT>
 	WinRegReadKey(
 		__in HKEY hKeyParent,
-		__in_z LPCTSTR lpszKeyName,
+		__in_z const CharT* lpszKeyName,
 		__in REGSAM samDesired = KEY_ALL_ACCESS)
 	{
 		open(hKeyParent, lpszKeyName, samDesired);
 	}
+
 	~WinRegReadKey()
 	{
 		close();
@@ -519,10 +563,12 @@ private:
 
 public:
 	WinRegWriteKey() {}
+
+	template <class CharT>
 	WinRegWriteKey(
 		__in HKEY hKeyParent,
-		__in_z LPCTSTR lpszKeyName,
-		__in_z LPTSTR lpszClass = REG_NONE,
+		__in_z const CharT* lpszKeyName,
+		__in_z CharT* lpszClass = REG_NONE,
 		__in DWORD dwOptions = REG_OPTION_NON_VOLATILE,
 		__in REGSAM samDesired = KEY_READ | KEY_WRITE,
 		__in_opt LPSECURITY_ATTRIBUTES lpSecAttr = NULL,
@@ -530,6 +576,7 @@ public:
 	{
 		create(hKeyParent, lpszKeyName, lpszClass, dwOptions, samDesired, lpSecAttr, lpdwDisposition);
 	}
+
 	~WinRegWriteKey()
 	{
 		close();
