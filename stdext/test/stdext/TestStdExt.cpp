@@ -22,10 +22,10 @@
 #define STD_NO_TASKALLOC
 #define STD_FILTER_TEST_CASE
 //#define STD_AUTORUN_SETUP
-//#define USES_APR
-//#define USES_BOOST
 //#define STD_NO_MSVCRT
 //#define STD_NO_WINSDK
+#define USES_APR
+#define USES_BOOST
 #include <stdext.h>
 #include <stdext/FileMapping.h>
 #include <stdext/ScopeDebug.h>
@@ -53,20 +53,9 @@
 
 #if defined(USES_BOOST)
 
-#include <stdext/memory/Pool.h>
+#include "../../../wrapper/boost/include/wrapper/boost/pool.h"
 
-template <class LogT>
-inline void testBoost(LogT& log)
-{
-	WINX_TEST_CLASS(TestPool);
-}
-
-#else
-
-template <class LogT>
-inline void testBoost(LogT& log)
-{
-}
+WINX_AUTORUN_CLASS(TestPool, std::ErrorLog);
 
 #endif
 
@@ -74,7 +63,11 @@ inline void testBoost(LogT& log)
 // testApr
 
 #if defined(USES_APR)
-#include <stdext/memory/apr_pools.h>
+
+#include "../../../wrapper/apr/include/wrapper/apr/apr_pools.h"
+
+WINX_AUTORUN_CLASS(TestAprPools, std::ErrorLog);
+
 #endif
 
 // -------------------------------------------------------------------------
@@ -142,12 +135,6 @@ void testStdExt()
 	WINX_TEST_CLASS(std::TestCompareAllocators);
 	WINX_TEST_CLASS(std::TestEvent);
 	WINX_TEST_CLASS(std::TestEventContainer);
-#if defined(USES_APR)
-	WINX_TEST_CLASS(TestAprPools);
-#endif
-
-	//Boost
-	testBoost(log);
 }
 
 int main()
@@ -155,7 +142,8 @@ int main()
 	return 0;
 }
 
-WINX_SELECT_RUN("testStdExt");
+WINX_SELECT_RUN("TestAprPools");
+
 WINX_AUTORUN(testStdExt);
 
 // -------------------------------------------------------------------------

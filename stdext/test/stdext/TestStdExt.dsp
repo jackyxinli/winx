@@ -45,7 +45,7 @@ RSC=rc.exe
 # PROP Ignore_Export_Lib 0
 # PROP Target_Dir ""
 # ADD BASE CPP /nologo /W3 /GX /O2 /D "WIN32" /D "NDEBUG" /D "_CONSOLE" /D "_MBCS" /Yu"stdafx.h" /FD /c
-# ADD CPP /nologo /MD /W3 /GX /Zi /O2 /I "../../include" /I "../../../stdext/include" /I "../../../boost" /D "WIN32" /D "NDEBUG" /D "_CONSOLE" /D "_MBCS" /FD /Zm128 /c
+# ADD CPP /nologo /MD /W3 /GX /Zi /O2 /I "../../../stdext/include" /I "../../../boost" /D "WIN32" /D "NDEBUG" /D "_CONSOLE" /D "_MBCS" /FD /Zm128 /c
 # ADD BASE RSC /l 0x804 /d "NDEBUG"
 # ADD RSC /l 0x804 /d "NDEBUG"
 BSC32=bscmake.exe
@@ -69,7 +69,7 @@ LINK32=link.exe
 # PROP Ignore_Export_Lib 0
 # PROP Target_Dir ""
 # ADD BASE CPP /nologo /W3 /Gm /GX /ZI /Od /D "WIN32" /D "_DEBUG" /D "_CONSOLE" /D "_MBCS" /Yu"stdafx.h" /FD /GZ /c
-# ADD CPP /nologo /MDd /W3 /Gm /GX /ZI /Od /I "../../include" /I "../../../stdext/include" /I "../../../boost" /D "WIN32" /D "_DEBUG" /D "_CONSOLE" /D "_MBCS" /D "APR_DECLARE_STATIC" /FD /GZ /Zm200 /c
+# ADD CPP /nologo /MDd /W3 /Gm /GX /ZI /Od /I "../../../stdext/include" /I "../../../boost" /D "WIN32" /D "_DEBUG" /D "_CONSOLE" /D "_MBCS" /D "APR_DECLARE_STATIC" /FD /GZ /Zm200 /c
 # ADD BASE RSC /l 0x804 /d "_DEBUG"
 # ADD RSC /l 0x804 /d "_DEBUG"
 BSC32=bscmake.exe
@@ -95,7 +95,7 @@ LINK32=link.exe
 # PROP Target_Dir ""
 # ADD BASE CPP /nologo /MD /W3 /GX /Zi /O2 /I "../../include" /I "../../../stdext/include" /I "../../../boost" /D "WIN32" /D "NDEBUG" /D "_CONSOLE" /D "_MBCS" /FD /c
 # SUBTRACT BASE CPP /YX /Yc /Yu
-# ADD CPP /nologo /MD /W3 /GX /Zi /O2 /I "../../include" /I "../../../stdext/include" /I "../../../boost" /D "WIN32" /D "NDEBUG" /D "_CONSOLE" /D "_MBCS" /D "APR_DECLARE_STATIC" /FD /Zm128 /c
+# ADD CPP /nologo /MD /W3 /GX /Zi /O2 /I "../../../stdext/include" /I "../../../boost" /D "WIN32" /D "NDEBUG" /D "_CONSOLE" /D "_MBCS" /D "APR_DECLARE_STATIC" /FD /Zm128 /c
 # ADD BASE RSC /l 0x804 /d "NDEBUG"
 # ADD RSC /l 0x804 /d "NDEBUG"
 BSC32=bscmake.exe
@@ -121,7 +121,7 @@ LINK32=link.exe
 # PROP Target_Dir ""
 # ADD BASE CPP /nologo /MD /W3 /GX /Zi /O2 /I "../../include" /I "../../../stdext/include" /I "../../../boost" /D "WIN32" /D "NDEBUG" /D "_CONSOLE" /D "_MBCS" /D "APR_DECLARE_STATIC" /FD /c
 # SUBTRACT BASE CPP /YX /Yc /Yu
-# ADD CPP /nologo /W3 /GX /Zi /O2 /I "../../include" /I "../../../stdext/include" /I "../../../boost" /D "WIN32" /D "NDEBUG" /D "_CONSOLE" /D "_MBCS" /FD /Zm128 /c
+# ADD CPP /nologo /W3 /GX /Zi /O2 /I "../../../stdext/include" /I "../../../boost" /D "WIN32" /D "NDEBUG" /D "_CONSOLE" /D "_MBCS" /FD /Zm128 /c
 # ADD BASE RSC /l 0x804 /d "NDEBUG"
 # ADD RSC /l 0x804 /d "NDEBUG"
 BSC32=bscmake.exe
@@ -146,7 +146,7 @@ LINK32=link.exe
 # PROP Ignore_Export_Lib 0
 # PROP Target_Dir ""
 # ADD BASE CPP /nologo /MDd /W3 /Gm /GX /ZI /Od /I "../../include" /I "../../../stdext/include" /I "../../../boost" /D "WIN32" /D "_DEBUG" /D "_CONSOLE" /D "_MBCS" /D "APR_DECLARE_STATIC" /FD /GZ /Zm200 /c
-# ADD CPP /nologo /MDd /W3 /Gm /GX /ZI /Od /I "../../include" /I "../../../stdext/include" /I "../../../boost" /D "WIN32" /D "_DEBUG" /D "_CONSOLE" /D "_MBCS" /D "APR_DECLARE_STATIC" /D "NO_SGISTL" /FD /GZ /Zm200 /c
+# ADD CPP /nologo /MDd /W3 /Gm /GX /ZI /Od /I "../../../stdext/include" /I "../../../boost" /D "WIN32" /D "_DEBUG" /D "_CONSOLE" /D "_MBCS" /D "APR_DECLARE_STATIC" /D "NO_SGISTL" /FD /GZ /Zm200 /c
 # ADD BASE RSC /l 0x804 /d "_DEBUG"
 # ADD RSC /l 0x804 /d "_DEBUG"
 BSC32=bscmake.exe
@@ -321,10 +321,6 @@ SOURCE=..\..\include\stdext\archive\Writer.h
 # PROP Default_Filter ""
 # Begin Source File
 
-SOURCE=..\..\include\stdext\memory\apr_pools.h
-# End Source File
-# Begin Source File
-
 SOURCE=..\..\include\stdext\memory\AutoFreeAlloc.h
 # End Source File
 # Begin Source File
@@ -333,15 +329,15 @@ SOURCE=..\..\include\stdext\memory\Basic.h
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\include\stdext\memory\Pool.h
-# End Source File
-# Begin Source File
-
 SOURCE=..\..\include\stdext\memory\RecycleBuffer.h
 # End Source File
 # Begin Source File
 
 SOURCE=..\..\include\stdext\memory\ScopeAlloc.h
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\include\stdext\memory\SystemAlloc.h
 # End Source File
 # End Group
 # Begin Source File

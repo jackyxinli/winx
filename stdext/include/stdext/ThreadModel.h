@@ -90,6 +90,15 @@ public:
 typedef ST SingleThreadModel;
 
 // -------------------------------------------------------------------------
+// class DefaultThreadModel
+
+#if defined(_MT)
+typedef MultiThreadModel DefaultThreadModel;
+#else
+typedef SingleThreadModel DefaultThreadModel;
+#endif
+
+// -------------------------------------------------------------------------
 //	$Log: $
 
 __NS_STD_END

@@ -34,6 +34,10 @@
 #include "iterator.h"
 #endif
 
+#if defined(__STL_NEED_TYPENAME)
+#define typename
+#endif
+
 #ifndef __TYPE_TRAITS_H
 #include "../../../../stl/type_traits.h"
 #endif
@@ -48,6 +52,10 @@
 
 #ifndef __SGI_STL_HASH_MAP_H
 #include "../../../../stl/hash_map.h"
+#endif
+
+#if defined(__STL_NEED_TYPENAME)
+#undef typename
 #endif
 
 // -------------------------------------------------------------------------

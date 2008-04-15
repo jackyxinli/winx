@@ -26,23 +26,15 @@
 // -------------------------------------------------------------------------
 
 #ifndef _NEW_
-#include <new>
+#include <new>	// new
 #endif
 
 #ifndef _INC_STDIO
 #include <stdio.h>
 #endif
 
-#ifndef _INC_STDLIB
-#include <stdlib.h>
-#endif
-
 #ifndef _INC_MALLOC
-#include <malloc.h>
-#endif
-
-#ifndef _ALGORITHM_
-#include <algorithm>
+#include <malloc.h>	// _alloca
 #endif
 
 #pragma pack() // 为了不受其他头文件的字节对齐干扰
@@ -234,28 +226,6 @@ STD_DECL_INT_CTYPE(long);
 #define STD_ALLOC_ARRAY(alloc, Type, count)		((Type*)(alloc).allocate(MEMORY_DBG_ALLOC_ARRAY_ARG(Type, count)))
 
 // =========================================================================
-// __STD_FAKE_DBG_ALLOCATE
-
-#if defined(_DEBUG)
-
-#define __STD_FAKE_DBG_ALLOCATE()														\
-	void* winx_call allocate(size_t cb, LPCSTR szFile, int nLine)						\
-		{ return allocate(cb); }														\
-	void* winx_call allocate(size_t cb, DestructorType fn, LPCSTR szFile, int nLine)	\
-		{ return allocate(cb, fn); }													\
-	void* winx_call allocate(size_t cb, int fnZero, LPCSTR szFile, int nLine)			\
-		{ return allocate(cb); }														\
-	template <class Type>																\
-	Type* winx_call newArray(size_t count, Type* zero, LPCSTR szFile, int nLine)		\
-		{ return newArray(count, zero); }
-
-#else
-
-#define __STD_FAKE_DBG_ALLOCATE()
-
-#endif
-
-// =========================================================================
 
 __NS_STD_BEGIN
 
@@ -271,187 +241,6 @@ inline void winx_call swap(void* a, void* b, size_t cb)
 	memcpy(a, b, cb);
 	memcpy(b, t, cb);
 }
-
-// -------------------------------------------------------------------------
-// StdLibAlloc
-
-class StdLibAlloc
-{
-public:
-	static void* winx_call allocate(size_t cb)						{ return malloc(cb); }
-	static void* winx_call allocate(size_t cb, DestructorType fn)	{ return malloc(cb); }
-	static void* winx_call allocate(size_t cb, int fnZero)			{ return malloc(cb); }
-
-	static void winx_call deallocate(void* p)			{ free(p); }
-	static void winx_call deallocate(void* p, size_t)	{ free(p); }
-	static void winx_call swap(StdLibAlloc& o)			{}
-
-	template <class Type>
-	static void winx_call destroy(Type* obj)
-	{
-		obj->~Type();
-		free(obj);
-	}
-
-	template <class Type>
-	static Type* winx_call newArray(size_t count, Type* zero)
-	{
-		Type* array = (Type*)malloc(sizeof(Type) * count);
-		return ConstructorTraits<Type>::constructArray(array, count);
-	}
-
-	template <class Type>
-	static void winx_call destroyArray(Type* array, size_t count)
-	{
-		DestructorTraits<Type>::destructArrayN(array, count);
-		free(array);
-	}
-
-#if defined(_DEBUG)
-	static void* winx_call allocate(size_t cb, LPCSTR szFile, int nLine)
-		{ return _malloc_dbg(cb, _NORMAL_BLOCK, szFile, nLine); }
-
-	static void* winx_call allocate(size_t cb, DestructorType fn, LPCSTR szFile, int nLine)
-		{ return _malloc_dbg(cb, _NORMAL_BLOCK, szFile, nLine); }
-	
-	static void* winx_call allocate(size_t cb, int fnZero, LPCSTR szFile, int nLine)
-		{ return _malloc_dbg(cb, _NORMAL_BLOCK, szFile, nLine); }
-
-	template <class Type>
-	static Type* winx_call newArray(size_t count, Type* zero, LPCSTR szFile, int nLine)
-	{
-		Type* array = (Type*)_malloc_dbg(sizeof(Type) * count, _NORMAL_BLOCK, szFile, nLine);
-		return ConstructorTraits<Type>::constructArray(array, count);
-	}
-#endif
-};
-
-typedef StdLibAlloc DefaultStaticAlloc;
-
-// -------------------------------------------------------------------------
-// CoTaskAlloc
-
-#if !defined(STD_NO_WINSDK)
-
-class CoTaskAlloc
-{
-public:
-	static void* winx_call allocate(size_t cb)						{ return CoTaskMemAlloc(cb); }
-	static void* winx_call allocate(size_t cb, DestructorType fn)	{ return CoTaskMemAlloc(cb); }
-	static void* winx_call allocate(size_t cb, int fnZero)			{ return CoTaskMemAlloc(cb); }
-	
-	static void winx_call deallocate(void* p)			{ CoTaskMemFree(p); }
-	static void winx_call deallocate(void* p, size_t)	{ CoTaskMemFree(p); }
-	static void winx_call swap(CoTaskAlloc& o)			{}
-	
-	template <class Type>
-	static void winx_call destroy(Type* obj)
-	{
-		obj->~Type();
-		CoTaskMemFree(obj);
-	}
-
-	template <class Type>
-	static Type* winx_call newArray(size_t count, Type* zero)
-	{
-		Type* array = (Type*)CoTaskMemAlloc(sizeof(Type) * count);
-		return ConstructorTraits<Type>::constructArray(array, count);
-	}
-
-	template <class Type>
-	static void winx_call destroyArray(Type* array, size_t count)
-	{
-		DestructorTraits<Type>::destructArrayN(array, count);
-		CoTaskMemFree(array);
-	}
-
-	__STD_FAKE_DBG_ALLOCATE();
-};
-
-#endif
-
-// -------------------------------------------------------------------------
-// HeapMemAllocBase, HeapMemAlloc
-
-template <DWORD uFlags = HEAP_GENERATE_EXCEPTIONS>
-class HeapMemAllocBase
-{
-public:
-	HANDLE m_hHeap;
-
-public:
-	HeapMemAllocBase(HANDLE hHeap) : m_hHeap(hHeap) {}
-
-	void* winx_call allocate(size_t cb)					   { return HeapAlloc(m_hHeap, uFlags, cb); }
-	void* winx_call allocate(size_t cb, DestructorType fn) { return HeapAlloc(m_hHeap, uFlags, cb); }
-	void* winx_call allocate(size_t cb, int fnZero)		   { return HeapAlloc(m_hHeap, uFlags, cb); }
-	
-	void winx_call deallocate(void* p)					{ HeapFree(m_hHeap, uFlags, p); }
-	void winx_call deallocate(void* p, size_t)			{ HeapFree(m_hHeap, uFlags, p); }	
-	void winx_call swap(HeapMemAllocBase& o)			{ std::swap(m_hHeap, o.m_hHeap); }
-	
-	template <class Type>
-	void winx_call destroy(Type* obj)
-	{
-		obj->~Type();
-		HeapFree(m_hHeap, uFlags, obj);
-	}
-
-	template <class Type>
-	Type* winx_call newArray(size_t count, Type* zero)
-	{
-		Type* array = (Type*)HeapAlloc(m_hHeap, uFlags, sizeof(Type) * count);
-		return ConstructorTraits<Type>::constructArray(array, count);
-	}
-
-	template <class Type>
-	void winx_call destroyArray(Type* array, size_t count)
-	{
-		DestructorTraits<Type>::destructArrayN(array, count);
-		HeapFree(m_hHeap, uFlags, array);
-	}
-
-	__STD_FAKE_DBG_ALLOCATE();
-};
-
-class HeapMemAlloc
-{
-public:
-	static HANDLE hProcessHeap;
-
-	static void* winx_call allocate(size_t cb)					  { return HeapAlloc(hProcessHeap, 0, cb); }
-	static void* winx_call allocate(size_t cb, DestructorType fn) { return HeapAlloc(hProcessHeap, 0, cb); }
-	static void* winx_call allocate(size_t cb, int fnZero)		  { return HeapAlloc(hProcessHeap, 0, cb); }
-	
-	static void winx_call deallocate(void* p)				{ HeapFree(hProcessHeap, 0, p); }
-	static void winx_call deallocate(void* p, size_t)		{ HeapFree(hProcessHeap, 0, p); }
-	static void winx_call swap(HeapMemAlloc& o)				{}
-	
-	template <class Type>
-	static void winx_call destroy(Type* obj)
-	{
-		obj->~Type();
-		HeapFree(hProcessHeap, 0, obj);
-	}
-
-	template <class Type>
-	static Type* winx_call newArray(size_t count, Type* zero)
-	{
-		Type* array = (Type*)HeapAlloc(hProcessHeap, 0, sizeof(Type) * count);
-		return ConstructorTraits<Type>::constructArray(array, count);
-	}
-
-	template <class Type>
-	static void winx_call destroyArray(Type* array, size_t count)
-	{
-		DestructorTraits<Type>::destructArrayN(array, count);
-		HeapFree(hProcessHeap, 0, array);
-	}
-
-	__STD_FAKE_DBG_ALLOCATE();
-};
-
-typedef HeapMemAlloc DefaultDynamicAlloc;
 
 __NS_STD_END
 

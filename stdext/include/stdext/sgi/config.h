@@ -43,6 +43,7 @@
 // -------------------------------------------------------------------------
 // namespace stdext
 
+#undef typename
 #undef __STD 
 #undef __STL_BEGIN_NAMESPACE 
 #undef __STL_END_NAMESPACE 
@@ -85,7 +86,6 @@
 	#endif
 #elif defined(X_CC_VC_NET)
 #define __STD stdext
-	#undef typename
 	#define __value	___value
 	#define __STL_FUNCTION_TMPL_PARTIAL_ORDER
 	#define __STL_MEMBER_TEMPLATES
