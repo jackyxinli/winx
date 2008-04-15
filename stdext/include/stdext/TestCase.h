@@ -32,20 +32,11 @@
 #endif
 
 #if (0)
-#define STD_AUTORUN_SETUP
 #define STD_FILTER_TEST_CASE
-#endif
-
-#if defined(STD_AUTORUN_SETUP)
-#define WINX_AUTORUN_SETUP
 #endif
 
 #if defined(_DEBUG) || defined(STD_FILTER_TEST_CASE)
 #define WINX_FILTER_TEST_CASE
-#endif
-
-#if defined(WINX_AUTORUN_SETUP)
-extern void setUp();
 #endif
 
 __NS_STD_BEGIN
@@ -254,39 +245,83 @@ bool winx_call isEqBuf(_It1 a1, _It2 a2, size_t count)
 // =========================================================================
 // WINX_SELECT_RUN, WINX_AUTORUN, WINX_AUTORUN_CLASS
 
-template <int n>
-struct __AutoRunUtil
+class AutoRunFunc
 {
-	static const char* _g_name;
-#if defined(WINX_AUTORUN_SETUP)
-	static int doSetUp() {
-		::setUp();
-		return 0;
+private:
+	void (*m_fn)();
+	const char* m_name;
+	const AutoRunFunc* m_prev;
+
+public:
+	AutoRunFunc(void (*fn)(), const char* name, const AutoRunFunc*& chain)
+	{
+		m_fn = fn;
+		m_name = name;
+		m_prev = chain;
+		chain = this;
 	}
-#endif
+
+	void winx_call runMe() const
+	{
+		(*m_fn)();
+	}
+
+	void winx_call runAll(const char* szSelFun) const
+	{
+		for (const AutoRunFunc* f = this; f != NULL; f = f->m_prev)
+		{
+			if (szSelFun == NULL || strstr(f->m_name, szSelFun))
+			{
+				printf("------------------------- %s -------------------------\n", f->m_name);
+				f->runMe();
+			}
+		}
+	}
 };
 
-template <class FunT>
-inline int __autoRun(FunT Fun, const char* szFun)
+class AutoRun
 {
-	typedef __AutoRunUtil<0> _Util;
-#if defined(WINX_AUTORUN_SETUP)
-	static int init = _Util::doSetUp();
-#endif
-	const char* szSelFun = _Util::_g_name;
-	if (szSelFun == NULL || strstr(szFun, szSelFun))
-	{
-		printf("------------------------- %s -------------------------\n", szFun);
-		Fun();
+private:
+	const char* m_szSelFun;
+	const AutoRunFunc* m_chain;
+
+public:
+	AutoRun(const char* szFun = NULL)
+		: m_szSelFun(szFun), m_chain(NULL) {
 	}
-	return 0;
-}
+
+	const char* winx_call select(const char* szSel) {
+		return m_szSelFun = szSel;
+	}
+
+	void winx_call run() const {
+		m_chain->runAll(m_szSelFun);
+	}
+
+	const AutoRunFunc*& getChain() {
+		return m_chain;
+	}
+};
+
+template <int n>
+struct __AutoRunUtil {
+	static AutoRun impl;
+};
+
+template <int n>
+AutoRun __AutoRunUtil<n>::impl;
+
+typedef __AutoRunUtil<0> AutoRunUtil;
 
 #define WINX_SELECT_RUN(szFun)												\
-	template <> const char* std::__AutoRunUtil<0>::_g_name = szFun
+	std::AutoRunUtil::impl.select(szFun)
+
+#define WINX_AUTORUN_ALL()													\
+	std::AutoRunUtil::impl.run()
 
 #define WINX_AUTORUN(Fun)													\
-	static int __g_autoRun_ ## Fun = std::__autoRun(Fun, #Fun)
+	static std::AutoRunFunc __g_autoRun_##Fun(								\
+		Fun, #Fun, std::AutoRunUtil::impl.getChain())
 
 #define WINX_AUTORUN_CLASS(Test, LogT)										\
 	inline void __autoRun_##Test()											\

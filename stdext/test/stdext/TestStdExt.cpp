@@ -24,8 +24,8 @@
 //#define STD_AUTORUN_SETUP
 //#define STD_NO_MSVCRT
 //#define STD_NO_WINSDK
-#define USES_APR
-#define USES_BOOST
+//#define USES_APR
+//#define USES_BOOST
 #include <stdext.h>
 #include <stdext/FileMapping.h>
 #include <stdext/ScopeDebug.h>
@@ -106,9 +106,7 @@ void testStdExt()
 	WINX_TEST_CLASS(std::TestBasicString);
 	WINX_TEST_CLASS(std::TestStringBuilder);
 	WINX_TEST_CLASS(std::TestTextPool);
-#ifndef NO_SGISTL
 	WINX_TEST_CLASS(std::TestRope);
-#endif
 	WINX_TEST_CLASS(std::TestRand);
 
 	//Collection
@@ -139,10 +137,10 @@ void testStdExt()
 
 int main()
 {
+	WINX_SELECT_RUN("testStdExt");
+	WINX_AUTORUN_ALL();
 	return 0;
 }
-
-WINX_SELECT_RUN("TestAprPools");
 
 WINX_AUTORUN(testStdExt);
 

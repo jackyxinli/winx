@@ -333,6 +333,8 @@ __NS_STD_END
 #include "Debug.h"
 #endif
 
+typedef std::DllMainInit DllMainInit;
+
 // -------------------------------------------------------------------------
 // TestCase class
 
