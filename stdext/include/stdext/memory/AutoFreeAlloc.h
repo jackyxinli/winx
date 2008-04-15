@@ -26,11 +26,12 @@
 __NS_STD_BEGIN
 
 // -------------------------------------------------------------------------
-// class AutoFreeAllocT
+// class GCAllocT
 
 template <class _Policy>
-class AutoFreeAllocT
+class GCAllocT
 {
+	WINX_THREAD_CALLER_CHECK();
 private:
 	typedef typename _Policy::allocator_type _Alloc;
 
@@ -60,34 +61,34 @@ private:
 	_Alloc m_alloc;
 
 private:
+	const GCAllocT& operator=(const GCAllocT&);
+
 	_MemBlock* winx_call _ChainHeader() const
 	{
 		return (_MemBlock*)(m_begin - HeaderSize);
 	}
 
-	const AutoFreeAllocT& operator=(const AutoFreeAllocT& rhs);
-
 public:
-	AutoFreeAllocT() : m_destroyChain(NULL)
+	GCAllocT() : m_destroyChain(NULL)
 	{
 		m_begin = m_end = (char*)HeaderSize;
 	}
-	explicit AutoFreeAllocT(_Alloc alloc) : m_alloc(alloc), m_destroyChain(NULL)
+	explicit GCAllocT(_Alloc alloc) : m_alloc(alloc), m_destroyChain(NULL)
 	{
 		m_begin = m_end = (char*)HeaderSize;
 	}
-	explicit AutoFreeAllocT(AutoFreeAllocT& owner)
+	explicit GCAllocT(GCAllocT& owner)
 		: m_alloc(owner.m_alloc), m_destroyChain(NULL)
 	{
 		m_begin = m_end = (char*)HeaderSize;
 	}
 
-	~AutoFreeAllocT()
+	~GCAllocT()
 	{
 		clear();
 	}
 
-	void winx_call swap(AutoFreeAllocT& o)
+	void winx_call swap(GCAllocT& o)
 	{
 		std::swap(m_begin, o.m_begin);
 		std::swap(m_end, o.m_end);
@@ -97,6 +98,7 @@ public:
 
 	void winx_call clear()
 	{
+		WINX_CHECK_THREAD();
 		while (m_destroyChain)
 		{
 			_DestroyNode* curr = m_destroyChain;
@@ -134,6 +136,7 @@ public:
 
 	void* winx_call allocate(size_t cb)
 	{
+		WINX_CHECK_THREAD();
 		if ((size_t)(m_end - m_begin) < cb)
 		{
 			if (cb >= BlockSize)
@@ -197,14 +200,14 @@ public:
 // -------------------------------------------------------------------------
 // class AutoFreeAlloc
 
-class StdAlloc
+class SysAlloc
 {
 public:
 	enum { MemBlockSize = MEMORY_BLOCK_SIZE };
-	typedef DefaultStaticAlloc allocator_type;
+	typedef SystemAlloc allocator_type;
 };
 
-typedef AutoFreeAllocT<StdAlloc> AutoFreeAlloc;
+typedef GCAllocT<SysAlloc> AutoFreeAlloc;
 
 // -------------------------------------------------------------------------
 // class TestAutoFreeAlloc

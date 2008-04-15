@@ -108,7 +108,7 @@ public:																		\
 
 #ifndef _WINX_ALLOC_TYPE
 #define _WINX_ALLOC_TEMPLATE_ARGS		class _Policy
-#define _WINX_ALLOC_TYPE				std::AutoFreeAllocT<_Policy>
+#define _WINX_ALLOC_TYPE				std::GCAllocT<_Policy>
 #endif
 
 template <class _E>

@@ -27,10 +27,6 @@
 #include "AutoFreeAlloc.h"
 #endif
 
-#ifndef __STDEXT_THREADMODEL_H__
-#include "../ThreadModel.h"
-#endif
-
 #ifndef _INC_LIMITS
 #include <limits.h>
 #endif
@@ -56,12 +52,15 @@ public:
 };
 
 // -------------------------------------------------------------------------
-// class BlockPoolT
+// class BlockPool
 
-template <class ThreadModel>
+template <class _Alloc = SystemAlloc, int _cbBlock = MEMORY_BLOCK_SIZE>
 class BlockPoolT
 {
+	WINX_THREAD_CALLER_CHECK();
 private:
+	enum { m_cbBlock = _cbBlock };
+
 	struct _Block {
 		_Block* next;
 	};
@@ -69,22 +68,15 @@ private:
 
 	int m_nFree;
 	const int m_nFreeLimit;
-	const int m_cbBlock;
-
-private:
-	typedef typename ThreadModel::CS CS;
-	typedef typename ThreadModel::CSLock CSLock;
-
-	CS m_cs;
 
 private:
 	BlockPoolT(const BlockPoolT&);
 	void operator=(const BlockPoolT&);
 
 public:
-	BlockPoolT(int cbFreeLimit = INT_MAX, int cbBlock = MEMORY_BLOCK_SIZE)
-		: m_freeList(NULL), m_cbBlock(cbBlock), m_nFree(0),
-		  m_nFreeLimit(cbFreeLimit / cbBlock + 1)
+	BlockPoolT(int cbFreeLimit = INT_MAX)
+		: m_freeList(NULL), m_nFree(0),
+		  m_nFreeLimit(cbFreeLimit / m_cbBlock + 1)
 	{
 	}
 	~BlockPoolT()
@@ -95,30 +87,30 @@ public:
 public:
 	void* winx_call allocate(size_t cb)
 	{
-		MEMORY_ASSERT(cb >= (size_t)m_cbBlock);
+		WINX_CHECK_THREAD();
+		WINX_ASSERT(cb >= (size_t)m_cbBlock);
 
 		if (cb > (size_t)m_cbBlock)
-			return malloc(cb);
+			return _Alloc::allocate(cb);
 		else
 		{
-			CSLock aLock(m_cs);
 			if (m_freeList)
 			{
-				MEMORY_ASSERT(_msize(m_freeList) >= cb);
+				WINX_ASSERT(_Alloc::alloc_size(m_freeList) >= cb);
 				_Block* blk = m_freeList;
 				m_freeList = blk->next;
 				--m_nFree;
 				return blk;
 			}
-			return malloc(m_cbBlock);
+			return _Alloc::allocate(m_cbBlock);
 		}
 	}
 
 	void winx_call deallocate(void* p)
 	{
-		CSLock aLock(m_cs);
+		WINX_CHECK_THREAD();
 		if (m_nFree >= m_nFreeLimit) {
-			free(p);
+			_Alloc::deallocate(p);
 		}
 		else {
 			_Block* blk = (_Block*)p;
@@ -130,12 +122,12 @@ public:
 
 	void winx_call clear()
 	{
-		CSLock aLock(m_cs);
+		WINX_CHECK_THREAD();
 		while (m_freeList)
 		{
 			_Block* blk = m_freeList;
 			m_freeList = blk->next;
-			free(blk);
+			_Alloc::deallocate(blk);
 		}
 		m_nFree = 0;
 	}
@@ -144,36 +136,17 @@ public:
 // -------------------------------------------------------------------------
 // class ScopeAlloc
 
-typedef BlockPoolT<SingleThreadModel> BlockPoolST;
-typedef ProxyAlloc<BlockPoolST> ProxyBlockPoolST;
+typedef BlockPoolT<SystemAlloc> BlockPool;
+typedef ProxyAlloc<BlockPool> ProxyBlockPool;
 
-typedef BlockPoolT<MultiThreadModel> BlockPoolMT;
-typedef ProxyAlloc<BlockPoolMT> ProxyBlockPoolMT;
-
-class ProxyST : public StdAlloc
+class PoolAlloc
 {
 public:
-	typedef ProxyBlockPoolST allocator_type;
+	enum { MemBlockSize = MEMORY_BLOCK_SIZE };
+	typedef ProxyBlockPool allocator_type;
 };
 
-class ProxyMT : public StdAlloc
-{
-public:
-	typedef ProxyBlockPoolMT allocator_type;
-};
-
-typedef AutoFreeAllocT<ProxyST> ScopeAllocST;
-typedef AutoFreeAllocT<ProxyMT> ScopeAllocMT;
-
-#if defined(_MT)
-typedef BlockPoolMT BlockPool;
-typedef ProxyBlockPoolMT ProxyBlockPool;
-typedef ScopeAllocMT ScopeAlloc;
-#else
-typedef BlockPoolST BlockPool;
-typedef ProxyBlockPoolST ProxyBlockPool;
-typedef ScopeAllocST ScopeAlloc;
-#endif
+typedef GCAllocT<PoolAlloc> ScopeAlloc;
 
 // -------------------------------------------------------------------------
 // class TestScopeAlloc

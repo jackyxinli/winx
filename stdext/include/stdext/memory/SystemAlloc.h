@@ -49,6 +49,8 @@ __NS_STD_BEGIN
 		{ return allocate(cb, fn); }													\
 	void* winx_call allocate(size_t cb, int fnZero, LPCSTR szFile, int nLine)			\
 		{ return allocate(cb); }														\
+	void* winx_call reallocate(void* p, size_t oldSize, size_t newSize,					\
+		LPCSTR szFile, int nLine) { return reallocate(p, oldSize, newSize); }			\
 	template <class Type>																\
 	Type* winx_call newArray(size_t count, Type* zero, LPCSTR szFile, int nLine)		\
 		{ return newArray(count, zero); }
@@ -69,9 +71,18 @@ public:
 	static void* winx_call allocate(size_t cb, DestructorType fn)	{ return malloc(cb); }
 	static void* winx_call allocate(size_t cb, int fnZero)			{ return malloc(cb); }
 
+	static void* winx_call reallocate(void* p, size_t oldSize, size_t newSize) {
+		return realloc(p, newSize);
+	}
+
 	static void winx_call deallocate(void* p)			{ free(p); }
 	static void winx_call deallocate(void* p, size_t)	{ free(p); }
 	static void winx_call swap(StdLibAlloc& o)			{}
+
+	static size_t winx_call alloc_size(void* p)
+	{
+		return _msize(p);
+	}
 
 	template <class Type>
 	static void winx_call destroy(Type* obj)
@@ -104,6 +115,9 @@ public:
 	static void* winx_call allocate(size_t cb, int fnZero, LPCSTR szFile, int nLine)
 		{ return _malloc_dbg(cb, _NORMAL_BLOCK, szFile, nLine); }
 
+	static void* winx_call reallocate(void* p, size_t oldSize, size_t newSize, LPCSTR szFile, int nLine)
+		{ return _realloc_dbg(p, newSize, _NORMAL_BLOCK, szFile, nLine); }
+
 	template <class Type>
 	static Type* winx_call newArray(size_t count, Type* zero, LPCSTR szFile, int nLine)
 	{
@@ -125,9 +139,27 @@ public:
 	static void* winx_call allocate(size_t cb, DestructorType fn)	{ return CoTaskMemAlloc(cb); }
 	static void* winx_call allocate(size_t cb, int fnZero)			{ return CoTaskMemAlloc(cb); }
 	
+	static void* winx_call reallocate(void* p, size_t oldSize, size_t newSize) {
+		return CoTaskMemRealloc(p, newSize);
+	}
+
 	static void winx_call deallocate(void* p)			{ CoTaskMemFree(p); }
 	static void winx_call deallocate(void* p, size_t)	{ CoTaskMemFree(p); }
 	static void winx_call swap(CoTaskAlloc& o)			{}
+
+	static size_t winx_call alloc_size(void* p)
+	{
+		ULONG cbSize;
+		IMalloc* pMalloc;
+		if (CoGetMalloc(0, &pMalloc) == S_OK) {
+			cbSize = pMalloc->GetSize(p);
+			pMalloc->Release();
+		}
+		else {
+			cbSize = 0;
+		}
+		return cbSize;
+	}
 	
 	template <class Type>
 	static void winx_call destroy(Type* obj)
@@ -171,10 +203,19 @@ public:
 	void* winx_call allocate(size_t cb, DestructorType fn) { return HeapAlloc(m_hHeap, uFlags, cb); }
 	void* winx_call allocate(size_t cb, int fnZero)		   { return HeapAlloc(m_hHeap, uFlags, cb); }
 	
+	static void* winx_call reallocate(void* p, size_t oldSize, size_t newSize) {
+		return HeapReAlloc(m_hHeap, uFlags, p, newSize);
+	}
+
 	void winx_call deallocate(void* p)					{ HeapFree(m_hHeap, uFlags, p); }
 	void winx_call deallocate(void* p, size_t)			{ HeapFree(m_hHeap, uFlags, p); }	
 	void winx_call swap(HeapMemAllocBase& o)			{ std::swap(m_hHeap, o.m_hHeap); }
 	
+	size_t winx_call alloc_size(void* p)
+	{
+		return HeapSize(m_hHeap, uFlags, p);
+	}
+
 	template <class Type>
 	void winx_call destroy(Type* obj)
 	{
@@ -199,31 +240,51 @@ public:
 	__STD_FAKE_DBG_ALLOCATE();
 };
 
-template <class Unused>
+template <DWORD uFlags>
 class HeapAllocT
 {
 public:
 	static HANDLE hProcessHeap;
 
-	static void* winx_call allocate(size_t cb)					  { return HeapAlloc(hProcessHeap, 0, cb); }
-	static void* winx_call allocate(size_t cb, DestructorType fn) { return HeapAlloc(hProcessHeap, 0, cb); }
-	static void* winx_call allocate(size_t cb, int fnZero)		  { return HeapAlloc(hProcessHeap, 0, cb); }
+	static void* winx_call allocate(size_t cb) {
+		WINX_ASSERT_INITIALIZED(hProcessHeap);
+		return HeapAlloc(hProcessHeap, uFlags, cb);
+	}
+
+	static void* winx_call allocate(size_t cb, DestructorType fn) {
+		WINX_ASSERT_INITIALIZED(hProcessHeap);
+		return HeapAlloc(hProcessHeap, uFlags, cb);
+	}
+
+	static void* winx_call allocate(size_t cb, int fnZero) {
+		WINX_ASSERT_INITIALIZED(hProcessHeap);
+		return HeapAlloc(hProcessHeap, uFlags, cb);
+	}
 	
-	static void winx_call deallocate(void* p)				{ HeapFree(hProcessHeap, 0, p); }
-	static void winx_call deallocate(void* p, size_t)		{ HeapFree(hProcessHeap, 0, p); }
-	static void winx_call swap(HeapAllocT& o)				{}
+	static void* winx_call reallocate(void* p, size_t oldSize, size_t newSize) {
+		return HeapReAlloc(hProcessHeap, uFlags, p, newSize);
+	}
+
+	static void winx_call deallocate(void* p) { HeapFree(hProcessHeap, uFlags, p); }
+	static void winx_call deallocate(void* p, size_t) { HeapFree(hProcessHeap, uFlags, p); }
+	static void winx_call swap(HeapAllocT& o) {}
 	
+	static size_t winx_call alloc_size(void* p)
+	{
+		return HeapSize(hProcessHeap, uFlags, p);
+	}
+
 	template <class Type>
 	static void winx_call destroy(Type* obj)
 	{
 		obj->~Type();
-		HeapFree(hProcessHeap, 0, obj);
+		HeapFree(hProcessHeap, uFlags, obj);
 	}
 
 	template <class Type>
 	static Type* winx_call newArray(size_t count, Type* zero)
 	{
-		Type* array = (Type*)HeapAlloc(hProcessHeap, 0, sizeof(Type) * count);
+		Type* array = (Type*)HeapAlloc(hProcessHeap, uFlags, sizeof(Type) * count);
 		return ConstructorTraits<Type>::constructArray(array, count);
 	}
 
@@ -231,24 +292,129 @@ public:
 	static void winx_call destroyArray(Type* array, size_t count)
 	{
 		DestructorTraits<Type>::destructArrayN(array, count);
-		HeapFree(hProcessHeap, 0, array);
+		HeapFree(hProcessHeap, uFlags, array);
 	}
 
 	__STD_FAKE_DBG_ALLOCATE();
 };
 
-template <class Unused>
-HANDLE HeapAllocT<Unused>::hProcessHeap = ::GetProcessHeap();
+template <DWORD uFlags>
+HANDLE HeapAllocT<uFlags>::hProcessHeap = ::GetProcessHeap();
 
-typedef HeapAllocT<int> HeapMemAlloc;
+typedef HeapAllocT<0> HeapMemAlloc;
 
 // -------------------------------------------------------------------------
-// Allocator Selector
+// class DefaultStaticAlloc
 
 typedef StdLibAlloc DefaultStaticAlloc;
-typedef HeapMemAlloc DefaultDynamicAlloc;
 
+// -------------------------------------------------------------------------
+// class SystemPoolT
+
+template <class ThreadModel, int m_cbBlock = MEMORY_BLOCK_SIZE>
+class SystemPoolT
+{
+private:
+	typedef DefaultStaticAlloc _Alloc;
+	struct _Block {
+		_Block* next;
+	};
+	_Block* m_freeList;
+
+private:
+	typedef typename ThreadModel::CS CS;
+	typedef typename ThreadModel::CSLock CSLock;
+
+	CS m_cs;
+
+private:
+	SystemPoolT(const SystemPoolT&);
+	void operator=(const SystemPoolT&);
+
+public:
+	SystemPoolT()
+		: m_freeList(NULL)
+	{
+	}
+	~SystemPoolT()
+	{
+		clear();
+	}
+
+public:
+	void* winx_call allocate(size_t cb)
+	{
+		WINX_ASSERT_INITIALIZED(m_cs);
+		WINX_ASSERT(cb >= (size_t)m_cbBlock);
+
+		if (cb > (size_t)m_cbBlock)
+			return _Alloc::allocate(cb);
+		{
+			CSLock aLock(m_cs);
+			if (m_freeList)
+			{
+				WINX_ASSERT(_Alloc::alloc_size(m_freeList) >= cb);
+				_Block* blk = m_freeList;
+				m_freeList = blk->next;
+				return blk;
+			}
+		}
+		return _Alloc::allocate(m_cbBlock);
+	}
+
+	void winx_call deallocate(void* p)
+	{
+		_Block* blk = (_Block*)p;
+		CSLock aLock(m_cs);
+		blk->next = m_freeList;
+		m_freeList = blk;
+	}
+
+	static size_t winx_call alloc_size(void* p)
+	{
+		return _Alloc::alloc_size(p);
+	}
+
+	void winx_call clear()
+	{
+		CSLock aLock(m_cs);
+		while (m_freeList)
+		{
+			_Block* blk = m_freeList;
+			m_freeList = blk->next;
+			_Alloc::deallocate(blk);
+		}
+	}
+};
+
+template <class ThreadModel, int m_cbBlock = MEMORY_BLOCK_SIZE>
+class SystemPool
+{
+private:
+	typedef SystemPoolT<ThreadModel, m_cbBlock> _SysPool;
+	static _SysPool s_impl;
+
+public:
+	static void* winx_call allocate(size_t cb) { return s_impl.allocate(cb); }
+	static void winx_call deallocate(void* p) { s_impl.deallocate(p); }
+	static size_t winx_call alloc_size(void* p) {
+		return s_impl.alloc_size(p);
+	}
+};
+
+template <class ThreadModel, int m_cbBlock>
+SystemPoolT<ThreadModel, m_cbBlock> SystemPool<ThreadModel, m_cbBlock>::s_impl;
+
+typedef SystemPool<DefaultThreadModel> SysPoolAlloc;
+
+// -------------------------------------------------------------------------
+// class SystemAlloc
+
+#if defined(WINX_GCC)
 typedef StdLibAlloc SystemAlloc;
+#else
+typedef SysPoolAlloc SystemAlloc;
+#endif
 
 // -------------------------------------------------------------------------
 // $Log: $
