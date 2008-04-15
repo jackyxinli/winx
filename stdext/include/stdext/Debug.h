@@ -20,6 +20,8 @@
 #ifndef __STDEXT_DEBUG_H__
 #define __STDEXT_DEBUG_H__
 
+__NS_STD_BEGIN
+
 // -------------------------------------------------------------------------
 // DbgFillMemory
 
@@ -142,6 +144,23 @@ do {																		\
 #endif
 
 // -------------------------------------------------------------------------
+// WINX_ASSERT_INITIALIZED
+
+template <class StrucType>
+inline BOOL winx_call isInitialized(const StrucType& stru) {
+	const char* p = (const char*)&stru;
+	for (size_t i = 0; i < sizeof(stru); ++i) {
+		if (p[i] != 0)
+			return TRUE;
+	}
+	return FALSE;
+}
+
+#ifndef WINX_ASSERT_INITIALIZED
+#define WINX_ASSERT_INITIALIZED(stru)	WINX_ASSERT(std::isInitialized(stru))
+#endif
+
+// -------------------------------------------------------------------------
 // WINX_STATIC_ASSERT
 
 #if defined(STATIC_ASSERT)
@@ -211,6 +230,41 @@ public:
 #endif
 
 // -------------------------------------------------------------------------
+// class ThreadCallerCheck
+
+class ThreadCallerCheck
+{
+private:
+	DWORD m_threadId;
+
+public:
+	ThreadCallerCheck() {
+		m_threadId = GetCurrentThreadId();
+	}
+
+	bool winx_call isMe() const {
+		return m_threadId == GetCurrentThreadId();
+	}
+};
+
+#if defined(_DEBUG)
+
+#define WINX_THREAD_CALLER_CHECK()											\
+	std::ThreadCallerCheck __threadCallerCheck
+
+#define WINX_CHECK_THREAD()													\
+	WINX_ASSERT(__threadCallerCheck.isMe())
+
+#else
+
+#define WINX_THREAD_CALLER_CHECK()
+#define WINX_CHECK_THREAD()
+
+#endif
+
+// -------------------------------------------------------------------------
 // $Log: $
+
+__NS_STD_END
 
 #endif /* __STDEXT_DEBUG_H__ */
