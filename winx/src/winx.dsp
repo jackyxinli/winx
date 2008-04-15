@@ -136,10 +136,6 @@ SOURCE=.\Config.h
 # End Source File
 # Begin Source File
 
-SOURCE=.\memory\HeapMemAlloc.cpp
-# End Source File
-# Begin Source File
-
 SOURCE=.\shell\ShellGuid.cpp
 # End Source File
 # End Target
