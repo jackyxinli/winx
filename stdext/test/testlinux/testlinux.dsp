@@ -86,6 +86,10 @@ LINK32=link.exe
 # Name "testlinux - Win32 Debug"
 # Begin Source File
 
+SOURCE=.\AllocatorPerformance.cpp
+# End Source File
+# Begin Source File
+
 SOURCE=.\TestBasic.cpp
 # End Source File
 # Begin Source File

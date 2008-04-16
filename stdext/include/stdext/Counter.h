@@ -77,7 +77,7 @@ public:
 		QueryPerformanceCounter(&(LARGE_INTEGER&)m_tick);
 	}
 
-	value_type winx_call duration() const
+	__forceinline value_type winx_call duration() const
 	{
 		value_type tickNow;
 		QueryPerformanceCounter(&(LARGE_INTEGER&)tickNow);
@@ -126,7 +126,7 @@ public:
 
 public:
 	template <class LogT>
-	__forceinline static void winx_call trace(LogT& log, const value_type& ticks)
+	static void winx_call trace(LogT& log, const value_type& ticks)
 	{
 		double msVal = (INT64)ticks * 1000.0 / (INT64)freq();
 		char szTicks[radix10_cstr_size];
@@ -138,13 +138,70 @@ public:
 	}
 
 	template <class LogT>
-	__forceinline void winx_call trace(LogT& log)
+	__forceinline value_type winx_call trace(LogT& log)
 	{
-		value_type tickNow;
-		QueryPerformanceCounter(&(LARGE_INTEGER&)tickNow);
-		trace(log, tickNow - m_tick);
+		value_type dur = duration();
+		trace(log, dur);
+		return dur;
 	}
 };
+
+// -------------------------------------------------------------------------
+// class Accumlator
+
+template <class CounterT = PerformanceCounter>
+class AccumlatorT
+{
+public:
+	typedef typename CounterT::value_type value_type;
+	typedef size_t size_type;
+	
+private:
+	value_type m_acc;
+	size_type m_count;
+
+public:
+	AccumlatorT() {
+		m_acc = 0;
+		m_count = 0;
+	}
+	
+	void winx_call start() {
+		m_acc = 0;
+		m_count = 0;
+	}
+	
+	size_type winx_call count() const {
+		return m_count;
+	}
+	
+	const value_type& winx_call accumlate() const {
+		return m_acc;
+	}
+
+	void winx_call accumlate(const value_type& val) {
+		m_acc += val;
+		++m_count;
+	}
+	
+	__forceinline void winx_call accumlate(const CounterT& counter) {
+		m_acc += counter.duration();
+		++m_count;
+	}
+	
+	template <class LogT>
+	void winx_call trace_avg(LogT& log) {
+		log.print("Average: ");
+		CounterT::trace(log, m_acc/m_count);
+	}
+
+	template <class LogT>
+	void winx_call trace(LogT& log) {
+		CounterT::trace(log, m_acc);
+	}
+};
+
+typedef AccumlatorT<> Accumlator;
 
 // -------------------------------------------------------------------------
 // $Log: Counter.h,v $

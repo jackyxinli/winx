@@ -1,20 +1,24 @@
 [Include]
 ../../../stdext/include
+../../../boost
 
 [Config Release]
 Product		Exe LRelease/testlinux
 Options		Release; MultiThread; AnsiChar; NoRtti; Exception
 ObjDir		LRelease
 LibDir		
-Libraries	rt
+Libraries	rt; apr-1
 
 [Config Debug]
 Product		Exe LDebug/testlinux
 Options		Debug; MultiThread; AnsiChar; NoRtti; Exception
 ObjDir		LDebug
 LibDir		
-Libraries	rt	
+Libraries	rt; apr-1
 
 [Source]
-testlinux.dsp
+//testlinux.dsp
+AllocatorPerformance.cpp
+TestLinux.cpp
+
 

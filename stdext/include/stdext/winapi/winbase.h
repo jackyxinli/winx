@@ -259,14 +259,6 @@ WINBASEAPI HANDLE WINAPI GetProcessHeap()
 
 // -------------------------------------------------------------------------
 
-WINBASEAPI DWORD WINAPI GetCurrentThreadId()
-{
-	NotImplementFeature("GetCurrentThreadId");
-	return 0;
-}
-
-// -------------------------------------------------------------------------
-
 WINBASEAPI LONG WINAPI InterlockedIncrement(
     LPLONG lpAddend)
 {

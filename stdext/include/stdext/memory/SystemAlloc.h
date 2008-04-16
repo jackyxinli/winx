@@ -203,7 +203,7 @@ public:
 	void* winx_call allocate(size_t cb, DestructorType fn) { return HeapAlloc(m_hHeap, uFlags, cb); }
 	void* winx_call allocate(size_t cb, int fnZero)		   { return HeapAlloc(m_hHeap, uFlags, cb); }
 	
-	static void* winx_call reallocate(void* p, size_t oldSize, size_t newSize) {
+	void* winx_call reallocate(void* p, size_t oldSize, size_t newSize) {
 		return HeapReAlloc(m_hHeap, uFlags, p, newSize);
 	}
 

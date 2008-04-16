@@ -192,6 +192,13 @@ inline BOOL winx_call isInitialized(const StrucType& stru) {
 // -------------------------------------------------------------------------
 // class DllMainInit
 
+#ifndef DLL_PROCESS_ATTACH
+#define DLL_PROCESS_ATTACH 1
+#define DLL_THREAD_ATTACH  2
+#define DLL_THREAD_DETACH  3
+#define DLL_PROCESS_DETACH 0
+#endif
+
 #if defined(_DEBUG)
 
 class DllMainInit

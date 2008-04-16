@@ -21,10 +21,10 @@
 
 int main()
 {
+	WINX_SELECT_RUN("TestAllocatorPerformance");
+	WINX_AUTORUN_ALL();
     return 0;
 }
-
-WINX_SELECT_RUN("");
 
 // -------------------------------------------------------------------------
 // $Log: TestLinux.cpp,v $

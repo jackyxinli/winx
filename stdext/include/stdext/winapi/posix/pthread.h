@@ -114,6 +114,13 @@ WINBASEAPI VOID WINAPI DeleteCriticalSection(
 }
 
 // -------------------------------------------------------------------------
+
+WINBASEAPI DWORD WINAPI GetCurrentThreadId()
+{
+	return pthread_self();
+}
+
+// -------------------------------------------------------------------------
 // $Log: $
 
 #endif /* __STDEXT_WINAPI_POSIX_PTHREAD_H__ */
