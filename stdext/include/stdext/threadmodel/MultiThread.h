@@ -19,6 +19,12 @@
 #ifndef __STDEXT_THREADMODEL_MULTITHREAD_H__
 #define __STDEXT_THREADMODEL_MULTITHREAD_H__
 
+#ifndef __STDEXT_BASIC_H__
+#include "../Basic.h"
+#endif
+
+__NS_STD_BEGIN
+
 // -------------------------------------------------------------------------
 // class RefCountMT
 
@@ -83,9 +89,16 @@ public:
 	{
 		LeaveCriticalSection(&m_cs);
 	}
+
+	BOOL winx_call good() const
+	{
+		return isInitialized(m_cs);
+	}
 };
 
 // -------------------------------------------------------------------------
 //	$Log: $
+
+__NS_STD_END
 
 #endif /* __STDEXT_THREADMODEL_MULTITHREAD_H__ */

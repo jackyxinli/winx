@@ -19,6 +19,12 @@
 #ifndef __STDEXT_THREADMODEL_SINGLETHREAD_H__
 #define __STDEXT_THREADMODEL_SINGLETHREAD_H__
 
+#ifndef __STDEXT_BASIC_H__
+#include "../Basic.h"
+#endif
+
+__NS_STD_BEGIN
+
 // -------------------------------------------------------------------------
 // struct RefCountST
 
@@ -52,9 +58,14 @@ class CriticalSectionST
 public:
 	void winx_call acquire() {}
 	void winx_call release() {}
+	BOOL winx_call good() const {
+		return TRUE;
+	}
 };
 
 // -------------------------------------------------------------------------
 //	$Log: $
+
+__NS_STD_END
 
 #endif /* __STDEXT_THREADMODEL_SINGLETHREAD_H__ */

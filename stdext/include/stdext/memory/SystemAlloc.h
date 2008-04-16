@@ -344,7 +344,7 @@ public:
 public:
 	void* winx_call allocate(size_t cb)
 	{
-		WINX_ASSERT_INITIALIZED(m_cs);
+		WINX_ASSERT(m_cs.good());
 		WINX_ASSERT(cb >= (size_t)m_cbBlock);
 
 		if (cb > (size_t)m_cbBlock)
