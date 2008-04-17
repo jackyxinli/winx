@@ -147,10 +147,10 @@ public:
 };
 
 // -------------------------------------------------------------------------
-// class Accumlator
+// class Accumulator
 
 template <class CounterT = PerformanceCounter>
-class AccumlatorT
+class AccumulatorT
 {
 public:
 	typedef typename CounterT::value_type value_type;
@@ -161,7 +161,7 @@ private:
 	size_type m_count;
 
 public:
-	AccumlatorT() {
+	AccumulatorT() {
 		m_acc = 0;
 		m_count = 0;
 	}
@@ -175,16 +175,16 @@ public:
 		return m_count;
 	}
 	
-	const value_type& winx_call accumlate() const {
+	const value_type& winx_call accumulate() const {
 		return m_acc;
 	}
 
-	void winx_call accumlate(const value_type& val) {
+	void winx_call accumulate(const value_type& val) {
 		m_acc += val;
 		++m_count;
 	}
 	
-	__forceinline void winx_call accumlate(const CounterT& counter) {
+	__forceinline void winx_call accumulate(const CounterT& counter) {
 		m_acc += counter.duration();
 		++m_count;
 	}
@@ -201,7 +201,7 @@ public:
 	}
 };
 
-typedef AccumlatorT<> Accumlator;
+typedef AccumulatorT<> Accumulator;
 
 // -------------------------------------------------------------------------
 // $Log: Counter.h,v $
