@@ -417,6 +417,71 @@ typedef SysPoolAlloc SystemAlloc;
 #endif
 
 // -------------------------------------------------------------------------
+// class TestSystemAlloc
+
+#if defined(STD_UNITTEST)
+
+template <class LogT>
+class TestSystemAlloc : public TestCase
+{
+	WINX_TEST_SUITE(TestSystemAlloc);
+		WINX_TEST(test);
+	WINX_TEST_SUITE_END();
+
+public:
+	template <class AllocT>
+	void doTestAlloc(LogT& log, AllocT& alloc)
+	{
+		const int Total = 5000;
+		void** p = new void*[Total];
+
+		std::Accumulator acc;
+		for (int i, j = 0; j < 16; ++j)
+		{
+			std::PerformanceCounter counter;
+			{
+				for (i = 0; i < Total; ++i)
+				{
+					p[i] = alloc.allocate(MEMORY_BLOCK_SIZE);
+				}
+				for (i = 0; i < Total; ++i)
+				{
+					alloc.deallocate(p[i]);
+				}
+			}
+			acc.accumulate(counter.trace(log));
+		}
+		acc.trace_avg(log);
+
+		delete[] p;
+	}
+
+	void test(LogT& log)
+	{
+		std::SysPoolAlloc sysPool;
+		std::StdLibAlloc stdLib;
+		std::HeapMemAlloc heapMem;
+		std::CoTaskAlloc cotask;
+
+		log.print("\n===== StdLibAlloc =====\n");
+		doTestAlloc(log, stdLib);
+
+#if !defined(STD_NO_WINSDK)
+		log.print("\n===== CoTaskAlloc =====\n");
+		doTestAlloc(log, cotask);
+#endif
+
+		log.print("\n===== HeapMemAlloc =====\n");
+		doTestAlloc(log, heapMem);
+
+		log.print("\n===== SysPoolAlloc =====\n");
+		doTestAlloc(log, sysPool);
+	}
+};
+
+#endif // defined(STD_UNITTEST)
+
+// -------------------------------------------------------------------------
 // $Log: $
 
 __NS_STD_END

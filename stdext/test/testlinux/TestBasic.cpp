@@ -22,7 +22,7 @@
 // -------------------------------------------------------------------------
 // TestCase
 
-int testBasic()
+void testBasic()
 {
     std::OutputLog log;
     log.print('a')
@@ -32,7 +32,6 @@ int testBasic()
        .print(1.0)
        .print(1.0, "%4.3lf")
        .newline(); 
-	return 0;
 }
 
 WINX_AUTORUN(testBasic);

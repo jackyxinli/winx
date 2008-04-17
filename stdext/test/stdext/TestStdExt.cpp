@@ -19,13 +19,12 @@
 
 #define SGI_DEQUE_UNITTEST
 #define STD_UNITTEST
-#define STD_NO_TASKALLOC
 #define STD_FILTER_TEST_CASE
 //#define STD_AUTORUN_SETUP
 //#define STD_NO_MSVCRT
 //#define STD_NO_WINSDK
-//#define USES_APR
-//#define USES_BOOST
+#define USES_APR
+#define USES_BOOST
 #include <stdext.h>
 #include <stdext/FileMapping.h>
 #include <stdext/ScopeDebug.h>
@@ -77,7 +76,7 @@ void testSgiHashMap();
 
 void testStdExt()
 {
-	WINX_TEST_APP(std::ErrorLog, "TestRope", "");
+	WINX_TEST_APP(std::ErrorLog, "", "");
 //	testSgiHashMap();
 
 	WINX_TEST_CLASS(TestFinder);
@@ -128,9 +127,11 @@ void testStdExt()
 	WINX_TEST_CLASS(std::TestDeque);
 
 	//Memory.h
+	WINX_TEST_CLASS(std::TestSystemAlloc);
 	WINX_TEST_CLASS(std::TestAutoFreeAlloc);
 	WINX_TEST_CLASS(std::TestScopeAlloc);
-	WINX_TEST_CLASS(std::TestCompareAllocators);
+
+	//AOP.h
 	WINX_TEST_CLASS(std::TestEvent);
 	WINX_TEST_CLASS(std::TestEventContainer);
 }

@@ -117,7 +117,11 @@ WINBASEAPI VOID WINAPI DeleteCriticalSection(
 
 WINBASEAPI DWORD WINAPI GetCurrentThreadId()
 {
+#if defined(PTW32_VERSION)
+	return (DWORD)pthread_self().p;
+#else
 	return pthread_self();
+#endif
 }
 
 // -------------------------------------------------------------------------

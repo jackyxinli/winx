@@ -18,6 +18,7 @@
 // -----------------------------------------------------------------------*/
 
 #define STD_UNITTEST
+#include <stdext/Counter.h>
 #include <stdext/HashMap.h>
 #include <stdext/HashSet.h>
 

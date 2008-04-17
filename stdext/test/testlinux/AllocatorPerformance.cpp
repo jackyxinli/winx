@@ -17,12 +17,18 @@
 // $Id: AllocatorPerformance.cpp,v 1.8 2006/12/03 07:52:55 xushiwei Exp $
 // -----------------------------------------------------------------------*/
 
-#define STD_UNITTEST
 #include <stdext/Memory.h>
+#include <stdext/Counter.h>
+
+#if !defined(X_OS_WINDOWS)
 #include <apr/apr_pools.h>
 #include <ext/mt_allocator.h>
 #include <boost/pool/pool.hpp>
 #include <boost/pool/object_pool.hpp>
+#else
+#include "../../wrapper/boost/include/wrapper/boost/pool.h"
+#include "../../wrapper/apr/include/wrapper/apr/apr_pools.h"
+#endif
 
 // -------------------------------------------------------------------------
 
@@ -35,7 +41,7 @@ class TestAllocatorPerformance : public TestCase
 
 private:
 	apr_pool_t* m_pool;
-	std::Accumlator m_acc;
+	std::Accumulator m_acc;
 
 	void __setUp()
 	{
@@ -69,10 +75,11 @@ public:
 				}
 			}
 		}
-		m_acc.accumlate(counter.trace(log));
+		m_acc.accumulate(counter.trace(log));
 		delete[] p;
 	}
 
+#if !defined(X_OS_WINDOWS)
 	void doMtAllocator(LogT& log, int NAlloc, int PerAlloc)
 	{
 		typedef __gnu_cxx::__mt_alloc<int> allocator_type;
@@ -97,9 +104,10 @@ public:
 				}
 			}
 		}
-		m_acc.accumlate(counter.trace(log));
+		m_acc.accumulate(counter.trace(log));
 		delete[] p;
 	}
+#endif // !defined(X_OS_WINDOWS)
 
 	void doBoostPool(LogT& log, int NAlloc, int PerAlloc)
 	{
@@ -114,7 +122,7 @@ public:
 				}
 			}
 		}
-		m_acc.accumlate(counter.trace(log));
+		m_acc.accumulate(counter.trace(log));
 	}
 
 	void doBoostObjectPool(LogT& log, int NAlloc, int PerAlloc)
@@ -130,7 +138,7 @@ public:
 				}
 			}
 		}
-		m_acc.accumlate(counter.trace(log));
+		m_acc.accumulate(counter.trace(log));
 	}
 
 	template <class LogT2>
@@ -149,7 +157,7 @@ public:
 				apr_pool_destroy(alloc);
 			}
 		}
-		m_acc.accumlate(counter.trace(log));
+		m_acc.accumulate(counter.trace(log));
 	}
 
 	void doAutoFreeAlloc(LogT& log, int NAlloc, int PerAlloc)
@@ -165,7 +173,7 @@ public:
 				}
 			}
 		}
-		m_acc.accumlate(counter.trace(log));
+		m_acc.accumulate(counter.trace(log));
 	}
 
 	void doScopeAlloc(LogT& log, int NAlloc, int PerAlloc)
@@ -182,53 +190,56 @@ public:
 				}
 			}
 		}
-		m_acc.accumlate(counter.trace(log));
+		m_acc.accumulate(counter.trace(log));
 	}
 
 	void doComparison(LogT& log, int Total, int NAlloc)
 	{
+		int i;
 		const int Count = 16;
 		const int PerAlloc = Total / NAlloc;
 		
 		m_acc.start();
 		log.print(PerAlloc, "\n===== AutoFreeAlloc(%d) =====\n");
-		for (int i = 0; i < Count; ++i)
+		for (i = 0; i < Count; ++i)
 			doAutoFreeAlloc(log, NAlloc, PerAlloc);
 		m_acc.trace_avg(log);
 
 		m_acc.start();
 		log.print(PerAlloc, "\n===== APR Pools(%d) =====\n");
-		for (int i = 0; i < Count; ++i)
+		for (i = 0; i < Count; ++i)
 			doAprPools(log, NAlloc, PerAlloc);
 		m_acc.trace_avg(log);
 
 		m_acc.start();
 		log.print(PerAlloc, "\n===== ScopeAlloc(%d) =====\n");
-		for (int i = 0; i < Count; ++i)
+		for (i = 0; i < Count; ++i)
 			doScopeAlloc(log, NAlloc, PerAlloc);
 		m_acc.trace_avg(log);
 
+#if !defined(X_OS_WINDOWS)
 		m_acc.start();
 		log.print(PerAlloc, "\n===== MtAllocator(%d) =====\n");
-		for (int i = 0; i < Count; ++i)
+		for (i = 0; i < Count; ++i)
 			doMtAllocator(log, NAlloc, PerAlloc);
 		m_acc.trace_avg(log);
+#endif
 
 		m_acc.start();
 		log.print(PerAlloc, "\n===== BoostPool(%d) =====\n");
-		for (int i = 0; i < Count; ++i)
+		for (i = 0; i < Count; ++i)
 			doBoostPool(log, NAlloc, PerAlloc);
 		m_acc.trace_avg(log);
 
 		m_acc.start();
 		log.print(PerAlloc, "\n===== BoostObjectPool(%d) =====\n");
-		for (int i = 0; i < Count; ++i)
+		for (i = 0; i < Count; ++i)
 			doBoostObjectPool(log, NAlloc, PerAlloc);
 		m_acc.trace_avg(log);
 
 		m_acc.start();
 		log.print(PerAlloc, "\n===== NewDelete(%d) =====\n");
-		for (int i = 0; i < Count; ++i)
+		for (i = 0; i < Count; ++i)
 			doNewDelete(log, NAlloc, PerAlloc);
 		m_acc.trace_avg(log);
 	}
