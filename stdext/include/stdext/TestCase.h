@@ -303,25 +303,21 @@ public:
 	}
 };
 
-template <int n>
-struct __AutoRunUtil {
+inline AutoRun& __autoRun_impl()
+{
 	static AutoRun impl;
+	return impl;
 };
 
-template <int n>
-AutoRun __AutoRunUtil<n>::impl;
-
-typedef __AutoRunUtil<0> AutoRunUtil;
-
 #define WINX_SELECT_RUN(szFun)												\
-	std::AutoRunUtil::impl.select(szFun)
+	std::__autoRun_impl().select(szFun)
 
 #define WINX_AUTORUN_ALL()													\
-	std::AutoRunUtil::impl.run()
+	std::__autoRun_impl().run()
 
 #define WINX_AUTORUN(Fun)													\
 	static std::AutoRunFunc __g_autoRun_##Fun(								\
-		Fun, #Fun, std::AutoRunUtil::impl.getChain())
+		Fun, #Fun, std::__autoRun_impl().getChain())
 
 #define WINX_AUTORUN_CLASS(Test, LogT)										\
 	inline void __autoRun_##Test()											\
