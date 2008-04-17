@@ -19,38 +19,8 @@
 #ifndef __WRAPPER_BOOST_POOL_H__
 #define __WRAPPER_BOOST_POOL_H__
 
-#if (0)
-#define WINX_USE_DEFBOOST
-#endif
-
-// -------------------------------------------------------------------------
-// Visual C++ 6.0
-
-#if defined(X_CC_VC6)
-
-namespace std
-{ 
-	typedef ::size_t size_t;
-	typedef ::ptrdiff_t ptrdiff_t;
-
-	inline void* __cxx_malloc(size_t cb) {
-		return malloc(cb);
-	}
-	inline void __cxx_free(void* p) {
-		free(p);
-	}
-};
-
-using std::__cxx_malloc;
-using std::__cxx_free;
-
-#undef malloc
-#undef free
-
-#define malloc __cxx_malloc
-#define free __cxx_free
-#define BOOST_NON_TYPE_HPP_GP_20030417
-
+#ifndef __WRAPPER_BOOST_CONFIG_H__
+#include "config.h"
 #endif
 
 // -------------------------------------------------------------------------
@@ -66,10 +36,6 @@ using std::__cxx_free;
 #endif
 
 #else
-
-#ifndef BOOST_CONFIG_HPP
-#include "../../../../../boost/boost/config.hpp"
-#endif
 
 #ifndef BOOST_POOL_HPP
 #include "../../../../../boost/boost/pool/pool.hpp"
