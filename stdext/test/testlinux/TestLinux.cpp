@@ -21,7 +21,7 @@
 
 int main()
 {
-	WINX_SELECT_RUN("TestRopePerformance");
+	WINX_SELECT_RUN("TestSTLContainersPerformance");
 	WINX_AUTORUN_ALL();
     return 0;
 }

@@ -94,6 +94,10 @@ SOURCE=.\RopePerformance.cpp
 # End Source File
 # Begin Source File
 
+SOURCE=.\STLContainersPerformance.cpp
+# End Source File
+# Begin Source File
+
 SOURCE=.\TestArchive.cpp
 # End Source File
 # Begin Source File

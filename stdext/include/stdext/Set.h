@@ -19,12 +19,12 @@
 #ifndef __STDEXT_SET_H__
 #define __STDEXT_SET_H__
 
-#ifndef __STD_SET_H__
-#include "../std/set.h"
-#endif
-
 #ifndef __STDEXT_MEMORY_H__
 #include "Memory.h"
+#endif
+
+#ifndef __STD_SET_H__
+#include "../std/set.h"
 #endif
 
 __NS_STD_BEGIN

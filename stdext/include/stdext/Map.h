@@ -19,12 +19,12 @@
 #ifndef __STDEXT_MAP_H__
 #define __STDEXT_MAP_H__
 
-#ifndef __STD_MAP_H__
-#include "../std/map.h"
-#endif
-
 #ifndef __STDEXT_MEMORY_H__
 #include "Memory.h"
+#endif
+
+#ifndef __STD_MAP_H__
+#include "../std/map.h"
 #endif
 
 __NS_STD_BEGIN
