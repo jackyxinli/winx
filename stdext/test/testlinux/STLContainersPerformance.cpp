@@ -219,7 +219,7 @@ public:
 		{
 			std::PerformanceCounter counter;
 			{
-				std::stdext::hash_set<int> s;
+				stdext::hash_set<int> s;
 				for (int i = 0; i < Count; ++i)
 					s.insert(i);
 			}
