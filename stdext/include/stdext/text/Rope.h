@@ -45,6 +45,10 @@
 
 #endif
 
+#ifndef __STDEXT_TEXT_BASICSTRING_H__
+#include "BasicString.h"
+#endif
+
 __NS_STD_BEGIN
 
 // -------------------------------------------------------------------------

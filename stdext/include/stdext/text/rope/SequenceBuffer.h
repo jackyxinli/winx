@@ -19,6 +19,10 @@
 #ifndef __STDEXT_TEXT_ROPE_SEQUENCEBUFFER_H__
 #define __STDEXT_TEXT_ROPE_SEQUENCEBUFFER_H__
 
+#ifndef __STDEXT_TEXT_TEMPSTRING_H__
+#include "../TempString.h"
+#endif
+
 /*
  * Copyright (c) 1997-1998
  * Silicon Graphics Computer Systems, Inc.
