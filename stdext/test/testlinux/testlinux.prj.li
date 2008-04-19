@@ -17,8 +17,8 @@ LibDir
 Libraries	rt; apr-1
 
 [Source]
-//testlinux.dsp
-AllocatorPerformance.cpp
+// testlinux.dsp
+// AllocatorPerformance.cpp
+RopePerformance.cpp
 TestLinux.cpp
-
 

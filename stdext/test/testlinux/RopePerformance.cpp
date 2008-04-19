@@ -20,6 +20,10 @@
 #include <stdext/text/Rope.h>
 #include <stdext/Counter.h>
 
+#if defined(WINX_GCC)
+#include <ext/rope>
+#endif
+
 // -------------------------------------------------------------------------
 
 template <class LogT>
@@ -33,13 +37,12 @@ private:
 	std::Accumulator m_acc;
 
 public:
-	enum { Count = 10000 };
+	enum { Count = 1000000 };
 	enum { TestN = 16 };
 
 	void doRope(LogT& log)
 	{
 		std::BlockPool recycle;
-		std::ScopeAlloc alloc(recycle);
 
 		log.print("\n===== Rope (ScopeAlloc) =====\n");
 		m_acc.start();
@@ -47,6 +50,7 @@ public:
 		{
 			std::PerformanceCounter counter;
 			{
+				std::ScopeAlloc alloc(recycle);
 				std::Rope<char> s(alloc);
 				for (int i = 0; i < Count; ++i)
 					s.push_back('a' + (i % 26));
