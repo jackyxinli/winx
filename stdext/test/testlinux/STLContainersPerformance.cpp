@@ -19,7 +19,9 @@
 
 #include <stdext/Counter.h>
 #include <stdext/Set.h>
+#include <stdext/HashSet.h>
 #include <stdext/Map.h>
+#include <stdext/HashMap.h>
 #include <stdext/List.h>
 #include <stdext/Deque.h>
 #include <deque>
@@ -188,6 +190,84 @@ public:
 		m_acc.trace_avg(log);
 	}
 
+	void doHashSet(LogT& log)
+	{
+		std::BlockPool recycle;
+
+		log.print("\n===== HashSet (ScopeAlloc) =====\n");
+		m_acc.start();
+		for (int j = 0; j < TestN; ++j)
+		{
+			std::PerformanceCounter counter;
+			{
+				std::ScopeAlloc alloc(recycle);
+				std::HashSet<int> s(alloc);
+				for (int i = 0; i < Count; ++i)
+					s.insert(i);
+			}
+			m_acc.accumulate(counter.trace(log));
+		}
+		m_acc.trace_avg(log);
+	}
+
+#if !defined(WINX_VC6)
+	void doStlHashSet(LogT& log)
+	{
+		log.print("\n===== stdext::hash_set =====\n");
+		m_acc.start();
+		for (int j = 0; j < TestN; ++j)
+		{
+			std::PerformanceCounter counter;
+			{
+				std::stdext::hash_set<int> s;
+				for (int i = 0; i < Count; ++i)
+					s.insert(i);
+			}
+			m_acc.accumulate(counter.trace(log));
+		}
+		m_acc.trace_avg(log);
+	}
+#endif
+
+	void doHashMap(LogT& log)
+	{
+		std::BlockPool recycle;
+
+		log.print("\n===== HashMap (ScopeAlloc) =====\n");
+		m_acc.start();
+		for (int j = 0; j < TestN; ++j)
+		{
+			std::PerformanceCounter counter;
+			{
+				std::ScopeAlloc alloc(recycle);
+				std::HashMap<int, int> s(alloc);
+				for (int i = 0; i < Count; ++i)
+					s.insert(std::HashMap<int, int>::value_type(i, i));
+			}
+			m_acc.accumulate(counter.trace(log));
+		}
+		m_acc.trace_avg(log);
+	}
+
+#if !defined(WINX_VC6)
+	void doStlHashMap(LogT& log)
+	{
+		log.print("\n===== stdext::hash_map =====\n");
+		m_acc.start();
+		for (int j = 0; j < TestN; ++j)
+		{
+			std::PerformanceCounter counter;
+			{
+				stdext::hash_map<int, int> s;
+				for (int i = 0; i < Count; ++i)
+					s.insert(stdext::hash_map<int, int>::value_type(i, i));
+			}
+			m_acc.accumulate(counter.trace(log));
+		}
+		m_acc.trace_avg(log);
+	}
+#endif
+
 	void testComparison(LogT& log)
 	{
 		doDeque(log);
@@ -196,8 +276,16 @@ public:
 		doStlList(log);
 		doSet(log);
 		doStlSet(log);
+		doHashSet(log);
+#if !defined(WINX_VC6)
+		doStlHashSet(log);
+#endif
 		doMap(log);
 		doStlMap(log);
+		doHashMap(log);
+#if !defined(WINX_VC6)
+		doStlHashMap(log);
+#endif
 	}
 };
 
