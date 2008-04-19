@@ -1,0 +1,4 @@
+EXPORTS
+	_stdext_SysPoolAlloc
+	_stdext_SysPoolFree
+	_stdext_SysPoolSize

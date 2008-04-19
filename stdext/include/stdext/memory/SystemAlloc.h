@@ -14,7 +14,7 @@
 // Email: xushiweizh@gmail.com
 // Date: 2008-1-20 13:46:39
 // 
-// $Id: RecycleBuffer.h,v 1.1 2006/10/18 12:13:39 xushiwei Exp $
+// $Id: SystemAlloc.h,v 1.1 2006/10/18 12:13:39 xushiwei Exp $
 // -----------------------------------------------------------------------*/
 #ifndef __STDEXT_MEMORY_SYSTEMALLOC_H__
 #define __STDEXT_MEMORY_SYSTEMALLOC_H__
@@ -311,11 +311,14 @@ typedef StdLibAlloc DefaultStaticAlloc;
 // -------------------------------------------------------------------------
 // class SystemPoolT
 
-template <class ThreadModel, int m_cbBlock = MEMORY_BLOCK_SIZE>
+template <class _Policy>
 class SystemPoolT
 {
 private:
-	typedef DefaultStaticAlloc _Alloc;
+	typedef typename _Policy::threadmodel_type ThreadModel;
+	typedef typename _Policy::allocator_type _Alloc;
+	enum { cbBlock = _Policy::MemBlockSize };
+
 	struct _Block {
 		_Block* next;
 	};
@@ -345,9 +348,9 @@ public:
 	void* winx_call allocate(size_t cb)
 	{
 		WINX_ASSERT(m_cs.good());
-		WINX_ASSERT(cb >= (size_t)m_cbBlock);
+		WINX_ASSERT(cb >= (size_t)cbBlock);
 
-		if (cb > (size_t)m_cbBlock)
+		if (cb > (size_t)cbBlock)
 			return _Alloc::allocate(cb);
 		{
 			CSLock aLock(m_cs);
@@ -359,7 +362,7 @@ public:
 				return blk;
 			}
 		}
-		return _Alloc::allocate(m_cbBlock);
+		return _Alloc::allocate(cbBlock);
 	}
 
 	void winx_call deallocate(void* p)
@@ -387,11 +390,11 @@ public:
 	}
 };
 
-template <class ThreadModel, int m_cbBlock = MEMORY_BLOCK_SIZE>
-class SystemPool
+template <class _Policy>
+class SystemPoolS
 {
 private:
-	typedef SystemPoolT<ThreadModel, m_cbBlock> _SysPool;
+	typedef SystemPoolT<_Policy> _SysPool;
 	static _SysPool s_impl;
 
 public:
@@ -402,18 +405,51 @@ public:
 	}
 };
 
-template <class ThreadModel, int m_cbBlock>
-SystemPoolT<ThreadModel, m_cbBlock> SystemPool<ThreadModel, m_cbBlock>::s_impl;
+template <class _Policy>
+SystemPoolT<_Policy> SystemPoolS<_Policy>::s_impl;
 
-typedef SystemPool<DefaultThreadModel> SysPoolAlloc;
+class _SysPolicy
+{
+public:
+	enum { MemBlockSize = MEMORY_BLOCK_SIZE };
+	typedef DefaultStaticAlloc allocator_type;
+	typedef DefaultThreadModel threadmodel_type;
+};
+
+typedef SystemPoolS<_SysPolicy> SystemPool;
+
+// -------------------------------------------------------------------------
+// class DynSystemPool
+
+STDAPI_(void*) _stdext_SysPoolAlloc(size_t cb);
+STDAPI_(void) _stdext_SysPoolFree(void* p);
+STDAPI_(size_t) _stdext_SysPoolSize(void* p);
+
+class DynSystemPool
+{
+	static void* winx_call allocate(size_t cb) { return _stdext_SysPoolAlloc(cb); }
+	static void winx_call deallocate(void* p) { _stdext_SysPoolFree(p); }
+	static size_t winx_call alloc_size(void* p) {
+		return _stdext_SysPoolSize(p);
+	}
+};
 
 // -------------------------------------------------------------------------
 // class SystemAlloc
 
-#if defined(WINX_GCC)
+#if (0)
+#define STD_DYN_SYSTEM_POOL
+#define STD_STATIC_SYSTEM_POOL
+#endif
+
+#if !defined(_WIN32) // non-windows default
 typedef StdLibAlloc SystemAlloc;
-#else
-typedef SysPoolAlloc SystemAlloc;
+#elif defined(STD_DYN_SYSTEM_POOL)	// recommended
+typedef DynSystemPool SystemAlloc;
+#elif defined(STD_STATIC_SYSTEM_POOL) // not recommended
+typedef SystemPool SystemAlloc;
+#else // windows default
+typedef HeapMemAlloc SystemAlloc;
 #endif
 
 // -------------------------------------------------------------------------
@@ -458,7 +494,7 @@ public:
 
 	void test(LogT& log)
 	{
-		std::SysPoolAlloc sysPool;
+		std::SystemPool sysPool;
 		std::StdLibAlloc stdLib;
 		std::HeapMemAlloc heapMem;
 		std::CoTaskAlloc cotask;

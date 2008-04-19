@@ -201,38 +201,32 @@ inline BOOL winx_call isInitialized(const StrucType& stru) {
 
 #if defined(_DEBUG)
 
-class DllMainInit
+inline void winx_call DllMainInit(
+	HANDLE hModule, DWORD ul_reason_for_call, long nBreakAlloc = 0)
 {
-public:
-	DllMainInit(HANDLE hModule, DWORD ul_reason_for_call, long nBreakAlloc = 0)
+	switch (ul_reason_for_call)
 	{
-		switch (ul_reason_for_call)
-		{
-		case DLL_PROCESS_ATTACH:
-			_CrtSetDbgFlag(_CrtSetDbgFlag(_CRTDBG_REPORT_FLAG) | _CRTDBG_LEAK_CHECK_DF);
-			if (nBreakAlloc > 0)
-				_CrtSetBreakAlloc(nBreakAlloc);
-			break;
-		case DLL_PROCESS_DETACH:
-			char szModule[_MAX_PATH];
-			GetModuleFileNameA((HMODULE)hModule, szModule, _MAX_PATH);
-			OutputDebugStringA("-----> Terminating ");
-			OutputDebugStringA(szModule);
-			OutputDebugStringA(" ...\n");
-			break;
-		}
+	case DLL_PROCESS_ATTACH:
+		_CrtSetDbgFlag(_CrtSetDbgFlag(_CRTDBG_REPORT_FLAG) | _CRTDBG_LEAK_CHECK_DF);
+		if (nBreakAlloc > 0)
+			_CrtSetBreakAlloc(nBreakAlloc);
+		break;
+	case DLL_PROCESS_DETACH:
+		char szModule[_MAX_PATH];
+		GetModuleFileNameA((HMODULE)hModule, szModule, _MAX_PATH);
+		OutputDebugStringA("-----> Terminating ");
+		OutputDebugStringA(szModule);
+		OutputDebugStringA(" ...\n");
+		break;
 	}
-};
+}
 
 #else
 
-class DllMainInit
+inline void winx_call DllMainInit(
+	HANDLE hModule, DWORD ul_reason_for_call, long nBreakAlloc = 0)
 {
-public:
-	DllMainInit(HANDLE hModule, DWORD ul_reason_for_call, long nBreakAlloc = 0)
-	{
-	}
-};
+}
 
 #endif
 
