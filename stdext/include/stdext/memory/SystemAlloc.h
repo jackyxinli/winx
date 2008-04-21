@@ -27,6 +27,12 @@
 #include "../ThreadModel.h"
 #endif
 
+#if defined(STD_UNITTEST)
+#ifndef __STDEXT_COUNTER_H__
+#include "../Counter.h"
+#endif
+#endif
+
 #ifndef __STD_ALGORITHM_H__
 #include "../../std/algorithm.h" // std::swap
 #endif
@@ -497,7 +503,9 @@ public:
 		std::SystemPool sysPool;
 		std::StdLibAlloc stdLib;
 		std::HeapMemAlloc heapMem;
+#if !defined(STD_NO_WINSDK)
 		std::CoTaskAlloc cotask;
+#endif
 
 		log.print("\n===== StdLibAlloc =====\n");
 		doTestAlloc(log, stdLib);
