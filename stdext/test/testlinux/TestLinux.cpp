@@ -21,7 +21,7 @@
 
 int main()
 {
-	WINX_SELECT_RUN("TestSTLContainersPerformance");
+	WINX_SELECT_RUN("TestAllocatorPerformance");
 	WINX_AUTORUN_ALL();
     return 0;
 }

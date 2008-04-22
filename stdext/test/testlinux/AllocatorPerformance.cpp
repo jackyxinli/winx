@@ -30,6 +30,8 @@
 #include "../../wrapper/apr/include/wrapper/apr/apr_pools.h"
 #endif
 
+#include "../../wrapper/dlmalloc/include/wrapper/dlmalloc.h"
+
 // -------------------------------------------------------------------------
 
 template <class LogT>
@@ -77,6 +79,28 @@ public:
 		}
 		m_acc.accumulate(counter.trace(log));
 		delete[] p;
+	}
+
+	void doDLMalloc(LogT& log, int NAlloc, int PerAlloc)
+	{
+		int i, **p;
+		p = (int**)dlmalloc(sizeof(int*)*PerAlloc);
+		std::PerformanceCounter counter;
+		{
+			for (int j = 0; j < NAlloc; ++j)
+			{
+				for (i = 0; i < PerAlloc; ++i)
+				{
+					p[i] = (int*)dlmalloc(sizeof(int));
+				}
+				for (i = 0; i < PerAlloc; ++i)
+				{
+					dlfree(p[i]);
+				}
+			}
+		}
+		m_acc.accumulate(counter.trace(log));
+		dlfree(p);
 	}
 
 #if !defined(X_OS_WINDOWS)
@@ -235,6 +259,12 @@ public:
 		log.print(PerAlloc, "\n===== BoostObjectPool(%d) =====\n");
 		for (i = 0; i < Count; ++i)
 			doBoostObjectPool(log, NAlloc, PerAlloc);
+		m_acc.trace_avg(log);
+
+		m_acc.start();
+		log.print(PerAlloc, "\n===== DLMalloc(%d) =====\n");
+		for (i = 0; i < Count; ++i)
+			doDLMalloc(log, NAlloc, PerAlloc);
 		m_acc.trace_avg(log);
 
 		m_acc.start();

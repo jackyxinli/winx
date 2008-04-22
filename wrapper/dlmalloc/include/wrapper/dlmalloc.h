@@ -19,6 +19,10 @@
 #ifndef __WRAPPER_DLMALLOC_H__
 #define __WRAPPER_DLMALLOC_H__
 
+#ifdef __cplusplus
+extern "C" {
+#endif /* __cplusplus */
+
 #ifndef MALLINFO_FIELD_TYPE
 #define MALLINFO_FIELD_TYPE size_t
 #endif  /* MALLINFO_FIELD_TYPE */
@@ -35,6 +39,13 @@ struct mallinfo {
   MALLINFO_FIELD_TYPE fordblks; /* total free space */
   MALLINFO_FIELD_TYPE keepcost; /* releasable (via malloc_trim) space */
 };
+
+#if !defined(__Linked_dlmalloc)
+#define __Linked_dlmalloc
+#if defined(_MSC_VER)
+#	pragma comment(lib, "dlmalloc.lib")
+#endif
+#endif
 
 /* ------------------- Declarations of public routines ------------------- */
 
@@ -371,5 +382,9 @@ void  dlmalloc_stats(void);
 
 // -------------------------------------------------------------------------
 // $Log: dlmalloc.h,v $
+
+#ifdef __cplusplus
+}; // extern "C"
+#endif /* __cplusplus */
 
 #endif /* __WRAPPER_DLMALLOC_H__ */
