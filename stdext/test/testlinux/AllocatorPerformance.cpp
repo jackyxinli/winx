@@ -250,6 +250,12 @@ public:
 #endif
 
 		m_acc.start();
+		log.print(PerAlloc, "\n===== DLMalloc(%d) =====\n");
+		for (i = 0; i < Count; ++i)
+			doDLMalloc(log, NAlloc, PerAlloc);
+		m_acc.trace_avg(log);
+		
+		m_acc.start();
 		log.print(PerAlloc, "\n===== BoostPool(%d) =====\n");
 		for (i = 0; i < Count; ++i)
 			doBoostPool(log, NAlloc, PerAlloc);
@@ -259,12 +265,6 @@ public:
 		log.print(PerAlloc, "\n===== BoostObjectPool(%d) =====\n");
 		for (i = 0; i < Count; ++i)
 			doBoostObjectPool(log, NAlloc, PerAlloc);
-		m_acc.trace_avg(log);
-
-		m_acc.start();
-		log.print(PerAlloc, "\n===== DLMalloc(%d) =====\n");
-		for (i = 0; i < Count; ++i)
-			doDLMalloc(log, NAlloc, PerAlloc);
 		m_acc.trace_avg(log);
 
 		m_acc.start();
