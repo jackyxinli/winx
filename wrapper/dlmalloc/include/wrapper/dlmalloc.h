@@ -27,6 +27,8 @@ extern "C" {
 #define MALLINFO_FIELD_TYPE size_t
 #endif  /* MALLINFO_FIELD_TYPE */
 
+#define mallinfo dlmallinfo
+
 struct mallinfo {
   MALLINFO_FIELD_TYPE arena;    /* non-mmapped space allocated from system */
   MALLINFO_FIELD_TYPE ordblks;  /* number of free chunks */
@@ -382,6 +384,8 @@ void  dlmalloc_stats(void);
 
 // -------------------------------------------------------------------------
 // $Log: dlmalloc.h,v $
+
+#undef mallinfo
 
 #ifdef __cplusplus
 }; // extern "C"
