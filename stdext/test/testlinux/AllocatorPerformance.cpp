@@ -184,7 +184,8 @@ public:
 		m_acc.accumulate(counter.trace(log));
 	}
 
-	void doAutoFreeAlloc(LogT& log, int NAlloc, int PerAlloc)
+	template <class LogT2>
+	void doAutoFreeAlloc(LogT2& log, int NAlloc, int PerAlloc)
 	{
 		std::PerformanceCounter counter;
 		{
@@ -301,7 +302,8 @@ public:
 		std::NullLog nullLog;
 		const int Total = 1000000;
 		__setUp();
-		doAprPools(nullLog, Total/10, 1);
+		doAutoFreeAlloc(nullLog, Total, 1);
+		doAprPools(nullLog, Total, 1);
 		doComparison(log, Total, Total);
 		doComparison(log, Total, 1000);
 		doComparison(log, Total, 1);
