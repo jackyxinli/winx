@@ -27,10 +27,6 @@
 #include "../wtypes.h"
 #endif
 
-#ifndef WINBASEAPI
-#define WINBASEAPI inline
-#endif
-
 // =========================================================================
 
 #if defined(X_OS_UNIX)
@@ -67,13 +63,13 @@
 
 #if defined(STD_HAS_MONOTONIC_CLOCK)
 
-WINBASEAPI BOOL WINAPI QueryPerformanceFrequency(LARGE_INTEGER* lp)
+__forceinline BOOL WINAPI QueryPerformanceFrequency(LARGE_INTEGER* lp)
 {
 	lp->QuadPart = 1000000000;
 	return TRUE;
 }
 
-WINBASEAPI BOOL WINAPI QueryPerformanceCounter(LARGE_INTEGER* lp)
+__forceinline BOOL WINAPI QueryPerformanceCounter(LARGE_INTEGER* lp)
 {
     struct timespec now;
     clock_gettime(CLOCK_MONOTONIC, &now);
@@ -107,7 +103,7 @@ inline UINT64 WINAPI __get_cpu_freq()
 		return 0;
 
 	while (getline(&line, &len, fd) != EOF) {
-		if(sscanf(line, "cpu MHz\t: %f", &freqf) == 1) {
+		if (sscanf(line, "cpu MHz\t: %f", &freqf) == 1) {
 			freqf = freqf * 1000000UL;
             freq = freqf;
             break;
@@ -117,7 +113,7 @@ inline UINT64 WINAPI __get_cpu_freq()
     return freq;
 }
 
-WINBASEAPI BOOL WINAPI QueryPerformanceFrequency(LARGE_INTEGER* lp)
+__forceinline BOOL WINAPI QueryPerformanceFrequency(LARGE_INTEGER* lp)
 {
 	lp->QuadPart = __get_cpu_freq();
     return TRUE;
@@ -143,7 +139,7 @@ __forceinline __declspec(naked) unsigned __int64 __RDTSC()
 }
 #pragma warning(default:4035)
 
-WINBASEAPI BOOL WINAPI QueryPerformanceCounter(LARGE_INTEGER* lp)
+__forceinline BOOL WINAPI QueryPerformanceCounter(LARGE_INTEGER* lp)
 {
 	lp->QuadPart = __RDTSC();
     return TRUE;
@@ -151,7 +147,7 @@ WINBASEAPI BOOL WINAPI QueryPerformanceCounter(LARGE_INTEGER* lp)
 
 #elif defined(X_CC_GCC)
 
-WINBASEAPI BOOL WINAPI QueryPerformanceCounter(LARGE_INTEGER* lp)
+__forceinline BOOL WINAPI QueryPerformanceCounter(LARGE_INTEGER* lp)
 {
 	__asm__ __volatile__("rdtsc" : "=A" (lp->QuadPart));
 	return TRUE;

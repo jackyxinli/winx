@@ -95,6 +95,7 @@ template <class Type>
 struct DestructorTraits
 {
 	typedef ArrayDestructHeader HeaderT;
+	typedef DestructorType destructor_type;
 	
 	static void winx_call destruct(void* data)
 	{
@@ -139,6 +140,8 @@ __NS_STD_BEGIN																\
 template <>																	\
 struct DestructorTraits< Type >												\
 {																			\
+	typedef int destructor_type;											\
+																			\
 	enum { destruct = 0 };													\
 	enum { destructArray = 0 };												\
 																			\

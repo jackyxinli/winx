@@ -26,6 +26,7 @@
 #define USES_APR
 #define USES_BOOST
 #include <stdext.h>
+#include <stdext/thread/TLS.h>
 #include <stdext/FileMapping.h>
 #include <stdext/ScopeDebug.h>
 #include <stdext/Registry.h>
@@ -76,7 +77,7 @@ void testSgiHashMap();
 
 void testStdExt()
 {
-	WINX_TEST_APP(std::ErrorLog, "TestSystemAlloc", "");
+	WINX_TEST_APP(std::ErrorLog, "TestTLS", "");
 //	testSgiHashMap();
 
 	WINX_TEST_CLASS(TestFinder);
@@ -96,6 +97,7 @@ void testStdExt()
 	WINX_TEST_CLASS(std::TestRecord);
 	WINX_TEST_CLASS(std::TestLog);
 	WINX_TEST_CLASS(std::TestFileBuf);
+	WINX_TEST_CLASS(std::TestTLS);
 
 	//String
 	WINX_TEST_CLASS(std::TestCharType);

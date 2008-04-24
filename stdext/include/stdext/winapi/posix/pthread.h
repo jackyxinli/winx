@@ -27,10 +27,6 @@
 #include "../windef.h"
 #endif
 
-#ifndef WINBASEAPI
-#define WINBASEAPI inline
-#endif
-
 // -------------------------------------------------------------------------
 // class PthreadRefCount
 
@@ -83,31 +79,31 @@ typedef RTL_CRITICAL_SECTION CRITICAL_SECTION;
 typedef PRTL_CRITICAL_SECTION PCRITICAL_SECTION;
 typedef PRTL_CRITICAL_SECTION LPCRITICAL_SECTION;
 
-WINBASEAPI VOID WINAPI InitializeCriticalSection(
+__forceinline VOID WINAPI InitializeCriticalSection(
     LPCRITICAL_SECTION lpCriticalSection)
 {
 	pthread_mutex_init(lpCriticalSection, NULL);
 }
 
-WINBASEAPI VOID WINAPI EnterCriticalSection(
+__forceinline VOID WINAPI EnterCriticalSection(
     LPCRITICAL_SECTION lpCriticalSection)
 {
 	pthread_mutex_lock(lpCriticalSection);
 }
 
-WINBASEAPI BOOL WINAPI TryEnterCriticalSection(
+__forceinline BOOL WINAPI TryEnterCriticalSection(
     LPCRITICAL_SECTION lpCriticalSection)
 {
 	return pthread_mutex_trylock(lpCriticalSection) == 0;
 }
 
-WINBASEAPI VOID WINAPI LeaveCriticalSection(
+__forceinline VOID WINAPI LeaveCriticalSection(
     LPCRITICAL_SECTION lpCriticalSection)
 {
 	pthread_mutex_unlock(lpCriticalSection);
 }
 
-WINBASEAPI VOID WINAPI DeleteCriticalSection(
+__forceinline VOID WINAPI DeleteCriticalSection(
     LPCRITICAL_SECTION lpCriticalSection)
 {
 	pthread_mutex_destroy(lpCriticalSection);
@@ -115,13 +111,41 @@ WINBASEAPI VOID WINAPI DeleteCriticalSection(
 
 // -------------------------------------------------------------------------
 
-WINBASEAPI DWORD WINAPI GetCurrentThreadId()
+__forceinline DWORD WINAPI GetCurrentThreadId()
 {
 #if defined(PTW32_VERSION)
 	return (DWORD)pthread_self().p;
 #else
 	return pthread_self();
 #endif
+}
+
+// -------------------------------------------------------------------------
+
+typedef pthread_key_t TLSINDEX;
+
+__forceinline TLSINDEX WINAPI TlsAlloc(void)
+{
+	pthread_key_t key;
+	if (pthread_key_create(&key, NULL) != S_OK)
+		return TLS_OUT_OF_INDEXES;
+	else
+		return key;
+}
+
+__forceinline BOOL WINAPI TlsFree(TLSINDEX key)
+{
+	return pthread_key_delete(key) == S_OK;
+}
+
+__forceinline BOOL WINAPI TlsSetValue(TLSINDEX key, LPVOID lpTlsValue)
+{
+	return pthread_setspecific(key, lpTlsValue) == S_OK;
+}
+
+__forceinline LPVOID WINAPI TlsGetValue(TLSINDEX key)
+{
+	return pthread_getspecific(key);
 }
 
 // -------------------------------------------------------------------------
