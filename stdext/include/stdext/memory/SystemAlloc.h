@@ -481,8 +481,8 @@ class TestSystemAlloc : public TestCase
 	WINX_TEST_SUITE_END();
 
 public:
-	template <class AllocT>
-	void doTestAlloc(LogT& log, AllocT& alloc)
+	template <class LogT2, class AllocT>
+	void doTestAlloc(LogT2& log, AllocT& alloc)
 	{
 		const int Total = 5000;
 		void** p = new void*[Total];
@@ -510,12 +510,15 @@ public:
 
 	void test(LogT& log)
 	{
-		std::SystemPool sysPool;
+		std::DynSystemPool sysPool;
 		std::StdLibAlloc stdLib;
 		std::HeapMemAlloc heapMem;
 #if !defined(STD_NO_WINSDK)
 		std::CoTaskAlloc cotask;
 #endif
+
+		std::NullLog nullLog;
+		doTestAlloc(nullLog, sysPool);
 
 		log.print("\n===== StdLibAlloc =====\n");
 		doTestAlloc(log, stdLib);

@@ -14,7 +14,7 @@
 // Email: xushiweizh@gmail.com
 // Date: 2008-1-20 13:46:39
 // 
-// $Id: RecycleBuffer.h,v 1.1 2006/10/18 12:13:39 xushiwei Exp $
+// $Id: ScopeAlloc.h,v 1.1 2006/10/18 12:13:39 xushiwei Exp $
 // -----------------------------------------------------------------------*/
 #ifndef __STDEXT_MEMORY_SCOPEALLOC_H__
 #define __STDEXT_MEMORY_SCOPEALLOC_H__
