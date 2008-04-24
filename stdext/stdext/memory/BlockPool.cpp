@@ -21,11 +21,9 @@
 
 // -------------------------------------------------------------------------
 
-using namespace std;
+std::_TlsBlockPool _tls_blockPool;
 
-TlsObject<BlockPool> _tls_blockPool;
-
-STDAPI_(TlsObject<BlockPool>*) _stdext_TlsBlockPool()
+STDAPI_(std::_TlsBlockPool*) _stdext_TlsBlockPool()
 {
 	return &_tls_blockPool;
 }
