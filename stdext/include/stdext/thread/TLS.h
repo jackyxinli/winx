@@ -23,6 +23,10 @@
 #include "../Basic.h"
 #endif
 
+#ifndef __STDEXT_THREADMODEL_H__
+#include "../ThreadModel.h"
+#endif
+
 #if defined(_WIN32) && !defined(STD_NO_WINSDK)
 typedef DWORD TLSINDEX;
 #endif
@@ -185,7 +189,7 @@ public:
 	typedef Type& reference;
 
 public:
-	explicit TlsPtr(TlsKeyT key) : p(key) {}
+	explicit TlsPtr(const TlsKeyT& key) : p(key) {}
 
 	operator pointer() const {
 		return (pointer)p.get();
@@ -223,6 +227,72 @@ public:
 
 	pointer winx_call operator=(pointer lp) {
 		return _Base::operator=(lp);
+	}
+};
+
+__NS_STD_END
+
+// -------------------------------------------------------------------------
+// class TlsObject
+
+__NS_STD_BEGIN
+
+template <class Type>
+class TlsFactory
+{
+public:
+	typedef TlsKey TlsKeyType;
+
+	static Type* winx_call create() {
+		return new Type;
+	}
+	static void cleanup(void* p) {
+		delete (Type*)p;
+	}
+};
+
+template <
+	class Type, 
+	class Factory = TlsFactory<Type>,
+	class ThreadModel = InitializerThreadModel>
+class TlsObject
+{
+private:
+	typedef typename ThreadModel::RefCount RefCount;
+	typedef typename Factory::TlsKeyType TlsKeyType;
+
+	TlsKeyType m_key;
+	RefCount m_ref;
+
+public:
+	TlsObject() : m_ref(0) {}
+
+	void winx_call init()
+	{
+		if (m_ref.acquire() == 1) {
+			m_key.create(Factory::cleanup);
+		}
+	}
+
+	void winx_call term()
+	{
+		if (m_ref.release() == 0) {
+			m_key.clear();
+		}
+	}
+
+	const TlsKey& winx_call storage() const
+	{
+		return m_key;
+	}
+
+	Type& winx_call get()
+	{
+		void* p = m_key.get();
+		if (p == NULL) {
+			m_key.put(p = Factory::create());
+		}
+		return *(Type*)p;
 	}
 };
 

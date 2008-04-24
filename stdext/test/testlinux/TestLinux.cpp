@@ -24,7 +24,7 @@
 int main()
 {
 #if !defined(STD_NO_SYSTEM_POOL)
-	std::BlockPoolInit initBP;
+	std::TlsBlockPoolInit initBP;
 #endif
 	WINX_SELECT_RUN("TestAllocatorPerformance");
 	WINX_AUTORUN_ALL();

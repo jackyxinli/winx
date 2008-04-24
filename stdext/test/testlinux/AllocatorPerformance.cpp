@@ -271,7 +271,7 @@ public:
 		m_acc.trace_avg(log);
 #endif
 
-/*		m_acc.start();
+		m_acc.start();
 		log.print(PerAlloc, "\n===== DLMalloc(%d) =====\n");
 		for (i = 0; i < Count; ++i)
 			doDLMalloc(log, NAlloc, PerAlloc);
@@ -294,7 +294,7 @@ public:
 		for (i = 0; i < Count; ++i)
 			doNewDelete(log, NAlloc, PerAlloc);
 		m_acc.trace_avg(log);
-*/	}
+	}
 	
 	void testComparison(LogT& log)
 	{

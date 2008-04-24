@@ -18,55 +18,14 @@
 // -----------------------------------------------------------------------*/
 #include "stdafx.h"
 #include <stdext/memory/ScopeAlloc.h>
-#include <stdext/thread/TLS.h>
-#include <stdext/ThreadModel.h>
 
 // -------------------------------------------------------------------------
 
-typedef std::InitializerThreadModel _ThreadModel;
+std::TlsBlockPool _tls_blockPool;
 
-std::TlsKey _g_keyBlockPool;
-_ThreadModel::RefCount _g_nRefBlockPool(0);
-
-static void _cleanup_BlockPool(void* p)
+STDAPI_(std::TlsBlockPool*) _stdext_TlsBlockPool()
 {
-	delete (std::BlockPool*)p;
-}
-
-STDAPI_(std::TlsKey*) _stdext_InitBlockPool()
-{
-	if (_g_nRefBlockPool.acquire() == 1) {
-		_g_keyBlockPool.create(_cleanup_BlockPool);
-	}
-	return &_g_keyBlockPool;
-}
-
-STDAPI_(std::TlsKey*) _stdext_BlockPoolTlsKey()
-{
-	return &_g_keyBlockPool;
-}
-
-STDAPI_(void) _stdext_TermBlockPool()
-{
-	if (_g_nRefBlockPool.release() == 0) {
-		_g_keyBlockPool.clear();
-	}
-}
-
-STDAPI_(std::BlockPool*) _stdext_CreateBlockPool()
-{
-	std::BlockPool* p = new std::BlockPool;
-	_g_keyBlockPool.put(p);
-	return p;
-}
-
-STDAPI_(std::BlockPool*) _stdext_GetBlockPool()
-{
-	void* p = _g_keyBlockPool.get();
-	if (p == NULL) {
-		_g_keyBlockPool.put(p = new std::BlockPool);
-	}
-	return (std::BlockPool*)p;
+	return &_tls_blockPool;
 }
 
 // -------------------------------------------------------------------------

@@ -2,8 +2,4 @@ EXPORTS
 	_stdext_SysPoolAlloc
 	_stdext_SysPoolFree
 	_stdext_SysPoolSize
-	_stdext_InitBlockPool
-	_stdext_TermBlockPool
-	_stdext_CreateBlockPool
-	_stdext_GetBlockPool
-	_stdext_BlockPoolTlsKey
+	_stdext_TlsBlockPool

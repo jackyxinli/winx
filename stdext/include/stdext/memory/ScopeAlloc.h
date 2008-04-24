@@ -40,7 +40,7 @@ __NS_STD_BEGIN
 // -------------------------------------------------------------------------
 // class ProxyAlloc
 
-template <class AllocT, class InitT = NullClass>
+template <class AllocT, class TlsAllocT = NullClass>
 class ProxyAlloc
 {
 private:
@@ -49,7 +49,7 @@ private:
 public:
 	ProxyAlloc(AllocT& alloc) : m_alloc(&alloc) {}
 #if !defined(STD_NO_SYSTEM_POOL)
-	ProxyAlloc() : m_alloc(&InitT::instance()) {}
+	ProxyAlloc() : m_alloc(&TlsAllocT::instance()) {}
 #endif
 
 public:
@@ -61,11 +61,12 @@ public:
 // -------------------------------------------------------------------------
 // class BlockPool
 
-template <class _Alloc = SystemAlloc, int _cbBlock = MEMORY_BLOCK_SIZE>
+template <class _Policy>
 class BlockPoolT
 {
 private:
-	enum { m_cbBlock = _cbBlock };
+	typedef typename _Policy::allocator_type _Alloc;
+	enum { m_cbBlock = _Policy::MemBlockSize };
 
 	struct _Block {
 		_Block* next;
@@ -136,53 +137,51 @@ public:
 	}
 };
 
-typedef BlockPoolT<SystemAlloc> BlockPool;
+typedef BlockPoolT<SysAlloc> BlockPool;
 
 // -------------------------------------------------------------------------
-// class BlockPoolInit, BlockPoolS
+// class TlsBlockPoolInit, TlsBlockPool
 
 #if !defined(STD_NO_SYSTEM_POOL)
 
-STDAPI_(std::TlsKey*) _stdext_InitBlockPool();
-STDAPI_(std::TlsKey*) _stdext_BlockPoolTlsKey();
-STDAPI_(std::BlockPool*) _stdext_CreateBlockPool();
-STDAPI_(std::BlockPool*) _stdext_GetBlockPool();
-STDAPI_(void) _stdext_TermBlockPool();
+STDAPI_(TlsObject<BlockPool>*) _stdext_TlsBlockPool();
 
-class BlockPoolInit
+class TlsBlockPoolInit
 {
+private:
+	TlsObject<BlockPool>* m_blockPool;
+
 public:
-	BlockPoolInit() {
-		_stdext_InitBlockPool();
+	TlsBlockPoolInit()
+		: m_blockPool(_stdext_TlsBlockPool())
+	{
+		m_blockPool->init();
 	}
-	~BlockPoolInit() {
-		_stdext_TermBlockPool();
+	~TlsBlockPoolInit() {
+		m_blockPool->term();
 	}
 };
 
-class BlockPoolS
+class TlsBlockPool
 {
 public:
 	static BlockPool& winx_call instance()
 	{
-		static TlsKey _s_key = *_stdext_BlockPoolTlsKey();
-		void* p = _s_key.get();
-		if (p == NULL)
-			p = _stdext_CreateBlockPool();
-		return *(BlockPool*)p;
+		static TlsObject<BlockPool>* _tls_blockPool = _stdext_TlsBlockPool();
+		return _tls_blockPool->get();
 	}
 };
 
 #else
 
-typedef NullClass BlockPoolS;
+typedef NullClass TlsBlockPool;
 
 #endif
 
 // -------------------------------------------------------------------------
 // class ScopeAlloc
 
-typedef ProxyAlloc<BlockPool, BlockPoolS> ProxyBlockPool;
+typedef ProxyAlloc<BlockPool, TlsBlockPool> ProxyBlockPool;
 
 class PoolAlloc
 {
