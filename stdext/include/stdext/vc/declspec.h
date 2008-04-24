@@ -43,6 +43,40 @@
 #endif
 
 // =========================================================================
+// WINX_DEFINE_SELECTANY, WINX_SELECTANY
+
+#define _WINX_SELECTANY_CLS(Var)		_TWinx ## Var
+#define _WINX_SELECTANY(Var, type)		_TWinx ## Var<type>::_g_inst
+
+#define WINX_DEFINE_SELECTANY(Type, Var)									\
+																			\
+template <class _Unused>													\
+struct _WINX_SELECTANY_CLS(Var)												\
+{																			\
+	static Type _g_inst;													\
+};																			\
+																			\
+template <class _Unused>													\
+Type _WINX_SELECTANY(Var, _Unused)
+
+#define WINX_SELECTANY(Var)		_WINX_SELECTANY(Var, int)
+
+// -------------------------------------------------------------------------
+// DEFINE_SELECTANY, SELECTANY
+
+#if defined(_MSC_VER)
+
+#define DEFINE_SELECTANY(Type, Var)	__declspec(selectany) Type Var
+#define SELECTANY(Var)				Var
+
+#else
+
+#define DEFINE_SELECTANY(Type, Var)	WINX_DEFINE_SELECTANY(Type, Var)
+#define SELECTANY(Var)				WINX_SELECTANY(Var)
+
+#endif
+
+// =========================================================================
 // uuidof
 
 #ifndef __STDEXT_VC_UUIDOF_H__

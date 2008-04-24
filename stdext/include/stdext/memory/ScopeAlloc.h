@@ -144,12 +144,14 @@ typedef BlockPoolT<SysAlloc> BlockPool;
 
 #if !defined(STD_NO_SYSTEM_POOL)
 
-STDAPI_(TlsObject<BlockPool>*) _stdext_TlsBlockPool();
+typedef TlsObject<BlockPool> _TlsBlockPool;
+
+STDAPI_(_TlsBlockPool*) _stdext_TlsBlockPool();
 
 class TlsBlockPoolInit
 {
 private:
-	TlsObject<BlockPool>* m_blockPool;
+	_TlsBlockPool* m_blockPool;
 
 public:
 	TlsBlockPoolInit()
@@ -162,13 +164,15 @@ public:
 	}
 };
 
+WINX_DEFINE_SELECTANY(_TlsBlockPool*, _tls_blockPool) = _stdext_TlsBlockPool();
+
 class TlsBlockPool
 {
 public:
 	static BlockPool& winx_call instance()
 	{
-		static TlsObject<BlockPool>* _tls_blockPool = _stdext_TlsBlockPool();
-		return _tls_blockPool->get();
+		_TlsBlockPool* inst = WINX_SELECTANY(_tls_blockPool);
+		return inst->get();
 	}
 };
 
