@@ -27,6 +27,10 @@
 #include "AutoFreeAlloc.h"
 #endif
 
+#ifndef __STDEXT_THREAD_TLS_H__
+#include "../thread/TLS.h"
+#endif
+
 #ifndef _INC_LIMITS
 #include <limits.h>
 #endif
@@ -36,13 +40,14 @@ __NS_STD_BEGIN
 // -------------------------------------------------------------------------
 // class ProxyAlloc
 
-template <class AllocT>
+template <class AllocT, class InitT = NullClass>
 class ProxyAlloc
 {
 private:
 	AllocT* m_alloc;
 
 public:
+	ProxyAlloc() : m_alloc(InitT::instance()) {}
 	ProxyAlloc(AllocT& alloc) : m_alloc(&alloc) {}
 
 public:
@@ -133,11 +138,51 @@ public:
 	}
 };
 
+typedef BlockPoolT<SystemAlloc> BlockPool;
+
+// -------------------------------------------------------------------------
+// class BlockPoolInit
+
+STDAPI_(std::TlsKey*) _stdext_InitBlockPool();
+STDAPI_(void) _stdext_TermBlockPool();
+STDAPI_(std::BlockPool*) _stdext_CreateBlockPool();
+STDAPI_(std::BlockPool*) _stdext_GetBlockPool();
+
+class BlockPoolInit
+{
+private:
+	enum no_init_type { no_init = 0 };
+	
+	BlockPoolInit(no_init_type) {
+	}
+
+	TlsKey* winx_call init() {
+		return _stdext_InitBlockPool();
+	}
+
+public:
+	BlockPoolInit() {
+		_stdext_InitBlockPool();
+	}
+	~BlockPoolInit() {
+		_stdext_TermBlockPool();
+	}
+
+	static BlockPool* winx_call instance()
+	{
+		static BlockPoolInit _s_init(no_init);
+		static TlsKey _s_key = *_s_init.init();
+		void* p = _s_key.get();
+		if (p == NULL)
+			p = _stdext_CreateBlockPool();
+		return (BlockPool*)p;
+	}
+};
+
 // -------------------------------------------------------------------------
 // class ScopeAlloc
 
-typedef BlockPoolT<SystemAlloc> BlockPool;
-typedef ProxyAlloc<BlockPool> ProxyBlockPool;
+typedef ProxyAlloc<BlockPool, BlockPoolInit> ProxyBlockPool;
 
 class PoolAlloc
 {
@@ -158,6 +203,7 @@ class TestScopeAlloc : public TestCase
 {
 	WINX_TEST_SUITE(TestScopeAlloc);
 		WINX_TEST(testBasic);
+		WINX_TEST(testTLS);
 		WINX_TEST(testScope);
 	WINX_TEST_SUITE_END();
 
@@ -175,6 +221,12 @@ public:
 			printf("destruct Obj: %d\n", m_val);
 		}
 	};
+
+	void testTLS(LogT& log)
+	{
+		std::ScopeAlloc alloc;
+		int* a = STD_NEW(alloc, int);
+	}
 
 	void testBasic(LogT& log)
 	{

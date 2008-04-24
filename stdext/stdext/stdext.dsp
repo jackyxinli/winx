@@ -92,6 +92,14 @@ LINK32=link.exe
 # PROP Default_Filter ""
 # Begin Source File
 
+SOURCE=.\memory\BlockPool.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\include\stdext\memory\ScopeAlloc.h
+# End Source File
+# Begin Source File
+
 SOURCE=.\memory\SystemAlloc.cpp
 # End Source File
 # Begin Source File

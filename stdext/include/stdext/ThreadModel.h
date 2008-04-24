@@ -98,6 +98,8 @@ typedef MultiThreadModel DefaultThreadModel;
 typedef SingleThreadModel DefaultThreadModel;
 #endif
 
+typedef SingleThreadModel InitializerThreadModel;
+
 // -------------------------------------------------------------------------
 //	$Log: $
 
