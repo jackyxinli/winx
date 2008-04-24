@@ -48,12 +48,16 @@ private:
 	TLSINDEX m_key;
 
 public:
-	void winx_call create() {
+	void winx_call create(int fnZero = 0) {
 		m_key = TlsAlloc();
 	}
 
 	void winx_call clear() {
 		TlsFree(m_key);
+	}
+
+	void winx_call init(void* p) const {
+		TlsSetValue(m_key, p);
 	}
 
 	void winx_call put(void* p) const {
@@ -87,6 +91,12 @@ public:
 				m_cleanup(p);
 		}
 		TlsFree(m_key);
+	}
+
+	void winx_call init(void* p) const
+	{
+		WINX_ASSERT(get() == NULL);
+		TlsSetValue(m_key, p);
 	}
 
 	void winx_call put(void* p) const
@@ -135,6 +145,10 @@ public:
 
 	void winx_call clear() const {
 		pthread_key_delete(m_key);
+	}
+
+	void winx_call init(void* p) const {
+		pthread_setspecific(m_key, p);
 	}
 
 	void winx_call put(void* p) const {
@@ -290,7 +304,7 @@ public:
 	{
 		void* p = m_key.get();
 		if (p == NULL) {
-			m_key.put(p = Factory::create());
+			m_key.init(p = Factory::create());
 		}
 		return *(Type*)p;
 	}
