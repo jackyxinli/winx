@@ -87,6 +87,15 @@ LINK32=link.exe
 # Begin Source File
 
 SOURCE=.\AllocatorPerformance.cpp
+
+!IF  "$(CFG)" == "testlinux - Win32 Release"
+
+# ADD CPP /FAs
+
+!ELSEIF  "$(CFG)" == "testlinux - Win32 Debug"
+
+!ENDIF 
+
 # End Source File
 # Begin Source File
 
