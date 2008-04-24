@@ -18,9 +18,14 @@
 // -----------------------------------------------------------------------*/
 
 #include <stdext/Basic.h>
+#include <stdext/LinkLib.h>
+#include <stdext/Memory.h>
 
 int main()
 {
+#if !defined(STD_NO_SYSTEM_POOL)
+	std::BlockPoolInit initBP;
+#endif
 	WINX_SELECT_RUN("TestAllocatorPerformance");
 	WINX_AUTORUN_ALL();
     return 0;

@@ -200,6 +200,22 @@ public:
 		m_acc.accumulate(counter.trace(log));
 	}
 
+	void doTlsScopeAlloc(LogT& log, int NAlloc, int PerAlloc)
+	{
+		std::PerformanceCounter counter;
+		{
+			for (int j = 0; j < NAlloc; ++j)
+			{
+				std::ScopeAlloc alloc;
+				for (int i = 0; i < PerAlloc; ++i)
+				{
+					int* p = STD_NEW(alloc, int);
+				}
+			}
+		}
+		m_acc.accumulate(counter.trace(log));
+	}
+
 	void doScopeAlloc(LogT& log, int NAlloc, int PerAlloc)
 	{
 		std::BlockPool recycle;
@@ -236,6 +252,12 @@ public:
 		m_acc.trace_avg(log);
 
 		m_acc.start();
+		log.print(PerAlloc, "\n===== TlsScopeAlloc(%d) =====\n");
+		for (i = 0; i < Count; ++i)
+			doTlsScopeAlloc(log, NAlloc, PerAlloc);
+		m_acc.trace_avg(log);
+
+		m_acc.start();
 		log.print(PerAlloc, "\n===== ScopeAlloc(%d) =====\n");
 		for (i = 0; i < Count; ++i)
 			doScopeAlloc(log, NAlloc, PerAlloc);
@@ -249,7 +271,7 @@ public:
 		m_acc.trace_avg(log);
 #endif
 
-		m_acc.start();
+/*		m_acc.start();
 		log.print(PerAlloc, "\n===== DLMalloc(%d) =====\n");
 		for (i = 0; i < Count; ++i)
 			doDLMalloc(log, NAlloc, PerAlloc);
@@ -272,14 +294,14 @@ public:
 		for (i = 0; i < Count; ++i)
 			doNewDelete(log, NAlloc, PerAlloc);
 		m_acc.trace_avg(log);
-	}
+*/	}
 	
 	void testComparison(LogT& log)
 	{
 		std::NullLog nullLog;
 		const int Total = 1000000;
 		__setUp();
-		doAprPools(nullLog, 100000, 1);
+		doAprPools(nullLog, Total/10, 1);
 		doComparison(log, Total, Total);
 		doComparison(log, Total, 1000);
 		doComparison(log, Total, 1);

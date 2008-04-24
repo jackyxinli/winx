@@ -433,6 +433,7 @@ STDAPI_(size_t) _stdext_SysPoolSize(void* p);
 
 class DynSystemPool
 {
+public:
 	static void* winx_call allocate(size_t cb) { return _stdext_SysPoolAlloc(cb); }
 	static void winx_call deallocate(void* p) { _stdext_SysPoolFree(p); }
 	static size_t winx_call alloc_size(void* p) {
@@ -444,8 +445,17 @@ class DynSystemPool
 // class SystemAlloc
 
 #if (0)
+#define STD_NO_SYSTEM_POOL
 #define STD_DYN_SYSTEM_POOL
 #define STD_STATIC_SYSTEM_POOL
+#endif
+
+#if defined(STD_STATIC_SYSTEM_POOL)
+#define STD_NO_SYSTEM_POOL
+#endif
+
+#if defined(_WIN32) && !defined(STD_NO_SYSTEM_POOL)
+#define STD_DYN_SYSTEM_POOL
 #endif
 
 #if !defined(_WIN32) // non-windows default
@@ -454,7 +464,7 @@ typedef StdLibAlloc SystemAlloc;
 typedef DynSystemPool SystemAlloc;
 #elif defined(STD_STATIC_SYSTEM_POOL) // not recommended
 typedef SystemPool SystemAlloc;
-#else // windows default
+#else // no system-pool
 typedef HeapMemAlloc SystemAlloc;
 #endif
 

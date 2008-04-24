@@ -26,7 +26,7 @@
 #define USES_APR
 #define USES_BOOST
 #include <stdext.h>
-#include <stdext/linklib.h>
+#include <stdext/LinkLib.h>
 #include <stdext/thread/TLS.h>
 #include <stdext/FileMapping.h>
 #include <stdext/ScopeDebug.h>
@@ -78,7 +78,7 @@ void testSgiHashMap();
 
 void testStdExt()
 {
-	WINX_TEST_APP(std::ErrorLog, "TestScopeAlloc", "");
+	WINX_TEST_APP(std::ErrorLog, "TestScopeAlloc", "testTLS");
 //	testSgiHashMap();
 
 	WINX_TEST_CLASS(TestFinder);

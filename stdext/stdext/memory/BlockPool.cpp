@@ -41,6 +41,11 @@ STDAPI_(std::TlsKey*) _stdext_InitBlockPool()
 	return &_g_keyBlockPool;
 }
 
+STDAPI_(std::TlsKey*) _stdext_BlockPoolTlsKey()
+{
+	return &_g_keyBlockPool;
+}
+
 STDAPI_(void) _stdext_TermBlockPool()
 {
 	if (_g_nRefBlockPool.release() == 0) {

@@ -9,12 +9,12 @@
 // of this license. You must not remove this notice, or any other, from
 // this software.
 // 
-// Module: stdext/linklib.h
+// Module: stdext/LinkLib.h
 // Creator: xushiwei
 // Email: xushiweizh@gmail.com
 // Date: 2003-10-14 17:57:09
 // 
-// $Id: linklib.h,v 1.1 2006/11/30 08:45:42 xushiwei Exp $
+// $Id: LinkLib.h,v 1.1 2006/11/30 08:45:42 xushiwei Exp $
 // -----------------------------------------------------------------------*/
 #ifndef __STDEXT_LINKLIB_H__
 #define __STDEXT_LINKLIB_H__
@@ -29,6 +29,6 @@
 #endif
 
 // -------------------------------------------------------------------------
-// $Log: linklib.h,v $
+// $Log: LinkLib.h,v $
 
 #endif /* __STDEXT_LINKLIB_H__ */

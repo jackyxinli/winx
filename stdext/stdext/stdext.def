@@ -6,3 +6,4 @@ EXPORTS
 	_stdext_TermBlockPool
 	_stdext_CreateBlockPool
 	_stdext_GetBlockPool
+	_stdext_BlockPoolTlsKey
