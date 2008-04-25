@@ -7,14 +7,14 @@ Product		Exe LRelease/testlinux
 Options		Release; MultiThread; AnsiChar; NoRtti; Exception
 ObjDir		LRelease
 LibDir		LRelease
-Libraries	rt; apr-1; dlmalloc
+Libraries	rt; apr-1; dlmalloc; stdext
 
 [Config Debug]
 Product		Exe LDebug/testlinux
 Options		Debug; MultiThread; AnsiChar; NoRtti; Exception
 ObjDir		LDebug
 LibDir		LDebug
-Libraries	rt; apr-1; dlmalloc
+Libraries	rt; apr-1; dlmalloc; stdext
 
 [Source]
 testlinux.dsp

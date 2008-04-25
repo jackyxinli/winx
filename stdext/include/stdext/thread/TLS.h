@@ -239,7 +239,7 @@ public:
 	{
 	}
 
-	pointer winx_call operator=(pointer lp) {
+	Type* winx_call operator=(Type* lp) {
 		return _Base::operator=(lp);
 	}
 };

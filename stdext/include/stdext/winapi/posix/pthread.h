@@ -122,6 +122,10 @@ __forceinline DWORD WINAPI GetCurrentThreadId()
 
 // -------------------------------------------------------------------------
 
+#ifndef TLS_OUT_OF_INDEXES
+#define TLS_OUT_OF_INDEXES (DWORD)0xFFFFFFFF
+#endif
+
 typedef pthread_key_t TLSINDEX;
 
 __forceinline TLSINDEX WINAPI TlsAlloc(void)

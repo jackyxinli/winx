@@ -148,33 +148,31 @@ typedef TlsObject<BlockPool> _TlsBlockPool;
 
 STDAPI_(_TlsBlockPool*) _stdext_TlsBlockPool();
 
-class TlsBlockPoolInit
+template <class _Unused>
+class TlsBlockPoolT
 {
 private:
-	_TlsBlockPool* m_blockPool;
-
+	static _TlsBlockPool* _tls_blockPool;
+	
 public:
-	TlsBlockPoolInit()
-		: m_blockPool(_stdext_TlsBlockPool())
-	{
-		m_blockPool->init();
+	TlsBlockPoolT() {
+		_tls_blockPool->init();
 	}
-	~TlsBlockPoolInit() {
-		m_blockPool->term();
+	~TlsBlockPoolT() {
+		_tls_blockPool->term();
 	}
-};
 
-WINX_DEFINE_SELECTANY(_TlsBlockPool*, _tls_blockPool) = _stdext_TlsBlockPool();
-
-class TlsBlockPool
-{
-public:
 	static BlockPool& winx_call instance()
 	{
-		_TlsBlockPool* inst = WINX_SELECTANY(_tls_blockPool);
-		return inst->get();
+		return _tls_blockPool->get();
 	}
 };
+
+template <class _Unused>
+_TlsBlockPool* TlsBlockPoolT<_Unused>::_tls_blockPool = _stdext_TlsBlockPool();
+
+typedef TlsBlockPoolT<int> TlsBlockPool;
+typedef TlsBlockPool TlsBlockPoolInit;
 
 #else
 

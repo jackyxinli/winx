@@ -17,9 +17,12 @@
 // $Id: SystemAlloc.cpp,v 1.1 2006/10/18 12:13:39 xushiwei Exp $
 // -----------------------------------------------------------------------*/
 #include "stdafx.h"
-#include <stdext/memory/SystemAlloc.h>
 
 // -------------------------------------------------------------------------
+
+#if defined(X_OS_WINDOWS)
+
+#include <stdext/memory/SystemAlloc.h>
 
 STDAPI_(void*) _stdext_SysPoolAlloc(size_t cb)
 {
@@ -35,6 +38,8 @@ STDAPI_(size_t) _stdext_SysPoolSize(void* p)
 {
 	return std::SystemPool::alloc_size(p);
 }
+
+#endif
 
 // -------------------------------------------------------------------------
 // $Log: $
