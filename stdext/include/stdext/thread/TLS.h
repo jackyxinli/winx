@@ -195,6 +195,10 @@ private:
 
 public:
 	TlsObject() : m_ref(0) {}
+	
+	bool winx_call good() const {
+		return (typename RefCount::value_type)m_ref > 0;
+	}
 
 	void winx_call init()
 	{

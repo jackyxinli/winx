@@ -44,7 +44,7 @@ public:
 	value_type winx_call acquire() { return ++m_nRef; }
 	value_type winx_call release() { return --m_nRef; }
 
-	operator value_type()
+	operator value_type() const
 	{
 		return m_nRef;
 	}

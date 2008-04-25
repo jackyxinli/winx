@@ -44,6 +44,7 @@ class TestAllocatorPerformance : public TestCase
 private:
 	apr_pool_t* m_pool;
 	std::Accumulator m_acc;
+	std::BlockPool m_recycle;
 
 	void __setUp()
 	{
@@ -201,7 +202,8 @@ public:
 		m_acc.accumulate(counter.trace(log));
 	}
 
-	void doTlsScopeAlloc(LogT& log, int NAlloc, int PerAlloc)
+	template <class LogT2>
+	void doTlsScopeAlloc(LogT2& log, int NAlloc, int PerAlloc)
 	{
 		std::PerformanceCounter counter;
 		{
@@ -217,14 +219,14 @@ public:
 		m_acc.accumulate(counter.trace(log));
 	}
 
-	void doScopeAlloc(LogT& log, int NAlloc, int PerAlloc)
+	template <class LogT2>
+	void doScopeAlloc(LogT2& log, int NAlloc, int PerAlloc)
 	{
-		std::BlockPool recycle;
 		std::PerformanceCounter counter;
 		{
 			for (int j = 0; j < NAlloc; ++j)
 			{
-				std::ScopeAlloc alloc(recycle);
+				std::ScopeAlloc alloc(m_recycle);
 				for (int i = 0; i < PerAlloc; ++i)
 				{
 					int* p = STD_NEW(alloc, int);
@@ -303,6 +305,8 @@ public:
 		const int Total = 1000000;
 		__setUp();
 		doAutoFreeAlloc(nullLog, Total, 1);
+		doTlsScopeAlloc(nullLog, Total, 1);
+		doScopeAlloc(nullLog, Total, 1);
 		doAprPools(nullLog, Total, 1);
 		doComparison(log, Total, Total);
 		doComparison(log, Total, 1000);

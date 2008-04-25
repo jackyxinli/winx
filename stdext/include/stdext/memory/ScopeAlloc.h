@@ -161,9 +161,15 @@ public:
 	~TlsBlockPoolT() {
 		_tls_blockPool->term();
 	}
+	
+	static bool winx_call isTlsBlockPoolInitialized()
+	{
+		return _tls_blockPool && _tls_blockPool->good();
+	}
 
 	static BlockPool& winx_call instance()
 	{
+		WINX_ASSERT( isTlsBlockPoolInitialized() );
 		return _tls_blockPool->get();
 	}
 };

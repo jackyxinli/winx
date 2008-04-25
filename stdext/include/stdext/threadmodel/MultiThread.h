@@ -52,7 +52,7 @@ public:
 		return InterlockedDecrement(&m_nRef);
 	}
 
-	operator value_type()
+	operator value_type() const
 	{
 		return m_nRef;
 	}
