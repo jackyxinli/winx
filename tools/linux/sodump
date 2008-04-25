@@ -1,0 +1,2 @@
+objdump -T $1 | grep EXPORTED
+
