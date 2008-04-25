@@ -9,27 +9,23 @@
 // of this license. You must not remove this notice, or any other, from
 // this software.
 // 
-// Module: TestEvent.cpp
+// Module: TestTLS.cpp
 // Creator: xushiwei
 // Email: xushiweizh@gmail.com
 // Date: 2006-8-18 13:57:28
 // 
-// $Id: TestEvent.cpp,v 1.8 2006/12/03 07:52:55 xushiwei Exp $
+// $Id: TestTLS.cpp,v 1.8 2006/12/03 07:52:55 xushiwei Exp $
 // -----------------------------------------------------------------------*/
 
 #define STD_UNITTEST
-#define WINX_USE_DEFINE_IID
-#include <stdext/Basic.h>
-#include <stdext/Memory.h>
-#include <stdext/AOP.h>
+#include <stdext/thread/TLS.h>
 
 // -------------------------------------------------------------------------
 
 using namespace std;
 
-WINX_AUTORUN_CLASS(TestEvent, std::ErrorLog);
-WINX_AUTORUN_CLASS(TestEventContainer, std::ErrorLog);
+WINX_AUTORUN_CLASS(TestTLS, std::ErrorLog);
 
 // -------------------------------------------------------------------------
-// $Log: TestEvent.cpp,v $
+// $Log: TestTLS.cpp,v $
 //

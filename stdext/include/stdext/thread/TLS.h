@@ -32,23 +32,17 @@ typedef DWORD TLSINDEX;
 #endif
 
 // -------------------------------------------------------------------------
-// CleanupType
-
-typedef void __FnCleanup(void* data);
-typedef __FnCleanup* CleanupType;
-
-// -------------------------------------------------------------------------
 // class WinTlsKey
 
 __NS_STD_BEGIN
 
-class WinTlsKeyPOD
+class WinTlsKey
 {
 private:
 	TLSINDEX m_key;
 
 public:
-	void winx_call create(int fnZero = 0) {
+	void winx_call create() {
 		m_key = TlsAlloc();
 	}
 
@@ -56,62 +50,11 @@ public:
 		TlsFree(m_key);
 	}
 
-	void winx_call init(void* p) const {
-		TlsSetValue(m_key, p);
-	}
-
 	void winx_call put(void* p) const {
 		TlsSetValue(m_key, p);
 	}
 
 	void* winx_call get() const {
-		return TlsGetValue(m_key);
-	}
-};
-
-class WinTlsKey
-{
-private:
-	TLSINDEX m_key;
-	CleanupType m_cleanup;
-
-public:
-	void winx_call create(CleanupType fn)
-	{
-		m_key = TlsAlloc();
-		m_cleanup = fn;
-	}
-
-	void winx_call clear() const
-	{
-		if (m_cleanup)
-		{
-			void* p = get();
-			if (p)
-				m_cleanup(p);
-		}
-		TlsFree(m_key);
-	}
-
-	void winx_call init(void* p) const
-	{
-		WINX_ASSERT(get() == NULL);
-		TlsSetValue(m_key, p);
-	}
-
-	void winx_call put(void* p) const
-	{
-		if (m_cleanup)
-		{
-			void* p = get();
-			if (p)
-				m_cleanup(p);
-		}
-		TlsSetValue(m_key, p);
-	}
-
-	void* winx_call get() const
-	{
 		return TlsGetValue(m_key);
 	}
 };
@@ -139,16 +82,8 @@ public:
 		pthread_key_create(&m_key, NULL);
 	}
 
-	void winx_call create(CleanupType fn) {
-		pthread_key_create(&m_key, fn);
-	}
-
 	void winx_call clear() const {
 		pthread_key_delete(m_key);
-	}
-
-	void winx_call init(void* p) const {
-		pthread_setspecific(m_key, p);
 	}
 
 	void winx_call put(void* p) const {
@@ -172,12 +107,10 @@ __NS_STD_BEGIN
 #if defined(_WIN32)
 
 typedef WinTlsKey TlsKey;
-typedef WinTlsKeyPOD TlsKeyPOD;
 
 #else
 
 typedef PthreadTlsKey TlsKey;
-typedef PthreadTlsKey TlsKeyPOD;
 
 #endif
 
@@ -188,7 +121,7 @@ __NS_STD_END
 
 __NS_STD_BEGIN
 
-template <class Type, class TlsKeyT = TlsKey>
+template <class Type>
 class TlsPtr
 {
 private:
@@ -196,14 +129,14 @@ private:
 	void operator=(const TlsPtr&);
 
 public:
-	TlsKeyT p;
+	TlsKey p;
 
 public:
 	typedef Type* pointer;
 	typedef Type& reference;
 
 public:
-	explicit TlsPtr(const TlsKeyT& key) : p(key) {}
+	explicit TlsPtr(const TlsKey& key) : p(key) {}
 
 	operator pointer() const {
 		return (pointer)p.get();
@@ -227,23 +160,6 @@ public:
 	}
 };
 
-template <class Type>
-class TlsPtrPOD : public TlsPtr<Type, TlsKeyPOD>
-{
-private:
-	typedef TlsPtr<Type, TlsKeyPOD> _Base;
-
-public:
-	explicit TlsPtrPOD(TlsKeyPOD key)
-		: _Base(key)
-	{
-	}
-
-	Type* winx_call operator=(Type* lp) {
-		return _Base::operator=(lp);
-	}
-};
-
 __NS_STD_END
 
 // -------------------------------------------------------------------------
@@ -255,8 +171,8 @@ template <class Type>
 class TlsFactory
 {
 public:
-	typedef TlsKey TlsKeyType;
-
+	enum { has_cleanup = 1 };
+	
 	static Type* winx_call create() {
 		return new Type;
 	}
@@ -273,9 +189,8 @@ class TlsObject
 {
 private:
 	typedef typename ThreadModel::RefCount RefCount;
-	typedef typename Factory::TlsKeyType TlsKeyType;
 
-	TlsKeyType m_key;
+	TlsKey m_key;
 	RefCount m_ref;
 
 public:
@@ -284,13 +199,20 @@ public:
 	void winx_call init()
 	{
 		if (m_ref.acquire() == 1) {
-			m_key.create(Factory::cleanup);
+			m_key.create();
 		}
 	}
 
 	void winx_call term()
 	{
-		if (m_ref.release() == 0) {
+		if (m_ref.release() == 0)
+		{
+			if (Factory::has_cleanup)
+			{
+				void* p = m_key.get();
+				if (p)
+					Factory::cleanup(p);
+			}
 			m_key.clear();
 		}
 	}
@@ -304,7 +226,7 @@ public:
 	{
 		void* p = m_key.get();
 		if (p == NULL) {
-			m_key.init(p = Factory::create());
+			m_key.put(p = Factory::create());
 		}
 		return *(Type*)p;
 	}
@@ -322,8 +244,7 @@ template <class LogT>
 class TestTLS : public TestCase
 {
 	WINX_TEST_SUITE(TestTLS);
-		WINX_TEST(testPOD);
-		WINX_TEST(testBasic);
+		WINX_TEST(test);
 	WINX_TEST_SUITE_END();
 
 public:
@@ -349,12 +270,12 @@ public:
 		}
 	};
 
-	void testPOD(LogT& log)
+	void test(LogT& log)
 	{
-		TlsKeyPOD key;
+		TlsKey key;
 		key.create();
 
-		TlsPtrPOD<Obj> obj(key);
+		TlsPtr<Obj> obj(key);
 
 		obj = new Obj(1);
 		obj->trace(log);
@@ -363,21 +284,6 @@ public:
 		obj = new Obj(2);
 		obj->trace(log);
 		delete obj;
-
-		key.clear();
-	}
-
-	void testBasic(LogT& log)
-	{
-		TlsKey key;
-		key.create(Obj::cleanup);
-
-		TlsPtr<Obj> obj(key);
-		obj = new Obj(21);
-		obj->trace(log);
-
-		obj = new Obj(22);
-		obj->trace(log);
 
 		key.clear();
 	}
