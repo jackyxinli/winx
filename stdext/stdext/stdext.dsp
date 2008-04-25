@@ -125,7 +125,7 @@ SOURCE=.\stdext.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=.\stdext.def
+SOURCE=.\stdext_w32.def
 # End Source File
 # End Group
 # End Target
