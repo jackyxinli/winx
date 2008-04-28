@@ -115,8 +115,8 @@ public:
 	template <class Type>
 	Type* BOOST_MEMORY_CALL newArray(size_t count, Type* zero)
 	{
-		Type* array = (Type*)DestructorTraits<Type>::allocArrayBuf(*this, count);
-		return ConstructorTraits<Type>::constructArray(array, count);
+		Type* array = (Type*)destructor_traits<Type>::allocArrayBuf(*this, count);
+		return constructor_traits<Type>::constructArray(array, count);
 	}
 
 	template <class Type>

@@ -92,13 +92,13 @@ public:
 	static Type* BOOST_MEMORY_CALL newArray(size_t count, Type* zero)
 	{
 		Type* array = (Type*)malloc(sizeof(Type) * count);
-		return ConstructorTraits<Type>::constructArray(array, count);
+		return constructor_traits<Type>::constructArray(array, count);
 	}
 
 	template <class Type>
 	static void BOOST_MEMORY_CALL destroyArray(Type* array, size_t count)
 	{
-		DestructorTraits<Type>::destructArrayN(array, count);
+		destructor_traits<Type>::destructArrayN(array, count);
 		free(array);
 	}
 
@@ -119,7 +119,7 @@ public:
 	static Type* BOOST_MEMORY_CALL newArray(size_t count, Type* zero, LPCSTR szFile, int nLine)
 	{
 		Type* array = (Type*)_malloc_dbg(sizeof(Type) * count, _NORMAL_BLOCK, szFile, nLine);
-		return ConstructorTraits<Type>::constructArray(array, count);
+		return constructor_traits<Type>::constructArray(array, count);
 	}
 #else
 	__BOOST_FAKE_DBG_ALLOCATE()
