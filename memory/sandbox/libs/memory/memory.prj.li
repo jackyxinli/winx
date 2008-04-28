@@ -1,0 +1,20 @@
+[Include]
+.
+../..
+
+[Config Release]
+Product		Dll bin/linux/boost-memory
+Options		Release; MultiThread; AnsiChar; NoRtti; Exception
+ObjDir		LRelease
+LibDir		
+Libraries	
+
+[Config Debug]
+Product		Dll bin/linuxd/boost-memory
+Options		Debug; MultiThread; AnsiChar; NoRtti; Exception
+ObjDir		LDebug
+LibDir		
+Libraries	
+
+[Source]
+memory.dsp
