@@ -26,10 +26,6 @@
 #include <cstdio>
 #endif
 
-#if !defined(_CSTRING_) && !defined(_CSTRING)
-#include <cstring> // memcpy
-#endif
-
 #if !defined(_INC_MALLOC) && !defined(_MALLOC_H)
 #include <malloc.h>	// _alloca
 #endif
@@ -43,6 +39,9 @@
 #define BOOST_MEMORY_ASSERT(e)		_ASSERTE(e)
 #else
 #ifdef _DEBUG
+#ifndef assert
+#include <cassert>
+#endif
 #define BOOST_MEMORY_ASSERT(e)		assert(e)
 #else
 #define BOOST_MEMORY_ASSERT(e)
@@ -223,10 +222,6 @@ STD_DECL_INT_CTYPE(long);
 #include <crtdbg.h>
 #endif
 
-#else
-
-#define _CrtSetDbgFlag(e)	0
-
 #endif
 
 // -------------------------------------------------------------------------
@@ -235,15 +230,9 @@ __NS_BOOST_BEGIN
 
 inline void BOOST_MEMORY_CALL enableMemoryLeakCheck()
 {
+#ifdef _CrtSetDbgFlag
 	_CrtSetDbgFlag(_CrtSetDbgFlag(_CRTDBG_REPORT_FLAG) | _CRTDBG_LEAK_CHECK_DF);
-}
-
-inline void BOOST_MEMORY_CALL swap(void* a, void* b, size_t cb)
-{
-	void* t = _alloca(cb);
-	memcpy(t, a, cb);
-	memcpy(a, b, cb);
-	memcpy(b, t, cb);
+#endif
 }
 
 __NS_BOOST_END

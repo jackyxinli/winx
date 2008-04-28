@@ -24,6 +24,8 @@
 
 #else
 
+#define BOOST_NO_WINSDK
+
 #ifndef __BOOST_MEMORY_WINAPI_WTYPES_H__
 #include "wtypes.h"
 #endif

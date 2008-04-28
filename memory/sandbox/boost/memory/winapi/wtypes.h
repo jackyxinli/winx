@@ -12,7 +12,7 @@
 #ifndef __BOOST_MEMORY_WINAPI_WTYPES_H__
 #define __BOOST_MEMORY_WINAPI_WTYPES_H__
 
-#if !defined(STD_NO_WINSDK)
+#if !defined(BOOST_NO_WINSDK)
 #error "Don't include <winapi/wtypes.h>"
 #endif
 
@@ -51,8 +51,9 @@ typedef /* [string] */ const TCHAR __RPC_FAR *LPCTSTR;
 
 // =========================================================================
 
-#if defined(X_CC_GCC)
+#if defined(__GNUG__)
 typedef long long __int64;
+typedef unsigned long long __uint64;
 #endif
 
 typedef __int64 LONG64, *PLONG64;

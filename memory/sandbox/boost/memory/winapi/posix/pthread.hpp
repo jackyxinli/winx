@@ -16,6 +16,10 @@
 #include "../windef.h"
 #endif
 
+#ifndef _PTHREAD_H
+#include <pthread.h>
+#endif
+
 // -------------------------------------------------------------------------
 // CriticalSection
 
@@ -69,6 +73,10 @@ __forceinline DWORD WINAPI GetCurrentThreadId()
 
 #ifndef TLS_OUT_OF_INDEXES
 #define TLS_OUT_OF_INDEXES (DWORD)0xFFFFFFFF
+#endif
+
+#ifndef S_OK
+#define S_OK 0
 #endif
 
 typedef pthread_key_t TLSINDEX;

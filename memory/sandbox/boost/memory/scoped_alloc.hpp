@@ -33,7 +33,7 @@ __NS_BOOST_BEGIN
 // -------------------------------------------------------------------------
 // class proxy_alloc
 
-template <class AllocT, class TlsAllocT = NullClass>
+template <class AllocT, class TlsAllocT>
 class proxy_alloc
 {
 private:
@@ -41,9 +41,7 @@ private:
 
 public:
 	proxy_alloc(AllocT& alloc) : m_alloc(&alloc) {}
-#if !defined(STD_NO_SYSTEM_POOL)
 	proxy_alloc() : m_alloc(&TlsAllocT::instance()) {}
-#endif
 
 public:
 	void* BOOST_MEMORY_CALL allocate(size_t cb)	{ return m_alloc->allocate(cb); }
@@ -87,7 +85,7 @@ public:
 public:
 	void* BOOST_MEMORY_CALL allocate(size_t cb)
 	{
-		WINX_ASSERT(cb >= (size_t)m_cbBlock);
+		BOOST_MEMORY_ASSERT(cb >= (size_t)m_cbBlock);
 
 		if (cb > (size_t)m_cbBlock)
 			return _Alloc::allocate(cb);
@@ -95,7 +93,7 @@ public:
 		{
 			if (m_freeList)
 			{
-				WINX_ASSERT(_Alloc::alloc_size(m_freeList) >= cb);
+				BOOST_MEMORY_ASSERT(_Alloc::alloc_size(m_freeList) >= cb);
 				_Block* blk = m_freeList;
 				m_freeList = blk->next;
 				--m_nFree;

@@ -57,6 +57,10 @@ __NS_BOOST_BEGIN
 // -------------------------------------------------------------------------
 // class stdlib_alloc
 
+#if defined(__GNUG__)
+#define _msize	malloc_usable_size
+#endif
+
 class stdlib_alloc
 {
 public:

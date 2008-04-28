@@ -12,7 +12,7 @@
 #ifndef __BOOST_MEMORY_WINAPI_WINDEF_H__
 #define __BOOST_MEMORY_WINAPI_WINDEF_H__
 
-#ifndef STD_NO_WINSDK
+#ifndef BOOST_NO_WINSDK
 #error "Don't include <winapi/windef.h>"
 #endif
 
@@ -28,6 +28,11 @@
 
 #ifndef CDECL
 #define CDECL
+#endif
+
+#if defined(__GNUG__)
+#define __forceinline inline
+#define __stdcall
 #endif
 
 #ifdef _MAC

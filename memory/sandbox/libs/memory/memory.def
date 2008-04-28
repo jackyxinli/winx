@@ -1,2 +1,2 @@
 EXPORTS
-	_stdext_TlsBlockPool
+	_boost_TlsBlockPool
