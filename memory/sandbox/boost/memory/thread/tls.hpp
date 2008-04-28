@@ -17,7 +17,7 @@
 #endif
 
 #ifndef __BOOST_MEMORY_THREADMODEL_HPP__
-#include "../threadModel.hpp"
+#include "../threadmodel.hpp"
 #endif
 
 // -------------------------------------------------------------------------
