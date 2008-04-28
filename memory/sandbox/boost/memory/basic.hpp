@@ -234,6 +234,6 @@ inline void BOOST_MEMORY_CALL enableMemoryLeakCheck()
 __NS_BOOST_END
 
 // =========================================================================
-// $Log: Basic.h,v $
+// $Log: basic.hpp,v $
 
 #endif /* __BOOST_MEMORY_BASIC_HPP__ */

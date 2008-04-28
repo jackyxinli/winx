@@ -200,7 +200,7 @@ public:
 typedef gc_alloc_imp<_sys_alloc> auto_alloc;
 
 // -------------------------------------------------------------------------
-// $Log: auto_alloc.h,v $
+// $Log: auto_alloc.hpp,v $
 
 __NS_BOOST_END
 
