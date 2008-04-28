@@ -12,7 +12,7 @@
 #ifndef __BOOST_MEMORY_AUTO_ALLOC_HPP__
 #define __BOOST_MEMORY_AUTO_ALLOC_HPP__
 
-#ifndef __STDEXT_MEMORY_SYSTEMALLOC_H__
+#ifndef __BOOST_MEMORY_SYSTEM_ALLOC_HPP__
 #include "system_alloc.hpp"
 #endif
 
@@ -44,7 +44,7 @@ private:
 	struct _DestroyNode
 	{
 		_DestroyNode* pPrev;
-		DestructorType fnDestroy;
+		destructor_t fnDestroy;
 	};
 	
 	char* m_begin;
@@ -156,7 +156,7 @@ public:
 		return m_end -= cb;
 	}
 
-	void* BOOST_MEMORY_CALL allocate(size_t cb, DestructorType fn)
+	void* BOOST_MEMORY_CALL allocate(size_t cb, destructor_t fn)
 	{
 		_DestroyNode* pNode = (_DestroyNode*)allocate(sizeof(_DestroyNode) + cb);
 		pNode->fnDestroy = fn;

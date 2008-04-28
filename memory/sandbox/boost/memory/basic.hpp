@@ -49,20 +49,15 @@
 #endif
 
 // =========================================================================
-// ConstructorTraits, DestructorTraits
+// constructor_traits, destructor_traits
 
 __NS_BOOST_BEGIN
 
-struct ArrayDestructHeader
-{
-	size_t count;
-};
-
 typedef void BOOST_MEMORY_CALL __FnDestructor(void* data);
-typedef __FnDestructor* DestructorType;
+typedef __FnDestructor* destructor_t;
 
 template <class Type>
-struct ConstructorTraits
+struct constructor_traits
 {
 	static Type* BOOST_MEMORY_CALL construct(void* data)
 	{
@@ -78,10 +73,13 @@ struct ConstructorTraits
 };
 
 template <class Type>
-struct DestructorTraits
+struct destructor_traits
 {
-	typedef ArrayDestructHeader HeaderT;
-	typedef DestructorType destructor_type;
+	typedef destructor_t destructor_type;
+	struct array_destructor_header
+	{
+		size_t count;
+	};
 	
 	static void BOOST_MEMORY_CALL destruct(void* data)
 	{
@@ -96,15 +94,15 @@ struct DestructorTraits
 
 	static void BOOST_MEMORY_CALL destructArray(void* data)
 	{
-		HeaderT* hdr = (HeaderT*)data;
+		array_destructor_header* hdr = (array_destructor_header*)data;
 		destructArrayN((Type*)(hdr + 1), hdr->count);
 	}
 
 	template <class AllocT>
 	static void* BOOST_MEMORY_CALL allocArrayBuf(AllocT& alloc, size_t count)
 	{
-		HeaderT* hdr = (HeaderT*)alloc.allocate(
-			sizeof(HeaderT)+sizeof(Type)*count, destructArray);
+		array_destructor_header* hdr = (array_destructor_header*)alloc.allocate(
+			sizeof(array_destructor_header)+sizeof(Type)*count, destructArray);
 		hdr->count = count;
 		return hdr + 1;
 	}
@@ -113,79 +111,79 @@ struct DestructorTraits
 template <class Type>
 inline void BOOST_MEMORY_CALL destroyArray(Type* array, size_t count)
 {
-	DestructorTraits<Type>::destructArrayN(array, count);
+	destructor_traits<Type>::destructArrayN(array, count);
 }
 
 __NS_BOOST_END
 
 // =========================================================================
-// STD_NO_DESTRUCTOR
+// BOOST_NO_DESTRUCTOR
 
-#define STD_NO_DESTRUCTOR(Type)												\
+#define BOOST_NO_DESTRUCTOR(Type)											\
 __NS_BOOST_BEGIN															\
 template <>																	\
-struct DestructorTraits< Type >												\
+struct destructor_traits< Type >											\
 {																			\
 	typedef int destructor_type;											\
 																			\
 	enum { destruct = 0 };													\
 	enum { destructArray = 0 };												\
 																			\
-	static void BOOST_MEMORY_CALL destructArrayN(Type* array, size_t count) {}		\
+	static void BOOST_MEMORY_CALL destructArrayN(Type* array, size_t count) {} \
 																			\
 	template <class AllocT>													\
-	static void* BOOST_MEMORY_CALL allocArrayBuf(AllocT& alloc, size_t count) {		\
+	static void* BOOST_MEMORY_CALL allocArrayBuf(AllocT& alloc, size_t count) {	\
 		return alloc.allocate(sizeof(Type)*count);							\
 	}																		\
 };																			\
 __NS_BOOST_END
 
-#define STD_INT_NO_DESTRUCTOR(Type)											\
-	STD_NO_DESTRUCTOR(unsigned Type);										\
-	STD_NO_DESTRUCTOR(signed Type)
+#define BOOST_INT_NO_DESTRUCTOR(Type)										\
+	BOOST_NO_DESTRUCTOR(unsigned Type);										\
+	BOOST_NO_DESTRUCTOR(signed Type)
 
 // -------------------------------------------------------------------------
-// STD_NO_CONSTRUCTOR
+// BOOST_NO_CONSTRUCTOR
 
-#define STD_NO_CONSTRUCTOR(Type)											\
+#define BOOST_NO_CONSTRUCTOR(Type)											\
 __NS_BOOST_BEGIN															\
 template <>																	\
-struct ConstructorTraits< Type >											\
+struct constructor_traits< Type >											\
 {																			\
-	static Type* BOOST_MEMORY_CALL construct(void* data) {							\
+	static Type* BOOST_MEMORY_CALL construct(void* data) {					\
 		return (Type*)data;													\
 	}																		\
-	static Type* BOOST_MEMORY_CALL constructArray(Type* array, size_t count) {		\
+	static Type* BOOST_MEMORY_CALL constructArray(Type* array, size_t count) { \
 		return array;														\
 	}																		\
 };																			\
 __NS_BOOST_END
 
-#define STD_INT_NO_CONSTRUCTOR(Type)										\
-	STD_NO_CONSTRUCTOR(unsigned Type);										\
-	STD_NO_CONSTRUCTOR(signed Type)
+#define BOOST_INT_NO_CONSTRUCTOR(Type)										\
+	BOOST_NO_CONSTRUCTOR(unsigned Type);									\
+	BOOST_NO_CONSTRUCTOR(signed Type)
 
 // -------------------------------------------------------------------------
 // C Standard Types Support
 
-#define STD_DECL_CTYPE(Type)												\
-	STD_NO_CONSTRUCTOR(Type);												\
-	STD_NO_DESTRUCTOR(Type)
+#define BOOST_DECL_CTYPE(Type)												\
+	BOOST_NO_CONSTRUCTOR(Type);												\
+	BOOST_NO_DESTRUCTOR(Type)
 
-#define STD_DECL_INT_CTYPE(Type)											\
-	STD_NO_CONSTRUCTOR(Type);												\
-	STD_INT_NO_DESTRUCTOR(Type)
+#define BOOST_DECL_INT_CTYPE(Type)											\
+	BOOST_NO_CONSTRUCTOR(Type);												\
+	BOOST_INT_NO_DESTRUCTOR(Type)
 
 // -------------------------------------------------------------------------
 
-STD_DECL_CTYPE(bool);
-STD_DECL_CTYPE(float);
-STD_DECL_CTYPE(double);
+BOOST_DECL_CTYPE(bool);
+BOOST_DECL_CTYPE(float);
+BOOST_DECL_CTYPE(double);
 
-STD_DECL_INT_CTYPE(int);
-STD_DECL_INT_CTYPE(char);
-STD_DECL_INT_CTYPE(short);
-STD_DECL_INT_CTYPE(long);
+BOOST_DECL_INT_CTYPE(int);
+BOOST_DECL_INT_CTYPE(char);
+BOOST_DECL_INT_CTYPE(short);
+BOOST_DECL_INT_CTYPE(long);
 
 // =========================================================================
 // MEMORY_DBG_NEW_ARG
@@ -196,7 +194,7 @@ STD_DECL_INT_CTYPE(long);
 #define MEMORY_FILE_LINE_ARG
 #endif
 
-#define MEMORY_NEW_ARG(Type)					sizeof(Type), std::DestructorTraits<Type>::destruct
+#define MEMORY_NEW_ARG(Type)					sizeof(Type), boost::destructor_traits<Type>::destruct
 #define MEMORY_DBG_NEW_ARG(Type)				MEMORY_NEW_ARG(Type) MEMORY_FILE_LINE_ARG
 
 #define MEMORY_NEW_ARRAY_ARG(Type, count)		(count), (Type*)0
@@ -208,11 +206,11 @@ STD_DECL_INT_CTYPE(long);
 // =========================================================================
 // NEW, NEW_ARRAY, ALLOC, ALLOC_ARRAY
 
-#define STD_NEW(alloc, Type)					::new((alloc).allocate(MEMORY_DBG_NEW_ARG(Type))) Type
-#define STD_NEW_ARRAY(alloc, Type, count) 		(alloc).newArray(MEMORY_DBG_NEW_ARRAY_ARG(Type, count))
+#define BOOST_NEW(alloc, Type)					::new((alloc).allocate(MEMORY_DBG_NEW_ARG(Type))) Type
+#define BOOST_NEW_ARRAY(alloc, Type, count) 	(alloc).newArray(MEMORY_DBG_NEW_ARRAY_ARG(Type, count))
 
-#define STD_ALLOC(alloc, Type)					((Type*)(alloc).allocate(MEMORY_DBG_ALLOC_ARG(Type)))
-#define STD_ALLOC_ARRAY(alloc, Type, count)		((Type*)(alloc).allocate(MEMORY_DBG_ALLOC_ARRAY_ARG(Type, count)))
+#define BOOST_ALLOC(alloc, Type)				((Type*)(alloc).allocate(MEMORY_DBG_ALLOC_ARG(Type)))
+#define BOOST_ALLOC_ARRAY(alloc, Type, count)	((Type*)(alloc).allocate(MEMORY_DBG_ALLOC_ARRAY_ARG(Type, count)))
 
 // =========================================================================
 
@@ -223,8 +221,6 @@ STD_DECL_INT_CTYPE(long);
 #endif
 
 #endif
-
-// -------------------------------------------------------------------------
 
 __NS_BOOST_BEGIN
 

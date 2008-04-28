@@ -38,7 +38,7 @@ __NS_BOOST_BEGIN
 #define __BOOST_FAKE_DBG_ALLOCATE()														\
 	void* BOOST_MEMORY_CALL allocate(size_t cb, LPCSTR szFile, int nLine)				\
 		{ return allocate(cb); }														\
-	void* BOOST_MEMORY_CALL allocate(size_t cb, DestructorType fn, LPCSTR szFile, int nLine)	\
+	void* BOOST_MEMORY_CALL allocate(size_t cb, destructor_t fn, LPCSTR szFile, int nLine)	\
 		{ return allocate(cb, fn); }													\
 	void* BOOST_MEMORY_CALL allocate(size_t cb, int fnZero, LPCSTR szFile, int nLine)	\
 		{ return allocate(cb); }														\
@@ -64,9 +64,9 @@ __NS_BOOST_BEGIN
 class stdlib_alloc
 {
 public:
-	static void* BOOST_MEMORY_CALL allocate(size_t cb)						{ return malloc(cb); }
-	static void* BOOST_MEMORY_CALL allocate(size_t cb, DestructorType fn)	{ return malloc(cb); }
-	static void* BOOST_MEMORY_CALL allocate(size_t cb, int fnZero)			{ return malloc(cb); }
+	static void* BOOST_MEMORY_CALL allocate(size_t cb)					{ return malloc(cb); }
+	static void* BOOST_MEMORY_CALL allocate(size_t cb, destructor_t fn)	{ return malloc(cb); }
+	static void* BOOST_MEMORY_CALL allocate(size_t cb, int fnZero)		{ return malloc(cb); }
 
 	static void* BOOST_MEMORY_CALL reallocate(void* p, size_t oldSize, size_t newSize) {
 		return realloc(p, newSize);
@@ -106,7 +106,7 @@ public:
 	static void* BOOST_MEMORY_CALL allocate(size_t cb, LPCSTR szFile, int nLine)
 		{ return _malloc_dbg(cb, _NORMAL_BLOCK, szFile, nLine); }
 
-	static void* BOOST_MEMORY_CALL allocate(size_t cb, DestructorType fn, LPCSTR szFile, int nLine)
+	static void* BOOST_MEMORY_CALL allocate(size_t cb, destructor_t fn, LPCSTR szFile, int nLine)
 		{ return _malloc_dbg(cb, _NORMAL_BLOCK, szFile, nLine); }
 	
 	static void* BOOST_MEMORY_CALL allocate(size_t cb, int fnZero, LPCSTR szFile, int nLine)
