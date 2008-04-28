@@ -1,0 +1,20 @@
+[Include]
+../../..
+
+[Config Release]
+Product		Exe LRelease/test
+Options		Release; MultiThread; AnsiChar; NoRtti; Exception
+ObjDir		LRelease
+LibDir		LRelease
+Libraries	rt; boost-memory
+
+[Config Debug]
+Product		Exe LDebug/test
+Options		Debug; MultiThread; AnsiChar; NoRtti; Exception
+ObjDir		LDebug
+LibDir		LDebug
+Libraries	rt; boost-memory
+
+[Source]
+test.dsp
+
