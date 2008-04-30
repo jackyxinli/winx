@@ -154,10 +154,6 @@ struct DestructorTraits< Type >												\
 };																			\
 __NS_STD_END
 
-#define STD_INT_NO_DESTRUCTOR(Type)											\
-	STD_NO_DESTRUCTOR(unsigned Type);										\
-	STD_NO_DESTRUCTOR(signed Type)
-
 // -------------------------------------------------------------------------
 // STD_NO_CONSTRUCTOR
 
@@ -175,10 +171,6 @@ struct ConstructorTraits< Type >											\
 };																			\
 __NS_STD_END
 
-#define STD_INT_NO_CONSTRUCTOR(Type)										\
-	STD_NO_CONSTRUCTOR(unsigned Type);										\
-	STD_NO_CONSTRUCTOR(signed Type)
-
 // -------------------------------------------------------------------------
 // C Standard Types Support
 
@@ -186,20 +178,23 @@ __NS_STD_END
 	STD_NO_CONSTRUCTOR(Type);												\
 	STD_NO_DESTRUCTOR(Type)
 
-#define STD_DECL_INT_CTYPE(Type)											\
-	STD_NO_CONSTRUCTOR(Type);												\
-	STD_INT_NO_DESTRUCTOR(Type)
-
 // -------------------------------------------------------------------------
 
-STD_DECL_CTYPE(bool);
-STD_DECL_CTYPE(float);
-STD_DECL_CTYPE(double);
+BOOST_DECL_CTYPE(bool);
+BOOST_DECL_CTYPE(float);
+BOOST_DECL_CTYPE(double);
 
-STD_DECL_INT_CTYPE(int);
-STD_DECL_INT_CTYPE(char);
-STD_DECL_INT_CTYPE(short);
-STD_DECL_INT_CTYPE(long);
+BOOST_DECL_CTYPE(int);
+BOOST_DECL_CTYPE(unsigned int);
+
+BOOST_DECL_CTYPE(char);
+BOOST_DECL_CTYPE(unsigned char);
+
+BOOST_DECL_CTYPE(short);
+BOOST_DECL_CTYPE(unsigned short);
+
+BOOST_DECL_CTYPE(long);
+BOOST_DECL_CTYPE(unsigned long);
 
 // =========================================================================
 // MEMORY_DBG_NEW_ARG
