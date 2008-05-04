@@ -19,6 +19,8 @@
 #ifndef __STDEXT_MEMORY_SCOPEALLOC_H__
 #define __STDEXT_MEMORY_SCOPEALLOC_H__
 
+#error "outdated"
+
 #ifndef __STDEXT_MEMORY_BASIC_H__
 #include "Basic.h"
 #endif

@@ -39,41 +39,47 @@
 #include "memory/ScopeAlloc.h"
 #endif
 
+class GcAlloc;
+class StlAlloc;
+
 #else
 
 #ifndef __STDEXT_BASIC_H__
 #include "Basic.h"
 #endif
 
+#define NS_BOOST_MEMORY_BEGIN	namespace std {
+#define NS_BOOST_MEMORY_END		}
+#define NS_BOOST_MEMORY			std
+#define NS_BOOST_MEMORY_POLICY_BEGIN
+#define NS_BOOST_MEMORY_POLICY_END
+#define NS_BOOST_MEMORY_POLICY	std
+
 #ifndef BOOST_MEMORY_HPP
 #include "../../memory/boost/memory.hpp"
 #endif
 
+#ifndef __STDEXT_THREADMODEL_H__
+#include "ThreadModel.h"
+#endif
+
 __NS_STD_BEGIN
 
-typedef boost::memory::system_alloc SystemAlloc;
-typedef boost::memory::stdlib_alloc DefaultStaticAlloc;
+typedef system_alloc SystemAlloc;
+typedef stdlib_alloc DefaultStaticAlloc;
 
-typedef boost::memory::block_pool BlockPool;
-typedef boost::memory::tls_block_pool TlsBlockPool;
-typedef boost::memory::tls_block_pool TlsBlockPoolInit;
+typedef block_pool BlockPool;
+typedef tls_block_pool TlsBlockPool;
+typedef tls_block_pool TlsBlockPoolInit;
 
-typedef boost::memory::auto_alloc AutoFreeAlloc;
-typedef boost::memory::scoped_alloc ScopeAlloc;
-typedef boost::memory::scoped_alloc ScopedAlloc;
-typedef boost::memory::gc_alloc GcAlloc;
+typedef auto_alloc AutoFreeAlloc;
+typedef scoped_alloc ScopeAlloc;
+typedef scoped_alloc ScopedAlloc;
+typedef gc_alloc GcAlloc;
 
-using boost::memory::region_alloc;
-using boost::memory::enableMemoryLeakCheck;
-
-#define RegionAllocT boost::memory::region_alloc
-#define DestructorTraits boost::memory::destructor_traits
-
-template <class Type>
-inline void winx_call destroyArray(Type* array, size_t count)
-{
-	DestructorTraits<Type>::destructArrayN(array, count);
-}
+#define RegionAllocT region_alloc
+#define DestructorTraits destructor_traits
+#define StlAlloc stl_allocator
 
 __NS_STD_END
 
@@ -148,97 +154,6 @@ private:
 			  return r; }													\
 	} __cntchecker;
 #endif
-
-__NS_STD_END
-
-// -------------------------------------------------------------------------
-// class StlAlloc
-
-__NS_STD_BEGIN
-
-template <class _Ty, class _Alloc = ScopeAlloc>
-class StlAlloc
-{
-private:
-	_Alloc* m_alloc;
-
-public:
-	typedef size_t size_type;
-	typedef ptrdiff_t difference_type;
-	typedef _Ty* pointer;
-	typedef const _Ty* const_pointer;
-	typedef _Ty& reference;
-	typedef const _Ty& const_reference;
-	typedef _Ty value_type;
-
-    template <class U>
-    struct rebind { typedef StlAlloc<U, _Alloc> other; };
-
-public:
-	pointer address(reference val) const
-		{ return &val; }
-	const_pointer address(const_reference val) const
-		{ return &val; }
-
-	size_type max_size() const
-		{ size_type count = (size_type)(-1) / sizeof (_Ty);
-		  return (0 < count ? count : 1); }
-
-public:
-	StlAlloc(_Alloc& alloc) : m_alloc(&alloc) {}
-
-    template <class U>
-	StlAlloc(const StlAlloc<U, _Alloc>& rhs) : m_alloc(rhs._Getalloc()) {}
-
-	pointer allocate(size_type count, const void* = NULL)
-		{ return (pointer)m_alloc->allocate(count * sizeof(_Ty)); }
-	void deallocate(void* p, size_type cb)
-		{ m_alloc->deallocate(p, cb); }
-	void construct(pointer p, const _Ty& val)
-		{ new(p) _Ty(val); }
-	void destroy(pointer p)
-		{ p->~_Ty(); }
-
-public:
-	char* _Charalloc(size_type cb)
-		{ return (char*)m_alloc->allocate(cb); }
-
-	_Alloc* _Getalloc() const { return m_alloc; }
-};
-
-template<> class StlAlloc<void, ScopeAlloc>
-{
-public:
-    typedef void        value_type;
-    typedef void*       pointer;
-    typedef const void* const_pointer;
- 
-    template <class U>
-    struct rebind { typedef StlAlloc<U, ScopeAlloc> other; };
-};
-
-template<> class StlAlloc<void, AutoFreeAlloc>
-{
-public:
-    typedef void        value_type;
-    typedef void*       pointer;
-    typedef const void* const_pointer;
- 
-    template <class U>
-    struct rebind { typedef StlAlloc<U, ScopeAlloc> other; };
-};
-
-template <class _Ty, class _Alloc>
-inline bool operator==(const StlAlloc<_Ty, _Alloc>&,
-                       const StlAlloc<_Ty, _Alloc>&) {
-    return true;
-}
-
-template <class _Ty, class _Alloc>
-inline bool operator!=(const StlAlloc<_Ty, _Alloc>&,
-                       const StlAlloc<_Ty, _Alloc>&) {
-    return false;
-}
 
 __NS_STD_END
 

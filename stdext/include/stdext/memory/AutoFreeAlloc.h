@@ -19,6 +19,8 @@
 #ifndef __STDEXT_MEMORY_AUTOFREEALLOC_H__
 #define __STDEXT_MEMORY_AUTOFREEALLOC_H__
 
+#error "outdated"
+
 #ifndef __STDEXT_MEMORY_SYSTEMALLOC_H__
 #include "SystemAlloc.h"
 #endif

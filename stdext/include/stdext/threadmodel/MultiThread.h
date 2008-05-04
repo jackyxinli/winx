@@ -19,8 +19,8 @@
 #ifndef __STDEXT_THREADMODEL_MULTITHREAD_H__
 #define __STDEXT_THREADMODEL_MULTITHREAD_H__
 
-#ifndef __STDEXT_BASIC_H__
-#include "../Basic.h"
+#ifndef __STDEXT_MEMORY_H__
+#include "../Memory.h"
 #endif
 
 __NS_STD_BEGIN
@@ -28,73 +28,12 @@ __NS_STD_BEGIN
 // -------------------------------------------------------------------------
 // class RefCountMT
 
-class RefCountMT
-{
-public:
-	typedef LONG value_type;
-
-private:
-	value_type m_nRef;
-
-public:
-	RefCountMT(value_type nRef)
-		: m_nRef(nRef)
-	{
-	}
-
-	value_type winx_call acquire()
-	{
-		return InterlockedIncrement(&m_nRef);
-	}
-
-	value_type winx_call release()
-	{
-		return InterlockedDecrement(&m_nRef);
-	}
-
-	operator value_type() const
-	{
-		return m_nRef;
-	}
-};
+typedef NS_BOOST_MEMORY::refcount_mt RefCountMT;
 
 // -------------------------------------------------------------------------
 // class CriticalSectionMT
 
-class CriticalSectionMT
-{
-private:
-	CRITICAL_SECTION m_cs;
-	
-private:
-	CriticalSectionMT(const CriticalSectionMT&);
-	void operator=(const CriticalSectionMT&);
-
-public:
-	CriticalSectionMT()
-	{
-		InitializeCriticalSection(&m_cs);
-	}
-	~CriticalSectionMT()
-	{
-		DeleteCriticalSection(&m_cs);
-	}
-
-	void winx_call acquire()
-	{
-		EnterCriticalSection(&m_cs);
-	}
-
-	void winx_call release()
-	{
-		LeaveCriticalSection(&m_cs);
-	}
-
-	BOOL winx_call good() const
-	{
-		return isInitialized(m_cs);
-	}
-};
+typedef NS_BOOST_MEMORY::critical_section_mt CriticalSectionMT;
 
 // -------------------------------------------------------------------------
 //	$Log: $

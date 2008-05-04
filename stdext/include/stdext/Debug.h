@@ -144,23 +144,6 @@ do {																		\
 #endif
 
 // -------------------------------------------------------------------------
-// WINX_ASSERT_INITIALIZED
-
-template <class StrucType>
-inline BOOL winx_call isInitialized(const StrucType& stru) {
-	const char* p = (const char*)&stru;
-	for (size_t i = 0; i < sizeof(stru); ++i) {
-		if (p[i] != 0)
-			return TRUE;
-	}
-	return FALSE;
-}
-
-#ifndef WINX_ASSERT_INITIALIZED
-#define WINX_ASSERT_INITIALIZED(stru)	WINX_ASSERT(std::isInitialized(stru))
-#endif
-
-// -------------------------------------------------------------------------
 // WINX_STATIC_ASSERT
 
 #if defined(STATIC_ASSERT)
