@@ -28,8 +28,8 @@
 #include "../CharType.h"
 #endif
 
-#ifndef __STDEXT_MEMORY_SCOPEALLOC_H__
-#include "../memory/ScopeAlloc.h"
+#ifndef __STDEXT_MEMORY_H__
+#include "../Memory.h"
 #endif
 
 #ifndef ARCHIVE_CACHE_SIZE

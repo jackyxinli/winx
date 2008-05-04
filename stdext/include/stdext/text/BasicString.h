@@ -108,7 +108,7 @@ public:																		\
 
 #ifndef _WINX_ALLOC_TYPE
 #define _WINX_ALLOC_TEMPLATE_ARGS		class _Policy
-#define _WINX_ALLOC_TYPE				std::GCAllocT<_Policy>
+#define _WINX_ALLOC_TYPE				RegionAllocT<_Policy>
 #endif
 
 template <class _E>
@@ -338,8 +338,8 @@ typedef String TString;
 
 __NS_STD_END
 
-STD_NO_DESTRUCTOR(String);
-STD_NO_DESTRUCTOR(WString);
+STD_NO_DESTRUCTOR(std::String);
+STD_NO_DESTRUCTOR(std::WString);
 
 // -------------------------------------------------------------------------
 

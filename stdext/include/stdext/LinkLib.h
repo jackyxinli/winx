@@ -21,11 +21,8 @@
 
 // -------------------------------------------------------------------------
 
-#if !defined(__Linked_stdext)
-#define __Linked_stdext
-#if defined(_MSC_VER)
-#	pragma comment(lib, "stdext")
-#endif
+#ifndef BOOST_MEMORY_LINKLIB_HPP
+#include "../../memory/boost/memory/linklib.hpp"
 #endif
 
 // -------------------------------------------------------------------------

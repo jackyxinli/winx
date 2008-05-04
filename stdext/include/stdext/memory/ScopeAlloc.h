@@ -208,7 +208,7 @@ public:
 	typedef ProxyBlockPool allocator_type;
 };
 
-typedef GCAllocT<PoolAlloc> ScopeAlloc;
+typedef RegionAllocT<PoolAlloc> ScopeAlloc;
 
 // -------------------------------------------------------------------------
 // class TestScopeAlloc

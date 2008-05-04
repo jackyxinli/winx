@@ -21,6 +21,8 @@
 
 // -------------------------------------------------------------------------
 
+#if (0)
+
 #ifndef __STDEXT_MEMORY_BASIC_H__
 #include "memory/Basic.h"
 #endif
@@ -35,6 +37,55 @@
 
 #ifndef __STDEXT_MEMORY_SCOPEALLOC_H__
 #include "memory/ScopeAlloc.h"
+#endif
+
+#else
+
+#ifndef __STDEXT_BASIC_H__
+#include "Basic.h"
+#endif
+
+#ifndef BOOST_MEMORY_HPP
+#include "../../memory/boost/memory.hpp"
+#endif
+
+__NS_STD_BEGIN
+
+typedef boost::memory::system_alloc SystemAlloc;
+typedef boost::memory::stdlib_alloc DefaultStaticAlloc;
+
+typedef boost::memory::block_pool BlockPool;
+typedef boost::memory::tls_block_pool TlsBlockPool;
+typedef boost::memory::tls_block_pool TlsBlockPoolInit;
+
+typedef boost::memory::auto_alloc AutoFreeAlloc;
+typedef boost::memory::scoped_alloc ScopeAlloc;
+typedef boost::memory::scoped_alloc ScopedAlloc;
+typedef boost::memory::gc_alloc GcAlloc;
+
+using boost::memory::region_alloc;
+using boost::memory::enableMemoryLeakCheck;
+
+#define RegionAllocT boost::memory::region_alloc
+#define DestructorTraits boost::memory::destructor_traits
+
+template <class Type>
+inline void winx_call destroyArray(Type* array, size_t count)
+{
+	DestructorTraits<Type>::destructArrayN(array, count);
+}
+
+__NS_STD_END
+
+#define STD_NO_CONSTRUCTOR(Type)				BOOST_MEMORY_NO_CONSTRUCTOR(Type)
+#define STD_NO_DESTRUCTOR(Type)					BOOST_MEMORY_NO_DESTRUCTOR(Type)
+
+#define STD_NEW(alloc, Type)					BOOST_MEMORY_NEW(alloc, Type)
+#define STD_NEW_ARRAY(alloc, Type, count)		BOOST_MEMORY_NEW_ARRAY(alloc, Type, count)
+
+#define STD_ALLOC(alloc, Type)					BOOST_MEMORY_ALLOC(alloc, Type)
+#define STD_ALLOC_ARRAY(alloc, Type, count)		BOOST_MEMORY_ALLOC_ARRAY(alloc, Type, count)
+
 #endif
 
 // -------------------------------------------------------------------------
@@ -157,6 +208,7 @@ public:
 
 template<> class StlAlloc<void, ScopeAlloc>
 {
+public:
     typedef void        value_type;
     typedef void*       pointer;
     typedef const void* const_pointer;
@@ -167,6 +219,7 @@ template<> class StlAlloc<void, ScopeAlloc>
 
 template<> class StlAlloc<void, AutoFreeAlloc>
 {
+public:
     typedef void        value_type;
     typedef void*       pointer;
     typedef const void* const_pointer;

@@ -124,12 +124,6 @@ struct DestructorTraits
 	}
 };
 
-template <class Type>
-inline void winx_call destroyArray(Type* array, size_t count)
-{
-	DestructorTraits<Type>::destructArrayN(array, count);
-}
-
 __NS_STD_END
 
 // =========================================================================

@@ -26,10 +26,10 @@
 __NS_STD_BEGIN
 
 // -------------------------------------------------------------------------
-// class GCAllocT
+// class RegionAllocT
 
 template <class _Policy>
-class GCAllocT
+class RegionAllocT
 {
 	WINX_THREAD_CALLER_CHECK();
 private:
@@ -61,7 +61,7 @@ private:
 	_Alloc m_alloc;
 
 private:
-	const GCAllocT& operator=(const GCAllocT&);
+	const RegionAllocT& operator=(const RegionAllocT&);
 
 	_MemBlock* winx_call _ChainHeader() const
 	{
@@ -69,26 +69,26 @@ private:
 	}
 
 public:
-	GCAllocT() : m_destroyChain(NULL)
+	RegionAllocT() : m_destroyChain(NULL)
 	{
 		m_begin = m_end = (char*)HeaderSize;
 	}
-	explicit GCAllocT(_Alloc alloc) : m_alloc(alloc), m_destroyChain(NULL)
+	explicit RegionAllocT(_Alloc alloc) : m_alloc(alloc), m_destroyChain(NULL)
 	{
 		m_begin = m_end = (char*)HeaderSize;
 	}
-	explicit GCAllocT(GCAllocT& owner)
+	explicit RegionAllocT(RegionAllocT& owner)
 		: m_alloc(owner.m_alloc), m_destroyChain(NULL)
 	{
 		m_begin = m_end = (char*)HeaderSize;
 	}
 
-	~GCAllocT()
+	~RegionAllocT()
 	{
 		clear();
 	}
 
-	void winx_call swap(GCAllocT& o)
+	void winx_call swap(RegionAllocT& o)
 	{
 		std::swap(m_begin, o.m_begin);
 		std::swap(m_end, o.m_end);
@@ -207,7 +207,7 @@ public:
 	typedef SystemAlloc allocator_type;
 };
 
-typedef GCAllocT<SysAlloc> AutoFreeAlloc;
+typedef RegionAllocT<SysAlloc> AutoFreeAlloc;
 
 // -------------------------------------------------------------------------
 // class TestAutoFreeAlloc
