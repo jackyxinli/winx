@@ -19,6 +19,8 @@
 #ifndef __STDEXT_MEMORY_SYSTEMALLOC_H__
 #define __STDEXT_MEMORY_SYSTEMALLOC_H__
 
+#error "outdated: move to http://svn.boost.org/svn/boost/sandbox/memory/boost/memory/system_alloc.hpp"
+
 #ifndef __STDEXT_MEMORY_BASIC_H__
 #include "Basic.h"
 #endif

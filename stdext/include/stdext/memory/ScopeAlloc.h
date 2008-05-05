@@ -19,7 +19,7 @@
 #ifndef __STDEXT_MEMORY_SCOPEALLOC_H__
 #define __STDEXT_MEMORY_SCOPEALLOC_H__
 
-#error "outdated"
+#error "outdated: move to http://svn.boost.org/svn/boost/sandbox/memory/boost/memory/scoped_alloc.hpp"
 
 #ifndef __STDEXT_MEMORY_BASIC_H__
 #include "Basic.h"

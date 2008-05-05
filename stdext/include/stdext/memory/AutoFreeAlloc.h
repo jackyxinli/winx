@@ -19,8 +19,8 @@
 #ifndef __STDEXT_MEMORY_AUTOFREEALLOC_H__
 #define __STDEXT_MEMORY_AUTOFREEALLOC_H__
 
-#error "outdated"
-
+#error "outdated: move to http://svn.boost.org/svn/boost/sandbox/memory/boost/memory/auto_alloc.hpp"
+	
 #ifndef __STDEXT_MEMORY_SYSTEMALLOC_H__
 #include "SystemAlloc.h"
 #endif
