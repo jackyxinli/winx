@@ -1,0 +1,6 @@
+rm -rf __svn-temp__
+mkdir -p __svn-temp__
+cd __svn-temp__
+svn export $1 .
+svn import . $2 $3 $4
+
