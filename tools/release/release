@@ -7,4 +7,5 @@ fi
 rm -rf $1
 svn export https://winx.googlecode.com/svn/tags/$1 $1
 tar -zcvf $1.tar.gz $1
+zip -r $1.zip $1
 
