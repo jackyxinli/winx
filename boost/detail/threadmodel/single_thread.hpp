@@ -55,7 +55,13 @@ public:
 #endif
 
 public:
-	class scoped_lock {};
+	class scoped_lock
+	{
+	public:
+		scoped_lock(critical_section_st& cs)
+		{
+		}
+	};
 };
 
 // -------------------------------------------------------------------------
