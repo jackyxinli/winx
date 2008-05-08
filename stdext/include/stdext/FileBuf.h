@@ -19,8 +19,8 @@
 #ifndef __STDEXT_FILEBUF_H__
 #define __STDEXT_FILEBUF_H__
 
-#ifndef __STDEXT_MEMORY_BASIC_H__
-#include "memory/Basic.h"
+#ifndef __STDEXT_MEMORY_H__
+#include "Memory.h"
 #endif
 
 __NS_STD_BEGIN

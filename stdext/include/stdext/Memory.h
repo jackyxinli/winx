@@ -48,19 +48,8 @@ class StlAlloc;
 #include "Basic.h"
 #endif
 
-#define NS_BOOST_MEMORY_BEGIN	namespace std {
-#define NS_BOOST_MEMORY_END		}
-#define NS_BOOST_MEMORY			std
-#define NS_BOOST_MEMORY_POLICY_BEGIN
-#define NS_BOOST_MEMORY_POLICY_END
-#define NS_BOOST_MEMORY_POLICY	std
-
-#ifndef BOOST_MEMORY_HPP
-#include "../../memory/boost/memory.hpp"
-#endif
-
-#ifndef __STDEXT_THREADMODEL_H__
-#include "ThreadModel.h"
+#ifndef __STDEXT_BOOST_MEMORY_H__
+#include "boost/Memory.h"
 #endif
 
 __NS_STD_BEGIN

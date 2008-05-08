@@ -27,7 +27,6 @@
 #define USES_BOOST
 #include <stdext.h>
 #include <stdext/LinkLib.h>
-#include <stdext/thread/TLS.h>
 #include <stdext/FileMapping.h>
 #include <stdext/ScopeDebug.h>
 #include <stdext/Registry.h>
@@ -98,7 +97,6 @@ void testStdExt()
 	WINX_TEST_CLASS(std::TestRecord);
 	WINX_TEST_CLASS(std::TestLog);
 	WINX_TEST_CLASS(std::TestFileBuf);
-	WINX_TEST_CLASS(std::TestTLS);
 
 	//String
 	WINX_TEST_CLASS(std::TestCharType);
@@ -128,11 +126,6 @@ void testStdExt()
 	WINX_TEST_CLASS(std::TestList);
 	WINX_TEST_CLASS(std::TestDclList);
 	WINX_TEST_CLASS(std::TestDeque);
-
-	//Memory.h
-	WINX_TEST_CLASS(std::TestSystemAlloc);
-	WINX_TEST_CLASS(std::TestAutoFreeAlloc);
-	WINX_TEST_CLASS(std::TestScopeAlloc);
 
 	//AOP.h
 	WINX_TEST_CLASS(std::TestEvent);

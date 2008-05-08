@@ -23,39 +23,31 @@
 #include "Basic.h"
 #endif
 
-#ifndef __STDEXT_THREADMODEL_SINGLETHREAD_H__
-#include "threadmodel/SingleThread.h"
-#endif
-
-#ifndef __STDEXT_THREADMODEL_MULTITHREAD_H__
-#include "threadmodel/MultiThread.h"
+#ifndef __STDEXT_BOOST_MEMORY_H__
+#include "boost/Memory.h"
 #endif
 
 __NS_STD_BEGIN
 
 // -------------------------------------------------------------------------
-// class AutoLock
+// class RefCountST
 
-template <class LockT>
-class AutoLock
-{
-private:
-	LockT& m_lock;
+typedef NS_BOOST_DETAIL::refcount_st RefCountST;
 
-private:
-	AutoLock(const AutoLock&);
-	void operator=(const AutoLock&);
+// -------------------------------------------------------------------------
+// class CriticalSectionST
 
-public:
-	AutoLock(LockT& lock) : m_lock(lock)
-	{
-		m_lock.acquire();
-	}
-	~AutoLock()
-	{
-		m_lock.release();
-	}
-};
+typedef NS_BOOST_DETAIL::critical_section_st CriticalSectionST;
+
+// -------------------------------------------------------------------------
+// class RefCountMT
+
+typedef NS_BOOST_DETAIL::refcount_mt RefCountMT;
+
+// -------------------------------------------------------------------------
+// class CriticalSectionMT
+
+typedef NS_BOOST_DETAIL::critical_section_mt CriticalSectionMT;
 
 // -------------------------------------------------------------------------
 // class MultiThreadModel
@@ -68,7 +60,7 @@ public:
 
 public:
 	typedef CriticalSection CS;
-	typedef AutoLock<CS> CSLock;
+	typedef CS::scoped_lock CSLock;
 };
 
 typedef MT MultiThreadModel;
@@ -84,7 +76,7 @@ public:
 
 public:
 	typedef CriticalSection CS;
-	typedef AutoLock<CS> CSLock;
+	typedef CS::scoped_lock CSLock;
 };
 
 typedef ST SingleThreadModel;
@@ -97,8 +89,6 @@ typedef MultiThreadModel DefaultThreadModel;
 #else
 typedef SingleThreadModel DefaultThreadModel;
 #endif
-
-typedef SingleThreadModel InitializerThreadModel;
 
 // -------------------------------------------------------------------------
 //	$Log: $

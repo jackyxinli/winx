@@ -19,21 +19,13 @@
 #ifndef __STDEXT_WINAPI_WINBASE_H__
 #define __STDEXT_WINAPI_WINBASE_H__
 
-#ifndef STD_NO_WINSDK
-#error "Don't include <stdext/winapi/winbase.h>"
+#ifndef BOOST_DETAIL_WINAPI_WINBASE_H
+#include "../../../../memory/boost/detail/winapi/winbase.h"
 #endif
 
-#ifndef __STDEXT_WINAPI_WTYPES_H__
-#include "wtypes.h"
-#endif
+// -------------------------------------------------------------------------
 
-#ifndef __STDEXT_WINAPI_POSIX_PTHREAD_H__
-#include "posix/pthread.h"
-#endif
-
-#ifndef __STDEXT_WINAPI_POSIX_TIME_H__
-#include "posix/time.h"
-#endif
+#ifdef STD_NO_WINSDK
 
 // -------------------------------------------------------------------------
 // NotImplementFeature
@@ -727,6 +719,8 @@ inline BOOL WINAPI CloseHandle(
 	NotImplementFeature("CloseHandle");
 	return TRUE;
 }
+
+#endif // STD_NO_WINSDK
 
 // -------------------------------------------------------------------------
 // $Log: $

@@ -119,10 +119,6 @@ SOURCE=.\TestCase.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=.\TestTLS.cpp
-# End Source File
-# Begin Source File
-
 SOURCE=.\TestEvent.cpp
 # End Source File
 # Begin Source File
