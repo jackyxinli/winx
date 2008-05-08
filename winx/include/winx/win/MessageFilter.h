@@ -317,8 +317,10 @@ public:
 public:
 	static BOOL winx_call _DoPreTranslateMessage(_MsgFilter* p, MSG* lpMsg)
 	{
-		for (; p; p = p->m_pNext)
+		_MsgFilter* pNext;
+		for (; p; p = pNext)
 		{
+			pNext = p->m_pNext;
 			if (p->PreTranslateMessage(lpMsg))
 				return TRUE;
 		}
