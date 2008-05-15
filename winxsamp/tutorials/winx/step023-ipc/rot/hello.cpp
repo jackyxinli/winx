@@ -54,7 +54,7 @@ public:
 	VOID OnIdle(HWND hWnd)
 	{
 		m_list.ResetContent();
-		OnInitDialog(hWnd, m_list);
+		OnInitDialog(hWnd, NULL);
 	}
 };
 
