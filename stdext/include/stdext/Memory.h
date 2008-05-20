@@ -93,7 +93,7 @@ __NS_STD_BEGIN
 inline void _ReportCountLeak(unsigned nRef, const char* szClass, const char* szFile, int nLine)
 {
 	char szBuf[1024];
-	int cch = 0;
+	size_t cch = 0;
 
 	sprintf(szBuf, "%s(%d):", szFile, nLine);
 	for (cch = strlen(szBuf); cch < 70; ++cch)
