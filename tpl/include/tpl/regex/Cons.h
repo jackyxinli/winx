@@ -52,26 +52,65 @@ public:
 // -------------------------------------------------------------------------
 // class ConsList
 
-template <class Type>
+template <class Type, bool bManaged = true>
 class ConsList
 {
+public:
+	typedef const Type& reference;
+	typedef const Cons<Type>* cons;
+
+private:
+	cons m_hd;
+
 private:
 	typedef Cons<Type> Node;
 
-	const Node* m_hd;
+	template <class AllocT>
+	static Node* TPL_CALL _newNode(AllocT& alloc, reference val, cons tail)
+	{
+		if (bManaged)
+			return TPL_NEW(alloc, Node)(val, tail);
+		else
+			return TPL_UNMANAGED_NEW(alloc, Node)(val, tail);
+	}
 
-public:
-	ConsList() : m_hd(NULL) {}
-
-public:
-	typedef const Type& reference;
-	typedef const Node* cons;
-
-	cons data() const {
-		return m_hd;
+	template <class AllocT, class CondT>
+	const Node*& TPL_CALL _selectRetTail(AllocT& alloc, CondT cond, cons* ptail) const
+	{
+		for (cons n = m_hd; n; n = n->tail)
+		{
+			reference val = n->value;
+			if (cond(val))
+			{
+				Node* node = _newNode(alloc, val, NULL);
+				*ptail = node;
+				ptail = (cons*)&node->tail;
+			}
+		}
+		return *ptail;
 	}
 
 public:
+	template <class AllocT, class CondT>
+	cons TPL_CALL select(AllocT& alloc, CondT cond) const
+	{
+		cons lstRet;
+		_selectRetTail(alloc, cond, &lstRet);
+		return lstRet;
+	}
+
+public:
+	ConsList() : m_hd(NULL) {}
+	ConsList(cons hd_) : m_hd(hd_) {}
+
+	cons TPL_CALL operator=(cons hd_) {
+		return m_hd = hd_;
+	}
+
+	cons TPL_CALL data() const {
+		return m_hd;
+	}
+
 	bool TPL_CALL empty() const {
 		return m_hd == NULL;
 	}

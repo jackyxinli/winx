@@ -1,0 +1,203 @@
+/* -------------------------------------------------------------------------
+// WINX: a C++ template GUI library - MOST SIMPLE BUT EFFECTIVE
+// 
+// This file is a part of the WINX Library.
+// The use and distribution terms for this software are covered by the
+// Common Public License 1.0 (http://opensource.org/licenses/cpl.php)
+// which can be found in the file CPL.txt at this distribution. By using
+// this software in any fashion, you are agreeing to be bound by the terms
+// of this license. You must not remove this notice, or any other, from
+// this software.
+// 
+// Module: tpl/regex/MatchResult.h
+// Creator: xushiwei
+// Email: xushiweizh@gmail.com
+// Date: 2006-8-13 9:41:58
+// 
+// $Id$
+// -----------------------------------------------------------------------*/
+#ifndef TPL_REGEX_MATCHRESULT_H
+#define TPL_REGEX_MATCHRESULT_H
+
+#ifndef TPL_REGEX_BASIC_H
+#include "Basic.h"
+#endif
+
+#ifndef TPL_REGEX_MARK_H
+#include "Mark.h"
+#endif
+
+#ifndef TPL_REGEX_CONS_H
+#include "Cons.h"
+#endif
+
+#if !defined(_STRING_) && !defined(_STRING)
+#include <string>
+#endif
+
+// -------------------------------------------------------------------------
+// LeafMatchResult
+
+template <class Iterator>
+class LeafMatchResult
+{
+public:
+	Iterator const first;
+	Iterator const second;
+
+public:
+	typedef ptrdiff_t difference_type;
+
+	LeafMatchResult(Iterator first_, Iterator second_)
+		: first(first_), second(second_) {}
+
+	difference_type TPL_CALL length() const {
+		return std::distance(first, second);
+	}
+
+	std::string TPL_CALL stl_str() const {
+		return std::string(first, second);
+	}
+};
+
+// -------------------------------------------------------------------------
+// NodeMatchResult
+
+template <class Iterator, class TagT = DefaultTag>
+class NodeMatchResult
+{
+private:
+	typedef BasicMark<TagT, LeafAssign> LeafMarkT;
+	typedef BasicMark<TagT, NodeAssign> NodeMarkT;
+
+	typedef LeafMatchResult<Iterator> LeafMatchResultT;
+	typedef NodeMatchResult NodeMatchResultT;
+
+	typedef std::pair<const void*, const void*> ValueT;
+	typedef ConsList<ValueT> ContainerT;
+
+	ContainerT m_data;
+
+public:
+	template <class AllocT>
+	void TPL_CALL insertLeaf(AllocT& alloc, const LeafMarkT& mark, Iterator first, Iterator last) {
+		const LeafMatchResultT* v = TPL_UNMANAGED_NEW(alloc, LeafMatchResultT)(first, last);
+		m_data.push_front(alloc, ValueT(&mark, v));
+	}
+
+	template <class AllocT>
+	NodeMatchResultT* TPL_CALL insertNode(AllocT& alloc, const NodeMarkT& mark) {
+		NodeMatchResultT* v = TPL_UNMANAGED_NEW(alloc, NodeMatchResultT);
+		m_data.push_front(alloc, ValueT(&mark, v));
+		return v;
+	}
+
+public:
+	template <class DataT>
+	class Value
+	{
+	private:
+		const ValueT& m_val;
+
+	public:
+		Value(const ValueT& val) : m_val(val) {}
+	
+		const Mark<TagT>& key() const {
+			return *(const Mark<TagT>*)m_val.first;
+		}
+
+		const DataT& data() const {
+			return *(const DataT*)m_val.second;
+		}
+
+		const LeafMatchResult<Iterator>& leaf() const {
+			return *(const LeafMatchResult<Iterator>*)m_val.second;
+		}
+
+		const NodeMatchResult& node() const {
+			return *(const NodeMatchResult*)m_val.second;
+		}
+	};
+
+	template <class DataT>
+	class Position
+	{
+	private:
+		ContainerT::cons m_pos;
+
+	public:
+		typedef Value<DataT> value_type;
+
+		Position(ContainerT::cons pos) : m_pos(pos) {}
+
+		Position TPL_CALL tl() const {
+			return m_pos->tl();
+		}
+
+		value_type TPL_CALL hd() const {
+			return m_pos->value;
+		}
+
+		const Position* TPL_CALL operator->() const {
+			return m_pos;
+		}
+
+		bool TPL_CALL operator!() const {
+			return m_pos == NULL;
+		}
+
+		operator const void*() const {
+			return m_pos;
+		}
+
+		operator bool() const {
+			return m_pos != NULL;
+		}
+	};
+
+public:
+	struct Null {};
+	typedef Value<Null> value_type;	
+	typedef Position<Null> cons;
+
+	typedef Value<LeafMatchResultT> leaf_value;
+	typedef Position<LeafMatchResultT> leaf_cons;
+
+	typedef Value<NodeMatchResultT> node_value;
+	typedef Position<NodeMatchResultT> node_cons;
+
+private:
+	struct DoSel
+	{
+		const void* m_mark;
+
+		template <class MarkT>
+		DoSel(const MarkT& mark) : m_mark(&mark) {}
+
+		bool TPL_CALL operator()(const ValueT& val) {
+			return val.first == m_mark;
+		}
+	};
+
+public:
+	template <class AllocT>
+	leaf_cons TPL_CALL select(AllocT& alloc, const LeafMarkT& mark) {
+		DoSel cond(mark);
+		return m_data.select(alloc, cond);
+	}
+
+	template <class AllocT>
+	node_cons TPL_CALL select(AllocT& alloc, const NodeMarkT& mark) {
+		DoSel cond(mark);
+		return m_data.select(alloc, cond);
+	}
+
+	cons TPL_CALL all() const {
+		return m_data.data();
+	}
+};
+
+// -------------------------------------------------------------------------
+// $Log: $
+
+#endif /* TPL_REGEX_MATCHRESULT_H */

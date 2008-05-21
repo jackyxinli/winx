@@ -27,6 +27,14 @@
 #include "regex/Basic.h"
 #endif
 
+#ifndef TPL_REGEX_MARK_H
+#include "regex/Mark.h"
+#endif
+
+#ifndef TPL_REGEX_MATCHRESULT_H
+#include "regex/MatchResult.h"
+#endif
+
 #ifndef TPL_REGEX_CONTEXT_H
 #include "regex/Context.h"
 #endif

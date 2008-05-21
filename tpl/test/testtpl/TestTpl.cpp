@@ -22,11 +22,9 @@ int main()
 
 	RegEx a_or_b_or_d(alloc, 'd' | a_or_b);
 
-	Mark mRoot;
-	Mark mResult(&mRoot);
-	Mark mResult2(&mRoot);
+	LeafMark mResult;
 
-	SimpleRegEx three_word(alloc, mResult2 = mResult = 'd' + a_or_b_or_c + 'b');
+	SimpleRegEx three_word(alloc, mResult = 'd' + a_or_b_or_c + 'b');
 
 	SimpleRegEx repeated(alloc, *three_word);
 	SimpleRegEx repeated3(alloc, repeat<3>(three_word));
@@ -37,25 +35,16 @@ int main()
 	char buf[] = "dcbdabcdefg";
 	Source source(buf, buf+sizeof(buf));
 
-	Document doc(alloc, mRoot);
+	Document doc;
 	Context context(alloc, doc);
 
 	bool fail = a_or_b_or_c.match(source, context);
 	bool ok = repeated3.match(source, context);
 
-	{
-		Context::document_type::cons result = doc[mResult].data();
-		while (result) {
-			std::cout << result->value.stl_str() << '\n';
-			result = result->tl();
-		}
-	}
-	{
-		Context::document_type::cons result = doc[mResult2].data();
-		while (result) {
-			std::cout << result->value.stl_str() << '\n';
-			result = result->tl();
-		}
+	Document::leaf_cons result = doc.select(alloc, mResult);
+	while (result) {
+		std::cout << result.hd().data().stl_str() << '\n';
+		result = result.tl();
 	}
 	return 0;
 }

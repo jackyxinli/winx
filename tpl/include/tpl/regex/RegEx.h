@@ -31,6 +31,10 @@
 #include "BasicRegEx.h"
 #endif
 
+#ifndef TPL_REGEX_MATCHRESULT_H
+#include "MatchResult.h"
+#endif
+
 #ifndef TPL_REGEX_CONTEXT_H
 #include "Context.h"
 #endif
@@ -41,10 +45,11 @@
 typedef std::PointerReadArchive Source;
 
 // -------------------------------------------------------------------------
-// class SubMatch, MatchResult
+// class Leaf, Node, Document
 
-typedef BasicSubMatch<Source::iterator> SubMatch;
-typedef BasicMatchResult<Source::iterator> MatchResult;
+typedef LeafMatchResult<Source::iterator> Leaf;
+typedef NodeMatchResult<Source::iterator, DefaultTag> Node;
+typedef Node Document;
 
 // -------------------------------------------------------------------------
 // class Allocator
@@ -53,10 +58,9 @@ typedef std::BlockPool BlockPool;
 typedef std::ScopeAlloc Allocator;
 
 // -------------------------------------------------------------------------
-// class Document, Context
+// class Context
 
-typedef MatchResult Document;
-typedef BasicContext<Source::iterator, Allocator> Context;
+typedef BasicContext<Source::iterator, Allocator, DefaultTag> Context;
 
 // -------------------------------------------------------------------------
 // class RegEx
