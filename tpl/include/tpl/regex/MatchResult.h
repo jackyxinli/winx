@@ -74,7 +74,7 @@ private:
 	typedef NodeMatchResult NodeMatchResultT;
 
 	typedef std::pair<const void*, const void*> ValueT;
-	typedef ConsList<ValueT> ContainerT;
+	typedef ConsList<ValueT, false> ContainerT;
 
 	ContainerT m_data;
 
@@ -162,9 +162,11 @@ public:
 
 	typedef Value<LeafMatchResultT> leaf_value;
 	typedef Position<LeafMatchResultT> leaf_cons;
+	typedef const LeafMatchResultT& leaf_data;
 
 	typedef Value<NodeMatchResultT> node_value;
 	typedef Position<NodeMatchResultT> node_cons;
+	typedef const NodeMatchResultT& node_data;
 
 private:
 	struct DoSel
@@ -181,13 +183,13 @@ private:
 
 public:
 	template <class AllocT>
-	leaf_cons TPL_CALL select(AllocT& alloc, const LeafMarkT& mark) {
+	leaf_cons TPL_CALL select(AllocT& alloc, const LeafMarkT& mark) const {
 		DoSel cond(mark);
 		return m_data.select(alloc, cond);
 	}
 
 	template <class AllocT>
-	node_cons TPL_CALL select(AllocT& alloc, const NodeMarkT& mark) {
+	node_cons TPL_CALL select(AllocT& alloc, const NodeMarkT& mark) const {
 		DoSel cond(mark);
 		return m_data.select(alloc, cond);
 	}

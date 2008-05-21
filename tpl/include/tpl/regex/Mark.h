@@ -117,10 +117,12 @@ public:
 	template <class SourceT, class ContextT>
 	bool TPL_CALL match(SourceT& ar, ContextT& context)
 	{
-		typename ContextT::scope_type scope(context, m_mark);
-		bool matched = m_x.match(ar, context);
-		scope.setMatched(matched);
-		return matched;
+		typename ContextT::trans_type trans(context);
+		context.insertNode(m_mark);
+		if (m_x.match(ar, context))
+			return true;
+		trans.rollback();
+		return false;
 	}
 };
 

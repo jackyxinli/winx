@@ -22,9 +22,10 @@ int main()
 
 	RegEx a_or_b_or_d(alloc, 'd' | a_or_b);
 
-	LeafMark mResult;
+	LeafMark mVal("value");
+	NodeMark mNode("node");
 
-	SimpleRegEx three_word(alloc, mResult = 'd' + a_or_b_or_c + 'b');
+	SimpleRegEx three_word(alloc, mVal = 'd' + a_or_b_or_c + 'b');
 
 	SimpleRegEx repeated(alloc, *three_word);
 	SimpleRegEx repeated3(alloc, repeat<3>(three_word));
@@ -39,11 +40,19 @@ int main()
 	Context context(alloc, doc);
 
 	bool fail = a_or_b_or_c.match(source, context);
-	bool ok = repeated3.match(source, context);
+	bool ok = (mNode = repeated).match(source, context);
 
-	Document::leaf_cons result = doc.select(alloc, mResult);
+	Document::node_cons result = doc.select(alloc, mNode);
+	std::cout << mNode.tag << ":\n";
 	while (result) {
-		std::cout << result.hd().data().stl_str() << '\n';
+		Document::node_data node = result.hd().data();
+		Document::leaf_cons leaf = node.select(alloc, mVal);
+		std::cout << "  " << mVal.tag << ":\n";
+		while (leaf) {
+			Document::leaf_data val = leaf.hd().data();
+			std::cout << "    " << val.stl_str() << '\n';
+			leaf = leaf.tl();
+		}
 		result = result.tl();
 	}
 	return 0;

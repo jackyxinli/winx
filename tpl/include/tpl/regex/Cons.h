@@ -94,7 +94,7 @@ public:
 	template <class AllocT, class CondT>
 	cons TPL_CALL select(AllocT& alloc, CondT cond) const
 	{
-		cons lstRet;
+		cons lstRet = NULL;
 		_selectRetTail(alloc, cond, &lstRet);
 		return lstRet;
 	}

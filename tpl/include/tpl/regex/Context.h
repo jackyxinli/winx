@@ -27,6 +27,10 @@
 #include "MatchResult.h"
 #endif
 
+#ifndef TPL_REGEX_CONS_H
+#include "Cons.h"
+#endif
+
 // -------------------------------------------------------------------------
 // class BasicContext
 
@@ -35,27 +39,16 @@ class BasicContext
 {
 private:
 	typedef NodeMatchResult<Iterator, TagT> NodeMatchResultT;
+	typedef ConsList<NodeMatchResultT*, false> StackT;
 
 	AllocT& m_alloc;
-	NodeMatchResultT* m_cur;
+	StackT m_stk;
 
 public:
 	BasicContext(AllocT& alloc, NodeMatchResultT& doc)
-		: m_alloc(alloc), m_cur(&doc) {}
-
-public:
-	typedef int trans_type;
-
-	trans_type TPL_CALL beginTrans() {
-		return trans_type();
-	}
-
-	bool TPL_CALL commitTrans(const trans_type& trans) {
-		return true;
-	}
-
-	bool TPL_CALL rollbackTrans(const trans_type& trans) {
-		return false;
+		: m_alloc(alloc)
+	{
+		m_stk.push_front(alloc, &doc);
 	}
 
 private:
@@ -63,21 +56,37 @@ private:
 	typedef BasicMark<TagT, NodeAssign> NodeMarkT;
 
 public:
-	class Scope
+	class Transaction
 	{
-	public:
-		Scope(BasicContext& context, NodeMarkT& mark) {}
+	private:
+		NodeMatchResultT* vParent;
+		NodeMatchResultT vOld;
 
-		void TPL_CALL setMatched(bool matched) {
+	public:
+		Transaction(BasicContext& context) {
+			StackT stk = context.m_stk;
+			vParent = stk.front();
+			vOld = *vParent;
+		}
+
+		void TPL_CALL rollback() {
+			*vParent = vOld;
 		}
 	};
 
-	typedef Scope scope_type;
+	typedef Transaction trans_type;
+
+public:
+	void TPL_CALL insertNode(const NodeMark& mark)
+	{
+		NodeMatchResultT* v = m_stk.front()->insertNode(m_alloc, mark);
+		m_stk.push_front(m_alloc, v);
+	}
 
 	template <class SourceT>
 	void TPL_CALL insertLeaf(const LeafMarkT& mark, SourceT& ar, Iterator pos)
 	{
-		m_cur->insertLeaf(m_alloc, mark, pos, ar.position());
+		m_stk.front()->insertLeaf(m_alloc, mark, pos, ar.position());
 	}
 };
 
