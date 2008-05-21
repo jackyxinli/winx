@@ -57,15 +57,15 @@ Exp< ChT<CharT> > TPL_CALL ch(const CharT x)
 	return Exp<RegExT>(RegExT(x));
 }
 
-#define TPL_REGEX_CH_OP1_(op, Op, CharT)												\
-	template <class T2> __forceinline													\
-	Exp< Op< Exp< ChT<CharT> >, Exp<T2> > > TPL_CALL operator op(CharT x, Exp<T2>& y)	\
-{ return ch(x) op y; }																	\
-	template <class T1> __forceinline													\
-	Exp< Op< Exp<T1>, Exp< ChT<CharT> > > > TPL_CALL operator op(Exp<T1>& x, CharT y)	\
-{ return x op ch(y); }
+#define TPL_REGEX_CH_OP1_(op, Op, CharT)											\
+template <class T2> __forceinline													\
+Exp< Op< Exp< ChT<CharT> >, Exp<T2> > > TPL_CALL operator op(CharT x, Exp<T2>& y)	\
+	{ return ch(x) op y; }															\
+template <class T1> __forceinline													\
+Exp< Op< Exp<T1>, Exp< ChT<CharT> > > > TPL_CALL operator op(Exp<T1>& x, CharT y)	\
+	{ return x op ch(y); }
 
-#define TPL_REGEX_CH_OP_(op, Op)														\
+#define TPL_REGEX_CH_OP_(op, Op)													\
 	TPL_REGEX_CH_OP1_(op, Op, char)
 
 // -------------------------------------------------------------------------
@@ -91,9 +91,8 @@ public:
 };
 
 template <class T1, class T2> inline
-Exp< And< Exp<T1>, Exp<T2> > > TPL_CALL operator>>(const Exp<T1>& x, Exp<T2>& y) {
-	typedef And< Exp<T1>, Exp<T2> > RegExT;
-	return Exp<RegExT>(RegExT(x, y));
+Exp<And<Exp<T1>, Exp<T2> > > TPL_CALL operator>>(const Exp<T1>& x, Exp<T2>& y) {
+	return Exp<And<Exp<T1>, Exp<T2> > >(x, y);
 }
 
 TPL_REGEX_CH_OP_(>>, And)
@@ -121,9 +120,8 @@ public:
 };
 
 template <class T1, class T2>
-Exp< Or< Exp<T1>, Exp<T2> > > TPL_CALL operator|(const Exp<T1>& x, Exp<T2>& y) {
-	typedef Or< Exp<T1>, Exp<T2> > RegExT;
-	return Exp<RegExT>(RegExT(x, y));
+Exp<Or<Exp<T1>, Exp<T2> > > TPL_CALL operator|(const Exp<T1>& x, Exp<T2>& y) {
+	return Exp<Or<Exp<T1>, Exp<T2> > >(x, y);
 }
 
 TPL_REGEX_CH_OP_(|, Or)

@@ -20,8 +20,16 @@
 #ifndef TPL_REGEX_H
 #define TPL_REGEX_H
 
+#ifndef TPL_REGEX_REGEXP_H
+#include "regex/RegExp.h"
+#endif
+
 #ifndef TPL_REGEX_BASIC_H
 #include "regex/Basic.h"
+#endif
+
+#ifndef TPL_REGEX_MARK_H
+#include "regex/Mark.h"
 #endif
 
 // -------------------------------------------------------------------------

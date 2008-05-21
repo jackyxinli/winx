@@ -20,12 +20,12 @@
 #ifndef TPL_REGEX_REGEXP_H
 #define TPL_REGEX_REGEXP_H
 
-#ifndef TPL_CALL
-#define TPL_CALL
-#endif
-
 #if 0
 #define TPL_HAS_TEMPLATE_TYPEDEF
+#endif
+
+#if !defined(__forceinline) && !defined(_MSC_VER)
+#define __forceinline inline
 #endif
 
 #ifndef TPL_UNMANAGED_NEW
@@ -33,11 +33,19 @@
 #endif
 
 #ifndef TPL_NEW
-	#if defined(BOOST_NEW)
-	#define TPL_NEW(alloc, Type)	BOOST_NEW(alloc, Type)
-	#else
-	#define TPL_NEW(alloc, Type)	STD_NEW(alloc, Type)
-	#endif
+#if defined(BOOST_NEW)
+#define TPL_NEW(alloc, Type)	BOOST_NEW(alloc, Type)
+#else
+#define TPL_NEW(alloc, Type)	STD_NEW(alloc, Type)
+#endif
+#endif
+
+#ifndef TPL_CALL
+#if defined(winx_call)
+#define TPL_CALL winx_call
+#else
+#define TPL_CALL
+#endif
 #endif
 
 // -------------------------------------------------------------------------
