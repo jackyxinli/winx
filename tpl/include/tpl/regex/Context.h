@@ -133,6 +133,7 @@ public:
 	
 	typedef BasicSubMatch<Iterator> value_type;
 	typedef typename ConsList<value_type>::cons cons;
+	typedef const value_type& reference;
 	
 	typedef BasicMatchResult child_type;
 	typedef const BasicMatchResult& child_reference;
@@ -143,6 +144,9 @@ private:
 	const Mark* m_self;
 	child_pointer* m_childs;
 	const size_type m_size;
+
+	BasicMatchResult(const BasicMatchResult&);
+	void operator=(const BasicMatchResult&);
 
 public:
 	template <class AllocT>
@@ -185,7 +189,7 @@ public:
 		return m_vals.hasValue();
 	}
 
-	const value_type& TPL_CALL operator*() const {
+	reference TPL_CALL operator*() const {
 		TPL_ASSERT(hasValue());
 		return m_vals.front();
 	}
@@ -229,17 +233,18 @@ class BasicContext
 {
 private:
 	AllocT& m_alloc;
-	BasicMatchResult<Iterator> m_dom;
+	BasicMatchResult<Iterator>& m_dom;
 	BasicMatchResult<Iterator>* m_cur;
 
 public:
-	typedef BasicMatchResult<Iterator> match_result;
+	typedef BasicMatchResult<Iterator> document_type;
+	typedef const document_type& document_reference;
 
 public:
-	BasicContext(AllocT& alloc, Mark& root)
-		: m_alloc(alloc), m_dom(alloc, root), m_cur(&m_dom) {}
+	BasicContext(AllocT& alloc, document_type& doc)
+		: m_alloc(alloc), m_dom(doc), m_cur(&m_dom) {}
 
-	const match_result& doc() const {
+	document_reference document() const {
 		return m_dom;
 	}
 

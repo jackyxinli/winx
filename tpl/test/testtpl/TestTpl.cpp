@@ -6,10 +6,10 @@
 
 int main()
 {
-	// ---- define rules ----
-
 	BlockPool recycle;
 	Allocator alloc(recycle);
+
+	// ---- define rules ----
 
 	RegEx a(alloc, ch('a'));
 	
@@ -32,16 +32,16 @@ int main()
 
 	// ---- parse source ----
 
-	char buf[] = "dcbcdefg";
+	char buf[] = "dcbdabcdefg";
 	Source source(buf, buf+sizeof(buf));
 
-	Context context(alloc, mRoot);
+	Document doc(alloc, mRoot);
+	Context context(alloc, doc);
 
 	bool fail = a_or_b_or_c.match(source, context);
-
 	bool ok = repeated.match(source, context);
 	
-	Context::match_result::cons result = context.doc()[mResult].data();
+	Context::document_type::cons result = doc[mResult].data();
 	while (result) {
 		std::cout << result->value.stl_str() << '\n';
 		result = result->tl();

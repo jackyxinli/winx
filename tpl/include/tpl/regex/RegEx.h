@@ -53,8 +53,9 @@ typedef std::BlockPool BlockPool;
 typedef std::ScopeAlloc Allocator;
 
 // -------------------------------------------------------------------------
-// class Context
+// class Document, Context
 
+typedef MatchResult Document;
 typedef BasicContext<Source::iterator, Allocator> Context;
 
 // -------------------------------------------------------------------------
