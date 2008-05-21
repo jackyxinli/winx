@@ -50,7 +50,7 @@ public:
 
 typedef ChT<char> Ch;
 
-template <class CharT>
+template <class CharT> __forceinline
 Exp< ChT<CharT> > TPL_CALL ch(const CharT x)
 {
 	typedef ChT<CharT> RegExT;
@@ -90,7 +90,7 @@ public:
 	}
 };
 
-template <class T1, class T2> inline
+template <class T1, class T2> __forceinline
 Exp<And<Exp<T1>, Exp<T2> > > TPL_CALL operator>>(const Exp<T1>& x, Exp<T2>& y) {
 	return Exp<And<Exp<T1>, Exp<T2> > >(x, y);
 }
@@ -119,7 +119,7 @@ public:
 	}
 };
 
-template <class T1, class T2>
+template <class T1, class T2> __forceinline
 Exp<Or<Exp<T1>, Exp<T2> > > TPL_CALL operator|(const Exp<T1>& x, Exp<T2>& y) {
 	return Exp<Or<Exp<T1>, Exp<T2> > >(x, y);
 }
@@ -148,51 +148,15 @@ public:
 	}
 };
 
-template <class T1>
+template <class T1> __forceinline
 Exp<Repeat0<Exp<T1> > > TPL_CALL operator*(const Exp<T1>& x) {
 	return Exp<Repeat0<Exp<T1> > >(x);
 }
 
 // -------------------------------------------------------------------------
-// class RepeatGE
-
-template <class RegExT, unsigned nMin = 1>
-class RepeatGE
-{
-private:
-	RegExT m_x;
-
-public:
-	RepeatGE(const RegExT& x) : m_x(x) {}
-
-	template <class Iterator>
-	bool TPL_CALL match(Iterator curr, Iterator last, Iterator& out)
-	{
-		unsigned n;
-		while (m_x.match(curr, last, curr))
-			++n;
-		if (n >= nMin) {
-			out = curr;
-			return true;
-		}
-		return false;
-	}
-};
-
-template <class T1>
-Exp<RepeatGE<Exp<T1>, 1> > TPL_CALL operator+(const Exp<T1>& x) {
-	return Exp<RepeatGE<Exp<T1>, 1> >(x);
-}
-
-template <unsigned nMin, class T1>
-Exp<RepeatGE<Exp<T1>, nMin> > TPL_CALL repeat_ge(const Exp<T1>& x) {
-	return Exp<RepeatGE<Exp<T1>, nMin> >(x);
-}
-
-// -------------------------------------------------------------------------
 // class Repeat
 
-template <class RegExT, unsigned nMin, unsigned nMax>
+template <class RegExT, unsigned nMin = 1, unsigned nMax = UINT_MAX>
 class Repeat
 {
 private:
@@ -210,19 +174,32 @@ public:
 			if (!m_x.match(curr, last, curr))
 				break;
 		}
-		out = curr;
-		return n >= nMin;
+		if (n >= nMin) {
+			out = curr;
+			return true;
+		}
+		return false;
 	}
 };
 
-template <unsigned nMin, unsigned nMax, class T1>
-Exp<Repeat<Exp<T1>, nMin, nMax> > TPL_CALL repeat(const Exp<T1>& x) {
-	return Exp<Repeat<Exp<T1>, nMin, nMax> >(x);
+template <class T1> __forceinline
+Exp<Repeat<Exp<T1>, 1> > TPL_CALL operator+(const Exp<T1>& x) {
+	return Exp<Repeat<Exp<T1>, 1> >(x);
 }
 
-template <unsigned nMin, class T1>
+template <unsigned nMin, class T1> __forceinline
+Exp<Repeat<Exp<T1>, nMin> > TPL_CALL repeat_ge(const Exp<T1>& x) {
+	return Exp<Repeat<Exp<T1>, nMin> >(x);
+}
+
+template <unsigned nMin, class T1> __forceinline
 Exp<Repeat<Exp<T1>, nMin, nMin> > TPL_CALL repeat(const Exp<T1>& x) {
 	return Exp<Repeat<Exp<T1>, nMin, nMin> >(x);
+}
+
+template <unsigned nMin, unsigned nMax, class T1> __forceinline
+Exp<Repeat<Exp<T1>, nMin, nMax> > TPL_CALL repeat(const Exp<T1>& x) {
+	return Exp<Repeat<Exp<T1>, nMin, nMax> >(x);
 }
 
 // -------------------------------------------------------------------------
