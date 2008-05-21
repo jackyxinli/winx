@@ -23,11 +23,13 @@ int main()
 	RegEx a_or_b_or_d(alloc, 'd' | a_or_b);
 
 	Mark mRoot;
-	Mark mResult(mRoot);
-	SimpleRegEx three_word(alloc, (mResult = ('d' >> a_or_b_or_c >> 'b')));
+	Mark mResult(&mRoot);
+	Mark mResult2(&mRoot);
+
+	SimpleRegEx three_word(alloc, mResult2 = mResult = 'd' + a_or_b_or_c + 'b');
 
 	SimpleRegEx repeated(alloc, *three_word);
-	SimpleRegEx repeated2(alloc, repeat<2>(three_word));
+	SimpleRegEx repeated3(alloc, repeat<3>(three_word));
 	SimpleRegEx repeated2Or3(alloc, repeat<2, 3>(three_word));
 
 	// ---- parse source ----
@@ -39,12 +41,21 @@ int main()
 	Context context(alloc, doc);
 
 	bool fail = a_or_b_or_c.match(source, context);
-	bool ok = repeated.match(source, context);
-	
-	Context::document_type::cons result = doc[mResult].data();
-	while (result) {
-		std::cout << result->value.stl_str() << '\n';
-		result = result->tl();
+	bool ok = repeated3.match(source, context);
+
+	{
+		Context::document_type::cons result = doc[mResult].data();
+		while (result) {
+			std::cout << result->value.stl_str() << '\n';
+			result = result->tl();
+		}
+	}
+	{
+		Context::document_type::cons result = doc[mResult2].data();
+		while (result) {
+			std::cout << result->value.stl_str() << '\n';
+			result = result->tl();
+		}
 	}
 	return 0;
 }

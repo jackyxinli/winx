@@ -85,21 +85,25 @@ public:
 };
 
 // -------------------------------------------------------------------------
-// class ChT
+// class BasicMatchCh
 
-template <class CharT>
-class ChT
+template <class PredT>
+class BasicMatchCh // Match a Char
 {
 private:
-	CharT m_x;
+	PredT m_pred;
 
 public:
-	ChT(CharT x) : m_x(x) {}
+	BasicMatchCh() {}
+	
+	template <class T1>
+	BasicMatchCh(const T1& x) : m_pred(x) {}
 
 	template <class SourceT, class ContextT>
 	bool TPL_CALL match(SourceT& ar, ContextT& context)
 	{
-		if (ar.peek() == m_x)
+		typename SourceT::int_type c = ar.peek();
+		if (m_pred(c))
 		{
 			ar.get();
 			return true;
@@ -108,31 +112,71 @@ public:
 	}
 };
 
-typedef ChT<char> Ch;
+// -------------------------------------------------------------------------
+// class Ch
+
+// Usage: Ch<'a'>()
+// Note: Its function is same as ch('a').
+
+template <int m_c>
+class EqCh0
+{
+public:
+	__forceinline bool TPL_CALL operator()(int c) const {
+		return m_c == c;
+	}
+};
+
+template <int m_c>
+class Ch : public Exp<BasicMatchCh<EqCh0<m_c> > > {
+};
+
+// -------------------------------------------------------------------------
+// function ch()
+
+// Usage: ch('a')
+// Sorry that we can't use 'a' directly instead of ch('a') in all case.
+
+class EqCh
+{
+private:
+	int m_c;
+
+public:
+	EqCh(int c) : m_c(c) {}
+
+	bool TPL_CALL operator()(int c) const {
+		return m_c == c;
+	}
+};
+
+typedef BasicMatchCh<EqCh> MatchCh;
 
 template <class CharT> __forceinline
-Exp< ChT<CharT> > TPL_CALL ch(const CharT x)
-{
-	typedef ChT<CharT> RegExT;
-	return Exp<RegExT>(RegExT(x));
+Exp<MatchCh> TPL_CALL ch(const CharT x) {
+	return Exp<MatchCh>(x);
 }
 
 #define TPL_REGEX_CH_OP1_(op, Op, CharT)											\
 template <class T2> __forceinline													\
-Exp< Op< Exp< ChT<CharT> >, Exp<T2> > > TPL_CALL operator op(CharT x, Exp<T2>& y)	\
+Exp< Op<MatchCh, T2> > TPL_CALL operator op(CharT x, Exp<T2>& y)					\
 	{ return ch(x) op y; }															\
 template <class T1> __forceinline													\
-Exp< Op< Exp<T1>, Exp< ChT<CharT> > > > TPL_CALL operator op(Exp<T1>& x, CharT y)	\
+Exp< Op<T1, MatchCh> > TPL_CALL operator op(Exp<T1>& x, CharT y)					\
 	{ return x op ch(y); }
 
 #define TPL_REGEX_CH_OP_(op, Op)													\
 	TPL_REGEX_CH_OP1_(op, Op, char)
 
 // -------------------------------------------------------------------------
-// class And
+// operator>> (boost::spirit, xpressive compatible)
+// operator+
+
+// Usage: Rule1 >> Rule2
+// Usage: Rule1 + Rule2
 
 template <class RegExT1, class RegExT2>
-class And
+class And // Rule1 Rule2
 {
 private:
 	RegExT1 m_x;
@@ -154,17 +198,25 @@ public:
 };
 
 template <class T1, class T2> __forceinline
-Exp<And<Exp<T1>, Exp<T2> > > TPL_CALL operator>>(const Exp<T1>& x, Exp<T2>& y) {
-	return Exp<And<Exp<T1>, Exp<T2> > >(x, y);
+Exp<And<T1, T2> > TPL_CALL operator>>(const Exp<T1>& x, Exp<T2>& y) {
+	return Exp<And<T1, T2> >(x, y);
+}
+
+template <class T1, class T2> __forceinline
+Exp<And<T1, T2> > TPL_CALL operator+(const Exp<T1>& x, Exp<T2>& y) {
+	return Exp<And<T1, T2> >(x, y);
 }
 
 TPL_REGEX_CH_OP_(>>, And)
+TPL_REGEX_CH_OP_(+, And)
 
 // -------------------------------------------------------------------------
-// class Or
+// operator|
+
+// Usage: Rule1 | Rule2
 
 template <class RegExT1, class RegExT2>
-class Or
+class Or // Rule1 | Rule2
 {
 private:
 	RegExT1 m_x;
@@ -183,17 +235,19 @@ public:
 };
 
 template <class T1, class T2> __forceinline
-Exp<Or<Exp<T1>, Exp<T2> > > TPL_CALL operator|(const Exp<T1>& x, Exp<T2>& y) {
-	return Exp<Or<Exp<T1>, Exp<T2> > >(x, y);
+Exp<Or<T1, T2> > TPL_CALL operator|(const Exp<T1>& x, Exp<T2>& y) {
+	return Exp<Or<T1, T2> >(x, y);
 }
 
 TPL_REGEX_CH_OP_(|, Or)
 
 // -------------------------------------------------------------------------
-// class Repeat0
+// operator* (Unary)
+
+// Usage: *Rule
 
 template <class RegExT>
-class Repeat0
+class Repeat0 // Rule*
 {
 private:
 	RegExT m_x;
@@ -211,15 +265,17 @@ public:
 };
 
 template <class T1> __forceinline
-Exp<Repeat0<Exp<T1> > > TPL_CALL operator*(const Exp<T1>& x) {
-	return Exp<Repeat0<Exp<T1> > >(x);
+Exp<Repeat0<T1> > TPL_CALL operator*(const Exp<T1>& x) {
+	return Exp<Repeat0<T1> >(x);
 }
 
 // -------------------------------------------------------------------------
-// class Repeat1
+// operator+ (Unary)
+
+// Usage: +Rule
 
 template <class RegExT>
-class Repeat1
+class Repeat1 // Rule+
 {
 private:
 	RegExT m_x;
@@ -238,15 +294,49 @@ public:
 };
 
 template <class T1> __forceinline
-Exp<Repeat1<Exp<T1> > > TPL_CALL operator+(const Exp<T1>& x) {
-	return Exp<Repeat1<Exp<T1> > >(x);
+Exp<Repeat1<T1> > TPL_CALL operator+(const Exp<T1>& x) {
+	return Exp<Repeat1<T1> >(x);
 }
 
 // -------------------------------------------------------------------------
-// class Repeat
+// operator!
+
+// Usage: !Rule
+// Note: Sorry that we don't have operator?
+
+template <class RegExT>
+class Repeat01 // Rule?
+{
+private:
+	RegExT m_x;
+
+public:
+	Repeat01(const RegExT& x) : m_x(x) {}
+
+	template <class SourceT, class ContextT>
+	bool TPL_CALL match(SourceT& ar, ContextT& context)
+	{
+		m_x.match(ar, context);
+		return true;
+	}
+};
+
+template <class T1> __forceinline
+Exp<Repeat01<T1> > TPL_CALL operator!(const Exp<T1>& x) {
+	return Exp<Repeat01<T1> >(x);
+}
+
+// -------------------------------------------------------------------------
+// function repeat
+
+// Usage:
+//	1. repeat<n>(Rule)		--- means: Rule{n}
+//	2. repeat<n, m>(Rule)	--- means: Rule{n, m}
+//	3. repeat<0, 1>(Rule)	--- means: Rule{0, 1}, that is: Rule?
+//	4. repeat_ge<n>(Rule)	--- means: Rule{n,}
 
 template <class RegExT, unsigned nMin, unsigned nMax = UINT_MAX>
-class Repeat
+class Repeat // Rule{nMin, nMax}
 {
 private:
 	RegExT m_x;
@@ -272,19 +362,38 @@ public:
 	}
 };
 
+template <class RegExT>
+class Repeat<RegExT, 0, 1> : public Repeat01<RegExT>
+{
+public:
+	Repeat<RegExT, 0, 1>(const RegExT& x) : Repeat01<RegExT>(x) {}
+};
+
 template <unsigned nMin, class T1> __forceinline
-Exp<Repeat<Exp<T1>, nMin> > TPL_CALL repeat_ge(const Exp<T1>& x) {
-	return Exp<Repeat<Exp<T1>, nMin> >(x);
+Exp<Repeat<T1, nMin> > TPL_CALL repeat_ge(const Exp<T1>& x) {
+	return Exp<Repeat<T1, nMin> >(x);
 }
 
 template <unsigned nMin, class T1> __forceinline
-Exp<Repeat<Exp<T1>, nMin, nMin> > TPL_CALL repeat(const Exp<T1>& x) {
-	return Exp<Repeat<Exp<T1>, nMin, nMin> >(x);
+Exp<Repeat<T1, nMin, nMin> > TPL_CALL repeat(const Exp<T1>& x) {
+	return Exp<Repeat<T1, nMin, nMin> >(x);
 }
 
 template <unsigned nMin, unsigned nMax, class T1> __forceinline
-Exp<Repeat<Exp<T1>, nMin, nMax> > TPL_CALL repeat(const Exp<T1>& x) {
-	return Exp<Repeat<Exp<T1>, nMin, nMax> >(x);
+Exp<Repeat<T1, nMin, nMax> > TPL_CALL repeat(const Exp<T1>& x) {
+	return Exp<Repeat<T1, nMin, nMax> >(x);
+}
+
+// -------------------------------------------------------------------------
+// operator%
+
+// Usage: Rule1 % Rule2		--- means: Rule1 (Rule2 Rule1)*
+// Example: Arg % ','		--- means: matching Function ArgList
+
+template <class T1, class T2> __forceinline
+Exp<And<T1, Repeat0<And<T1, T2> > > > TPL_CALL operator%(const Exp<T1>& x, Exp<T2>& y)
+{
+	return x >> *(x >> y);
 }
 
 // -------------------------------------------------------------------------
