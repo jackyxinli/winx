@@ -40,9 +40,12 @@ private:
 	size_type m_id;
 	size_type m_childs;
 
+	Mark(const Mark&);
+	void operator=(const Mark&);
+
 public:
 	Mark() : m_parent(NULL), m_childs(0) {};
-	Mark(Mark& p) : m_parent(NULL), m_childs(0) {
+	Mark(Mark* p) : m_parent(NULL), m_childs(0) {
 		parent(p);
 	}
 
@@ -62,11 +65,11 @@ public:
 		return m_parent;
 	}
 
-	void TPL_CALL parent(Mark& p)
+	void TPL_CALL parent(Mark* p)
 	{ 
 		TPL_ASSERT(m_parent == NULL);
-		m_id = p.m_childs++;
-		m_parent = &p;
+		m_id = p->m_childs++;
+		m_parent = p;
 	}
 
 	template <class RegExT>
@@ -83,10 +86,12 @@ public:
 		template <class SourceT, class ContextT>
 		bool TPL_CALL match(SourceT& ar, ContextT& context)
 		{
+			typename ContextT::scope_type scope = context.enterScope(m_mark);
 			typename SourceT::iterator pos = ar.position();
 			bool matched = m_x.match(ar, context);
 			if (matched)
 				context.add_matched(m_mark, ar, pos);
+			context.leaveScope(scope);
 			return matched;
 		}
 	};
@@ -244,7 +249,7 @@ public:
 	BasicContext(AllocT& alloc, document_type& doc)
 		: m_alloc(alloc), m_dom(doc), m_cur(&m_dom) {}
 
-	document_reference document() const {
+	document_reference TPL_CALL document() const {
 		return m_dom;
 	}
 
@@ -257,6 +262,31 @@ public:
 		BasicMatchResult<Iterator>* child = m_cur->_getChild(m_alloc, mark);
 		BasicSubMatch<Iterator> submatch(pos, ar.position());
 		child->_getValueContainer().push_front(m_alloc, submatch);
+	}
+
+public:
+	typedef int trans_type;
+
+	trans_type TPL_CALL beginTrans() {
+		return trans_type();
+	}
+
+	bool TPL_CALL commitTrans(const trans_type& trans) {
+		return true;
+	}
+
+	bool TPL_CALL rollbackTrans(const trans_type& trans) {
+		return false;
+	}
+
+public:
+	typedef int scope_type;
+
+	scope_type TPL_CALL enterScope(const Mark& mark) {
+		return scope_type();
+	}
+
+	void TPL_CALL leaveScope(const scope_type& scope) {
 	}
 };
 

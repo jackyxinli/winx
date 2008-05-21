@@ -144,9 +144,12 @@ public:
 	template <class SourceT, class ContextT>
 	bool TPL_CALL match(SourceT& ar, ContextT& context)
 	{
-		if (!m_x.match(ar, context))
-			return false;
-		return m_y.match(ar, context);
+		typename ContextT::trans_type trans = context.beginTrans();
+		if (m_x.match(ar, context)) {
+			if (m_y.match(ar, context))
+				return context.commitTrans(trans);
+		}
+		return context.rollbackTrans(trans);
 	}
 };
 
@@ -256,15 +259,16 @@ public:
 	{
 		unsigned n;
 		typename SourceT::iterator pos = ar.position();
+		typename ContextT::trans_type trans = context.beginTrans();
 		for (n = 0; n < nMax; ++n)
 		{
 			if (!m_x.match(ar, context))
 				break;
 		}
 		if (n >= nMin)
-			return true;
+			return context.commitTrans(trans);
 		ar.seek(pos);
-		return false;
+		return context.rollbackTrans(trans);
 	}
 };
 
