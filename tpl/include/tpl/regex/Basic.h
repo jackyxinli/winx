@@ -13,16 +13,76 @@
 // Creator: xushiwei
 // Email: xushiweizh@gmail.com
 // Date: 2006-8-13 9:41:58
-// Description: AOP - Aspect Oriented Programming
 // 
 // $Id$
 // -----------------------------------------------------------------------*/
 #ifndef TPL_REGEX_BASIC_H
 #define TPL_REGEX_BASIC_H
 
-#ifndef TPL_REGEX_REGEXP_H
-#include "RegExp.h"
+#if !defined(_LIMITS_) && !defined(_LIMITS)
+#include <climits>
 #endif
+
+#if 0
+#define TPL_HAS_TEMPLATE_TYPEDEF
+#endif
+
+#if !defined(__forceinline) && !defined(_MSC_VER)
+#define __forceinline inline
+#endif
+
+#ifndef TPL_UNMANAGED_NEW
+#define TPL_UNMANAGED_NEW(alloc, Type)	new((alloc).allocate(sizeof(Type))) Type
+#endif
+
+#ifndef TPL_ALLOC_ARRAY
+#define TPL_ALLOC_ARRAY(alloc, Type, n)	(Type*)(alloc).allocate((n)*sizeof(Type))
+#endif
+
+#ifndef TPL_NEW
+#if defined(BOOST_NEW)
+#define TPL_NEW(alloc, Type)	BOOST_NEW(alloc, Type)
+#else
+#define TPL_NEW(alloc, Type)	STD_NEW(alloc, Type)
+#endif
+#endif
+
+#ifndef TPL_CALL
+#if defined(winx_call)
+#define TPL_CALL winx_call
+#else
+#define TPL_CALL
+#endif
+#endif
+
+#ifndef TPL_ASSERT
+#if defined(BOOST_MEMORY_ASSERT)
+#define TPL_ASSERT(e)	BOOST_MEMORY_ASSERT(e)
+#elif defined(_ASSERTE)
+#define TPL_ASSERT(e)	_ASSERTE(e)
+#else
+#define TPL_ASSERT(e)	0
+#endif
+#endif
+
+// -------------------------------------------------------------------------
+// class Exp
+
+template <class RegExT>
+class Exp : public RegExT
+{
+public:
+	Exp() {}
+
+	template <class T1>
+	Exp(const T1& x) : RegExT(x) {}
+
+	template <class T1, class T2>
+	Exp(const T1& x, const T2& y) : RegExT(x, y) {}
+
+	template <class T1, class T2>
+	Exp(T1& x, const T2& y) : RegExT(x, y) {}
+};
 
 // -------------------------------------------------------------------------
 // class ChT
@@ -36,12 +96,12 @@ private:
 public:
 	ChT(CharT x) : m_x(x) {}
 
-	template <class Iterator>
-	bool TPL_CALL match(Iterator curr, Iterator, Iterator& out)
+	template <class SourceT, class ContextT>
+	bool TPL_CALL match(SourceT& ar, ContextT& context)
 	{
-		if (*curr == m_x)
+		if (ar.peek() == m_x)
 		{
-			out = ++curr;
+			ar.get();
 			return true;
 		}
 		return false;
@@ -81,12 +141,12 @@ private:
 public:
 	And(const RegExT1& x, const RegExT2& y) : m_x(x), m_y(y) {}
 
-	template <class Iterator>
-	bool TPL_CALL match(Iterator curr, Iterator last, Iterator& out)
+	template <class SourceT, class ContextT>
+	bool TPL_CALL match(SourceT& ar, ContextT& context)
 	{
-		if (!m_x.match(curr, last, out))
+		if (!m_x.match(ar, context))
 			return false;
-		return m_y.match(out, last, out);
+		return m_y.match(ar, context);
 	}
 };
 
@@ -110,12 +170,12 @@ private:
 public:
 	Or(const RegExT1& x, const RegExT2& y) : m_x(x), m_y(y) {}
 
-	template <class Iterator>
-	bool TPL_CALL match(Iterator curr, Iterator last, Iterator& out)
+	template <class SourceT, class ContextT>
+	bool TPL_CALL match(SourceT& ar, ContextT& context)
 	{
-		if (m_x.match(curr, last, out))
+		if (m_x.match(ar, context))
 			return true;
-		return m_y.match(curr, last, out);
+		return m_y.match(ar, context);
 	}
 };
 
@@ -138,12 +198,11 @@ private:
 public:
 	Repeat0(const RegExT& x) : m_x(x) {}
 
-	template <class Iterator>
-	bool TPL_CALL match(Iterator curr, Iterator last, Iterator& out)
+	template <class SourceT, class ContextT>
+	bool TPL_CALL match(SourceT& ar, ContextT& context)
 	{
-		while (m_x.match(curr, last, curr))
+		while (m_x.match(ar, context))
 			;
-		out = curr;
 		return true;
 	}
 };
@@ -154,9 +213,36 @@ Exp<Repeat0<Exp<T1> > > TPL_CALL operator*(const Exp<T1>& x) {
 }
 
 // -------------------------------------------------------------------------
+// class Repeat1
+
+template <class RegExT>
+class Repeat1
+{
+private:
+	RegExT m_x;
+
+public:
+	Repeat1(const RegExT& x) : m_x(x) {}
+
+	template <class SourceT, class ContextT>
+	bool TPL_CALL match(SourceT& ar, ContextT& context)
+	{
+		unsigned n = 0;
+		while (m_x.match(ar, context))
+			++n;
+		return n > 0;
+	}
+};
+
+template <class T1> __forceinline
+Exp<Repeat1<Exp<T1> > > TPL_CALL operator+(const Exp<T1>& x) {
+	return Exp<Repeat1<Exp<T1> > >(x);
+}
+
+// -------------------------------------------------------------------------
 // class Repeat
 
-template <class RegExT, unsigned nMin = 1, unsigned nMax = UINT_MAX>
+template <class RegExT, unsigned nMin, unsigned nMax = UINT_MAX>
 class Repeat
 {
 private:
@@ -165,27 +251,22 @@ private:
 public:
 	Repeat(const RegExT& x) : m_x(x) {}
 
-	template <class Iterator>
-	bool TPL_CALL match(Iterator curr, Iterator last, Iterator& out)
+	template <class SourceT, class ContextT>
+	bool TPL_CALL match(SourceT& ar, ContextT& context)
 	{
 		unsigned n;
+		typename SourceT::iterator pos = ar.position();
 		for (n = 0; n < nMax; ++n)
 		{
-			if (!m_x.match(curr, last, curr))
+			if (!m_x.match(ar, context))
 				break;
 		}
-		if (n >= nMin) {
-			out = curr;
+		if (n >= nMin)
 			return true;
-		}
+		ar.seek(pos);
 		return false;
 	}
 };
-
-template <class T1> __forceinline
-Exp<Repeat<Exp<T1>, 1> > TPL_CALL operator+(const Exp<T1>& x) {
-	return Exp<Repeat<Exp<T1>, 1> >(x);
-}
 
 template <unsigned nMin, class T1> __forceinline
 Exp<Repeat<Exp<T1>, nMin> > TPL_CALL repeat_ge(const Exp<T1>& x) {

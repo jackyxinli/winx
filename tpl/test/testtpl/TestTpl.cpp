@@ -1,33 +1,50 @@
 
 #include "stdafx.h"
-#include <stdext/Memory.h>
 #include <tpl/RegEx.h>
+#include <stdext/LinkLib.h>
 #include <iostream>
 
 int main()
 {
-	std::AutoFreeAlloc alloc;
+	// ---- define rules ----
 
-	RegExp a(alloc, ch('a'));
+	BlockPool recycle;
+	Allocator alloc(recycle);
+
+	RegEx a(alloc, ch('a'));
 	
-	RegExp b;
+	RegEx b;
 	b.assign(alloc, ch('b'));
 
-	RegExp a_or_b(alloc, a | b);
+	RegEx a_or_b(alloc, a | b);
 	
-	RegExp a_or_b_or_c(alloc, a_or_b | 'c');
+	RegEx a_or_b_or_c(alloc, a_or_b | 'c');
 
-	RegExp a_or_b_or_d(alloc, 'd' | a_or_b);
+	RegEx a_or_b_or_d(alloc, 'd' | a_or_b);
 
-	SubMatch result;
-	SimpleRegExp three_word(alloc, (result = ('d' >> a_or_b_or_c >> 'b')));
+	Mark mRoot;
+	Mark mResult(mRoot);
+	SimpleRegEx three_word(alloc, (mResult = ('d' >> a_or_b_or_c >> 'b')));
 
-	SimpleRegExp repeated = three_word; // *three_word;
+	SimpleRegEx repeated(alloc, *three_word);
+	SimpleRegEx repeated2(alloc, repeat<2>(three_word));
+	SimpleRegEx repeated2Or3(alloc, repeat<2, 3>(three_word));
 
-	const char* out;
-	char data[] = "dcbcdefg";
-	bool fail = a_or_b_or_c.match(data, data+sizeof(data), out);
-	bool ok = repeated.match(data, data+sizeof(data), out);
-	std::cout << result.stl_str() << '\n';
+	// ---- parse source ----
+
+	char buf[] = "dcbcdefg";
+	Source source(buf, buf+sizeof(buf));
+
+	Context context(alloc, mRoot);
+
+	bool fail = a_or_b_or_c.match(source, context);
+
+	bool ok = repeated.match(source, context);
+	
+	Context::match_result::cons result = context.doc()[mResult].data();
+	while (result) {
+		std::cout << result->value.stl_str() << '\n';
+		result = result->tl();
+	}
 	return 0;
 }
