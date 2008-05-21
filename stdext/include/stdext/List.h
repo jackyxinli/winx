@@ -16,8 +16,8 @@
 // 
 // $Id: List.h,v 1.1 2006/10/18 12:13:39 xushiwei Exp $
 // -----------------------------------------------------------------------*/
-#ifndef __STDEXT_LIST_H__
-#define __STDEXT_LIST_H__
+#ifndef STDEXT_LIST_H
+#define STDEXT_LIST_H
 
 #ifndef __STDEXT_BASIC_H__
 #include "Basic.h"
@@ -488,4 +488,4 @@ public:
 
 __NS_STD_END
 
-#endif /* __STDEXT_LIST_H__ */
+#endif /* STDEXT_LIST_H */

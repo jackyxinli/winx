@@ -16,8 +16,8 @@
 // 
 // $Id: Memory.h,v 1.1 2006/10/18 12:13:39 xushiwei Exp $
 // -----------------------------------------------------------------------*/
-#ifndef __STDEXT_MEMORY_H__
-#define __STDEXT_MEMORY_H__
+#ifndef STDEXT_MEMORY_H
+#define STDEXT_MEMORY_H
 
 // -------------------------------------------------------------------------
 
@@ -65,6 +65,7 @@ typedef auto_alloc AutoFreeAlloc;
 typedef scoped_alloc ScopeAlloc;
 typedef scoped_alloc ScopedAlloc;
 typedef gc_alloc GcAlloc;
+typedef tls_gc_alloc TlsGcAlloc;
 
 #define RegionAllocT region_alloc
 #define DestructorTraits destructor_traits
@@ -149,4 +150,4 @@ __NS_STD_END
 // -------------------------------------------------------------------------
 // $Log: Memory.h,v $
 
-#endif /* __STDEXT_MEMORY_H__ */
+#endif /* STDEXT_MEMORY_H */

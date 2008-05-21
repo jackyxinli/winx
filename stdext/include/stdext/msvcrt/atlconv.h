@@ -71,12 +71,12 @@ inline LPSTR __stdcall _winx_W2AHelper(LPSTR lpa, LPCWSTR lpw, int nWideChars)
 
 #define WINX_A2W(lpa) (\
 	((_lpa = lpa) == NULL) ? NULL : (\
-		_convert = (strlen(_lpa)+1),\
+		_convert = (int)(strlen(_lpa)+1),\
 		_winx_A2WHelper((LPWSTR)_alloca(_convert<<1), _lpa, _convert)))
 
 #define WINX_W2A(lpw) (\
 	((_lpw = lpw) == NULL) ? NULL : (\
-		_convert = (wcslen(_lpw)+1), \
+		_convert = (int)(wcslen(_lpw)+1), \
 		_winx_W2AHelper((LPSTR)_alloca(_convert<<1), _lpw, _convert)))
 
 #define WINX_A2CW(lpa) ((LPCWSTR)WINX_A2W(lpa))

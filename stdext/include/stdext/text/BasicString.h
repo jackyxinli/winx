@@ -16,8 +16,8 @@
 // 
 // $Id: BasicString.h,v 1.1 2006/10/18 12:13:39 xushiwei Exp $
 // -----------------------------------------------------------------------*/
-#ifndef __STDEXT_TEXT_BASICSTRING_H__
-#define __STDEXT_TEXT_BASICSTRING_H__
+#ifndef STDEXT_TEXT_BASICSTRING_H
+#define STDEXT_TEXT_BASICSTRING_H
 
 #ifndef __STDEXT_TEXT_TEMPSTRING_H__
 #include "TempString.h"
@@ -570,4 +570,4 @@ public:
 
 __NS_STD_END
 
-#endif /* __STDEXT_TEXT_BASICSTRING_H__ */
+#endif /* STDEXT_TEXT_BASICSTRING_H */

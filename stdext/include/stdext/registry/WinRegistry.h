@@ -244,7 +244,7 @@ private:
 		s.reserve(strValue.size() + 1);
 		s.insert(s.end(), strValue.begin(), strValue.end());
 		s.push_back(0);
-		return __putString(pszValueName, _ConvIt(s.begin()), s.size(), dwType);
+		return __putString(pszValueName, _ConvIt(s.begin()), (DWORD)s.size(), dwType);
 	}
 
 public:
@@ -254,7 +254,7 @@ public:
 		__in_z const CharT* pszValue,
 		__in DWORD dwType = REG_SZ)
 	{
-		return __putString(pszValueName, pszValue, std::length(pszValue)+1, dwType);
+		return __putString(pszValueName, pszValue, (DWORD)std::length(pszValue)+1, dwType);
 	}
 
 	template <class CharT>

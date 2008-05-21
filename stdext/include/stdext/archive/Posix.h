@@ -16,8 +16,8 @@
 // 
 // $Id: Posix.h,v 1.3 2007/01/10 09:36:12 xushiwei Exp $
 // -----------------------------------------------------------------------*/
-#ifndef __STDEXT_ARCHIVE_POSIX_H__
-#define __STDEXT_ARCHIVE_POSIX_H__
+#ifndef STDEXT_ARCHIVE_POSIX_H
+#define STDEXT_ARCHIVE_POSIX_H
 
 #ifndef __STDEXT_ARCHIVE_WRITER_H__
 #include "Writer.h"
@@ -56,7 +56,7 @@ public:
 	typedef unsigned char	uchar_type;
 	typedef int				int_type;
 	
-	typedef size_t			size_type;
+	typedef unsigned int	size_type;
 	
 	typedef __off_t			pos_type;
 	typedef __off_t			off_type;
@@ -329,4 +329,4 @@ public:
 
 __NS_STD_END
 
-#endif /* __STDEXT_ARCHIVE_POSIX_H__ */
+#endif /* STDEXT_ARCHIVE_POSIX_H */

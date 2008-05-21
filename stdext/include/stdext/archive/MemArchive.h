@@ -16,8 +16,8 @@
 // 
 // $Id: MemArchive.h,v 1.4 2006/12/14 09:15:04 xushiwei Exp $
 // -----------------------------------------------------------------------*/
-#ifndef __STDEXT_ARCHIVE_MEMARCHIVE_H__
-#define __STDEXT_ARCHIVE_MEMARCHIVE_H__
+#ifndef STDEXT_ARCHIVE_MEMARCHIVE_H
+#define STDEXT_ARCHIVE_MEMARCHIVE_H
 
 #ifndef __STDEXT_ARCHIVE_BASIC_H__
 #include "Basic.h"
@@ -192,7 +192,9 @@ public:
 
 	typedef size_type pos_type;
 	typedef difference_type off_type;
-	
+	typedef Iterator iterator;
+	typedef Iterator const_iterator;
+
 protected:
 	Iterator m_pos;
 	Iterator m_first;
@@ -224,9 +226,14 @@ public:
 		return m_pos - m_first;
 	}
 
-	Iterator winx_call position() const
+	const_iterator winx_call position() const
 	{
 		return m_pos;
+	}
+
+	void winx_call seek(const_iterator pos)
+	{
+		m_pos = pos;
 	}
 
 	void winx_call seek(pos_type offset)
@@ -353,4 +360,4 @@ public:
 
 __NS_STD_END
 
-#endif /* __STDEXT_ARCHIVE_MEMARCHIVE_H__ */
+#endif /* STDEXT_ARCHIVE_MEMARCHIVE_H */
