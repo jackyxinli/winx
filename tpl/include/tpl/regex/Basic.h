@@ -127,6 +127,105 @@ Exp<Or<Exp<T1>, Exp<T2> > > TPL_CALL operator|(const Exp<T1>& x, Exp<T2>& y) {
 TPL_REGEX_CH_OP_(|, Or)
 
 // -------------------------------------------------------------------------
+// class Repeat0
+
+template <class RegExT>
+class Repeat0
+{
+private:
+	RegExT m_x;
+
+public:
+	Repeat0(const RegExT& x) : m_x(x) {}
+
+	template <class Iterator>
+	bool TPL_CALL match(Iterator curr, Iterator last, Iterator& out)
+	{
+		while (m_x.match(curr, last, curr))
+			;
+		out = curr;
+		return true;
+	}
+};
+
+template <class T1>
+Exp<Repeat0<Exp<T1> > > TPL_CALL operator*(const Exp<T1>& x) {
+	return Exp<Repeat0<Exp<T1> > >(x);
+}
+
+// -------------------------------------------------------------------------
+// class RepeatGE
+
+template <class RegExT, unsigned nMin = 1>
+class RepeatGE
+{
+private:
+	RegExT m_x;
+
+public:
+	RepeatGE(const RegExT& x) : m_x(x) {}
+
+	template <class Iterator>
+	bool TPL_CALL match(Iterator curr, Iterator last, Iterator& out)
+	{
+		unsigned n;
+		while (m_x.match(curr, last, curr))
+			++n;
+		if (n >= nMin) {
+			out = curr;
+			return true;
+		}
+		return false;
+	}
+};
+
+template <class T1>
+Exp<RepeatGE<Exp<T1>, 1> > TPL_CALL operator+(const Exp<T1>& x) {
+	return Exp<RepeatGE<Exp<T1>, 1> >(x);
+}
+
+template <unsigned nMin, class T1>
+Exp<RepeatGE<Exp<T1>, nMin> > TPL_CALL repeat_ge(const Exp<T1>& x) {
+	return Exp<RepeatGE<Exp<T1>, nMin> >(x);
+}
+
+// -------------------------------------------------------------------------
+// class Repeat
+
+template <class RegExT, unsigned nMin, unsigned nMax>
+class Repeat
+{
+private:
+	RegExT m_x;
+
+public:
+	Repeat(const RegExT& x) : m_x(x) {}
+
+	template <class Iterator>
+	bool TPL_CALL match(Iterator curr, Iterator last, Iterator& out)
+	{
+		unsigned n;
+		for (n = 0; n < nMax; ++n)
+		{
+			if (!m_x.match(curr, last, curr))
+				break;
+		}
+		out = curr;
+		return n >= nMin;
+	}
+};
+
+template <unsigned nMin, unsigned nMax, class T1>
+Exp<Repeat<Exp<T1>, nMin, nMax> > TPL_CALL repeat(const Exp<T1>& x) {
+	return Exp<Repeat<Exp<T1>, nMin, nMax> >(x);
+}
+
+template <unsigned nMin, class T1>
+Exp<Repeat<Exp<T1>, nMin, nMin> > TPL_CALL repeat(const Exp<T1>& x) {
+	return Exp<Repeat<Exp<T1>, nMin, nMin> >(x);
+}
+
+// -------------------------------------------------------------------------
 // $Log: $
 
 #endif /* TPL_REGEX_BASIC_H */
