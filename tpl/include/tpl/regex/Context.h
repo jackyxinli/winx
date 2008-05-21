@@ -77,12 +77,26 @@ public:
 	typedef Transaction trans_type;
 
 public:
-	void TPL_CALL insertNode(const NodeMark& mark)
+	class Scope
 	{
-		NodeMatchResultT* v = m_stk.front()->insertNode(m_alloc, mark);
-		m_stk.push_front(m_alloc, v);
-	}
+	private:
+		StackT& m_stk;
+	public:
+		Scope(BasicContext& context, const NodeMark& mark)
+			: m_stk(context.m_stk)
+		{
+			NodeMatchResultT* v = m_stk.front()->insertNode(context.m_alloc, mark);
+			m_stk.push_front(context.m_alloc, v);
+		}
+		~Scope() {
+			m_stk.pop_front();
+		}
+	};
+	friend class Scope;
 
+	typedef Scope scope_type;
+
+public:
 	template <class SourceT>
 	void TPL_CALL insertLeaf(const LeafMarkT& mark, SourceT& ar, Iterator pos)
 	{

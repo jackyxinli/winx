@@ -118,7 +118,7 @@ public:
 	bool TPL_CALL match(SourceT& ar, ContextT& context)
 	{
 		typename ContextT::trans_type trans(context);
-		context.insertNode(m_mark);
+		typename ContextT::scope_type scope(context, m_mark);
 		if (m_x.match(ar, context))
 			return true;
 		trans.rollback();

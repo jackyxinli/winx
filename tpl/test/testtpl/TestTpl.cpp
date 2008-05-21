@@ -26,21 +26,18 @@ int main()
 	NodeMark mNode("node");
 
 	SimpleRegEx three_word(alloc, mVal = 'd' + a_or_b_or_c + 'b');
-
-	SimpleRegEx repeated(alloc, *three_word);
-	SimpleRegEx repeated3(alloc, repeat<3>(three_word));
-	SimpleRegEx repeated2Or3(alloc, repeat<2, 3>(three_word));
+	SimpleRegEx repeated(alloc, repeat<2>(three_word));
 
 	// ---- parse source ----
 
-	char buf[] = "dcbdabcdefg";
+	char buf[] = "dcbdabdbbdcbcdefg";
 	Source source(buf, buf+sizeof(buf));
 
 	Document doc;
 	Context context(alloc, doc);
 
 	bool fail = a_or_b_or_c.match(source, context);
-	bool ok = (mNode = repeated).match(source, context);
+	bool ok = (*(mNode = repeated)).match(source, context);
 
 	Document::node_cons result = doc.select(alloc, mNode);
 	std::cout << mNode.tag << ":\n";
