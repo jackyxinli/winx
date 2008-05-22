@@ -26,22 +26,6 @@
 NS_TPL_BEGIN
 
 // -------------------------------------------------------------------------
-// class Pred
-
-template <class PredT>
-class Pred : public PredT
-{
-public:
-	Pred() {}
-
-	template <class T1>
-	Pred(const T1& x) : PredT(x) {}
-
-	template <class T1, class T2>
-	Pred(const T1& x, const T2& y) : PredT(x, y) {}
-};
-
-// -------------------------------------------------------------------------
 // class LenStr
 
 template <class CharT, const CharT* m_s>
@@ -57,6 +41,19 @@ const size_t LenStr<CharT, m_s>::m_len = std::char_traits<CharT>::length(m_s);
 // -------------------------------------------------------------------------
 // class Str
 
+template <class Iterator, class SourceT, class ContextT>
+inline bool TPL_CALL match_str(Iterator first, Iterator last, SourceT& ar, ContextT& context)
+{
+	typename SourceT::iterator pos = ar.position();
+	for (; first != last; ++first) {
+		if (ar.get() != *first) {
+			ar.seek(pos);
+			return false;
+		}
+	}
+	return true;
+}
+
 template <class CharT, const CharT* m_s>
 class BasicStr
 {
@@ -68,6 +65,11 @@ public:
 	bool TPL_CALL operator()(Iterator first, Iterator last) const {
 		size_t len = std::distance(first, last);
 		return len == LenStrT::m_len && std::equal(first, last, m_s);
+	}
+
+	template <class SourceT, class ContextT>
+	bool TPL_CALL match(SourceT& ar, ContextT& context) const {
+		return match_str(m_s, m_s + LenStrT::m_len, ar, context);
 	}
 };
 
@@ -109,6 +111,11 @@ public:
 		size_t len = std::distance(first, last);
 		return len == m_len && std::equal(first, last, m_s);
 	}
+
+	template <class SourceT, class ContextT>
+	bool TPL_CALL match(SourceT& ar, ContextT& context) const {
+		return match_str(m_s, m_s + m_len, ar, context);
+	}
 };
 
 typedef BasicStrEq<char> StrEq;
@@ -117,24 +124,61 @@ typedef BasicStrEq<wchar_t> WStrEq;
 // -------------------------------------------------------------------------
 // function str
 
-// Usage: Rule/str("abcd")
-// Usage: Rule/str("abcd", 3)
-// Usage: Rule/str(first, last)
+// Usage: str("abcd")
+// Usage: str("abcd", 3)
+// Usage: str(first, last)
 
 template <class CharT>
-__forceinline Pred<BasicStrEq<CharT> > TPL_CALL str(const CharT* s)
+__forceinline Exp<BasicStrEq<CharT> > TPL_CALL str(const CharT* s)
+{
+	return Exp<BasicStrEq<CharT> >(s);
+}
+
+template <class CharT>
+__forceinline Exp<BasicStrEq<CharT> > TPL_CALL str(const CharT* s, size_t n)
+{
+	return Exp<BasicStrEq<CharT> >(s, n);
+}
+
+template <class CharT>
+__forceinline Exp<BasicStrEq<CharT> > TPL_CALL str(const CharT* first, const CharT* last)
+{
+	return Exp<BasicStrEq<CharT> >(first, last);
+}
+
+#define TPL_REGEX_STR_OP1_(op, Op, CharT)											\
+template <class T2> __forceinline													\
+Exp< Op<BasicStrEq<CharT>, T2> > TPL_CALL operator op(const CharT* x, const Exp<T2>& y)	\
+	{ return str(x) op y; }															\
+template <class T1> __forceinline													\
+Exp< Op<T1, BasicStrEq<CharT> > > TPL_CALL operator op(const Exp<T1>& x, const CharT* y) \
+	{ return x op str(y); }
+
+#define TPL_REGEX_STR_OP_(op, Op)													\
+	TPL_REGEX_STR_OP1_(op, Op, char)												\
+	TPL_REGEX_STR_OP1_(op, Op, wchar_t)
+
+// -------------------------------------------------------------------------
+// function eq_str
+
+// Usage: Rule/eq_str("abcd")
+// Usage: Rule/eq_str("abcd", 3)
+// Usage: Rule/eq_str(first, last)
+
+template <class CharT>
+__forceinline Pred<BasicStrEq<CharT> > TPL_CALL eq_str(const CharT* s)
 {
 	return Pred<BasicStrEq<CharT> >(s);
 }
 
 template <class CharT>
-__forceinline Pred<BasicStrEq<CharT> > TPL_CALL str(const CharT* s, size_t n)
+__forceinline Pred<BasicStrEq<CharT> > TPL_CALL eq_str(const CharT* s, size_t n)
 {
 	return Pred<BasicStrEq<CharT> >(s, n);
 }
 
 template <class CharT>
-__forceinline Pred<BasicStrEq<CharT> > TPL_CALL str(const CharT* first, const CharT* last)
+__forceinline Pred<BasicStrEq<CharT> > TPL_CALL eq_str(const CharT* first, const CharT* last)
 {
 	return Pred<BasicStrEq<CharT> >(first, last);
 }
@@ -173,7 +217,7 @@ public:
 // -------------------------------------------------------------------------
 // operator/
 
-// Usage: Rule/Restriction	--- eg. Rule/str("abcd")
+// Usage: Rule/Restriction	--- eg. Rule/eq_str("abcd")
 // Usage: Rule/"abcd"
 // Usage: Rule/L"abcd"
 
@@ -184,12 +228,12 @@ Exp<Restriction<T1, T2> > TPL_CALL operator/(const Exp<T1>& x, const Pred<T2>& y
 
 template <class T1>
 Exp<Restriction<T1, StrEq> > TPL_CALL operator/(const Exp<T1>& x, const char* y) {
-	return x / str(y);
+	return x / eq_str(y);
 }
 
 template <class T1>
 Exp<Restriction<T1, WStrEq> > TPL_CALL operator/(const Exp<T1>& x, const wchar_t* y) {
-	return x / str(y);
+	return x / eq_str(y);
 }
 
 // -------------------------------------------------------------------------

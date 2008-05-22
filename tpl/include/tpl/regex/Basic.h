@@ -67,10 +67,10 @@
 #define NS_TPL					tpl
 #endif
 
+NS_TPL_BEGIN
+
 // -------------------------------------------------------------------------
 // class Exp
-
-NS_TPL_BEGIN
 
 template <class RegExT>
 class Exp : public RegExT
@@ -88,9 +88,25 @@ public:
 	Exp(T1& x, const T2& y) : RegExT(x, y) {}
 };
 
-NS_TPL_END
+// -------------------------------------------------------------------------
+// class Pred
+
+template <class PredT>
+class Pred : public PredT
+{
+public:
+	Pred() {}
+
+	template <class T1>
+	Pred(const T1& x) : PredT(x) {}
+
+	template <class T1, class T2>
+	Pred(const T1& x, const T2& y) : PredT(x, y) {}
+};
 
 // -------------------------------------------------------------------------
 // $Log: $
+
+NS_TPL_END
 
 #endif /* TPL_REGEX_BASIC_H */

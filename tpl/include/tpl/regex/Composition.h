@@ -27,8 +27,18 @@
 #include "Terminal.h"
 #endif
 
+#ifndef TPL_REGEX_RESTRICTION_H
+#include "Restriction.h"
+#endif
+
 #if !defined(_LIMITS_) && !defined(_LIMITS)
 #include <climits>
+#endif
+
+#ifndef TPL_REGEX_OP_
+#define TPL_REGEX_OP_(op, Op)												\
+	TPL_REGEX_CH_OP_(op, Op)												\
+	TPL_REGEX_STR_OP_(op, Op)
 #endif
 
 NS_TPL_BEGIN
@@ -74,8 +84,8 @@ Exp<And<T1, T2> > TPL_CALL operator+(const Exp<T1>& x, const Exp<T2>& y) {
 	return Exp<And<T1, T2> >(x, y);
 }
 
-TPL_REGEX_CH_OP_(>>, And)
-TPL_REGEX_CH_OP_(+, And)
+TPL_REGEX_OP_(>>, And)
+TPL_REGEX_OP_(+, And)
 
 // -------------------------------------------------------------------------
 // operator*
@@ -135,7 +145,7 @@ Exp<Or<T1, T2> > TPL_CALL operator|(const Exp<T1>& x, const Exp<T2>& y) {
 	return Exp<Or<T1, T2> >(x, y);
 }
 
-TPL_REGEX_CH_OP_(|, Or)
+TPL_REGEX_OP_(|, Or)
 
 // -------------------------------------------------------------------------
 // operator* (Unary)
@@ -301,16 +311,27 @@ Exp<And<T1, Repeat0<And<T2, T1> > > > TPL_CALL operator%(const Exp<T1>& x, const
 template <class T1> __forceinline
 Exp<And<T1, Repeat0<And<ChEq, T1> > > > TPL_CALL operator%(const Exp<T1>& x, int c)
 {
-	Exp<ChEq> y = c;
+	Exp<ChEq> y(c);
 	return x + *(y + x);
 }
 
 template <class T2> __forceinline
 Exp<And<ChEq, Repeat0<And<T2, ChEq> > > > TPL_CALL operator%(int c, const Exp<T2>& y)
 {
-	Exp<ChEq> x = c;
+	Exp<ChEq> x(c);
 	return x + *(y + x);
 }
+
+#define TPL_REGEX_LIST_OP_(RegExT, CharT)														\
+template <class T1> __forceinline																\
+Exp<And<T1, Repeat0<And<RegExT, T1> > > > TPL_CALL operator%(const Exp<T1>& x, const CharT* s)	\
+	{ Exp<RegExT> y(s); return x + *(y + x); }													\
+template <class T2> __forceinline																\
+Exp<And<ChEq, Repeat0<And<T2, ChEq> > > > TPL_CALL operator%(const CharT* s, const Exp<T2>& y)	\
+	{ Exp<RegExT> x(s); return x + *(y + x); }
+
+TPL_REGEX_LIST_OP_(StrEq, char)
+TPL_REGEX_LIST_OP_(WStrEq, wchar_t)
 
 // -------------------------------------------------------------------------
 // function csymbol, integer, etc.

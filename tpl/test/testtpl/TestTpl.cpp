@@ -89,7 +89,7 @@ void example2()
 	RegExp rProp(alloc, xml_symbol()/tagProp + '=' + integer()/tagValue);
 	RegExp rProps(alloc, rProp % ws() / tagProps);
 	RegExp rTagStart(alloc, '<' + xml_symbol()/"tag" + ws() + rProps + '>');
-	RegExp rDoc(alloc, rTagStart + c_symbol()/tagText + '<' + '/' + xml_symbol()/"tag" + '>');
+	RegExp rDoc(alloc, rTagStart + c_symbol()/tagText + "</tag>");
 
 	// ---- do match ----
 

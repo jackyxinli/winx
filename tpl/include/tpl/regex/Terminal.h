@@ -143,9 +143,8 @@ public:
 
 typedef MatchCh<EqCh> ChEq;
 
-template <class CharT> 
 __forceinline
-Exp<ChEq> TPL_CALL ch(const CharT x) {
+Exp<ChEq> TPL_CALL ch(const int x) {
 	return Exp<ChEq>(x);
 }
 
@@ -158,7 +157,8 @@ Exp< Op<T1, ChEq> > TPL_CALL operator op(const Exp<T1>& x, CharT y)					\
 	{ return x op ch(y); }
 
 #define TPL_REGEX_CH_OP_(op, Op)													\
-	TPL_REGEX_CH_OP1_(op, Op, char)
+	TPL_REGEX_CH_OP1_(op, Op, char)													\
+	TPL_REGEX_CH_OP1_(op, Op, wchar_t)
 
 // -------------------------------------------------------------------------
 // function space, alpha, ...
