@@ -4,6 +4,8 @@
 #include <stdext/LinkLib.h>
 #include <iostream>
 
+// -------------------------------------------------------------------------
+
 void example()
 {
 	using namespace tpl;
@@ -18,10 +20,10 @@ void example()
 
 	// ---- define rules ----
 
-	LeafMark tagSym = "symbol";
-	LeafMark tagValue = "value";
+	LeafMark tagSym;
+	LeafMark tagValue;
 	LeafMark tagPairValue;
-	NodeMark tagPair = "pair";
+	NodeMark tagPair;
 
 	RegExp rPair(alloc, (csymbol()/tagSym + '=' + real()/tagValue)/tagPair/tagPairValue);
 	RegExp rDoc(alloc, (skipws() + rPair) % ',');

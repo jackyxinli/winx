@@ -28,7 +28,7 @@ NS_TPL_BEGIN
 // -------------------------------------------------------------------------
 // class DefaultTag
 
-typedef const char* DefaultTag;
+typedef int DefaultTag;
 
 // -------------------------------------------------------------------------
 // class Mark
@@ -99,7 +99,7 @@ public:
 
 public:
 	template <class SourceT, class ContextT>
-	bool TPL_CALL match(SourceT& ar, ContextT& context)
+	bool TPL_CALL match(SourceT& ar, ContextT& context) const
 	{
 		typename SourceT::iterator pos = ar.position();
 		bool matched = m_x.match(ar, context);
@@ -130,7 +130,7 @@ public:
 
 public:
 	template <class SourceT, class ContextT>
-	bool TPL_CALL match(SourceT& ar, ContextT& context)
+	bool TPL_CALL match(SourceT& ar, ContextT& context) const
 	{
 		typename ContextT::trans_type trans(context);
 		typename ContextT::scope_type scope(context, m_mark);

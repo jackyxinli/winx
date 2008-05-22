@@ -52,7 +52,7 @@ public:
 	And(const RegExT1& x, const RegExT2& y) : m_x(x), m_y(y) {}
 
 	template <class SourceT, class ContextT>
-	bool TPL_CALL match(SourceT& ar, ContextT& context)
+	bool TPL_CALL match(SourceT& ar, ContextT& context) const
 	{
 		typename ContextT::trans_type trans(context);
 		if (m_x.match(ar, context)) {
@@ -94,7 +94,7 @@ public:
 	UAnd(const RegExT1& x, const RegExT2& y) : m_x(x), m_y(y) {}
 
 	template <class SourceT, class ContextT>
-	bool TPL_CALL match(SourceT& ar, ContextT& context)
+	bool TPL_CALL match(SourceT& ar, ContextT& context) const
 	{
 		return m_x.match(ar, context) && m_y.match(ar, context);
 	}
@@ -122,7 +122,7 @@ public:
 	Or(const RegExT1& x, const RegExT2& y) : m_x(x), m_y(y) {}
 
 	template <class SourceT, class ContextT>
-	bool TPL_CALL match(SourceT& ar, ContextT& context)
+	bool TPL_CALL match(SourceT& ar, ContextT& context) const
 	{
 		if (m_x.match(ar, context))
 			return true;
@@ -153,7 +153,7 @@ public:
 	Repeat0(const RegExT& x) : m_x(x) {}
 
 	template <class SourceT, class ContextT>
-	bool TPL_CALL match(SourceT& ar, ContextT& context)
+	bool TPL_CALL match(SourceT& ar, ContextT& context) const
 	{
 		while (m_x.match(ar, context))
 			;
@@ -182,7 +182,7 @@ public:
 	Repeat1(const RegExT& x) : m_x(x) {}
 
 	template <class SourceT, class ContextT>
-	bool TPL_CALL match(SourceT& ar, ContextT& context)
+	bool TPL_CALL match(SourceT& ar, ContextT& context) const
 	{
 		unsigned n = 0;
 		while (m_x.match(ar, context))
@@ -213,7 +213,7 @@ public:
 	Repeat01(const RegExT& x) : m_x(x) {}
 
 	template <class SourceT, class ContextT>
-	bool TPL_CALL match(SourceT& ar, ContextT& context)
+	bool TPL_CALL match(SourceT& ar, ContextT& context) const
 	{
 		m_x.match(ar, context);
 		return true;
@@ -245,7 +245,7 @@ public:
 	Repeat(const RegExT& x) : m_x(x) {}
 
 	template <class SourceT, class ContextT>
-	bool TPL_CALL match(SourceT& ar, ContextT& context)
+	bool TPL_CALL match(SourceT& ar, ContextT& context) const
 	{
 		unsigned n;
 		typename SourceT::iterator pos = ar.position();

@@ -45,7 +45,7 @@ public:
 	MatchCh(const T1& x) : m_pred(x) {}
 
 	template <class SourceT, class ContextT>
-	bool TPL_CALL match(SourceT& ar, ContextT& context)
+	bool TPL_CALL match(SourceT& ar, ContextT& context) const
 	{
 		typename SourceT::int_type c = ar.peek();
 		if (m_pred(c))

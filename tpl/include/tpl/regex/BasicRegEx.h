@@ -28,79 +28,58 @@ NS_TPL_BEGIN
 // -------------------------------------------------------------------------
 // class IRegExp
 
-template <class SourceT, class ContextT>
+template <class SourceT, class ContextT, bool bManaged = true>
 class IRegExp
 {
-public:
-	virtual bool TPL_CALL match(SourceT& ar, ContextT& context) = 0;
-};
-
-template <class RegExT, class SourceT, class ContextT>
-class ImplRegEx : public IRegExp<SourceT, ContextT>
-{
 private:
-	RegExT m_x;
+	typedef bool TPL_CALL _FN_match(const void* pThis, SourceT& ar, ContextT& context);
+	typedef _FN_match* FN_match;
+
+	const void* m_this;
+	FN_match m_fn;
 
 public:
-	ImplRegEx(const Exp<RegExT>& x)
-		: m_x(static_cast<const RegExT&>(x)) {
-	}
-
-	bool TPL_CALL match(SourceT& ar, ContextT& context) {
-		return m_x.match(ar, context);
-	}
-};
-
-// -------------------------------------------------------------------------
-// class Propxy
-
-template <class ImplT>
-class Factory
-{
-public:
-	template <class AllocT, class T1>
-	static ImplT* TPL_CALL create(AllocT& alloc, const T1& x) {
-		return TPL_NEW(alloc, ImplT)(x);
-	}
-};
-
-template <class ImplT>
-class UnmanagedFactory
-{
-public:
-	template <class AllocT, class T1>
-	static ImplT* TPL_CALL create(AllocT& alloc, const T1& x) {
-		return TPL_UNMANAGED_NEW(alloc, ImplT)(x);
-	}
-};
-
-template <class SourceT, class ContextT, template <class T> class FactoryT = Factory>
-class Propxy
-{
-private:
-	IRegExp<SourceT, ContextT>* m_x;
-
-public:
-	Propxy() : m_x(NULL) {}
-
+	IRegExp() : m_this(NULL) {}
+	
 	template <class AllocT, class RegExT>
-	Propxy(AllocT& alloc, const RegExT& x)
+	IRegExp(AllocT& alloc, const RegExT& x)
 	{
 		assign(alloc, x);
 	}
 
+	bool TPL_CALL match(SourceT& ar, ContextT& context) const {
+		TPL_ASSERT(m_this);
+		return m_fn(m_this, ar, context);
+	}
+
+public:
+	template <class RegExT>
+	class Impl
+	{
+	private:
+		RegExT m_x;
+
+	public:
+		Impl(const Exp<RegExT>& x)
+			: m_x(static_cast<const RegExT&>(x)) {
+		}
+
+		static bool TPL_CALL match(const void* pThis, SourceT& ar, ContextT& context) {
+			const RegExT& x = ((const Impl*)pThis)->m_x;
+			return x.match(ar, context);
+		}
+	};
+
 	template <class AllocT, class RegExT>
 	void TPL_CALL assign(AllocT& alloc, const Exp<RegExT>& x)
 	{
-		typedef ImplRegEx<RegExT, SourceT, ContextT> Impl;
-		m_x = FactoryT<Impl>::create(alloc, x);
-	}
-
-	bool TPL_CALL match(SourceT& ar, ContextT& context)
-	{
-		if (!m_x)
-			return false;
-		return m_x->match(ar, context);
+		typedef Impl<RegExT> Imp;
+		if (bManaged)
+			m_this = TPL_NEW(alloc, Imp)(x);
+		else
+			m_this = TPL_UNMANAGED_NEW(alloc, Imp)(x);
+	
+		m_fn = Imp::match;
 	}
 };
 
@@ -109,16 +88,16 @@ public:
 
 #if defined(TPL_HAS_TEMPLATE_TYPEDEF)
 
-template <class SourceT, class ContextT, template <class T> class FactoryT = Factory>
-typedef Exp< Propxy<SourceT, ContextT, FactoryT> > BasicRegEx;
+template <class SourceT, class ContextT, bool bManaged = true>
+typedef Exp<IRegExp<SourceT, ContextT, bManaged> > BasicRegEx;
 
 #else
 
-template <class SourceT, class ContextT, template <class T> class FactoryT = Factory>
-class BasicRegEx : public Exp< Propxy<SourceT, ContextT, FactoryT> >
+template <class SourceT, class ContextT, bool bManaged = true>
+class BasicRegEx : public Exp<IRegExp<SourceT, ContextT, bManaged> >
 {
 private:
-	typedef Exp< Propxy<SourceT, ContextT, FactoryT> > Base;
+	typedef Exp<IRegExp<SourceT, ContextT, bManaged> > Base;
 
 public:
 	BasicRegEx() {}
