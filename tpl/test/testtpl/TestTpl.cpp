@@ -18,12 +18,13 @@ void example()
 
 	// ---- define rules ----
 
-	LeafMark tSym = "symbol";
-	LeafMark tValue = "value";
-	NodeMark tPair = "pair";
+	LeafMark tagSym = "symbol";
+	LeafMark tagValue = "value";
+	LeafMark tagPairValue;
+	NodeMark tagPair = "pair";
 
-	RegExp rReal(alloc, real());
-	RegExp rDoc(alloc, tPair/(skipws() + tSym/csymbol() + '=' + tValue/rReal) % ',');
+	RegExp rPair(alloc, (csymbol()/tagSym + '=' + real()/tagValue)/tagPair/tagPairValue);
+	RegExp rDoc(alloc, (skipws() + rPair) % ',');
 
 	// ---- do match ----
 
@@ -35,13 +36,32 @@ void example()
 		return;
 	}
 
-	Document::cons itPair = doc.all();
-	while (itPair) {
-		Document::node_data vPair = itPair.hd().node();
-		Document::leaf_data vSym = vPair[tSym];
-		Document::leaf_data vValue = vPair[tValue];
-		std::cout << vSym.stl_str() << ": " << vValue.stl_str() << "\n";
-		itPair = itPair.tl();
+	// ---- print all data ----
+
+	Document::cons it = doc.all();
+	while (it) {
+		Document::value_type item = it.hd();
+		if (item.key() == tagPair) {
+			Document::node_data vPair = item.node();
+			Document::leaf_data vSym = vPair[tagSym];
+			Document::leaf_data vValue = vPair[tagValue];
+			std::cout << vSym.stl_str() << ": " << vValue.stl_str() << "\n";
+		}
+		else {
+			Document::leaf_data vPair = item.leaf();
+			std::cout << "Pair: " << vPair.stl_str() << "\n";
+		}
+		it = it.tl();
+	}
+
+	// ---- select what we are interested in and print ----
+
+	std::cout << "\n";
+	Document::leaf_cons it2 = doc.select(alloc, tagPairValue);
+	while (it2) {
+		Document::leaf_data vPair = *it2;
+		std::cout << "Pair: " << vPair.stl_str() << "\n";		
+		it2 = it2.tl();
 	}
 }
 

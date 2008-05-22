@@ -46,6 +46,14 @@ private:
 public:
 	Mark(const TagT tag_ = TagT())
 		: tag(tag_) {}
+
+	bool operator==(const Mark& b) const {
+		return this == &b;
+	}
+
+	bool operator!=(const Mark& b) const {
+		return this != &b;
+	}
 };
 
 // -------------------------------------------------------------------------
@@ -65,13 +73,13 @@ public:
 		: Base(tag_) {}
 
 	template <class T1>
-	Exp<Assign<T1, BasicMark> > TPL_CALL operator=(const Exp<T1>& x) {
+	Exp<Assign<T1, BasicMark> > TPL_CALL operator=(const Exp<T1>& x) const {
 		return Exp<Assign<T1, BasicMark> >(*this, x);
 	}
 
 	template <class T1>
-	Exp<Assign<T1, BasicMark> > TPL_CALL operator/(const Exp<T1>& x) {
-		return Exp<Assign<T1, BasicMark> >(*this, x);
+	friend Exp<Assign<T1, BasicMark> > TPL_CALL operator/(const Exp<T1>& x, const BasicMark& y) {
+		return Exp<Assign<T1, BasicMark> >(y, x);
 	}
 };
 

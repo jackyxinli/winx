@@ -299,16 +299,16 @@ Exp<And<T1, Repeat0<And<T2, T1> > > > TPL_CALL operator%(const Exp<T1>& x, const
 }
 
 template <class T1> __forceinline
-Exp<And<T1, Repeat0<And<MatchCh, T1> > > > TPL_CALL operator%(const Exp<T1>& x, int c)
+Exp<And<T1, Repeat0<And<ChEq, T1> > > > TPL_CALL operator%(const Exp<T1>& x, int c)
 {
-	Exp<MatchCh> y = c;
+	Exp<ChEq> y = c;
 	return x + *(y + x);
 }
 
 template <class T2> __forceinline
-Exp<And<MatchCh, Repeat0<And<T2, MatchCh> > > > TPL_CALL operator%(int c, const Exp<T2>& y)
+Exp<And<ChEq, Repeat0<And<T2, ChEq> > > > TPL_CALL operator%(int c, const Exp<T2>& y)
 {
-	Exp<MatchCh> x = c;
+	Exp<ChEq> x = c;
 	return x + *(y + x);
 }
 
@@ -317,7 +317,8 @@ Exp<And<MatchCh, Repeat0<And<T2, MatchCh> > > > TPL_CALL operator%(int c, const 
 
 // Usage: skipws()			--- means: matching Whitespaces. that is: [ \t\r\n]*
 // Usage: csymbol()			--- means: matching a CSymbol. that is: [a-zA-Z_][0-9a-zA-Z_]*
-// Usage: integer()			--- means: matching an Integer. that is: d+
+// Usage: u_integer()		--- means: matching an Unsigned Integer. that is: d+
+// Usage: integer()			--- means: matching an Integer. that is: [+-]?d+
 // Usage: normal_real()		--- means: matching a normal Real Number (no exponent).
 // Usage: real()			--- means: matching a Real Number (including exponent).
 

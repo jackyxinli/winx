@@ -102,11 +102,12 @@ public:
 		const ValueT& m_val;
 
 	public:
+		typedef const Mark<TagT>& key_type;
 		typedef const DataT& data_type;
 
 		Value(const ValueT& val) : m_val(val) {}
 	
-		const Mark<TagT>& TPL_CALL key() const {
+		key_type TPL_CALL key() const {
 			return *(const Mark<TagT>*)m_val.first;
 		}
 
@@ -132,6 +133,7 @@ public:
 	public:
 		typedef Value<DataT> value_type;
 		typedef typename value_type::data_type data_type;
+		typedef typename value_type::key_type key_type;
 
 		Position(ContainerT::cons pos) : m_pos(pos) {}
 
@@ -166,7 +168,7 @@ public:
 
 public:
 	struct Null {};
-	typedef Value<Null> value_type;	
+	typedef Value<Null> value_type;
 	typedef Position<Null> cons;
 
 	typedef Value<LeafMatchResultT> leaf_value;
