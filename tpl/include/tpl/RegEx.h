@@ -47,12 +47,16 @@
 #include "regex/Terminal.h"
 #endif
 
+#ifndef TPL_REGEX_RESTRICTION_H
+#include "regex/Restriction.h"
+#endif
+
 #ifndef TPL_REGEX_COMPOSITION_H
 #include "regex/Composition.h"
 #endif
 
-#ifndef TPL_REGEX_RESTRICTION_H
-#include "regex/Restriction.h"
+#ifndef TPL_REGEX_UCOMPOSITION_H
+#include "regex/UComposition.h"
 #endif
 
 // -------------------------------------------------------------------------

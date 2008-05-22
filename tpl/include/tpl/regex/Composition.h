@@ -88,40 +88,6 @@ TPL_REGEX_OP_(>>, And)
 TPL_REGEX_OP_(+, And)
 
 // -------------------------------------------------------------------------
-// operator*
-
-// Usage: Rule1 * Rule2		--- means: Rule1 Rule2 (but no transaction)
-
-template <class RegExT1, class RegExT2>
-class UAnd // Rule1 * Rule2
-{
-private:
-	RegExT1 m_x;
-	RegExT2 m_y;
-
-public:
-	UAnd() {}
-	UAnd(const RegExT1& x, const RegExT2& y) : m_x(x), m_y(y) {}
-
-	template <class SourceT, class ContextT>
-	bool TPL_CALL match(SourceT& ar, ContextT& context) const
-	{
-		typename SourceT::iterator pos = ar.position();
-		if (m_x.match(ar, context)) {
-			if (m_y.match(ar, context))
-				return true;
-		}
-		ar.seek(pos);
-		return false;
-	}
-};
-
-template <class T1, class T2> __forceinline
-Exp<UAnd<T1, T2> > TPL_CALL operator*(const Exp<T1>& x, const Exp<T2>& y) {
-	return Exp<UAnd<T1, T2> >(x, y);
-}
-
-// -------------------------------------------------------------------------
 // operator|
 
 // Usage: Rule1 | Rule2
@@ -340,38 +306,15 @@ TPL_REGEX_LIST_OP_(StrEq, char)
 TPL_REGEX_LIST_OP_(WStrEq, wchar_t)
 
 // -------------------------------------------------------------------------
-// function c_symbol, integer, etc.
+// function ws, skipws, u_integer
 
 // Usage: ws()				--- means: matching Whitespaces. that is: w+
 // Usage: skipws()			--- means: skip Whitespaces. that is: w*
-// Usage: c_symbol()		--- means: matching a CSymbol. that is: [a-zA-Z_][0-9a-zA-Z_]*
 // Usage: u_integer()		--- means: matching an Unsigned Integer. that is: d+
-// Usage: integer()			--- means: matching an Integer. that is: [+-]?d+
-// Usage: normal_real()		--- means: matching a normal Real Number (no exponent).
-// Usage: real()			--- means: matching a Real Number (including exponent).
-
-typedef Ch<'.'> DecimalPointer;
-typedef Ch<'+', '-'> Sign;
-typedef Ch<'E', 'e'> ExponentSign;
 
 typedef Repeat0<Space> SkipWhiteSpaces; // w*
 typedef Repeat1<Space> WhiteSpaces; // w+
-
-typedef UAnd<CSymbolFirstChar, Repeat0<CSymbolNextChar> > CSymbol;
-typedef UAnd<XmlSymbolFirstChar, Repeat0<XmlSymbolNextChar> > XmlSymbol;
-
-typedef Repeat1<Digit> UInteger; // u := d+
-typedef UAnd<Repeat01<Sign>, UInteger> Integer; // i := [+-]?d+
-
-typedef UAnd<DecimalPointer, UInteger> DecimalPointerStarted_; // \.d+
-typedef UAnd<DecimalPointer, Repeat0<Digit> > DecimalPointerStarted0_; // \.d*
-typedef UAnd<UInteger, Repeat01<DecimalPointerStarted0_> > IntegerStarted_; // d+(\.d*)?
-
-typedef Or<IntegerStarted_, DecimalPointerStarted_> UNormalReal_; // d+(\.d*)? | \.d+
-typedef UAnd<Repeat01<Sign>, UNormalReal_> NormalReal;
-
-typedef UAnd<ExponentSign, Integer> Exponent; // [Ee]<Integer>
-typedef UAnd<NormalReal, Repeat01<Exponent> > Real; // <NormalReal><Exponent>?
+typedef Repeat1<Digit> UInteger; // d+
 
 inline Exp<WhiteSpaces> TPL_CALL ws()
 {
@@ -383,34 +326,9 @@ inline Exp<SkipWhiteSpaces> TPL_CALL skipws()
 	return Exp<SkipWhiteSpaces>();
 }
 
-inline Exp<CSymbol> TPL_CALL c_symbol()
-{
-	return Exp<CSymbol>();
-}
-
-inline Exp<XmlSymbol> TPL_CALL xml_symbol()
-{
-	return Exp<XmlSymbol>();
-}
-
 inline Exp<UInteger> TPL_CALL u_integer()
 {
 	return Exp<UInteger>();
-}
-
-inline Exp<Integer> TPL_CALL integer()
-{
-	return Exp<Integer>();
-}
-
-inline Exp<NormalReal> TPL_CALL normal_real()
-{
-	return Exp<NormalReal>();
-}
-
-inline Exp<Real> TPL_CALL real()
-{
-	return Exp<Real>();
 }
 
 // -------------------------------------------------------------------------

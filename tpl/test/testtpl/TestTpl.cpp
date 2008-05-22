@@ -119,6 +119,6 @@ void example2()
 
 int main()
 {
-	example2();
+	example1();
 	return 0;
 }
