@@ -16,8 +16,8 @@
 // 
 // $Id: CharType.h,v 1.4 2006/12/03 07:51:57 xushiwei Exp $
 // -----------------------------------------------------------------------*/
-#ifndef __STDEXT_CHARTYPE_H__
-#define __STDEXT_CHARTYPE_H__
+#ifndef STDEXT_CHARTYPE_H
+#define STDEXT_CHARTYPE_H
 
 #ifndef __STDEXT_BASIC_H__
 #include "Basic.h"
@@ -114,6 +114,7 @@ typedef DigitTableT<void> DigitTable;
 #define STD_CTYPE_UNDERLINE			0x08	/* underline[_] */
 #define STD_CTYPE_XDIGIT			0x10	/* xdigit[0-9a-fA-F] */
 #define STD_CTYPE_PATH_SEP			0x20	/* [/\\] */
+#define STD_CTYPE_BLANK				0x40	/* [ \t\r\n] */
 #define STD_CTYPE_MAX_CHAR			128
 
 #define STD_CTYPE_ALPHA				(STD_CTYPE_UPPER|STD_CTYPE_LOWER)
@@ -177,6 +178,10 @@ struct CharTypeT
 		return __STD_CTYPE_IS(STD_CTYPE_XDIGIT, c);
 	}
 
+	static int isBlank(int c) {
+		return __STD_CTYPE_IS(STD_CTYPE_BLANK, c);
+	}
+
 	static int isCSymbolFirstChar(int c) {
 		return __STD_CTYPE_IS(STD_CSYMBOL_FIRST_CHAR, c);
 	}
@@ -207,6 +212,7 @@ struct CharTypeT
 	struct IsUnderline;			struct NotIsUnderline;
 	struct IsPathSeparator;		struct NotIsPathSeparator;
 	struct IsEOL;				struct NotIsEOL;
+	struct IsBlank;				struct NotIsBlank;
 
 	__STD_CTYPE_OP_AND_NOT(IsDigit, isDigit);
 	__STD_CTYPE_OP_AND_NOT(IsLower, isLower);
@@ -218,6 +224,7 @@ struct CharTypeT
 	__STD_CTYPE_OP_AND_NOT(IsCSymbolFirstChar, isCSymbolFirstChar);
 	__STD_CTYPE_OP_AND_NOT(IsCSymbolNextChar, isCSymbolNextChar);
 	__STD_CTYPE_OP_AND_NOT(IsEOL, isEOL);
+	__STD_CTYPE_OP_AND_NOT(IsBlank, isBlank);
 
 	struct ToUpper;
 	struct ToLower;
@@ -238,11 +245,11 @@ BYTE CharTypeT<Unused>::data[STD_CTYPE_MAX_CHAR] =
 	0,	//   [6]
 	0,	//   [7]
 	0,	//   [8]
-	0,	//   [9]
-	0,	//   [10]
+	STD_CTYPE_BLANK,	//   [9]
+	STD_CTYPE_BLANK,	//   [10]
 	0,	//   [11]
 	0,	//   [12]
-	0,	//   [13]
+	STD_CTYPE_BLANK,	//   [13]
 	0,	//   [14]
 	0,	//   [15]
 	0,	//   [16]
@@ -261,7 +268,7 @@ BYTE CharTypeT<Unused>::data[STD_CTYPE_MAX_CHAR] =
 	0,	//   [29]
 	0,	//   [30]
 	0,	//   [31]
-	0,	//   [32]
+	STD_CTYPE_BLANK,	//   [32]
 	0,	// ! [33]
 	0,	// " [34]
 	0,	// # [35]
@@ -443,4 +450,4 @@ public:
 
 __NS_STD_END
 
-#endif /* __STDEXT_CHARTYPE_H__ */
+#endif /* STDEXT_CHARTYPE_H */
