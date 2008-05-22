@@ -114,12 +114,15 @@ typedef DigitTableT<void> DigitTable;
 #define STD_CTYPE_UNDERLINE			0x08	/* underline[_] */
 #define STD_CTYPE_XDIGIT			0x10	/* xdigit[0-9a-fA-F] */
 #define STD_CTYPE_PATH_SEP			0x20	/* [/\\] */
-#define STD_CTYPE_BLANK				0x40	/* [ \t\r\n] */
+#define STD_CTYPE_SPACE				0x40	/* [ \t\r\n] */
+#define STD_CTYPE_SUBTRACTION_SIGN	0x80	/* [-], dash(ÆÆÕÛºÅ)/hyphen(Á¬×Ö·û) */
 #define STD_CTYPE_MAX_CHAR			128
 
 #define STD_CTYPE_ALPHA				(STD_CTYPE_UPPER|STD_CTYPE_LOWER)
 #define STD_CSYMBOL_FIRST_CHAR		(STD_CTYPE_ALPHA|STD_CTYPE_UNDERLINE)
 #define STD_CSYMBOL_NEXT_CHAR		(STD_CSYMBOL_FIRST_CHAR|STD_CTYPE_DIGIT)
+#define STD_XMLSYMBOL_FIRST_CHAR	(STD_CSYMBOL_FIRST_CHAR)
+#define STD_XMLSYMBOL_NEXT_CHAR		(STD_CSYMBOL_NEXT_CHAR|STD_CTYPE_SUBTRACTION_SIGN)
 
 // -------------------------------------------------------------------------
 
@@ -178,8 +181,8 @@ struct CharTypeT
 		return __STD_CTYPE_IS(STD_CTYPE_XDIGIT, c);
 	}
 
-	static int isBlank(int c) {
-		return __STD_CTYPE_IS(STD_CTYPE_BLANK, c);
+	static int isSpace(int c) {
+		return __STD_CTYPE_IS(STD_CTYPE_SPACE, c);
 	}
 
 	static int isCSymbolFirstChar(int c) {
@@ -188,6 +191,14 @@ struct CharTypeT
 
 	static int isCSymbolNextChar(int c) {
 		return __STD_CTYPE_IS(STD_CSYMBOL_NEXT_CHAR, c);
+	}
+
+	static int isXmlSymbolFirstChar(int c) {
+		return __STD_CTYPE_IS(STD_XMLSYMBOL_FIRST_CHAR, c);
+	}
+
+	static int isXmlSymbolNextChar(int c) {
+		return __STD_CTYPE_IS(STD_XMLSYMBOL_NEXT_CHAR, c);
 	}
 
 	static int isPathSeparator(int c) {
@@ -209,10 +220,12 @@ struct CharTypeT
 	struct IsXDigit;			struct NotIsXDigit;
 	struct IsCSymbolFirstChar;	struct NotIsCSymbolFirstChar;
 	struct IsCSymbolNextChar;	struct NotIsCSymbolNextChar;
+	struct IsXmlSymbolFirstChar;struct NotIsXmlSymbolFirstChar;
+	struct IsXmlSymbolNextChar;	struct NotIsXmlSymbolNextChar;
 	struct IsUnderline;			struct NotIsUnderline;
 	struct IsPathSeparator;		struct NotIsPathSeparator;
 	struct IsEOL;				struct NotIsEOL;
-	struct IsBlank;				struct NotIsBlank;
+	struct IsSpace;				struct NotIsSpace;
 
 	__STD_CTYPE_OP_AND_NOT(IsDigit, isDigit);
 	__STD_CTYPE_OP_AND_NOT(IsLower, isLower);
@@ -223,8 +236,10 @@ struct CharTypeT
 	__STD_CTYPE_OP_AND_NOT(IsPathSeparator, isPathSeparator);
 	__STD_CTYPE_OP_AND_NOT(IsCSymbolFirstChar, isCSymbolFirstChar);
 	__STD_CTYPE_OP_AND_NOT(IsCSymbolNextChar, isCSymbolNextChar);
+	__STD_CTYPE_OP_AND_NOT(IsXmlSymbolFirstChar, isXmlSymbolFirstChar);
+	__STD_CTYPE_OP_AND_NOT(IsXmlSymbolNextChar, isXmlSymbolNextChar);
 	__STD_CTYPE_OP_AND_NOT(IsEOL, isEOL);
-	__STD_CTYPE_OP_AND_NOT(IsBlank, isBlank);
+	__STD_CTYPE_OP_AND_NOT(IsSpace, isSpace);
 
 	struct ToUpper;
 	struct ToLower;
@@ -245,11 +260,11 @@ BYTE CharTypeT<Unused>::data[STD_CTYPE_MAX_CHAR] =
 	0,	//   [6]
 	0,	//   [7]
 	0,	//   [8]
-	STD_CTYPE_BLANK,	//   [9]
-	STD_CTYPE_BLANK,	//   [10]
+	STD_CTYPE_SPACE,	//   [9]
+	STD_CTYPE_SPACE,	//   [10]
 	0,	//   [11]
 	0,	//   [12]
-	STD_CTYPE_BLANK,	//   [13]
+	STD_CTYPE_SPACE,	//   [13]
 	0,	//   [14]
 	0,	//   [15]
 	0,	//   [16]
@@ -268,7 +283,7 @@ BYTE CharTypeT<Unused>::data[STD_CTYPE_MAX_CHAR] =
 	0,	//   [29]
 	0,	//   [30]
 	0,	//   [31]
-	STD_CTYPE_BLANK,	//   [32]
+	STD_CTYPE_SPACE,	//   [32]
 	0,	// ! [33]
 	0,	// " [34]
 	0,	// # [35]
@@ -281,7 +296,7 @@ BYTE CharTypeT<Unused>::data[STD_CTYPE_MAX_CHAR] =
 	0,	// * [42]
 	0,	// + [43]
 	0,	// , [44]
-	0,	// - [45]
+	STD_CTYPE_SUBTRACTION_SIGN,			// - [45]
 	0,	// . [46]
 	STD_CTYPE_PATH_SEP,	// / [47]
 	STD_CTYPE_DIGIT|STD_CTYPE_XDIGIT,	// 0 [48]
