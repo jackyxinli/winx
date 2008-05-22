@@ -66,8 +66,8 @@ typedef BasicContext<Source::iterator, Allocator, DefaultTag> Context;
 // -------------------------------------------------------------------------
 // class RegEx
 
-typedef BasicRegEx<Source, Context> RegEx;
-typedef BasicRegEx<Source, Context, UnmanagedFactory> SimpleRegEx;
+typedef BasicRegEx<Source, Context> RegEx, RegExp;
+typedef BasicRegEx<Source, Context, UnmanagedFactory> SimpleRegEx, SimpleRegExp;
 
 // -------------------------------------------------------------------------
 // $Log: $

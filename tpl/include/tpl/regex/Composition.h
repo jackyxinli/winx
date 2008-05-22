@@ -48,6 +48,7 @@ private:
 	RegExT2 m_y;
 
 public:
+	And() {}
 	And(const RegExT1& x, const RegExT2& y) : m_x(x), m_y(y) {}
 
 	template <class SourceT, class ContextT>
@@ -89,6 +90,7 @@ private:
 	RegExT2 m_y;
 
 public:
+	UAnd() {}
 	UAnd(const RegExT1& x, const RegExT2& y) : m_x(x), m_y(y) {}
 
 	template <class SourceT, class ContextT>
@@ -116,6 +118,7 @@ private:
 	RegExT2 m_y;
 
 public:
+	Or() {}
 	Or(const RegExT1& x, const RegExT2& y) : m_x(x), m_y(y) {}
 
 	template <class SourceT, class ContextT>
@@ -146,6 +149,7 @@ private:
 	RegExT m_x;
 
 public:
+	Repeat0() {}
 	Repeat0(const RegExT& x) : m_x(x) {}
 
 	template <class SourceT, class ContextT>
@@ -174,6 +178,7 @@ private:
 	RegExT m_x;
 
 public:
+	Repeat1() {}
 	Repeat1(const RegExT& x) : m_x(x) {}
 
 	template <class SourceT, class ContextT>
@@ -204,6 +209,7 @@ private:
 	RegExT m_x;
 
 public:
+	Repeat01() {}
 	Repeat01(const RegExT& x) : m_x(x) {}
 
 	template <class SourceT, class ContextT>
@@ -235,6 +241,7 @@ private:
 	RegExT m_x;
 
 public:
+	Repeat() {}
 	Repeat(const RegExT& x) : m_x(x) {}
 
 	template <class SourceT, class ContextT>
@@ -260,6 +267,7 @@ template <class RegExT>
 class Repeat<RegExT, 0, 1> : public Repeat01<RegExT>
 {
 public:
+	Repeat<RegExT, 0, 1>() {}
 	Repeat<RegExT, 0, 1>(const RegExT& x) : Repeat01<RegExT>(x) {}
 };
 
@@ -307,26 +315,59 @@ Exp<And<MatchCh, Repeat0<And<T2, MatchCh> > > > TPL_CALL operator%(int c, const 
 // -------------------------------------------------------------------------
 // function csymbol, integer, etc.
 
+// Usage: skipws()			--- means: matching Whitespaces. that is: [ \t\r\n]*
 // Usage: csymbol()			--- means: matching a CSymbol. that is: [a-zA-Z_][0-9a-zA-Z_]*
-// Usage: integer()			--- means: matching a CSymbol. that is: [0-9]+
+// Usage: integer()			--- means: matching an Integer. that is: d+
+// Usage: normal_real()		--- means: matching a normal Real Number (no exponent).
+// Usage: real()			--- means: matching a Real Number (including exponent).
 
-inline Exp<Repeat0<Blank> > skipws()
+typedef Ch<'.'> DecimalPointer;
+typedef Ch<'+', '-'> Sign;
+typedef Ch<'E', 'e'> ExponentSign;
+
+typedef Repeat0<Blank> WhiteSpaces; // w*
+typedef UAnd<CSymbolFirstChar, Repeat0<CSymbolNextChar> > CSymbol;
+typedef Repeat1<Digit> UInteger; // u := d+
+typedef UAnd<Repeat01<Sign>, UInteger> Integer; // i := [+-]?d+
+
+typedef UAnd<DecimalPointer, UInteger> DecimalPointerStarted_; // \.d+
+typedef UAnd<DecimalPointer, Repeat0<Digit> > DecimalPointerStarted0_; // \.d*
+typedef UAnd<UInteger, Repeat01<DecimalPointerStarted0_> > IntegerStarted_; // d+(\.d*)?
+
+typedef Or<IntegerStarted_, DecimalPointerStarted_> UNormalReal_; // d+(\.d*)? | \.d+
+typedef UAnd<Repeat01<Sign>, UNormalReal_> NormalReal;
+
+typedef UAnd<ExponentSign, Integer> Exponent; // [Ee]<Integer>
+typedef UAnd<NormalReal, Repeat01<Exponent> > Real; // <NormalReal><Exponent>?
+
+inline Exp<WhiteSpaces> TPL_CALL skipws()
 {
-	Exp<Blank> b;
-	return *b;
+	return Exp<WhiteSpaces>();
 }
 
-inline Exp<UAnd<CSymbolFirstChar, Repeat0<CSymbolNextChar> > > TPL_CALL csymbol()
+inline Exp<CSymbol> TPL_CALL csymbol()
 {
-	Exp<CSymbolFirstChar> f;
-	Exp<CSymbolNextChar> n;
-	return f * *n;
+	return Exp<CSymbol>();
 }
 
-inline Exp<Repeat1<Digit> > TPL_CALL integer()
+inline Exp<UInteger> TPL_CALL u_integer()
 {
-	Exp<Digit> d;
-	return +d;
+	return Exp<UInteger>();
+}
+
+inline Exp<Integer> TPL_CALL integer()
+{
+	return Exp<Integer>();
+}
+
+inline Exp<NormalReal> TPL_CALL normal_real()
+{
+	return Exp<NormalReal>();
+}
+
+inline Exp<Real> TPL_CALL real()
+{
+	return Exp<Real>();
 }
 
 // -------------------------------------------------------------------------

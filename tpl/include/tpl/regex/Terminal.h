@@ -58,13 +58,36 @@ public:
 };
 
 // -------------------------------------------------------------------------
+// function ch_range
+
+// Usage: ch_range<'0', '9'>()	--- means: [0-9]
+
+template <int m_c1, int m_c2>
+class EqChRg
+{
+public:
+	__forceinline bool TPL_CALL operator()(int c) const {
+		return c >= m_c1 && c <= m_c2;
+	}
+};
+
+template <int m_c1, int m_c2>
+class ChRange : public BasicMatchCh<EqChRg<m_c1, m_c2> > {
+};
+
+template <int m_c1, int m_c2> 
+__forceinline Exp<ChRange<m_c1, m_c2> > TPL_CALL ch_range() {
+	return Exp<ChRange<m_c1, m_c2> >();
+}
+
+// -------------------------------------------------------------------------
 // function ch
 
-// Usage: ch<'a'>()
-// Note: Its function is same as ch('a').
+// Usage: ch<'a'>()			--- means: ch('a')
+// Usage: ch<'a', 'b'>()	--- means: ch('a') | ch('b')
 
 template <int m_c>
-class EqCh0
+class EqCh1
 {
 public:
 	__forceinline bool TPL_CALL operator()(int c) const {
@@ -72,10 +95,31 @@ public:
 	}
 };
 
+template <int m_c1, int m_c2>
+class EqCh2
+{
+public:
+	__forceinline bool TPL_CALL operator()(int c) const {
+		return m_c1 == c || m_c2 == c;
+	}
+};
+
+template <int m_c1, int m_c2 = m_c1>
+class Ch : public BasicMatchCh<EqCh2<m_c1, m_c2> > {
+};
+
+template <int m_c>
+class Ch<m_c, m_c> : public BasicMatchCh<EqCh1<m_c> > {
+};
+
 template <int m_c> 
-__forceinline
-Exp<BasicMatchCh<EqCh0<m_c> > > TPL_CALL ch() {
-	return Exp<BasicMatchCh<EqCh0<m_c> > >();
+__forceinline Exp<Ch<m_c> > TPL_CALL ch() {
+	return Exp<Ch<m_c> >();
+}
+
+template <int m_c1, int m_c2> 
+__forceinline Exp<Ch<m_c1, m_c2> > TPL_CALL ch() {
+	return Exp<Ch<m_c1, m_c2> >();
 }
 
 // -------------------------------------------------------------------------
@@ -123,11 +167,12 @@ Exp< Op<T1, MatchCh> > TPL_CALL operator op(const Exp<T1>& x, CharT y)				\
 // Usage: alpha()		--- means: matching ONE Alpha Character
 // Usage: ...
 
+typedef ChRange<'0', '9'> Digit;
+typedef ChRange<'a', 'z'> LowerAlpha;
+typedef ChRange<'A', 'Z'> UpperAlpha;
+
 typedef BasicMatchCh<std::CharType::IsBlank> Blank;
 typedef BasicMatchCh<std::CharType::IsAlpha> Alpha;
-typedef BasicMatchCh<std::CharType::IsLower> LowerAlpha;
-typedef BasicMatchCh<std::CharType::IsUpper> UpperAlpha;
-typedef BasicMatchCh<std::CharType::IsDigit> Digit;
 typedef BasicMatchCh<std::CharType::IsXDigit> XDigit;
 typedef BasicMatchCh<std::CharType::IsEOL> EOL;
 
