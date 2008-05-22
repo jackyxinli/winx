@@ -65,10 +65,8 @@ public:
 	bool TPL_CALL match(SourceT& ar, ContextT& context) const
 	{
 		typename ContextT::trans_type trans(ar, context);
-		if (m_x.match(ar, context)) {
-			if (m_y.match(ar, context))
-				return true;
-		}
+		if (m_x.match(ar, context) && m_y.match(ar, context))
+			return true;
 		trans.rollback(ar);
 		return false;
 	}
@@ -106,9 +104,7 @@ public:
 	template <class SourceT, class ContextT>
 	bool TPL_CALL match(SourceT& ar, ContextT& context) const
 	{
-		if (m_x.match(ar, context))
-			return true;
-		return m_y.match(ar, context);
+		return m_x.match(ar, context) || m_y.match(ar, context);
 	}
 };
 
@@ -230,8 +226,7 @@ public:
 	bool TPL_CALL match(SourceT& ar, ContextT& context) const
 	{
 		unsigned n;
-		typename SourceT::iterator pos = ar.position();
-		typename ContextT::trans_type trans(context);
+		typename ContextT::trans_type trans(ar, context);
 		for (n = 0; n < nMax; ++n)
 		{
 			if (!m_x.match(ar, context))
@@ -239,8 +234,7 @@ public:
 		}
 		if (n >= nMin)
 			return true;
-		ar.seek(pos);
-		trans.rollback();
+		trans.rollback(ar);
 		return false;
 	}
 };

@@ -26,9 +26,11 @@
 NS_TPL_BEGIN
 
 // -------------------------------------------------------------------------
-// operator*
+// class UAnd
 
-// Usage: Rule1 * Rule2		--- means: Rule1 Rule2 (but no transaction)
+// Usage: UAnd<Rule1,Rule2>		--- means: Rule1 Rule2 (but no transaction)
+// Note: Rule1 and Rule2 cannot contain any Mark operators (See <tpl/regex/Mark.h>)
+// If Rule1 or Rule2 contains Mark operators, you should use And operator instead of UAnd.
 
 template <class RegExT1, class RegExT2>
 class UAnd // Rule1 * Rule2
@@ -44,20 +46,91 @@ public:
 	template <class SourceT, class ContextT>
 	bool TPL_CALL match(SourceT& ar, ContextT& context) const
 	{
-		typename SourceT::iterator pos = ar.position();
-		if (m_x.match(ar, context)) {
-			if (m_y.match(ar, context))
-				return true;
+		return m_x.match(ar, context) && m_y.match(ar, context);
+	}
+};
+
+// -------------------------------------------------------------------------
+// class URepeat
+
+template <class RegExT, unsigned nMin, unsigned nMax = UINT_MAX>
+class URepeat // Rule{nMin, nMax}
+{
+private:
+	RegExT m_x;
+
+public:
+	URepeat() {}
+	URepeat(const RegExT& x) : m_x(x) {}
+
+	template <class SourceT, class ContextT>
+	bool TPL_CALL match(SourceT& ar, ContextT& context) const
+	{
+		unsigned n;
+		for (n = 0; n < nMax; ++n) {
+			if (!m_x.match(ar, context))
+				break;
 		}
+		return n >= nMin;
+	}
+};
+
+// -------------------------------------------------------------------------
+// class UGuard
+
+// Usage: UGuad<Rule>	--- usually Rule contains some UAnd operators.
+// Note: Rule cannot contain any Mark operators (See <tpl/regex/Mark.h>)
+
+template <class RegExT>
+class UGuard
+{
+private:
+	RegExT m_x;
+
+public:
+	UGuard() {}
+	UGuard(const RegExT& x) : m_x(x) {}
+
+	template <class SourceT, class ContextT>
+	bool TPL_CALL match(SourceT& ar, ContextT& context) const
+	{
+		typename SourceT::iterator pos = ar.position();
+		if (m_x.match(ar, context))
+			return true;
 		ar.seek(pos);
 		return false;
 	}
 };
 
-template <class T1, class T2> __forceinline
-Exp<UAnd<T1, T2> > TPL_CALL operator*(const Exp<T1>& x, const Exp<T2>& y) {
-	return Exp<UAnd<T1, T2> >(x, y);
-}
+// -------------------------------------------------------------------------
+// TPL_REGEX_REDUCE_NAME
+
+#ifndef TPL_REGEX_REDUCE_NAME
+#define TPL_REGEX_REDUCE_NAME(OrgClass, NewClass)							\
+	class NewClass : public OrgClass {};
+#endif
+
+#ifndef TPL_REGEX_TYPEDEF
+#define TPL_REGEX_TYPEDEF(OrgClass, NewClass)								\
+	typedef OrgClass NewClass;
+#endif
+
+// -------------------------------------------------------------------------
+// TPL_REGEX_GUARD
+
+#if (0)
+#define TPL_NO_REDUCE_NAME
+#endif
+
+#ifndef TPL_REGEX_GUARD
+#if defined(TPL_NO_REDUCE_NAME)
+#define TPL_REGEX_GUARD(UnGuard, Guard)										\
+	TPL_REGEX_TYPEDEF(UGuard<UnGuard>, Guard)
+#else
+#define TPL_REGEX_GUARD(UnGuard, Guard)										\
+	TPL_REGEX_REDUCE_NAME(UGuard<UnGuard>, Guard)
+#endif
+#endif
 
 // -------------------------------------------------------------------------
 // function c_symbol, xml_symbol, etc.
@@ -68,92 +141,119 @@ Exp<UAnd<T1, T2> > TPL_CALL operator*(const Exp<T1>& x, const Exp<T2>& y) {
 typedef UAnd<CSymbolFirstChar, Repeat0<CSymbolNextChar> > CSymbol;
 typedef UAnd<XmlSymbolFirstChar, Repeat0<XmlSymbolNextChar> > XmlSymbol;
 
-inline Exp<CSymbol> TPL_CALL c_symbol()
+TPL_REGEX_GUARD(CSymbol, CSymbolG)
+TPL_REGEX_GUARD(XmlSymbol, XmlSymbolG)
+
+inline Exp<CSymbolG> TPL_CALL c_symbol()
 {
-	return Exp<CSymbol>();
+	return Exp<CSymbolG>();
 }
 
-inline Exp<XmlSymbol> TPL_CALL xml_symbol()
+inline Exp<XmlSymbolG> TPL_CALL xml_symbol()
 {
-	return Exp<XmlSymbol>();
+	return Exp<XmlSymbolG>();
 }
 
 // -------------------------------------------------------------------------
-// function c_symbol, integer, etc.
+// function integer, etc.
 
 // Usage: integer()			--- means: matching an Integer. that is: [+-]?d+
-// Usage: real()			--- means: matching a Real Number or an Integer
-// Usage: strict_real()		--- means: matching a Real Number (NOT including an Integer)
-// Usage: ...
 
-typedef Ch<'.'> DecimalPointer;
 typedef Ch<'+', '-'> Sign;
-typedef Ch<'E', 'e'> ExponentSign;
-
 typedef UAnd<Repeat01<Sign>, UInteger> Integer; // [+-]?d+
-
-typedef UAnd<UAnd<Repeat0<Digit>, DecimalPointer>, UInteger> UStrictFraction1_;
-typedef UAnd<UInteger, DecimalPointer> UStrictFraction2_;
-typedef Or<UStrictFraction1_, UStrictFraction2_> UStrictFraction; // d*\.d+ | d+\.
-
-typedef UAnd<ExponentSign, Integer> Exponent; // [Ee][+-]?d+
-
-typedef UAnd<UStrictFraction, Repeat01<Exponent> > UStrictReal1_;
-typedef UAnd<UInteger, Exponent> UStrictReal2_;
-typedef Or<UStrictReal1_, UStrictReal2_> UStrictReal;
-
-typedef Or<UStrictFraction, UInteger> UFraction;
-typedef Or<UStrictReal, UInteger> UReal;
-
-typedef UAnd<Repeat01<Sign>, UStrictFraction> StrictFraction;
-typedef UAnd<Repeat01<Sign>, UStrictReal> StrictReal;
-
-typedef UAnd<Repeat01<Sign>, UFraction> Fraction;
-typedef UAnd<Repeat01<Sign>, UReal> Real;
 
 inline Exp<Integer> TPL_CALL integer()
 {
 	return Exp<Integer>();
 }
 
-inline Exp<UStrictFraction> TPL_CALL u_strict_fraction()
+// -------------------------------------------------------------------------
+// function strict_fraction, fraction, etc.
+
+typedef Ch<'.'> DecimalPointer;
+
+typedef UAnd<DecimalPointer, UInteger> DecimalPointerStarted_; // \.d+
+typedef UAnd<DecimalPointer, Repeat0<Digit> > DecimalPointerStarted0_; // \.d*
+
+typedef UAnd<UInteger, DecimalPointerStarted0_> DigitStartedUStrictFraction_; // d+\.d*
+typedef Or<DecimalPointerStarted_, DigitStartedUStrictFraction_> UStrictFraction; // \.d+ | d+\.d*
+
+typedef UAnd<UInteger, Repeat01<DecimalPointerStarted0_> > DigitStartedUFraction_; // d+(\.d*)?
+typedef Or<DecimalPointerStarted_, DigitStartedUFraction_> UFraction; // \.d+ | d+(\.d*)?
+
+typedef UAnd<Repeat01<Sign>, UStrictFraction> StrictFraction;
+typedef UAnd<Repeat01<Sign>, UFraction> Fraction;
+
+TPL_REGEX_GUARD(UStrictFraction, UStrictFractionG)
+TPL_REGEX_GUARD(StrictFraction, StrictFractionG)
+TPL_REGEX_GUARD(UFraction, UFractionG)
+TPL_REGEX_GUARD(Fraction, FractionG)
+
+inline Exp<UStrictFractionG> TPL_CALL u_strict_fraction()
 {
-	return Exp<UStrictFraction>();
+	return Exp<UStrictFractionG>();
 }
 
-inline Exp<StrictFraction> TPL_CALL strict_fraction()
+inline Exp<StrictFractionG> TPL_CALL strict_fraction()
 {
-	return Exp<StrictFraction>();
+	return Exp<StrictFractionG>();
 }
 
-inline Exp<UFraction> TPL_CALL u_fraction()
+inline Exp<UFractionG> TPL_CALL u_fraction()
 {
-	return Exp<UFraction>();
+	return Exp<UFractionG>();
 }
 
-inline Exp<Fraction> TPL_CALL fraction()
+inline Exp<FractionG> TPL_CALL fraction()
 {
-	return Exp<Fraction>();
+	return Exp<FractionG>();
 }
 
-inline Exp<UStrictReal> TPL_CALL u_strict_real()
+// -------------------------------------------------------------------------
+// function real, strict_real, etc.
+
+// Usage: real()			--- means: matching a Real Number or an Integer
+// Usage: strict_real()		--- means: matching a Real Number (NOT including an Integer)
+
+typedef Ch<'E', 'e'> ExponentSign;
+
+typedef UAnd<ExponentSign, Integer> Exponent; // [Ee][+-]?d+
+
+typedef UAnd<DecimalPointerStarted_, Repeat01<Exponent> > DPS_UStrictReal_;
+
+typedef UAnd<DecimalPointerStarted0_, Repeat01<Exponent> > DPS0_UStrictReal_;
+typedef Or<DPS0_UStrictReal_, Exponent> DS_UStrictRealSuffix_;
+typedef UAnd<UInteger, DS_UStrictRealSuffix_> DigitStartUStrictReal_;
+
+typedef Or<DPS_UStrictReal_, DigitStartUStrictReal_> UStrictReal;
+typedef UAnd<Repeat01<Sign>, UStrictReal> StrictReal;
+
+typedef UAnd<UFraction, Repeat01<Exponent> > UReal;
+typedef UAnd<Repeat01<Sign>, UReal> Real;
+
+TPL_REGEX_GUARD(UStrictReal, UStrictRealG)
+TPL_REGEX_GUARD(StrictReal, StrictRealG)
+TPL_REGEX_GUARD(UReal, URealG)
+TPL_REGEX_GUARD(Real, RealG)
+
+inline Exp<UStrictRealG> TPL_CALL u_strict_real()
 {
-	return Exp<UStrictReal>();
+	return Exp<UStrictRealG>();
 }
 
-inline Exp<StrictReal> TPL_CALL strict_real()
+inline Exp<StrictRealG> TPL_CALL strict_real()
 {
-	return Exp<StrictReal>();
+	return Exp<StrictRealG>();
 }
 
-inline Exp<UReal> TPL_CALL u_real()
+inline Exp<URealG> TPL_CALL u_real()
 {
-	return Exp<UReal>();
+	return Exp<URealG>();
 }
 
-inline Exp<Real> TPL_CALL real()
+inline Exp<RealG> TPL_CALL real()
 {
-	return Exp<Real>();
+	return Exp<RealG>();
 }
 
 // -------------------------------------------------------------------------

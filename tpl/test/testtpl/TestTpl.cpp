@@ -117,8 +117,45 @@ void example2()
 	}
 }
 
+void example3()
+{
+	using namespace tpl;
+
+	std::BlockPool recycle;
+	std::ScopeAlloc alloc(recycle);
+
+	// ---- define source ----
+
+	char buf[] = "1928-10-1, 97-1-3";
+	Source source(buf, buf+sizeof(buf));
+
+	// ---- define rules ----
+
+	LeafMark tagTime;
+
+	RegExp rYear( alloc, repeat<1, 2>(repeat<2>(digit())) );
+	RegExp rMonOrDay( alloc, repeat<1, 2>(digit()) );
+	RegExp rDoc( alloc, (rYear + '-' + rMonOrDay + '-' + rMonOrDay)/tagTime % (',' + skipws()) );
+
+	// ---- do match ----
+
+	Document doc;
+	Context context(alloc, doc);
+
+	if (!rDoc.match(source, context)) {
+		std::cout << "match failed\n";
+		return;
+	}
+
+	// ---- print time ----
+
+	for (Document::cons it = doc.all(); it; it = it.tl()) {
+		std::cout << it.hd().leaf().stl_str() << "\n";
+	}
+}
+
 int main()
 {
-	example1();
+	example3();
 	return 0;
 }
