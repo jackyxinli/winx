@@ -23,6 +23,8 @@
 #include "Basic.h"
 #endif
 
+NS_TPL_BEGIN
+
 // -------------------------------------------------------------------------
 // class DefaultTag
 
@@ -64,6 +66,11 @@ public:
 
 	template <class T1>
 	Exp<Assign<T1, BasicMark> > TPL_CALL operator=(const Exp<T1>& x) {
+		return Exp<Assign<T1, BasicMark> >(*this, x);
+	}
+
+	template <class T1>
+	Exp<Assign<T1, BasicMark> > TPL_CALL operator/(const Exp<T1>& x) {
 		return Exp<Assign<T1, BasicMark> >(*this, x);
 	}
 };
@@ -133,5 +140,7 @@ typedef BasicMark<DefaultTag, NodeAssign> NodeMark;
 
 // -------------------------------------------------------------------------
 // $Log: $
+
+NS_TPL_END
 
 #endif /* TPL_REGEX_MARK_H */

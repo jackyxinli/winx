@@ -39,6 +39,8 @@
 #include "Context.h"
 #endif
 
+NS_TPL_BEGIN
+
 // -------------------------------------------------------------------------
 // class Source
 
@@ -54,7 +56,6 @@ typedef Node Document;
 // -------------------------------------------------------------------------
 // class Allocator
 
-typedef std::BlockPool BlockPool;
 typedef std::ScopeAlloc Allocator;
 
 // -------------------------------------------------------------------------
@@ -70,5 +71,7 @@ typedef BasicRegEx<Source, Context, UnmanagedFactory> SimpleRegEx;
 
 // -------------------------------------------------------------------------
 // $Log: $
+
+NS_TPL_END
 
 #endif /* TPL_REGEX_REGEX_H */

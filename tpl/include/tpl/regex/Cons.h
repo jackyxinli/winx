@@ -23,6 +23,8 @@
 #include "Basic.h"
 #endif
 
+NS_TPL_BEGIN
+
 // -------------------------------------------------------------------------
 // class Cons
 
@@ -99,6 +101,29 @@ public:
 		return lstRet;
 	}
 
+	template <class CondT>
+	cons TPL_CALL find(CondT cond) const
+	{
+		for (cons n = m_hd; n; n = n->tail)
+		{
+			reference val = n->value;
+			if (cond(val))
+				return n;
+		}
+		return NULL;
+	}
+
+	template <class AllocT>
+	void TPL_CALL reverse(AllocT& alloc)
+	{
+		cons lst = NULL;
+		for (cons n = m_hd; n; n = n->tail)
+		{
+			lst = _newNode(alloc, n->value, lst);
+		}
+		m_hd = lst;
+	}
+
 public:
 	ConsList() : m_hd(NULL) {}
 	ConsList(cons hd_) : m_hd(hd_) {}
@@ -135,5 +160,7 @@ public:
 
 // -------------------------------------------------------------------------
 // $Log: $
+
+NS_TPL_END
 
 #endif /* TPL_REGEX_CONS_H */

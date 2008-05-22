@@ -43,6 +43,14 @@
 #include "regex/BasicRegEx.h"
 #endif
 
+#ifndef TPL_REGEX_TERMINAL_H
+#include "regex/Terminal.h"
+#endif
+
+#ifndef TPL_REGEX_COMPOSITION_H
+#include "regex/Composition.h"
+#endif
+
 // -------------------------------------------------------------------------
 // $Log: $
 

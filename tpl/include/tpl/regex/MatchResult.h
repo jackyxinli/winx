@@ -35,6 +35,8 @@
 #include <string>
 #endif
 
+NS_TPL_BEGIN
+
 // -------------------------------------------------------------------------
 // LeafMatchResult
 
@@ -100,21 +102,23 @@ public:
 		const ValueT& m_val;
 
 	public:
+		typedef const DataT& data_type;
+
 		Value(const ValueT& val) : m_val(val) {}
 	
-		const Mark<TagT>& key() const {
+		const Mark<TagT>& TPL_CALL key() const {
 			return *(const Mark<TagT>*)m_val.first;
 		}
 
-		const DataT& data() const {
+		data_type TPL_CALL data() const {
 			return *(const DataT*)m_val.second;
 		}
 
-		const LeafMatchResult<Iterator>& leaf() const {
+		const LeafMatchResult<Iterator>& TPL_CALL leaf() const {
 			return *(const LeafMatchResult<Iterator>*)m_val.second;
 		}
 
-		const NodeMatchResult& node() const {
+		const NodeMatchResult& TPL_CALL node() const {
 			return *(const NodeMatchResult*)m_val.second;
 		}
 	};
@@ -127,6 +131,7 @@ public:
 
 	public:
 		typedef Value<DataT> value_type;
+		typedef typename value_type::data_type data_type;
 
 		Position(ContainerT::cons pos) : m_pos(pos) {}
 
@@ -136,6 +141,10 @@ public:
 
 		value_type TPL_CALL hd() const {
 			return m_pos->value;
+		}
+
+		data_type TPL_CALL operator*() const {
+			return hd().data();
 		}
 
 		const Position* TPL_CALL operator->() const {
@@ -197,9 +206,34 @@ public:
 	cons TPL_CALL all() const {
 		return m_data.data();
 	}
+
+public:
+	leaf_cons TPL_CALL find(const LeafMarkT& mark) const {
+		DoSel cond(mark);
+		return m_data.find(cond);
+	}
+
+	node_cons TPL_CALL find(const NodeMarkT& mark) const {
+		DoSel cond(mark);
+		return m_data.find(cond);
+	}
+
+	leaf_data TPL_CALL operator[](const LeafMarkT& mark) const {
+		leaf_cons it = find(mark);
+		TPL_ASSERT(it);
+		return it.hd().data();
+	}
+
+	node_data TPL_CALL operator[](const NodeMarkT& mark) const {
+		node_cons it = find(mark);
+		TPL_ASSERT(it);
+		return it.hd().data();
+	}
 };
 
 // -------------------------------------------------------------------------
 // $Log: $
+
+NS_TPL_END
 
 #endif /* TPL_REGEX_MATCHRESULT_H */

@@ -4,12 +4,56 @@
 #include <stdext/LinkLib.h>
 #include <iostream>
 
-int main()
+void example()
 {
-	BlockPool recycle;
-	Allocator alloc(recycle);
+	using namespace tpl;
+
+	std::BlockPool recycle;
+	std::ScopeAlloc alloc(recycle);
+
+	// ---- define source ----
+
+	char buf[] = "x1=1, x2=32, x3=22323";
+	Source source(buf, buf+sizeof(buf));
 
 	// ---- define rules ----
+
+	LeafMark tSym = "symbol";
+	LeafMark tValue = "value";
+	NodeMark tPair = "pair";
+
+	RegEx rDoc(alloc, tPair/(skipws() + tSym/csymbol() + '=' + tValue/integer()) % ',');
+
+	// ---- do match ----
+
+	Document doc;
+	Context context(alloc, doc);
+
+	if (!rDoc.match(source, context)) {
+		std::cout << "match failed\n";
+		return;
+	}
+
+	Document::cons itPair = doc.all();
+	while (itPair) {
+		Document::node_data vPair = itPair.hd().node();
+		Document::leaf_data vSym = vPair[tSym];
+		Document::leaf_data vValue = vPair[tValue];
+		std::cout << vSym.stl_str() << "," << vValue.stl_str() << "\n";
+		itPair = itPair.tl();
+	}
+}
+
+int main()
+{
+	using namespace tpl;
+
+	example();
+	return 0;
+
+	// ---- define rules ----
+
+	Allocator alloc;
 
 	RegEx a(alloc, ch('a'));
 	
@@ -23,21 +67,27 @@ int main()
 	RegEx a_or_b_or_d(alloc, 'd' | a_or_b);
 
 	LeafMark mVal("value");
+	LeafMark mSym("symbol");
 	NodeMark mNode("node");
 
 	SimpleRegEx three_word(alloc, mVal = 'd' + a_or_b_or_c + 'b');
-	SimpleRegEx repeated(alloc, repeat<2>(three_word));
+	SimpleRegEx repeated(alloc, mNode = repeat<2>(three_word));
+
+	SimpleRegEx rDoc(alloc, *repeated + mSym/csymbol());
 
 	// ---- parse source ----
 
-	char buf[] = "dcbdabdbbdcbcdefg";
+	char buf[] = "dcbdabdbbdcbcdef9g";
 	Source source(buf, buf+sizeof(buf));
 
 	Document doc;
 	Context context(alloc, doc);
 
 	bool fail = a_or_b_or_c.match(source, context);
-	bool ok = (*(mNode = repeated)).match(source, context);
+	bool ok = rDoc.match(source, context);
+
+	Document::leaf_cons sym = doc.select(alloc, mSym);
+	std::cout << mSym.tag << ": " << sym.hd().data().stl_str() << "\n";
 
 	Document::node_cons result = doc.select(alloc, mNode);
 	std::cout << mNode.tag << ":\n";

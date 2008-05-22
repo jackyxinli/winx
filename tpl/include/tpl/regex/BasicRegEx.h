@@ -23,6 +23,8 @@
 #include "Basic.h"
 #endif
 
+NS_TPL_BEGIN
+
 // -------------------------------------------------------------------------
 // class IRegExp
 
@@ -40,7 +42,9 @@ private:
 	RegExT m_x;
 
 public:
-	ImplRegEx(const RegExT& x) : m_x(x) {}
+	ImplRegEx(const Exp<RegExT>& x)
+		: m_x(static_cast<const RegExT&>(x)) {
+	}
 
 	bool TPL_CALL match(SourceT& ar, ContextT& context) {
 		return m_x.match(ar, context);
@@ -86,7 +90,7 @@ public:
 	}
 
 	template <class AllocT, class RegExT>
-	void TPL_CALL assign(AllocT& alloc, const RegExT& x)
+	void TPL_CALL assign(AllocT& alloc, const Exp<RegExT>& x)
 	{
 		typedef ImplRegEx<RegExT, SourceT, ContextT> Impl;
 		m_x = FactoryT<Impl>::create(alloc, x);
@@ -128,5 +132,7 @@ public:
 
 // -------------------------------------------------------------------------
 // $Log: $
+
+NS_TPL_END
 
 #endif /* TPL_REGEX_BASICREGEX_H */
