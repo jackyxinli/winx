@@ -58,29 +58,44 @@ private:
 	typedef BasicMark<TagT, NodeAssign> NodeMarkT;
 
 public:
-	class Transaction
+	class ScopeTransaction
 	{
 	private:
 		NodeMatchResultT* vParent;
 		NodeMatchResultT vOld;
+
+	public:
+		ScopeTransaction(const BasicContext& context) {
+			StackT stk = context.m_stk;
+			vParent = stk.front();
+			vOld = *vParent;
+		}
+
+		void TPL_CALL rollback() {
+			*vParent = vOld;
+		}
+	};
+
+	class Transaction
+	{
+	private:
+		ScopeTransaction vScope;
 		Iterator vPos;
 
 	public:
 		template <class SourceT>
-		Transaction(const SourceT& ar, const BasicContext& context) {
-			StackT stk = context.m_stk;
-			vParent = stk.front();
-			vOld = *vParent;
+		Transaction(const SourceT& ar, const BasicContext& context) : vScope(context) {
 			vPos = ar.position();
 		}
 
 		template <class SourceT>
 		void TPL_CALL rollback(SourceT& ar) {
-			*vParent = vOld;
 			ar.seek(vPos);
+			vScope.rollback();
 		}
 	};
 
+	typedef ScopeTransaction scope_trans_type;
 	typedef Transaction trans_type;
 
 public:

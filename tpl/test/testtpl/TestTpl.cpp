@@ -76,7 +76,7 @@ void example2()
 
 	// ---- define source ----
 
-	char buf[] = "<tag prop-1=1 prop-2=2>text</tag>";
+	char buf[] = "<tag prop-1=1 prop-2=-2>text</tag>";
 	Source source(buf, buf+sizeof(buf));
 
 	// ---- define rules ----

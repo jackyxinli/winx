@@ -132,11 +132,11 @@ public:
 	template <class SourceT, class ContextT>
 	bool TPL_CALL match(SourceT& ar, ContextT& context) const
 	{
-		typename ContextT::trans_type trans(ar, context);
+		typename ContextT::scope_trans_type trans(context);
 		typename ContextT::scope_type scope(context, m_mark);
 		if (m_x.match(ar, context))
 			return true;
-		trans.rollback(ar);
+		trans.rollback();
 		return false;
 	}
 };

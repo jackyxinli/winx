@@ -106,7 +106,13 @@ public:
 	template <class SourceT, class ContextT>
 	bool TPL_CALL match(SourceT& ar, ContextT& context) const
 	{
-		return m_x.match(ar, context) && m_y.match(ar, context);
+		typename SourceT::iterator pos = ar.position();
+		if (m_x.match(ar, context)) {
+			if (m_y.match(ar, context))
+				return true;
+		}
+		ar.seek(pos);
+		return false;
 	}
 };
 
