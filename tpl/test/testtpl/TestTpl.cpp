@@ -40,8 +40,8 @@ void example1()
 
 	// ---- print all data ----
 
-	Document::cons it = doc.all();
-	while (it) {
+	for (Document::cons it = doc.all(); it; it = it.tl())
+	{
 		Document::value_type item = it.hd();
 		if (item.key() == tagPair) {
 			Document::node_data vPair = item.node();
@@ -53,17 +53,15 @@ void example1()
 			Document::leaf_data vPair = item.leaf();
 			std::cout << "Pair: " << vPair.stl_str() << "\n";
 		}
-		it = it.tl();
 	}
 
 	// ---- select what we are interested in and print ----
 
 	std::cout << "\n";
 	Document::leaf_cons it2 = doc.select(alloc, tagPairValue);
-	while (it2) {
+	for (; it2; it2 = it2.tl()) {
 		Document::leaf_data vPair = *it2;
 		std::cout << "Pair: " << vPair.stl_str() << "\n";		
-		it2 = it2.tl();
 	}
 }
 
