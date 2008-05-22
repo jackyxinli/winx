@@ -120,10 +120,9 @@ public:
 	typedef Scope scope_type;
 
 public:
-	template <class SourceT>
-	void TPL_CALL insertLeaf(const LeafMarkT& mark, SourceT& ar, Iterator pos)
+	void TPL_CALL insertLeaf(const LeafMarkT& mark, Iterator pos, Iterator pos2)
 	{
-		m_stk.front()->insertLeaf(m_alloc, mark, pos, ar.position());
+		m_stk.front()->insertLeaf(m_alloc, mark, pos, pos2);
 	}
 };
 

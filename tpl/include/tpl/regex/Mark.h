@@ -104,7 +104,7 @@ public:
 		typename SourceT::iterator pos = ar.position();
 		bool matched = m_x.match(ar, context);
 		if (matched)
-			context.insertLeaf(m_mark, ar, pos);
+			context.insertLeaf(m_mark, pos, ar.position());
 		return matched;
 	}
 };

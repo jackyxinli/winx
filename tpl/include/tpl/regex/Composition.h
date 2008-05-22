@@ -340,11 +340,11 @@ TPL_REGEX_LIST_OP_(StrEq, char)
 TPL_REGEX_LIST_OP_(WStrEq, wchar_t)
 
 // -------------------------------------------------------------------------
-// function csymbol, integer, etc.
+// function c_symbol, integer, etc.
 
 // Usage: ws()				--- means: matching Whitespaces. that is: w+
 // Usage: skipws()			--- means: skip Whitespaces. that is: w*
-// Usage: csymbol()			--- means: matching a CSymbol. that is: [a-zA-Z_][0-9a-zA-Z_]*
+// Usage: c_symbol()		--- means: matching a CSymbol. that is: [a-zA-Z_][0-9a-zA-Z_]*
 // Usage: u_integer()		--- means: matching an Unsigned Integer. that is: d+
 // Usage: integer()			--- means: matching an Integer. that is: [+-]?d+
 // Usage: normal_real()		--- means: matching a normal Real Number (no exponent).

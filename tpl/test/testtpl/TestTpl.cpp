@@ -74,7 +74,7 @@ void example2()
 
 	// ---- define source ----
 
-	char buf[] = "<tag prop-1=1 prop-2=-2>text</tag>";
+	char buf[] = "<tag prop-1=1 prop-2 = -2>text</tag>";
 	Source source(buf, buf+sizeof(buf));
 
 	// ---- define rules ----
@@ -84,7 +84,7 @@ void example2()
 	LeafMark tagText = 3;
 	NodeMark tagProps;
 
-	RegExp rProp(alloc, xml_symbol()/tagProp + '=' + integer()/tagValue);
+	RegExp rProp(alloc, xml_symbol()/tagProp + skipws() + '=' + skipws() + integer()/tagValue);
 	RegExp rProps(alloc, rProp % ws() / tagProps);
 	RegExp rTagStart(alloc, '<' + xml_symbol()/"tag" + ws() + rProps + '>');
 	RegExp rDoc(alloc, rTagStart + c_symbol()/tagText + "</tag>");
