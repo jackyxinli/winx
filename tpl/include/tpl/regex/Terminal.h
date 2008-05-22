@@ -30,19 +30,19 @@
 NS_TPL_BEGIN
 
 // -------------------------------------------------------------------------
-// class BasicMatchCh
+// class MatchCh
 
 template <class PredT>
-class BasicMatchCh // Match a Char
+class MatchCh // Match a Char
 {
 private:
 	PredT m_pred;
 
 public:
-	BasicMatchCh() {}
+	MatchCh() {}
 	
 	template <class T1>
-	BasicMatchCh(const T1& x) : m_pred(x) {}
+	MatchCh(const T1& x) : m_pred(x) {}
 
 	template <class SourceT, class ContextT>
 	bool TPL_CALL match(SourceT& ar, ContextT& context)
@@ -72,7 +72,7 @@ public:
 };
 
 template <int m_c1, int m_c2>
-class ChRange : public BasicMatchCh<EqChRg<m_c1, m_c2> > {
+class ChRange : public MatchCh<EqChRg<m_c1, m_c2> > {
 };
 
 template <int m_c1, int m_c2> 
@@ -105,11 +105,11 @@ public:
 };
 
 template <int m_c1, int m_c2 = m_c1>
-class Ch : public BasicMatchCh<EqCh2<m_c1, m_c2> > {
+class Ch : public MatchCh<EqCh2<m_c1, m_c2> > {
 };
 
 template <int m_c>
-class Ch<m_c, m_c> : public BasicMatchCh<EqCh1<m_c> > {
+class Ch<m_c, m_c> : public MatchCh<EqCh1<m_c> > {
 };
 
 template <int m_c> 
@@ -141,20 +141,20 @@ public:
 	}
 };
 
-typedef BasicMatchCh<EqCh> MatchCh;
+typedef MatchCh<EqCh> ChEq;
 
 template <class CharT> 
 __forceinline
-Exp<MatchCh> TPL_CALL ch(const CharT x) {
-	return Exp<MatchCh>(x);
+Exp<ChEq> TPL_CALL ch(const CharT x) {
+	return Exp<ChEq>(x);
 }
 
 #define TPL_REGEX_CH_OP1_(op, Op, CharT)											\
 template <class T2> __forceinline													\
-Exp< Op<MatchCh, T2> > TPL_CALL operator op(CharT x, const Exp<T2>& y)				\
+Exp< Op<ChEq, T2> > TPL_CALL operator op(CharT x, const Exp<T2>& y)					\
 	{ return ch(x) op y; }															\
 template <class T1> __forceinline													\
-Exp< Op<T1, MatchCh> > TPL_CALL operator op(const Exp<T1>& x, CharT y)				\
+Exp< Op<T1, ChEq> > TPL_CALL operator op(const Exp<T1>& x, CharT y)					\
 	{ return x op ch(y); }
 
 #define TPL_REGEX_CH_OP_(op, Op)													\
@@ -171,13 +171,13 @@ typedef ChRange<'0', '9'> Digit;
 typedef ChRange<'a', 'z'> LowerAlpha;
 typedef ChRange<'A', 'Z'> UpperAlpha;
 
-typedef BasicMatchCh<std::CharType::IsBlank> Blank;
-typedef BasicMatchCh<std::CharType::IsAlpha> Alpha;
-typedef BasicMatchCh<std::CharType::IsXDigit> XDigit;
-typedef BasicMatchCh<std::CharType::IsEOL> EOL;
+typedef MatchCh<std::CharType::IsBlank> Blank;
+typedef MatchCh<std::CharType::IsAlpha> Alpha;
+typedef MatchCh<std::CharType::IsXDigit> XDigit;
+typedef MatchCh<std::CharType::IsEOL> EOL;
 
-typedef BasicMatchCh<std::CharType::IsCSymbolFirstChar> CSymbolFirstChar;
-typedef BasicMatchCh<std::CharType::IsCSymbolNextChar> CSymbolNextChar;
+typedef MatchCh<std::CharType::IsCSymbolFirstChar> CSymbolFirstChar;
+typedef MatchCh<std::CharType::IsCSymbolNextChar> CSymbolNextChar;
 
 inline Exp<Blank> TPL_CALL blank() {
 	return Exp<Blank>();
