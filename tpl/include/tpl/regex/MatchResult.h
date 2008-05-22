@@ -166,6 +166,14 @@ public:
 		}
 	};
 
+	template <class ConsT>
+	static size_t TPL_CALL length(ConsT hd) {
+		size_t len = 0;
+		for (; hd; hd = hd.tl())
+			++len;
+		return len;
+	}
+
 public:
 	struct Null {};
 	typedef Value<Null> value_type;
@@ -212,11 +220,13 @@ public:
 public:
 	leaf_cons TPL_CALL find(const LeafMarkT& mark) const {
 		DoSel cond(mark);
+		TPL_ASSERT(count_if(m_data, cond) <= 1);
 		return m_data.find(cond);
 	}
 
 	node_cons TPL_CALL find(const NodeMarkT& mark) const {
 		DoSel cond(mark);
+		TPL_ASSERT(count_if(m_data, cond) <= 1);
 		return m_data.find(cond);
 	}
 

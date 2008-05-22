@@ -128,6 +128,10 @@ public:
 	ConsList() : m_hd(NULL) {}
 	ConsList(cons hd_) : m_hd(hd_) {}
 
+	operator cons() const {
+		return m_hd;
+	}
+
 	cons TPL_CALL operator=(cons hd_) {
 		return m_hd = hd_;
 	}
@@ -157,6 +161,40 @@ public:
 		m_hd = m_hd->tail;
 	}
 };
+
+// -------------------------------------------------------------------------
+// function length
+
+template <class Type>
+inline size_t TPL_CALL length(const Cons<Type>* hd) {
+	size_t len = 0;
+	for (; hd; hd = hd->tail)
+		++len;
+	return len;
+}
+
+template <class Type, bool bManaged>
+__forceinline size_t TPL_CALL length(const ConsList<Type, bManaged>& hd) {
+	return length(hd.data());
+}
+
+// -------------------------------------------------------------------------
+// function count_if
+
+template <class Type, class CondT>
+inline size_t TPL_CALL count_if(const Cons<Type>* hd, CondT cond) {
+	size_t len = 0;
+	for (; hd; hd = hd->tail) {
+		if (cond(hd->value))	
+			++len;
+	}
+	return len;
+}
+
+template <class Type, bool bManaged, class CondT>
+__forceinline size_t TPL_CALL count_if(const ConsList<Type, bManaged>& hd, CondT cond) {
+	return count_if(hd.data(), cond);
+}
 
 // -------------------------------------------------------------------------
 // $Log: $

@@ -63,16 +63,21 @@ public:
 	private:
 		NodeMatchResultT* vParent;
 		NodeMatchResultT vOld;
+		Iterator vPos;
 
 	public:
-		Transaction(BasicContext& context) {
+		template <class SourceT>
+		Transaction(const SourceT& ar, const BasicContext& context) {
 			StackT stk = context.m_stk;
 			vParent = stk.front();
 			vOld = *vParent;
+			vPos = ar.position();
 		}
 
-		void TPL_CALL rollback() {
+		template <class SourceT>
+		void TPL_CALL rollback(SourceT& ar) {
 			*vParent = vOld;
+			ar.seek(vPos);
 		}
 	};
 
@@ -83,6 +88,7 @@ public:
 	{
 	private:
 		StackT& m_stk;
+	
 	public:
 		Scope(BasicContext& context, const NodeMark& mark)
 			: m_stk(context.m_stk)

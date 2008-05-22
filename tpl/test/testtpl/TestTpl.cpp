@@ -6,7 +6,7 @@
 
 // -------------------------------------------------------------------------
 
-void example()
+void example1()
 {
 	using namespace tpl;
 
@@ -25,7 +25,7 @@ void example()
 	LeafMark tagPairValue;
 	NodeMark tagPair;
 
-	RegExp rPair(alloc, (csymbol()/tagSym + '=' + real()/tagValue)/tagPair/tagPairValue);
+	RegExp rPair(alloc, (c_symbol()/tagSym + '=' + real()/tagValue)/tagPair/tagPairValue);
 	RegExp rDoc(alloc, (skipws() + rPair) % ',');
 
 	// ---- do match ----
@@ -67,8 +67,60 @@ void example()
 	}
 }
 
+void example2()
+{
+	using namespace tpl;
+
+	std::BlockPool recycle;
+	std::ScopeAlloc alloc(recycle);
+
+	// ---- define source ----
+
+	char buf[] = "<tag prop-1=1 prop-2=2>text</tag>";
+	Source source(buf, buf+sizeof(buf));
+
+	// ---- define rules ----
+
+	LeafMark tagProp = 1;
+	LeafMark tagValue = 2;
+	LeafMark tagText = 3;
+	NodeMark tagProps;
+
+	RegExp rProp(alloc, xml_symbol()/tagProp + '=' + integer()/tagValue);
+	RegExp rProps(alloc, rProp % ws() / tagProps);
+	RegExp rTagStart(alloc, '<' + xml_symbol()/"tag" + ws() + rProps + '>');
+	RegExp rDoc(alloc, rTagStart + c_symbol()/tagText + '<' + '/' + xml_symbol()/"tag" + '>');
+
+	// ---- do match ----
+
+	Document doc;
+	Context context(alloc, doc);
+
+	if (!rDoc.match(source, context)) {
+		std::cout << "match failed\n";
+		return;
+	}
+
+	// ---- print text ----
+
+	Document::leaf_data vText = doc[tagText];
+	std::cout << "Text: " << vText.stl_str() << "\n";
+
+	// ---- print properties ----
+
+	Document::node_data vProps = doc[tagProps];
+	for (Document::cons it = vProps.all(); it; it = it.tl())
+	{
+		Document::value_type item = it.hd();
+		std::cout << (item.key() == tagProp ? "Prop: " : "Value: ");
+		
+		Document::leaf_data vData = item.leaf();
+		std::cout << vData.stl_str() << "\n";
+	}
+}
+
 int main()
 {
-	example();
+	example2();
 	return 0;
 }

@@ -54,12 +54,12 @@ public:
 	template <class SourceT, class ContextT>
 	bool TPL_CALL match(SourceT& ar, ContextT& context) const
 	{
-		typename ContextT::trans_type trans(context);
+		typename ContextT::trans_type trans(ar, context);
 		if (m_x.match(ar, context)) {
 			if (m_y.match(ar, context))
 				return true;
 		}
-		trans.rollback();
+		trans.rollback(ar);
 		return false;
 	}
 };
@@ -315,7 +315,8 @@ Exp<And<ChEq, Repeat0<And<T2, ChEq> > > > TPL_CALL operator%(int c, const Exp<T2
 // -------------------------------------------------------------------------
 // function csymbol, integer, etc.
 
-// Usage: skipws()			--- means: matching Whitespaces. that is: [ \t\r\n]*
+// Usage: ws()				--- means: matching Whitespaces. that is: w+
+// Usage: skipws()			--- means: skip Whitespaces. that is: w*
 // Usage: csymbol()			--- means: matching a CSymbol. that is: [a-zA-Z_][0-9a-zA-Z_]*
 // Usage: u_integer()		--- means: matching an Unsigned Integer. that is: d+
 // Usage: integer()			--- means: matching an Integer. that is: [+-]?d+
@@ -326,8 +327,12 @@ typedef Ch<'.'> DecimalPointer;
 typedef Ch<'+', '-'> Sign;
 typedef Ch<'E', 'e'> ExponentSign;
 
-typedef Repeat0<Blank> WhiteSpaces; // w*
+typedef Repeat0<Space> SkipWhiteSpaces; // w*
+typedef Repeat1<Space> WhiteSpaces; // w+
+
 typedef UAnd<CSymbolFirstChar, Repeat0<CSymbolNextChar> > CSymbol;
+typedef UAnd<XmlSymbolFirstChar, Repeat0<XmlSymbolNextChar> > XmlSymbol;
+
 typedef Repeat1<Digit> UInteger; // u := d+
 typedef UAnd<Repeat01<Sign>, UInteger> Integer; // i := [+-]?d+
 
@@ -341,14 +346,24 @@ typedef UAnd<Repeat01<Sign>, UNormalReal_> NormalReal;
 typedef UAnd<ExponentSign, Integer> Exponent; // [Ee]<Integer>
 typedef UAnd<NormalReal, Repeat01<Exponent> > Real; // <NormalReal><Exponent>?
 
-inline Exp<WhiteSpaces> TPL_CALL skipws()
+inline Exp<WhiteSpaces> TPL_CALL ws()
 {
 	return Exp<WhiteSpaces>();
 }
 
-inline Exp<CSymbol> TPL_CALL csymbol()
+inline Exp<SkipWhiteSpaces> TPL_CALL skipws()
+{
+	return Exp<SkipWhiteSpaces>();
+}
+
+inline Exp<CSymbol> TPL_CALL c_symbol()
 {
 	return Exp<CSymbol>();
+}
+
+inline Exp<XmlSymbol> TPL_CALL xml_symbol()
+{
+	return Exp<XmlSymbol>();
 }
 
 inline Exp<UInteger> TPL_CALL u_integer()

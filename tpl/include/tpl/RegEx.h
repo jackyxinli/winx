@@ -51,6 +51,10 @@
 #include "regex/Composition.h"
 #endif
 
+#ifndef TPL_REGEX_RESTRICTION_H
+#include "regex/Restriction.h"
+#endif
+
 // -------------------------------------------------------------------------
 // $Log: $
 

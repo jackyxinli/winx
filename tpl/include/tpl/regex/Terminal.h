@@ -161,9 +161,9 @@ Exp< Op<T1, ChEq> > TPL_CALL operator op(const Exp<T1>& x, CharT y)					\
 	TPL_REGEX_CH_OP1_(op, Op, char)
 
 // -------------------------------------------------------------------------
-// function blank, alpha, ...
+// function space, alpha, ...
 
-// Usage: blank()		--- means: matching ONE Writespace Character
+// Usage: space()		--- means: matching ONE Writespace Character
 // Usage: alpha()		--- means: matching ONE Alpha Character
 // Usage: ...
 
@@ -171,7 +171,7 @@ typedef ChRange<'0', '9'> Digit;
 typedef ChRange<'a', 'z'> LowerAlpha;
 typedef ChRange<'A', 'Z'> UpperAlpha;
 
-typedef MatchCh<std::CharType::IsBlank> Blank;
+typedef MatchCh<std::CharType::IsSpace> Space;
 typedef MatchCh<std::CharType::IsAlpha> Alpha;
 typedef MatchCh<std::CharType::IsXDigit> XDigit;
 typedef MatchCh<std::CharType::IsEOL> EOL;
@@ -179,8 +179,11 @@ typedef MatchCh<std::CharType::IsEOL> EOL;
 typedef MatchCh<std::CharType::IsCSymbolFirstChar> CSymbolFirstChar;
 typedef MatchCh<std::CharType::IsCSymbolNextChar> CSymbolNextChar;
 
-inline Exp<Blank> TPL_CALL blank() {
-	return Exp<Blank>();
+typedef MatchCh<std::CharType::IsXmlSymbolFirstChar> XmlSymbolFirstChar;
+typedef MatchCh<std::CharType::IsXmlSymbolNextChar> XmlSymbolNextChar;
+
+inline Exp<Space> TPL_CALL space() {
+	return Exp<Space>();
 }
 
 inline Exp<Alpha> TPL_CALL alpha() {
