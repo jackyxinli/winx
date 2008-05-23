@@ -16,8 +16,8 @@
 // 
 // $Id: Basic.h,v 1.6 2007/01/10 09:38:10 xushiwei Exp $
 // -----------------------------------------------------------------------*/
-#ifndef __STDEXT_BASIC_H__
-#define __STDEXT_BASIC_H__
+#ifndef STDEXT_BASIC_H
+#define STDEXT_BASIC_H
 
 #if (0)
 #define STD_NO_WINSDK
@@ -363,4 +363,4 @@ namespace stdext = __gnu_cxx;
 // -------------------------------------------------------------------------
 // $Log: Basic.h,v $
 
-#endif /* __STDEXT_BASIC_H__ */
+#endif /* STDEXT_BASIC_H */
