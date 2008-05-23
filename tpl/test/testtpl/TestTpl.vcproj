@@ -189,6 +189,18 @@
 	</References>
 	<Files>
 		<File
+			RelativePath=".\Customization.cpp"
+			>
+		</File>
+		<File
+			RelativePath=".\Demo.cpp"
+			>
+		</File>
+		<File
+			RelativePath=".\ParseClass.cpp"
+			>
+		</File>
+		<File
 			RelativePath=".\StdAfx.cpp"
 			>
 			<FileConfiguration
@@ -216,6 +228,14 @@
 		</File>
 		<File
 			RelativePath=".\TestTpl.cpp"
+			>
+		</File>
+		<File
+			RelativePath=".\Transformation.cpp"
+			>
+		</File>
+		<File
+			RelativePath=".\XmlProcess.cpp"
 			>
 		</File>
 	</Files>

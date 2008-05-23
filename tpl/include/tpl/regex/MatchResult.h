@@ -50,9 +50,12 @@ public:
 public:
 	typedef ptrdiff_t difference_type;
 
+	LeafMatchResult()
+		: first(), second() {}
+
 	LeafMatchResult(Iterator first_, Iterator second_)
 		: first(first_), second(second_) {}
-
+	
 	difference_type TPL_CALL length() const {
 		return std::distance(first, second);
 	}

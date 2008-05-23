@@ -40,8 +40,15 @@ private:
 	RegExT2 m_y;
 
 public:
-	UAnd() {}
-	UAnd(const RegExT1& x, const RegExT2& y) : m_x(x), m_y(y) {}
+	UAnd() {
+		TPL_ASSERT(RegExT1::category == 0 && RegExT2::category == 0);
+	}
+	UAnd(const RegExT1& x, const RegExT2& y) : m_x(x), m_y(y) {
+		TPL_ASSERT(RegExT1::category == 0 && RegExT2::category == 0);
+	}
+
+public:
+	enum { category = 0 };
 
 	template <class SourceT, class ContextT>
 	bool TPL_CALL match(SourceT& ar, ContextT& context) const
@@ -60,8 +67,15 @@ private:
 	RegExT m_x;
 
 public:
-	URepeat() {}
-	URepeat(const RegExT& x) : m_x(x) {}
+	URepeat() {
+		TPL_ASSERT(RegExT::category == 0);
+	}
+	URepeat(const RegExT& x) : m_x(x) {
+		TPL_ASSERT(RegExT::category == 0);
+	}
+
+public:
+	enum { category = 0 };
 
 	template <class SourceT, class ContextT>
 	bool TPL_CALL match(SourceT& ar, ContextT& context) const
@@ -88,8 +102,15 @@ private:
 	RegExT m_x;
 
 public:
-	UGuard() {}
-	UGuard(const RegExT& x) : m_x(x) {}
+	UGuard() {
+		TPL_ASSERT(RegExT::category == 0);
+	}
+	UGuard(const RegExT& x) : m_x(x) {
+		TPL_ASSERT(RegExT::category == 0);
+	}
+
+public:
+	enum { category = 0 };
 
 	template <class SourceT, class ContextT>
 	bool TPL_CALL match(SourceT& ar, ContextT& context) const
@@ -144,14 +165,14 @@ typedef UAnd<XmlSymbolFirstChar, Repeat0<XmlSymbolNextChar> > XmlSymbol;
 TPL_REGEX_GUARD(CSymbol, CSymbolG)
 TPL_REGEX_GUARD(XmlSymbol, XmlSymbolG)
 
-inline Exp<CSymbolG> TPL_CALL c_symbol()
+inline Rule<CSymbolG> TPL_CALL c_symbol()
 {
-	return Exp<CSymbolG>();
+	return Rule<CSymbolG>();
 }
 
-inline Exp<XmlSymbolG> TPL_CALL xml_symbol()
+inline Rule<XmlSymbolG> TPL_CALL xml_symbol()
 {
-	return Exp<XmlSymbolG>();
+	return Rule<XmlSymbolG>();
 }
 
 // -------------------------------------------------------------------------
@@ -162,9 +183,9 @@ inline Exp<XmlSymbolG> TPL_CALL xml_symbol()
 typedef Ch<'+', '-'> Sign;
 typedef UAnd<Repeat01<Sign>, UInteger> Integer; // [+-]?d+
 
-inline Exp<Integer> TPL_CALL integer()
+inline Rule<Integer> TPL_CALL integer()
 {
-	return Exp<Integer>();
+	return Rule<Integer>();
 }
 
 // -------------------------------------------------------------------------
@@ -189,24 +210,24 @@ TPL_REGEX_GUARD(StrictFraction, StrictFractionG)
 TPL_REGEX_GUARD(UFraction, UFractionG)
 TPL_REGEX_GUARD(Fraction, FractionG)
 
-inline Exp<UStrictFractionG> TPL_CALL u_strict_fraction()
+inline Rule<UStrictFractionG> TPL_CALL u_strict_fraction()
 {
-	return Exp<UStrictFractionG>();
+	return Rule<UStrictFractionG>();
 }
 
-inline Exp<StrictFractionG> TPL_CALL strict_fraction()
+inline Rule<StrictFractionG> TPL_CALL strict_fraction()
 {
-	return Exp<StrictFractionG>();
+	return Rule<StrictFractionG>();
 }
 
-inline Exp<UFractionG> TPL_CALL u_fraction()
+inline Rule<UFractionG> TPL_CALL u_fraction()
 {
-	return Exp<UFractionG>();
+	return Rule<UFractionG>();
 }
 
-inline Exp<FractionG> TPL_CALL fraction()
+inline Rule<FractionG> TPL_CALL fraction()
 {
-	return Exp<FractionG>();
+	return Rule<FractionG>();
 }
 
 // -------------------------------------------------------------------------
@@ -236,24 +257,24 @@ TPL_REGEX_GUARD(StrictReal, StrictRealG)
 TPL_REGEX_GUARD(UReal, URealG)
 TPL_REGEX_GUARD(Real, RealG)
 
-inline Exp<UStrictRealG> TPL_CALL u_strict_real()
+inline Rule<UStrictRealG> TPL_CALL u_strict_real()
 {
-	return Exp<UStrictRealG>();
+	return Rule<UStrictRealG>();
 }
 
-inline Exp<StrictRealG> TPL_CALL strict_real()
+inline Rule<StrictRealG> TPL_CALL strict_real()
 {
-	return Exp<StrictRealG>();
+	return Rule<StrictRealG>();
 }
 
-inline Exp<URealG> TPL_CALL u_real()
+inline Rule<URealG> TPL_CALL u_real()
 {
-	return Exp<URealG>();
+	return Rule<URealG>();
 }
 
-inline Exp<RealG> TPL_CALL real()
+inline Rule<RealG> TPL_CALL real()
 {
-	return Exp<RealG>();
+	return Rule<RealG>();
 }
 
 // -------------------------------------------------------------------------

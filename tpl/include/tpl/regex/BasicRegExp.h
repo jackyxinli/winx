@@ -9,15 +9,15 @@
 // of this license. You must not remove this notice, or any other, from
 // this software.
 // 
-// Module: tpl/regex/BasicRegEx.h
+// Module: tpl/regex/BasicRegExp.h
 // Creator: xushiwei
 // Email: xushiweizh@gmail.com
 // Date: 2006-8-13 9:41:58
 // 
 // $Id$
 // -----------------------------------------------------------------------*/
-#ifndef TPL_REGEX_BASICREGEX_H
-#define TPL_REGEX_BASICREGEX_H
+#ifndef TPL_REGEX_BASICREGEXP_H
+#define TPL_REGEX_BASICREGEXP_H
 
 #ifndef TPL_REGEX_BASIC_H
 #include "Basic.h"
@@ -26,10 +26,10 @@
 NS_TPL_BEGIN
 
 // -------------------------------------------------------------------------
-// class IRegExp
+// class BasicRegExp
 
-template <class SourceT, class ContextT, bool bManaged = true>
-class IRegExp
+template <int nCategory, class SourceT, class ContextT, bool bManaged = false>
+class BasicRegExp
 {
 private:
 	typedef bool TPL_CALL _FN_match(const void* pThis, SourceT& ar, ContextT& context);
@@ -39,13 +39,16 @@ private:
 	FN_match m_fn;
 
 public:
-	IRegExp() : m_this(NULL) {}
+	BasicRegExp() : m_this(NULL) {}
 	
 	template <class AllocT, class RegExT>
-	IRegExp(AllocT& alloc, const RegExT& x)
+	BasicRegExp(AllocT& alloc, const RegExT& x)
 	{
 		assign(alloc, x);
 	}
+
+public:
+	enum { category = nCategory };
 
 	bool TPL_CALL match(SourceT& ar, ContextT& context) const {
 		TPL_ASSERT(m_this);
@@ -60,9 +63,11 @@ public:
 		RegExT m_x;
 
 	public:
-		Impl(const Exp<RegExT>& x)
+		Impl(const Rule<RegExT>& x)
 			: m_x(static_cast<const RegExT&>(x)) {
 		}
+
+		enum { category = RegExT::category };
 
 		static bool TPL_CALL match(const void* pThis, SourceT& ar, ContextT& context) {
 			const RegExT& x = ((const Impl*)pThis)->m_x;
@@ -71,9 +76,11 @@ public:
 	};
 
 	template <class AllocT, class RegExT>
-	void TPL_CALL assign(AllocT& alloc, const Exp<RegExT>& x)
+	void TPL_CALL assign(AllocT& alloc, const Rule<RegExT>& x)
 	{
 		typedef Impl<RegExT> Imp;
+		TPL_ASSERT((Imp::category & ~category) == 0);
+
 		if (bManaged)
 			m_this = TPL_NEW(alloc, Imp)(x);
 		else
@@ -84,34 +91,8 @@ public:
 };
 
 // -------------------------------------------------------------------------
-// class BasicRegEx
-
-#if defined(TPL_HAS_TEMPLATE_TYPEDEF)
-
-template <class SourceT, class ContextT, bool bManaged = true>
-typedef Exp<IRegExp<SourceT, ContextT, bManaged> > BasicRegEx;
-
-#else
-
-template <class SourceT, class ContextT, bool bManaged = true>
-class BasicRegEx : public Exp<IRegExp<SourceT, ContextT, bManaged> >
-{
-private:
-	typedef Exp<IRegExp<SourceT, ContextT, bManaged> > Base;
-
-public:
-	BasicRegEx() {}
-
-	template <class AllocT, class RegExT>
-	BasicRegEx(AllocT& alloc, const RegExT& x)
-		: Base(alloc, x) {}
-};
-
-#endif
-
-// -------------------------------------------------------------------------
 // $Log: $
 
 NS_TPL_END
 
-#endif /* TPL_REGEX_BASICREGEX_H */
+#endif /* TPL_REGEX_BASICREGEXP_H */

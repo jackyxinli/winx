@@ -73,13 +73,13 @@ public:
 		: Base(tag_) {}
 
 	template <class T1>
-	Exp<Assign<T1, BasicMark> > TPL_CALL operator=(const Exp<T1>& x) const {
-		return Exp<Assign<T1, BasicMark> >(*this, x);
+	Rule<Assign<T1, BasicMark> > TPL_CALL operator=(const Rule<T1>& x) const {
+		return Rule<Assign<T1, BasicMark> >(*this, x);
 	}
 
 	template <class T1>
-	friend Exp<Assign<T1, BasicMark> > TPL_CALL operator/(const Exp<T1>& x, const BasicMark& y) {
-		return Exp<Assign<T1, BasicMark> >(y, x);
+	friend Rule<Assign<T1, BasicMark> > TPL_CALL operator/(const Rule<T1>& x, const BasicMark& y) {
+		return Rule<Assign<T1, BasicMark> >(y, x);
 	}
 };
 
@@ -98,6 +98,8 @@ public:
 		: m_mark(val), m_x(x) {}
 
 public:
+	enum { category = RegExT::category | CATEGORY_MARKED };
+
 	template <class SourceT, class ContextT>
 	bool TPL_CALL match(SourceT& ar, ContextT& context) const
 	{
@@ -108,11 +110,6 @@ public:
 		return matched;
 	}
 };
-
-// -------------------------------------------------------------------------
-// class LeafMark
-
-typedef BasicMark<DefaultTag, LeafAssign> LeafMark;
 
 // -------------------------------------------------------------------------
 // class NodeAssign
@@ -129,6 +126,8 @@ public:
 		: m_mark(val), m_x(x) {}
 
 public:
+	enum { category = RegExT::category | CATEGORY_MARKED };
+
 	template <class SourceT, class ContextT>
 	bool TPL_CALL match(SourceT& ar, ContextT& context) const
 	{
@@ -140,11 +139,6 @@ public:
 		return false;
 	}
 };
-
-// -------------------------------------------------------------------------
-// class NodeMark
-
-typedef BasicMark<DefaultTag, NodeAssign> NodeMark; 
 
 // -------------------------------------------------------------------------
 // $Log: $

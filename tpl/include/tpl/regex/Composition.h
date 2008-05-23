@@ -61,10 +61,13 @@ public:
 	And() {}
 	And(const RegExT1& x, const RegExT2& y) : m_x(x), m_y(y) {}
 
+public:
+	enum { category = RegExT1::category | RegExT2::category };
+
 	template <class SourceT, class ContextT>
 	bool TPL_CALL match(SourceT& ar, ContextT& context) const
 	{
-		typename ContextT::trans_type trans(ar, context);
+		typename ContextT::trans_type<RegExT1::category> trans(ar, context);
 		if (m_x.match(ar, context) && m_y.match(ar, context))
 			return true;
 		trans.rollback(ar);
@@ -73,13 +76,13 @@ public:
 };
 
 template <class T1, class T2> __forceinline
-Exp<And<T1, T2> > TPL_CALL operator>>(const Exp<T1>& x, const Exp<T2>& y) {
-	return Exp<And<T1, T2> >(x, y);
+Rule<And<T1, T2> > TPL_CALL operator>>(const Rule<T1>& x, const Rule<T2>& y) {
+	return Rule<And<T1, T2> >(x, y);
 }
 
 template <class T1, class T2> __forceinline
-Exp<And<T1, T2> > TPL_CALL operator+(const Exp<T1>& x, const Exp<T2>& y) {
-	return Exp<And<T1, T2> >(x, y);
+Rule<And<T1, T2> > TPL_CALL operator+(const Rule<T1>& x, const Rule<T2>& y) {
+	return Rule<And<T1, T2> >(x, y);
 }
 
 TPL_REGEX_OP_(>>, And)
@@ -101,6 +104,9 @@ public:
 	Or() {}
 	Or(const RegExT1& x, const RegExT2& y) : m_x(x), m_y(y) {}
 
+public:
+	enum { category = RegExT1::category | RegExT2::category };
+
 	template <class SourceT, class ContextT>
 	bool TPL_CALL match(SourceT& ar, ContextT& context) const
 	{
@@ -109,8 +115,8 @@ public:
 };
 
 template <class T1, class T2> __forceinline
-Exp<Or<T1, T2> > TPL_CALL operator|(const Exp<T1>& x, const Exp<T2>& y) {
-	return Exp<Or<T1, T2> >(x, y);
+Rule<Or<T1, T2> > TPL_CALL operator|(const Rule<T1>& x, const Rule<T2>& y) {
+	return Rule<Or<T1, T2> >(x, y);
 }
 
 TPL_REGEX_OP_(|, Or)
@@ -130,6 +136,9 @@ public:
 	Repeat0() {}
 	Repeat0(const RegExT& x) : m_x(x) {}
 
+public:
+	enum { category = RegExT::category };
+
 	template <class SourceT, class ContextT>
 	bool TPL_CALL match(SourceT& ar, ContextT& context) const
 	{
@@ -140,8 +149,8 @@ public:
 };
 
 template <class T1> __forceinline
-Exp<Repeat0<T1> > TPL_CALL operator*(const Exp<T1>& x) {
-	return Exp<Repeat0<T1> >(x);
+Rule<Repeat0<T1> > TPL_CALL operator*(const Rule<T1>& x) {
+	return Rule<Repeat0<T1> >(x);
 }
 
 // -------------------------------------------------------------------------
@@ -159,6 +168,9 @@ public:
 	Repeat1() {}
 	Repeat1(const RegExT& x) : m_x(x) {}
 
+public:
+	enum { category = RegExT::category };
+
 	template <class SourceT, class ContextT>
 	bool TPL_CALL match(SourceT& ar, ContextT& context) const
 	{
@@ -170,8 +182,8 @@ public:
 };
 
 template <class T1> __forceinline
-Exp<Repeat1<T1> > TPL_CALL operator+(const Exp<T1>& x) {
-	return Exp<Repeat1<T1> >(x);
+Rule<Repeat1<T1> > TPL_CALL operator+(const Rule<T1>& x) {
+	return Rule<Repeat1<T1> >(x);
 }
 
 // -------------------------------------------------------------------------
@@ -190,6 +202,9 @@ public:
 	Repeat01() {}
 	Repeat01(const RegExT& x) : m_x(x) {}
 
+public:
+	enum { category = RegExT::category };
+
 	template <class SourceT, class ContextT>
 	bool TPL_CALL match(SourceT& ar, ContextT& context) const
 	{
@@ -199,8 +214,8 @@ public:
 };
 
 template <class T1> __forceinline
-Exp<Repeat01<T1> > TPL_CALL operator!(const Exp<T1>& x) {
-	return Exp<Repeat01<T1> >(x);
+Rule<Repeat01<T1> > TPL_CALL operator!(const Rule<T1>& x) {
+	return Rule<Repeat01<T1> >(x);
 }
 
 // -------------------------------------------------------------------------
@@ -222,11 +237,14 @@ public:
 	Repeat() {}
 	Repeat(const RegExT& x) : m_x(x) {}
 
+public:
+	enum { category = RegExT::category };
+
 	template <class SourceT, class ContextT>
 	bool TPL_CALL match(SourceT& ar, ContextT& context) const
 	{
 		unsigned n;
-		typename ContextT::trans_type trans(ar, context);
+		typename ContextT::trans_type<category> trans(ar, context);
 		for (n = 0; n < nMax; ++n)
 		{
 			if (!m_x.match(ar, context))
@@ -248,18 +266,18 @@ public:
 };
 
 template <unsigned nMin, class T1> __forceinline
-Exp<Repeat<T1, nMin> > TPL_CALL repeat_ge(const Exp<T1>& x) {
-	return Exp<Repeat<T1, nMin> >(x);
+Rule<Repeat<T1, nMin> > TPL_CALL repeat_ge(const Rule<T1>& x) {
+	return Rule<Repeat<T1, nMin> >(x);
 }
 
 template <unsigned nMin, class T1> __forceinline
-Exp<Repeat<T1, nMin, nMin> > TPL_CALL repeat(const Exp<T1>& x) {
-	return Exp<Repeat<T1, nMin, nMin> >(x);
+Rule<Repeat<T1, nMin, nMin> > TPL_CALL repeat(const Rule<T1>& x) {
+	return Rule<Repeat<T1, nMin, nMin> >(x);
 }
 
 template <unsigned nMin, unsigned nMax, class T1> __forceinline
-Exp<Repeat<T1, nMin, nMax> > TPL_CALL repeat(const Exp<T1>& x) {
-	return Exp<Repeat<T1, nMin, nMax> >(x);
+Rule<Repeat<T1, nMin, nMax> > TPL_CALL repeat(const Rule<T1>& x) {
+	return Rule<Repeat<T1, nMin, nMax> >(x);
 }
 
 // -------------------------------------------------------------------------
@@ -269,35 +287,35 @@ Exp<Repeat<T1, nMin, nMax> > TPL_CALL repeat(const Exp<T1>& x) {
 // Example: Arg % ','		--- means: matching Function ArgList
 
 template <class T1, class T2> __forceinline
-Exp<And<T1, Repeat0<And<T2, T1> > > > TPL_CALL operator%(const Exp<T1>& x, const Exp<T2>& y)
+Rule<And<T1, Repeat0<And<T2, T1> > > > TPL_CALL operator%(const Rule<T1>& x, const Rule<T2>& y)
 {
 	return x + *(y + x);
 }
 
 template <class T1> __forceinline
-Exp<And<T1, Repeat0<And<ChEq, T1> > > > TPL_CALL operator%(const Exp<T1>& x, int c)
+Rule<And<T1, Repeat0<And<Ch1_, T1> > > > TPL_CALL operator%(const Rule<T1>& x, int c)
 {
-	Exp<ChEq> y(c);
+	Rule<Ch1_> y(c);
 	return x + *(y + x);
 }
 
 template <class T2> __forceinline
-Exp<And<ChEq, Repeat0<And<T2, ChEq> > > > TPL_CALL operator%(int c, const Exp<T2>& y)
+Rule<And<Ch1_, Repeat0<And<T2, Ch1_> > > > TPL_CALL operator%(int c, const Rule<T2>& y)
 {
-	Exp<ChEq> x(c);
+	Rule<Ch1_> x(c);
 	return x + *(y + x);
 }
 
 #define TPL_REGEX_LIST_OP_(RegExT, CharT)														\
 template <class T1> __forceinline																\
-Exp<And<T1, Repeat0<And<RegExT, T1> > > > TPL_CALL operator%(const Exp<T1>& x, const CharT* s)	\
-	{ Exp<RegExT> y(s); return x + *(y + x); }													\
+Rule<And<T1, Repeat0<And<RegExT, T1> > > > TPL_CALL operator%(const Rule<T1>& x, const CharT* s)\
+	{ Rule<RegExT> y(s); return x + *(y + x); }													\
 template <class T2> __forceinline																\
-Exp<And<ChEq, Repeat0<And<T2, ChEq> > > > TPL_CALL operator%(const CharT* s, const Exp<T2>& y)	\
-	{ Exp<RegExT> x(s); return x + *(y + x); }
+Rule<And<RegExT, Repeat0<And<T2, RegExT> > > > TPL_CALL operator%(const CharT* s, const Rule<T2>& y)\
+	{ Rule<RegExT> x(s); return x + *(y + x); }
 
-TPL_REGEX_LIST_OP_(StrEq, char)
-TPL_REGEX_LIST_OP_(WStrEq, wchar_t)
+TPL_REGEX_LIST_OP_(EqStr, char)
+TPL_REGEX_LIST_OP_(EqWStr, wchar_t)
 
 // -------------------------------------------------------------------------
 // function ws, skipws, u_integer
@@ -310,19 +328,19 @@ typedef Repeat0<Space> SkipWhiteSpaces; // w*
 typedef Repeat1<Space> WhiteSpaces; // w+
 typedef Repeat1<Digit> UInteger; // d+
 
-inline Exp<WhiteSpaces> TPL_CALL ws()
+inline Rule<WhiteSpaces> TPL_CALL ws()
 {
-	return Exp<WhiteSpaces>();
+	return Rule<WhiteSpaces>();
 }
 
-inline Exp<SkipWhiteSpaces> TPL_CALL skipws()
+inline Rule<SkipWhiteSpaces> TPL_CALL skipws()
 {
-	return Exp<SkipWhiteSpaces>();
+	return Rule<SkipWhiteSpaces>();
 }
 
-inline Exp<UInteger> TPL_CALL u_integer()
+inline Rule<UInteger> TPL_CALL u_integer()
 {
-	return Exp<UInteger>();
+	return Rule<UInteger>();
 }
 
 // -------------------------------------------------------------------------

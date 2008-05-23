@@ -154,7 +154,7 @@ public:
 
 	template <class AllocT>
 	void TPL_CALL push_front(AllocT& alloc, reference v) {
-		m_hd = TPL_NEW(alloc, Node)(v, m_hd);
+		m_hd = _newNode(alloc, v, m_hd);
 	}
 
 	void TPL_CALL pop_front() {

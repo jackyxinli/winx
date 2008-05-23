@@ -76,7 +76,33 @@ public:
 		}
 	};
 
-	class Transaction
+	typedef ScopeTransaction scope_trans_type;
+
+public:
+	template <int category>
+	class trans_type {
+	};
+
+	template <>
+	class trans_type<0>
+	{
+	private:
+		Iterator vPos;
+
+	public:
+		template <class SourceT>
+		trans_type(const SourceT& ar, const BasicContext&) {
+			vPos = ar.position();
+		}
+
+		template <class SourceT>
+		void TPL_CALL rollback(SourceT& ar) {
+			ar.seek(vPos);
+		}
+	};
+
+	template <>
+	class trans_type<CATEGORY_MARKED>
 	{
 	private:
 		ScopeTransaction vScope;
@@ -84,7 +110,7 @@ public:
 
 	public:
 		template <class SourceT>
-		Transaction(const SourceT& ar, const BasicContext& context) : vScope(context) {
+		trans_type(const SourceT& ar, const BasicContext& context) : vScope(context) {
 			vPos = ar.position();
 		}
 
@@ -95,9 +121,6 @@ public:
 		}
 	};
 
-	typedef ScopeTransaction scope_trans_type;
-	typedef Transaction trans_type;
-
 public:
 	class Scope
 	{
@@ -105,7 +128,7 @@ public:
 		StackT& m_stk;
 	
 	public:
-		Scope(BasicContext& context, const NodeMark& mark)
+		Scope(BasicContext& context, const NodeMarkT& mark)
 			: m_stk(context.m_stk)
 		{
 			NodeMatchResultT* v = m_stk.front()->insertNode(context.m_alloc, mark);

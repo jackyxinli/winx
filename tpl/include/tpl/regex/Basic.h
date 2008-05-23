@@ -19,12 +19,12 @@
 #ifndef TPL_REGEX_BASIC_H
 #define TPL_REGEX_BASIC_H
 
-#if 0
-#define TPL_HAS_TEMPLATE_TYPEDEF
+#ifndef STDEXT_BASIC_H
+#include "../../../stdext/include/stdext/Basic.h"
 #endif
 
-#if !defined(__forceinline) && !defined(_MSC_VER)
-#define __forceinline inline
+#ifndef STDEXT_MEMORY_H
+#include "../../../stdext/include/stdext/Memory.h"
 #endif
 
 #ifndef TPL_UNMANAGED_NEW
@@ -67,41 +67,41 @@
 #define NS_TPL					tpl
 #endif
 
+#if !defined(__forceinline) && !defined(_MSC_VER)
+#define __forceinline inline
+#endif
+
 NS_TPL_BEGIN
 
 // -------------------------------------------------------------------------
-// class Exp
+// class Rule
 
 template <class RegExT>
-class Exp : public RegExT
+class Rule : public RegExT
 {
 public:
-	Exp() {}
+	Rule() {}
 
 	template <class T1>
-	Exp(const T1& x) : RegExT(x) {}
+	Rule(T1& x) : RegExT(x) {}
+
+	template <class T1>
+	Rule(const T1& x) : RegExT(x) {}
 
 	template <class T1, class T2>
-	Exp(const T1& x, const T2& y) : RegExT(x, y) {}
+	Rule(const T1& x, const T2& y) : RegExT(x, y) {}
 
 	template <class T1, class T2>
-	Exp(T1& x, const T2& y) : RegExT(x, y) {}
+	Rule(T1& x, const T2& y) : RegExT(x, y) {}
 };
 
 // -------------------------------------------------------------------------
-// class Pred
+// enum Category
 
-template <class PredT>
-class Pred : public PredT
+enum Category
 {
-public:
-	Pred() {}
-
-	template <class T1>
-	Pred(const T1& x) : PredT(x) {}
-
-	template <class T1, class T2>
-	Pred(const T1& x, const T2& y) : PredT(x, y) {}
+	CATEGORY_MARKED	= 0x01,
+	CATEGORY_DEFAULT = CATEGORY_MARKED,
 };
 
 // -------------------------------------------------------------------------
