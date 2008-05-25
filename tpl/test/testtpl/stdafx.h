@@ -1,4 +1,18 @@
 
+#include <iostream>
+#include <list>
+#include <set>
 #include <tpl/RegExp.h>
 
-#include <iostream>
+class My_ : public tpl::policy::Default
+{
+public:
+	typedef std::AutoFreeAlloc Allocator;
+};
+
+typedef tpl::Customization<My_> impl_;
+typedef tpl::Customization<My_, false> simple_;
+
+#define impl impl_
+#define simple simple_
+#define SimpleImplementation simple_

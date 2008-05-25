@@ -13,13 +13,11 @@ void xml_process()
 {
 	using namespace tpl;
 
-	std::BlockPool recycle;
-	std::ScopeAlloc alloc(recycle);
+	impl::Allocator alloc;
 
 	// ---- define source ----
 
-	char buf[] = "<tag prop-1=1 prop-2 = -2>text</tag>";
-	impl::Source source(buf, buf+sizeof(buf));
+	impl::Source source("<tag prop-1=1 prop-2 = -2>text</tag>");
 
 	// ---- define rules ----
 
@@ -45,7 +43,7 @@ void xml_process()
 
 	// ---- print text ----
 
-	std::cout << "Text: " << doc[tagText].stl_str() << "\n";
+	std::cout << "\nText: " << doc[tagText].stl_str() << "\n";
 
 	// ---- print properties ----
 

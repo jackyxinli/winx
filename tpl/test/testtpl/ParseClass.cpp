@@ -14,13 +14,11 @@ void parse_class()
 {
 	using namespace tpl;
 
-	std::BlockPool recycle;
-	std::ScopeAlloc alloc(recycle);
+	impl::Allocator alloc;
 
 	// ---- define source ----
 
-	char buf[] = "struct Foo : public Base1, private Base2 {};";
-	impl::Source source(buf, buf+sizeof(buf));
+	impl::Source source("struct Foo : public Base1, private Base2 {};");
 
 	// ---- define rules ----
 
@@ -46,7 +44,7 @@ void parse_class()
 
 	// ---- print class name ----
 
-	std::cout << "ClassName: " << className.stl_str() << "\n";
+	std::cout << "\nClassName: " << className.stl_str() << "\n";
 
 	// ---- print base class names ----
 

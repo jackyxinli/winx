@@ -24,8 +24,7 @@ void customize()
 
 	// ---- define source ----
 
-	char buf[] = "1928-10-1, 97-1-3, 1977/3/28";
-	impl::Source source(buf, buf+sizeof(buf));
+	impl::Source source("1928-10-1, 97-1-3, 1937/3/28");
 
 	// ---- define rules ----
 
@@ -36,7 +35,7 @@ void customize()
 
 	impl::RegExp0 rYear( alloc, repeat<1, 2>(repeat<2>(digit())) );
 	impl::RegExp0 rMonOrDay( alloc, repeat<1, 2>(digit()) );
-	impl::RegExp0 rTime( alloc, rYear + ch<'-', '/'>()/&delim + rMonOrDay + delim + rMonOrDay );
+	impl::RegExp0 rTime( alloc, rYear + ch('-', '/')/&delim + rMonOrDay + ref(delim) + rMonOrDay );
 	impl::RegExp rDoc( alloc, rTime/tagTime % (',' + skipws()) );
 
 	// ---- do match ----

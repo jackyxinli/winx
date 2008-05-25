@@ -13,13 +13,11 @@ void demo()
 {
 	using namespace tpl;
 
-	std::BlockPool recycle;
-	std::ScopeAlloc alloc(recycle);
+	impl::Allocator alloc;
 
 	// ---- define source ----
 
-	char buf[] = "x1=-.1, x2=+32., x3=-22323.2e+12";
-	impl::Source source(buf, buf+sizeof(buf));
+	impl::Source source("x1=-.1, x2=+32., x3=-22323.2e+12");
 
 	// ---- define rules ----
 
@@ -44,7 +42,7 @@ void demo()
 
 	// ---- print dblValue ----
 
-	std::cout << "DoubleValue: " << dblValue << "\n"; // guess what it is!
+	std::cout << "\nDoubleValue: " << dblValue << "\n"; // guess what it is!
 
 	// ---- print all data ----
 
