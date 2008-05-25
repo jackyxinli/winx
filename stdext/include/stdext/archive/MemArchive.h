@@ -210,11 +210,43 @@ public:
 	{
 	}
 
+	explicit MemReadArchive(Iterator first)
+		: m_pos(first), m_first(first), m_last(std::end(first))
+	{
+	}
+
 	template <class ContainerT>
 	explicit MemReadArchive(const ContainerT* cont)
 		: m_pos(cont->begin()), m_first(m_pos), m_last(cont->end())
 	{
 	}
+
+public:
+	class Restriction
+	{
+	private:
+		MemReadArchive& m_ar;
+		Iterator m_pos;
+		Iterator m_first;
+		Iterator m_last;
+
+	public:
+		Restriction(MemReadArchive& ar, Iterator first, Iterator last)
+			: m_ar(ar), m_pos(ar.m_pos), m_first(ar.m_first), m_last(ar.m_last) 
+		{
+			ar.m_first = ar.m_pos = first;
+			ar.m_last = last;
+		}
+
+		~Restriction()
+		{
+			m_ar.m_pos = m_pos;
+			m_ar.m_first = m_first;
+			m_ar.m_last = m_last;
+		}
+	};
+
+	typedef Restriction restriction_type;
 
 public:
 	void winx_call clear_cache()
