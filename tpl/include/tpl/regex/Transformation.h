@@ -26,19 +26,6 @@
 NS_TPL_BEGIN
 
 // =========================================================================
-// class Transformation
-
-template <class TransformT>
-class Transformation : public TransformT
-{
-public:
-	Transformation() {}
-
-	template <class T1>
-	Transformation(const T1& x) : TransformT(x) {}
-};
-
-// =========================================================================
 // class ICase, UCase
 
 class ICase
@@ -173,19 +160,26 @@ private:
 	typedef typename SourceT::iterator OldIt_;
 
 public:
-	TransfSource(SourceT& ar)
-		: m_ar(ar) {}
-
-	TransfSource(SourceT& ar, const TransformT& transf)
-		: m_ar(ar), m_transf(transf) {}
-
-public:
 	typedef TransfIterator<OldIt_, TransformT> iterator;
 	typedef typename SourceT::char_type char_type;
 	typedef typename SourceT::uchar_type uchar_type;
 	typedef typename SourceT::int_type int_type;
+	typedef typename SourceT::restriction_type restriction_type;
 
 public:
+	TransfSource(SourceT& ar)
+		: m_ar(ar) {
+	}
+
+	TransfSource(SourceT& ar, const TransformT& transf)
+		: m_ar(ar), m_transf(transf) {
+	}
+
+public:
+	operator SourceT&() const {
+		return m_ar;
+	}
+
 	iterator TPL_CALL position() const {
 		return iterator(m_ar.position(), m_transf);
 	}
@@ -200,6 +194,10 @@ public:
 
 	void TPL_CALL unget() const {
 		m_ar.unget();
+	}
+
+	void TPL_CALL unget(int_type c) const {
+		m_ar.unget(c);
 	}
 
 	int_type TPL_CALL peek() const {
@@ -234,6 +232,7 @@ public:
 // class Transf
 
 // Usage: Transformation->*Rule		--- eg. icase()->*Rule
+// Usage: Transformation>>Rule		--- same as: Transformation->*Rule
 
 template <class RegExT, class TransformT>
 class Transf
@@ -260,6 +259,11 @@ public:
 
 template <class T1, class T2> __forceinline
 Rule<Transf<T1, T2> > TPL_CALL operator->*(Transformation<T2>& y, const Rule<T1>& x) {
+	return Rule<Transf<T1, T2> >(x, y);
+}
+
+template <class T1, class T2> __forceinline
+Rule<Transf<T1, T2> > TPL_CALL operator>>(Transformation<T2>& y, const Rule<T1>& x) {
 	return Rule<Transf<T1, T2> >(x, y);
 }
 

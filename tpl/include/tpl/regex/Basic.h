@@ -73,6 +73,16 @@
 
 NS_TPL_BEGIN
 
+// =========================================================================
+// enum RuleCategory
+
+enum RuleCategory
+{
+	CATEGORY_TERMINAL	= 0x00,
+	CATEGORY_MARKED		= 0x01,
+	CATEGORY_DEFAULT	= CATEGORY_MARKED,
+};
+
 // -------------------------------------------------------------------------
 // class Rule
 
@@ -93,18 +103,124 @@ public:
 
 	template <class T1, class T2>
 	Rule(T1& x, const T2& y) : RegExT(x, y) {}
+
+	template <class T1, class T2, class T3>
+	Rule(const T1& x, const T2& y, const T3& z) : RegExT(x, y, z) {}
+
+public:
+	// concept:
+
+	enum { category = RegExT::category };
+
+	template <class SourceT, class ContextT>
+	bool TPL_CALL match(SourceT& ar, ContextT& context) const;
 };
 
-// -------------------------------------------------------------------------
-// enum Category
+// =========================================================================
+// class SimpleAction
 
-enum Category
+template <class ActionT>
+class SimpleAction : public ActionT
 {
-	CATEGORY_MARKED	= 0x01,
-	CATEGORY_DEFAULT = CATEGORY_MARKED,
+public:
+	SimpleAction() {}
+
+	template <class T1>
+	SimpleAction(const T1& x) : ActionT(x) {}
+
+	template <class T1>
+	SimpleAction(T1& x) : ActionT(x) {}
+
+	template <class T1, class T2>
+	SimpleAction(const T1& x, const T2& y) : ActionT(x, y) {}
+
+	template <class T1, class T2>
+	SimpleAction(T1& x, const T2& y) : ActionT(x, y) {}
+
+	template <class T1, class T2>
+	SimpleAction(const T1& x, T2& y) : ActionT(x, y) {}
+
+	template <class T1, class T2>
+	SimpleAction(T1& x, T2& y) : ActionT(x, y) {}
+
+public:
+	// concept:
+
+	void TPL_CALL operator()() const;
 };
 
-// -------------------------------------------------------------------------
+// =========================================================================
+// class Action
+
+template <class ActionT>
+class Action : public ActionT
+{
+public:
+	Action() {}
+
+	template <class T1>
+	Action(const T1& x) : ActionT(x) {}
+
+	template <class T1>
+	Action(T1& x) : ActionT(x) {}
+
+	template <class T1, class T2>
+	Action(const T1& x, const T2& y) : ActionT(x, y) {}
+
+	template <class T1, class T2>
+	Action(T1& x, const T2& y) : ActionT(x, y) {}
+
+	template <class T1, class T2>
+	Action(const T1& x, T2& y) : ActionT(x, y) {}
+
+	template <class T1, class T2>
+	Action(T1& x, T2& y) : ActionT(x, y) {}
+
+public:
+	// concept:
+
+	template <class Iterator>
+	void TPL_CALL operator()(Iterator first, Iterator last) const;
+};
+
+// =========================================================================
+// class Reference
+
+template <class RefT>
+class Reference : public RefT
+{
+public:
+	template <class T1>
+	Reference(const T1& x) : RefT(x) {}
+
+public:
+	// concept:
+
+	typedef typename RefT::rule_type rule_type;
+	typedef typename RefT::dereference_type dereference_type;
+
+	dereference_type TPL_CALL operator()() const;
+};
+
+// =========================================================================
+// class Transformation
+
+template <class TransformT>
+class Transformation : public TransformT
+{
+public:
+	Transformation() {}
+
+	template <class T1>
+	Transformation(const T1& x) : TransformT(x) {}
+
+public:
+	// concept:
+
+	int TPL_CALL operator()(int ch) const;
+};
+
+// =========================================================================
 // $Log: $
 
 NS_TPL_END

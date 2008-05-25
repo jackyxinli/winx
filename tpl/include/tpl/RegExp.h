@@ -19,6 +19,10 @@
 #ifndef TPL_REGEXP_H
 #define TPL_REGEXP_H
 
+#if (0)
+#define TPL_NO_STL_HEADERS // don't auto include stl headers
+#endif
+
 #ifndef TPL_REGEX_BASIC_H
 #include "regex/Basic.h"
 #endif
@@ -43,10 +47,6 @@
 #include "regex/Terminal.h"
 #endif
 
-#ifndef TPL_REGEX_RESTRICTION_H
-#include "regex/Restriction.h"
-#endif
-
 #ifndef TPL_REGEX_COMPOSITION_H
 #include "regex/Composition.h"
 #endif
@@ -55,12 +55,8 @@
 #include "regex/UComposition.h"
 #endif
 
-#ifndef TPL_REGEX_REF_H
-#include "regex/Ref.h"
-#endif
-
-#ifndef TPL_REGEX_FIND_H
-#include "regex/Find.h"
+#ifndef TPL_REGEX_OPERATOR_H
+#include "regex/Operator.h"
 #endif
 
 #ifndef TPL_REGEX_ACTION_H
@@ -69,6 +65,18 @@
 
 #ifndef TPL_REGEX_ASSIGNMENT_H
 #include "regex/Assignment.h"
+#endif
+
+#ifndef TPL_REGEX_ASSIGNMENTS_H
+#include "regex/Assignments.h"
+#endif
+
+#ifndef TPL_REGEX_REF_H
+#include "regex/Ref.h"
+#endif
+
+#ifndef TPL_REGEX_FIND_H
+#include "regex/Find.h"
 #endif
 
 #ifndef TPL_REGEX_TRANSFORMATION_H

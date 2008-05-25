@@ -25,35 +25,56 @@
 
 NS_TPL_BEGIN
 
-// -------------------------------------------------------------------------
-// class Action
+// =========================================================================
+// class Act0
 
-template <class ActionT>
-class Action : public ActionT
+template <class RegExT, class ActionT>
+class Act0
 {
+private:
+	RegExT m_x;
+	ActionT m_action;
+
 public:
-	Action() {}
+	Act0() {}
+	Act0(const RegExT& x, const ActionT& act)
+		: m_x(x), m_action(act) {}
 
-	template <class T1>
-	Action(const T1& x) : ActionT(x) {}
+public:
+	enum { category = RegExT::category };
 
-	template <class T1>
-	Action(T1& x) : ActionT(x) {}
-
-	template <class T1, class T2>
-	Action(const T1& x, const T2& y) : ActionT(x, y) {}
-
-	template <class T1, class T2>
-	Action(T1& x, const T2& y) : ActionT(x, y) {}
-
-	template <class T1, class T2>
-	Action(const T1& x, T2& y) : ActionT(x, y) {}
-
-	template <class T1, class T2>
-	Action(T1& x, T2& y) : ActionT(x, y) {}
+	template <class SourceT, class ContextT>
+	bool TPL_CALL match(SourceT& ar, ContextT& context) const
+	{
+		if (m_x.match(ar, context)) {
+			m_action();
+			return true;
+		}
+		return false;
+	}
 };
 
 // -------------------------------------------------------------------------
+// operator/
+
+// Usage: Rule/SimpleAction
+
+template <class T1, class T2> __forceinline
+Rule<Act0<T1, T2> > TPL_CALL operator/(const Rule<T1>& x, const SimpleAction<T2>& y) {
+	return Rule<Act0<T1, T2> >(x, y);
+}
+
+template <class T2> __forceinline
+Rule<Act0<Ch1_, T2> > TPL_CALL operator/(char x, const SimpleAction<T2>& y) {
+	return ch((unsigned char)x) / y;
+}
+
+template <class T2> __forceinline
+Rule<Act0<Ch1_, T2> > TPL_CALL operator/(wchar_t x, const SimpleAction<T2>& y) {
+	return ch(x) / y;
+}
+
+// =========================================================================
 // class Act
 
 template <class RegExT, class ActionT>
@@ -87,14 +108,50 @@ public:
 // -------------------------------------------------------------------------
 // operator/
 
-// Usage: Rule/Action
+// Usage: Rule/Action	--- eg. Rule/assign(a_variable)
 
 template <class T1, class T2> __forceinline
 Rule<Act<T1, T2> > TPL_CALL operator/(const Rule<T1>& x, const Action<T2>& y) {
 	return Rule<Act<T1, T2> >(x, y);
 }
 
-// -------------------------------------------------------------------------
+template <class T2> __forceinline
+Rule<Act<Ch1_, T2> > TPL_CALL operator/(char x, const Action<T2>& y) {
+	return ch((unsigned char)x) / y;
+}
+
+template <class T2> __forceinline
+Rule<Act<Ch1_, T2> > TPL_CALL operator/(wchar_t x, const Action<T2>& y) {
+	return ch(x) / y;
+}
+
+// =========================================================================
+// class Info
+
+// Usage: Rule/info("...")
+
+class Info
+{
+private:
+	const char* m_prompt;
+
+public:
+	Info(const char* prompt_) : m_prompt(prompt_) {
+	}
+
+public:
+	template <class Iterator>
+	void operator()(Iterator pos, Iterator pos2) const {
+		std::string str(pos, pos2);
+		printf("%s: %s\n", m_prompt, str.c_str());
+	}
+};
+
+inline Action<Info> TPL_CALL info(const char* prompt_) {
+	return Action<Info>(prompt_);
+}
+
+// =========================================================================
 // $Log: $
 
 NS_TPL_END

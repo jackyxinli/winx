@@ -34,20 +34,46 @@
 NS_TPL_BEGIN
 
 // -------------------------------------------------------------------------
+// class FakeContext
+
+template <class Iterator>
+class FakeContext
+{
+public:
+	template <int category>
+	class trans_type
+	{
+	private:
+		Iterator vPos;
+
+	public:
+		template <class SourceT>
+		trans_type(const SourceT& ar, const FakeContext&) {
+			vPos = ar.position();
+		}
+
+		template <class SourceT>
+		void TPL_CALL rollback(SourceT& ar) {
+			ar.seek(vPos);
+		}
+	};
+};
+
+// -------------------------------------------------------------------------
 // class BasicContext
 
 template <class Iterator, class AllocT, class TagT = DefaultTag>
 class BasicContext
 {
 private:
-	typedef NodeMatchResult<Iterator, TagT> NodeMatchResultT;
-	typedef ConsList<NodeMatchResultT*, false> StackT;
+	typedef Node<Iterator, TagT> NodeT;
+	typedef ConsList<NodeT*, false> StackT;
 
 	AllocT& m_alloc;
 	StackT m_stk;
 
 public:
-	BasicContext(AllocT& alloc, NodeMatchResultT& doc)
+	BasicContext(AllocT& alloc, NodeT& doc)
 		: m_alloc(alloc)
 	{
 		m_stk.push_front(alloc, &doc);
@@ -58,11 +84,22 @@ private:
 	typedef BasicMark<TagT, NodeAssign> NodeMarkT;
 
 public:
+	typedef AllocT allocator_type;
+
+	allocator_type& TPL_CALL getAllocator() const {
+		return m_alloc;
+	}
+
+	void TPL_CALL insertLeaf(const LeafMarkT& mark, Iterator pos, Iterator pos2) {
+		m_stk.front()->insertLeaf(m_alloc, mark, pos, pos2);
+	}
+
+public:
 	class ScopeTransaction
 	{
 	private:
-		NodeMatchResultT* vParent;
-		NodeMatchResultT vOld;
+		NodeT* vParent;
+		NodeT vOld;
 
 	public:
 		ScopeTransaction(const BasicContext& context) {
@@ -131,7 +168,7 @@ public:
 		Scope(BasicContext& context, const NodeMarkT& mark)
 			: m_stk(context.m_stk)
 		{
-			NodeMatchResultT* v = m_stk.front()->insertNode(context.m_alloc, mark);
+			NodeT* v = m_stk.front()->insertNode(context.m_alloc, mark);
 			m_stk.push_front(context.m_alloc, v);
 		}
 		~Scope() {
@@ -141,12 +178,6 @@ public:
 	friend class Scope;
 
 	typedef Scope scope_type;
-
-public:
-	void TPL_CALL insertLeaf(const LeafMarkT& mark, Iterator pos, Iterator pos2)
-	{
-		m_stk.front()->insertLeaf(m_alloc, mark, pos, pos2);
-	}
 };
 
 // -------------------------------------------------------------------------

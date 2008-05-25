@@ -19,13 +19,13 @@
 #ifndef TPL_REGEX_UCOMPOSITION_H
 #define TPL_REGEX_UCOMPOSITION_H
 
-#ifndef TPL_REGEX_COMPOSITION_H
-#include "Composition.h"
+#ifndef TPL_REGEX_OPERATOR_H
+#include "Operator.h"
 #endif
 
 NS_TPL_BEGIN
 
-// -------------------------------------------------------------------------
+// =========================================================================
 // class UAnd
 
 // Usage: UAnd<Rule1,Rule2>		--- means: Rule1 Rule2 (but no transaction)
@@ -51,8 +51,7 @@ public:
 	enum { category = 0 };
 
 	template <class SourceT, class ContextT>
-	bool TPL_CALL match(SourceT& ar, ContextT& context) const
-	{
+	bool TPL_CALL match(SourceT& ar, ContextT& context) const {
 		return m_x.match(ar, context) && m_y.match(ar, context);
 	}
 };
@@ -153,7 +152,7 @@ public:
 #endif
 #endif
 
-// -------------------------------------------------------------------------
+// =========================================================================
 // function c_symbol, xml_symbol, etc.
 
 // Usage: c_symbol()		--- means: matching a CSymbol. that is: [a-zA-Z_][0-9a-zA-Z_]*
@@ -277,7 +276,7 @@ inline Rule<RealG> TPL_CALL real()
 	return Rule<RealG>();
 }
 
-// -------------------------------------------------------------------------
+// =========================================================================
 // $Log: $
 
 NS_TPL_END

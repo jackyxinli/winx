@@ -30,6 +30,82 @@
 NS_TPL_BEGIN
 
 // -------------------------------------------------------------------------
+// function eps, nothing
+
+// Usage: eps()	--- means: always be successful.
+// Usage: nothing()	--- means: always be failed.
+
+template <bool bOk>
+class Null
+{
+public:
+	enum { category = 0 };
+
+	template <class SourceT, class ContextT>
+	bool TPL_CALL match(SourceT& ar, ContextT& context) const {
+		return bOk;
+	}
+};
+
+class Eps : public Null<true> {};
+class Nothing : public Null<false> {};
+
+__forceinline Rule<Eps> TPL_CALL eps() {
+	return Rule<Eps>();
+}
+
+__forceinline Rule<Nothing> TPL_CALL nothing() {
+	return Rule<Nothing>();
+}
+
+// -------------------------------------------------------------------------
+// function eos/eof
+
+// Usage: eos() --- means: matching end-of-stream
+// Usage: eof() --- same as: eos()
+
+class Eos
+{
+public:
+	enum { category = 0 };
+
+	template <class SourceT, class ContextT>
+	bool TPL_CALL match(SourceT& ar, ContextT& context) const {
+		return ar.peek() == SourceT::endch;
+	}
+};
+
+typedef Eos Eof;
+
+__forceinline Rule<Eos> TPL_CALL eos() {
+	return Rule<Eos>();
+}
+
+__forceinline Rule<Eos> TPL_CALL eof() {
+	return Rule<Eos>();
+}
+
+// -------------------------------------------------------------------------
+// function ch_any
+
+// Usage: ch_any()	--- means: matching any character.
+
+class ChAny
+{
+public:
+	enum { category = 0 };
+
+	template <class SourceT, class ContextT>
+	bool TPL_CALL match(SourceT& ar, ContextT& context) const {
+		return ar.get() != SourceT::endch;
+	}
+};
+
+__forceinline Rule<ChAny> TPL_CALL ch_any() {
+	return Rule<ChAny>();
+}
+
+// -------------------------------------------------------------------------
 // class EqCh
 
 template <class PredT>
@@ -44,8 +120,11 @@ public:
 	template <class T1>
 	EqCh(const T1& x) : m_pred(x) {}
 
-	template <class T1>
-	EqCh(const T1& x, const T1& y) : m_pred(x, y) {}
+	template <class T1, class T2>
+	EqCh(const T1& x, const T2& y) : m_pred(x, y) {}
+
+	template <class T1, class T2, class T3>
+	EqCh(const T1& x, const T2& y, const T3& z) : m_pred(x, y, z) {}
 
 public:
 	enum { category = 0 };
@@ -53,12 +132,10 @@ public:
 	template <class SourceT, class ContextT>
 	bool TPL_CALL match(SourceT& ar, ContextT& context) const
 	{
-		typename SourceT::int_type c = ar.peek();
+		typename SourceT::int_type c = ar.get();
 		if (m_pred(c))
-		{
-			ar.get();
 			return true;
-		}
+		ar.unget(c);
 		return false;
 	}
 };
@@ -212,35 +289,51 @@ __forceinline Rule<Ch<m_c1, m_c2, m_c3> > TPL_CALL ch() {
 // Usage: ch('a')
 // Sorry that we can't use 'a' directly instead of ch('a') in all case.
 
-class Ch1
+class C1
 {
 private:
 	int m_c;
 
 public:
-	Ch1(int c) : m_c(c) {}
+	C1(int c) : m_c(c) {}
 
 	bool TPL_CALL operator()(int c) const {
 		return m_c == c;
 	}
 };
 
-class Ch2
+class C2
 {
 private:
 	int m_c1;
 	int m_c2;
 
 public:
-	Ch2(int c1, int c2) : m_c1(c1), m_c2(c2) {}
+	C2(int c1, int c2) : m_c1(c1), m_c2(c2) {}
 
 	bool TPL_CALL operator()(int c) const {
 		return m_c1 == c || m_c2 == c;
 	}
 };
 
-typedef EqCh<Ch1> Ch1_;
-typedef EqCh<Ch2> Ch2_;
+class C3
+{
+private:
+	int m_c1;
+	int m_c2;
+	int m_c3;
+
+public:
+	C3(int c1, int c2, int c3) : m_c1(c1), m_c2(c2), m_c3(c3) {}
+
+	bool TPL_CALL operator()(int c) const {
+		return m_c1 == c || m_c2 == c || m_c3 == c;
+	}
+};
+
+typedef EqCh<C1> Ch1_;
+typedef EqCh<C2> Ch2_;
+typedef EqCh<C3> Ch3_;
 
 __forceinline Rule<Ch1_> TPL_CALL ch(int x) {
 	return Rule<Ch1_>(x);
@@ -250,17 +343,21 @@ __forceinline Rule<Ch2_> TPL_CALL ch(int c1, int c2) {
 	return Rule<Ch2_>(c1, c2);
 }
 
-#define TPL_REGEX_CH_OP1_(op, Op, CharT)											\
+__forceinline Rule<Ch3_> TPL_CALL ch(int c1, int c2, int c3) {
+	return Rule<Ch3_>(c1, c2, c3);
+}
+
+#define TPL_REGEX_CH_BINARY_OP1_(op, Op, CharT, UCharT)								\
 template <class T2> __forceinline													\
 Rule< Op<Ch1_, T2> > TPL_CALL operator op(CharT x, const Rule<T2>& y)				\
-	{ return ch(x) op y; }															\
+	{ return ch((UCharT)x) op y; }													\
 template <class T1> __forceinline													\
 Rule< Op<T1, Ch1_> > TPL_CALL operator op(const Rule<T1>& x, CharT y)				\
-	{ return x op ch(y); }
+	{ return x op ch((UCharT)y); }
 
-#define TPL_REGEX_CH_OP_(op, Op)													\
-	TPL_REGEX_CH_OP1_(op, Op, char)													\
-	TPL_REGEX_CH_OP1_(op, Op, wchar_t)
+#define TPL_REGEX_CH_BINARY_OP_(op, Op)												\
+	TPL_REGEX_CH_BINARY_OP1_(op, Op, char, unsigned char)							\
+	TPL_REGEX_CH_BINARY_OP1_(op, Op, wchar_t, wchar_t)
 
 // -------------------------------------------------------------------------
 // function space, alpha, ...

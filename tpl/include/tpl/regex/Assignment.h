@@ -38,6 +38,8 @@ NS_TPL_BEGIN
 
 // Usage: Rule/assign(a_string_var)
 // Usage: Rule/&a_string_var
+// Usage: Rule/assign(a_leaf_node_var)
+// Usage: Rule/&a_leaf_node_var
 
 template <class StringT>
 class AssigStr
@@ -60,6 +62,11 @@ Action<AssigStr<std::basic_string<CharT> > > TPL_CALL assign(std::basic_string<C
 	return Action<AssigStr<std::basic_string<CharT> > >(result);
 }
 
+template <class Iterator> __forceinline
+Action<AssigStr<Leaf<Iterator> > > TPL_CALL assign(Leaf<Iterator>& result) {
+	return Action<AssigStr<Leaf<Iterator> > >(result);
+}
+
 template <class T1, class CharT>
 __forceinline
 Rule<Act<T1, AssigStr<std::basic_string<CharT> > > >
@@ -67,36 +74,10 @@ TPL_CALL operator/(const Rule<T1>& x, std::basic_string<CharT>* result) {
 	return x / assign(*result);
 }
 
-// -------------------------------------------------------------------------
-// class AssigLeaf
-
-// Usage: Rule/assign(a_leaf_node_var)
-// Usage: Rule/&a_leaf_node_var
-
-template <class Iterator>
-class AssigLeaf
-{
-private:
-	LeafMatchResult<Iterator>& m_result;
-
-public:
-	AssigLeaf(LeafMatchResult<Iterator>& result) : m_result(result) {
-	}
-
-	void TPL_CALL operator()(Iterator pos, Iterator pos2) const {
-		new(&m_result) LeafMatchResult<Iterator>(pos, pos2);
-	}
-};
-
-template <class Iterator> __forceinline
-Action<AssigLeaf<Iterator> > TPL_CALL assign(LeafMatchResult<Iterator>& result) {
-	return Action<AssigLeaf<Iterator> >(result);
-}
-
 template <class T1, class Iterator>
 __forceinline
-Rule<Act<T1, AssigLeaf<Iterator> > >
-TPL_CALL operator/(const Rule<T1>& x, LeafMatchResult<Iterator>* result) {
+Rule<Act<T1, AssigStr<Leaf<Iterator> > > >
+TPL_CALL operator/(const Rule<T1>& x, Leaf<Iterator>* result) {
 	return x / assign(*result);
 }
 
@@ -118,7 +99,7 @@ public:
 	template <class Iterator>
 	void TPL_CALL operator()(Iterator pos, Iterator pos2) const {
 		TPL_ASSERT(std::distance(pos, pos2) == 1);
-		*m_result = pos;
+		m_result = *pos;
 	}
 };
 
@@ -141,7 +122,7 @@ inline Iterator TPL_CALL _parseUInt(UIntT& result, Iterator first, Iterator last
 {
 	UIntT val = 0;
 	for (; first != last; ++first) {
-		WINX_ASSERT(*first >= '0' && *first <= '9');
+		TPL_ASSERT(*first >= '0' && *first <= '9');
 		val = val * 10 + (*first - '0');
 	}
 	result = val;
@@ -168,8 +149,10 @@ __forceinline Action<AssigUInt<unsigned> > TPL_CALL assign(unsigned& result) {
 	return Action<AssigUInt<unsigned> >(result);
 }
 
-template <class T1> __forceinline
-Rule<Act<T1, AssigUInt<unsigned> > > TPL_CALL operator/(const Rule<T1>& x, unsigned* result) {
+template <class T1>
+__forceinline
+Rule<Act<T1, AssigUInt<unsigned> > >
+TPL_CALL operator/(const Rule<T1>& x, unsigned* result) {
 	return x / assign(*result);
 }
 
@@ -213,8 +196,10 @@ __forceinline Action<AssigInt<int> > TPL_CALL assign(int& result) {
 	return Action<AssigInt<int> >(result);
 }
 
-template <class T1> __forceinline
-Rule<Act<T1, AssigInt<int> > > TPL_CALL operator/(const Rule<T1>& x, int* result) {
+template <class T1>
+__forceinline
+Rule<Act<T1, AssigInt<int> > >
+TPL_CALL operator/(const Rule<T1>& x, int* result) {
 	return x / assign(*result);
 }
 
@@ -224,17 +209,19 @@ Rule<Act<T1, AssigInt<int> > > TPL_CALL operator/(const Rule<T1>& x, int* result
 // Usage: Rule/assign(a_real_var)
 // Usage: Rule/&a_real_var
 
-inline const char* TPL_CALL _parseReal(double& result, const char* first, const char* last)
+template <class RealT>
+inline const char* TPL_CALL _parseReal(RealT& result, const char* first, const char* last)
 {
-	result = strtod(first, (char**)&first);
-	WINX_ASSERT(first == last);
+	result = (RealT)strtod(first, (char**)&first);
+	TPL_ASSERT(first == last);
 	return last;
 }
 
-inline const wchar_t* TPL_CALL _parseReal(double& result, const wchar_t* first, const wchar_t* last)
+template <class RealT>
+inline const wchar_t* TPL_CALL _parseReal(RealT& result, const wchar_t* first, const wchar_t* last)
 {
-	result = wcstod(first, (wchar_t**)&first);
-	WINX_ASSERT(first == last);
+	result = (RealT)wcstod(first, (wchar_t**)&first);
+	TPL_ASSERT(first == last);
 	return last;
 }
 
@@ -262,13 +249,17 @@ __forceinline Action<AssigReal<float> > TPL_CALL assign(float& result) {
 	return Action<AssigReal<float> >(result);
 }
 
-template <class T1> __forceinline
-Rule<Act<T1, AssigReal<double> > > TPL_CALL operator/(const Rule<T1>& x, double* result) {
+template <class T1>
+__forceinline
+Rule<Act<T1, AssigReal<double> > >
+TPL_CALL operator/(const Rule<T1>& x, double* result) {
 	return x / assign(*result);
 }
 
-template <class T1> __forceinline
-Rule<Act<T1, AssigReal<float> > > TPL_CALL operator/(const Rule<T1>& x, float* result) {
+template <class T1>
+__forceinline
+Rule<Act<T1, AssigReal<float> > >
+TPL_CALL operator/(const Rule<T1>& x, float* result) {
 	return x / assign(*result);
 }
 

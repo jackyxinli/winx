@@ -28,10 +28,25 @@ NS_TPL_BEGIN
 // -------------------------------------------------------------------------
 // class DefaultTag
 
-typedef int DefaultTag;
+typedef size_t DefaultTag;
+
+// -------------------------------------------------------------------------
+// TPL_DBG_TAG
+
+#ifndef TPL_DBG_STR
+#define TPL_DBG_STR(tag)	((impl::Tag)(tag))
+#endif
+
+#ifndef TPL_DBG_TAG
+#define TPL_DBG_TAG(mark)	(const char*)((size_t)(mark).tag & ~TPL_REGEX_NODE_MARK)
+#endif
 
 // -------------------------------------------------------------------------
 // class Mark
+
+#ifndef TPL_REGEX_NODE_MARK	
+#define TPL_REGEX_NODE_MARK	(1 << (sizeof(impl::Tag)*8 - 1))
+#endif
 
 template <class TagT>
 class Mark
@@ -47,22 +62,49 @@ public:
 	Mark(const TagT tag_ = TagT())
 		: tag(tag_) {}
 
-	bool operator==(const Mark& b) const {
+	__forceinline bool TPL_CALL operator==(const Mark& b) const {
 		return this == &b;
 	}
 
-	bool operator!=(const Mark& b) const {
+	__forceinline bool TPL_CALL operator!=(const Mark& b) const {
 		return this != &b;
+	}
+
+	__forceinline TagT TPL_CALL isNode() const {
+		return tag & TPL_REGEX_NODE_MARK;
+	}
+
+	__forceinline TagT TPL_CALL isLeaf() const {
+		return !(tag & TPL_REGEX_NODE_MARK);
 	}
 };
 
 // -------------------------------------------------------------------------
 // class BasicMark
 
+struct FakeRegEx_ {
+	enum { category = 0 };
+};
+
+template <class TagT, template <class RegExT, class MarkT> class Assign>
+struct TagTraits_ {
+	__forceinline static TagT TPL_CALL calcTag(TagT tag_) {
+		return tag_;
+	}
+};
+
+template <template <class RegExT, class MarkT> class Assign>
+struct TagTraits_<size_t, Assign> {
+	__forceinline static size_t TPL_CALL calcTag(size_t tag_) {
+		return (tag_ | Assign<FakeRegEx_, int>::tag);
+	}
+};
+
 template <class TagT, template <class RegExT, class MarkT> class Assign>
 class BasicMark : public Mark<TagT>
 {
 private:
+	typedef TagTraits_<TagT, Assign> Tr_;
 	typedef Mark<TagT> Base;
 
 	BasicMark(const BasicMark&);
@@ -70,7 +112,8 @@ private:
 
 public:
 	BasicMark(const TagT tag_ = TagT())
-		: Base(tag_) {}
+		: Base(Tr_::calcTag(tag_)) {
+	}
 
 	template <class T1>
 	Rule<Assign<T1, BasicMark> > TPL_CALL operator=(const Rule<T1>& x) const {
@@ -98,6 +141,7 @@ public:
 		: m_mark(val), m_x(x) {}
 
 public:
+	enum { tag = 0 };
 	enum { category = RegExT::category | CATEGORY_MARKED };
 
 	template <class SourceT, class ContextT>
@@ -126,6 +170,7 @@ public:
 		: m_mark(val), m_x(x) {}
 
 public:
+	enum { tag = TPL_REGEX_NODE_MARK };
 	enum { category = RegExT::category | CATEGORY_MARKED };
 
 	template <class SourceT, class ContextT>

@@ -58,7 +58,7 @@ namespace policy
 // -------------------------------------------------------------------------
 // class Context
 
-template <class Policy = policy::Default>
+template <class Policy = policy::Default, bool bHasDocument = true>
 class Customization
 {
 public:
@@ -73,16 +73,27 @@ public:
 
 	typedef typename Source::iterator Iterator;
 
+private:
+	template <bool bHas>
+	struct ContextTraits_ {
+		typedef BasicContext<Iterator, Allocator, Tag> Context;
+	};
+
+	template <>
+	struct ContextTraits_<false> {
+		typedef tpl::FakeContext<Iterator> Context;
+	};
+
 public:
 	// Context
 
-	typedef BasicContext<Iterator, Allocator, Tag> Context;
+	typedef typename ContextTraits_<bHasDocument>::Context Context;
 
 public:
 	// Leaf, Node, Document
 
-	typedef LeafMatchResult<Iterator> Leaf;
-	typedef NodeMatchResult<Iterator, Tag> Node;
+	typedef tpl::Leaf<Iterator> Leaf;
+	typedef tpl::Node<Iterator, Tag> Node;
 	typedef Node Document;
 
 public:
@@ -92,6 +103,23 @@ public:
 	typedef BasicMark<Tag, NodeAssign> NodeMark;
 	typedef BasicMark<Tag, LeafAssign> LeafMark;
 
+private:
+	template <bool bHas>
+	struct CategoryTraits_ {
+		enum { categoryTerminal = CATEGORY_TERMINAL };
+		enum { categoryDefault	= CATEGORY_DEFAULT };
+		enum { categoryMarked	= CATEGORY_MARKED };
+	};
+
+	template <>
+	struct CategoryTraits_<false> {
+		enum { categoryTerminal = 0 };
+		enum { categoryDefault	= 0 };
+		enum { categoryMarked	= 0 };
+	};
+
+	typedef CategoryTraits_<bHasDocument> CateTraits_;
+
 public:
 	// RegExp
 
@@ -99,7 +127,8 @@ public:
 	class RegExpT : public Rule<BasicRegExp<nCategory, Source, Context, false> >
 	{
 	private:
-		typedef Rule<BasicRegExp<nCategory, Source, Context, false> > Base;
+		typedef BasicRegExp<nCategory, Source, Context, false> Impl;
+		typedef Rule<Impl> Base;
 
 	public:
 		RegExpT() {}
@@ -107,20 +136,26 @@ public:
 		template <class AllocT, class RegExT>
 		RegExpT(AllocT& alloc, const RegExT& x)
 			: Base(alloc, x) {}
+	
+		template <class SourceT, class ContextT>
+		__forceinline bool TPL_CALL match(SourceT& ar, ContextT& context) const {
+			return Impl::match(ar, context);
+		}
 	};
 
 	typedef RegExpT<0> RegExp0;
-	typedef RegExpT<CATEGORY_DEFAULT> RegExp;
-	typedef RegExpT<CATEGORY_MARKED> MarkedRegExp;
+	typedef RegExpT<CateTraits_::categoryDefault> RegExp;
+	typedef RegExpT<CateTraits_::categoryMarked> MarkedRegExp;
 
 public:
 	// ManagedRegExp
 
-	template <int nCategory = CATEGORY_DEFAULT>
+	template <int nCategory>
 	class ManagedRegExpT : public Rule<BasicRegExp<nCategory, Source, Context, true> >
 	{
 	private:
-		typedef Rule<BasicRegExp<nCategory, Source, Context, true> > Base;
+		typedef BasicRegExp<nCategory, Source, Context, true> Impl;
+		typedef Rule<Impl> Base;
 
 	public:
 		ManagedRegExpT() {}
@@ -128,51 +163,50 @@ public:
 		template <class AllocT, class RegExT>
 		ManagedRegExpT(AllocT& alloc, const RegExT& x)
 			: Base(alloc, x) {}
+
+		template <class SourceT, class ContextT>
+		__forceinline bool TPL_CALL match(SourceT& ar, ContextT& context) const {
+			return Impl::match(ar, context);
+		}
 	};
 
 	typedef ManagedRegExpT<0> ManagedRegExp0;
-	typedef ManagedRegExpT<CATEGORY_DEFAULT> ManagedRegExp;
-	typedef ManagedRegExpT<CATEGORY_MARKED> ManagedMarkedRegExp;
+	typedef ManagedRegExpT<CateTraits_::categoryDefault> ManagedRegExp;
+	typedef ManagedRegExpT<CateTraits_::categoryMarked> ManagedMarkedRegExp;
+
+public:
+	// helper functions:
+
+	template <class RegExT>
+	static inline bool TPL_CALL match(Iterator pos, Iterator pos2, const Rule<RegExT>& rule)
+	{
+		Source source(pos, pos2);
+		Context context;
+		return static_cast<const RegExT&>(rule).match(source, context);
+	}
+
+	template <class RegExT>
+	static inline bool TPL_CALL match(Iterator pos, const Rule<RegExT>& rule)
+	{
+		Source source(pos);
+		Context context;
+		return static_cast<const RegExT&>(rule).match(source, context);
+	}
 };
 
 // -------------------------------------------------------------------------
+// SimpleImplementation
 
-namespace impl
-{
-	typedef Customization<> DefaultImplementation;
+typedef Customization<policy::Default, false> SimpleImplementation;
 
-	// Source, Allocator
+typedef SimpleImplementation simple;
 
-	typedef DefaultImplementation::Source Source;
-	typedef DefaultImplementation::Allocator Allocator;
+// -------------------------------------------------------------------------
+// DefaultImplementation
 
-	// Context
+typedef Customization<> DefaultImplementation;
 
-	typedef DefaultImplementation::Context Context;
-
-	// Leaf, Node, Document
-
-	typedef DefaultImplementation::Leaf Leaf;
-	typedef DefaultImplementation::Node Node;
-	typedef DefaultImplementation::Document Document;
-
-	// LeafMark, NodeMark
-
-	typedef DefaultImplementation::NodeMark NodeMark;
-	typedef DefaultImplementation::LeafMark LeafMark;
-
-	// RegExp
-
-	typedef DefaultImplementation::RegExp RegExp;
-	typedef DefaultImplementation::RegExp0 RegExp0;
-	typedef DefaultImplementation::MarkedRegExp MarkedRegExp;
-
-	// ManagedRegExp
-
-	typedef DefaultImplementation::ManagedRegExp ManagedRegExp;
-	typedef DefaultImplementation::ManagedRegExp0 ManagedRegExp0;
-	typedef DefaultImplementation::ManagedMarkedRegExp ManagedMarkedRegExp;
-};
+typedef DefaultImplementation impl;
 
 // -------------------------------------------------------------------------
 // $Log: $
