@@ -189,7 +189,11 @@
 	</References>
 	<Files>
 		<File
-			RelativePath=".\Caculator.cpp"
+			RelativePath=".\Calculator.cpp"
+			>
+		</File>
+		<File
+			RelativePath=".\Calculator2.cpp"
 			>
 		</File>
 		<File

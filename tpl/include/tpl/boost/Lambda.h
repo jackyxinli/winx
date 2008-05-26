@@ -110,7 +110,7 @@ public:
 };
 
 #define TPL_LOCAL(T, variable)												\
-	T _tpl_##variable;														\
+	T _tpl_##variable = T();												\
 	tpl::Local<T>::Ref variable = boost::lambda::var(_tpl_##variable)
 
 template <class T>

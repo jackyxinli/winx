@@ -10,6 +10,7 @@ void parse_class();
 void html_process();
 void circuit();
 void calculate();
+void calculate2();
 
 int main()
 {
@@ -20,7 +21,7 @@ int main()
 // 	demo();
 // 	customize();
 // 	parse_class();
-	calculate();
+	calculate2();
 	return 0;
 }
 

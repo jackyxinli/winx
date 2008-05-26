@@ -2,6 +2,7 @@
 #include <iostream>
 #include <vector>
 #include <list>
+#include <stack>
 #include <tpl/RegExp.h>
 
 class My_ : public tpl::policy::Default
