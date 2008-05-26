@@ -24,7 +24,7 @@ void calculate2()
 	impl::RegExp rSub( alloc, '-' + rTerm/calc<std::minus>(stk) );
 	impl::RegExp rExpr( alloc, rTerm + *(rAdd | rSub) );
 	
-	impl::RegExp rFun( alloc, "sin"/calc(stk, sin) | "cos"/calc(stk, cos) );
+	impl::RegExp rFun( alloc, "sin"/calc(stk, sin) | "cos"/calc(stk, cos) | "pow"/calc(stk, pow) );
 
 	rFactor.assign( alloc, 
 		real()/assign(stk) |
