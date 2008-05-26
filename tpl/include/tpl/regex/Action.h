@@ -23,6 +23,14 @@
 #include "Basic.h"
 #endif
 
+#ifndef TPL_REGEX_BASIC_H
+#include "Terminal.h"
+#endif
+
+#ifndef TPL_REGEX_COMPOSITION_H
+#include "Composition.h"
+#endif
+
 NS_TPL_BEGIN
 
 // =========================================================================
@@ -72,6 +80,16 @@ Rule<Act0<Ch1_, T2> > TPL_CALL operator/(char x, const SimpleAction<T2>& y) {
 template <class T2> __forceinline
 Rule<Act0<Ch1_, T2> > TPL_CALL operator/(wchar_t x, const SimpleAction<T2>& y) {
 	return ch(x) / y;
+}
+
+template <class T2> __forceinline
+Rule<Act0<EqStr, T2> > TPL_CALL operator/(const char* x, const SimpleAction<T2>& y) {
+	return str(x) / y;
+}
+
+template <class T2> __forceinline
+Rule<Act0<EqWStr, T2> > TPL_CALL operator/(const wchar_t* x, const SimpleAction<T2>& y) {
+	return str(x) / y;
 }
 
 // =========================================================================
@@ -125,6 +143,16 @@ Rule<Act<Ch1_, T2> > TPL_CALL operator/(wchar_t x, const Action<T2>& y) {
 	return ch(x) / y;
 }
 
+template <class T2> __forceinline
+Rule<Act<EqStr, T2> > TPL_CALL operator/(const char* x, const Action<T2>& y) {
+	return str(x) / y;
+}
+
+template <class T2> __forceinline
+Rule<Act<EqWStr, T2> > TPL_CALL operator/(const wchar_t* x, const Action<T2>& y) {
+	return str(x) / y;
+}
+
 // =========================================================================
 // class Info
 
@@ -142,8 +170,8 @@ public:
 public:
 	template <class Iterator>
 	void operator()(Iterator pos, Iterator pos2) const {
-		std::string str(pos, pos2);
-		printf("%s: %s\n", m_prompt, str.c_str());
+		std::string str_(pos, pos2);
+		printf("%s: %s\n", m_prompt, str_.c_str());
 	}
 };
 

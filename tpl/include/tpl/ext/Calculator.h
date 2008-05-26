@@ -125,7 +125,7 @@ public:
 };
 
 // -------------------------------------------------------------------------
-// function calc
+// function calc/1-ary
 
 template <int nArity, class Op, class StackT>
 struct CalcActionTraits_ {
@@ -175,6 +175,63 @@ public:
 template <template <class Type> class Op_, class StackT> __forceinline
 SimpleAction<typename CalcTraits_<Op_, StackT>::action_type> TPL_CALL calc(StackT& stk) {
 	return SimpleAction<typename CalcTraits_<Op_, StackT>::action_type>(stk);	
+}
+
+// -------------------------------------------------------------------------
+// function calc/2-ary
+
+template <class StackT>
+class CalcTraits_1_
+{
+private:
+	typedef typename StackT::value_type Ty;
+	typedef typename StackT::value_type (*fn_)(typename StackT::value_type);
+	typedef fn_ Op;
+
+public:
+	typedef typename CalcActionTraits_<1, Op, StackT>::action_type action_type;
+};
+
+template <class StackT>
+class CalcTraits_2_
+{
+private:
+	typedef typename StackT::value_type Ty;
+	typedef typename StackT::value_type (*fn_)(typename StackT::value_type, typename StackT::value_type);
+	typedef fn_ Op;
+
+public:
+	typedef typename CalcActionTraits_<2, Op, StackT>::action_type action_type;
+};
+
+template <class StackT>
+class CalcTraits_3_
+{
+private:
+	typedef typename StackT::value_type Ty;
+	typedef typename StackT::value_type (*fn_)(typename StackT::value_type, typename StackT::value_type, typename StackT::value_type);
+	typedef fn_ Op;
+
+public:
+	typedef typename CalcActionTraits_<3, Op, StackT>::action_type action_type;
+};
+
+template <class StackT> __forceinline
+SimpleAction<typename CalcTraits_1_<StackT>::action_type>
+TPL_CALL calc(StackT& stk, typename StackT::value_type (*fn)(typename StackT::value_type)) {
+	return SimpleAction<typename CalcTraits_1_<StackT>::action_type>(stk, fn);
+}
+
+template <class StackT> __forceinline
+SimpleAction<typename CalcTraits_2_<StackT>::action_type>
+TPL_CALL calc(StackT& stk, typename StackT::value_type (*fn)(typename StackT::value_type, typename StackT::value_type)) {
+	return SimpleAction<typename CalcTraits_2_<StackT>::action_type>(stk, fn);
+}
+
+template <class StackT> __forceinline
+SimpleAction<typename CalcTraits_3_<StackT>::action_type>
+TPL_CALL calc(StackT& stk, typename StackT::value_type (*fn)(typename StackT::value_type, typename StackT::value_type, typename StackT::value_type)) {
+	return SimpleAction<typename CalcTraits_2_<StackT>::action_type>(stk, fn);
 }
 
 // -------------------------------------------------------------------------

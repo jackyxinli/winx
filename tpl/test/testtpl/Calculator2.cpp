@@ -1,5 +1,6 @@
 #include "stdafx.h"
 #include <tpl/ext/Calculator.h>
+#include <cmath>
 
 using namespace tpl;
 
@@ -23,10 +24,13 @@ void calculate2()
 	impl::RegExp rSub( alloc, '-' + rTerm/calc<std::minus>(stk) );
 	impl::RegExp rExpr( alloc, rTerm + *(rAdd | rSub) );
 	
+	impl::RegExp rFun( alloc, "sin"/calc(stk, sin) | "cos"/calc(stk, cos) );
+
 	rFactor.assign( alloc, 
-		u_real()/assign(stk) |
-		'(' + rExpr + ')' |
+		real()/assign(stk) |
 		'-' + ref(rFactor)/calc<std::negate>(stk) |
+		'(' + rExpr + ')' |
+		(c_symbol() + '('+ rExpr % ',' + ')')/rFun |
 		'+' + ref(rFactor) );
 
 	// ---- do match ----
