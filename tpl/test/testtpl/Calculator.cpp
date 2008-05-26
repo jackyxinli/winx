@@ -19,7 +19,7 @@ void calculate()
 
 	impl::RegExp rMul( alloc, '*' + rFactor/exec[factor *= _1] );
 	impl::RegExp rDiv( alloc, '/' + rFactor/exec[factor /= _1] );
-	impl::RegExp rTerm( alloc, rFactor/exec[factor = _1] + *(rMul | rDiv) );
+	impl::RegExp rTerm( alloc, rFactor/assign(factor) + *(rMul | rDiv) );
 
 	impl::RegExp rAdd( alloc, '+' + rTerm/exec[term += factor] );
 	impl::RegExp rSub( alloc, '-' + rTerm/exec[term -= factor] );
