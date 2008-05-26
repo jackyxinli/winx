@@ -1,6 +1,6 @@
 
 #include "stdafx.h"
-#include <stdext/LinkLib.h>
+//#include <stdext/LinkLib.h>
 
 void simplest();
 void demo();

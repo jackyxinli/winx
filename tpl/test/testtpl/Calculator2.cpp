@@ -44,10 +44,17 @@ void calculate2()
 		if (strExp == "q")
 			break;
 
-		if (!impl::match(strExp.c_str(), rExpr + eos()))
-			std::cout << "invalid expression!\n";
-		else
-			std::cout << stk.top() << "\n";
+		try {
+			while (!stk.empty())
+				stk.pop();
+			if (!impl::match(strExp.c_str(), rExpr + eos()))
+				std::cout << ">>> ERROR: invalid expression!\n";
+			else
+				std::cout << stk.top() << "\n";
+		}
+		catch (std::logic_error e) {
+			std::cout << ">>> ERROR: " << e.what() << "\n";
+		}
 	}
 }
 

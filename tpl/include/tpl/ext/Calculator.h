@@ -37,6 +37,10 @@
 
 NS_TPL_BEGIN
 
+inline void throw_arity_error() {
+	throw std::invalid_argument("function arity is not consistent!");
+}
+
 // class UnaryFn
 
 template <class Op, class StackT>
@@ -58,6 +62,8 @@ public:
 public:
 	void TPL_CALL operator()() const {
 		TPL_ASSERT(m_stk.size() >= 1);
+		if (m_stk.size() < 1)
+			throw_arity_error();
 		value_type x = m_stk.top();
 		m_stk.pop();
 		m_stk.push(m_op(x));
@@ -86,6 +92,8 @@ public:
 	void TPL_CALL operator()() const {
 		TPL_ASSERT(m_stk.size() >= 2);
 		value_type y = m_stk.top();
+		if (m_stk.size() < 2)
+			throw_arity_error();
 		m_stk.pop();
 		value_type x = m_stk.top();
 		m_stk.pop();
@@ -114,6 +122,8 @@ public:
 public:
 	void TPL_CALL operator()() const {
 		TPL_ASSERT(m_stk.size() >= 3);
+		if (m_stk.size() < 3)
+			throw_arity_error();
 		value_type z = m_stk.top();
 		m_stk.pop();
 		value_type y = m_stk.top();
