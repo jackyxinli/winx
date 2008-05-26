@@ -30,7 +30,7 @@ void calculate()
 	for (;;)
 	{
 		std::string strExp;
-		std::cout << "input an expression (q to ): ";
+		std::cout << "input an expression (q to quit): ";
 		std::getline(std::cin, strExp);
 		
 		if (strExp == "q")
