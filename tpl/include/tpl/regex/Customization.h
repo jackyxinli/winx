@@ -56,7 +56,31 @@ namespace policy
 }
 
 // -------------------------------------------------------------------------
-// class Context
+// class Customization
+
+template <bool bHas, class Iterator, class Allocator, class Tag>
+struct CustomizationContextTraits_ {
+	typedef BasicContext<Iterator, Allocator, Tag> Context;
+};
+
+template <class Iterator, class Allocator, class Tag>
+struct CustomizationContextTraits_<false, Iterator, Allocator, Tag> {
+	typedef FakeContext<Iterator> Context;
+};
+
+template <bool bHas>
+struct CustomizationCategoryTraits_ {
+	enum { categoryTerminal = CATEGORY_TERMINAL };
+	enum { categoryDefault	= CATEGORY_DEFAULT };
+	enum { categoryMarked	= CATEGORY_MARKED };
+};
+
+template <>
+struct CustomizationCategoryTraits_<false> {
+	enum { categoryTerminal = 0 };
+	enum { categoryDefault	= 0 };
+	enum { categoryMarked	= 0 };
+};
 
 template <class Policy = policy::Default, bool bHasDocument = true>
 class Customization
@@ -75,13 +99,7 @@ public:
 
 private:
 	template <bool bHas>
-	struct ContextTraits_ {
-		typedef BasicContext<Iterator, Allocator, Tag> Context;
-	};
-
-	template <>
-	struct ContextTraits_<false> {
-		typedef tpl::FakeContext<Iterator> Context;
+	struct ContextTraits_ : public CustomizationContextTraits_<bHas, Iterator, Allocator, Tag> {
 	};
 
 public:
@@ -104,21 +122,7 @@ public:
 	typedef BasicMark<Tag, LeafAssign> LeafMark;
 
 private:
-	template <bool bHas>
-	struct CategoryTraits_ {
-		enum { categoryTerminal = CATEGORY_TERMINAL };
-		enum { categoryDefault	= CATEGORY_DEFAULT };
-		enum { categoryMarked	= CATEGORY_MARKED };
-	};
-
-	template <>
-	struct CategoryTraits_<false> {
-		enum { categoryTerminal = 0 };
-		enum { categoryDefault	= 0 };
-		enum { categoryMarked	= 0 };
-	};
-
-	typedef CategoryTraits_<bHasDocument> CateTraits_;
+	typedef CustomizationCategoryTraits_<bHasDocument> CateTraits_;
 
 public:
 	// RegExp

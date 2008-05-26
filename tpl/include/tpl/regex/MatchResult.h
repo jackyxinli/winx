@@ -219,7 +219,7 @@ public:
 	template <class ConsT>
 	static size_t TPL_CALL length(ConsT hd_) {
 		size_t len = 0;
-		for (; hd_; hd_ _= hd_.tl())
+		for (; hd_; hd_ = hd_.tl())
 			++len;
 		return len;
 	}

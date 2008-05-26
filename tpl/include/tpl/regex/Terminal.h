@@ -220,7 +220,7 @@ __forceinline Rule<NotCh<m_c1, m_c2> > TPL_CALL not_ch() {
 
 template <int m_c1, int m_c2, int m_c3>
 __forceinline Rule<NotCh<m_c1, m_c2, m_c3> > TPL_CALL not_ch() {
-	return Rule<NotCh<m_c1, m_c2, int m_c3> >();
+	return Rule<NotCh<m_c1, m_c2, m_c3> >();
 }
 
 // -------------------------------------------------------------------------
@@ -280,7 +280,7 @@ __forceinline Rule<Ch<m_c1, m_c2> > TPL_CALL ch() {
 
 template <int m_c1, int m_c2, int m_c3>
 __forceinline Rule<Ch<m_c1, m_c2, m_c3> > TPL_CALL ch() {
-	return Rule<Ch<m_c1, m_c2, int m_c3> >();
+	return Rule<Ch<m_c1, m_c2, m_c3> >();
 }
 
 // -------------------------------------------------------------------------

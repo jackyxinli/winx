@@ -60,6 +60,51 @@ public:
 };
 
 // -------------------------------------------------------------------------
+// class ContextTransaction
+
+template <int category, class Iterator, class Scope>
+class ContextTransaction {
+};
+
+template <class Iterator, class Scope>
+class ContextTransaction<0, Iterator, Scope>
+{
+private:
+	Iterator vPos;
+
+public:
+	template <class SourceT, class ContextT>
+	ContextTransaction(const SourceT& ar, const ContextT&) {
+		vPos = ar.position();
+	}
+
+	template <class SourceT>
+	void TPL_CALL rollback(SourceT& ar) {
+		ar.seek(vPos);
+	}
+};
+
+template <class Iterator, class Scope>
+class ContextTransaction<CATEGORY_MARKED, Iterator, Scope>
+{
+private:
+	Scope vScope;
+	Iterator vPos;
+
+public:
+	template <class SourceT, class ContextT>
+	ContextTransaction(const SourceT& ar, const ContextT& context) : vScope(context) {
+		vPos = ar.position();
+	}
+
+	template <class SourceT>
+	void TPL_CALL rollback(SourceT& ar) {
+		ar.seek(vPos);
+		vScope.rollback();
+	}
+};
+
+// -------------------------------------------------------------------------
 // class BasicContext
 
 template <class Iterator, class AllocT, class TagT = DefaultTag>
@@ -117,44 +162,15 @@ public:
 
 public:
 	template <int category>
-	class trans_type {
-	};
-
-	template <>
-	class trans_type<0>
+	class trans_type : public ContextTransaction<category, Iterator, ScopeTransaction>
 	{
 	private:
-		Iterator vPos;
-
+		typedef ContextTransaction<category, Iterator, ScopeTransaction> Base;
+		
 	public:
 		template <class SourceT>
-		trans_type(const SourceT& ar, const BasicContext&) {
-			vPos = ar.position();
-		}
-
-		template <class SourceT>
-		void TPL_CALL rollback(SourceT& ar) {
-			ar.seek(vPos);
-		}
-	};
-
-	template <>
-	class trans_type<CATEGORY_MARKED>
-	{
-	private:
-		ScopeTransaction vScope;
-		Iterator vPos;
-
-	public:
-		template <class SourceT>
-		trans_type(const SourceT& ar, const BasicContext& context) : vScope(context) {
-			vPos = ar.position();
-		}
-
-		template <class SourceT>
-		void TPL_CALL rollback(SourceT& ar) {
-			ar.seek(vPos);
-			vScope.rollback();
+		trans_type(const SourceT& ar, const BasicContext& context)
+			: Base(ar, context) {
 		}
 	};
 

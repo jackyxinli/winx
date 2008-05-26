@@ -13,13 +13,13 @@ void calculate();
 
 int main()
 {
-//	simplest();
+	simplest();
 // 	circuit();
 // 	html_process();
 // 	xml_process();
 // 	demo();
 // 	customize();
 // 	parse_class();
-	calculate();
+//	calculate();
 	return 0;
 }

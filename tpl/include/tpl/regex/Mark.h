@@ -45,7 +45,7 @@ typedef size_t DefaultTag;
 // class Mark
 
 #ifndef TPL_REGEX_NODE_MARK	
-#define TPL_REGEX_NODE_MARK	(1 << (sizeof(impl::Tag)*8 - 1))
+#define TPL_REGEX_NODE_MARK	(1 << (sizeof(void*)*8 - 1))
 #endif
 
 template <class TagT>

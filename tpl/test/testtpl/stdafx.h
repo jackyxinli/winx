@@ -1,7 +1,7 @@
 
 #include <iostream>
+#include <vector>
 #include <list>
-#include <set>
 #include <tpl/RegExp.h>
 
 class My_ : public tpl::policy::Default

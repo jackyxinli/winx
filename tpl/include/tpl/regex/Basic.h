@@ -107,7 +107,7 @@ public:
 	template <class T1, class T2, class T3>
 	Rule(const T1& x, const T2& y, const T3& z) : RegExT(x, y, z) {}
 
-public:
+private:
 	// concept:
 
 	enum { category = RegExT::category };
@@ -143,7 +143,7 @@ public:
 	template <class T1, class T2>
 	SimpleAction(T1& x, T2& y) : ActionT(x, y) {}
 
-public:
+private:
 	// concept:
 
 	void TPL_CALL operator()() const;
@@ -176,7 +176,7 @@ public:
 	template <class T1, class T2>
 	Action(T1& x, T2& y) : ActionT(x, y) {}
 
-public:
+private:
 	// concept:
 
 	template <class Iterator>
@@ -193,7 +193,7 @@ public:
 	template <class T1>
 	Reference(const T1& x) : RefT(x) {}
 
-public:
+private:
 	// concept:
 
 	typedef typename RefT::rule_type rule_type;
@@ -214,7 +214,7 @@ public:
 	template <class T1>
 	Transformation(const T1& x) : TransformT(x) {}
 
-public:
+private:
 	// concept:
 
 	int TPL_CALL operator()(int ch) const;

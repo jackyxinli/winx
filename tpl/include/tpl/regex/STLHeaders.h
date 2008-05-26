@@ -21,42 +21,42 @@
 
 // -------------------------------------------------------------------------
 
-#if defined(_STACK_) || defined(_STACK)
+#if defined(_STACK_) || defined(_STACK) || defined(_GLIBCXX_STACK)
 #define TPL_HAS_STACK
 #endif
 
 // -------------------------------------------------------------------------
 // std::queue
 
-#if defined(_QUEUE_) || defined(_QUEUE)
+#if defined(_QUEUE_) || defined(_QUEUE) || defined(_GLIBCXX_QUEUE)
 #define TPL_HAS_QUEUE
 #endif
 
 // -------------------------------------------------------------------------
 // std::deque
 
-#if defined(_DEQUE_) || defined(_DEQUE)
+#if defined(_DEQUE_) || defined(_DEQUE) || defined(_GLIBCXX_DEQUE)
 #define TPL_HAS_DEQUE
 #endif
 
 // -------------------------------------------------------------------------
 // std::vector
 
-#if defined(_VECTOR_) || defined(_VECTOR)
+#if defined(_VECTOR_) || defined(_VECTOR) || defined(_GLIBCXX_VECTOR)
 #define TPL_HAS_VECTOR
 #endif
 
 // -------------------------------------------------------------------------
 // std::list
 
-#if defined(_LIST_) || defined(_LIST)
+#if defined(_LIST_) || defined(_LIST) || defined(_GLIBCXX_LIST)
 #define TPL_HAS_LIST
 #endif
 
 // -------------------------------------------------------------------------
 // std::set, std::multiset
 
-#if defined(_SET_) || defined(_SET)
+#if defined(_SET_) || defined(_SET) || defined(_GLIBCXX_SET)
 #define TPL_HAS_SET
 #define TPL_HAS_MULTI_SET
 #endif
@@ -64,7 +64,7 @@
 // -------------------------------------------------------------------------
 // std::map, std::multimap
 
-#if defined(_MAP_) || defined(_MAP)
+#if defined(_MAP_) || defined(_MAP) || defined(_GLIBCXX_MAP)
 #define TPL_HAS_MAP
 #define TPL_HAS_MULTI_MAP
 #endif
@@ -73,3 +73,4 @@
 // $Log: $
 
 #endif /* TPL_REGEX_STLHEADERS_H */
+

@@ -79,11 +79,15 @@ class TransfIterator<const CharT*, TransformT> :
 {
 private:
 	typedef const CharT* IteratorT;
+	typedef std::iterator<std::random_access_iterator_tag, CharT> Base;
 
 private:
 	IteratorT m_it;
 	TransformT m_transf;
 
+public:
+	typedef typename Base::difference_type difference_type;
+	
 public:
 	TransfIterator(const CharT* it, const TransformT& transf)
 		: m_it(it), m_transf(transf) {

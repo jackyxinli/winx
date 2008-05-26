@@ -76,7 +76,7 @@ public:
 	template <class SourceT, class ContextT>
 	bool TPL_CALL match(SourceT& ar, ContextT& context) const
 	{
-		typename ContextT::trans_type<RegExT1::category> trans(ar, context);
+		typename ContextT::template trans_type<RegExT1::category> trans(ar, context);
 		if (m_x.match(ar, context) && m_y.match(ar, context))
 			return true;
 		trans.rollback(ar);
@@ -181,7 +181,7 @@ public:
 	bool TPL_CALL match(SourceT& ar, ContextT& context) const
 	{
 		typename SourceT::iterator pos = ar.position();
-		typename ContextT::trans_type<category> trans(ar, context);
+		typename ContextT::template trans_type<category> trans(ar, context);
 		if (m_x.match(ar, context)) {
 			typename SourceT::iterator pos2 = ar.position();
 			typename SourceT::restriction_type restr(ar, pos, pos2);
@@ -329,7 +329,7 @@ public:
 	bool TPL_CALL match(SourceT& ar, ContextT& context) const
 	{
 		unsigned n;
-		typename ContextT::trans_type<category> trans(ar, context);
+		typename ContextT::template trans_type<category> trans(ar, context);
 		for (n = 0; n < nMax; ++n)
 		{
 			if (!m_x.match(ar, context))
