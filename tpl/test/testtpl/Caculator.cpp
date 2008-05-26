@@ -5,35 +5,46 @@ using namespace tpl;
 // -------------------------------------------------------------------------
 // calculate
 
-template <template <class Ty> class Fn>
-class Op
+template <class Type, class OperaT>
+class Calc
 {
 private:
-	double& result_;
-	const double& operand_;
-	Fn<double> op_;
+	typedef AssignmentTypeTraits<Type> Tr_;
+
+	OperaT m_opera;
 
 public:
-	Op(double& result, const double& operand)
-		: result_(result), operand_(operand) {
+	typedef Type value_type;
+	typedef typename Tr_::assignment_type assignment_type;
+
+public:
+	Calc(const OperaT& opera)
+		: m_opera(opera) {
 	}
 
-	void operator()() const {
-		double old_ = result_;
-		result_ = op_(old_, operand_);
-		std::cout << old_ << " op " << operand_ << " = " << result_ << '\n';
+	template <class Iterator>
+	void TPL_CALL operator()(Iterator pos, Iterator pos2) const {
+		value_type val = value_type();
+		assignment_type assig(val);
+		assig(pos, pos2);
+		m_opera(val);
 	}
 };
 
-template <template <class Ty> class Fn>
-inline SimpleAction<Op<Fn> > op(double& result, const double& operand_) {
-	return SimpleAction<Op<Fn> >(result, operand_);
-}
+template <class Type>
+class Lambda
+{
+public:
+	template <class OperaT>
+	Action<Calc<Type, OperaT> > TPL_CALL operator[](const OperaT& op) const {
+		return Action<Calc<Type, OperaT> >(op);
+	}
+};
 
-#define mul op<std::multiplies>
-#define div op<std::divides>
-#define add op<std::plus>
-#define sub op<std::minus>
+#pragma warning(disable:4819)
+#include <boost/lambda/lambda.hpp>
+
+using namespace boost::lambda;
 
 void calculate()
 {
@@ -43,19 +54,20 @@ void calculate()
 
 	impl::Allocator alloc;
 
+	Lambda<double> exec;
+
 	double vTerm = 0;
 	double vFactor = 0;
-	double vTemp = 0;
 
-	impl::RegExp rFactor( alloc, real() );
+	impl::RegExp rFactor( alloc, real()/info("push") );
 
-	impl::RegExp rMul( alloc, '*' + rFactor/&vTemp/info("push")/mul(vFactor, vTemp) );
-	impl::RegExp rDiv( alloc, '/' + rFactor/&vTemp/info("push")/div(vFactor, vTemp) );
-	impl::RegExp rTerm( alloc, rFactor/&vFactor/info("push") + *(rMul | rDiv) );
+	impl::RegExp rMul( alloc, '*' + rFactor/exec[var(vFactor) *= _1] );
+	impl::RegExp rDiv( alloc, '/' + rFactor/exec[var(vFactor) /= _1] );
+	impl::RegExp rTerm( alloc, rFactor/&vFactor + *(rMul | rDiv) );
 
-	impl::RegExp rAdd( alloc, '+' + rTerm/add(vTerm, vFactor) );
-	impl::RegExp rSub( alloc, '-' + rTerm/sub(vTerm, vFactor) );
-	impl::RegExp rExpr( alloc, rTerm/&vTerm/info("push") + *(rAdd | rSub) + eos() );
+	impl::RegExp rAdd( alloc, '+' + rTerm/exec[var(vTerm) += var(vFactor)] );
+	impl::RegExp rSub( alloc, '-' + rTerm/exec[var(vTerm) -= var(vFactor)] );
+	impl::RegExp rExpr( alloc, rTerm/&vTerm + *(rAdd | rSub) + eos() );
 
 	// ---- do match ----
 

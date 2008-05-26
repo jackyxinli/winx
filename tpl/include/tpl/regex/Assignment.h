@@ -264,6 +264,53 @@ TPL_CALL operator/(const Rule<T1>& x, float* result) {
 }
 
 // -------------------------------------------------------------------------
+// class AssignmentTypeTraits
+
+template <class Type>
+struct AssignmentTypeTraits {
+};
+
+template <class CharT>
+struct AssignmentTypeTraits<std::basic_string<CharT> > {
+	typedef AssigStr<std::basic_string<CharT> > assignment_type;
+};
+
+template <class Iterator>
+struct AssignmentTypeTraits<Leaf<Iterator> > {
+	typedef AssigStr<Leaf<Iterator> > assignment_type;
+};
+
+template <>
+struct AssignmentTypeTraits<char> {
+	typedef AssigCh<char> assignment_type;
+};
+
+template <>
+struct AssignmentTypeTraits<wchar_t> {
+	typedef AssigCh<wchar_t> assignment_type;
+};
+
+template <>
+struct AssignmentTypeTraits<int> {
+	typedef AssigInt<int> assignment_type;
+};
+
+template <>
+struct AssignmentTypeTraits<unsigned> {
+	typedef AssigUInt<unsigned> assignment_type;
+};
+
+template <>
+struct AssignmentTypeTraits<float> {
+	typedef AssigReal<float> assignment_type;
+};
+
+template <>
+struct AssignmentTypeTraits<double> {
+	typedef AssigReal<double> assignment_type;
+};
+
+// -------------------------------------------------------------------------
 // $Log: $
 
 NS_TPL_END

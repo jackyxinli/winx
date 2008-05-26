@@ -21,39 +21,29 @@
 
 // -------------------------------------------------------------------------
 
-#if !defined(TPL_NO_STL_HEADERS)
-
-#if !defined(_STACK_) && !defined(_STACK)
-#include <stack>
-#endif
-
-#if !defined(_DEQUE_) && !defined(_DEQUE)
-#include <deque>
-#endif
-
-#if !defined(_VECTOR_) && !defined(_VECTOR)
-#include <vector.h>
-#endif
-
-#define TPL_HAS_STACK
-#define TPL_HAS_DEQUE
-#define TPL_HAS_VECTOR
-
-// -------------------------------------------------------------------------
-#else
-
 #if defined(_STACK_) || defined(_STACK)
 #define TPL_HAS_STACK
 #endif
+
+// -------------------------------------------------------------------------
+// std::queue
+
+#if defined(_QUEUE_) || defined(_QUEUE)
+#define TPL_HAS_QUEUE
+#endif
+
+// -------------------------------------------------------------------------
+// std::deque
 
 #if defined(_DEQUE_) || defined(_DEQUE)
 #define TPL_HAS_DEQUE
 #endif
 
+// -------------------------------------------------------------------------
+// std::vector
+
 #if defined(_VECTOR_) || defined(_VECTOR)
 #define TPL_HAS_VECTOR
-#endif
-
 #endif
 
 // -------------------------------------------------------------------------
@@ -64,11 +54,19 @@
 #endif
 
 // -------------------------------------------------------------------------
-// std::set, std::multi_set
+// std::set, std::multiset
 
 #if defined(_SET_) || defined(_SET)
 #define TPL_HAS_SET
 #define TPL_HAS_MULTI_SET
+#endif
+
+// -------------------------------------------------------------------------
+// std::map, std::multimap
+
+#if defined(_MAP_) || defined(_MAP)
+#define TPL_HAS_MAP
+#define TPL_HAS_MULTI_MAP
 #endif
 
 // -------------------------------------------------------------------------
