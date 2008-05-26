@@ -9,15 +9,15 @@
 // of this license. You must not remove this notice, or any other, from
 // this software.
 // 
-// Module: tpl/RegExp.h
+// Module: tpl/Lambda.h
 // Creator: xushiwei
 // Email: xushiweizh@gmail.com
 // Date: 2006-8-13 9:41:58
 // 
-// $Id: RegExp.h 554 2008-05-25 07:50:50Z xushiweizh $
+// $Id: Lambda.h 554 2008-05-25 07:50:50Z xushiweizh $
 // -----------------------------------------------------------------------*/
-#ifndef TPL_LAMBDA_H
-#define TPL_LAMBDA_H
+#ifndef TPL_BOOST_LAMBDA_H
+#define TPL_BOOST_LAMBDA_H
 
 #pragma warning(disable:4819)
 
