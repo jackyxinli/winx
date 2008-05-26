@@ -45,6 +45,12 @@
 		std::deque<DataT, StlAlloc<DataT, AllocT> >
 #endif
 
+#if defined(STD_UNITTEST)
+	#ifndef __STDEXT_COUNTER_H__
+	#include "Counter.h"
+	#endif
+#endif
+
 __NS_STD_BEGIN
 
 // -------------------------------------------------------------------------

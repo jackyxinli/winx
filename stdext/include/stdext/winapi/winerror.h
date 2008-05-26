@@ -8497,8 +8497,13 @@
 //
 // Success codes
 //
+#ifndef S_OK
 #define S_OK                                   ((HRESULT)0x00000000L)
+#endif
+
+#ifndef S_FALSE
 #define S_FALSE                                ((HRESULT)0x00000001L)
+#endif
 
 // ******************
 // FACILITY_ITF

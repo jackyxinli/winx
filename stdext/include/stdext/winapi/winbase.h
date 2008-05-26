@@ -247,22 +247,6 @@ inline HANDLE WINAPI GetProcessHeap()
 
 // -------------------------------------------------------------------------
 
-inline LONG WINAPI InterlockedIncrement(
-    LPLONG lpAddend)
-{
-	NotImplementFeature("InterlockedIncrement");
-	return *lpAddend;
-}
-
-inline LONG WINAPI InterlockedDecrement(
-    LPLONG lpAddend)
-{
-	NotImplementFeature("InterlockedDecrement");
-	return *lpAddend;
-}
-
-// -------------------------------------------------------------------------
-
 inline HLOCAL WINAPI LocalAlloc(
     UINT uFlags,
     UINT uBytes)

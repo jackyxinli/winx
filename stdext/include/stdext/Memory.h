@@ -87,6 +87,10 @@ __NS_STD_END
 // -------------------------------------------------------------------------
 // --> Memory leak checker - count-checker
 
+#ifndef __STDEXT_WINAPI_WINBASE_H__
+#include "winapi/winbase.h"
+#endif
+
 __NS_STD_BEGIN
 
 #pragma warning(disable:4996) // XXX  was declared deprecated
