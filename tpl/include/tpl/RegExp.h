@@ -14,14 +14,10 @@
 // Email: xushiweizh@gmail.com
 // Date: 2006-8-13 9:41:58
 // 
-// $Id: RegExp.h 549 2008-05-22 14:07:04Z xushiweizh $
+// $Id$
 // -----------------------------------------------------------------------*/
 #ifndef TPL_REGEXP_H
 #define TPL_REGEXP_H
-
-#if (0)
-#define TPL_NO_STL_HEADERS // don't auto include stl headers
-#endif
 
 #ifndef TPL_REGEX_BASIC_H
 #include "regex/Basic.h"

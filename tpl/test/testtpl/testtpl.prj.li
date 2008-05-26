@@ -2,6 +2,7 @@
 .
 ../../../tpl/include
 ../../../stdext/include
+../../../boost
 
 [Config Release]
 Product		Exe LRelease/testtpl
@@ -20,4 +21,5 @@ Libraries
 [Source]
 Simplest.cpp
 TestTpl.cpp
+Calculator.cpp
 
