@@ -23,7 +23,7 @@ void calculate()
 
 	impl::RegExp rAdd( alloc, '+' + rTerm/exec[term += factor] );
 	impl::RegExp rSub( alloc, '-' + rTerm/exec[term -= factor] );
-	impl::RegExp rExpr( alloc, rTerm/assign(term) + *(rAdd | rSub) + eos() );
+	impl::RegExp rExpr( alloc, rTerm/exec[term = 0+factor] + *(rAdd | rSub) + eos() );
 	
 	// ---- do match ----
 	
@@ -31,7 +31,7 @@ void calculate()
 	{
 		std::string strExp;
 		std::cout << "input an expression (q to ): ";
-		std::cin >> strExp;
+		std::getline(std::cin, strExp);
 		
 		if (strExp == "q")
 			break;
