@@ -3,19 +3,21 @@
 using namespace tpl;
 
 // -------------------------------------------------------------------------
-// simplest
+// simple_grammar
 
-// A simplest example.
+// A simple grammar example.
 
 // What we use:
-//	* Rules: /assign(), %, integer(), ch(' ')
+//	* Rules: /assign(), %, real(), gr::ch(' '), skipws()
 //	* Matching: tpl::simple::match()
 
-void simplest()
+void simple_grammar()
 {
+	simple::Allocator alloc;
+
 	std::vector<double> values; // you can change vector to other stl containers.
-	
-	if ( simple::match("-.1 -0.1 +32. -22323.2e+12", real()/&values % ' ') )
+
+	if ( simple::match(alloc, " -.1 , -0.1 , +32. , -22323.2e+12 ", real()/&values % gr::ch(','), skipws()) )
 	{
 		for (std::vector<double>::iterator it = values.begin(); it != values.end(); ++it)
 		{

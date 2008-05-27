@@ -84,6 +84,8 @@ public:
 public:
 	enum { character = 0 };
 
+	typedef ExplicitConvertable convertable_type;
+
 	template <class SourceT, class ContextT>
 	bool TPL_CALL match(SourceT& ar, ContextT& context) const {
 		return match_while<bEat>(ar, m_pred);

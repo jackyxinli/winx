@@ -57,6 +57,8 @@ public:
 public:
 	enum { character = composition_rule::character };
 
+	typedef typename composition_rule::convertable_type convertable_type;
+
 	template <class SourceT, class ContextT>
 	bool TPL_CALL match(SourceT& ar, ContextT& context) const {
 		dereference_type der(m_ref());
@@ -90,6 +92,8 @@ public:
 public:
 	enum { character = rule_type::character };
 
+	typedef typename rule_type::convertable_type convertable_type;
+
 	template <class SourceT, class ContextT>
 	bool TPL_CALL match(SourceT& ar, ContextT& context) const {
 		dereference_type der(m_ref());
@@ -115,6 +119,8 @@ public:
 
 public:
 	enum { character = composition_rule::character };
+
+	typedef typename composition_rule::convertable_type convertable_type;
 
 	template <class SourceT, class ContextT>
 	bool TPL_CALL match(SourceT& ar, ContextT& context) const {
@@ -142,6 +148,8 @@ public:
 
 public:
 	enum { character = composition_rule::character };
+
+	typedef typename composition_rule::convertable_type convertable_type;
 
 	template <class SourceT, class ContextT>
 	bool TPL_CALL match(SourceT& ar, ContextT& context) const {
@@ -178,6 +186,8 @@ public:
 
 public:
 	enum { character = RegExT::character };
+
+	typedef typename RegExT::convertable_type convertable_type;
 
 	template <class SourceT, class ContextT>
 	bool TPL_CALL match(SourceT& ar, ContextT& context) const {
@@ -304,6 +314,8 @@ public:
 
 public:
 	enum { character = 0 };
+
+	typedef ExplicitConvertable convertable_type;
 
 	template <class SourceT, class ContextT>
 	bool TPL_CALL match(SourceT& ar, ContextT& context) const

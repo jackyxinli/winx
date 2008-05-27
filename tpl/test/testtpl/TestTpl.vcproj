@@ -213,6 +213,10 @@
 			>
 		</File>
 		<File
+			RelativePath=".\SimpleGrammar.cpp"
+			>
+		</File>
+		<File
 			RelativePath=".\Simplest.cpp"
 			>
 		</File>

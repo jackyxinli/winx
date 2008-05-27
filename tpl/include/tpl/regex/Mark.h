@@ -84,6 +84,7 @@ public:
 
 struct FakeRegEx_ {
 	enum { character = 0 };
+	typedef ExplicitConvertable convertable_type;
 };
 
 template <class TagT, template <class RegExT, class MarkT> class Assign>
@@ -144,6 +145,8 @@ public:
 	enum { tag = 0 };
 	enum { character = RegExT::character | CHARACTER_MARKED };
 
+	typedef typename RegExT::convertable_type convertable_type;
+
 	template <class SourceT, class ContextT>
 	bool TPL_CALL match(SourceT& ar, ContextT& context) const
 	{
@@ -172,6 +175,8 @@ public:
 public:
 	enum { tag = TPL_REGEX_NODE_MARK };
 	enum { character = RegExT::character | CHARACTER_MARKED };
+
+	typedef typename RegExT::convertable_type convertable_type;
 
 	template <class SourceT, class ContextT>
 	bool TPL_CALL match(SourceT& ar, ContextT& context) const

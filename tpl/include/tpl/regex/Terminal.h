@@ -39,6 +39,8 @@ class ChAny
 public:
 	enum { character = 0 };
 
+	typedef ExplicitConvertable convertable_type;
+
 	template <class SourceT, class ContextT>
 	bool TPL_CALL match(SourceT& ar, ContextT& context) const {
 		return ar.get() != SourceT::endch;
@@ -72,6 +74,8 @@ public:
 
 public:
 	enum { character = 0 };
+
+	typedef AutoConvertable convertable_type;
 
 	template <class SourceT, class ContextT>
 	bool TPL_CALL match(SourceT& ar, ContextT& context) const

@@ -121,6 +121,27 @@ enum RuleCharacter
 };
 
 // -------------------------------------------------------------------------
+// ConvertableType
+
+struct AutoConvertable {}; // Convert a Rule to a Grammar automatically.
+struct ExplicitConvertable {}; // Should convert a Rule to a Grammar manually.
+
+template <class CT1, class CT2>
+struct OrConvertable {
+	typedef ExplicitConvertable convertable_type;
+};
+
+template <class CT>
+struct OrConvertable<AutoConvertable, CT> {
+	typedef AutoConvertable convertable_type;
+};
+
+template <>
+struct OrConvertable<ExplicitConvertable, AutoConvertable> {
+	typedef AutoConvertable convertable_type;
+};
+
+// -------------------------------------------------------------------------
 // class Rule
 
 template <class GrammarT> class Grammar;
@@ -146,13 +167,22 @@ public:
 	template <class T1, class T2, class T3>
 	Rule(const T1& x, const T2& y, const T3& z) : RegExT(x, y, z) {}
 
+private:
+	const Grammar<Gr<RegExT> >& TPL_CALL cast_grammar_(AutoConvertable) const {
+		return (const Grammar<Gr<RegExT> >&)*this;
+	}
+
 public:
-	const RegExT& TPL_CALL impl() const {
-		return *this;
+	const Grammar<Gr<RegExT> >& TPL_CALL cast_grammar() const {
+		return cast_grammar_(typename RegExT::convertable_type());
 	}
 
 	const Grammar<Gr<RegExT> >& TPL_CALL grammar() const {
 		return (const Grammar<Gr<RegExT> >&)*this;
+	}
+
+	const RegExT& TPL_CALL impl() const {
+		return *this;
 	}
 
 private:
@@ -160,9 +190,19 @@ private:
 
 	enum { character = RegExT::character };
 
+	typedef typename RegExT::convertable_type convertable_type;
+
 	template <class SourceT, class ContextT>
 	bool TPL_CALL match(SourceT& ar, ContextT& context) const;
 };
+
+#define TPL_GRAMMAR_RULE_BINARY_OP_(op, Op)									\
+template <class T1, class T2>												\
+__forceinline Grammar<Op<Gr<T1>, T2> > TPL_CALL operator op(const Rule<T1>& x, const Grammar<T2>& y) \
+	{ return x.cast_grammar() op y; }										\
+template <class T1, class T2>												\
+__forceinline Grammar<Op<T1, Gr<T2> > > TPL_CALL operator op(const Grammar<T1>& x, const Rule<T2>& y) \
+	{ return x op y.cast_grammar(); }
 
 // =========================================================================
 // class Grammar

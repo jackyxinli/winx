@@ -42,7 +42,8 @@ NS_TPL_BEGIN
 #define TPL_GRAMMAR_BINARY_OP_(op, Op)										\
 	TPL_GRAMMAR_CH_BINARY_OP_(op, Op)										\
 	TPL_GRAMMAR_STR_BINARY_OP_(op, Op)										\
-	TPL_GRAMMAR_REF_BINARY_OP_(op, Op)
+	TPL_GRAMMAR_REF_BINARY_OP_(op, Op)										\
+	TPL_GRAMMAR_RULE_BINARY_OP_(op, Op)
 
 // =========================================================================
 // operator>> (boost::spirit, xpressive compatible)

@@ -73,6 +73,8 @@ public:
 public:
 	enum { character = RegExT1::character | RegExT2::character };
 
+	typedef ExplicitConvertable convertable_type;
+
 	template <class SourceT, class ContextT>
 	bool TPL_CALL match(SourceT& ar, ContextT& context) const
 	{
@@ -115,6 +117,8 @@ public:
 
 public:
 	enum { character = RegExT1::character | RegExT2::character };
+
+	typedef ExplicitConvertable convertable_type;
 
 	template <class SourceT, class ContextT>
 	bool TPL_CALL match(SourceT& ar, ContextT& context) const
@@ -169,6 +173,9 @@ private:
 	RegExT1 m_x;
 	RegExT2 m_y;
 
+	typedef typename RegExT1::convertable_type CT1;
+	typedef typename RegExT2::convertable_type CT2;
+
 public:
 	Restr() {}
 	Restr(const RegExT1& x, const RegExT2& y)
@@ -176,6 +183,8 @@ public:
 
 public:
 	enum { character = RegExT1::character | RegExT2::character };
+
+	typedef typename OrConvertable<CT1, CT2>::convertable_type convertable_type;
 
 	template <class SourceT, class ContextT>
 	bool TPL_CALL match(SourceT& ar, ContextT& context) const
@@ -218,6 +227,8 @@ public:
 public:
 	enum { character = RegExT::character };
 
+	typedef ExplicitConvertable convertable_type;
+
 	template <class SourceT, class ContextT>
 	bool TPL_CALL match(SourceT& ar, ContextT& context) const
 	{
@@ -251,6 +262,8 @@ public:
 
 public:
 	enum { character = RegExT::character };
+
+	typedef ExplicitConvertable convertable_type;
 
 	template <class SourceT, class ContextT>
 	bool TPL_CALL match(SourceT& ar, ContextT& context) const
@@ -288,6 +301,8 @@ public:
 public:
 	enum { character = RegExT::character };
 
+	typedef ExplicitConvertable convertable_type;
+
 	template <class SourceT, class ContextT>
 	bool TPL_CALL match(SourceT& ar, ContextT& context) const
 	{
@@ -324,6 +339,8 @@ public:
 
 public:
 	enum { character = RegExT::character };
+
+	typedef ExplicitConvertable convertable_type;
 
 	template <class SourceT, class ContextT>
 	bool TPL_CALL match(SourceT& ar, ContextT& context) const
@@ -389,15 +406,13 @@ Rule<Lst<T1, T2> > TPL_CALL operator%(const Rule<T1>& x, const Rule<T2>& y) {
 TPL_REGEX_BINARY_OP_(%, Lst)
 
 // =========================================================================
-// function ws, skipws, u_integer
+// function ws, skipws
 
 // Usage: ws()				--- means: matching Whitespaces. that is: w+
 // Usage: skipws()			--- means: skip Whitespaces. that is: w*
-// Usage: u_integer()		--- means: matching an Unsigned Integer. that is: d+
 
 typedef Repeat0<Space> SkipWhiteSpaces; // w*
 typedef Repeat1<Space> WhiteSpaces; // w+
-typedef Repeat1<Digit> UInteger; // d+
 
 inline Rule<WhiteSpaces> TPL_CALL ws()
 {
@@ -407,11 +422,6 @@ inline Rule<WhiteSpaces> TPL_CALL ws()
 inline Rule<SkipWhiteSpaces> TPL_CALL skipws()
 {
 	return Rule<SkipWhiteSpaces>();
-}
-
-inline Rule<UInteger> TPL_CALL u_integer()
-{
-	return Rule<UInteger>();
 }
 
 // =========================================================================

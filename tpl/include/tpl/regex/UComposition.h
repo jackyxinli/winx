@@ -19,6 +19,10 @@
 #ifndef TPL_REGEX_UCOMPOSITION_H
 #define TPL_REGEX_UCOMPOSITION_H
 
+#if (0)
+#define TPL_NO_REDUCE_NAME
+#endif
+
 #ifndef TPL_REGEX_OPERATOR_H
 #include "Operator.h"
 #endif
@@ -111,6 +115,8 @@ public:
 public:
 	enum { character = 0 };
 
+	typedef AutoConvertable convertable_type;
+
 	template <class SourceT, class ContextT>
 	bool TPL_CALL match(SourceT& ar, ContextT& context) const
 	{
@@ -136,11 +142,7 @@ public:
 #endif
 
 // -------------------------------------------------------------------------
-// TPL_REGEX_GUARD
-
-#if (0)
-#define TPL_NO_REDUCE_NAME
-#endif
+// TPL_REGEX_GUARD, TPL_REGEX_GUARD0
 
 #ifndef TPL_REGEX_GUARD
 #if defined(TPL_NO_REDUCE_NAME)
@@ -152,6 +154,14 @@ public:
 #endif
 #endif
 
+#ifndef TPL_REGEX_GUARD0
+#define TPL_REGEX_GUARD0(UnGuard, Guard)									\
+	class Guard : public UnGuard {											\
+	public:																	\
+		typedef AutoConvertable convertable_type;							\
+	};
+#endif
+
 // =========================================================================
 // function c_symbol, xml_symbol, etc.
 
@@ -161,8 +171,8 @@ public:
 typedef UAnd<CSymbolFirstChar, Repeat0<CSymbolNextChar> > CSymbol;
 typedef UAnd<XmlSymbolFirstChar, Repeat0<XmlSymbolNextChar> > XmlSymbol;
 
-TPL_REGEX_GUARD(CSymbol, CSymbolG)
-TPL_REGEX_GUARD(XmlSymbol, XmlSymbolG)
+TPL_REGEX_GUARD0(CSymbol, CSymbolG)
+TPL_REGEX_GUARD0(XmlSymbol, XmlSymbolG)
 
 inline Rule<CSymbolG> TPL_CALL c_symbol()
 {
@@ -175,16 +185,27 @@ inline Rule<XmlSymbolG> TPL_CALL xml_symbol()
 }
 
 // -------------------------------------------------------------------------
-// function integer, etc.
+// function u_integer, integer, etc.
 
+// Usage: u_integer()		--- means: matching an Unsigned Integer. that is: d+
 // Usage: integer()			--- means: matching an Integer. that is: [+-]?d+
+
+typedef Repeat1<Digit> UInteger;
 
 typedef Ch<'+', '-'> Sign;
 typedef UAnd<Repeat01<Sign>, UInteger> Integer; // [+-]?d+
 
-inline Rule<Integer> TPL_CALL integer()
+TPL_REGEX_GUARD0(UInteger, UIntegerG)
+TPL_REGEX_GUARD(Integer, IntegerG)
+
+inline Rule<UIntegerG> TPL_CALL u_integer()
 {
-	return Rule<Integer>();
+	return Rule<UIntegerG>();
+}
+
+inline Rule<IntegerG> TPL_CALL integer()
+{
+	return Rule<IntegerG>();
 }
 
 // -------------------------------------------------------------------------

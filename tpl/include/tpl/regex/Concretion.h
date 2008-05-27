@@ -55,12 +55,14 @@ public:
 	}
 
 	template <class AllocT, class RegExT>
-	Concretion(AllocT& alloc, const RegExT& x) {
+	Concretion(AllocT& alloc, const Rule<RegExT>& x) {
 		assign(alloc, x);
 	}
 
 public:
 	enum { character = uCharacter };
+
+	typedef ExplicitConvertable convertable_type;
 
 	bool TPL_CALL match(SourceT& ar, ContextT& context) const {
 		TPL_ASSERT(m_this);
@@ -84,6 +86,8 @@ private:
 		}
 
 		enum { character = RegExT::character };
+
+		typedef typename RegExT::convertable_type convertable_type;
 
 		static bool TPL_CALL match(const void* pThis, SourceT& ar, ContextT& context) {
 			const RegExT& x = ((const Impl*)pThis)->m_x;
@@ -134,7 +138,7 @@ private:
 
 public:
 	template <class AllocT>
-	Skipper(AllocT& alloc, const SkipperT& x)
+	Skipper(AllocT& alloc, const Rule<SkipperT>& x)
 		: SkipperT(x), m_alter(alloc, x) {}
 
 public:
