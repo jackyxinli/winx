@@ -9,27 +9,31 @@
 // of this license. You must not remove this notice, or any other, from
 // this software.
 // 
-// Module: tpl/regex/BasicRegExp.h
+// Module: tpl/regex/BasicRule.h
 // Creator: xushiwei
 // Email: xushiweizh@gmail.com
 // Date: 2006-8-13 9:41:58
 // 
 // $Id$
 // -----------------------------------------------------------------------*/
-#ifndef TPL_REGEX_BASICREGEXP_H
-#define TPL_REGEX_BASICREGEXP_H
+#ifndef TPL_REGEX_BASICRULE_H
+#define TPL_REGEX_BASICRULE_H
 
 #ifndef TPL_REGEX_BASIC_H
 #include "Basic.h"
 #endif
 
+#ifndef TPL_REGEX_REF_H
+#include "Ref.h"
+#endif
+
 NS_TPL_BEGIN
 
 // -------------------------------------------------------------------------
-// class BasicRegExp
+// class BasicRule
 
 template <int uCharacter, class SourceT, class ContextT, bool bManaged = false>
-class BasicRegExp
+class BasicRule
 {
 private:
 	typedef bool TPL_CALL _FN_match(const void* pThis, SourceT& ar, ContextT& context);
@@ -39,10 +43,10 @@ private:
 	FN_match m_fn;
 
 public:
-	BasicRegExp() : m_this(NULL) {}
+	BasicRule() : m_this(NULL) {}
 	
 	template <class AllocT, class RegExT>
-	BasicRegExp(AllocT& alloc, const RegExT& x)
+	BasicRule(AllocT& alloc, const RegExT& x)
 	{
 		assign(alloc, x);
 	}
@@ -55,7 +59,7 @@ public:
 		return m_fn(m_this, ar, context);
 	}
 
-public:
+private:
 	template <class RegExT>
 	class Impl
 	{
@@ -75,6 +79,7 @@ public:
 		}
 	};
 
+public:
 	template <class AllocT, class RegExT>
 	void TPL_CALL assign(AllocT& alloc, const Rule<RegExT>& x)
 	{
@@ -88,6 +93,22 @@ public:
 	
 		m_fn = Imp::match;
 	}
+
+public:
+	class Var : public Rule<Ref<BasicRule> >
+	{
+	private:
+		BasicRule m_x;
+
+	public:
+		Var() : Rule<Ref<BasicRule> >(m_x) {
+		}
+
+		template <class AllocT, class RegExT>
+		void TPL_CALL assign(AllocT& alloc, const Rule<RegExT>& x) {
+			m_x.assign(alloc, x);
+		}
+	};
 };
 
 // -------------------------------------------------------------------------
@@ -95,4 +116,4 @@ public:
 
 NS_TPL_END
 
-#endif /* TPL_REGEX_BASICREGEXP_H */
+#endif /* TPL_REGEX_BASICRULE_H */

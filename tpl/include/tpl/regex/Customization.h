@@ -28,7 +28,7 @@
 #endif
 
 #ifndef TPL_REGEX_BASICREGEXP_H
-#include "BasicRegExp.h"
+#include "BasicRule.h"
 #endif
 
 #ifndef TPL_REGEX_MATCHRESULT_H
@@ -69,13 +69,13 @@ struct CustomizationContextTraits_<false, Iterator, Allocator, Tag> {
 };
 
 template <bool bHas>
-struct CustomizationCategoryTraits_ {
+struct CustomizationCharacterTraits_ {
 	enum { characterDefault	= CHARACTER_DEFAULT };
 	enum { characterMarked	= CHARACTER_MARKED };
 };
 
 template <>
-struct CustomizationCategoryTraits_<false> {
+struct CustomizationCharacterTraits_<false> {
 	enum { characterDefault	= 0 };
 	enum { characterMarked	= 0 };
 };
@@ -120,16 +120,16 @@ public:
 	typedef BasicMark<Tag, LeafAssign> LeafMark;
 
 private:
-	typedef CustomizationCategoryTraits_<bHasDocument> CateTraits_;
+	typedef CustomizationCharacterTraits_<bHasDocument> CharacterTraits_;
 
 public:
 	// RegExp
 
 	template <int uCharacter>
-	class RuleT : public tpl::Rule<BasicRegExp<uCharacter, Source, Context, false> >
+	class RuleT : public tpl::Rule<BasicRule<uCharacter, Source, Context, false> >
 	{
 	private:
-		typedef BasicRegExp<uCharacter, Source, Context, false> Impl;
+		typedef BasicRule<uCharacter, Source, Context, false> Impl;
 		typedef tpl::Rule<Impl> Base;
 
 	public:
@@ -146,17 +146,17 @@ public:
 	};
 
 	typedef RuleT<0> Rule0;
-	typedef RuleT<CateTraits_::characterDefault> Rule;
-	typedef RuleT<CateTraits_::characterMarked> MarkedRule;
+	typedef RuleT<CharacterTraits_::characterDefault> Rule;
+	typedef RuleT<CharacterTraits_::characterMarked> MarkedRule;
 
 public:
 	// ManagedRegExp
 
 	template <int uCharacter>
-	class ManagedRuleT : public tpl::Rule<BasicRegExp<uCharacter, Source, Context, true> >
+	class ManagedRuleT : public tpl::Rule<BasicRule<uCharacter, Source, Context, true> >
 	{
 	private:
-		typedef BasicRegExp<uCharacter, Source, Context, true> Impl;
+		typedef BasicRule<uCharacter, Source, Context, true> Impl;
 		typedef tpl::Rule<Impl> Base;
 
 	public:
@@ -173,8 +173,8 @@ public:
 	};
 
 	typedef ManagedRuleT<0> ManagedRule0;
-	typedef ManagedRuleT<CateTraits_::characterDefault> ManagedRule;
-	typedef ManagedRuleT<CateTraits_::characterMarked> ManagedMarkedRule;
+	typedef ManagedRuleT<CharacterTraits_::characterDefault> ManagedRule;
+	typedef ManagedRuleT<CharacterTraits_::characterMarked> ManagedMarkedRule;
 
 public:
 	// helper functions:

@@ -14,10 +14,10 @@ void calculate2()
 
 	std::stack<double> stk;
 
-	impl::Rule rFactor;
+	impl::Rule::Var rFactor;
 
-	impl::Rule rMul( alloc, '*' + ref(rFactor)/calc<std::multiplies>(stk) );
-	impl::Rule rDiv( alloc, '/' + ref(rFactor)/calc<std::divides>(stk) );
+	impl::Rule rMul( alloc, '*' + rFactor/calc<std::multiplies>(stk) );
+	impl::Rule rDiv( alloc, '/' + rFactor/calc<std::divides>(stk) );
 	impl::Rule rTerm( alloc, ref(rFactor) + *(rMul | rDiv) );
 
 	impl::Rule rAdd( alloc, '+' + rTerm/calc<std::plus>(stk) );
@@ -28,10 +28,10 @@ void calculate2()
 
 	rFactor.assign( alloc, 
 		real()/assign(stk) |
-		'-' + ref(rFactor)/calc<std::negate>(stk) |
+		'-' + rFactor/calc<std::negate>(stk) |
 		'(' + rExpr + ')' |
-		(c_symbol() + '('+ rExpr % ',' + ')')/rFun |
-		'+' + ref(rFactor) );
+		(c_symbol() + '('+ rExpr % ',' + ')')/(rFun + '(') |
+		'+' + rFactor );
 
 	// ---- do match ----
 	
