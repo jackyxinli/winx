@@ -30,62 +30,6 @@
 NS_TPL_BEGIN
 
 // -------------------------------------------------------------------------
-// function eps, nothing
-
-// Usage: eps()	--- means: always be successful.
-// Usage: nothing()	--- means: always be failed.
-
-template <bool bOk>
-class Null
-{
-public:
-	enum { character = 0 };
-
-	template <class SourceT, class ContextT>
-	bool TPL_CALL match(SourceT& ar, ContextT& context) const {
-		return bOk;
-	}
-};
-
-class Eps : public Null<true> {};
-class Nothing : public Null<false> {};
-
-__forceinline Rule<Eps> TPL_CALL eps() {
-	return Rule<Eps>();
-}
-
-__forceinline Rule<Nothing> TPL_CALL nothing() {
-	return Rule<Nothing>();
-}
-
-// -------------------------------------------------------------------------
-// function eos/eof
-
-// Usage: eos() --- means: matching end-of-stream
-// Usage: eof() --- same as: eos()
-
-class Eos
-{
-public:
-	enum { character = 0 };
-
-	template <class SourceT, class ContextT>
-	bool TPL_CALL match(SourceT& ar, ContextT& context) const {
-		return ar.peek() == SourceT::endch;
-	}
-};
-
-typedef Eos Eof;
-
-__forceinline Rule<Eos> TPL_CALL eos() {
-	return Rule<Eos>();
-}
-
-__forceinline Rule<Eos> TPL_CALL eof() {
-	return Rule<Eos>();
-}
-
-// -------------------------------------------------------------------------
 // function ch_any
 
 // Usage: ch_any()	--- means: matching any character.

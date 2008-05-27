@@ -23,7 +23,7 @@
 #include "Basic.h"
 #endif
 
-#ifndef TPL_REGEX_BASIC_H
+#ifndef TPL_REGEX_TERMINAL_H
 #include "Terminal.h" // TPL_RULE_CH_BINARY_OP_
 #endif
 

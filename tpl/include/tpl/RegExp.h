@@ -79,6 +79,10 @@
 #include "regex/Transformation.h"
 #endif
 
+#ifndef TPL_REGEX_GRAMMAR_TERMINAL_H
+#include "regex/grammar/Terminal.h"
+#endif
+
 #ifndef TPL_REGEX_GRAMMAR_OPERATOR_H
 #include "regex/grammar/Operator.h"
 #endif

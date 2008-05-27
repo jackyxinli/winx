@@ -196,7 +196,7 @@ public:
 private:
 	// concept:
 
-	enum { character = RegExT::character };
+	enum { character = GrammarT::character };
 
 	template <class SourceT, class ContextT, class SkipperT>
 	bool TPL_CALL match(SourceT& ar, ContextT& context, const Rule<SkipperT>& skipper) const;

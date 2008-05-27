@@ -19,16 +19,8 @@
 #ifndef TPL_REGEX_GRAMMAR_OPERATOR_H
 #define TPL_REGEX_GRAMMAR_OPERATOR_H
 
-#ifndef TPL_REGEX_BASIC_H
-#include "../Basic.h"
-#endif
-
-#ifndef TPL_REGEX_BASIC_H
-#include "../Terminal.h" // TPL_GRAMMAR_CH_BINARY_OP_
-#endif
-
-#ifndef TPL_REGEX_COMPOSITION_H
-#include "../Composition.h" // TPL_GRAMMAR_STR_BINARY_OP_
+#ifndef TPL_REGEX_GRAMMAR_TERMINAL_H
+#include "Terminal.h"
 #endif
 
 #ifndef TPL_REGEX_GRAMMAR_REF_H

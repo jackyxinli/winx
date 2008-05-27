@@ -26,6 +26,62 @@
 NS_TPL_BEGIN
 
 // =========================================================================
+// function eps, nothing
+
+// Usage: eps()	--- means: always be successful.
+// Usage: nothing()	--- means: always be failed.
+
+template <bool bOk>
+class Null
+{
+public:
+	enum { character = 0 };
+
+	template <class SourceT, class ContextT>
+	bool TPL_CALL match(SourceT& ar, ContextT& context) const {
+		return bOk;
+	}
+};
+
+class Eps : public Null<true> {};
+class Nothing : public Null<false> {};
+
+__forceinline Rule<Eps> TPL_CALL eps() {
+	return Rule<Eps>();
+}
+
+__forceinline Rule<Nothing> TPL_CALL nothing() {
+	return Rule<Nothing>();
+}
+
+// -------------------------------------------------------------------------
+// function eos/eof
+
+// Usage: eos() --- means: matching end-of-stream
+// Usage: eof() --- same as: eos()
+
+class Eos
+{
+public:
+	enum { character = 0 };
+
+	template <class SourceT, class ContextT>
+	bool TPL_CALL match(SourceT& ar, ContextT& context) const {
+		return ar.peek() == SourceT::endch;
+	}
+};
+
+typedef Eos Eof;
+
+__forceinline Rule<Eos> TPL_CALL eos() {
+	return Rule<Eos>();
+}
+
+__forceinline Rule<Eos> TPL_CALL eof() {
+	return Rule<Eos>();
+}
+
+// =========================================================================
 // class LenStr
 
 template <class CharT, const CharT* m_s>
@@ -177,62 +233,6 @@ RuleT< Op<T1, Eq<CharT> > > TPL_CALL operator op(const RuleT<T1>& x, const CharT
 
 #define TPL_GRAMMAR_STR_BINARY_OP_(op, Op)											\
 	TPL_REGEX_STR_BINARY_OP_(Grammar, op, Op)
-
-// =========================================================================
-// function gr::eq
-
-template <class Iterator>
-class GEq_ : public Gr<Eq_<Iterator> >
-{
-private:
-	typedef Gr<Eq_<Iterator> > Base;
-
-public:
-	template <class StringT>
-	GEq_(const StringT& s) : Base(s) {}
-
-	GEq_(Iterator s, size_t n) : Base(s, n) {}
-};
-
-template <class CharT>
-class GEq : public Gr<Eq_<const CharT*> >
-{
-private:
-	typedef public Gr<Eq_<const CharT*> > Base;
-
-public:
-	GEq(const CharT* s, size_t n)
-		: Base(s, n) {
-	}
-
-	GEq(const CharT* s)
-		: Base(s,std::char_traits<CharT>::length(s)) {
-	}
-};
-
-namespace gr {
-
-template <class CharT>
-__forceinline Grammar<GEq<CharT> > TPL_CALL eq(const CharT* s) {
-	return Grammar<GEq<CharT> >(s);
-}
-
-template <class CharT>
-__forceinline Grammar<GEq<CharT> > TPL_CALL eq(const CharT* s, size_t n) {
-	return Grammar<GEq<CharT> >(s, n);
-}
-
-template <class CharT>
-__forceinline Grammar<GEq<CharT> > TPL_CALL str(const CharT* s) {
-	return Grammar<GEq<CharT> >(s);
-}
-
-template <class CharT>
-__forceinline Grammar<GEq<CharT> > TPL_CALL str(const CharT* s, size_t n) {
-	return Grammar<GEq<CharT> >(s, n);
-}
-
-} // namespace gr
 
 // =========================================================================
 // $Log: $
