@@ -241,7 +241,7 @@ TPL_CALL calc(StackT& stk, typename StackT::value_type (*fn)(typename StackT::va
 template <class StackT> __forceinline
 SimpleAction<typename CalcTraits_3_<StackT>::action_type>
 TPL_CALL calc(StackT& stk, typename StackT::value_type (*fn)(typename StackT::value_type, typename StackT::value_type, typename StackT::value_type)) {
-	return SimpleAction<typename CalcTraits_2_<StackT>::action_type>(stk, fn);
+	return SimpleAction<typename CalcTraits_3_<StackT>::action_type>(stk, fn);
 }
 
 // -------------------------------------------------------------------------
