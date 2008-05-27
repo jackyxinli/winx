@@ -55,7 +55,7 @@ public:
 	Deref(const RefT& ref_) : m_ref(ref_) {}
 
 public:
-	enum { category = composition_rule::category };
+	enum { character = composition_rule::character };
 
 	template <class SourceT, class ContextT>
 	bool TPL_CALL match(SourceT& ar, ContextT& context) const {
@@ -88,7 +88,7 @@ public:
 	DelayDeref_(const RefT& ref_) : m_ref(ref_) {}
 
 public:
-	enum { category = rule_type::category };
+	enum { character = rule_type::character };
 
 	template <class SourceT, class ContextT>
 	bool TPL_CALL match(SourceT& ar, ContextT& context) const {
@@ -114,7 +114,7 @@ public:
 		: m_x(x_), m_ref(ref_) {}
 
 public:
-	enum { category = composition_rule::category };
+	enum { character = composition_rule::character };
 
 	template <class SourceT, class ContextT>
 	bool TPL_CALL match(SourceT& ar, ContextT& context) const {
@@ -141,7 +141,7 @@ public:
 		: m_ref(ref_), m_y(y_) {}
 
 public:
-	enum { category = composition_rule::category };
+	enum { character = composition_rule::character };
 
 	template <class SourceT, class ContextT>
 	bool TPL_CALL match(SourceT& ar, ContextT& context) const {
@@ -177,7 +177,7 @@ public:
 	Ref(const RegExT& x) : m_x(x) {}
 
 public:
-	enum { category = RegExT::category };
+	enum { character = RegExT::character };
 
 	template <class SourceT, class ContextT>
 	bool TPL_CALL match(SourceT& ar, ContextT& context) const {
@@ -303,7 +303,7 @@ public:
 	FindRefCh(const CharT& c) : m_c(c) {}
 
 public:
-	enum { category = 0 };
+	enum { character = 0 };
 
 	template <class SourceT, class ContextT>
 	bool TPL_CALL match(SourceT& ar, ContextT& context) const

@@ -71,12 +71,12 @@ public:
 	And(const RegExT1& x, const RegExT2& y) : m_x(x), m_y(y) {}
 
 public:
-	enum { category = RegExT1::category | RegExT2::category };
+	enum { character = RegExT1::character | RegExT2::character };
 
 	template <class SourceT, class ContextT>
 	bool TPL_CALL match(SourceT& ar, ContextT& context) const
 	{
-		typename ContextT::template trans_type<RegExT1::category> trans(ar, context);
+		typename ContextT::template trans_type<RegExT1::character> trans(ar, context);
 		if (m_x.match(ar, context) && m_y.match(ar, context))
 			return true;
 		trans.rollback(ar);
@@ -114,7 +114,7 @@ public:
 	Or(const RegExT1& x, const RegExT2& y) : m_x(x), m_y(y) {}
 
 public:
-	enum { category = RegExT1::category | RegExT2::category };
+	enum { character = RegExT1::character | RegExT2::character };
 
 	template <class SourceT, class ContextT>
 	bool TPL_CALL match(SourceT& ar, ContextT& context) const
@@ -175,13 +175,13 @@ public:
 		: m_x(x), m_y(y) {}
 
 public:
-	enum { category = RegExT1::category | RegExT2::category };
+	enum { character = RegExT1::character | RegExT2::character };
 
 	template <class SourceT, class ContextT>
 	bool TPL_CALL match(SourceT& ar, ContextT& context) const
 	{
 		typename SourceT::iterator pos = ar.position();
-		typename ContextT::template trans_type<category> trans(ar, context);
+		typename ContextT::template trans_type<character> trans(ar, context);
 		if (m_x.match(ar, context)) {
 			typename SourceT::iterator pos2 = ar.position();
 			typename SourceT::restriction_type restr(ar, pos, pos2);
@@ -216,7 +216,7 @@ public:
 	Repeat0(const RegExT& x) : m_x(x) {}
 
 public:
-	enum { category = RegExT::category };
+	enum { character = RegExT::character };
 
 	template <class SourceT, class ContextT>
 	bool TPL_CALL match(SourceT& ar, ContextT& context) const
@@ -250,7 +250,7 @@ public:
 	Repeat1(const RegExT& x) : m_x(x) {}
 
 public:
-	enum { category = RegExT::category };
+	enum { character = RegExT::character };
 
 	template <class SourceT, class ContextT>
 	bool TPL_CALL match(SourceT& ar, ContextT& context) const
@@ -286,7 +286,7 @@ public:
 	Repeat01(const RegExT& x) : m_x(x) {}
 
 public:
-	enum { category = RegExT::category };
+	enum { character = RegExT::character };
 
 	template <class SourceT, class ContextT>
 	bool TPL_CALL match(SourceT& ar, ContextT& context) const
@@ -323,13 +323,13 @@ public:
 	Repeat(const RegExT& x) : m_x(x) {}
 
 public:
-	enum { category = RegExT::category };
+	enum { character = RegExT::character };
 
 	template <class SourceT, class ContextT>
 	bool TPL_CALL match(SourceT& ar, ContextT& context) const
 	{
 		unsigned n;
-		typename ContextT::template trans_type<category> trans(ar, context);
+		typename ContextT::template trans_type<character> trans(ar, context);
 		for (n = 0; n < nMax; ++n)
 		{
 			if (!m_x.match(ar, context))

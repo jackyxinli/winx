@@ -28,7 +28,7 @@ NS_TPL_BEGIN
 // -------------------------------------------------------------------------
 // class BasicRegExp
 
-template <int nCategory, class SourceT, class ContextT, bool bManaged = false>
+template <int uCharacter, class SourceT, class ContextT, bool bManaged = false>
 class BasicRegExp
 {
 private:
@@ -48,7 +48,7 @@ public:
 	}
 
 public:
-	enum { category = nCategory };
+	enum { character = uCharacter };
 
 	bool TPL_CALL match(SourceT& ar, ContextT& context) const {
 		TPL_ASSERT(m_this);
@@ -67,7 +67,7 @@ public:
 			: m_x(static_cast<const RegExT&>(x)) {
 		}
 
-		enum { category = RegExT::category };
+		enum { character = RegExT::character };
 
 		static bool TPL_CALL match(const void* pThis, SourceT& ar, ContextT& context) {
 			const RegExT& x = ((const Impl*)pThis)->m_x;
@@ -79,7 +79,7 @@ public:
 	void TPL_CALL assign(AllocT& alloc, const Rule<RegExT>& x)
 	{
 		typedef Impl<RegExT> Imp;
-		TPL_ASSERT((Imp::category & ~category) == 0);
+		TPL_ASSERT((Imp::character & ~character) == 0);
 
 		if (bManaged)
 			m_this = TPL_NEW(alloc, Imp)(x);

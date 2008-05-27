@@ -83,7 +83,7 @@ public:
 // class BasicMark
 
 struct FakeRegEx_ {
-	enum { category = 0 };
+	enum { character = 0 };
 };
 
 template <class TagT, template <class RegExT, class MarkT> class Assign>
@@ -142,7 +142,7 @@ public:
 
 public:
 	enum { tag = 0 };
-	enum { category = RegExT::category | CATEGORY_MARKED };
+	enum { character = RegExT::character | CHARACTER_MARKED };
 
 	template <class SourceT, class ContextT>
 	bool TPL_CALL match(SourceT& ar, ContextT& context) const
@@ -171,7 +171,7 @@ public:
 
 public:
 	enum { tag = TPL_REGEX_NODE_MARK };
-	enum { category = RegExT::category | CATEGORY_MARKED };
+	enum { character = RegExT::character | CHARACTER_MARKED };
 
 	template <class SourceT, class ContextT>
 	bool TPL_CALL match(SourceT& ar, ContextT& context) const

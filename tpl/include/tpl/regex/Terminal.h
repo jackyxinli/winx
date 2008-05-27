@@ -39,7 +39,7 @@ template <bool bOk>
 class Null
 {
 public:
-	enum { category = 0 };
+	enum { character = 0 };
 
 	template <class SourceT, class ContextT>
 	bool TPL_CALL match(SourceT& ar, ContextT& context) const {
@@ -67,7 +67,7 @@ __forceinline Rule<Nothing> TPL_CALL nothing() {
 class Eos
 {
 public:
-	enum { category = 0 };
+	enum { character = 0 };
 
 	template <class SourceT, class ContextT>
 	bool TPL_CALL match(SourceT& ar, ContextT& context) const {
@@ -93,7 +93,7 @@ __forceinline Rule<Eos> TPL_CALL eof() {
 class ChAny
 {
 public:
-	enum { category = 0 };
+	enum { character = 0 };
 
 	template <class SourceT, class ContextT>
 	bool TPL_CALL match(SourceT& ar, ContextT& context) const {
@@ -127,7 +127,7 @@ public:
 	EqCh(const T1& x, const T2& y, const T3& z) : m_pred(x, y, z) {}
 
 public:
-	enum { category = 0 };
+	enum { character = 0 };
 
 	template <class SourceT, class ContextT>
 	bool TPL_CALL match(SourceT& ar, ContextT& context) const

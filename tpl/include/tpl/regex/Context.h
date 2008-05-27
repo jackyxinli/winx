@@ -62,7 +62,7 @@ public:
 // -------------------------------------------------------------------------
 // class ContextTransaction
 
-template <int category, class Iterator, class Scope>
+template <int uCharacter, class Iterator, class Scope>
 class ContextTransaction {
 };
 
@@ -85,7 +85,7 @@ public:
 };
 
 template <class Iterator, class Scope>
-class ContextTransaction<CATEGORY_MARKED, Iterator, Scope>
+class ContextTransaction<CHARACTER_MARKED, Iterator, Scope>
 {
 private:
 	Scope vScope;
@@ -161,11 +161,11 @@ public:
 	typedef ScopeTransaction scope_trans_type;
 
 public:
-	template <int category>
-	class trans_type : public ContextTransaction<category, Iterator, ScopeTransaction>
+	template <int uCharacter>
+	class trans_type : public ContextTransaction<uCharacter, Iterator, ScopeTransaction>
 	{
 	private:
-		typedef ContextTransaction<category, Iterator, ScopeTransaction> Base;
+		typedef ContextTransaction<uCharacter, Iterator, ScopeTransaction> Base;
 		
 	public:
 		template <class SourceT>

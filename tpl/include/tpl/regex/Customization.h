@@ -70,16 +70,14 @@ struct CustomizationContextTraits_<false, Iterator, Allocator, Tag> {
 
 template <bool bHas>
 struct CustomizationCategoryTraits_ {
-	enum { categoryTerminal = CATEGORY_TERMINAL };
-	enum { categoryDefault	= CATEGORY_DEFAULT };
-	enum { categoryMarked	= CATEGORY_MARKED };
+	enum { characterDefault	= CHARACTER_DEFAULT };
+	enum { characterMarked	= CHARACTER_MARKED };
 };
 
 template <>
 struct CustomizationCategoryTraits_<false> {
-	enum { categoryTerminal = 0 };
-	enum { categoryDefault	= 0 };
-	enum { categoryMarked	= 0 };
+	enum { characterDefault	= 0 };
+	enum { characterMarked	= 0 };
 };
 
 template <class Policy = policy::Default, bool bHasDocument = true>
@@ -127,11 +125,11 @@ private:
 public:
 	// RegExp
 
-	template <int nCategory>
-	class RegExpT : public Rule<BasicRegExp<nCategory, Source, Context, false> >
+	template <int uCharacter>
+	class RegExpT : public Rule<BasicRegExp<uCharacter, Source, Context, false> >
 	{
 	private:
-		typedef BasicRegExp<nCategory, Source, Context, false> Impl;
+		typedef BasicRegExp<uCharacter, Source, Context, false> Impl;
 		typedef Rule<Impl> Base;
 
 	public:
@@ -148,17 +146,17 @@ public:
 	};
 
 	typedef RegExpT<0> RegExp0;
-	typedef RegExpT<CateTraits_::categoryDefault> RegExp;
-	typedef RegExpT<CateTraits_::categoryMarked> MarkedRegExp;
+	typedef RegExpT<CateTraits_::characterDefault> RegExp;
+	typedef RegExpT<CateTraits_::characterMarked> MarkedRegExp;
 
 public:
 	// ManagedRegExp
 
-	template <int nCategory>
-	class ManagedRegExpT : public Rule<BasicRegExp<nCategory, Source, Context, true> >
+	template <int uCharacter>
+	class ManagedRegExpT : public Rule<BasicRegExp<uCharacter, Source, Context, true> >
 	{
 	private:
-		typedef BasicRegExp<nCategory, Source, Context, true> Impl;
+		typedef BasicRegExp<uCharacter, Source, Context, true> Impl;
 		typedef Rule<Impl> Base;
 
 	public:
@@ -175,8 +173,8 @@ public:
 	};
 
 	typedef ManagedRegExpT<0> ManagedRegExp0;
-	typedef ManagedRegExpT<CateTraits_::categoryDefault> ManagedRegExp;
-	typedef ManagedRegExpT<CateTraits_::categoryMarked> ManagedMarkedRegExp;
+	typedef ManagedRegExpT<CateTraits_::characterDefault> ManagedRegExp;
+	typedef ManagedRegExpT<CateTraits_::characterMarked> ManagedMarkedRegExp;
 
 public:
 	// helper functions:

@@ -74,13 +74,12 @@
 NS_TPL_BEGIN
 
 // =========================================================================
-// enum RuleCategory
+// enum RuleCharacter
 
-enum RuleCategory
+enum RuleCharacter
 {
-	CATEGORY_TERMINAL	= 0x00,
-	CATEGORY_MARKED		= 0x01,
-	CATEGORY_DEFAULT	= CATEGORY_MARKED,
+	CHARACTER_MARKED	= 0X01,
+	CHARACTER_DEFAULT	= CHARACTER_MARKED,
 };
 
 // -------------------------------------------------------------------------
@@ -110,7 +109,7 @@ public:
 private:
 	// concept:
 
-	enum { category = RegExT::category };
+	enum { character = RegExT::character };
 
 	template <class SourceT, class ContextT>
 	bool TPL_CALL match(SourceT& ar, ContextT& context) const;

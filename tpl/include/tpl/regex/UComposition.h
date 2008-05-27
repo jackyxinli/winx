@@ -41,14 +41,14 @@ private:
 
 public:
 	UAnd() {
-		TPL_ASSERT(RegExT1::category == 0 && RegExT2::category == 0);
+		TPL_ASSERT(RegExT1::character == 0 && RegExT2::character == 0);
 	}
 	UAnd(const RegExT1& x, const RegExT2& y) : m_x(x), m_y(y) {
-		TPL_ASSERT(RegExT1::category == 0 && RegExT2::category == 0);
+		TPL_ASSERT(RegExT1::character == 0 && RegExT2::character == 0);
 	}
 
 public:
-	enum { category = 0 };
+	enum { character = 0 };
 
 	template <class SourceT, class ContextT>
 	bool TPL_CALL match(SourceT& ar, ContextT& context) const {
@@ -67,14 +67,14 @@ private:
 
 public:
 	URepeat() {
-		TPL_ASSERT(RegExT::category == 0);
+		TPL_ASSERT(RegExT::character == 0);
 	}
 	URepeat(const RegExT& x) : m_x(x) {
-		TPL_ASSERT(RegExT::category == 0);
+		TPL_ASSERT(RegExT::character == 0);
 	}
 
 public:
-	enum { category = 0 };
+	enum { character = 0 };
 
 	template <class SourceT, class ContextT>
 	bool TPL_CALL match(SourceT& ar, ContextT& context) const
@@ -102,14 +102,14 @@ private:
 
 public:
 	UGuard() {
-		TPL_ASSERT(RegExT::category == 0);
+		TPL_ASSERT(RegExT::character == 0);
 	}
 	UGuard(const RegExT& x) : m_x(x) {
-		TPL_ASSERT(RegExT::category == 0);
+		TPL_ASSERT(RegExT::character == 0);
 	}
 
 public:
-	enum { category = 0 };
+	enum { character = 0 };
 
 	template <class SourceT, class ContextT>
 	bool TPL_CALL match(SourceT& ar, ContextT& context) const

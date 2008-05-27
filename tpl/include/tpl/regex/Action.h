@@ -49,7 +49,7 @@ public:
 		: m_x(x), m_action(act) {}
 
 public:
-	enum { category = RegExT::category };
+	enum { character = RegExT::character };
 
 	template <class SourceT, class ContextT>
 	bool TPL_CALL match(SourceT& ar, ContextT& context) const
@@ -108,7 +108,7 @@ public:
 		: m_x(x), m_action(act) {}
 
 public:
-	enum { category = RegExT::category };
+	enum { character = RegExT::character };
 
 	template <class SourceT, class ContextT>
 	bool TPL_CALL match(SourceT& ar, ContextT& context) const

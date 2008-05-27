@@ -251,7 +251,7 @@ public:
 		: m_x(x), m_transf(transf) {}
 
 public:
-	enum { category = RegExT::category };
+	enum { character = RegExT::character };
 
 	template <class SourceT, class ContextT>
 	bool TPL_CALL match(SourceT& ar, ContextT& context) const
