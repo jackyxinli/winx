@@ -126,17 +126,17 @@ public:
 	// RegExp
 
 	template <int uCharacter>
-	class RegExpT : public Rule<BasicRegExp<uCharacter, Source, Context, false> >
+	class RuleT : public tpl::Rule<BasicRegExp<uCharacter, Source, Context, false> >
 	{
 	private:
 		typedef BasicRegExp<uCharacter, Source, Context, false> Impl;
-		typedef Rule<Impl> Base;
+		typedef tpl::Rule<Impl> Base;
 
 	public:
-		RegExpT() {}
+		RuleT() {}
 
 		template <class AllocT, class RegExT>
-		RegExpT(AllocT& alloc, const RegExT& x)
+		RuleT(AllocT& alloc, const RegExT& x)
 			: Base(alloc, x) {}
 	
 		template <class SourceT, class ContextT>
@@ -145,25 +145,25 @@ public:
 		}
 	};
 
-	typedef RegExpT<0> RegExp0;
-	typedef RegExpT<CateTraits_::characterDefault> RegExp;
-	typedef RegExpT<CateTraits_::characterMarked> MarkedRegExp;
+	typedef RuleT<0> Rule0;
+	typedef RuleT<CateTraits_::characterDefault> Rule;
+	typedef RuleT<CateTraits_::characterMarked> MarkedRule;
 
 public:
 	// ManagedRegExp
 
 	template <int uCharacter>
-	class ManagedRegExpT : public Rule<BasicRegExp<uCharacter, Source, Context, true> >
+	class ManagedRuleT : public tpl::Rule<BasicRegExp<uCharacter, Source, Context, true> >
 	{
 	private:
 		typedef BasicRegExp<uCharacter, Source, Context, true> Impl;
-		typedef Rule<Impl> Base;
+		typedef tpl::Rule<Impl> Base;
 
 	public:
-		ManagedRegExpT() {}
+		ManagedRuleT() {}
 
 		template <class AllocT, class RegExT>
-		ManagedRegExpT(AllocT& alloc, const RegExT& x)
+		ManagedRuleT(AllocT& alloc, const RegExT& x)
 			: Base(alloc, x) {}
 
 		template <class SourceT, class ContextT>
@@ -172,15 +172,15 @@ public:
 		}
 	};
 
-	typedef ManagedRegExpT<0> ManagedRegExp0;
-	typedef ManagedRegExpT<CateTraits_::characterDefault> ManagedRegExp;
-	typedef ManagedRegExpT<CateTraits_::characterMarked> ManagedMarkedRegExp;
+	typedef ManagedRuleT<0> ManagedRule0;
+	typedef ManagedRuleT<CateTraits_::characterDefault> ManagedRule;
+	typedef ManagedRuleT<CateTraits_::characterMarked> ManagedMarkedRule;
 
 public:
 	// helper functions:
 
 	template <class RegExT>
-	static inline bool TPL_CALL match(Iterator pos, Iterator pos2, const Rule<RegExT>& rule)
+	static inline bool TPL_CALL match(Iterator pos, Iterator pos2, const tpl::Rule<RegExT>& rule)
 	{
 		Source source(pos, pos2);
 		Context context;
@@ -188,7 +188,7 @@ public:
 	}
 
 	template <class RegExT>
-	static inline bool TPL_CALL match(Iterator pos, const Rule<RegExT>& rule)
+	static inline bool TPL_CALL match(Iterator pos, const tpl::Rule<RegExT>& rule)
 	{
 		Source source(pos);
 		Context context;

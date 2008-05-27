@@ -4,9 +4,9 @@
 // demo
 
 // What we use:
-//	* Rules: RegExp, +, /, %, c_symbol(), real(), skipws()
+//	* Rules: Rule, +, /, %, c_symbol(), real(), skipws()
 //	* Tags: LeafMark, NodeMark, double*
-//	* Matching: RegExp::match()
+//	* Matching: Rule::match()
 //	* Result Processing: Document::all(), select(), []
 
 void demo()
@@ -27,8 +27,8 @@ void demo()
 	impl::LeafMark tagPairValue;
 	impl::NodeMark tagPair;
 
-	impl::RegExp rPair( alloc, (c_symbol()/tagSym + '=' + real()/tagValue/&dblValue)/tagPair/tagPairValue );
-	impl::RegExp rDoc( alloc, (skipws() + rPair) % ',' );
+	impl::Rule rPair( alloc, (c_symbol()/tagSym + '=' + real()/tagValue/&dblValue)/tagPair/tagPairValue );
+	impl::Rule rDoc( alloc, (skipws() + rPair) % ',' );
 
 	// ---- do match ----
 

@@ -85,6 +85,8 @@ enum RuleCharacter
 // -------------------------------------------------------------------------
 // class Rule
 
+template <class RegExT> class Grammar;
+
 template <class RegExT>
 class Rule : public RegExT
 {
@@ -106,6 +108,11 @@ public:
 	template <class T1, class T2, class T3>
 	Rule(const T1& x, const T2& y, const T3& z) : RegExT(x, y, z) {}
 
+public:
+	const Grammar<RegExT>& TPL_CALL grammar() const {
+		return (const Grammar<RegExT>&)*this;
+	}
+
 private:
 	// concept:
 
@@ -113,6 +120,42 @@ private:
 
 	template <class SourceT, class ContextT>
 	bool TPL_CALL match(SourceT& ar, ContextT& context) const;
+};
+
+// =========================================================================
+// class Grammar
+
+template <class RegExT>
+class Grammar : public RegExT
+{
+public:
+	Grammar() {}
+
+	template <class T1>
+	Grammar(T1& x) : RegExT(x) {}
+
+	template <class T1>
+	Grammar(const T1& x) : RegExT(x) {}
+
+	template <class T1, class T2>
+	Grammar(const T1& x, const T2& y) : RegExT(x, y) {}
+
+	template <class T1, class T2>
+	Grammar(T1& x, const T2& y) : RegExT(x, y) {}
+
+	template <class T1, class T2, class T3>
+	Grammar(const T1& x, const T2& y, const T3& z) : RegExT(x, y, z) {}
+
+public:
+	const Rule<RegExT>& TPL_CALL rule() const {
+		return (const Rule<RegExT>&)*this;
+	}
+
+	template <class SourceT, class ContextT, class SkipperT>
+	bool TPL_CALL match(SourceT& ar, ContextT& context, const Rule<SkipperT>& skipper) const {
+		skipper.match(ar, context);
+		return RegExT::match(ar, context);
+	}
 };
 
 // =========================================================================

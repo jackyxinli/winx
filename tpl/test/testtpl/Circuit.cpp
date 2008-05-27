@@ -22,7 +22,7 @@ void circuit()
 	impl::Allocator alloc;
 
 	std::vector<int> values;
-	impl::RegExp rDoc;
+	impl::Rule rDoc;
 	rDoc.assign( alloc, integer()/&values + !(',' + ref(rDoc)) );
 
 	// This is only an example. A better way to do the same thing is:

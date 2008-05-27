@@ -14,17 +14,17 @@ void calculate2()
 
 	std::stack<double> stk;
 
-	impl::RegExp rFactor;
+	impl::Rule rFactor;
 
-	impl::RegExp rMul( alloc, '*' + ref(rFactor)/calc<std::multiplies>(stk) );
-	impl::RegExp rDiv( alloc, '/' + ref(rFactor)/calc<std::divides>(stk) );
-	impl::RegExp rTerm( alloc, ref(rFactor) + *(rMul | rDiv) );
+	impl::Rule rMul( alloc, '*' + ref(rFactor)/calc<std::multiplies>(stk) );
+	impl::Rule rDiv( alloc, '/' + ref(rFactor)/calc<std::divides>(stk) );
+	impl::Rule rTerm( alloc, ref(rFactor) + *(rMul | rDiv) );
 
-	impl::RegExp rAdd( alloc, '+' + rTerm/calc<std::plus>(stk) );
-	impl::RegExp rSub( alloc, '-' + rTerm/calc<std::minus>(stk) );
-	impl::RegExp rExpr( alloc, rTerm + *(rAdd | rSub) );
+	impl::Rule rAdd( alloc, '+' + rTerm/calc<std::plus>(stk) );
+	impl::Rule rSub( alloc, '-' + rTerm/calc<std::minus>(stk) );
+	impl::Rule rExpr( alloc, rTerm + *(rAdd | rSub) );
 	
-	impl::RegExp rFun( alloc, "sin"/calc(stk, sin) | "cos"/calc(stk, cos) | "pow"/calc(stk, pow) );
+	impl::Rule rFun( alloc, "sin"/calc(stk, sin) | "cos"/calc(stk, cos) | "pow"/calc(stk, pow) );
 
 	rFactor.assign( alloc, 
 		real()/assign(stk) |

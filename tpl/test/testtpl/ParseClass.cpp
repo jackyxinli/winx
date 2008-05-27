@@ -4,10 +4,10 @@
 // parse_class
 
 // What we use:
-//	* Rules: RegExp, +, /, %, c_symbol(), ws(), skipws()
+//	* Rules: Rule, +, /, %, c_symbol(), ws(), skipws()
 //	* Restrictions: eq()
 //	* Tags: Leaf*, LeafMark
-//	* Matching: RegExp::match()
+//	* Matching: Rule::match()
 //	* Result Processing: Document::select(), []
 
 void parse_class()
@@ -26,11 +26,11 @@ void parse_class()
 	impl::LeafMark tagAccess;
 	impl::LeafMark tagBaseClass;
 
-	impl::RegExp rDecl( alloc, c_symbol()/eq("class", "struct") + ws() + c_symbol()/&className );
-	impl::RegExp rBase( alloc, c_symbol()/eq("public", "private", "protected")/tagAccess + ws() + c_symbol()/tagBaseClass );
-	impl::RegExp rBases( alloc, rBase % (skipws() + ',' + skipws()) );
-	impl::RegExp rBody( alloc, '{' + skipws() + '}' + skipws() + ';' );
-	impl::RegExp rDoc( alloc, rDecl + skipws() + ':' + skipws() + rBases + skipws() + rBody );
+	impl::Rule rDecl( alloc, c_symbol()/eq("class", "struct") + ws() + c_symbol()/&className );
+	impl::Rule rBase( alloc, c_symbol()/eq("public", "private", "protected")/tagAccess + ws() + c_symbol()/tagBaseClass );
+	impl::Rule rBases( alloc, rBase % (skipws() + ',' + skipws()) );
+	impl::Rule rBody( alloc, '{' + skipws() + '}' + skipws() + ';' );
+	impl::Rule rDoc( alloc, rDecl + skipws() + ':' + skipws() + rBases + skipws() + rBody );
 
 	// ---- do match ----
 

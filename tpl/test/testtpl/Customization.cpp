@@ -5,9 +5,9 @@
 
 // What we use:
 //  * Customization
-//	* Rules: RegExp, RegExp0, +, /, %, digit(), repeat(), skipws()
+//	* Rules: Rule, Rule0, +, /, %, digit(), repeat(), skipws()
 //	* Tags: Leaf*, LeafMark
-//	* Matching: RegExp::match()
+//	* Matching: Rule::match()
 //	* Result Processing: Document::all()
 
 class My : public tpl::policy::Default
@@ -33,10 +33,10 @@ void customize()
 	impl::Leaf delim;
 	impl::LeafMark tagTime;
 
-	impl::RegExp0 rYear( alloc, repeat<1, 2>(repeat<2>(digit())) );
-	impl::RegExp0 rMonOrDay( alloc, repeat<1, 2>(digit()) );
-	impl::RegExp0 rTime( alloc, rYear + ch('-', '/')/&delim + rMonOrDay + ref(delim) + rMonOrDay );
-	impl::RegExp rDoc( alloc, rTime/tagTime % (',' + skipws()) );
+	impl::Rule0 rYear( alloc, repeat<1, 2>(repeat<2>(digit())) );
+	impl::Rule0 rMonOrDay( alloc, repeat<1, 2>(digit()) );
+	impl::Rule0 rTime( alloc, rYear + ch('-', '/')/&delim + rMonOrDay + ref(delim) + rMonOrDay );
+	impl::Rule rDoc( alloc, rTime/tagTime % (',' + skipws()) );
 
 	// ---- do match ----
 

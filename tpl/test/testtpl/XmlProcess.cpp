@@ -4,9 +4,9 @@
 // xml_process
 
 // What we use:
-//	* Rules: RegExp, +, /, %, xml_symbol(), c_symbol(), integer(), ws(), skipws()
+//	* Rules: Rule, +, /, %, xml_symbol(), c_symbol(), integer(), ws(), skipws()
 //	* Tags: LeafMark, NodeMark
-//	* Matching: RegExp::match()
+//	* Matching: Rule::match()
 //	* Result Processing: Document::all(), []
 
 void xml_process()
@@ -26,10 +26,10 @@ void xml_process()
 	impl::LeafMark tagText;
 	impl::NodeMark tagProps;
 
-	impl::RegExp rProp( alloc, xml_symbol()/tagProp + skipws() + '=' + skipws() + integer()/tagValue );
-	impl::RegExp rProps( alloc, rProp % ws() / tagProps );
-	impl::RegExp rTagStart( alloc, '<' + xml_symbol()/"tag" + ws() + rProps + '>' );
-	impl::RegExp rDoc( alloc, rTagStart + c_symbol()/tagText + "</tag>" );
+	impl::Rule rProp( alloc, xml_symbol()/tagProp + skipws() + '=' + skipws() + integer()/tagValue );
+	impl::Rule rProps( alloc, rProp % ws() / tagProps );
+	impl::Rule rTagStart( alloc, '<' + xml_symbol()/"tag" + ws() + rProps + '>' );
+	impl::Rule rDoc( alloc, rTagStart + c_symbol()/tagText + "</tag>" );
 
 	// ---- do match ----
 
