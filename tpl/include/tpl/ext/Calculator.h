@@ -19,8 +19,8 @@
 #ifndef TPL_EXT_CALCULATOR_H
 #define TPL_EXT_CALCULATOR_H
 
-#ifndef TPL_REGEX_ACTION_H
-#include "Action.h"
+#ifndef TPL_REGEXP_H
+#include "../RegExp.h"
 #endif
 
 #if !defined(_FUNCTIONAL_) && !defined(_FUNCTIONAL)
