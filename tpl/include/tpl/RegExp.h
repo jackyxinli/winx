@@ -35,8 +35,8 @@
 #include "regex/Context.h"
 #endif
 
-#ifndef TPL_REGEX_BASICRULE_H
-#include "regex/BasicRule.h"
+#ifndef TPL_REGEX_CONCRETION_H
+#include "regex/Concretion.h"
 #endif
 
 #ifndef TPL_REGEX_TERMINAL_H
