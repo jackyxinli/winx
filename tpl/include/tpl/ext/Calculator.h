@@ -51,7 +51,7 @@ private:
 
 private:
 	StackT& m_stk;
-	const Op m_op;
+	Op m_op;
 
 public:
 	UnaryFn(StackT& stk) : m_stk(stk) {}
@@ -80,7 +80,7 @@ private:
 
 private:
 	StackT& m_stk;
-	const Op m_op;
+	Op m_op;
 
 public:
 	BinaryFn(StackT& stk) : m_stk(stk) {}
@@ -111,7 +111,7 @@ private:
 
 private:
 	StackT& m_stk;
-	const Op m_op;
+	Op m_op;
 
 public:
 	TernaryFn(StackT& stk) : m_stk(stk) {}

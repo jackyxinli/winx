@@ -21,8 +21,12 @@ void calculate()
 
 	impl::RegExp rAdd( alloc, '+' + rTerm/exec[term += factor] );
 	impl::RegExp rSub( alloc, '-' + rTerm/exec[term -= factor] );
+#if defined(__GNUG__) // work arounds
+	impl::RegExp rExpr( alloc, rTerm/exec[term = 0+factor] + *(rAdd | rSub) );
+#else
 	impl::RegExp rExpr( alloc, rTerm/exec[term = factor] + *(rAdd | rSub) );
-	
+#endif
+
 	// ---- do match ----
 	
 	for (;;)
