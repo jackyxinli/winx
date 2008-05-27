@@ -24,15 +24,15 @@
 #endif
 
 #ifndef TPL_REGEX_BASIC_H
-#include "Terminal.h" // TPL_REGEX_CH_OP_
+#include "Terminal.h" // TPL_RULE_CH_BINARY_OP_
 #endif
 
 #ifndef TPL_REGEX_COMPOSITION_H
-#include "Composition.h" // TPL_REGEX_STR_OP_
+#include "Composition.h" // TPL_RULE_STR_BINARY_OP_
 #endif
 
 #ifndef TPL_REGEX_REF_H
-#include "Ref.h" // TPL_REGEX_REF_RULE_BINARY_OP_
+#include "Ref.h"
 #endif
 
 #if !defined(_LIMITS_) && !defined(_LIMITS)
@@ -42,15 +42,15 @@
 NS_TPL_BEGIN
 
 // =========================================================================
-// TPL_REGEX_UNARY_OP_, TPL_REGEX_BINARY_OP_
+// TPL_RULE_UNARY_OP_, TPL_REGEX_BINARY_OP_
 
-#define TPL_REGEX_UNARY_OP_(op, Op)											\
-	TPL_REGEX_REF_UNARY_OP_(op, Op)
+#define TPL_RULE_UNARY_OP_(op, Op)											\
+	TPL_RULE_REF_UNARY_OP_(op, Op)
 
 #define TPL_REGEX_BINARY_OP_(op, Op)										\
-	TPL_REGEX_CH_BINARY_OP_(op, Op)											\
-	TPL_REGEX_STR_BINARY_OP_(op, Op)										\
-	TPL_REGEX_REF_BINARY_OP_(op, Op)
+	TPL_RULE_CH_BINARY_OP_(op, Op)											\
+	TPL_RULE_STR_BINARY_OP_(op, Op)											\
+	TPL_RULE_REF_BINARY_OP_(op, Op)
 
 // =========================================================================
 // operator>> (boost::spirit, xpressive compatible)
@@ -232,7 +232,7 @@ Rule<Repeat0<T1> > TPL_CALL operator*(const Rule<T1>& x) {
 	return Rule<Repeat0<T1> >(x);
 }
 
-TPL_REGEX_UNARY_OP_(*, Repeat0)
+TPL_RULE_UNARY_OP_(*, Repeat0)
 
 // =========================================================================
 // operator+ (Unary)
@@ -267,7 +267,7 @@ Rule<Repeat1<T1> > TPL_CALL operator+(const Rule<T1>& x) {
 	return Rule<Repeat1<T1> >(x);
 }
 
-TPL_REGEX_UNARY_OP_(+, Repeat1)
+TPL_RULE_UNARY_OP_(+, Repeat1)
 
 // =========================================================================
 // operator!
@@ -301,7 +301,7 @@ Rule<Repeat01<T1> > TPL_CALL operator!(const Rule<T1>& x) {
 	return Rule<Repeat01<T1> >(x);
 }
 
-TPL_REGEX_UNARY_OP_(!, Repeat01)
+TPL_RULE_UNARY_OP_(!, Repeat01)
 
 // =========================================================================
 // function repeat

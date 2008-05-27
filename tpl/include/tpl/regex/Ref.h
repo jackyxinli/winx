@@ -66,7 +66,7 @@ public:
 	}
 };
 
-#define TPL_REGEX_REF_UNARY_OP_(op, Op)										\
+#define TPL_RULE_REF_UNARY_OP_(op, Op)										\
 template <class T1> __forceinline 											\
 Rule<Deref<Op, T1> > TPL_CALL operator op(const Reference<T1>& x)			\
 	{ return Rule<Deref<Op, T1> >(x); }
@@ -152,7 +152,7 @@ public:
 	}
 };
 
-#define TPL_REGEX_REF_BINARY_OP_(op, Op)									\
+#define TPL_RULE_REF_BINARY_OP_(op, Op)										\
 template <class T1, class T2>												\
 __forceinline Rule<DerefL<Op, T1, T2> > TPL_CALL operator op(const Reference<T1>& x, const Rule<T2>& y) \
 	{ return Rule<DerefL<Op, T1, T2> >(x, y); }								\

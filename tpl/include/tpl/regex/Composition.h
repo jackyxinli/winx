@@ -160,17 +160,79 @@ __forceinline Rule<Eq<CharT> > TPL_CALL str(const CharT* s, size_t n) {
 	return Rule<Eq<CharT> >(s, n);
 }
 
-#define TPL_REGEX_STR_BINARY_OP1_(op, Op, CharT)									\
+#define TPL_REGEX_STR_BINARY_OP1_(RuleT, op, Op, CharT)								\
 template <class T2> __forceinline													\
-Rule< Op<Eq<CharT>, T2> > TPL_CALL operator op(const CharT* x, const Rule<T2>& y)	\
+RuleT< Op<Eq<CharT>, T2> > TPL_CALL operator op(const CharT* x, const RuleT<T2>& y)	\
 	{ return str(x) op y; }															\
 template <class T1> __forceinline													\
-Rule< Op<T1, Eq<CharT> > > TPL_CALL operator op(const Rule<T1>& x, const CharT* y)	\
+RuleT< Op<T1, Eq<CharT> > > TPL_CALL operator op(const RuleT<T1>& x, const CharT* y)\
 	{ return x op str(y); }
 
-#define TPL_REGEX_STR_BINARY_OP_(op, Op)											\
-	TPL_REGEX_STR_BINARY_OP1_(op, Op, char)											\
-	TPL_REGEX_STR_BINARY_OP1_(op, Op, wchar_t)
+#define TPL_REGEX_STR_BINARY_OP_(RuleT, op, Op)										\
+	TPL_REGEX_STR_BINARY_OP1_(RuleT, op, Op, char)									\
+	TPL_REGEX_STR_BINARY_OP1_(RuleT, op, Op, wchar_t)
+
+#define TPL_RULE_STR_BINARY_OP_(op, Op)												\
+	TPL_REGEX_STR_BINARY_OP_(Rule, op, Op)
+
+#define TPL_GRAMMAR_STR_BINARY_OP_(op, Op)											\
+	TPL_REGEX_STR_BINARY_OP_(Grammar, op, Op)
+
+// =========================================================================
+// function gr::eq
+
+template <class Iterator>
+class GEq_ : public Gr<Eq_<Iterator> >
+{
+private:
+	typedef Gr<Eq_<Iterator> > Base;
+
+public:
+	template <class StringT>
+	GEq_(const StringT& s) : Base(s) {}
+
+	GEq_(Iterator s, size_t n) : Base(s, n) {}
+};
+
+template <class CharT>
+class GEq : public Gr<Eq_<const CharT*> >
+{
+private:
+	typedef public Gr<Eq_<const CharT*> > Base;
+
+public:
+	GEq(const CharT* s, size_t n)
+		: Base(s, n) {
+	}
+
+	GEq(const CharT* s)
+		: Base(s,std::char_traits<CharT>::length(s)) {
+	}
+};
+
+namespace gr {
+
+template <class CharT>
+__forceinline Grammar<GEq<CharT> > TPL_CALL eq(const CharT* s) {
+	return Grammar<GEq<CharT> >(s);
+}
+
+template <class CharT>
+__forceinline Grammar<GEq<CharT> > TPL_CALL eq(const CharT* s, size_t n) {
+	return Grammar<GEq<CharT> >(s, n);
+}
+
+template <class CharT>
+__forceinline Grammar<GEq<CharT> > TPL_CALL str(const CharT* s) {
+	return Grammar<GEq<CharT> >(s);
+}
+
+template <class CharT>
+__forceinline Grammar<GEq<CharT> > TPL_CALL str(const CharT* s, size_t n) {
+	return Grammar<GEq<CharT> >(s, n);
+}
+
+} // namespace gr
 
 // =========================================================================
 // $Log: $

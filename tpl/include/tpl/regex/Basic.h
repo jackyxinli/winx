@@ -74,6 +74,44 @@
 NS_TPL_BEGIN
 
 // =========================================================================
+// class Gr: Wrapper a Rule to Grammar
+
+template <class RegExT> class Rule;
+
+template <class RegExT>
+class Gr : public RegExT
+{
+public:
+	Gr() {}
+
+	template <class T1>
+	Gr(T1& x) : RegExT(x) {}
+
+	template <class T1>
+	Gr(const T1& x) : RegExT(x) {}
+
+	template <class T1, class T2>
+	Gr(const T1& x, const T2& y) : RegExT(x, y) {}
+
+	template <class T1, class T2>
+	Gr(T1& x, const T2& y) : RegExT(x, y) {}
+
+	template <class T1, class T2, class T3>
+	Gr(const T1& x, const T2& y, const T3& z) : RegExT(x, y, z) {}
+
+public:
+	const Rule<RegExT>& TPL_CALL rule() const {
+		return (const Rule<RegExT>&)*this;
+	}
+
+	template <class SourceT, class ContextT, class SkipperT>
+	bool TPL_CALL match(SourceT& ar, ContextT& context, const Rule<SkipperT>& skipper) const {
+		skipper.impl().match(ar, context);
+		return RegExT::match(ar, context);
+	}
+};
+
+// =========================================================================
 // enum RuleCharacter
 
 enum RuleCharacter
@@ -85,7 +123,7 @@ enum RuleCharacter
 // -------------------------------------------------------------------------
 // class Rule
 
-template <class RegExT> class Grammar;
+template <class GrammarT> class Grammar;
 
 template <class RegExT>
 class Rule : public RegExT
@@ -109,8 +147,12 @@ public:
 	Rule(const T1& x, const T2& y, const T3& z) : RegExT(x, y, z) {}
 
 public:
-	const Grammar<RegExT>& TPL_CALL grammar() const {
-		return (const Grammar<RegExT>&)*this;
+	const RegExT& TPL_CALL impl() const {
+		return *this;
+	}
+
+	const Grammar<Gr<RegExT> >& TPL_CALL grammar() const {
+		return (const Grammar<Gr<RegExT> >&)*this;
 	}
 
 private:
@@ -125,37 +167,39 @@ private:
 // =========================================================================
 // class Grammar
 
-template <class RegExT>
-class Grammar : public RegExT
+template <class GrammarT>
+class Grammar : public GrammarT
 {
 public:
 	Grammar() {}
 
 	template <class T1>
-	Grammar(T1& x) : RegExT(x) {}
+	Grammar(T1& x) : GrammarT(x) {}
 
 	template <class T1>
-	Grammar(const T1& x) : RegExT(x) {}
+	Grammar(const T1& x) : GrammarT(x) {}
 
 	template <class T1, class T2>
-	Grammar(const T1& x, const T2& y) : RegExT(x, y) {}
+	Grammar(const T1& x, const T2& y) : GrammarT(x, y) {}
 
 	template <class T1, class T2>
-	Grammar(T1& x, const T2& y) : RegExT(x, y) {}
+	Grammar(T1& x, const T2& y) : GrammarT(x, y) {}
 
 	template <class T1, class T2, class T3>
-	Grammar(const T1& x, const T2& y, const T3& z) : RegExT(x, y, z) {}
+	Grammar(const T1& x, const T2& y, const T3& z) : GrammarT(x, y, z) {}
 
 public:
-	const Rule<RegExT>& TPL_CALL rule() const {
-		return (const Rule<RegExT>&)*this;
+	const GrammarT& TPL_CALL impl() const {
+		return *this;
 	}
 
+private:
+	// concept:
+
+	enum { character = RegExT::character };
+
 	template <class SourceT, class ContextT, class SkipperT>
-	bool TPL_CALL match(SourceT& ar, ContextT& context, const Rule<SkipperT>& skipper) const {
-		skipper.match(ar, context);
-		return RegExT::match(ar, context);
-	}
+	bool TPL_CALL match(SourceT& ar, ContextT& context, const Rule<SkipperT>& skipper) const;
 };
 
 // =========================================================================
@@ -226,7 +270,7 @@ private:
 };
 
 // =========================================================================
-// class Reference
+// class Reference - Reference of a Rule
 
 template <class RefT>
 class Reference : public RefT
@@ -240,6 +284,25 @@ private:
 
 	typedef typename RefT::rule_type rule_type;
 	typedef typename RefT::dereference_type dereference_type;
+
+	dereference_type TPL_CALL operator()() const;
+};
+
+// =========================================================================
+// class GReference - Reference of a Grammar
+
+template <class GRefT>
+class GReference : public GRefT
+{
+public:
+	template <class T1>
+	GReference(const T1& x) : GRefT(x) {}
+
+private:
+	// concept:
+
+	typedef typename GRefT::grammar_type grammar_type;
+	typedef typename GRefT::dereference_type dereference_type;
 
 	dereference_type TPL_CALL operator()() const;
 };
