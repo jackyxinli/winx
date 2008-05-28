@@ -34,10 +34,10 @@
 NS_TPL_BEGIN
 
 // -------------------------------------------------------------------------
-// class FakeContext
+// class Context0
 
 template <class Iterator>
-class FakeContext
+class Context0
 {
 public:
 	template <int category>
@@ -48,7 +48,7 @@ public:
 
 	public:
 		template <class SourceT>
-		trans_type(const SourceT& ar, const FakeContext&) {
+		trans_type(const SourceT& ar, const Context0&) {
 			vPos = ar.position();
 		}
 

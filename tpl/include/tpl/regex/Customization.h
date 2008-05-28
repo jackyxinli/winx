@@ -61,7 +61,7 @@ struct CustomizationContextTraits_ {
 
 template <class Iterator, class Allocator, class Tag>
 struct CustomizationContextTraits_<false, Iterator, Allocator, Tag> {
-	typedef FakeContext<Iterator> Context;
+	typedef Context0<Iterator> Context;
 };
 
 template <bool bHas>
@@ -222,69 +222,38 @@ public:
 	typedef GrammarT<CharacterTraits_::characterDefault> Grammar;
 	typedef GrammarT<CharacterTraits_::characterMarked> MarkedGrammar;
 
+private:
+	template <class SkipperT>
+	static tpl::Rule<Skipper<SkipperT, Source, Context> > TPL_CALL _get(Allocator& alloc, const tpl::Rule<SkipperT>& skipper_) {
+		return tpl::Rule<Skipper<SkipperT, Source, Context> >(alloc, skipper_);
+	}
+
+	template <int uCharacter>
+	static const RuleT<uCharacter>& TPL_CALL _get(Allocator& alloc, const RuleT<uCharacter>& skipper_) {
+		return skipper_;
+	}
+
 public:
 	// Grammar helper functions:
 
 	template <class RegExT, class SkipperT>
 	static inline bool TPL_CALL match(
 		Allocator& alloc, Iterator pos, Iterator pos2,
-		const tpl::Grammar<RegExT>& grammar_, const tpl::Rule<SkipperT>& skipper_)
+		const tpl::Grammar<RegExT>& grammar_, const tpl::Rule<SkipperT>& skipper)
 	{
 		Source source(pos, pos2);
 		Context context;
-		tpl::Rule<Skipper<SkipperT, typename Rule0::Impl> > skipper(alloc, skipper_);
-		return grammar_.impl().match(source, context, skipper);
+		return grammar_.impl().match(source, context, _get(alloc, skipper));
 	}
 
 	template <class RegExT, class SkipperT>
 	static inline bool TPL_CALL match(
 		Allocator& alloc, Iterator pos,
-		const tpl::Grammar<RegExT>& grammar_, const tpl::Rule<SkipperT>& skipper_)
+		const tpl::Grammar<RegExT>& grammar_, const tpl::Rule<SkipperT>& skipper)
 	{
 		Source source(pos);
 		Context context;
-		tpl::Rule<Skipper<SkipperT, typename Rule0::Impl> > skipper(alloc, skipper_);
-		return grammar_.impl().match(source, context, skipper);
-	}
-
-	template <int uCharacter, class RegExT>
-	static inline bool TPL_CALL match(
-		Allocator& alloc, Iterator pos, Iterator pos2,
-		const tpl::Grammar<RegExT>& grammar_, const RuleT<uCharacter>& skipper)
-	{
-		Source source(pos, pos2);
-		Context context;
-		return grammar_.impl().match(source, context, skipper);
-	}
-
-	template <int uCharacter, class RegExT>
-	static inline bool TPL_CALL match(
-		Allocator& alloc, Iterator pos,
-		const tpl::Grammar<RegExT>& grammar_, const RuleT<uCharacter>& skipper)
-	{
-		Source source(pos);
-		Context context;
-		return grammar_.impl().match(source, context, skipper);
-	}
-
-	template <int uCharacter, class RegExT>
-	static inline bool TPL_CALL match(
-		Allocator& alloc, Iterator pos, Iterator pos2,
-		const tpl::Grammar<RegExT>& grammar_, const ManagedRuleT<uCharacter>& skipper)
-	{
-		Source source(pos, pos2);
-		Context context;
-		return grammar_.impl().match(source, context, skipper);
-	}
-
-	template <int uCharacter, class RegExT>
-	static inline bool TPL_CALL match(
-		Allocator& alloc, Iterator pos,
-		const tpl::Grammar<RegExT>& grammar_, const ManagedRuleT<uCharacter>& skipper)
-	{
-		Source source(pos);
-		Context context;
-		return grammar_.impl().match(source, context, skipper);
+		return grammar_.impl().match(source, context, _get(alloc, skipper));
 	}
 };
 

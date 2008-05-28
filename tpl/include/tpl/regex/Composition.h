@@ -67,7 +67,7 @@ class Eos
 public:
 	enum { character = 0 };
 
-	typedef ExplicitConvertable convertable_type;
+	typedef AutoConvertable convertable_type;
 
 	template <class SourceT, class ContextT>
 	bool TPL_CALL match(SourceT& ar, ContextT& context) const {
@@ -224,23 +224,37 @@ __forceinline Rule<Eq<CharT> > TPL_CALL str(const CharT* s, size_t n) {
 	return Rule<Eq<CharT> >(s, n);
 }
 
-#define TPL_REGEX_STR_BINARY_OP1_(RuleT, op, Op, CharT)								\
+__forceinline Grammar<Gr<EqStr> > TPL_CALL gr(const char* s) {
+	return Grammar<Gr<EqStr> >(s);
+}
+
+__forceinline Grammar<Gr<EqWStr> > TPL_CALL gr(const wchar_t* s) {
+	return Grammar<Gr<EqWStr> >(s);
+}
+
+#define TPL_RULE_STR_BINARY_OP1_(op, Op, CharT)										\
 template <class T2> __forceinline													\
-RuleT< Op<Eq<CharT>, T2> > TPL_CALL operator op(const CharT* x, const RuleT<T2>& y)	\
+Rule< Op<Eq<CharT>, T2> > TPL_CALL operator op(const CharT* x, const Rule<T2>& y)	\
 	{ return str(x) op y; }															\
 template <class T1> __forceinline													\
-RuleT< Op<T1, Eq<CharT> > > TPL_CALL operator op(const RuleT<T1>& x, const CharT* y)\
+Rule< Op<T1, Eq<CharT> > > TPL_CALL operator op(const Rule<T1>& x, const CharT* y)	\
 	{ return x op str(y); }
 
-#define TPL_REGEX_STR_BINARY_OP_(RuleT, op, Op)										\
-	TPL_REGEX_STR_BINARY_OP1_(RuleT, op, Op, char)									\
-	TPL_REGEX_STR_BINARY_OP1_(RuleT, op, Op, wchar_t)
+#define TPL_GRAMMAR_STR_BINARY_OP1_(op, Op, CharT)									\
+template <class T2> __forceinline													\
+Grammar< Op<Gr<Eq<CharT> >, T2> > TPL_CALL operator op(const CharT* x, const Grammar<T2>& y) \
+	{ return str(x) op y; }															\
+template <class T1> __forceinline													\
+Grammar< Op<T1, Gr<Eq<CharT> > > > TPL_CALL operator op(const Grammar<T1>& x, const CharT* y) \
+	{ return x op str(y); }
 
 #define TPL_RULE_STR_BINARY_OP_(op, Op)												\
-	TPL_REGEX_STR_BINARY_OP_(Rule, op, Op)
+	TPL_RULE_STR_BINARY_OP1_(op, Op, char)											\
+	TPL_RULE_STR_BINARY_OP1_(op, Op, wchar_t)
 
 #define TPL_GRAMMAR_STR_BINARY_OP_(op, Op)											\
-	TPL_REGEX_STR_BINARY_OP_(Grammar, op, Op)
+	TPL_GRAMMAR_STR_BINARY_OP1_(op, Op, char)										\
+	TPL_GRAMMAR_STR_BINARY_OP1_(op, Op, wchar_t)
 
 // =========================================================================
 // $Log: $

@@ -54,7 +54,7 @@ public:
 	enum { character = composition_grammar::character };
 
 	template <class SourceT, class ContextT, class SkipperT>
-	bool TPL_CALL match(SourceT& ar, ContextT& context, const Grammar<SkipperT>& skipper) const
+	bool TPL_CALL match(SourceT& ar, ContextT& context, const Rule<SkipperT>& skipper) const
 	{
 		dereference_type der(m_ref());
 		grammar_type x(der);
@@ -88,7 +88,7 @@ public:
 	enum { character = grammar_type::character };
 
 	template <class SourceT, class ContextT, class SkipperT>
-	bool TPL_CALL match(SourceT& ar, ContextT& context, const Grammar<SkipperT>& skipper) const
+	bool TPL_CALL match(SourceT& ar, ContextT& context, const Rule<SkipperT>& skipper) const
 	{
 		dereference_type der(m_ref());
 		grammar_type y(der);
@@ -115,7 +115,7 @@ public:
 	enum { character = composition_grammar::character };
 
 	template <class SourceT, class ContextT, class SkipperT>
-	bool TPL_CALL match(SourceT& ar, ContextT& context, const Grammar<SkipperT>& skipper) const
+	bool TPL_CALL match(SourceT& ar, ContextT& context, const Rule<SkipperT>& skipper) const
 	{
 		grammar_type y(m_ref);
 		composition_grammar op(m_x, y);
@@ -143,7 +143,7 @@ public:
 	enum { character = composition_grammar::character };
 
 	template <class SourceT, class ContextT, class SkipperT>
-	bool TPL_CALL match(SourceT& ar, ContextT& context, const Grammar<SkipperT>& skipper) const
+	bool TPL_CALL match(SourceT& ar, ContextT& context, const Rule<SkipperT>& skipper) const
 	{
 		dereference_type der(m_ref());
 		grammar_type x(der);
@@ -180,7 +180,7 @@ public:
 	enum { character = GrammarT::character };
 
 	template <class SourceT, class ContextT, class SkipperT>
-	bool TPL_CALL match(SourceT& ar, ContextT& context, const Grammar<SkipperT>& skipper) const {
+	bool TPL_CALL match(SourceT& ar, ContextT& context, const Rule<SkipperT>& skipper) const {
 		return m_x.match(ar, context, skipper);
 	}
 };

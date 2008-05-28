@@ -19,10 +19,6 @@
 #ifndef TPL_REGEX_GRAMMAR_OPERATOR_H
 #define TPL_REGEX_GRAMMAR_OPERATOR_H
 
-#ifndef TPL_REGEX_GRAMMAR_TERMINAL_H
-#include "Terminal.h"
-#endif
-
 #ifndef TPL_REGEX_GRAMMAR_REF_H
 #include "Ref.h"
 #endif
@@ -122,37 +118,6 @@ Grammar<GOr<T1, T2> > TPL_CALL operator|(const Grammar<T1>& x, const Grammar<T2>
 }
 
 TPL_GRAMMAR_BINARY_OP_(|, GOr)
-
-// -------------------------------------------------------------------------
-// function gr::eq
-
-// Usage: Grammar/gr::eq("abc", "defg")		--- same as: Grammar/(gr::eq("abc") | gr::eq("defg"))
-// Usage: Grammar/gr::eq("s1", "s2", "s3")	--- same as: Grammar/(gr::eq("s1") | gr::eq("s2") | gr::eq("s3"))
-
-namespace gr {
-
-template <class CharT>
-__forceinline
-Grammar<GOr<GEq<CharT>, GEq<CharT> > >
-TPL_CALL eq(const CharT* s1, const CharT* s2) {
-	return eq(s1) | eq(s2);
-}
-
-template <class CharT>
-__forceinline
-Grammar<GOr<GOr<GEq<CharT>, GEq<CharT> >, GEq<CharT> > >
-TPL_CALL eq(const CharT* s1, const CharT* s2, const CharT* s3) {
-	return eq(s1) | eq(s2) | eq(s3);
-}
-
-template <class CharT>
-__forceinline
-Grammar<GOr<GOr<GOr<GEq<CharT>, GEq<CharT> >, GEq<CharT> >, GEq<CharT> > >
-TPL_CALL eq(const CharT* s1, const CharT* s2, const CharT* s3, const CharT* s4) {
-	return eq(s1) | eq(s2) | eq(s3) | eq(s4);
-}
-
-} // namespace gr
 
 // =========================================================================
 // operator/

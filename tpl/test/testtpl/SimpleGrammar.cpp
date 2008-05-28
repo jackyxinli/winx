@@ -8,7 +8,7 @@ using namespace tpl;
 // A simple grammar example.
 
 // What we use:
-//	* Rules: /assign(), %, real(), gr::ch(' '), skipws()
+//	* Rules: /assign(), %, real(), gr(','), skipws()
 //	* Matching: tpl::simple::match()
 
 void simple_grammar()
@@ -17,7 +17,7 @@ void simple_grammar()
 
 	std::vector<double> values; // you can change vector to other stl containers.
 
-	if ( simple::match(alloc, " -.1 , -0.1 , +32. , -22323.2e+12 ", real()/&values % gr::ch(','), skipws()) )
+	if ( simple::match(alloc, " -.1 , -0.1 , +32. , -22323.2e+12 ", real()/assign(values) % gr(','), skipws()) )
 	{
 		for (std::vector<double>::iterator it = values.begin(); it != values.end(); ++it)
 		{

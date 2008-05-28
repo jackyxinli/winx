@@ -295,23 +295,41 @@ __forceinline Rule<Ch3_> TPL_CALL ch(int c1, int c2, int c3) {
 	return Rule<Ch3_>(c1, c2, c3);
 }
 
-#define TPL_REGEX_CH_BINARY_OP1_(RuleT, op, Op, CharT, UCharT)						\
+__forceinline Grammar<Gr<Ch1_> > TPL_CALL gr(char x) {
+	return Grammar<Gr<Ch1_> >((unsigned char)x);
+}
+
+__forceinline Grammar<Gr<Ch1_> > TPL_CALL gr(wchar_t x) {
+	return Grammar<Gr<Ch1_> >(x);
+}
+
+__forceinline Grammar<Gr<Ch1_> > TPL_CALL gr(int x) {
+	return Grammar<Gr<Ch1_> >(x);
+}
+
+#define TPL_RULE_CH_BINARY_OP1_(op, Op, CharT, UCharT)								\
 template <class T2> __forceinline													\
-RuleT< Op<Ch1_, T2> > TPL_CALL operator op(CharT x, const RuleT<T2>& y)				\
+Rule< Op<Ch1_, T2> > TPL_CALL operator op(CharT x, const Rule<T2>& y)				\
 	{ return ch((UCharT)x) op y; }													\
 template <class T1> __forceinline													\
-RuleT< Op<T1, Ch1_> > TPL_CALL operator op(const RuleT<T1>& x, CharT y)				\
+Rule< Op<T1, Ch1_> > TPL_CALL operator op(const Rule<T1>& x, CharT y)				\
 	{ return x op ch((UCharT)y); }
 
-#define TPL_REGEX_CH_BINARY_OP_(RuleT, op, Op)										\
-	TPL_REGEX_CH_BINARY_OP1_(RuleT, op, Op, char, unsigned char)					\
-	TPL_REGEX_CH_BINARY_OP1_(RuleT, op, Op, wchar_t, wchar_t)
+#define TPL_GRAMMAR_CH_BINARY_OP1_(op, Op, CharT, UCharT)							\
+template <class T2> __forceinline													\
+Grammar< Op<Gr<Ch1_>, T2> > TPL_CALL operator op(CharT x, const Grammar<T2>& y)		\
+	{ return ch((UCharT)x) op y; }													\
+template <class T1> __forceinline													\
+Grammar< Op<T1, Gr<Ch1_> > > TPL_CALL operator op(const Grammar<T1>& x, CharT y)	\
+	{ return x op ch((UCharT)y); }
 
 #define TPL_RULE_CH_BINARY_OP_(op, Op)												\
-	TPL_REGEX_CH_BINARY_OP_(Rule, op, Op)
+	TPL_RULE_CH_BINARY_OP1_(op, Op, char, unsigned char)							\
+	TPL_RULE_CH_BINARY_OP1_(op, Op, wchar_t, wchar_t)
 
 #define TPL_GRAMMAR_CH_BINARY_OP_(op, Op)											\
-	TPL_REGEX_CH_BINARY_OP_(Grammar, op, Op)
+	TPL_GRAMMAR_CH_BINARY_OP1_(op, Op, char, unsigned char)							\
+	TPL_GRAMMAR_CH_BINARY_OP1_(op, Op, wchar_t, wchar_t)
 
 // -------------------------------------------------------------------------
 // function space, alpha, ...

@@ -83,21 +83,7 @@ class Gr : public RegExT
 {
 public:
 	Gr() {}
-
-	template <class T1>
-	Gr(T1& x) : RegExT(x) {}
-
-	template <class T1>
-	Gr(const T1& x) : RegExT(x) {}
-
-	template <class T1, class T2>
-	Gr(const T1& x, const T2& y) : RegExT(x, y) {}
-
-	template <class T1, class T2>
-	Gr(T1& x, const T2& y) : RegExT(x, y) {}
-
-	template <class T1, class T2, class T3>
-	Gr(const T1& x, const T2& y, const T3& z) : RegExT(x, y, z) {}
+	Gr(const RegExT& x) : RegExT(x) {}
 
 public:
 	const Rule<RegExT>& TPL_CALL rule() const {
@@ -116,8 +102,9 @@ public:
 
 enum RuleCharacter
 {
-	CHARACTER_MARKED	= 0X01,
+	CHARACTER_MARKED	= 0x01,
 	CHARACTER_DEFAULT	= CHARACTER_MARKED,
+	CHARACTER_SKIPPER	= 0x00,
 };
 
 // -------------------------------------------------------------------------
@@ -241,6 +228,11 @@ private:
 	template <class SourceT, class ContextT, class SkipperT>
 	bool TPL_CALL match(SourceT& ar, ContextT& context, const Rule<SkipperT>& skipper) const;
 };
+
+template <class RegExT>
+__forceinline const Grammar<Gr<RegExT> >& TPL_CALL gr(const Rule<RegExT>& rule_) {
+	return (const Grammar<Gr<RegExT> >&)rule_;
+}
 
 // =========================================================================
 // class SimpleAction

@@ -74,11 +74,6 @@ Rule<Act0<T1, T2> > TPL_CALL operator/(const Rule<T1>& x, const SimpleAction<T2>
 	return Rule<Act0<T1, T2> >(x, y);
 }
 
-template <class T1, class T2> __forceinline
-Grammar<Act0<T1, T2> > TPL_CALL operator/(const Grammar<T1>& x, const SimpleAction<T2>& y) {
-	return Grammar<Act0<T1, T2> >(x, y);
-}
-
 template <class T2> __forceinline
 Rule<Act0<Ch1_, T2> > TPL_CALL operator/(char x, const SimpleAction<T2>& y) {
 	return ch((unsigned char)x) / y;
@@ -140,11 +135,6 @@ public:
 template <class T1, class T2> __forceinline
 Rule<Act<T1, T2> > TPL_CALL operator/(const Rule<T1>& x, const Action<T2>& y) {
 	return Rule<Act<T1, T2> >(x, y);
-}
-
-template <class T1, class T2> __forceinline
-Grammar<Act<T1, T2> > TPL_CALL operator/(const Grammar<T1>& x, const Action<T2>& y) {
-	return Grammar<Act<T1, T2> >(x, y);
 }
 
 template <class T2> __forceinline

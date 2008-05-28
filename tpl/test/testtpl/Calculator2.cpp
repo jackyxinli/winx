@@ -14,15 +14,15 @@ void calculate2()
 
 	std::stack<double> stk;
 
-	impl::Rule::Var rFactor;
+	impl::Grammar::Var rFactor;
 
-	impl::Rule rMul( alloc, '*' + rFactor/calc<std::multiplies>(stk) );
-	impl::Rule rDiv( alloc, '/' + rFactor/calc<std::divides>(stk) );
-	impl::Rule rTerm( alloc, ref(rFactor) + *(rMul | rDiv) );
+	impl::Grammar rMul( alloc, '*' + rFactor/calc<std::multiplies>(stk) );
+	impl::Grammar rDiv( alloc, '/' + rFactor/calc<std::divides>(stk) );
+	impl::Grammar rTerm( alloc, ref(rFactor) + *(rMul | rDiv) );
 
-	impl::Rule rAdd( alloc, '+' + rTerm/calc<std::plus>(stk) );
-	impl::Rule rSub( alloc, '-' + rTerm/calc<std::minus>(stk) );
-	impl::Rule rExpr( alloc, rTerm + *(rAdd | rSub) );
+	impl::Grammar rAdd( alloc, '+' + rTerm/calc<std::plus>(stk) );
+	impl::Grammar rSub( alloc, '-' + rTerm/calc<std::minus>(stk) );
+	impl::Grammar rExpr( alloc, rTerm + *(rAdd | rSub) );
 	
 	impl::Rule rFun( alloc, "sin"/calc(stk, sin) | "cos"/calc(stk, cos) | "pow"/calc(stk, pow) );
 
@@ -30,7 +30,7 @@ void calculate2()
 		real()/assign(stk) |
 		'-' + rFactor/calc<std::negate>(stk) |
 		'(' + rExpr + ')' |
-		(c_symbol() + '('+ rExpr % ',' + ')')/(rFun + '(') |
+		(gr(c_symbol()) + '(' + rExpr % ',' + ')')/(gr(rFun) + '(') |
 		'+' + rFactor );
 
 	// ---- do match ----
@@ -45,9 +45,9 @@ void calculate2()
 			break;
 
 		try {
-			while (!stk.empty())
+			while ( !stk.empty() )
 				stk.pop();
-			if (!impl::match(strExp.c_str(), rExpr + eos()))
+			if ( !impl::match(alloc, strExp.c_str(), rExpr + eos(), skipws()) )
 				std::cout << ">>> ERROR: invalid expression!\n";
 			else
 				std::cout << stk.top() << "\n";
@@ -59,4 +59,3 @@ void calculate2()
 }
 
 // -------------------------------------------------------------------------
-

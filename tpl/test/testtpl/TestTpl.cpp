@@ -15,7 +15,7 @@ void calculate2();
 
 int main()
 {
-	simple_grammar();
+//	simple_grammar();
 //	simplest();
 // 	circuit();
 // 	html_process();
@@ -23,7 +23,7 @@ int main()
 // 	demo();
 // 	customize();
 // 	parse_class();
-//	calculate2();
+	calculate2();
 	return 0;
 }
 

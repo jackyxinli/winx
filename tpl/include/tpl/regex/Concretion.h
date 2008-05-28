@@ -33,7 +33,7 @@
 
 NS_TPL_BEGIN
 
-// -------------------------------------------------------------------------
+// =========================================================================
 // class Concretion
 
 template <int uCharacter, class SourceT, class ContextT, bool bManaged = false>
@@ -49,6 +49,10 @@ private:
 public:
 	Concretion() : m_this(NULL) {}
 	
+	Concretion(const void* this_, FN_match fn) 
+		: m_this(this_), m_fn(fn) {
+	}
+
 	template <class AllocT>
 	Concretion(AllocT& alloc, const Concretion& x) {
 		new(this) Concretion(x);
@@ -110,6 +114,12 @@ public:
 		m_fn = Imp::match;
 	}
 
+	void TPL_CALL assign(const void* this_, FN_match fn)
+	{
+		m_this = this_;
+		m_fn = fn;
+	}
+
 public:
 	class Var : public Rule<Ref<Concretion> >
 	{
@@ -127,13 +137,27 @@ public:
 	};
 };
 
-// -------------------------------------------------------------------------
+// =========================================================================
 // class Skipper
 
-template <class SkipperT, class ConcretionT>
+// class SkipperTraits
+
+template <class SourceT, class ContextT>
+class SkipperTraits
+{
+public:
+	typedef Concretion<CHARACTER_SKIPPER, SourceT, ContextT, false> concretion_type;
+};
+
+// class Skipper
+
+template <class SkipperT, class SourceT, class ContextT>
 class Skipper : public SkipperT
 {
 private:
+	typedef SkipperTraits<SourceT, ContextT> Tr_;
+	typedef typename Tr_::concretion_type ConcretionT;
+
 	ConcretionT m_alter;
 
 public:
@@ -150,13 +174,37 @@ public:
 };
 
 // -------------------------------------------------------------------------
+// class NullSkipper
+
+inline bool TPL_CALL null_skipper_match_(const void* pThis, int& ar, int& context) {
+	return true;
+}
+
+template <class SourceT, class ContextT>
+class NullSkipper : public Null<true>
+{
+private:
+	typedef SkipperTraits<SourceT, ContextT> Tr_;
+	typedef typename Tr_::concretion_type ConcretionT;
+
+	typedef bool TPL_CALL _FN_match(const void* pThis, SourceT& ar, ContextT& context);
+	typedef _FN_match* FN_match;
+
+public:
+	const ConcretionT TPL_CALL concretion() const {
+		return ConcretionT(NULL, (FN_match)null_skipper_match_);
+	}
+};
+
+// -------------------------------------------------------------------------
 // class GConcretion
 
 template <int uCharacter, class SourceT, class ContextT, bool bManaged = false>
 class GConcretion
 {
 private:
-	typedef Concretion<uCharacter, SourceT, ContextT, bManaged> ConcretionT;
+	typedef SkipperTraits<SourceT, ContextT> Tr_;
+	typedef typename Tr_::concretion_type ConcretionT;
 	typedef bool TPL_CALL _FN_match(const void* pThis, SourceT& ar, ContextT& context, const ConcretionT& skipper);
 	typedef _FN_match* FN_match;
 
@@ -167,7 +215,7 @@ public:
 	GConcretion() : m_this(NULL) {}
 
 	template <class AllocT, class GrammarT>
-	GConcretion(AllocT& alloc, const GrammarT& x) {
+	GConcretion(AllocT& alloc, const Grammar<GrammarT>& x) {
 		assign(alloc, x);
 	}
 
@@ -188,7 +236,7 @@ private:
 		GrammarT m_x;
 
 	public:
-		Impl(const Rule<GrammarT>& x)
+		Impl(const Grammar<GrammarT>& x)
 			: m_x(static_cast<const GrammarT&>(x)) {
 		}
 
@@ -202,7 +250,7 @@ private:
 
 public:
 	template <class AllocT, class GrammarT>
-	void TPL_CALL assign(AllocT& alloc, const Rule<GrammarT>& x)
+	void TPL_CALL assign(AllocT& alloc, const Grammar<GrammarT>& x)
 	{
 		typedef Impl<GrammarT> Imp;
 		TPL_ASSERT((Imp::character & ~character) == 0);
@@ -226,13 +274,13 @@ public:
 		}
 
 		template <class AllocT, class GrammarT>
-		void TPL_CALL assign(AllocT& alloc, const Rule<GrammarT>& x) {
+		void TPL_CALL assign(AllocT& alloc, const Grammar<GrammarT>& x) {
 			m_x.assign(alloc, x);
 		}
 	};
 };
 
-// -------------------------------------------------------------------------
+// =========================================================================
 // $Log: $
 
 NS_TPL_END
