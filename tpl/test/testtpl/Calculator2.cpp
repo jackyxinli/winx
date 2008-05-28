@@ -52,7 +52,7 @@ void calculate2()
 			else
 				std::cout << stk.top() << "\n";
 		}
-		catch (std::logic_error e) {
+		catch (const std::logic_error& e) {
 			std::cout << ">>> ERROR: " << e.what() << "\n";
 		}
 	}
