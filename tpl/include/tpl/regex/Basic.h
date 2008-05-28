@@ -74,6 +74,24 @@
 NS_TPL_BEGIN
 
 // =========================================================================
+// TPL_REQUIRE(e, Require) -- see BOOST_STATIC_ASSERT(e)
+
+template <bool bOk>
+struct RequireFeatureTraits {
+	typedef struct RequireFeatureOk {} feature_type;
+};
+
+template <>
+struct RequireFeatureTraits<false> {
+	struct RequireFeatureFailed {};
+};
+
+#ifndef TPL_REQUIRE
+#define TPL_REQUIRE(e, RequireFeature_)										\
+	typedef typename tpl::RequireFeatureTraits<(e) != 0>::feature_type RequireFeature_;
+#endif
+
+// =========================================================================
 // class Skipper
 
 template <class RegExT> class Rule;
@@ -94,6 +112,7 @@ public:
 
 //	concept (as a Rule):
 //
+//	enum { vtype = SkipperT::vtype };
 //	enum { character = SkipperT::character };
 //
 //	typedef typename SkipperT::convertible_type convertible_type;
@@ -132,15 +151,28 @@ public:
 };
 
 // =========================================================================
+// class Rule
+
 // enum RuleCharacter
 
 enum RuleCharacter
 {
+	CHARACTER_NONE		= 0x00,
 	CHARACTER_MARKED	= 0x01,
-	CHARACTER_SKIPPER	= 0x00,
+	CHARACTER_SKIPPER	= CHARACTER_NONE,
 };
 
-// -------------------------------------------------------------------------
+enum RuleVType
+{
+	VTYPE_NONE			= 0,
+	VTYPE_USER_DEFINED	= 0x0001,
+	VTYPE_CHAR			= 0x0002,
+	VTYPE_U_INTEGER		= 0x0004,
+	VTYPE_INTEGER		= 0x0008,
+	VTYPE_U_REAL		= 0x0010,
+	VTYPE_REAL			= 0x0020,
+};
+
 // ConvertableType
 
 struct SelfConvertible {}; // The Rule can convert itself to a Grammar automatically.
@@ -162,7 +194,17 @@ struct OrConvertable<ExplicitConvertible, AutoConvertible> {
 	typedef AutoConvertible convertible_type;
 };
 
-// -------------------------------------------------------------------------
+// class RuleBase
+
+class RuleBase
+{
+public:
+	enum { vtype = VTYPE_NONE };
+	enum { character = CHARACTER_MARKED };
+
+	typedef ExplicitConvertible convertible_type;
+};
+
 // class Rule
 
 template <class GrammarT> class Grammar;
@@ -204,6 +246,7 @@ public:
 
 //	concept:
 //
+//	enum { vtype = RegExT::vtype };
 //	enum { character = RegExT::character };
 //
 //	typedef typename RegExT::convertible_type convertible_type;
@@ -319,6 +362,8 @@ public:
 
 private:
 	// concept:
+
+	enum { required_vtypes = ActionT::required_vtypes };
 
 	template <class Iterator>
 	void TPL_CALL operator()(Iterator first, Iterator last) const;

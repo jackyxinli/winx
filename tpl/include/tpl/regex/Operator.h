@@ -72,6 +72,7 @@ public:
 
 public:
 	enum { character = RegExT1::character | RegExT2::character };
+	enum { vtype = 0 };
 
 	typedef ExplicitConvertible convertible_type;
 
@@ -117,6 +118,7 @@ public:
 
 public:
 	enum { character = RegExT1::character | RegExT2::character };
+	enum { vtype = 0 };
 
 	typedef ExplicitConvertible convertible_type;
 
@@ -183,6 +185,7 @@ public:
 
 public:
 	enum { character = RegExT1::character | RegExT2::character };
+	enum { vtype = RegExT1::vtype };
 
 	typedef typename OrConvertable<CT1, CT2>::convertible_type convertible_type;
 
@@ -226,6 +229,7 @@ public:
 
 public:
 	enum { character = RegExT::character };
+	enum { vtype = 0 };
 
 	typedef ExplicitConvertible convertible_type;
 
@@ -262,6 +266,7 @@ public:
 
 public:
 	enum { character = RegExT::character };
+	enum { vtype = 0 };
 
 	typedef ExplicitConvertible convertible_type;
 
@@ -300,6 +305,7 @@ public:
 
 public:
 	enum { character = RegExT::character };
+	enum { vtype = 0 };
 
 	typedef ExplicitConvertible convertible_type;
 
@@ -339,6 +345,7 @@ public:
 
 public:
 	enum { character = RegExT::character };
+	enum { vtype = 0 };
 
 	typedef ExplicitConvertible convertible_type;
 

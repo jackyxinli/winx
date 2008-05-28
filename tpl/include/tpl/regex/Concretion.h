@@ -69,6 +69,7 @@ public:
 
 public:
 	enum { character = uCharacter };
+	enum { vtype = 0 };
 
 	typedef ExplicitConvertible convertible_type;
 	typedef const Concretion& concreation_type;

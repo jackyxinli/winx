@@ -38,6 +38,7 @@ class ChAny
 {
 public:
 	enum { character = 0 };
+	enum { vtype = VTYPE_CHAR };
 
 	typedef ExplicitConvertible convertible_type;
 
@@ -74,6 +75,7 @@ public:
 
 public:
 	enum { character = 0 };
+	enum { vtype = VTYPE_CHAR };
 
 	typedef AutoConvertible convertible_type;
 

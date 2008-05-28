@@ -84,6 +84,7 @@ public:
 
 struct FakeRegEx_ {
 	enum { character = 0 };
+	enum { vtype = 0 };
 	typedef ExplicitConvertible convertible_type;
 };
 
@@ -144,6 +145,7 @@ public:
 public:
 	enum { tag = 0 };
 	enum { character = RegExT::character | CHARACTER_MARKED };
+	enum { vtype = RegExT::vtype };
 
 	typedef typename RegExT::convertible_type convertible_type;
 
@@ -175,6 +177,7 @@ public:
 public:
 	enum { tag = TPL_REGEX_NODE_MARK };
 	enum { character = RegExT::character | CHARACTER_MARKED };
+	enum { vtype = RegExT::vtype };
 
 	typedef typename RegExT::convertible_type convertible_type;
 

@@ -83,6 +83,7 @@ public:
 
 public:
 	enum { character = 0 };
+	enum { vtype = 0 };
 
 	typedef ExplicitConvertible convertible_type;
 

@@ -51,6 +51,8 @@ public:
 	AssigStr(StringT& result) : m_result(result) {
 	}
 
+	enum { required_vtypes = 0 };
+
 	template <class Iterator>
 	void TPL_CALL operator()(Iterator pos, Iterator pos2) const {
 		m_result.assign(pos, pos2);
@@ -96,6 +98,8 @@ public:
 	AssigCh(CharT& result) : m_result(result) {
 	}
 
+	enum { required_vtypes = VTYPE_CHAR };
+
 	template <class Iterator>
 	void TPL_CALL operator()(Iterator pos, Iterator pos2) const {
 		TPL_ASSERT(std::distance(pos, pos2) == 1);
@@ -138,6 +142,8 @@ private:
 public:
 	AssigUInt(UIntT& result) : m_result(result) {
 	}
+
+	enum { required_vtypes = VTYPE_U_INTEGER };
 
 	template <class Iterator>
 	void TPL_CALL operator()(Iterator pos, Iterator pos2) const {
@@ -185,6 +191,8 @@ private:
 public:
 	AssigInt(IntT& result) : m_result(result) {
 	}
+
+	enum { required_vtypes = VTYPE_U_INTEGER | VTYPE_INTEGER };
 
 	template <class Iterator>
 	void TPL_CALL operator()(Iterator pos, Iterator pos2) const {
@@ -234,6 +242,8 @@ private:
 public:
 	AssigReal(RealT& result) : m_result(result) {
 	}
+
+	enum { required_vtypes = VTYPE_U_INTEGER | VTYPE_INTEGER | VTYPE_U_REAL | VTYPE_REAL };
 
 	template <class Iterator>
 	void TPL_CALL operator()(Iterator pos, Iterator pos2) const {
@@ -309,6 +319,25 @@ template <>
 struct AssignmentTypeTraits<double> {
 	typedef AssigReal<double> assignment_type;
 };
+
+// -------------------------------------------------------------------------
+// class Cast
+
+template <class ValueType, class RegExT>
+class Cast : public RegExT
+{
+private:
+	typedef AssignmentTypeTraits<ValueType> Tr_;
+	typedef typename Tr_::assignment_type Assig_;
+
+public:
+	enum { vtype = Assig_::required_vtypes };
+};
+
+template <class ValueType, class RegExT> __forceinline
+const Rule<Cast<ValueType, RegExT> >& TPL_CALL cast(const Rule<RegExT>& rule_) {
+	return *(const Rule<Cast<ValueType, RegExT> >*)&rule_;
+}
 
 // -------------------------------------------------------------------------
 // $Log: $

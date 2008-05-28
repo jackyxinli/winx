@@ -252,6 +252,7 @@ public:
 
 public:
 	enum { character = RegExT::character };
+	enum { vtype = RegExT::vtype };
 
 	typedef typename RegExT::convertible_type convertible_type;
 

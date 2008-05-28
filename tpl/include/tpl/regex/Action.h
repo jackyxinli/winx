@@ -50,6 +50,7 @@ public:
 
 public:
 	enum { character = RegExT::character };
+	enum { vtype = RegExT::vtype };
 
 	typedef typename RegExT::convertible_type convertible_type;
 
@@ -111,7 +112,9 @@ public:
 
 public:
 	enum { character = RegExT::character };
-
+	enum { vtype = RegExT::vtype };
+	enum { required_vtypes = ActionT::required_vtypes };
+	
 	typedef typename RegExT::convertible_type convertible_type;
 
 	template <class SourceT, class ContextT>
@@ -125,6 +128,9 @@ public:
 		}
 		return false;
 	}
+
+private:
+	TPL_REQUIRE(required_vtypes == 0 || (vtype & required_vtypes), RequreVTypes_);
 };
 
 // -------------------------------------------------------------------------
@@ -172,6 +178,8 @@ public:
 	}
 
 public:
+	enum { required_vtypes = 0 };
+
 	template <class Iterator>
 	void operator()(Iterator pos, Iterator pos2) const {
 		std::string str_(pos, pos2);

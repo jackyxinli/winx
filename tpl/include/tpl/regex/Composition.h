@@ -36,6 +36,7 @@ class Null
 {
 public:
 	enum { character = 0 };
+	enum { vtype = 0 };
 
 	typedef ExplicitConvertible convertible_type;
 
@@ -66,6 +67,7 @@ class Eos
 {
 public:
 	enum { character = 0 };
+	enum { vtype = 0 };
 
 	typedef AutoConvertible convertible_type;
 
@@ -170,6 +172,7 @@ public:
 
 public:
 	enum { character = 0 };
+	enum { vtype = 0 };
 
 	typedef AutoConvertible convertible_type;
 

@@ -46,6 +46,8 @@ public:
 	AssigStackT(StackT& result) : m_result(result) {
 	}
 
+	enum { required_vtypes = assignment_type::required_vtypes };
+
 	template <class Iterator>
 	void TPL_CALL operator()(Iterator pos, Iterator pos2) const {
 		value_type val = value_type();
@@ -98,6 +100,8 @@ private:
 public:
 	AssigContainerT(ContainerT& result) : m_result(result) {
 	}
+
+	enum { required_vtypes = assignment_type::required_vtypes };
 
 	template <class Iterator>
 	void TPL_CALL operator()(Iterator pos, Iterator pos2) const {
@@ -202,6 +206,8 @@ private:
 public:
 	AssigSetT(ContainerT& result) : m_result(result) {
 	}
+
+	enum { required_vtypes = assignment_type::required_vtypes };
 
 	template <class Iterator>
 	void TPL_CALL operator()(Iterator pos, Iterator pos2) const {

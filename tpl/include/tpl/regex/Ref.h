@@ -56,6 +56,7 @@ public:
 
 public:
 	enum { character = composition_rule::character };
+	enum { vtype = composition_rule::vtype };
 
 	typedef typename composition_rule::convertible_type convertible_type;
 
@@ -91,6 +92,7 @@ public:
 
 public:
 	enum { character = rule_type::character };
+	enum { vtype = rule_type::vtype };
 
 	typedef typename rule_type::convertible_type convertible_type;
 
@@ -119,6 +121,7 @@ public:
 
 public:
 	enum { character = composition_rule::character };
+	enum { vtype = composition_rule::vtype };
 
 	typedef typename composition_rule::convertible_type convertible_type;
 
@@ -148,6 +151,7 @@ public:
 
 public:
 	enum { character = composition_rule::character };
+	enum { vtype = composition_rule::vtype };
 
 	typedef typename composition_rule::convertible_type convertible_type;
 
@@ -186,6 +190,7 @@ public:
 
 public:
 	enum { character = RegExT::character };
+	enum { vtype = RegExT::vtype };
 
 	typedef typename RegExT::convertible_type convertible_type;
 
@@ -314,6 +319,7 @@ public:
 
 public:
 	enum { character = 0 };
+	enum { vtype = 0 };
 
 	typedef ExplicitConvertible convertible_type;
 

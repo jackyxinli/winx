@@ -98,7 +98,7 @@ public:
 // Usage: UGuad<Rule>	--- usually Rule contains some UAnd operators.
 // Note: Rule cannot contain any Mark operators (See <tpl/regex/Mark.h>)
 
-template <class RegExT>
+template <class RegExT, int uVType>
 class UGuard
 {
 private:
@@ -114,6 +114,7 @@ public:
 
 public:
 	enum { character = 0 };
+	enum { vtype = uVType };
 
 	typedef AutoConvertible convertible_type;
 
@@ -129,35 +130,23 @@ public:
 };
 
 // -------------------------------------------------------------------------
-// TPL_REGEX_REDUCE_NAME
-
-#ifndef TPL_REGEX_REDUCE_NAME
-#define TPL_REGEX_REDUCE_NAME(OrgClass, NewClass)							\
-	class NewClass : public OrgClass {};
-#endif
-
-#ifndef TPL_REGEX_TYPEDEF
-#define TPL_REGEX_TYPEDEF(OrgClass, NewClass)								\
-	typedef OrgClass NewClass;
-#endif
-
-// -------------------------------------------------------------------------
 // TPL_REGEX_GUARD, TPL_REGEX_GUARD0
 
 #ifndef TPL_REGEX_GUARD
 #if defined(TPL_NO_REDUCE_NAME)
-#define TPL_REGEX_GUARD(UnGuard, Guard)										\
-	TPL_REGEX_TYPEDEF(UGuard<UnGuard>, Guard)
+#define TPL_REGEX_GUARD(UnGuard, Guard, uVType)								\
+	typedef UGuard<UnGuard, uVType> Guard;
 #else
-#define TPL_REGEX_GUARD(UnGuard, Guard)										\
-	TPL_REGEX_REDUCE_NAME(UGuard<UnGuard>, Guard)
+#define TPL_REGEX_GUARD(UnGuard, Guard, uVType)								\
+	class Guard : public UGuard<UnGuard, uVType> {};
 #endif
 #endif
 
 #ifndef TPL_REGEX_GUARD0
-#define TPL_REGEX_GUARD0(UnGuard, Guard)									\
+#define TPL_REGEX_GUARD0(UnGuard, Guard, uVType)							\
 	class Guard : public UnGuard {											\
 	public:																	\
+		enum { vtype = uVType };											\
 		typedef AutoConvertible convertible_type;							\
 	};
 #endif
@@ -171,8 +160,8 @@ public:
 typedef UAnd<CSymbolFirstChar, Repeat0<CSymbolNextChar> > CSymbol;
 typedef UAnd<XmlSymbolFirstChar, Repeat0<XmlSymbolNextChar> > XmlSymbol;
 
-TPL_REGEX_GUARD0(CSymbol, CSymbolG)
-TPL_REGEX_GUARD0(XmlSymbol, XmlSymbolG)
+TPL_REGEX_GUARD0(CSymbol, CSymbolG, VTYPE_NONE)
+TPL_REGEX_GUARD0(XmlSymbol, XmlSymbolG, VTYPE_NONE)
 
 inline Rule<CSymbolG> TPL_CALL c_symbol()
 {
@@ -195,8 +184,8 @@ typedef Repeat1<Digit> UInteger;
 typedef Ch<'+', '-'> Sign;
 typedef UAnd<Repeat01<Sign>, UInteger> Integer; // [+-]?d+
 
-TPL_REGEX_GUARD0(UInteger, UIntegerG)
-TPL_REGEX_GUARD(Integer, IntegerG)
+TPL_REGEX_GUARD0(UInteger, UIntegerG, VTYPE_U_INTEGER)
+TPL_REGEX_GUARD(Integer, IntegerG, VTYPE_INTEGER)
 
 inline Rule<UIntegerG> TPL_CALL u_integer()
 {
@@ -225,10 +214,10 @@ typedef Or<DecimalPointerStarted_, DigitStartedUFraction_> UFraction; // \.d+ | 
 typedef UAnd<Repeat01<Sign>, UStrictFraction> StrictFraction;
 typedef UAnd<Repeat01<Sign>, UFraction> Fraction;
 
-TPL_REGEX_GUARD(UStrictFraction, UStrictFractionG)
-TPL_REGEX_GUARD(StrictFraction, StrictFractionG)
-TPL_REGEX_GUARD(UFraction, UFractionG)
-TPL_REGEX_GUARD(Fraction, FractionG)
+TPL_REGEX_GUARD(UStrictFraction, UStrictFractionG, VTYPE_U_REAL)
+TPL_REGEX_GUARD(StrictFraction, StrictFractionG, VTYPE_REAL)
+TPL_REGEX_GUARD(UFraction, UFractionG, VTYPE_U_REAL)
+TPL_REGEX_GUARD(Fraction, FractionG, VTYPE_REAL)
 
 inline Rule<UStrictFractionG> TPL_CALL u_strict_fraction()
 {
@@ -272,10 +261,10 @@ typedef UAnd<Repeat01<Sign>, UStrictReal> StrictReal;
 typedef UAnd<UFraction, Repeat01<Exponent> > UReal;
 typedef UAnd<Repeat01<Sign>, UReal> Real;
 
-TPL_REGEX_GUARD(UStrictReal, UStrictRealG)
-TPL_REGEX_GUARD(StrictReal, StrictRealG)
-TPL_REGEX_GUARD(UReal, URealG)
-TPL_REGEX_GUARD(Real, RealG)
+TPL_REGEX_GUARD(UStrictReal, UStrictRealG, VTYPE_U_REAL)
+TPL_REGEX_GUARD(StrictReal, StrictRealG, VTYPE_REAL)
+TPL_REGEX_GUARD(UReal, URealG, VTYPE_U_REAL)
+TPL_REGEX_GUARD(Real, RealG, VTYPE_REAL)
 
 inline Rule<UStrictRealG> TPL_CALL u_strict_real()
 {
