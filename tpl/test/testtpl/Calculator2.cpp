@@ -18,7 +18,7 @@ void calculate2()
 
 	impl::Grammar rMul( alloc, '*' + rFactor/calc<std::multiplies>(stk) );
 	impl::Grammar rDiv( alloc, '/' + rFactor/calc<std::divides>(stk) );
-	impl::Grammar rTerm( alloc, ref(rFactor) + *(rMul | rDiv) );
+	impl::Grammar rTerm( alloc, rFactor + *(rMul | rDiv) );
 
 	impl::Grammar rAdd( alloc, '+' + rTerm/calc<std::plus>(stk) );
 	impl::Grammar rSub( alloc, '-' + rTerm/calc<std::minus>(stk) );
