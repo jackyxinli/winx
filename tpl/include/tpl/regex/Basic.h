@@ -121,7 +121,7 @@ public:
 
 public:
 	const Rule<RegExT>& TPL_CALL rule() const {
-		return (const Rule<RegExT>&)*this;
+		return *(const Rule<RegExT>*)this;
 	}
 
 	template <class SourceT, class ContextT, class SkipperT>
@@ -191,7 +191,7 @@ public:
 
 private:
 	const Grammar<Gr<RegExT> >& TPL_CALL cast_grammar_(AutoConvertable) const {
-		return (const Grammar<Gr<RegExT> >&)*this;
+		return *(const Grammar<Gr<RegExT> >*)this;
 	}
 
 public:
@@ -200,7 +200,7 @@ public:
 	}
 
 	const Grammar<Gr<RegExT> >& TPL_CALL grammar() const {
-		return (const Grammar<Gr<RegExT> >&)*this;
+		return *(const Grammar<Gr<RegExT> >*)this;
 	}
 
 //	concept:
@@ -255,7 +255,7 @@ public:
 
 template <class RegExT>
 __forceinline const Grammar<Gr<RegExT> >& TPL_CALL gr(const Rule<RegExT>& rule_) {
-	return (const Grammar<Gr<RegExT> >&)rule_;
+	return *(const Grammar<Gr<RegExT> >*)(&rule_);
 }
 
 // =========================================================================

@@ -23,8 +23,8 @@ int main()
 // 	demo();
 // 	customize();
 // 	parse_class();
-//	calculate2();
-	calculate();
+	calculate2();
+//	calculate();
 	return 0;
 }
 
