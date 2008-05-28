@@ -47,7 +47,7 @@ void calculate2()
 		try {
 			while ( !stk.empty() )
 				stk.pop();
-			if ( !impl::match(alloc, strExp.c_str(), rExpr + eos(), skipws()) )
+			if ( !impl::match(strExp.c_str(), rExpr + eos(), skipws(), alloc) )
 				std::cout << ">>> ERROR: invalid expression!\n";
 			else
 				std::cout << stk.top() << "\n";

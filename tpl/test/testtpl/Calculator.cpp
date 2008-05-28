@@ -12,19 +12,21 @@ void calculate()
 
 	impl::Allocator alloc;
 
+	Lambda<double> exec;
+
 	TPL_LOCAL(double, term);
 	TPL_LOCAL(double, factor);
 	
-	impl::RegExp rMul( alloc, '*' + real()/exec[factor *= _1] );
-	impl::RegExp rDiv( alloc, '/' + real()/exec[factor /= _1] );
-	impl::RegExp rTerm( alloc, real()/assign(factor) + *(rMul | rDiv) );
+	impl::Rule rMul( alloc, '*' + real()/exec[factor *= _1] );
+	impl::Rule rDiv( alloc, '/' + real()/exec[factor /= _1] );
+	impl::Rule rTerm( alloc, real()/assign(factor) + *(rMul | rDiv) );
 
-	impl::RegExp rAdd( alloc, '+' + rTerm/exec[term += factor] );
-	impl::RegExp rSub( alloc, '-' + rTerm/exec[term -= factor] );
+	impl::Rule rAdd( alloc, '+' + rTerm/exec[term += factor] );
+	impl::Rule rSub( alloc, '-' + rTerm/exec[term -= factor] );
 #if defined(__GNUG__) // work arounds
-	impl::RegExp rExpr( alloc, rTerm/exec[term = 0+factor] + *(rAdd | rSub) );
+	impl::Rule rExpr( alloc, rTerm/exec[term = 0+factor] + *(rAdd | rSub) );
 #else
-	impl::RegExp rExpr( alloc, rTerm/exec[term = factor] + *(rAdd | rSub) );
+	impl::Rule rExpr( alloc, rTerm/exec[term = factor] + *(rAdd | rSub) );
 #endif
 
 	// ---- do match ----
@@ -46,4 +48,3 @@ void calculate()
 }
 
 // -------------------------------------------------------------------------
-

@@ -74,9 +74,43 @@
 NS_TPL_BEGIN
 
 // =========================================================================
-// class Gr: Wrapper a Rule to Grammar
+// class Skipper
 
 template <class RegExT> class Rule;
+
+template <class SkipperT>
+class Skipper : public SkipperT
+{
+public:
+	Skipper(const SkipperT& x) : SkipperT(x) {}
+
+	template <class T1, class T2>
+	Skipper(T1& x, const T2& y) : SkipperT(x, y) {}
+
+public:
+	const Rule<SkipperT>& TPL_CALL rule() const {
+		return (const Rule<SkipperT>&)*this;
+	}
+
+//	concept (as a Rule):
+//
+//	enum { character = SkipperT::character };
+//
+//	typedef typename SkipperT::convertable_type convertable_type;
+//
+//	template <class SourceT, class ContextT>
+//	bool TPL_CALL match(SourceT& ar, ContextT& context) const;
+//
+
+//	concept (as a Skipper):
+//
+//	typedef typename SkipperT::concreation_type concreation_type;
+//
+//	concreation_type TPL_CALL concretion() const;
+};
+
+// =========================================================================
+// class Gr: Wrapper a Rule to Grammar
 
 template <class RegExT>
 class Gr : public RegExT
@@ -91,8 +125,8 @@ public:
 	}
 
 	template <class SourceT, class ContextT, class SkipperT>
-	bool TPL_CALL match(SourceT& ar, ContextT& context, const Rule<SkipperT>& skipper) const {
-		skipper.impl().match(ar, context);
+	bool TPL_CALL match(SourceT& ar, ContextT& context, const Skipper<SkipperT>& skipper_) const {
+		skipper_.match(ar, context);
 		return RegExT::match(ar, context);
 	}
 };
@@ -110,6 +144,7 @@ enum RuleCharacter
 // -------------------------------------------------------------------------
 // ConvertableType
 
+struct SelfConvertable {}; // The Rule can convert itself to a Grammar automatically.
 struct AutoConvertable {}; // Convert a Rule to a Grammar automatically.
 struct ExplicitConvertable {}; // Should convert a Rule to a Grammar manually.
 
@@ -168,19 +203,14 @@ public:
 		return (const Grammar<Gr<RegExT> >&)*this;
 	}
 
-	const RegExT& TPL_CALL impl() const {
-		return *this;
-	}
-
-private:
-	// concept:
-
-	enum { character = RegExT::character };
-
-	typedef typename RegExT::convertable_type convertable_type;
-
-	template <class SourceT, class ContextT>
-	bool TPL_CALL match(SourceT& ar, ContextT& context) const;
+//	concept:
+//
+//	enum { character = RegExT::character };
+//
+//	typedef typename RegExT::convertable_type convertable_type;
+//
+//	template <class SourceT, class ContextT>
+//	bool TPL_CALL match(SourceT& ar, ContextT& context) const;
 };
 
 #define TPL_GRAMMAR_RULE_BINARY_OP_(op, Op)									\
@@ -215,18 +245,12 @@ public:
 	template <class T1, class T2, class T3>
 	Grammar(const T1& x, const T2& y, const T3& z) : GrammarT(x, y, z) {}
 
-public:
-	const GrammarT& TPL_CALL impl() const {
-		return *this;
-	}
-
-private:
-	// concept:
-
-	enum { character = GrammarT::character };
-
-	template <class SourceT, class ContextT, class SkipperT>
-	bool TPL_CALL match(SourceT& ar, ContextT& context, const Rule<SkipperT>& skipper) const;
+//	concept:
+//
+//	enum { character = GrammarT::character };
+//
+//	template <class SourceT, class ContextT, class SkipperT>
+//	bool TPL_CALL match(SourceT& ar, ContextT& context, const Skipper<SkipperT>& skipper_) const;
 };
 
 template <class RegExT>

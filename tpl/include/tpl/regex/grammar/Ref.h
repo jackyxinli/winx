@@ -54,12 +54,12 @@ public:
 	enum { character = composition_grammar::character };
 
 	template <class SourceT, class ContextT, class SkipperT>
-	bool TPL_CALL match(SourceT& ar, ContextT& context, const Rule<SkipperT>& skipper) const
+	bool TPL_CALL match(SourceT& ar, ContextT& context, const Skipper<SkipperT>& skipper_) const
 	{
 		dereference_type der(m_ref());
 		grammar_type x(der);
 		composition_grammar op(x);
-		return op.match(ar, context, skipper);
+		return op.match(ar, context, skipper_);
 	}
 };
 
@@ -88,11 +88,11 @@ public:
 	enum { character = grammar_type::character };
 
 	template <class SourceT, class ContextT, class SkipperT>
-	bool TPL_CALL match(SourceT& ar, ContextT& context, const Rule<SkipperT>& skipper) const
+	bool TPL_CALL match(SourceT& ar, ContextT& context, const Skipper<SkipperT>& skipper_) const
 	{
 		dereference_type der(m_ref());
 		grammar_type y(der);
-		return y.match(ar, context, skipper);
+		return y.match(ar, context, skipper_);
 	}
 };
 
@@ -115,11 +115,11 @@ public:
 	enum { character = composition_grammar::character };
 
 	template <class SourceT, class ContextT, class SkipperT>
-	bool TPL_CALL match(SourceT& ar, ContextT& context, const Rule<SkipperT>& skipper) const
+	bool TPL_CALL match(SourceT& ar, ContextT& context, const Skipper<SkipperT>& skipper_) const
 	{
 		grammar_type y(m_ref);
 		composition_grammar op(m_x, y);
-		return op.match(ar, context, skipper);
+		return op.match(ar, context, skipper_);
 	}
 };
 
@@ -143,12 +143,12 @@ public:
 	enum { character = composition_grammar::character };
 
 	template <class SourceT, class ContextT, class SkipperT>
-	bool TPL_CALL match(SourceT& ar, ContextT& context, const Rule<SkipperT>& skipper) const
+	bool TPL_CALL match(SourceT& ar, ContextT& context, const Skipper<SkipperT>& skipper_) const
 	{
 		dereference_type der(m_ref());
 		grammar_type x(der);
 		composition_grammar op(x, m_y);
-		return op.match(ar, context, skipper);
+		return op.match(ar, context, skipper_);
 	}
 };
 
@@ -180,8 +180,8 @@ public:
 	enum { character = GrammarT::character };
 
 	template <class SourceT, class ContextT, class SkipperT>
-	bool TPL_CALL match(SourceT& ar, ContextT& context, const Rule<SkipperT>& skipper) const {
-		return m_x.match(ar, context, skipper);
+	bool TPL_CALL match(SourceT& ar, ContextT& context, const Skipper<SkipperT>& skipper_) const {
+		return m_x.match(ar, context, skipper_);
 	}
 };
 

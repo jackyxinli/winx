@@ -124,10 +124,8 @@ public:
 	template <int uCharacter>
 	class RuleT : public tpl::Rule<Concretion<uCharacter, Source, Context, false> >
 	{
-	public:
-		typedef Concretion<uCharacter, Source, Context, false> Impl;
-
 	private:
+		typedef Concretion<uCharacter, Source, Context, false> Impl;
 		typedef tpl::Rule<Impl> Base;
 
 	public:
@@ -153,10 +151,8 @@ public:
 	template <int uCharacter>
 	class ManagedRuleT : public tpl::Rule<Concretion<uCharacter, Source, Context, true> >
 	{
-	public:
-		typedef Concretion<uCharacter, Source, Context, true> Impl;
-	
 	private:
+		typedef Concretion<uCharacter, Source, Context, true> Impl;
 		typedef tpl::Rule<Impl> Base;
 
 	public:
@@ -180,19 +176,39 @@ public:
 	// Rule helper functions:
 
 	template <class RegExT>
-	static inline bool TPL_CALL match(Iterator pos, Iterator pos2, const tpl::Rule<RegExT>& rule)
+	static inline bool TPL_CALL match(Iterator pos, Iterator pos2, const tpl::Rule<RegExT>& rule_)
 	{
 		Source source(pos, pos2);
 		Context context;
-		return rule.impl().match(source, context);
+		return rule_.match(source, context);
 	}
 
 	template <class RegExT>
-	static inline bool TPL_CALL match(Iterator pos, const tpl::Rule<RegExT>& rule)
+	static inline bool TPL_CALL match(Iterator pos, const tpl::Rule<RegExT>& rule_)
 	{
 		Source source(pos);
 		Context context;
-		return rule.impl().match(source, context);
+		return rule_.match(source, context);
+	}
+
+private:
+	typedef SkipperTraits<Source, Context> SkipperTr_;
+	typedef typename SkipperTr_::concretion_type ConcretionSkipper_;
+
+public:
+	// Skipper
+
+	template <class SkipperT>
+	static Skipper<SkipperImpl<SkipperT, Source, Context> > TPL_CALL skipper(Allocator& alloc, const tpl::Rule<SkipperT>& skipper_) {
+		return Skipper<SkipperImpl<SkipperT, Source, Context> >(alloc, skipper_);
+	}
+
+	static Skipper<ConcretionSkipper_> TPL_CALL skipper(Allocator& alloc, const tpl::Rule<ConcretionSkipper_>& skipper_) {
+		return (const Skipper<ConcretionSkipper_>&)skipper_;
+	}
+
+	static Skipper<SkipperImpl<SkipWhiteSpaces, Source, Context> > TPL_CALL skipws(Allocator& alloc) {
+		return skipper(alloc, tpl::skipws());
 	}
 
 public:
@@ -213,8 +229,8 @@ public:
 			: Base(alloc, x) {}
 
 		template <class SourceT, class ContextT, class SkipperT> __forceinline
-		bool TPL_CALL match(SourceT& ar, ContextT& context, const tpl::Rule<SkipperT>& skipper) const {
-			return Impl::match(ar, context, skipper);
+		bool TPL_CALL match(SourceT& ar, ContextT& context, const Skipper<SkipperT>& skipper_) const {
+			return Impl::match(ar, context, skipper_);
 		}
 	};
 
@@ -222,38 +238,33 @@ public:
 	typedef GrammarT<CharacterTraits_::characterDefault> Grammar;
 	typedef GrammarT<CharacterTraits_::characterMarked> MarkedGrammar;
 
-private:
-	template <class SkipperT>
-	static tpl::Rule<Skipper<SkipperT, Source, Context> > TPL_CALL _get(Allocator& alloc, const tpl::Rule<SkipperT>& skipper_) {
-		return tpl::Rule<Skipper<SkipperT, Source, Context> >(alloc, skipper_);
-	}
-
-	template <int uCharacter>
-	static const RuleT<uCharacter>& TPL_CALL _get(Allocator& alloc, const RuleT<uCharacter>& skipper_) {
-		return skipper_;
-	}
-
 public:
 	// Grammar helper functions:
 
 	template <class RegExT, class SkipperT>
 	static inline bool TPL_CALL match(
-		Allocator& alloc, Iterator pos, Iterator pos2,
-		const tpl::Grammar<RegExT>& grammar_, const tpl::Rule<SkipperT>& skipper)
+		Iterator pos, Iterator pos2, const tpl::Grammar<RegExT>& grammar_, 
+		const tpl::Rule<SkipperT>& skipper_, Allocator& alloc_)
 	{
+		// equal to:
+		//	 return match(pos, pos2, skipper(alloc_, skipper_) >> grammar_);
+
 		Source source(pos, pos2);
 		Context context;
-		return grammar_.impl().match(source, context, _get(alloc, skipper));
+		return grammar_.match(source, context, skipper(alloc_, skipper_));
 	}
 
 	template <class RegExT, class SkipperT>
 	static inline bool TPL_CALL match(
-		Allocator& alloc, Iterator pos,
-		const tpl::Grammar<RegExT>& grammar_, const tpl::Rule<SkipperT>& skipper)
+		Iterator pos, const tpl::Grammar<RegExT>& grammar_,
+		const tpl::Rule<SkipperT>& skipper_, Allocator& alloc_)
 	{
+		// equal to:
+		//	 return match(pos, skipper(alloc_, skipper_) >> grammar_);
+
 		Source source(pos);
 		Context context;
-		return grammar_.impl().match(source, context, _get(alloc, skipper));
+		return grammar_.match(source, context, skipper(alloc_, skipper_));
 	}
 };
 

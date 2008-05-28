@@ -95,12 +95,8 @@ public:
 	}
 };
 
-namespace {
-	const Lambda<double> exec = Lambda<double>();
-} // unnamed
-
 // -------------------------------------------------------------------------
-// class tpl::Local<double>::Ref
+// class tpl::Local<T>::Ref
 
 template <class T>
 class Local

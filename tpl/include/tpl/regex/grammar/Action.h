@@ -48,9 +48,9 @@ public:
 	enum { character = GrammarT::character };
 
 	template <class SourceT, class ContextT, class SkipperT>
-	bool TPL_CALL match(SourceT& ar, ContextT& context, const Rule<SkipperT>& skipper) const
+	bool TPL_CALL match(SourceT& ar, ContextT& context, const Skipper<SkipperT>& skipper_) const
 	{
-		if (m_x.match(ar, context, skipper)) {
+		if (m_x.match(ar, context, skipper_)) {
 			m_action();
 			return true;
 		}
@@ -88,10 +88,10 @@ public:
 	enum { character = GrammarT::character };
 
 	template <class SourceT, class ContextT, class SkipperT>
-	bool TPL_CALL match(SourceT& ar, ContextT& context, const Rule<SkipperT>& skipper) const
+	bool TPL_CALL match(SourceT& ar, ContextT& context, const Skipper<SkipperT>& skipper_) const
 	{
 		typename SourceT::iterator pos = ar.position();
-		if (m_x.match(ar, context, skipper)) {
+		if (m_x.match(ar, context, skipper_)) {
 			typename SourceT::iterator pos2 = ar.position();
 			m_action(pos, pos2);
 			return true;

@@ -27,10 +27,6 @@
 #include "Ref.h"
 #endif
 
-#ifndef TPL_REGEX_GRAMMAR_REF_H
-#include "grammar/Ref.h"
-#endif
-
 NS_TPL_BEGIN
 
 // =========================================================================
@@ -67,13 +63,14 @@ public:
 	enum { character = uCharacter };
 
 	typedef ExplicitConvertable convertable_type;
+	typedef const Concretion& concreation_type;
 
 	bool TPL_CALL match(SourceT& ar, ContextT& context) const {
 		TPL_ASSERT(m_this);
 		return m_fn(m_this, ar, context);
 	}
 
-	const Concretion& TPL_CALL concretion() const {
+	concreation_type TPL_CALL concretion() const {
 		return *this;
 	}
 
@@ -132,149 +129,6 @@ public:
 
 		template <class AllocT, class RegExT>
 		void TPL_CALL assign(AllocT& alloc, const Rule<RegExT>& x) {
-			m_x.assign(alloc, x);
-		}
-	};
-};
-
-// =========================================================================
-// class Skipper
-
-// class SkipperTraits
-
-template <class SourceT, class ContextT>
-class SkipperTraits
-{
-public:
-	typedef Concretion<CHARACTER_SKIPPER, SourceT, ContextT, false> concretion_type;
-};
-
-// class Skipper
-
-template <class SkipperT, class SourceT, class ContextT>
-class Skipper : public SkipperT
-{
-private:
-	typedef SkipperTraits<SourceT, ContextT> Tr_;
-	typedef typename Tr_::concretion_type ConcretionT;
-
-	ConcretionT m_alter;
-
-public:
-	template <class AllocT>
-	Skipper(AllocT& alloc, const Rule<SkipperT>& x)
-		: SkipperT(x), m_alter(alloc, x) {}
-
-public:
-	// concept:
-
-	const ConcretionT& TPL_CALL concretion() const {
-		return m_alter;
-	}
-};
-
-// -------------------------------------------------------------------------
-// class NullSkipper
-
-inline bool TPL_CALL null_skipper_match_(const void* pThis, int& ar, int& context) {
-	return true;
-}
-
-template <class SourceT, class ContextT>
-class NullSkipper : public Null<true>
-{
-private:
-	typedef SkipperTraits<SourceT, ContextT> Tr_;
-	typedef typename Tr_::concretion_type ConcretionT;
-
-	typedef bool TPL_CALL _FN_match(const void* pThis, SourceT& ar, ContextT& context);
-	typedef _FN_match* FN_match;
-
-public:
-	const ConcretionT TPL_CALL concretion() const {
-		return ConcretionT(NULL, (FN_match)null_skipper_match_);
-	}
-};
-
-// -------------------------------------------------------------------------
-// class GConcretion
-
-template <int uCharacter, class SourceT, class ContextT, bool bManaged = false>
-class GConcretion
-{
-private:
-	typedef SkipperTraits<SourceT, ContextT> Tr_;
-	typedef typename Tr_::concretion_type ConcretionT;
-	typedef bool TPL_CALL _FN_match(const void* pThis, SourceT& ar, ContextT& context, const ConcretionT& skipper);
-	typedef _FN_match* FN_match;
-
-	const void* m_this;
-	FN_match m_fn;
-
-public:
-	GConcretion() : m_this(NULL) {}
-
-	template <class AllocT, class GrammarT>
-	GConcretion(AllocT& alloc, const Grammar<GrammarT>& x) {
-		assign(alloc, x);
-	}
-
-public:
-	enum { character = uCharacter };
-
-	template <class SkipperT>
-	bool TPL_CALL match(SourceT& ar, ContextT& context, const Rule<SkipperT>& skipper) const {
-		TPL_ASSERT(m_this);
-		return m_fn(m_this, ar, context, skipper.concretion());
-	}
-
-private:
-	template <class GrammarT>
-	class Impl
-	{
-	private:
-		GrammarT m_x;
-
-	public:
-		Impl(const Grammar<GrammarT>& x)
-			: m_x(static_cast<const GrammarT&>(x)) {
-		}
-
-		enum { character = GrammarT::character };
-
-		static bool TPL_CALL match(const void* pThis, SourceT& ar, ContextT& context, const ConcretionT& skipper) {
-			const GrammarT& x = ((const Impl*)pThis)->m_x;
-			return x.match(ar, context, (const Rule<ConcretionT>&)(skipper));
-		}
-	};
-
-public:
-	template <class AllocT, class GrammarT>
-	void TPL_CALL assign(AllocT& alloc, const Grammar<GrammarT>& x)
-	{
-		typedef Impl<GrammarT> Imp;
-		TPL_ASSERT((Imp::character & ~character) == 0);
-
-		if (bManaged)
-			m_this = TPL_NEW(alloc, Imp)(x);
-		else
-			m_this = TPL_UNMANAGED_NEW(alloc, Imp)(x);
-
-		m_fn = Imp::match;
-	}
-
-public:
-	class Var : public Grammar<GRef<GConcretion> >
-	{
-	private:
-		GConcretion m_x;
-
-	public:
-		Var() : Grammar<GRef<GConcretion> >(m_x) {
-		}
-
-		template <class AllocT, class GrammarT>
-		void TPL_CALL assign(AllocT& alloc, const Grammar<GrammarT>& x) {
 			m_x.assign(alloc, x);
 		}
 	};

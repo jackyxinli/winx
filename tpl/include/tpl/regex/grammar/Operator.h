@@ -63,10 +63,10 @@ public:
 	enum { character = GrammarT1::character | GrammarT2::character };
 
 	template <class SourceT, class ContextT, class SkipperT>
-	bool TPL_CALL match(SourceT& ar, ContextT& context, const Rule<SkipperT>& skipper) const
+	bool TPL_CALL match(SourceT& ar, ContextT& context, const Skipper<SkipperT>& skipper_) const
 	{
 		typename ContextT::template trans_type<GrammarT1::character> trans(ar, context);
-		if (m_x.match(ar, context, skipper) && m_y.match(ar, context, skipper))
+		if (m_x.match(ar, context, skipper_) && m_y.match(ar, context, skipper_))
 			return true;
 		trans.rollback(ar);
 		return false;
@@ -106,9 +106,9 @@ public:
 	enum { character = GrammarT1::character | GrammarT2::character };
 
 	template <class SourceT, class ContextT, class SkipperT>
-	bool TPL_CALL match(SourceT& ar, ContextT& context, const Rule<SkipperT>& skipper) const
+	bool TPL_CALL match(SourceT& ar, ContextT& context, const Skipper<SkipperT>& skipper_) const
 	{
-		return m_x.match(ar, context, skipper) || m_y.match(ar, context, skipper);
+		return m_x.match(ar, context, skipper_) || m_y.match(ar, context, skipper_);
 	}
 };
 
@@ -140,14 +140,14 @@ public:
 	enum { character = GrammarT1::character | GrammarT2::character };
 
 	template <class SourceT, class ContextT, class SkipperT>
-	bool TPL_CALL match(SourceT& ar, ContextT& context, const Rule<SkipperT>& skipper) const
+	bool TPL_CALL match(SourceT& ar, ContextT& context, const Skipper<SkipperT>& skipper_) const
 	{
 		typename SourceT::iterator pos = ar.position();
 		typename ContextT::template trans_type<character> trans(ar, context);
-		if (m_x.match(ar, context, skipper)) {
+		if (m_x.match(ar, context, skipper_)) {
 			typename SourceT::iterator pos2 = ar.position();
 			typename SourceT::restriction_type restr(ar, pos, pos2);
-			if (m_y.match(ar, context, skipper))
+			if (m_y.match(ar, context, skipper_))
 				return true;
 		}
 		trans.rollback(ar);
@@ -181,9 +181,9 @@ public:
 	enum { character = GrammarT::character };
 
 	template <class SourceT, class ContextT, class SkipperT>
-	bool TPL_CALL match(SourceT& ar, ContextT& context, const Rule<SkipperT>& skipper) const
+	bool TPL_CALL match(SourceT& ar, ContextT& context, const Skipper<SkipperT>& skipper_) const
 	{
-		while (m_x.match(ar, context, skipper))
+		while (m_x.match(ar, context, skipper_))
 			;
 		return true;
 	}
@@ -215,10 +215,10 @@ public:
 	enum { character = GrammarT::character };
 
 	template <class SourceT, class ContextT, class SkipperT>
-	bool TPL_CALL match(SourceT& ar, ContextT& context, const Rule<SkipperT>& skipper) const
+	bool TPL_CALL match(SourceT& ar, ContextT& context, const Skipper<SkipperT>& skipper_) const
 	{
 		unsigned n = 0;
-		while (m_x.match(ar, context, skipper))
+		while (m_x.match(ar, context, skipper_))
 			++n;
 		return n > 0;
 	}
@@ -251,9 +251,9 @@ public:
 	enum { character = GrammarT::character };
 
 	template <class SourceT, class ContextT, class SkipperT>
-	bool TPL_CALL match(SourceT& ar, ContextT& context, const Rule<SkipperT>& skipper) const
+	bool TPL_CALL match(SourceT& ar, ContextT& context, const Skipper<SkipperT>& skipper_) const
 	{
-		m_x.match(ar, context, skipper);
+		m_x.match(ar, context, skipper_);
 		return true;
 	}
 };
@@ -288,13 +288,13 @@ public:
 	enum { character = GrammarT::character };
 
 	template <class SourceT, class ContextT, class SkipperT>
-	bool TPL_CALL match(SourceT& ar, ContextT& context, const Rule<SkipperT>& skipper) const
+	bool TPL_CALL match(SourceT& ar, ContextT& context, const Skipper<SkipperT>& skipper_) const
 	{
 		unsigned n;
 		typename ContextT::template trans_type<character> trans(ar, context);
 		for (n = 0; n < nMax; ++n)
 		{
-			if (!m_x.match(ar, context, skipper))
+			if (!m_x.match(ar, context, skipper_))
 				break;
 		}
 		if (n >= nMin)

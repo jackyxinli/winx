@@ -91,6 +91,10 @@
 #include "regex/grammar/Action.h"
 #endif
 
+#ifndef TPL_REGEX_GRAMMAR_CONCRETION_H
+#include "regex/grammar/Concretion.h"
+#endif
+
 #ifndef TPL_REGEX_CUSTOMIZATION_H
 #include "regex/Customization.h"
 #endif
