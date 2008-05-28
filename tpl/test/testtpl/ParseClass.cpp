@@ -5,7 +5,7 @@
 
 // What we use:
 //	* Rules: Rule, +, /, %, c_symbol(), ws(), skipws()
-//	* Restrictions: eq()
+//	* Restrictions: eq_s()
 //	* Tags: Leaf*, LeafMark
 //	* Matching: Rule::match()
 //	* Result Processing: Document::select(), []
@@ -26,9 +26,9 @@ void parse_class()
 	impl::LeafMark tagAccess;
 	impl::LeafMark tagBaseClass;
 
-	impl::Rule rDecl( alloc, c_symbol()/eq("class", "struct") + ws() + c_symbol()/assign(className) );
+	impl::Rule rDecl( alloc, c_symbol()/eq_s("class", "struct") + ws() + c_symbol()/assign(className) );
 	impl::Rule rBody( alloc, '{' + skipws() + '}' + skipws() + ';' );
-	impl::MarkedRule rBase( alloc, c_symbol()/eq("public", "private", "protected")/tagAccess + ws() + c_symbol()/tagBaseClass );
+	impl::MarkedRule rBase( alloc, c_symbol()/eq_s("public", "private", "protected")/tagAccess + ws() + c_symbol()/tagBaseClass );
 	impl::MarkedRule rBases( alloc, rBase % (skipws() + ',' + skipws()) );
 	impl::MarkedRule rDoc( alloc, rDecl + skipws() + ':' + skipws() + rBases + skipws() + rBody );
 

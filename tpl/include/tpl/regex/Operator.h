@@ -163,6 +163,41 @@ TPL_CALL eq(const CharT* s1, const CharT* s2, const CharT* s3, const CharT* s4) 
 	return eq(s1) | eq(s2) | eq(s3) | eq(s4);
 }
 
+// -------------------------------------------------------------------------
+// function eq_s = eq + eos
+
+// Usage: Rule/eq_s("abc")
+// Usage: Rule/eq_s("abc", "defg")
+// Usage: Rule/eq_s("s1", "s2", "s3")
+
+template <class CharT>
+__forceinline
+Rule<And<Eq<CharT>, Eos> >
+TPL_CALL eq_s(const CharT* s) {
+	return eq(s) + eos();
+}
+
+template <class CharT>
+__forceinline
+Rule<And<Or<Eq<CharT>, Eq<CharT> >, Eos> >
+TPL_CALL eq_s(const CharT* s1, const CharT* s2) {
+	return (eq(s1) | eq(s2)) + eos();
+}
+
+template <class CharT>
+__forceinline
+Rule<And<Or<Or<Eq<CharT>, Eq<CharT> >, Eq<CharT> >, Eos> >
+TPL_CALL eq_s(const CharT* s1, const CharT* s2, const CharT* s3) {
+	return (eq(s1) | eq(s2) | eq(s3)) + eos();
+}
+
+template <class CharT>
+__forceinline
+Rule<And<Or<Or<Or<Eq<CharT>, Eq<CharT> >, Eq<CharT> >, Eq<CharT> >, Eos> >
+TPL_CALL eq_s(const CharT* s1, const CharT* s2, const CharT* s3, const CharT* s4) {
+	return (eq(s1) | eq(s2) | eq(s3) | eq(s4)) + eos();
+}
+
 // =========================================================================
 // operator/
 
