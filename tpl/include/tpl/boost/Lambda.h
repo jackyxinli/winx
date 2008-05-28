@@ -57,6 +57,8 @@ public:
 		: m_opera(opera) {
 	}
 
+	enum { required_vtypes = assignment_type::required_vtypes };
+
 	template <class Iterator>
 	void TPL_CALL operator()(Iterator pos, Iterator pos2) const {
 		value_type val = value_type();
