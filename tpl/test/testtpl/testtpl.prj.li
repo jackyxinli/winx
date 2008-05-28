@@ -20,7 +20,8 @@ Libraries
 
 [Source]
 Simplest.cpp
-TestTpl.cpp
+ParseClass.cpp
 Calculator.cpp
 Calculator2.cpp
+TestTpl.cpp
 
