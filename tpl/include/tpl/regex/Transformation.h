@@ -265,12 +265,12 @@ public:
 };
 
 template <class T1, class T2> __forceinline
-Rule<Transf<T1, T2> > TPL_CALL operator->*(Transformation<T2>& y, const Rule<T1>& x) {
+Rule<Transf<T1, T2> > TPL_CALL operator->*(const Transformation<T2>& y, const Rule<T1>& x) {
 	return Rule<Transf<T1, T2> >(x, y);
 }
 
 template <class T1, class T2> __forceinline
-Rule<Transf<T1, T2> > TPL_CALL operator>>(Transformation<T2>& y, const Rule<T1>& x) {
+Rule<Transf<T1, T2> > TPL_CALL operator>>(const Transformation<T2>& y, const Rule<T1>& x) {
 	return Rule<Transf<T1, T2> >(x, y);
 }
 

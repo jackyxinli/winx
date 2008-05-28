@@ -45,7 +45,7 @@ typedef size_t DefaultTag;
 // class Mark
 
 #ifndef TPL_REGEX_NODE_MARK	
-#define TPL_REGEX_NODE_MARK	(1 << (sizeof(void*)*8 - 1))
+#define TPL_REGEX_NODE_MARK	((size_t)(1) << (sizeof(size_t)*8 - 1))
 #endif
 
 template <class TagT>
@@ -98,7 +98,7 @@ struct TagTraits_ {
 template <template <class RegExT, class MarkT> class Assign>
 struct TagTraits_<size_t, Assign> {
 	__forceinline static size_t TPL_CALL calcTag(size_t tag_) {
-		return (tag_ | Assign<FakeRegEx_, int>::tag);
+		return (tag_ | Assign<FakeRegEx_, int>::tag());
 	}
 };
 
@@ -143,7 +143,6 @@ public:
 		: m_mark(val), m_x(x) {}
 
 public:
-	enum { tag = 0 };
 	enum { character = RegExT::character | CHARACTER_MARKED };
 	enum { vtype = RegExT::vtype };
 
@@ -157,6 +156,10 @@ public:
 		if (matched)
 			context.insertLeaf(m_mark, pos, ar.position());
 		return matched;
+	}
+
+	__forceinline static size_t TPL_CALL tag() {
+		return 0;
 	}
 };
 
@@ -175,7 +178,6 @@ public:
 		: m_mark(val), m_x(x) {}
 
 public:
-	enum { tag = TPL_REGEX_NODE_MARK };
 	enum { character = RegExT::character | CHARACTER_MARKED };
 	enum { vtype = RegExT::vtype };
 
@@ -190,6 +192,10 @@ public:
 			return true;
 		trans.rollback();
 		return false;
+	}
+
+	__forceinline static size_t TPL_CALL tag() {
+		return TPL_REGEX_NODE_MARK;
 	}
 };
 

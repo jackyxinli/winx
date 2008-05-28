@@ -64,7 +64,7 @@ public:
 };
 
 template <class GrammarT, class SkipperT> __forceinline
-Rule<GrBind<GrammarT, SkipperT> > TPL_CALL operator>>(Skipper<SkipperT>& y, const Grammar<GrammarT>& x) {
+Rule<GrBind<GrammarT, SkipperT> > TPL_CALL operator>>(const Skipper<SkipperT>& y, const Grammar<GrammarT>& x) {
 	return Rule<GrBind<GrammarT, SkipperT> >(x, y);
 }
 
