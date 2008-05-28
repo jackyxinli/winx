@@ -16,8 +16,8 @@
 // 
 // $Id: string.h,v 1.1 2006/10/18 12:13:39 xushiwei Exp $
 // -----------------------------------------------------------------------*/
-#ifndef __STD_STRING_H__
-#define __STD_STRING_H__
+#ifndef STD_STRING_H
+#define STD_STRING_H
 
 #ifndef __STLPATCH_H__
 #include "../stlpatch.h"
@@ -38,4 +38,4 @@
 // -------------------------------------------------------------------------
 // $Log: string.h,v $
 
-#endif /* __STD_STRING_H__ */
+#endif /* STD_STRING_H */

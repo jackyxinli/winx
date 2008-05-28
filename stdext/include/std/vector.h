@@ -16,8 +16,8 @@
 // 
 // $Id: vector.h,v 1.1 2006/10/18 12:13:39 xushiwei Exp $
 // -----------------------------------------------------------------------*/
-#ifndef __STD_VECTOR_H__
-#define __STD_VECTOR_H__
+#ifndef STD_VECTOR_H
+#define STD_VECTOR_H
 
 #ifndef __STDEXT_PLATFORM_H__
 #include "../stdext/Platform.h"
@@ -38,4 +38,4 @@
 // -------------------------------------------------------------------------
 // $Log: vector.h,v $
 
-#endif /* __STD_VECTOR_H__ */
+#endif /* STD_VECTOR_H */
