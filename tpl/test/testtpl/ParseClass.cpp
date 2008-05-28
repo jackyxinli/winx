@@ -26,11 +26,11 @@ void parse_class()
 	impl::LeafMark tagAccess;
 	impl::LeafMark tagBaseClass;
 
-	impl::Rule rDecl( alloc, c_symbol()/eq("class", "struct") + ws() + c_symbol()/&className );
-	impl::Rule rBase( alloc, c_symbol()/eq("public", "private", "protected")/tagAccess + ws() + c_symbol()/tagBaseClass );
-	impl::Rule rBases( alloc, rBase % (skipws() + ',' + skipws()) );
+	impl::Rule rDecl( alloc, c_symbol()/eq("class", "struct") + ws() + c_symbol()/assign(className) );
 	impl::Rule rBody( alloc, '{' + skipws() + '}' + skipws() + ';' );
-	impl::Rule rDoc( alloc, rDecl + skipws() + ':' + skipws() + rBases + skipws() + rBody );
+	impl::MarkedRule rBase( alloc, c_symbol()/eq("public", "private", "protected")/tagAccess + ws() + c_symbol()/tagBaseClass );
+	impl::MarkedRule rBases( alloc, rBase % (skipws() + ',' + skipws()) );
+	impl::MarkedRule rDoc( alloc, rDecl + skipws() + ':' + skipws() + rBases + skipws() + rBody );
 
 	// ---- do match ----
 

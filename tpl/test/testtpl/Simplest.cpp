@@ -8,14 +8,14 @@ using namespace tpl;
 // A simplest example.
 
 // What we use:
-//	* Rules: /assign(), %, integer(), ch(' ')
+//	* Rules: /assign(), %, real(), ws()
 //	* Matching: tpl::simple::match()
 
 void simplest()
 {
 	std::vector<double> values; // you can change vector to other stl containers.
 	
-	if ( simple::match("-.1 -0.1 +32. -22323.2e+12", real()/&values % ' ') )
+	if ( simple::match("-.1 -0.1 +32. -22323.2e+12", real()/assign(values) % ws()) )
 	{
 		for (std::vector<double>::iterator it = values.begin(); it != values.end(); ++it)
 		{

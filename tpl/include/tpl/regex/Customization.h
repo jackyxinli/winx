@@ -66,13 +66,11 @@ struct CustomizationContextTraits_<false, Iterator, Allocator, Tag> {
 
 template <bool bHas>
 struct CustomizationCharacterTraits_ {
-	enum { characterDefault	= CHARACTER_DEFAULT };
 	enum { characterMarked	= CHARACTER_MARKED };
 };
 
 template <>
 struct CustomizationCharacterTraits_<false> {
-	enum { characterDefault	= 0 };
 	enum { characterMarked	= 0 };
 };
 
@@ -141,8 +139,7 @@ public:
 		}
 	};
 
-	typedef RuleT<0> Rule0;
-	typedef RuleT<CharacterTraits_::characterDefault> Rule;
+	typedef RuleT<0> Rule;
 	typedef RuleT<CharacterTraits_::characterMarked> MarkedRule;
 
 public:
@@ -168,8 +165,7 @@ public:
 		}
 	};
 
-	typedef ManagedRuleT<0> ManagedRule0;
-	typedef ManagedRuleT<CharacterTraits_::characterDefault> ManagedRule;
+	typedef ManagedRuleT<0> ManagedRule;
 	typedef ManagedRuleT<CharacterTraits_::characterMarked> ManagedMarkedRule;
 
 public:
@@ -234,8 +230,7 @@ public:
 		}
 	};
 
-	typedef GrammarT<0> Grammar0;
-	typedef GrammarT<CharacterTraits_::characterDefault> Grammar;
+	typedef GrammarT<0> Grammar;
 	typedef GrammarT<CharacterTraits_::characterMarked> MarkedGrammar;
 
 public:

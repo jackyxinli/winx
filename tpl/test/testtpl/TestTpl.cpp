@@ -18,13 +18,13 @@ int main()
 //	simple_grammar();
 //	simplest();
 // 	circuit();
+//	customize();
+ 	parse_class();
 // 	html_process();
 // 	xml_process();
 // 	demo();
-// 	customize();
-// 	parse_class();
-	calculate2();
 //	calculate();
+//	calculate2();
 	return 0;
 }
 

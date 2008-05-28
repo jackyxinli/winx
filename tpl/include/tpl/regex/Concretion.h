@@ -32,6 +32,14 @@ NS_TPL_BEGIN
 // =========================================================================
 // class Concretion
 
+template <class Imp, int bFail>
+struct ConcretionImpTr_ {};
+
+template <class Imp>
+struct ConcretionImpTr_<Imp, 0> {
+	typedef Imp impl_type;
+};
+
 template <int uCharacter, class SourceT, class ContextT, bool bManaged = false>
 class Concretion
 {
@@ -100,8 +108,8 @@ public:
 	template <class AllocT, class RegExT>
 	void TPL_CALL assign(AllocT& alloc, const Rule<RegExT>& x)
 	{
-		typedef Impl<RegExT> Imp;
-		TPL_ASSERT((Imp::character & ~character) == 0);
+		typedef Impl<RegExT> Imp_;
+		typedef typename ConcretionImpTr_<Imp_, Imp_::character & ~character>::impl_type Imp;
 
 		if (bManaged)
 			m_this = TPL_NEW(alloc, Imp)(x);

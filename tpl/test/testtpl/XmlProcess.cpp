@@ -26,10 +26,10 @@ void xml_process()
 	impl::LeafMark tagText;
 	impl::NodeMark tagProps;
 
-	impl::Rule rProp( alloc, xml_symbol()/tagProp + skipws() + '=' + skipws() + integer()/tagValue );
-	impl::Rule rProps( alloc, rProp % ws() / tagProps );
-	impl::Rule rTagStart( alloc, '<' + xml_symbol()/"tag" + ws() + rProps + '>' );
-	impl::Rule rDoc( alloc, rTagStart + c_symbol()/tagText + "</tag>" );
+	impl::MarkedRule rProp( alloc, xml_symbol()/tagProp + skipws() + '=' + skipws() + integer()/tagValue );
+	impl::MarkedRule rProps( alloc, rProp % ws() / tagProps );
+	impl::MarkedRule rTagStart( alloc, '<' + xml_symbol()/"tag" + ws() + rProps + '>' );
+	impl::MarkedRule rDoc( alloc, rTagStart + c_symbol()/tagText + "</tag>" );
 
 	// ---- do match ----
 
