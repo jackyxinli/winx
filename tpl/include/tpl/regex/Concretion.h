@@ -70,7 +70,7 @@ public:
 public:
 	enum { character = uCharacter };
 
-	typedef ExplicitConvertable convertable_type;
+	typedef ExplicitConvertible convertible_type;
 	typedef const Concretion& concreation_type;
 
 	bool TPL_CALL match(SourceT& ar, ContextT& context) const {
@@ -96,7 +96,7 @@ private:
 
 		enum { character = RegExT::character };
 
-		typedef typename RegExT::convertable_type convertable_type;
+		typedef typename RegExT::convertible_type convertible_type;
 
 		static bool TPL_CALL match(const void* pThis, SourceT& ar, ContextT& context) {
 			const RegExT& x = ((const Impl*)pThis)->m_x;

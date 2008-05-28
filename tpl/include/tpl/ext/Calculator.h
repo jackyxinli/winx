@@ -174,8 +174,8 @@ class CalcTraits_
 private:
 	typedef typename StackT::value_type Ty;
 	typedef Op_<Ty> Op;
-	enum { is_unary = boost::detail::is_convertible_impl<Op, std::unary_function<Ty, Ty> >::value };
-	enum { is_binary = boost::detail::is_convertible_impl<Op, std::binary_function<Ty, Ty, Ty> >::value };
+	enum { is_unary = boost::is_convertible<Op, std::unary_function<Ty, Ty> >::value };
+	enum { is_binary = boost::is_convertible<Op, std::binary_function<Ty, Ty, Ty> >::value };
 	enum { n_arity = ArityTratis_<is_unary, is_binary>::value };
 
 public:

@@ -73,7 +73,7 @@ public:
 public:
 	enum { character = RegExT1::character | RegExT2::character };
 
-	typedef ExplicitConvertable convertable_type;
+	typedef ExplicitConvertible convertible_type;
 
 	template <class SourceT, class ContextT>
 	bool TPL_CALL match(SourceT& ar, ContextT& context) const
@@ -118,7 +118,7 @@ public:
 public:
 	enum { character = RegExT1::character | RegExT2::character };
 
-	typedef ExplicitConvertable convertable_type;
+	typedef ExplicitConvertible convertible_type;
 
 	template <class SourceT, class ContextT>
 	bool TPL_CALL match(SourceT& ar, ContextT& context) const
@@ -173,8 +173,8 @@ private:
 	RegExT1 m_x;
 	RegExT2 m_y;
 
-	typedef typename RegExT1::convertable_type CT1;
-	typedef typename RegExT2::convertable_type CT2;
+	typedef typename RegExT1::convertible_type CT1;
+	typedef typename RegExT2::convertible_type CT2;
 
 public:
 	Restr() {}
@@ -184,7 +184,7 @@ public:
 public:
 	enum { character = RegExT1::character | RegExT2::character };
 
-	typedef typename OrConvertable<CT1, CT2>::convertable_type convertable_type;
+	typedef typename OrConvertable<CT1, CT2>::convertible_type convertible_type;
 
 	template <class SourceT, class ContextT>
 	bool TPL_CALL match(SourceT& ar, ContextT& context) const
@@ -227,7 +227,7 @@ public:
 public:
 	enum { character = RegExT::character };
 
-	typedef ExplicitConvertable convertable_type;
+	typedef ExplicitConvertible convertible_type;
 
 	template <class SourceT, class ContextT>
 	bool TPL_CALL match(SourceT& ar, ContextT& context) const
@@ -263,7 +263,7 @@ public:
 public:
 	enum { character = RegExT::character };
 
-	typedef ExplicitConvertable convertable_type;
+	typedef ExplicitConvertible convertible_type;
 
 	template <class SourceT, class ContextT>
 	bool TPL_CALL match(SourceT& ar, ContextT& context) const
@@ -301,7 +301,7 @@ public:
 public:
 	enum { character = RegExT::character };
 
-	typedef ExplicitConvertable convertable_type;
+	typedef ExplicitConvertible convertible_type;
 
 	template <class SourceT, class ContextT>
 	bool TPL_CALL match(SourceT& ar, ContextT& context) const
@@ -340,7 +340,7 @@ public:
 public:
 	enum { character = RegExT::character };
 
-	typedef ExplicitConvertable convertable_type;
+	typedef ExplicitConvertible convertible_type;
 
 	template <class SourceT, class ContextT>
 	bool TPL_CALL match(SourceT& ar, ContextT& context) const

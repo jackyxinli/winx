@@ -96,7 +96,7 @@ public:
 //
 //	enum { character = SkipperT::character };
 //
-//	typedef typename SkipperT::convertable_type convertable_type;
+//	typedef typename SkipperT::convertible_type convertible_type;
 //
 //	template <class SourceT, class ContextT>
 //	bool TPL_CALL match(SourceT& ar, ContextT& context) const;
@@ -143,23 +143,23 @@ enum RuleCharacter
 // -------------------------------------------------------------------------
 // ConvertableType
 
-struct SelfConvertable {}; // The Rule can convert itself to a Grammar automatically.
-struct AutoConvertable {}; // Convert a Rule to a Grammar automatically.
-struct ExplicitConvertable {}; // Should convert a Rule to a Grammar manually.
+struct SelfConvertible {}; // The Rule can convert itself to a Grammar automatically.
+struct AutoConvertible {}; // Convert a Rule to a Grammar automatically.
+struct ExplicitConvertible {}; // Should convert a Rule to a Grammar manually.
 
 template <class CT1, class CT2>
 struct OrConvertable {
-	typedef ExplicitConvertable convertable_type;
+	typedef ExplicitConvertible convertible_type;
 };
 
 template <class CT>
-struct OrConvertable<AutoConvertable, CT> {
-	typedef AutoConvertable convertable_type;
+struct OrConvertable<AutoConvertible, CT> {
+	typedef AutoConvertible convertible_type;
 };
 
 template <>
-struct OrConvertable<ExplicitConvertable, AutoConvertable> {
-	typedef AutoConvertable convertable_type;
+struct OrConvertable<ExplicitConvertible, AutoConvertible> {
+	typedef AutoConvertible convertible_type;
 };
 
 // -------------------------------------------------------------------------
@@ -189,13 +189,13 @@ public:
 	Rule(const T1& x, const T2& y, const T3& z) : RegExT(x, y, z) {}
 
 private:
-	const Grammar<Gr<RegExT> >& TPL_CALL cast_grammar_(AutoConvertable) const {
+	const Grammar<Gr<RegExT> >& TPL_CALL cast_grammar_(AutoConvertible) const {
 		return *(const Grammar<Gr<RegExT> >*)this;
 	}
 
 public:
 	const Grammar<Gr<RegExT> >& TPL_CALL cast_grammar() const {
-		return cast_grammar_(typename RegExT::convertable_type());
+		return cast_grammar_(typename RegExT::convertible_type());
 	}
 
 	const Grammar<Gr<RegExT> >& TPL_CALL grammar() const {
@@ -206,7 +206,7 @@ public:
 //
 //	enum { character = RegExT::character };
 //
-//	typedef typename RegExT::convertable_type convertable_type;
+//	typedef typename RegExT::convertible_type convertible_type;
 //
 //	template <class SourceT, class ContextT>
 //	bool TPL_CALL match(SourceT& ar, ContextT& context) const;

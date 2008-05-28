@@ -46,7 +46,7 @@ public:
 public:
 	enum { character = GrammarT::character | SkipperT::character };
 
-	typedef SelfConvertable convertable_type;
+	typedef SelfConvertible convertible_type;
 	typedef const Grammar<GrammarT>& grammar_type;
 
 	template <class SourceT, class ContextT>

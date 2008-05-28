@@ -115,7 +115,7 @@ public:
 public:
 	enum { character = 0 };
 
-	typedef AutoConvertable convertable_type;
+	typedef AutoConvertible convertible_type;
 
 	template <class SourceT, class ContextT>
 	bool TPL_CALL match(SourceT& ar, ContextT& context) const
@@ -158,7 +158,7 @@ public:
 #define TPL_REGEX_GUARD0(UnGuard, Guard)									\
 	class Guard : public UnGuard {											\
 	public:																	\
-		typedef AutoConvertable convertable_type;							\
+		typedef AutoConvertible convertible_type;							\
 	};
 #endif
 

@@ -253,7 +253,7 @@ public:
 public:
 	enum { character = RegExT::character };
 
-	typedef typename RegExT::convertable_type convertable_type;
+	typedef typename RegExT::convertible_type convertible_type;
 
 	template <class SourceT, class ContextT>
 	bool TPL_CALL match(SourceT& ar, ContextT& context) const
