@@ -19,12 +19,12 @@ int main()
 //	simplest();
 // 	circuit();
 //	customize();
- 	parse_class();
+// 	parse_class();
 // 	html_process();
 // 	xml_process();
 // 	demo();
 //	calculate();
-//	calculate2();
+	calculate2();
 	return 0;
 }
 
