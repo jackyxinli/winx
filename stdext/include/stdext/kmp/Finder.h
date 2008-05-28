@@ -19,16 +19,16 @@
 #ifndef __STDEXT_KMP_FINDER_H__
 #define __STDEXT_KMP_FINDER_H__
 
-#ifndef __STDEXT_BASIC_H__
-#include "../Basic.h"
-#endif
-
 #ifndef _INC_CTYPE
 #include <ctype.h>
 #endif
 
-#ifndef __STD_STRING_H__
-#include "../std/string.h"
+#ifndef STDEXT_BASIC_H
+#include "../Basic.h"
+#endif
+
+#ifndef STD_STRING_H
+#include "../../std/string.h"
 #endif
 
 #define __STD_KMP			std::kmp::
