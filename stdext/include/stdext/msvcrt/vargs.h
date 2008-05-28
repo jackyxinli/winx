@@ -16,8 +16,8 @@
 // 
 // $Id: $
 // -----------------------------------------------------------------------*/
-#ifndef __STDEXT_MSVCRT_VARGS_H__
-#define __STDEXT_MSVCRT_VARGS_H__
+#ifndef STDEXT_MSVCRT_VARGS_H
+#define STDEXT_MSVCRT_VARGS_H
 
 #ifndef _INC_LIMITS
 #include <limits.h>
@@ -200,13 +200,15 @@
 		args[6] = &a7;														\
 		args[7] = &a8;														\
 		return call(exarg, args, 8);										\
-	}																		\	template <class TempParaT>												\
+	}																		\
+	template <class TempParaT>												\
 	RetType __cdecl func(ExParaT exarg, ParaT& a1, ParaT& a2, ParaT& a3, ParaT& a4, ParaT& a5, ParaT& a6, ParaT& a7, ParaT& a8, ParaT& a9) \
 	{																		\
 		ParaT** args = _alloca_array(ParaT*, 9);							\
 		args[0] = &a1;														\
 		args[1] = &a2;														\
-		args[2] = &a3;														\		args[3] = &a4;														\
+		args[2] = &a3;														\
+		args[3] = &a4;														\
 		args[4] = &a5;														\
 		args[5] = &a6;														\
 		args[6] = &a7;														\
@@ -228,4 +230,4 @@
 // =========================================================================
 // $Log: $
 
-#endif /* __STDEXT_MSVCRT_VARGS_H__ */
+#endif /* STDEXT_MSVCRT_VARGS_H */

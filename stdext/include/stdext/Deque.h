@@ -16,10 +16,10 @@
 // 
 // $Id: Deque.h,v 1.1 2006/10/18 12:13:39 xushiwei Exp $
 // -----------------------------------------------------------------------*/
-#ifndef __STDEXT_DEQUE_H__
-#define __STDEXT_DEQUE_H__
+#ifndef STDEXT_DEQUE_H
+#define STDEXT_DEQUE_H
 
-#ifndef __STDEXT_MEMORY_H__
+#ifndef STDEXT_MEMORY_H
 #include "Memory.h"
 #endif
 
@@ -179,4 +179,4 @@ public:
 
 __NS_STD_END
 
-#endif /* __STDEXT_DEQUE_H__ */
+#endif /* STDEXT_DEQUE_H */
