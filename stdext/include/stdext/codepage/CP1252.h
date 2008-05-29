@@ -23,7 +23,7 @@
 #include "../Basic.h"
 #endif
 
-__NS_STD_BEGIN
+NS_STD_BEGIN
 
 // -------------------------------------------------------------------------
 
@@ -155,6 +155,6 @@ public:
 // ToW中的for循环改为从后向前，解决src、dest重叠问题。
 //
 
-__NS_STD_END
+NS_STD_END
 
 #endif /* STDEXT_CODEPAGE_CP1252_H */

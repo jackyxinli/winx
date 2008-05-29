@@ -25,7 +25,7 @@
 #include "SystemAlloc.h"
 #endif
 
-__NS_STD_BEGIN
+NS_STD_BEGIN
 
 // -------------------------------------------------------------------------
 // class RegionAllocT
@@ -261,6 +261,6 @@ public:
 // -------------------------------------------------------------------------
 // $Log: AutoFreeAlloc.h,v $
 
-__NS_STD_END
+NS_STD_END
 
 #endif /* STDEXT_MEMORY_AUTOFREEALLOC_H */

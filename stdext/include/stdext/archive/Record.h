@@ -19,7 +19,7 @@
 #ifndef STDEXT_ARCHIVE_RECORD_H
 #define STDEXT_ARCHIVE_RECORD_H
 
-__NS_STD_BEGIN
+NS_STD_BEGIN
 
 #pragma pack(1)
 
@@ -190,6 +190,6 @@ public:
 
 #pragma pack()
 
-__NS_STD_END
+NS_STD_END
 
 #endif /* STDEXT_ARCHIVE_RECORD_H */

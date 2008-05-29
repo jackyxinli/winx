@@ -38,7 +38,7 @@
 // -------------------------------------------------------------------------
 // class TempString
 
-__NS_STD_BEGIN
+NS_STD_BEGIN
 
 inline void winx_call __Xran()
 	{ throw std::out_of_range("invalid string position"); }
@@ -177,7 +177,7 @@ public:
 		{return basic_string<_E>(m_pszBuf, m_length);	}
 };
 
-__NS_STD_END
+NS_STD_END
 
 STD_NO_DESTRUCTOR(std::TempString<char>);
 STD_NO_DESTRUCTOR(std::TempString<WCHAR>);

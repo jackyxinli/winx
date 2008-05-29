@@ -31,7 +31,7 @@
 #include "MemArchive.h"
 #endif
 
-__NS_STD_BEGIN
+NS_STD_BEGIN
 
 // -------------------------------------------------------------------------
 // class MemReader
@@ -211,6 +211,6 @@ class TestMemArchive : public TestCase
 // -------------------------------------------------------------------------
 // $Log: Mem.h,v $
 
-__NS_STD_END
+NS_STD_END
 
 #endif /* STDEXT_ARCHIVE_MEM_H */

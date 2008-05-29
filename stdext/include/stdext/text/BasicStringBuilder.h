@@ -31,7 +31,7 @@
 #include "../../std/vector.h"
 #endif
 
-__NS_STD_BEGIN
+NS_STD_BEGIN
 
 // -------------------------------------------------------------------------
 
@@ -484,6 +484,6 @@ public:
 // -------------------------------------------------------------------------
 // $Log: BasicStringBuilder.h,v $
 
-__NS_STD_END
+NS_STD_END
 
 #endif /* STDEXT_TEXT_BASICSTRINGBUILDER_H */

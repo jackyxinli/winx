@@ -23,7 +23,7 @@
 #include "Memory.h"
 #endif
 
-__NS_STD_BEGIN
+NS_STD_BEGIN
 
 // -------------------------------------------------------------------------
 // class AutoBufferT
@@ -251,6 +251,6 @@ public:
 // STL-Extension: FileBuf(WinFileBuf, FILEFileBuf)
 //
 
-__NS_STD_END
+NS_STD_END
 
 #endif /* STDEXT_FILEBUF_H */

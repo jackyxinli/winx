@@ -27,7 +27,7 @@
 #include "../tchar.h"
 #endif
 
-__NS_STD_BEGIN
+NS_STD_BEGIN
 
 // -------------------------------------------------------------------------
 // class WinRegHelper
@@ -245,6 +245,6 @@ public:
 // -------------------------------------------------------------------------
 // $Log: WinReg.h,v $
 
-__NS_STD_END
+NS_STD_END
 
 #endif /* STDEXT_ARCHIVE_WINREG_H */

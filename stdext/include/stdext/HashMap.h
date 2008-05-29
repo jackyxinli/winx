@@ -37,7 +37,7 @@
 #include "Memory.h"
 #endif
 
-__NS_STD_BEGIN
+NS_STD_BEGIN
 
 // -------------------------------------------------------------------------
 // class HashMap
@@ -271,7 +271,7 @@ public:
 // -------------------------------------------------------------------------
 // $Log: HashMap.h,v $
 
-__NS_STD_END
+NS_STD_END
 
 #endif // _WINX_NO_HASH_MAP
 

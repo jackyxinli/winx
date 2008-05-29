@@ -28,7 +28,7 @@
 #error "Not support."
 #endif
 
-__NS_STD_BEGIN
+NS_STD_BEGIN
 
 // -------------------------------------------------------------------------
 // class CheckException - 该类不允许继承
@@ -146,6 +146,6 @@ public:
 // -------------------------------------------------------------------------
 // $Log: $
 
-__NS_STD_END
+NS_STD_END
 
 #endif /* STDEXT_SCOPEDBG_CHECKEXCEPTION_H */

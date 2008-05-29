@@ -23,7 +23,7 @@
 #include "Basic.h"
 #endif
 
-__NS_STD_BEGIN
+NS_STD_BEGIN
 
 // -------------------------------------------------------------------------
 
@@ -376,6 +376,6 @@ inline const ULargeInteger& winx_call ULargeInteger::operator=(const LargeIntege
 //  StdioArchive(StdioWriteArchive, StdioReadArchive)
 //
 
-__NS_STD_END
+NS_STD_END
 
 #endif /* STDEXT_LARGEINTEGER_H */

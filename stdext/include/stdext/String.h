@@ -39,7 +39,7 @@
 #include "text/StringAlgo.h"
 #endif
 
-__NS_STD_BEGIN
+NS_STD_BEGIN
 
 // -------------------------------------------------------------------------
 // class tstring
@@ -171,6 +171,6 @@ public:
 // -------------------------------------------------------------------------
 // $Log: String.h,v $
 
-__NS_STD_END
+NS_STD_END
 
 #endif /* STDEXT_STRING_H */

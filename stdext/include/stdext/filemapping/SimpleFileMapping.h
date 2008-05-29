@@ -23,7 +23,7 @@
 #include "../Basic.h"
 #endif
 
-__NS_STD_BEGIN
+NS_STD_BEGIN
 
 // -------------------------------------------------------------------------
 // struct FileMappingReadWrite
@@ -268,6 +268,6 @@ public:
 // -------------------------------------------------------------------------
 // $Log: $
 
-__NS_STD_END
+NS_STD_END
 
 #endif /* STDEXT_FILEMAPPING_SIMPLEFILEMAPPING_H */

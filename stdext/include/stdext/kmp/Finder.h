@@ -31,11 +31,11 @@
 #include "../../std/string.h"
 #endif
 
-#define __STD_KMP			std::kmp::
-#define __STD_KMP_BEGIN		namespace std { namespace kmp {
-#define __STD_KMP_END		} }
+#define NS_KMP			std::kmp::
+#define NS_KMP_BEGIN		namespace std { namespace kmp {
+#define NS_KMP_END		} }
 
-__STD_KMP_BEGIN
+NS_KMP_BEGIN
 
 // -------------------------------------------------------------------------
 // c++ std::istream adapter
@@ -537,6 +537,6 @@ public:
 //  KMP-String-Find-Algorithm(class std::kmp::Finder/CaseFinder/NoCaseFinder)
 //
 
-__STD_KMP_END
+NS_KMP_END
 
 #endif /* STDEXT_KMP_FINDER_H */

@@ -23,7 +23,7 @@
 #include "Basic.h"
 #endif
 
-__NS_STD_BEGIN
+NS_STD_BEGIN
 
 // -------------------------------------------------------------------------
 // algorithm - set_intersection_do
@@ -375,6 +375,6 @@ inline void winx_call clear(_Container& cont)
 // set_intersection_do
 //
 
-__NS_STD_END
+NS_STD_END
 
 #endif /* STDEXT_ALGORITHM_H */

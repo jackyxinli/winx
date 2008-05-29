@@ -21,7 +21,7 @@
 
 #define GC_REGISTER_FINALIZER(a0, a1, a2, a3, a4) //@@todo
 
-__NS_STD_BEGIN
+NS_STD_BEGIN
 
 // -------------------------------------------------------------------------
 
@@ -230,6 +230,6 @@ _CharT _Rope_RopeRep<_CharT>::_S_fetch(_Rope_RopeRep<_CharT>* __r, size_t __i)
 // -------------------------------------------------------------------------
 // $Log: RopeRep.h,v $
 
-__NS_STD_END
+NS_STD_END
 
 #endif /* STDEXT_TEXT_ROPE_ROPEREP_H */

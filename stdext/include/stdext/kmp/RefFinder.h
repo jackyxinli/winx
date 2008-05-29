@@ -27,7 +27,7 @@
 #include <algorithm>
 #endif
 
-__STD_KMP_BEGIN
+NS_KMP_BEGIN
 
 // -------------------------------------------------------------------------
 // class RefFinder - just for testing class Finder
@@ -130,6 +130,6 @@ public:
 //  KMP-String-Find-Algorithm(class std::kmp::Finder/CaseFinder/NoCaseFinder)
 //
 
-__STD_KMP_END
+NS_KMP_END
 
 #endif /* STDEXT_KMP_REFFINDER_H */

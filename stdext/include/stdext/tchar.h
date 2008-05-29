@@ -23,7 +23,7 @@
 #include <limits.h>
 #endif
 
-__NS_STD_BEGIN
+NS_STD_BEGIN
 
 // -------------------------------------------------------------------------
 // template char type functions
@@ -77,6 +77,6 @@ namespace tchar {
 //   namespace std::tchar(std::tchar::strlen, std::tchar::strlwr, etc)
 //
 
-__NS_STD_END
+NS_STD_END
 
 #endif /* STDEXT_TCHAR_H */

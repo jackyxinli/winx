@@ -52,7 +52,7 @@ class StlAlloc;
 #include "boost/Memory.h"
 #endif
 
-__NS_STD_BEGIN
+NS_STD_BEGIN
 
 typedef system_alloc SystemAlloc;
 typedef stdlib_alloc DefaultStaticAlloc;
@@ -71,7 +71,7 @@ typedef tls_gc_alloc TlsGcAlloc;
 #define DestructorTraits destructor_traits
 #define StlAlloc stl_allocator
 
-__NS_STD_END
+NS_STD_END
 
 #define STD_NO_CONSTRUCTOR(Type)				BOOST_MEMORY_NO_CONSTRUCTOR(Type)
 #define STD_NO_DESTRUCTOR(Type)					BOOST_MEMORY_NO_DESTRUCTOR(Type)
@@ -91,7 +91,7 @@ __NS_STD_END
 #include "winapi/winbase.h"
 #endif
 
-__NS_STD_BEGIN
+NS_STD_BEGIN
 
 #pragma warning(disable:4996) // XXX  was declared deprecated
 
@@ -149,7 +149,7 @@ private:
 	} __cntchecker;
 #endif
 
-__NS_STD_END
+NS_STD_END
 
 // -------------------------------------------------------------------------
 // $Log: Memory.h,v $

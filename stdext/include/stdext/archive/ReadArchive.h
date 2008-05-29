@@ -23,7 +23,7 @@
 #include "Basic.h"
 #endif
 
-__NS_STD_BEGIN
+NS_STD_BEGIN
 
 // -------------------------------------------------------------------------
 // class ReadArchive
@@ -388,6 +388,6 @@ public:
 // -------------------------------------------------------------------------
 // $Log: ReadArchive.h,v $
 
-__NS_STD_END
+NS_STD_END
 
 #endif /* STDEXT_ARCHIVE_READARCHIVE_H */

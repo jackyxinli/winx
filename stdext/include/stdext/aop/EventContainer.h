@@ -31,7 +31,7 @@
 // -------------------------------------------------------------------------
 // class EventContainer
 
-__NS_STD_BEGIN
+NS_STD_BEGIN
 
 template <int EventCount>
 class EventContainer : public IEventContainer
@@ -79,7 +79,7 @@ public:
 	}
 };
 
-__NS_STD_END
+NS_STD_END
 
 // -------------------------------------------------------------------------
 // class TestEventContainer
@@ -185,7 +185,7 @@ public:
 
 } // namespace test_event_container
 
-__NS_STD_BEGIN
+NS_STD_BEGIN
 
 template <class LogT>
 class TestEventContainer : public TestCase
@@ -207,7 +207,7 @@ public:
 	}
 };
 
-__NS_STD_END
+NS_STD_END
 
 #endif // defined(STD_UNITTEST)
 

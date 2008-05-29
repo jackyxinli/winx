@@ -40,7 +40,7 @@
  *   You should not attempt to use it directly.
  */
 
-__NS_STD_BEGIN
+NS_STD_BEGIN
 
 // -------------------------------------------------------------------------
 // class SequenceBuffer
@@ -155,6 +155,6 @@ public:
 // -------------------------------------------------------------------------
 // $Log: SequenceBuffer.h,v $
 
-__NS_STD_END
+NS_STD_END
 
 #endif /* STDEXT_TEXT_ROPE_SEQUENCEBUFFER_H */

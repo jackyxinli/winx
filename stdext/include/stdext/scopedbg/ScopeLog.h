@@ -44,7 +44,7 @@
 	#endif
 #endif
 
-__NS_STD_BEGIN
+NS_STD_BEGIN
 
 // =========================================================================
 // printScopeMessage
@@ -463,6 +463,6 @@ public:
 // =========================================================================
 // $Log: $
 
-__NS_STD_END
+NS_STD_END
 
 #endif /* STDEXT_SCOPEDBG_SCOPELOG_H */

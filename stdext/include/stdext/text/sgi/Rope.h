@@ -29,7 +29,7 @@
 #include "../../sgi/rope.h"
 #endif
 
-__NS_STD_BEGIN
+NS_STD_BEGIN
 
 // -------------------------------------------------------------------------
 // class SequenceBuffer
@@ -138,7 +138,7 @@ public:
 // -------------------------------------------------------------------------
 // $Log: Rope.h,v $
 
-__NS_STD_END
+NS_STD_END
 
 #endif // !defined(NO_SGISTL)
 

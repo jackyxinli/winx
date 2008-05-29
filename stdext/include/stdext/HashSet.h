@@ -37,7 +37,7 @@
 #include "Memory.h"
 #endif
 
-__NS_STD_BEGIN
+NS_STD_BEGIN
 
 // -------------------------------------------------------------------------
 // class HashSet
@@ -267,7 +267,7 @@ public:
 // -------------------------------------------------------------------------
 // $Log: HashSet.h,v $
 
-__NS_STD_END
+NS_STD_END
 
 #endif // _WINX_NO_HASH_SET
 

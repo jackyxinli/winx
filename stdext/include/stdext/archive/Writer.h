@@ -27,7 +27,7 @@
 #include "../text/TempString.h"
 #endif
 
-__NS_STD_BEGIN
+NS_STD_BEGIN
 
 // -------------------------------------------------------------------------
 // class Writer
@@ -235,6 +235,6 @@ public:
 // -------------------------------------------------------------------------
 // $Log: Writer.h,v $
 
-__NS_STD_END
+NS_STD_END
 
 #endif /* STDEXT_ARCHIVE_WRITER_H */

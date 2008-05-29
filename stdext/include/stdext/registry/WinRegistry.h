@@ -39,7 +39,7 @@
 #define REG_QWORD                   ( 11 )  // 64-bit number
 #endif
 
-__NS_STD_BEGIN
+NS_STD_BEGIN
 
 // -------------------------------------------------------------------------
 // class WinRegKeyHandle
@@ -653,6 +653,6 @@ public:
 // -------------------------------------------------------------------------
 // $Log: $
 
-__NS_STD_END
+NS_STD_END
 
 #endif /* STDEXT_REGISTRY_WINREGISTRY_H */

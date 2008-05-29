@@ -39,7 +39,7 @@
 #include "posix/Config.h"
 #endif
 
-__NS_STD_BEGIN
+NS_STD_BEGIN
 
 // -------------------------------------------------------------------------
 // class StdioAdapter
@@ -319,6 +319,6 @@ public:
 // -------------------------------------------------------------------------
 // $Log: Stdio.h,v $
 
-__NS_STD_END
+NS_STD_END
 
 #endif /* STDEXT_ARCHIVE_STDIO_H */

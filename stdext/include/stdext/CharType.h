@@ -23,7 +23,7 @@
 #include "Basic.h"
 #endif
 
-__NS_STD_BEGIN
+NS_STD_BEGIN
 
 // -------------------------------------------------------------------------
 // struct DigitTable
@@ -463,6 +463,6 @@ public:
 // -------------------------------------------------------------------------
 // $Log: CharType.h,v $
 
-__NS_STD_END
+NS_STD_END
 
 #endif /* STDEXT_CHARTYPE_H */

@@ -39,7 +39,7 @@
 // -------------------------------------------------------------------------
 // stdext::identity_element
 
-__NS_STD_BEGIN
+NS_STD_BEGIN
 
 // Some helpers, so we can use power on ropes.
 // See below for why this isn't local to the implementation.
@@ -57,7 +57,7 @@ struct _Rope_Concat_fn : public binary_function<
 	}
 };
 
-__NS_STD_END
+NS_STD_END
 
 namespace __STD {
 
@@ -72,7 +72,7 @@ inline std::Rope<_CharT,_Alloc>
 
 // -------------------------------------------------------------------------
 
-__NS_STD_BEGIN
+NS_STD_BEGIN
 
 using __STD::identity_element;
 
@@ -620,7 +620,7 @@ inline Rope<_CharT, _Alloc>::Rope(_Alloc& __a, size_t __n, _CharT __c)
     _M_tree_ptr = __result._M_tree_ptr;
 }
 
-__NS_STD_END
+NS_STD_END
 
 // -------------------------------------------------------------------------
 // $Log: Rope.h,v $

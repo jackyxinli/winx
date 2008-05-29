@@ -20,7 +20,7 @@
 #ifndef STDEXT_DEBUG_H
 #define STDEXT_DEBUG_H
 
-__NS_STD_BEGIN
+NS_STD_BEGIN
 
 // -------------------------------------------------------------------------
 // DbgFillMemory
@@ -249,6 +249,6 @@ public:
 // -------------------------------------------------------------------------
 // $Log: $
 
-__NS_STD_END
+NS_STD_END
 
 #endif /* STDEXT_DEBUG_H */

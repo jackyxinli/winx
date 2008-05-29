@@ -19,7 +19,7 @@
 #ifndef STDEXT_TEXT_ROPE_CHARPROXY_H
 #define STDEXT_TEXT_ROPE_CHARPROXY_H
 
-__NS_STD_BEGIN
+NS_STD_BEGIN
 
 // -------------------------------------------------------------------------
 // class _Rope_char_ref_proxy
@@ -168,6 +168,6 @@ inline bool operator!= (const _Rope_char_ptr_proxy<_CharT,_Alloc>& __x,
 // -------------------------------------------------------------------------
 // $Log: CharProxy.h,v $
 
-__NS_STD_END
+NS_STD_END
 
 #endif /* STDEXT_TEXT_ROPE_CHARPROXY_H */

@@ -74,12 +74,12 @@
 #endif
 
 // -------------------------------------------------------------------------
-// __NS_STD
+// NS_STD
 
-#ifndef __NS_STD
-#define __NS_STD			std::
-#define __NS_STD_BEGIN		namespace std {
-#define __NS_STD_END		}
+#ifndef NS_STD
+#define NS_STD			std::
+#define NS_STD_BEGIN		namespace std {
+#define NS_STD_END		}
 #endif
 
 // -------------------------------------------------------------------------
@@ -320,11 +320,11 @@ typedef unsigned short UINT16, *PUINT16;
 // -------------------------------------------------------------------------
 // class NullClass
 
-__NS_STD_BEGIN
+NS_STD_BEGIN
 
 class NullClass {};
 
-__NS_STD_END
+NS_STD_END
 
 // -------------------------------------------------------------------------
 // Debug Utilities

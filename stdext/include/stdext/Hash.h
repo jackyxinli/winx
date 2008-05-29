@@ -29,7 +29,7 @@
 
 #ifndef _WINX_NO_HASH
 
-__NS_STD_BEGIN
+NS_STD_BEGIN
 
 // -------------------------------------------------------------------------
 // class Hash
@@ -164,7 +164,7 @@ struct _HashComp : public stdext::hash_compare<KeyT, typename HashCompT::key_pre
 // $Log: Hash.h,v $
 //
 
-__NS_STD_END
+NS_STD_END
 
 #endif // _WINX_NO_HASH
 

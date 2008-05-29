@@ -36,7 +36,7 @@
 // -------------------------------------------------------------------------
 // class BasicRand
 
-__NS_STD_BEGIN
+NS_STD_BEGIN
 
 __forceinline int winx_call getTimeSeed()
 {
@@ -270,7 +270,7 @@ public:
 	}
 };
 
-__NS_STD_END
+NS_STD_END
 
 // -------------------------------------------------------------------------
 // class SimpleRand, MinstdRand, Mt19937Rand
@@ -279,7 +279,7 @@ __NS_STD_END
 #include <stdlib.h>
 #endif
 
-__NS_STD_BEGIN
+NS_STD_BEGIN
 
 class SimpleRandGen
 {
@@ -307,7 +307,7 @@ typedef BasicRand<boost::minstd_rand> MinstdRand;
 typedef BasicRand<boost::mt19937> Mt19937Rand;
 #endif
 
-__NS_STD_END
+NS_STD_END
 
 #if defined(X_CC_VC_NET)
 #pragma pop_macro("min")
@@ -317,7 +317,7 @@ __NS_STD_END
 // -------------------------------------------------------------------------
 // class RandGen/Rand
 
-__NS_STD_BEGIN
+NS_STD_BEGIN
 
 #if defined(BOOST_RANDOM_LINEAR_CONGRUENTIAL_HPP)
 typedef boost::minstd_rand RandGen;
@@ -330,14 +330,14 @@ typedef SimpleRandGen RandGen;
 typedef SimpleRand Rand;
 #endif
 
-__NS_STD_END
+NS_STD_END
 
 // -------------------------------------------------------------------------
 // class TestRand
 
 #if defined(STD_UNITTEST)
 
-__NS_STD_BEGIN
+NS_STD_BEGIN
 
 template <class LogT>
 class TestRand : public TestCase
@@ -414,7 +414,7 @@ public:
 	}
 };
 
-__NS_STD_END
+NS_STD_END
 
 #endif // defined(STD_UNITTEST)
 
