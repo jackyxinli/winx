@@ -19,14 +19,14 @@ LibDir
 Libraries	
 
 [Source]
-Transformation.cpp
-Simplest.cpp
-ParseClass.cpp
-Calculator.cpp
-Calculator2.cpp
+// Transformation.cpp
+// Simplest.cpp
+// ParseClass.cpp
+// Calculator.cpp
+// Calculator2.cpp
 TestTpl.cpp
-Customization.cpp
-Circuit.cpp
-Demo.cpp
-XmlProcess.cpp
-
+// Customization.cpp
+// Circuit.cpp
+// Demo.cpp
+// XmlProcess.cpp
+RemoveCppComments.cpp

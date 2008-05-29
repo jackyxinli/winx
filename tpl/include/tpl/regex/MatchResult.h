@@ -111,6 +111,16 @@ public:
 	}
 };
 
+#if defined(_OSTREAM_) || defined(_OSTREAM) || defined(_GLIBCXX_OSTREAM)
+
+template <class CharT, class Tr, class Iterator>
+inline std::basic_ostream<CharT, Tr>& operator<<(std::basic_ostream<CharT, Tr>& os, const Leaf<Iterator>& v) {
+	std::copy(v.begin(), v.end(), std::ostream_iterator<CharT>(os));
+	return os;
+}
+
+#endif
+
 // -------------------------------------------------------------------------
 // Node
 

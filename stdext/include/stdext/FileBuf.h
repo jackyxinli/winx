@@ -210,7 +210,11 @@ typedef FILEFileBufT<DefaultStaticAlloc> FILEFileBuf;
 // -------------------------------------------------------------------------
 // class FileBuf
 
+#if defined(X_OS_WINDOWS)
 typedef WinFileBuf FileBuf;
+#else
+typedef FILEFileBuf FileBuf;
+#endif
 
 // -------------------------------------------------------------------------
 // class TestFileBuf

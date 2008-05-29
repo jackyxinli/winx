@@ -37,13 +37,14 @@ void remove_cpp_comments()
 			('/' | rString)/assign(result)
 		));
 	
-	impl::Rule( alloc, *rItem + done()/assign(result) );
+	impl::Rule rDoc( alloc, *rItem + done()/assign(result) );
 
 	// ---- do match ----
 
 	const std::FileBuf file(__FILE__);
 	if ( impl::match(file.begin(), file.end(), rDoc) ) {
 		for (std::vector<impl::Leaf>::iterator it = result.begin(); it != result.end(); ++it)
-			std::copy((*it).begin(), (*it).end(), std::ostream_iterator<char>(std::cout));
+			std::cout << *it;
 	}
 }
+
