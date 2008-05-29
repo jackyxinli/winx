@@ -39,10 +39,10 @@ void calculate2()
 	{
 		std::string strExp;
 		std::cout << "input an expression (q to quit): ";
-		std::getline(std::cin, strExp);
-		
-		if (strExp == "q")
+		if (!std::getline(std::cin, strExp) || strExp == "q") {
+			std::cout << '\n';
 			break;
+		}
 
 		try {
 			while ( !stk.empty() )
@@ -50,10 +50,10 @@ void calculate2()
 			if ( !impl::match(strExp.c_str(), rExpr + eos(), skipws(), alloc) )
 				std::cout << ">>> ERROR: invalid expression!\n";
 			else
-				std::cout << stk.top() << "\n";
+				std::cout << stk.top() << '\n';
 		}
 		catch (const std::logic_error& e) {
-			std::cout << ">>> ERROR: " << e.what() << "\n";
+			std::cout << ">>> ERROR: " << e.what() << '\n';
 		}
 	}
 }
