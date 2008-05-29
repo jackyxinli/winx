@@ -20,11 +20,11 @@
 #define TPL_REGEX_BASIC_H
 
 #ifndef STDEXT_BASIC_H
-#include "../../../stdext/include/stdext/Basic.h"
+#include "../../../../stdext/include/stdext/Basic.h"
 #endif
 
 #ifndef STDEXT_MEMORY_H
-#include "../../../stdext/include/stdext/Memory.h"
+#include "../../../../stdext/include/stdext/Memory.h"
 #endif
 
 #ifndef TPL_UNMANAGED_NEW

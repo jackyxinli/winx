@@ -24,7 +24,7 @@
 #endif
 
 #ifndef STDEXT_CHARTYPE_H
-#include "../../../stdext/include/stdext/CharType.h"
+#include "../../../../stdext/include/stdext/CharType.h"
 #endif
 
 NS_TPL_BEGIN

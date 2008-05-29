@@ -20,11 +20,11 @@
 #define TPL_REGEX_CUSTOMIZATION_H
 
 #ifndef STDEXT_MEMORY_H
-#include "../../../stdext/include/stdext/Memory.h"
+#include "../../../../stdext/include/stdext/Memory.h"
 #endif
 
 #ifndef STDEXT_ARCHIVE_MEM_H
-#include "../../../stdext/include/stdext/archive/Mem.h"
+#include "../../../../stdext/include/stdext/archive/Mem.h"
 #endif
 
 #ifndef TPL_REGEX_MATCHRESULT_H

@@ -23,6 +23,10 @@
 #include "Basic.h"
 #endif
 
+#ifndef STDEXT_KMP_FINDER_H
+#include "../../../../stdext/include/stdext/kmp/Finder.h"
+#endif
+
 NS_TPL_BEGIN
 
 // -------------------------------------------------------------------------
