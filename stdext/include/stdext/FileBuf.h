@@ -32,12 +32,12 @@ template <class _Alloc>
 class AutoBufferT
 {
 protected:
-	unsigned char* m_data;
-	unsigned int m_bytes;
+	char* m_data;
+	size_t m_bytes;
 
 public:
 	AutoBufferT() : m_data(NULL), m_bytes(0) {}
-	explicit AutoBufferT(unsigned int bytes) : m_data(NULL) {
+	explicit AutoBufferT(size_t bytes) : m_data(NULL) {
 		allocate(bytes);
 	}
 	~AutoBufferT() {
@@ -45,10 +45,10 @@ public:
 			_Alloc::deallocate(m_data);
 	}
 
-	unsigned char* winx_call allocate(unsigned int bytes) {
+	char* winx_call allocate(size_t bytes) {
 		WINX_ASSERT(m_data == NULL);
 		m_bytes = bytes;
-		m_data = (unsigned char*)_Alloc::allocate(bytes);
+		m_data = (char*)_Alloc::allocate(bytes);
 		return m_data;
 	}
 
@@ -59,24 +59,24 @@ public:
 		}
 	}
 
-	unsigned char* winx_call data() {
+	char* winx_call data() {
 		return m_data;
 	}
-	const unsigned char* winx_call data() const {
+	const char* winx_call data() const {
 		return m_data;
 	}
 
-	unsigned char* winx_call begin() {
+	char* winx_call begin() {
 		return m_data;
 	}
-	const unsigned char* winx_call begin() const {
+	const char* winx_call begin() const {
 		return m_data;
 	}
 	
-	unsigned char* winx_call end() {
+	char* winx_call end() {
 		return m_data + m_bytes;
 	}
-	const unsigned char* winx_call end() const {
+	const char* winx_call end() const {
 		return m_data + m_bytes;
 	}
 
@@ -84,7 +84,7 @@ public:
 		return m_data != NULL;
 	}
 
-	const unsigned int winx_call size() const {
+	const size_t winx_call size() const {
 		return m_bytes;
 	}
 };

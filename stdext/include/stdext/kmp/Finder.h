@@ -138,7 +138,7 @@ struct MatchCase
 	typedef CharT char_type;
 
 	template <class Iterator>
-	__forceinline static void winx_call copy(char_type* dest, Iterator src, int n)
+	__forceinline static void winx_call copy(char_type* dest, Iterator src, size_t n)
 	{
 		while (n--)
 			*dest++ = *src++;
@@ -166,7 +166,7 @@ struct MatchNoCase
 	typedef CharT char_type;
 
 	template <class Iterator>
-	static void winx_call copy(char_type* dest, Iterator src, int n)
+	static void winx_call copy(char_type* dest, Iterator src, size_t n)
 	{
 		while (n--)
 			*dest++ = toupper( *src++ );
@@ -207,6 +207,9 @@ private:
 	size_type m_size;
 	size_type* m_next;
 	
+	Finder(const Finder&);
+	void operator=(const Finder&);
+
 public:
 	/*
 	@ctor()
@@ -393,7 +396,7 @@ public:
 		if (m_size == 0)
 			return E_ACCESSDENIED;
 
-		int j = 0;
+		size_t j = 0;
 		for (; limit != 0; --limit)
 		{
 			typename ArchiveT::int_type ch_ = Strategy::get(ar);
@@ -403,7 +406,7 @@ public:
 			while (m_str_find[j] != ch_)
 			{
 				j = m_next[j];
-				if (j == npos)
+				if (j == (size_t)npos)
 					break;
 			}
 			
