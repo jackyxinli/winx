@@ -389,25 +389,6 @@ private:
 };
 
 // =========================================================================
-// class GReference - Reference of a Grammar
-
-template <class GRefT>
-class GReference : public GRefT
-{
-public:
-	template <class T1>
-	GReference(const T1& x) : GRefT(x) {}
-
-private:
-	// concept:
-
-	typedef typename GRefT::grammar_type grammar_type;
-	typedef typename GRefT::dereference_type dereference_type;
-
-	dereference_type TPL_CALL operator()() const;
-};
-
-// =========================================================================
 // class Transformation
 
 template <class TransformT>

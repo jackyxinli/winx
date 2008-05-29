@@ -26,7 +26,7 @@ void html_process()
 	impl::Rule rPropVal( alloc, ch('\"', '\'')/assign(delim) + find_ref(delim)/assign(strValue) + ref(delim) );
 	impl::Rule rProp( alloc, (ucase() >> c_symbol()/assign(strProp)) + skipws() + '=' + skipws() + rPropVal );
 	impl::Rule rTagStart( alloc, '<' + rTagName + !(ws() + rProp % ws()) + skipws() + '>' );
-	impl::Rule rText( alloc, find_ch('<')/assign(strText) );
+	impl::Rule rText( alloc, find('<')/assign(strText) );
 	impl::Rule rTagEnd( alloc, "</" + (ucase() >> c_symbol()/ref(strTransformedTag)) + '>' );
 	impl::Rule rHtmlStart(alloc, ucase() >> '<' + c_symbol()/"HTML" + '>' );
 	impl::Rule rHtmlEnd(alloc, ucase() >> "</" + c_symbol()/"HTML" +'>' );

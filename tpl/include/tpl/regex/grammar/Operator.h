@@ -19,8 +19,12 @@
 #ifndef TPL_REGEX_GRAMMAR_OPERATOR_H
 #define TPL_REGEX_GRAMMAR_OPERATOR_H
 
-#ifndef TPL_REGEX_GRAMMAR_REF_H
-#include "Ref.h"
+#ifndef TPL_REGEX_TERMINAL_H
+#include "../Terminal.h"
+#endif
+
+#ifndef TPL_REGEX_COMPOSITION_H
+#include "../Composition.h"
 #endif
 
 #if !defined(_LIMITS_) && !defined(_LIMITS)
@@ -31,6 +35,9 @@ NS_TPL_BEGIN
 
 // =========================================================================
 // TPL_GRAMMAR_UNARY_OP_, TPL_GRAMMAR_BINARY_OP_
+
+#define TPL_GRAMMAR_REF_UNARY_OP_(op, Op)
+#define TPL_GRAMMAR_REF_BINARY_OP_(op, Op)
 
 #define TPL_GRAMMAR_UNARY_OP_(op, Op)										\
 	TPL_GRAMMAR_REF_UNARY_OP_(op, Op)

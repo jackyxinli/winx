@@ -19,6 +19,8 @@
 #ifndef TPL_REGEX_GRAMMAR_REF_H
 #define TPL_REGEX_GRAMMAR_REF_H
 
+#error "don't include me!!!"
+
 #ifndef TPL_REGEX_BASIC_H
 #include "../Basic.h"
 #endif
@@ -32,6 +34,25 @@
 #endif
 
 NS_TPL_BEGIN
+
+// =========================================================================
+// class GReference - Reference of a Grammar
+
+template <class GRefT>
+class GReference : public GRefT
+{
+public:
+	template <class T1>
+	GReference(const T1& x) : GRefT(x) {}
+
+private:
+	// concept:
+
+	typedef typename GRefT::grammar_type grammar_type;
+	typedef typename GRefT::dereference_type dereference_type;
+
+	dereference_type TPL_CALL operator()() const;
+};
 
 // =========================================================================
 // Dereference for Grammar (unary function)
@@ -159,36 +180,6 @@ __forceinline Grammar<GDerefL<Op, T1, T2> > TPL_CALL operator op(const GReferenc
 template <class T1, class T2>												\
 __forceinline Grammar<GDerefR<Op, T1, T2> > TPL_CALL operator op(const Grammar<T1>& x, const GReference<T2>& y) \
 	{ return Grammar<GDerefR<Op, T1, T2> >(x, y); }
-
-// =========================================================================
-// function ref(a_grammar_var)
-
-// Usage: ref(a_grammar_var)	--- Work as a grammar.
-// Note: if two rules A, B circularly refer to each other (or a grammar A refer to itself),
-//	we need use ref() function to break the circuit.
-
-template <class GrammarT>
-class GRef
-{
-private:
-	const GrammarT& m_x;
-
-public:
-	GRef(const GrammarT& x) : m_x(x) {}
-
-public:
-	enum { character = GrammarT::character };
-
-	template <class SourceT, class ContextT, class SkipperT>
-	bool TPL_CALL match(SourceT& ar, ContextT& context, const Skipper<SkipperT>& skipper_) const {
-		return m_x.match(ar, context, skipper_);
-	}
-};
-
-template <class T1>
-__forceinline Grammar<GRef<T1> > TPL_CALL ref(const Grammar<T1>& x) {
-	return Grammar<GRef<T1> >(x);
-}
 
 // =========================================================================
 // $Log: $

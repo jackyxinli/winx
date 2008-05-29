@@ -104,10 +104,10 @@ __forceinline Rule<While<PredT, false> > TPL_CALL ch_while(PredT pred) {
 }
 
 // -------------------------------------------------------------------------
-// function find_ch
+// function find
 
-// Usage: find_ch('c')				--- means: find character 'c'. ('c' remains in the inputstream)
-// Usage: find_ch<true>('c')		--- means: find character 'c' and eat it.
+// Usage: find('c')				--- means: find character 'c'. ('c' remains in the inputstream)
+// Usage: find<true>('c')		--- means: find character 'c' and eat it.
 
 template <bool bEat = false>
 class FindCh : public While<NotCh_, bEat>
@@ -116,13 +116,36 @@ public:
 	FindCh(int x) : While<NotCh_, bEat>(x) {}
 };
 
+// -------------------------------------------------------------------------
+// function find(val)
+
+template <class Type, bool bEat = false>
+struct FindTraits {
+};
+
 template <bool bEat>
-__forceinline Rule<FindCh<bEat> > TPL_CALL find_ch(int x) {
-	return Rule<FindCh<bEat> >(x);
+struct FindTraits<char, bEat> {
+	typedef FindCh<bEat> find_type;
+};
+
+template <bool bEat>
+struct FindTraits<wchar_t, bEat> {
+	typedef FindCh<bEat> find_type;
+};
+
+template <bool bEat>
+struct FindTraits<int, bEat> {
+	typedef FindCh<bEat> find_type;
+};
+
+template <bool bEat, class Type> __forceinline
+Rule<typename FindTraits<Type, bEat>::find_type> TPL_CALL find(const Type& val) {
+	return Rule<typename FindTraits<Type, bEat>::find_type>(val);
 }
 
-__forceinline Rule<FindCh<false> > TPL_CALL find_ch(int x) {
-	return Rule<FindCh<false> >(x);
+template <class Type> __forceinline
+Rule<typename FindTraits<Type, false>::find_type> TPL_CALL find(const Type& val) {
+	return Rule<typename FindTraits<Type, false>::find_type>(val);
 }
 
 // -------------------------------------------------------------------------

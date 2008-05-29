@@ -83,10 +83,6 @@
 #include "regex/grammar/Operator.h"
 #endif
 
-#ifndef TPL_REGEX_GRAMMAR_REF_H
-#include "regex/grammar/Ref.h"
-#endif
-
 #ifndef TPL_REGEX_GRAMMAR_ACTION_H
 #include "regex/grammar/Action.h"
 #endif
