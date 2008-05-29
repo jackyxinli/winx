@@ -77,7 +77,7 @@ void testSgiHashMap();
 
 void testStdExt()
 {
-	WINX_TEST_APP(std::ErrorLog, "TestSystemAlloc", "");
+	WINX_TEST_APP(std::ErrorLog, "TestFinder", "");
 //	testSgiHashMap();
 
 	WINX_TEST_CLASS(TestFinder);

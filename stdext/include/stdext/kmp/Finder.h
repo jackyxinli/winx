@@ -27,12 +27,20 @@
 #include "../Basic.h"
 #endif
 
+#ifndef STDEXT_MEMORY_H
+#include "../Memory.h"
+#endif
+
+#ifndef STDEXT_ARCHIVE_BASIC_H
+#include "../archive/Basic.h"
+#endif
+
 #ifndef STD_STRING_H
 #include "../../std/string.h"
 #endif
 
 #define NS_KMP			std::kmp::
-#define NS_KMP_BEGIN		namespace std { namespace kmp {
+#define NS_KMP_BEGIN	namespace std { namespace kmp {
 #define NS_KMP_END		} }
 
 NS_KMP_BEGIN
@@ -51,25 +59,28 @@ public:
 // -------------------------------------------------------------------------
 // c style string adapter
 
-template <class _E>
+template <class CharT>
 class _cstr_adapter
 {
 public:
 	enum { endch = -1 };
-	typedef int int_type;
+
+	typedef CharT char_type;
+	typedef typename ArchiveCharTraits<char_type>::uchar_type uchar_type;
+	typedef typename ArchiveCharTraits<char_type>::int_type int_type;
 	
 private:
-	const _E* m_p;
+	const CharT* m_p;
 	
 public:
-	_cstr_adapter(const _E* p) : m_p(p) {}
+	_cstr_adapter(const CharT* p) : m_p(p) {}
 	
-	int_type winx_call get()
+	__forceinline int_type winx_call get()
 	{
-		return (*m_p ? *m_p++ : (int_type)endch);
+		return (*m_p ? (uchar_type)*m_p++ : (int_type)endch);
 	}
 
-	const _E* winx_call tell() const
+	__forceinline const CharT* winx_call tell() const
 	{
 		return m_p;
 	}
@@ -81,11 +92,16 @@ public:
 template <class iterator_type>
 class _iterator_adapter
 {
+private:
+	typedef ArchiveIteratorTraits<iterator_type> Tr_;
+
 public:
 	enum { endch = -1 };
 
 	typedef iterator_type iterator;
-	typedef int int_type;
+	typedef typename Tr_::value_type char_type;
+	typedef typename ArchiveCharTraits<char_type>::uchar_type uchar_type;
+	typedef typename ArchiveCharTraits<char_type>::int_type int_type;
 	
 private:
 	iterator m_it;
@@ -95,7 +111,7 @@ public:
 
 	int_type winx_call get()
 	{
-		return *m_it++;
+		return (uchar_type)*m_it++;
 	}
 
 	iterator winx_call tell() const
@@ -112,23 +128,23 @@ public:
 @brief
 	The std::kmp::MatchCase class is provided as a strategy of class \<Finder>. It means the
 	searching algorithm will process in case-sensitive mode.
-@arg _E
+@arg CharT
 	The data type of a single character. It must be the same as you pass to \<Finder> class.
 @see Finder, MatchNoCase
 @*/
-template <class _E>
+template <class CharT>
 struct MatchCase
 {
-	typedef _E char_type;
+	typedef CharT char_type;
 
-	static void winx_call copy(char_type* dest, const char_type* src, int n)
+	__forceinline static void winx_call copy(char_type* dest, const char_type* src, int n)
 	{
 		while (n--)
 			dest[n] = src[n];
 	}
 
 	template <class ArchiveT>
-	static typename ArchiveT::int_type winx_call get(ArchiveT& ar)
+	__forceinline static typename ArchiveT::int_type winx_call get(ArchiveT& ar)
 	{
 		return ar.get();
 	}
@@ -139,14 +155,14 @@ struct MatchCase
 @brief
 	The std::kmp::MatchNoCase class is provided as a strategy of class \<Finder>. It means the
 	searching algorithm will process in non case-sensitive mode.
-@arg _E
+@arg CharT
 	The data type of a single character. It must be the same as you pass to \<Finder> class.
 @see Finder, MatchCase
 @*/
-template <class _E>
+template <class CharT>
 struct MatchNoCase
 {
-	typedef _E char_type;
+	typedef CharT char_type;
 
 	static void winx_call copy(char_type* dest, const char_type* src, int n)
 	{
@@ -168,23 +184,24 @@ struct MatchNoCase
 @class std::kmp::Finder
 @brief
 	The std::kmp::Finder class implements KMP string searching algorithm.
-@arg _E
+@arg CharT
 	The data type of a single character to be found in searching algorithm. It can be char or WCHAR.
-@arg _Strategy
+@arg Strategy
 	The strategy of searching algorithm. Default is \<MatchCase>, and it also can be \<MatchNoCase>.
 @*/
-template < class _E, class _Strategy = MatchCase<_E> >
+template < class CharT, class Strategy = MatchCase<CharT>, class AllocT = DefaultStaticAlloc>
 class Finder
 {
 public:
-	typedef _E char_type;
-	typedef int size_type;
+	typedef CharT char_type;
+	typedef typename ArchiveCharTraits<CharT>::uchar_type uchar_type;
+	typedef size_t size_type;
 
 	enum { npos = -1 };
 	enum { nolimit = -1 };
 
 private:
-	char_type* m_str_find;
+	uchar_type* m_str_find;
 	size_type m_size;
 	size_type* m_next;
 	
@@ -228,16 +245,15 @@ public:
 	@arg [in] strPattern	The pattern string object.
 	@see Finder, initPattern, getPattern
 	@*/
-	template <class _Tr, class _Alloc>
-	Finder(const std::basic_string<_E, _Tr, _Alloc>& strPattern) : m_str_find(NULL)
+	template <class Tr, class AllocT2>
+	Finder(const std::basic_string<CharT, Tr, AllocT2>& strPattern) : m_str_find(NULL)
 	{
 		initPattern(strPattern.c_str(), strPattern.size());
 	}
 
-	~Finder()
-	{
+	~Finder() {
 		if (m_str_find)
-			free(m_str_find);
+			AllocT::deallocate(m_str_find);
 	}
 	
 	/*
@@ -249,17 +265,19 @@ public:
 	@*/
 	HRESULT winx_call initPattern(const char_type* szPattern, size_type cchLen)
 	{
+		WINX_STATIC_ASSERT(sizeof(char_type) == sizeof(uchar_type));
+
 		if (szPattern == NULL || cchLen <= 0)
 			return E_INVALIDARG;
 
 		if (m_str_find)
-			free(m_str_find);
+			AllocT::deallocate(m_str_find);
 		
-		m_str_find = (char_type*)malloc( (sizeof(char_type) + sizeof(size_type)) * cchLen);
+		m_str_find = (uchar_type*)AllocT::allocate( (sizeof(uchar_type) + sizeof(size_type)) * cchLen);
 		m_next = (size_type*)(m_str_find + cchLen);
 		m_size = cchLen;
 		
-		_Strategy::copy(m_str_find, szPattern, cchLen);
+		Strategy::copy((char_type*)m_str_find, szPattern, cchLen);
 		
 		size_type k;
 		m_next[0] = npos;
@@ -269,7 +287,7 @@ public:
 			while (k != npos && m_str_find[k] != m_str_find[j-1])
 				k = m_next[k];
 			m_next[j] = k + 1;
-		}		
+		}
 		return S_OK;
 	}
 
@@ -283,7 +301,7 @@ public:
 	{
 		if (szPattern == NULL)
 			return E_INVALIDARG;
-		return initPattern(szPattern, std::char_traits<_E>::length(szPattern));
+		return initPattern(szPattern, std::char_traits<CharT>::length(szPattern));
 	}
 
 	/*
@@ -292,8 +310,8 @@ public:
 	@arg [in] strPattern	The pattern string object.
 	@see Finder, initPattern, getPattern
 	@*/
-	template <class _Tr, class _Alloc>
-	HRESULT winx_call initPattern(const std::basic_string<_E, _Tr, _Alloc>& strPattern)
+	template <class Tr, class AllocT2>
+	HRESULT winx_call initPattern(const std::basic_string<CharT, Tr, AllocT2>& strPattern)
 	{
 		return initPattern(strPattern.c_str(), strPattern.size());
 	}
@@ -368,11 +386,11 @@ public:
 		int j = 0;
 		for (; limit != 0; --limit)
 		{
-			typename ArchiveT::int_type ch = _Strategy::get(ar);
-			if (ch == ArchiveT::endch)
+			typename ArchiveT::int_type ch_ = Strategy::get(ar);
+			if (ch_ == ArchiveT::endch)
 				break;
 
-			while (m_str_find[j] != ch)
+			while (m_str_find[j] != ch_)
 			{
 				j = m_next[j];
 				if (j == npos)
@@ -479,15 +497,15 @@ public:
 @class std::kmp::NoCaseFinder
 @brief
 	The std::kmp::NoCaseFinder class is a simple class which sets \<Finder> to non case-sensitive mode.
-@arg _E
+@arg CharT
 	The data type of a single character to be found in searching algorithm. It can be char or WCHAR.
 @see Finder
 @*/
-template <class _E>
-class NoCaseFinder : public Finder< _E, MatchNoCase<_E> >
+template <class CharT>
+class NoCaseFinder : public Finder< CharT, MatchNoCase<CharT> >
 {
 private:
-	typedef Finder< _E, MatchNoCase<_E> > BaseClass;
+	typedef Finder< CharT, MatchNoCase<CharT> > BaseClass;
 
 public:
     typedef typename BaseClass::size_type size_type;
@@ -523,8 +541,8 @@ public:
 	@arg [in] strPattern	The pattern string object.
 	@see std::kmp::Finder
 	@*/
-	template <class _Tr, class _Alloc>
-	NoCaseFinder(const std::basic_string<_E, _Tr, _Alloc>& strPattern) : BaseClass(strPattern) {}
+	template <class Tr, class AllocT2>
+	NoCaseFinder(const std::basic_string<CharT, Tr, AllocT2>& strPattern) : BaseClass(strPattern) {}
 };
 
 // -------------------------------------------------------------------------
