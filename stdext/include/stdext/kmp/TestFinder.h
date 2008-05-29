@@ -16,14 +16,14 @@
 // 
 // $Id: TestFinder.h,v 1.2 2006/12/03 07:52:27 xushiwei Exp $
 // -----------------------------------------------------------------------*/
-#ifndef __STDEXT_KMP_TESTFINDER_H__
-#define __STDEXT_KMP_TESTFINDER_H__
+#ifndef STDEXT_KMP_TESTFINDER_H
+#define STDEXT_KMP_TESTFINDER_H
 
-#ifndef __STDEXT_KMP_REFFINDER_H__
+#ifndef STDEXT_KMP_REFFINDER_H
 #include "RefFinder.h"
 #endif
 
-#ifndef __STD_DEQUE_H__
+#ifndef STD_DEQUE_H
 #include "../../std/deque.h"
 #endif
 
@@ -108,4 +108,4 @@ public:
 // -------------------------------------------------------------------------
 // $Log: TestFinder.h,v $
 
-#endif /* __STDEXT_KMP_TESTFINDER_H__ */
+#endif /* STDEXT_KMP_TESTFINDER_H */

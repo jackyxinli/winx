@@ -16,14 +16,14 @@
 // 
 // $Id: $
 // -----------------------------------------------------------------------*/
-#ifndef __STDEXT_WINAPI_OLE2_H__
-#define __STDEXT_WINAPI_OLE2_H__
+#ifndef STDEXT_WINAPI_OLE2_H
+#define STDEXT_WINAPI_OLE2_H
 
-#ifndef __STDEXT_WINAPI_OBJBASE_H__
+#ifndef STDEXT_WINAPI_OBJBASE_H
 #include "objbase.h"
 #endif
 
-#ifndef __STDEXT_WINAPI_OLEAUTO_H__
+#ifndef STDEXT_WINAPI_OLEAUTO_H
 #include "oleauto.h"
 #endif
 
@@ -107,4 +107,4 @@ WINOLEAPI  DoDragDrop(
 // =========================================================================
 // $Log: $
 
-#endif /* __STDEXT_WINAPI_OLE2_H__ */
+#endif /* STDEXT_WINAPI_OLE2_H */

@@ -17,24 +17,24 @@
 // 
 // $Id: $
 // -----------------------------------------------------------------------*/
-#ifndef __STDEXT_AOP_H__
-#define __STDEXT_AOP_H__
+#ifndef STDEXT_AOP_H
+#define STDEXT_AOP_H
 
 // -------------------------------------------------------------------------
 
-#ifndef __STDEXT_AOP_INTERFACE_H__
+#ifndef STDEXT_AOP_INTERFACE_H
 #include "aop/Interface.h"
 #endif
 
-#ifndef __STDEXT_AOP_EVENT_H__
+#ifndef STDEXT_AOP_EVENT_H
 #include "aop/Event.h"
 #endif
 
-#ifndef __STDEXT_AOP_EVENTCONTAINER_H__
+#ifndef STDEXT_AOP_EVENTCONTAINER_H
 #include "aop/EventContainer.h"
 #endif
 
 // -------------------------------------------------------------------------
 // $Log: $
 
-#endif /* __STDEXT_AOP_H__ */
+#endif /* STDEXT_AOP_H */

@@ -16,10 +16,10 @@
 // 
 // $Id: Algorithm.h,v 1.1 2006/11/30 08:45:42 xushiwei Exp $
 // -----------------------------------------------------------------------*/
-#ifndef __STDEXT_ALGORITHM_H__
-#define __STDEXT_ALGORITHM_H__
+#ifndef STDEXT_ALGORITHM_H
+#define STDEXT_ALGORITHM_H
 
-#ifndef __STDEXT_BASIC_H__
+#ifndef STDEXT_BASIC_H
 #include "Basic.h"
 #endif
 
@@ -377,4 +377,4 @@ inline void winx_call clear(_Container& cont)
 
 __NS_STD_END
 
-#endif /* __STDEXT_ALGORITHM_H__ */
+#endif /* STDEXT_ALGORITHM_H */

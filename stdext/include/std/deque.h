@@ -16,10 +16,10 @@
 // 
 // $Id: deque.h,v 1.1 2006/10/18 12:13:39 xushiwei Exp $
 // -----------------------------------------------------------------------*/
-#ifndef __STD_DEQUE_H__
-#define __STD_DEQUE_H__
+#ifndef STD_DEQUE_H
+#define STD_DEQUE_H
 
-#ifndef __STDEXT_PLATFORM_H__
+#ifndef STDEXT_PLATFORM_H
 #include "../stdext/Platform.h"
 #endif
 
@@ -35,7 +35,7 @@
 	#endif
 #endif
 
-#ifndef __STD_ALGORITHM_H__
+#ifndef STD_ALGORITHM_H
 #include "algorithm.h"
 #endif
 
@@ -103,4 +103,4 @@ public:
 // -------------------------------------------------------------------------
 // $Log: deque.h,v $
 
-#endif /* __STD_DEQUE_H__ */
+#endif /* STD_DEQUE_H */

@@ -19,7 +19,7 @@
 #ifndef STD_VECTOR_H
 #define STD_VECTOR_H
 
-#ifndef __STDEXT_PLATFORM_H__
+#ifndef STDEXT_PLATFORM_H
 #include "../stdext/Platform.h"
 #endif
 

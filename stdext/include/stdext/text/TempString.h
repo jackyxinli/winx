@@ -16,22 +16,22 @@
 // 
 // $Id: TempString.h,v 1.1 2006/10/18 12:13:39 xushiwei Exp $
 // -----------------------------------------------------------------------*/
-#ifndef __STDEXT_TEXT_TEMPSTRING_H__
-#define __STDEXT_TEXT_TEMPSTRING_H__
+#ifndef STDEXT_TEXT_TEMPSTRING_H
+#define STDEXT_TEXT_TEMPSTRING_H
 
-#ifndef __STDEXT_MEMORY_H__
+#ifndef STDEXT_MEMORY_H
 #include "../Memory.h"
 #endif
 
-#ifndef __STD_VECTOR_H__
+#ifndef STD_VECTOR_H
 #include "../../std/vector.h"
 #endif
 
-#ifndef __STD_STRING_H__
+#ifndef STD_STRING_H
 #include "../../std/string.h"
 #endif
 
-#ifndef __STDEXT_TEXT_BASICALGO_H__
+#ifndef STDEXT_TEXT_BASICALGO_H
 #include "BasicAlgo.h"
 #endif
 
@@ -187,4 +187,4 @@ STD_NO_DESTRUCTOR(std::TempString<short>);
 // -------------------------------------------------------------------------
 // $Log: TempString.h,v $
 
-#endif /* __STDEXT_TEXT_TEMPSTRING_H__ */
+#endif /* STDEXT_TEXT_TEMPSTRING_H */

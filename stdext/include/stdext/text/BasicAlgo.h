@@ -16,14 +16,14 @@
 // 
 // $Id: BasicString.h,v 1.1 2006/10/18 12:13:39 xushiwei Exp $
 // -----------------------------------------------------------------------*/
-#ifndef __STDEXT_TEXT_BASICALGO_H__
-#define __STDEXT_TEXT_BASICALGO_H__
+#ifndef STDEXT_TEXT_BASICALGO_H
+#define STDEXT_TEXT_BASICALGO_H
 
-#ifndef __STDEXT_BASIC_H__
+#ifndef STDEXT_BASIC_H
 #include "../Basic.h"
 #endif
 
-#ifndef __STDEXT_CHARTYPE_H__
+#ifndef STDEXT_CHARTYPE_H
 #include "../CharType.h"
 #endif
 
@@ -385,4 +385,4 @@ namespace tchar { using std::strecpy; }
 
 __NS_STD_END
 
-#endif /* __STDEXT_TEXT_BASICALGO_H__ */
+#endif /* STDEXT_TEXT_BASICALGO_H */

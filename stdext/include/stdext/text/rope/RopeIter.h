@@ -16,8 +16,8 @@
 // 
 // $Id: RopeIter.h,v 1.1 2006/10/18 12:13:39 xushiwei Exp $
 // -----------------------------------------------------------------------*/
-#ifndef __STDEXT_TEXT_ROPE_ROPEITER_H__
-#define __STDEXT_TEXT_ROPE_ROPEITER_H__
+#ifndef STDEXT_TEXT_ROPE_ROPEITER_H
+#define STDEXT_TEXT_ROPE_ROPEITER_H
 
 __NS_STD_BEGIN
 
@@ -697,4 +697,4 @@ winx_call operator+(ptrdiff_t __n, const _Rope_const_iterator<_CharT>& __x) {
 
 __NS_STD_END
 
-#endif /* __STDEXT_TEXT_ROPE_ROPEITER_H__ */
+#endif /* STDEXT_TEXT_ROPE_ROPEITER_H */

@@ -17,8 +17,8 @@
 // 
 // $Id: $
 // -----------------------------------------------------------------------*/
-#ifndef __STDEXT_DEBUG_H__
-#define __STDEXT_DEBUG_H__
+#ifndef STDEXT_DEBUG_H
+#define STDEXT_DEBUG_H
 
 __NS_STD_BEGIN
 
@@ -251,4 +251,4 @@ public:
 
 __NS_STD_END
 
-#endif /* __STDEXT_DEBUG_H__ */
+#endif /* STDEXT_DEBUG_H */

@@ -16,8 +16,8 @@
 // 
 // $Id: Record.h,v 1.2 2006/11/30 03:19:24 xushiwei Exp $
 // -----------------------------------------------------------------------*/
-#ifndef __STDEXT_ARCHIVE_RECORD_H__
-#define __STDEXT_ARCHIVE_RECORD_H__
+#ifndef STDEXT_ARCHIVE_RECORD_H
+#define STDEXT_ARCHIVE_RECORD_H
 
 __NS_STD_BEGIN
 
@@ -192,4 +192,4 @@ public:
 
 __NS_STD_END
 
-#endif /* __STDEXT_ARCHIVE_RECORD_H__ */
+#endif /* STDEXT_ARCHIVE_RECORD_H */

@@ -17,14 +17,14 @@
 // 
 // $Id: $
 // -----------------------------------------------------------------------*/
-#ifndef __STDEXT_AOP_EVENT_H__
-#define __STDEXT_AOP_EVENT_H__
+#ifndef STDEXT_AOP_EVENT_H
+#define STDEXT_AOP_EVENT_H
 
-#ifndef __STDEXT_AOP_INTERFACE_H__
+#ifndef STDEXT_AOP_INTERFACE_H
 #include "Interface.h"
 #endif
 
-#ifndef __STDEXT_LIST_H__
+#ifndef STDEXT_LIST_H
 #include "../List.h"
 #endif
 
@@ -266,4 +266,4 @@ __NS_STD_END
 // -------------------------------------------------------------------------
 // $Log: $
 
-#endif /* __STDEXT_AOP_EVENT_H__ */
+#endif /* STDEXT_AOP_EVENT_H */

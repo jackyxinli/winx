@@ -19,7 +19,7 @@
 #ifndef STDEXT_TEXT_BASICSTRING_H
 #define STDEXT_TEXT_BASICSTRING_H
 
-#ifndef __STDEXT_TEXT_TEMPSTRING_H__
+#ifndef STDEXT_TEXT_TEMPSTRING_H
 #include "TempString.h"
 #endif
 

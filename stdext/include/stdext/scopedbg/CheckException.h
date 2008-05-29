@@ -17,10 +17,10 @@
 // 
 // $Id: $
 // -----------------------------------------------------------------------*/
-#ifndef __STDEXT_SCOPEDBG_CHECKEXCEPTION_H__
-#define __STDEXT_SCOPEDBG_CHECKEXCEPTION_H__
+#ifndef STDEXT_SCOPEDBG_CHECKEXCEPTION_H
+#define STDEXT_SCOPEDBG_CHECKEXCEPTION_H
 
-#ifndef __STDEXT_BASIC_H__
+#ifndef STDEXT_BASIC_H
 #include "../Basic.h"
 #endif
 
@@ -148,4 +148,4 @@ public:
 
 __NS_STD_END
 
-#endif /* __STDEXT_SCOPEDBG_CHECKEXCEPTION_H__ */
+#endif /* STDEXT_SCOPEDBG_CHECKEXCEPTION_H */

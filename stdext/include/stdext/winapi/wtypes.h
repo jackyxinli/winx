@@ -16,8 +16,8 @@
 // 
 // $Id: $
 // -----------------------------------------------------------------------*/
-#ifndef __STDEXT_WINAPI_WTYPES_H__
-#define __STDEXT_WINAPI_WTYPES_H__
+#ifndef STDEXT_WINAPI_WTYPES_H
+#define STDEXT_WINAPI_WTYPES_H
 
 // -------------------------------------------------------------------------
 
@@ -28,5 +28,5 @@
 // -------------------------------------------------------------------------
 // $Log: $
 
-#endif /* __STDEXT_WINAPI_WTYPES_H__ */
+#endif /* STDEXT_WINAPI_WTYPES_H */
 

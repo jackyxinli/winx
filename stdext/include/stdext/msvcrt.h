@@ -16,10 +16,10 @@
 // 
 // $Id: $
 // -----------------------------------------------------------------------*/
-#ifndef __STDEXT_MSVCRT_H__
-#define __STDEXT_MSVCRT_H__
+#ifndef STDEXT_MSVCRT_H
+#define STDEXT_MSVCRT_H
 
-#ifndef __STDEXT_PLATFORM_H__
+#ifndef STDEXT_PLATFORM_H
 #include "../Platform.h"
 #endif
 
@@ -47,7 +47,7 @@
 #include <crtdbg.h>
 #endif
 #else
-#ifndef __STDEXT_MSVCRT_CRTDBG_H__
+#ifndef STDEXT_MSVCRT_CRTDBG_H
 #include "msvcrt/crtdbg.h"
 #endif
 #endif // !defined(STD_NO_MSVCRT)
@@ -67,11 +67,11 @@
 #define _MAX_FNAME  256 /* max. length of file name component */
 #define _MAX_EXT    256 /* max. length of extension component */
 
-#ifndef __STDEXT_WINAPI_WTYPES_H__
+#ifndef STDEXT_WINAPI_WTYPES_H
 #include "winapi/wtypes.h"
 #endif
 
-#ifndef __STDEXT_TCHAR_H__
+#ifndef STDEXT_TCHAR_H
 #include "tchar.h"
 #endif
 
@@ -145,11 +145,11 @@ namespace std
 // -------------------------------------------------------------------------
 // ==== atlconv.h ====
 
-#ifndef __STDEXT_MSVCRT_ATLCONV_H__
+#ifndef STDEXT_MSVCRT_ATLCONV_H
 #include "msvcrt/atlconv.h"
 #endif
 
 // -------------------------------------------------------------------------
 // $Log: $
 
-#endif /* __STDEXT_MSVCRT_H__ */
+#endif /* STDEXT_MSVCRT_H */

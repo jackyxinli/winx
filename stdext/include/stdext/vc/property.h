@@ -16,10 +16,10 @@
 // 
 // $Id: $
 // -----------------------------------------------------------------------*/
-#ifndef __STDEXT_VC_PROPERTY_H__
-#define __STDEXT_VC_PROPERTY_H__
+#ifndef STDEXT_VC_PROPERTY_H
+#define STDEXT_VC_PROPERTY_H
 
-#ifndef __STDEXT_PLATFORM_H__
+#ifndef STDEXT_PLATFORM_H
 #include "../Platform.h"
 #endif
 
@@ -471,4 +471,4 @@ void testProperty()
 // =========================================================================
 // $Log: $
 
-#endif /* __STDEXT_VC_PROPERTY_H__ */
+#endif /* STDEXT_VC_PROPERTY_H */

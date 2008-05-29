@@ -16,26 +16,26 @@
 // 
 // $Id: SystemAlloc.h,v 1.1 2006/10/18 12:13:39 xushiwei Exp $
 // -----------------------------------------------------------------------*/
-#ifndef __STDEXT_MEMORY_SYSTEMALLOC_H__
-#define __STDEXT_MEMORY_SYSTEMALLOC_H__
+#ifndef STDEXT_MEMORY_SYSTEMALLOC_H
+#define STDEXT_MEMORY_SYSTEMALLOC_H
 
 #error "outdated: move to http://svn.boost.org/svn/boost/sandbox/memory/boost/memory/system_alloc.hpp"
 
-#ifndef __STDEXT_MEMORY_BASIC_H__
+#ifndef STDEXT_MEMORY_BASIC_H
 #include "Basic.h"
 #endif
 
-#ifndef __STDEXT_THREADMODEL_H__
+#ifndef STDEXT_THREADMODEL_H
 #include "../ThreadModel.h"
 #endif
 
 #if defined(STD_UNITTEST)
-#ifndef __STDEXT_COUNTER_H__
+#ifndef STDEXT_COUNTER_H
 #include "../Counter.h"
 #endif
 #endif
 
-#ifndef __STD_ALGORITHM_H__
+#ifndef STD_ALGORITHM_H
 #include "../../std/algorithm.h" // std::swap
 #endif
 
@@ -545,4 +545,4 @@ public:
 
 __NS_STD_END
 
-#endif /* __STDEXT_MEMORY_SYSTEMALLOC_H__ */
+#endif /* STDEXT_MEMORY_SYSTEMALLOC_H */

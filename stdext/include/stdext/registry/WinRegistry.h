@@ -16,22 +16,22 @@
 // 
 // $Id: $
 // -----------------------------------------------------------------------*/
-#ifndef __STDEXT_REGISTRY_WINREGISTRY_H__
-#define __STDEXT_REGISTRY_WINREGISTRY_H__
+#ifndef STDEXT_REGISTRY_WINREGISTRY_H
+#define STDEXT_REGISTRY_WINREGISTRY_H
 
 #if defined(STD_NO_WINSDK)
 #error "Require windows sdk!!!"
 #endif
 
-#ifndef __STDEXT_BASIC_H__
+#ifndef STDEXT_BASIC_H
 #include "../Basic.h"
 #endif
 
-#ifndef __STDEXT_TEXT_BASICSTRING_H__
+#ifndef STDEXT_TEXT_BASICSTRING_H
 #include "../text/BasicString.h"
 #endif
 
-#ifndef __STDEXT_MSVCRT_SPECSTRINGS_H__
+#ifndef STDEXT_MSVCRT_SPECSTRINGS_H
 #include "../msvcrt/specstrings.h"
 #endif
 
@@ -655,4 +655,4 @@ public:
 
 __NS_STD_END
 
-#endif /* __STDEXT_REGISTRY_WINREGISTRY_H__ */
+#endif /* STDEXT_REGISTRY_WINREGISTRY_H */

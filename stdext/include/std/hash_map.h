@@ -16,10 +16,10 @@
 // 
 // $Id: hash_map.h,v 1.1 2006/10/18 12:13:39 xushiwei Exp $
 // -----------------------------------------------------------------------*/
-#ifndef __STD_HASH_MAP_H__
-#define __STD_HASH_MAP_H__
+#ifndef STD_HASH_MAP_H
+#define STD_HASH_MAP_H
 
-#ifndef __STDEXT_PLATFORM_H__
+#ifndef STDEXT_PLATFORM_H
 #include "../stdext/Platform.h"
 #endif
 
@@ -44,4 +44,4 @@
 // -------------------------------------------------------------------------
 // $Log: hash_map.h,v $
 
-#endif /* __STD_HASH_MAP_H__ */
+#endif /* STD_HASH_MAP_H */

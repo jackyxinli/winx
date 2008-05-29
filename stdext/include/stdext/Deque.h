@@ -25,7 +25,7 @@
 
 #if defined(X_CC_VC6)
 	#if defined(NO_SGISTL)
-		#ifndef __STD_DEQUE_H__
+		#ifndef STD_DEQUE_H
 		#include "../std/deque.h"
 		#endif
 		#define _WINX_DEQUE_BASE(DataT, AllocT) \
@@ -46,7 +46,7 @@
 #endif
 
 #if defined(STD_UNITTEST)
-	#ifndef __STDEXT_COUNTER_H__
+	#ifndef STDEXT_COUNTER_H
 	#include "Counter.h"
 	#endif
 #endif

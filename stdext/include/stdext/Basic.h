@@ -55,11 +55,11 @@
 #define STD_NO_MSVCRT
 #endif
 
-#ifndef __STDEXT_PLATFORM_H__
+#ifndef STDEXT_PLATFORM_H
 #include "Platform.h"
 #endif
 
-#ifndef __STLPATCH_H__
+#ifndef STLPATCH_H
 #include "../stlpatch.h"
 #endif
 
@@ -176,7 +176,7 @@ typedef unsigned long long __uint64;
 typedef unsigned __int64 __uint64;
 #endif
 
-#ifndef __STDEXT_VC_DECLSPEC_H__
+#ifndef STDEXT_VC_DECLSPEC_H
 #include "vc/declspec.h"
 #endif
 
@@ -192,11 +192,11 @@ typedef unsigned __int64 __uint64;
 
 #else
 
-#ifndef __STDEXT_WINAPI_WTYPES_H__
+#ifndef STDEXT_WINAPI_WTYPES_H
 #include "winapi/wtypes.h"
 #endif
 
-#ifndef __STDEXT_WINAPI_OBJBASE_H__
+#ifndef STDEXT_WINAPI_OBJBASE_H
 #include "winapi/objbase.h"
 #endif
 
@@ -215,7 +215,7 @@ typedef unsigned short UINT16, *PUINT16;
 #endif
 #endif // !defined(WINX_VC_NET)
 
-#ifndef __STDEXT_MSVCRT_H__
+#ifndef STDEXT_MSVCRT_H
 #include "msvcrt.h"
 #endif
 
@@ -329,7 +329,7 @@ __NS_STD_END
 // -------------------------------------------------------------------------
 // Debug Utilities
 
-#ifndef __STDEXT_DEBUG_H__
+#ifndef STDEXT_DEBUG_H
 #include "Debug.h"
 #endif
 
@@ -338,7 +338,7 @@ using std::DllMainInit;
 // -------------------------------------------------------------------------
 // TestCase class
 
-#ifndef __STDEXT_TESTCASE_H__
+#ifndef STDEXT_TESTCASE_H
 #include "TestCase.h"
 #endif
 
@@ -349,7 +349,7 @@ typedef std::TestCase TestCase;
 // -------------------------------------------------------------------------
 // Log class
 
-#ifndef __STDEXT_LOG_H__
+#ifndef STDEXT_LOG_H
 #include "Log.h"
 #endif
 

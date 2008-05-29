@@ -16,26 +16,26 @@
 // 
 // $Id: Stdio.h,v 1.3 2007/01/10 09:36:12 xushiwei Exp $
 // -----------------------------------------------------------------------*/
-#ifndef __STDEXT_ARCHIVE_STDIO_H__
-#define __STDEXT_ARCHIVE_STDIO_H__
+#ifndef STDEXT_ARCHIVE_STDIO_H
+#define STDEXT_ARCHIVE_STDIO_H
 
-#ifndef __STDEXT_ARCHIVE_WRITER_H__
+#ifndef STDEXT_ARCHIVE_WRITER_H
 #include "Writer.h"
 #endif
 
-#ifndef __STDEXT_ARCHIVE_READER_H__
+#ifndef STDEXT_ARCHIVE_READER_H
 #include "Reader.h"
 #endif
 
-#ifndef __STDEXT_ARCHIVE_WRITEARCHIVE_H__
+#ifndef STDEXT_ARCHIVE_WRITEARCHIVE_H
 #include "WriteArchive.h"
 #endif
 
-#ifndef __STDEXT_ARCHIVE_READARCHIVE_H__
+#ifndef STDEXT_ARCHIVE_READARCHIVE_H
 #include "ReadArchive.h"
 #endif
 
-#ifndef __STDEXT_ARCHIVE_POSIX_CONFIG_H__
+#ifndef STDEXT_ARCHIVE_POSIX_CONFIG_H
 #include "posix/Config.h"
 #endif
 
@@ -321,4 +321,4 @@ public:
 
 __NS_STD_END
 
-#endif /* __STDEXT_ARCHIVE_STDIO_H__ */
+#endif /* STDEXT_ARCHIVE_STDIO_H */

@@ -16,10 +16,10 @@
 // 
 // $Id: Rope.h,v 1.1 2006/10/18 12:13:39 xushiwei Exp $
 // -----------------------------------------------------------------------*/
-#ifndef __STDEXT_TEXT_SGI_ROPE_H__
-#define __STDEXT_TEXT_SGI_ROPE_H__
+#ifndef STDEXT_TEXT_SGI_ROPE_H
+#define STDEXT_TEXT_SGI_ROPE_H
 
-#ifndef __STDEXT_BASIC_H__
+#ifndef STDEXT_BASIC_H
 #include "../../Basic.h"
 #endif
 
@@ -142,4 +142,4 @@ __NS_STD_END
 
 #endif // !defined(NO_SGISTL)
 
-#endif /* __STDEXT_TEXT_SGI_ROPE_H__ */
+#endif /* STDEXT_TEXT_SGI_ROPE_H */

@@ -16,14 +16,14 @@
 // 
 // $Id: Set.h,v 1.1 2006/10/18 12:13:39 xushiwei Exp $
 // -----------------------------------------------------------------------*/
-#ifndef __STDEXT_SET_H__
-#define __STDEXT_SET_H__
+#ifndef STDEXT_SET_H
+#define STDEXT_SET_H
 
-#ifndef __STDEXT_MEMORY_H__
+#ifndef STDEXT_MEMORY_H
 #include "Memory.h"
 #endif
 
-#ifndef __STD_SET_H__
+#ifndef STD_SET_H
 #include "../std/set.h"
 #endif
 
@@ -242,4 +242,4 @@ public:
 
 __NS_STD_END
 
-#endif /* __STDEXT_SET_H__ */
+#endif /* STDEXT_SET_H */

@@ -16,8 +16,8 @@
 // 
 // $Id: stdext.h,v 1.3 2007/01/10 09:38:33 xushiwei Exp $
 // -----------------------------------------------------------------------*/
-#ifndef __STDEXT_H__
-#define __STDEXT_H__
+#ifndef STDEXT_H
+#define STDEXT_H
 
 #if (0)
 #define STD_NO_TASKALLOC
@@ -25,55 +25,55 @@
 
 // -------------------------------------------------------------------------
 
-#ifndef __STLPATCH_H__
+#ifndef STLPATCH_H
 #include "stlpatch.h"
 #endif
 
-#ifndef __STDEXT_BASIC_H__
+#ifndef STDEXT_BASIC_H
 #include "stdext/Basic.h"
 #endif
 
-#ifndef __STDEXT_TESTCASE_H__
+#ifndef STDEXT_TESTCASE_H
 #include "stdext/TestCase.h"
 #endif
 
-#ifndef __STDEXT_ARRAY_H__
+#ifndef STDEXT_ARRAY_H
 #include "stdext/Array.h"
 #endif
 
-#ifndef __STDEXT_STORAGE_H__
+#ifndef STDEXT_STORAGE_H
 #include "stdext/Storage.h"
 #endif
 
-#ifndef __STDEXT_LOG_H__
+#ifndef STDEXT_LOG_H
 #include "stdext/Log.h"
 #endif
 
-#ifndef __STDEXT_COUNTER_H__
+#ifndef STDEXT_COUNTER_H
 #include "stdext/Counter.h"
 #endif
 
-#ifndef __STDEXT_MEMORY_H__
+#ifndef STDEXT_MEMORY_H
 #include "stdext/Memory.h"
 #endif
 
-#ifndef __STDEXT_CHARTYPE_H__
+#ifndef STDEXT_CHARTYPE_H
 #include "stdext/CharType.h"
 #endif
 
-#ifndef __STDEXT_STRING_H__
+#ifndef STDEXT_STRING_H
 #include "stdext/String.h"
 #endif
 
-#ifndef __STDEXT_TYPEDPTRARRAY_H__
+#ifndef STDEXT_TYPEDPTRARRAY_H
 #include "stdext/TypedPtrArray.h"
 #endif
 
-#ifndef __STDEXT_FILEBUF_H__
+#ifndef STDEXT_FILEBUF_H
 #include "stdext/FileBuf.h"
 #endif
 
 // -------------------------------------------------------------------------
 // $Log: stdext.h,v $
 
-#endif /* __STDEXT_H__ */
+#endif /* STDEXT_H */

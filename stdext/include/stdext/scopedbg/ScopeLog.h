@@ -17,18 +17,18 @@
 // 
 // $Id: $
 // -----------------------------------------------------------------------*/
-#ifndef __STDEXT_SCOPEDBG_SCOPELOG_H__
-#define __STDEXT_SCOPEDBG_SCOPELOG_H__
+#ifndef STDEXT_SCOPEDBG_SCOPELOG_H
+#define STDEXT_SCOPEDBG_SCOPELOG_H
 
-#ifndef __STDEXT_STORAGE_H__
+#ifndef STDEXT_STORAGE_H
 #include "../Storage.h"
 #endif
 
-#ifndef __STDEXT_LOG_H__
+#ifndef STDEXT_LOG_H
 #include "../Log.h"
 #endif
 
-#ifndef __STD_DEQUE_H__
+#ifndef STD_DEQUE_H
 #include "../../std/deque.h"
 #endif
 
@@ -38,7 +38,7 @@
 		#include <shlwapi.h>
 		#endif
 	#else
-		#ifndef __STDEXT_WINAPI_SHLWAPI_H__
+		#ifndef STDEXT_WINAPI_SHLWAPI_H
 		#include "../winapi/shlwapi.h"
 		#endif
 	#endif
@@ -465,4 +465,4 @@ public:
 
 __NS_STD_END
 
-#endif /* __STDEXT_SCOPEDBG_SCOPELOG_H__ */
+#endif /* STDEXT_SCOPEDBG_SCOPELOG_H */

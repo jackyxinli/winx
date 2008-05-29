@@ -16,10 +16,10 @@
 // 
 // $Id: FileBuf.h,v 1.1 2006/10/18 12:13:39 xushiwei Exp $
 // -----------------------------------------------------------------------*/
-#ifndef __STDEXT_FILEBUF_H__
-#define __STDEXT_FILEBUF_H__
+#ifndef STDEXT_FILEBUF_H
+#define STDEXT_FILEBUF_H
 
-#ifndef __STDEXT_MEMORY_H__
+#ifndef STDEXT_MEMORY_H
 #include "Memory.h"
 #endif
 
@@ -253,4 +253,4 @@ public:
 
 __NS_STD_END
 
-#endif /* __STDEXT_FILEBUF_H__ */
+#endif /* STDEXT_FILEBUF_H */

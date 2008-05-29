@@ -16,10 +16,10 @@
 // 
 // $Id: RefFinder.h,v 1.1 2006/12/02 08:00:45 xushiwei Exp $
 // -----------------------------------------------------------------------*/
-#ifndef __STDEXT_KMP_REFFINDER_H__
-#define __STDEXT_KMP_REFFINDER_H__
+#ifndef STDEXT_KMP_REFFINDER_H
+#define STDEXT_KMP_REFFINDER_H
 
-#ifndef __STDEXT_KMP_FINDER_H__
+#ifndef STDEXT_KMP_FINDER_H
 #include "Finder.h"
 #endif
 
@@ -132,4 +132,4 @@ public:
 
 __STD_KMP_END
 
-#endif /* __STDEXT_KMP_REFFINDER_H__ */
+#endif /* STDEXT_KMP_REFFINDER_H */

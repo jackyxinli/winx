@@ -17,18 +17,18 @@
 // 
 // $Id: $
 // -----------------------------------------------------------------------*/
-#ifndef __STDEXT_SCOPEDEBUG_H__
-#define __STDEXT_SCOPEDEBUG_H__
+#ifndef STDEXT_SCOPEDEBUG_H
+#define STDEXT_SCOPEDEBUG_H
 
 // -------------------------------------------------------------------------
 
 #if defined(_WIN32)
 
-#ifndef __STDEXT_SCOPEDBG_SCOPELOG_H__
+#ifndef STDEXT_SCOPEDBG_SCOPELOG_H
 #include "scopedbg/ScopeLog.h"
 #endif
 
-#ifndef __STDEXT_SCOPEDBG_ERRORGUARD_H__
+#ifndef STDEXT_SCOPEDBG_ERRORGUARD_H
 #include "scopedbg/ErrorGuard.h"
 #endif
 
@@ -37,4 +37,4 @@
 // -------------------------------------------------------------------------
 // $Log: $
 
-#endif /* __STDEXT_SCOPEDEBUG_H__ */
+#endif /* STDEXT_SCOPEDEBUG_H */

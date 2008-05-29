@@ -16,8 +16,8 @@
 // 
 // $Id: $
 // -----------------------------------------------------------------------*/
-#ifndef __STDEXT_MSVCRT_CRTDBG_H__
-#define __STDEXT_MSVCRT_CRTDBG_H__
+#ifndef STDEXT_MSVCRT_CRTDBG_H
+#define STDEXT_MSVCRT_CRTDBG_H
 
 #if !defined(STD_NO_MSVCRT)
 #error "Don't include <stdext/msvcrt/crtdbg.h>"
@@ -244,4 +244,4 @@ typedef struct _CrtMemState
 // -------------------------------------------------------------------------
 // $Log: $
 
-#endif /* __STDEXT_MSVCRT_CRTDBG_H__ */
+#endif /* STDEXT_MSVCRT_CRTDBG_H */

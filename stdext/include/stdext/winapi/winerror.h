@@ -16,8 +16,8 @@
 // 
 // $Id: $
 // -----------------------------------------------------------------------*/
-#ifndef __STDEXT_WINAPI_WINERROR_H__
-#define __STDEXT_WINAPI_WINERROR_H__
+#ifndef STDEXT_WINAPI_WINERROR_H
+#define STDEXT_WINAPI_WINERROR_H
 
 //
 //  Values are 32 bit values layed out as follows:
@@ -12950,4 +12950,4 @@
 // -------------------------------------------------------------------------
 // $Log: $
 
-#endif /* __STDEXT_WINAPI_WINERROR_H__ */
+#endif /* STDEXT_WINAPI_WINERROR_H */

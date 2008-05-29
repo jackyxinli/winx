@@ -16,10 +16,10 @@
 // 
 // $Id: $
 // -----------------------------------------------------------------------*/
-#ifndef __STDEXT_FILEMAPPING_SIMPLEFILEMAPPING_H__
-#define __STDEXT_FILEMAPPING_SIMPLEFILEMAPPING_H__
+#ifndef STDEXT_FILEMAPPING_SIMPLEFILEMAPPING_H
+#define STDEXT_FILEMAPPING_SIMPLEFILEMAPPING_H
 
-#ifndef __STDEXT_BASIC_H__
+#ifndef STDEXT_BASIC_H
 #include "../Basic.h"
 #endif
 
@@ -270,4 +270,4 @@ public:
 
 __NS_STD_END
 
-#endif /* __STDEXT_FILEMAPPING_SIMPLEFILEMAPPING_H__ */
+#endif /* STDEXT_FILEMAPPING_SIMPLEFILEMAPPING_H */

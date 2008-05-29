@@ -16,12 +16,12 @@
 // 
 // $Id: Counter.h,v 1.1 2006/10/18 12:13:39 xushiwei Exp $
 // -----------------------------------------------------------------------*/
-#ifndef __STDEXT_COUNTER_H__
-#define __STDEXT_COUNTER_H__
+#ifndef STDEXT_COUNTER_H
+#define STDEXT_COUNTER_H
 
 #pragma warning(disable:4996) // XXX  was declared deprecated
 
-#ifndef __STDEXT_BASIC_H__
+#ifndef STDEXT_BASIC_H
 #include "Basic.h"
 #endif
 
@@ -30,7 +30,7 @@
 #include <winbase.h>
 #endif
 #else
-#ifndef __STDEXT_WINAPI_WINBASE_H__
+#ifndef STDEXT_WINAPI_WINBASE_H
 #include "winapi/winbase.h"
 #endif
 #endif
@@ -210,4 +210,4 @@ __NS_STD_END
 
 #pragma warning(default:4996) // XXX  was declared deprecated
 
-#endif /* __STDEXT_COUNTER_H__ */
+#endif /* STDEXT_COUNTER_H */

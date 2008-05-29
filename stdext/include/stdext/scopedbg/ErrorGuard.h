@@ -17,18 +17,18 @@
 // 
 // $Id: $
 // -----------------------------------------------------------------------*/
-#ifndef __STDEXT_SCOPEDBG_ERRORGUARD_H__
-#define __STDEXT_SCOPEDBG_ERRORGUARD_H__
+#ifndef STDEXT_SCOPEDBG_ERRORGUARD_H
+#define STDEXT_SCOPEDBG_ERRORGUARD_H
 
 #if defined(_MSC_VER)
-	#ifndef __STDEXT_SCOPEDBG_CHECKEXCEPTION_H__
+	#ifndef STDEXT_SCOPEDBG_CHECKEXCEPTION_H
 	#include "CheckException.h"
 	#endif
 #else
 	#error "todo"
 #endif
 
-#ifndef __STDEXT_SCOPEDBG_SCOPELOG_H__
+#ifndef STDEXT_SCOPEDBG_SCOPELOG_H
 #include "ScopeLog.h"
 #endif
 
@@ -247,4 +247,4 @@ public:
 __NS_STD_END
 
 
-#endif /* __STDEXT_SCOPEDBG_ERRORGUARD_H__ */
+#endif /* STDEXT_SCOPEDBG_ERRORGUARD_H */

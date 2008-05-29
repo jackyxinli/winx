@@ -16,8 +16,8 @@
 // 
 // $Id: tchar.h,v 1.1 2006/10/18 12:13:39 xushiwei Exp $
 // -----------------------------------------------------------------------*/
-#ifndef __STDEXT_TCHAR_H__
-#define __STDEXT_TCHAR_H__
+#ifndef STDEXT_TCHAR_H
+#define STDEXT_TCHAR_H
 
 #ifndef _INC_LIMITS
 #include <limits.h>
@@ -79,4 +79,4 @@ namespace tchar {
 
 __NS_STD_END
 
-#endif /* __STDEXT_TCHAR_H__ */
+#endif /* STDEXT_TCHAR_H */

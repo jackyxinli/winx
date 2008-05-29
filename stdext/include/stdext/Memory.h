@@ -23,19 +23,19 @@
 
 #if (0)
 
-#ifndef __STDEXT_MEMORY_BASIC_H__
+#ifndef STDEXT_MEMORY_BASIC_H
 #include "memory/Basic.h"
 #endif
 
-#ifndef __STDEXT_MEMORY_AUTOFREEALLOC_H__
+#ifndef STDEXT_MEMORY_AUTOFREEALLOC_H
 #include "memory/AutoFreeAlloc.h"
 #endif
 
-#ifndef __STDEXT_MEMORY_RECYCLEBUFFER_H__
+#ifndef STDEXT_MEMORY_RECYCLEBUFFER_H
 #include "memory/RecycleBuffer.h"
 #endif
 
-#ifndef __STDEXT_MEMORY_SCOPEALLOC_H__
+#ifndef STDEXT_MEMORY_SCOPEALLOC_H
 #include "memory/ScopeAlloc.h"
 #endif
 
@@ -44,11 +44,11 @@ class StlAlloc;
 
 #else
 
-#ifndef __STDEXT_BASIC_H__
+#ifndef STDEXT_BASIC_H
 #include "Basic.h"
 #endif
 
-#ifndef __STDEXT_BOOST_MEMORY_H__
+#ifndef STDEXT_BOOST_MEMORY_H
 #include "boost/Memory.h"
 #endif
 
@@ -87,7 +87,7 @@ __NS_STD_END
 // -------------------------------------------------------------------------
 // --> Memory leak checker - count-checker
 
-#ifndef __STDEXT_WINAPI_WINBASE_H__
+#ifndef STDEXT_WINAPI_WINBASE_H
 #include "winapi/winbase.h"
 #endif
 

@@ -16,10 +16,10 @@
 // 
 // $Id: $
 // -----------------------------------------------------------------------*/
-#ifndef __STDEXT_FILEMAPPING_FILEMAPPINGIMPL_H__
-#define __STDEXT_FILEMAPPING_FILEMAPPINGIMPL_H__
+#ifndef STDEXT_FILEMAPPING_FILEMAPPINGIMPL_H
+#define STDEXT_FILEMAPPING_FILEMAPPINGIMPL_H
 
-#ifndef __STDEXT_FILEMAPPING_SIMPLEFILEMAPPING_H__
+#ifndef STDEXT_FILEMAPPING_SIMPLEFILEMAPPING_H
 #include "SimpleFileMapping.h"
 #endif
 
@@ -792,4 +792,4 @@ __NS_STD_END
 
 #pragma pack()
 
-#endif /* __STDEXT_FILEMAPPING_FILEMAPPINGIMPL_H__ */
+#endif /* STDEXT_FILEMAPPING_FILEMAPPINGIMPL_H */

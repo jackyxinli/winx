@@ -16,8 +16,8 @@
 // 
 // $Id: Rope.h,v 1.1 2006/10/18 12:13:39 xushiwei Exp $
 // -----------------------------------------------------------------------*/
-#ifndef __STDEXT_TEXT_ROPE_ROPEIMPL_H__
-#define __STDEXT_TEXT_ROPE_ROPEIMPL_H__
+#ifndef STDEXT_TEXT_ROPE_ROPEIMPL_H
+#define STDEXT_TEXT_ROPE_ROPEIMPL_H
 
 /*
  * Copyright (c) 1997
@@ -625,4 +625,4 @@ __NS_STD_END
 // -------------------------------------------------------------------------
 // $Log: Rope.h,v $
 
-#endif /* __STDEXT_TEXT_ROPE_ROPEIMPL_H__ */
+#endif /* STDEXT_TEXT_ROPE_ROPEIMPL_H */

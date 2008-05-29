@@ -16,14 +16,14 @@
 // 
 // $Id: Map.h,v 1.1 2006/10/18 12:13:39 xushiwei Exp $
 // -----------------------------------------------------------------------*/
-#ifndef __STDEXT_MAP_H__
-#define __STDEXT_MAP_H__
+#ifndef STDEXT_MAP_H
+#define STDEXT_MAP_H
 
-#ifndef __STDEXT_MEMORY_H__
+#ifndef STDEXT_MEMORY_H
 #include "Memory.h"
 #endif
 
-#ifndef __STD_MAP_H__
+#ifndef STD_MAP_H
 #include "../std/map.h"
 #endif
 
@@ -239,4 +239,4 @@ public:
 
 __NS_STD_END
 
-#endif /* __STDEXT_MAP_H__ */
+#endif /* STDEXT_MAP_H */

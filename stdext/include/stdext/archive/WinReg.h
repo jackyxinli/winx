@@ -16,14 +16,14 @@
 // 
 // $Id: WinReg.h,v 1.1 2006/10/18 12:13:39 xushiwei Exp $
 // -----------------------------------------------------------------------*/
-#ifndef __STDEXT_ARCHIVE_WINREG_H__
-#define __STDEXT_ARCHIVE_WINREG_H__
+#ifndef STDEXT_ARCHIVE_WINREG_H
+#define STDEXT_ARCHIVE_WINREG_H
 
-#ifndef __STDEXT_REGISTRY_WINREGISTRY_H__
+#ifndef STDEXT_REGISTRY_WINREGISTRY_H
 #include "../registry/WinRegistry.h"
 #endif
 
-#ifndef __STDEXT_TCHAR_H__
+#ifndef STDEXT_TCHAR_H
 #include "../tchar.h"
 #endif
 
@@ -247,4 +247,4 @@ public:
 
 __NS_STD_END
 
-#endif /* __STDEXT_ARCHIVE_WINREG_H__ */
+#endif /* STDEXT_ARCHIVE_WINREG_H */

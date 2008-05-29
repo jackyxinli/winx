@@ -16,24 +16,24 @@
 // 
 // $Id: HashMap.h,v 1.1 2006/10/18 12:13:39 xushiwei Exp $
 // -----------------------------------------------------------------------*/
-#ifndef __STDEXT_HASHMAP_H__
-#define __STDEXT_HASHMAP_H__
+#ifndef STDEXT_HASHMAP_H
+#define STDEXT_HASHMAP_H
 
-#ifndef __STDEXT_BASIC_H__
+#ifndef STDEXT_BASIC_H
 #include "Basic.h"
 #endif
 
-#ifndef __STD_HASH_MAP_H__
+#ifndef STD_HASH_MAP_H
 #include "../std/hash_map.h"
 #endif
 
 #ifndef _WINX_NO_HASH_MAP
 
-#ifndef __STDEXT_HASH_H__
+#ifndef STDEXT_HASH_H
 #include "Hash.h"
 #endif
 
-#ifndef __STDEXT_MEMORY_H__
+#ifndef STDEXT_MEMORY_H
 #include "Memory.h"
 #endif
 
@@ -275,4 +275,4 @@ __NS_STD_END
 
 #endif // _WINX_NO_HASH_MAP
 
-#endif /* __STDEXT_HASHMAP_H__ */
+#endif /* STDEXT_HASHMAP_H */

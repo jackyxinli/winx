@@ -16,14 +16,14 @@
 // 
 // $Id: objbase.h,v 1.1 2006/10/18 12:13:39 xushiwei Exp $
 // -----------------------------------------------------------------------*/
-#ifndef __STDEXT_WINAPI_OBJBASE_H__
-#define __STDEXT_WINAPI_OBJBASE_H__
+#ifndef STDEXT_WINAPI_OBJBASE_H
+#define STDEXT_WINAPI_OBJBASE_H
 
-#ifndef __STDEXT_WINAPI_WTYPES_H__
+#ifndef STDEXT_WINAPI_WTYPES_H
 #include "wtypes.h"
 #endif
 
-#ifndef __STDEXT_WINAPI_WINERROR_H__
+#ifndef STDEXT_WINAPI_WINERROR_H
 #include "winerror.h"
 #endif
 
@@ -91,11 +91,11 @@ __inline BOOL operator!=(const GUID& guidOne, const GUID& guidOther)
 
 // =========================================================================
 
-#ifndef __STDEXT_WINAPI_OBJIDL_H__
+#ifndef STDEXT_WINAPI_OBJIDL_H
 #include "objidl.h"
 #endif
 
-#ifndef __STDEXT_WINAPI_OLEAUTO_H__
+#ifndef STDEXT_WINAPI_OLEAUTO_H
 #include "oleauto.h"
 #endif
 
@@ -148,4 +148,4 @@ __inline BOOL operator!=(const GUID& guidOne, const GUID& guidOther)
 // $Log: objbase.h,v $
 //
 
-#endif /* __STDEXT_WINAPI_OBJBASE_H__ */
+#endif /* STDEXT_WINAPI_OBJBASE_H */

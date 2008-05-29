@@ -16,18 +16,18 @@
 // 
 // $Id: TypedPtrArray.h,v 1.1 2006/10/18 12:13:39 xushiwei Exp $
 // -----------------------------------------------------------------------*/
-#ifndef __STDEXT_TYPEDPTRARRAY_H__
-#define __STDEXT_TYPEDPTRARRAY_H__
+#ifndef STDEXT_TYPEDPTRARRAY_H
+#define STDEXT_TYPEDPTRARRAY_H
 
-#ifndef __STDEXT_BASIC_H__
+#ifndef STDEXT_BASIC_H
 #include "Basic.h"
 #endif
 
-#ifndef __STD_VECTOR_H__
+#ifndef STD_VECTOR_H
 #include "../std/vector.h"
 #endif
 
-#ifndef __STD_ALGORITHM_H__
+#ifndef STD_ALGORITHM_H
 #include "../std/algorithm.h"
 #endif
 
@@ -417,4 +417,4 @@ public:
 
 __NS_STD_END
 
-#endif /* __STDEXT_TYPEDPTRARRAY_H__ */
+#endif /* STDEXT_TYPEDPTRARRAY_H */

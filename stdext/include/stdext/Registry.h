@@ -16,14 +16,14 @@
 // 
 // $Id: $
 // -----------------------------------------------------------------------*/
-#ifndef __STDEXT_REGISTRY_H__
-#define __STDEXT_REGISTRY_H__
+#ifndef STDEXT_REGISTRY_H
+#define STDEXT_REGISTRY_H
 
 // -------------------------------------------------------------------------
 
 #if !defined(STD_NO_WINSDK)
 
-#ifndef __STDEXT_REGISTRY_WINREGISTRY_H__
+#ifndef STDEXT_REGISTRY_WINREGISTRY_H
 #include "registry/WinRegistry.h"
 #endif
 
@@ -32,4 +32,4 @@
 // -------------------------------------------------------------------------
 // $Log: $
 
-#endif /* __STDEXT_REGISTRY_H__ */
+#endif /* STDEXT_REGISTRY_H */

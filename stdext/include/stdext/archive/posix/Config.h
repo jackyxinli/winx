@@ -16,10 +16,10 @@
 // 
 // $Id: Config.h,v 1.3 2007/01/10 09:36:12 xushiwei Exp $
 // -----------------------------------------------------------------------*/
-#ifndef __STDEXT_ARCHIVE_POSIX_CONFIG_H__
-#define __STDEXT_ARCHIVE_POSIX_CONFIG_H__
+#ifndef STDEXT_ARCHIVE_POSIX_CONFIG_H
+#define STDEXT_ARCHIVE_POSIX_CONFIG_H
 
-#ifndef __STDEXT_PLATFORM_H__
+#ifndef STDEXT_PLATFORM_H
 #include "../../Platform.h"
 #endif
 
@@ -88,4 +88,4 @@ inline int _commit(int fd)
 
 #endif
 
-#endif /* __STDEXT_ARCHIVE_POSIX_CONFIG_H__ */
+#endif /* STDEXT_ARCHIVE_POSIX_CONFIG_H */

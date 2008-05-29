@@ -16,10 +16,10 @@
 // 
 // $Id: objidl.h,v 1.1 2006/10/18 12:13:39 xushiwei Exp $
 // -----------------------------------------------------------------------*/
-#ifndef __STDEXT_WINAPI_OBJIDL_H__
-#define __STDEXT_WINAPI_OBJIDL_H__
+#ifndef STDEXT_WINAPI_OBJIDL_H
+#define STDEXT_WINAPI_OBJIDL_H
 
-#ifndef __STDEXT_WINAPI_WINDEF_H__
+#ifndef STDEXT_WINAPI_WINDEF_H
 #include "windef.h"
 #endif
 
@@ -889,4 +889,4 @@ public:
 // $Log: objidl.h,v $
 //
 
-#endif /* __STDEXT_WINAPI_OBJIDL_H__ */
+#endif /* STDEXT_WINAPI_OBJIDL_H */

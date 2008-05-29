@@ -16,14 +16,14 @@
 // 
 // $Id: Writer.h,v 1.4 2006/12/14 09:15:04 xushiwei Exp $
 // -----------------------------------------------------------------------*/
-#ifndef __STDEXT_ARCHIVE_WRITER_H__
-#define __STDEXT_ARCHIVE_WRITER_H__
+#ifndef STDEXT_ARCHIVE_WRITER_H
+#define STDEXT_ARCHIVE_WRITER_H
 
-#ifndef __STDEXT_ARCHIVE_BASIC_H__
+#ifndef STDEXT_ARCHIVE_BASIC_H
 #include "Basic.h"
 #endif
 
-#ifndef __STDEXT_TEXT_TEMPSTRING_H__
+#ifndef STDEXT_TEXT_TEMPSTRING_H
 #include "../text/TempString.h"
 #endif
 
@@ -237,4 +237,4 @@ public:
 
 __NS_STD_END
 
-#endif /* __STDEXT_ARCHIVE_WRITER_H__ */
+#endif /* STDEXT_ARCHIVE_WRITER_H */

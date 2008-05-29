@@ -16,18 +16,18 @@
 // 
 // $Id: BasicStringBuilder.h,v 1.1 2006/10/18 12:13:39 xushiwei Exp $
 // -----------------------------------------------------------------------*/
-#ifndef __STDEXT_TEXT_BASICSTRINGBUILDER_H__
-#define __STDEXT_TEXT_BASICSTRINGBUILDER_H__
+#ifndef STDEXT_TEXT_BASICSTRINGBUILDER_H
+#define STDEXT_TEXT_BASICSTRINGBUILDER_H
 
-#ifndef __STDEXT_TEXT_BASICSTRING_H__
+#ifndef STDEXT_TEXT_BASICSTRING_H
 #include "BasicString.h"
 #endif
 
-#ifndef __STDEXT_TEXT_STRINGALGO_H__
+#ifndef STDEXT_TEXT_STRINGALGO_H
 #include "StringAlgo.h"
 #endif
 
-#ifndef __STD_VECTOR_H__
+#ifndef STD_VECTOR_H
 #include "../../std/vector.h"
 #endif
 
@@ -486,4 +486,4 @@ public:
 
 __NS_STD_END
 
-#endif /* __STDEXT_TEXT_BASICSTRINGBUILDER_H__ */
+#endif /* STDEXT_TEXT_BASICSTRINGBUILDER_H */

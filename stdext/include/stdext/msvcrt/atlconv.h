@@ -16,8 +16,8 @@
 // 
 // $Id: $
 // -----------------------------------------------------------------------*/
-#ifndef __STDEXT_MSVCRT_ATLCONV_H__
-#define __STDEXT_MSVCRT_ATLCONV_H__
+#ifndef STDEXT_MSVCRT_ATLCONV_H
+#define STDEXT_MSVCRT_ATLCONV_H
 
 #ifndef _INC_WCHAR
 #include <wchar.h>
@@ -28,7 +28,7 @@
 #endif
 
 #if defined(STD_NO_WINSDK)
-#ifndef __STDEXT_WINAPI_WINNLS_H__
+#ifndef STDEXT_WINAPI_WINNLS_H
 #include "../winapi/winnls.h"
 #endif
 #endif
@@ -109,4 +109,4 @@ inline LPSTR __stdcall _winx_W2AHelper(LPSTR lpa, LPCWSTR lpw, int nWideChars)
 // -------------------------------------------------------------------------
 // $Log: $
 
-#endif /* __STDEXT_MSVCRT_ATLCONV_H__ */
+#endif /* STDEXT_MSVCRT_ATLCONV_H */

@@ -16,14 +16,14 @@
 // 
 // $Id: Log.h,v 1.7 2007/01/10 09:32:25 xushiwei Exp $
 // -----------------------------------------------------------------------*/
-#ifndef __STDEXT_LOG_H__
-#define __STDEXT_LOG_H__
+#ifndef STDEXT_LOG_H
+#define STDEXT_LOG_H
 
-#ifndef __STDEXT_BASIC_H__
+#ifndef STDEXT_BASIC_H
 #include "Basic.h"
 #endif
 
-#ifndef __STDEXT_STORAGE_H__
+#ifndef STDEXT_STORAGE_H
 #include "Storage.h"
 #endif
 
@@ -35,7 +35,7 @@
 #include <stdarg.h>
 #endif
 
-#ifndef __STD_STRING_H__
+#ifndef STD_STRING_H
 #include "../std/string.h"
 #endif
 
@@ -903,4 +903,4 @@ public:
 
 __NS_STD_END
 
-#endif /* __STDEXT_LOG_H__ */
+#endif /* STDEXT_LOG_H */

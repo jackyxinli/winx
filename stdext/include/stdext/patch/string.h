@@ -16,8 +16,8 @@
 // 
 // $Id: string.h,v 1.1 2006/12/22 10:19:55 xushiwei Exp $
 // -----------------------------------------------------------------------*/
-#ifndef __STDEXT_PATCH_STRING_H__
-#define __STDEXT_PATCH_STRING_H__
+#ifndef STDEXT_PATCH_STRING_H
+#define STDEXT_PATCH_STRING_H
 
 // -------------------------------------------------------------------------
 
@@ -35,4 +35,4 @@
 // STL-Patch: std::basic_string::_Split function bugfix (vc6)
 //
 
-#endif /* __STDEXT_PATCH_STRING_H__ */
+#endif /* STDEXT_PATCH_STRING_H */

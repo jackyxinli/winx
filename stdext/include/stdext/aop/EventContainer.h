@@ -17,14 +17,14 @@
 // 
 // $Id: $
 // -----------------------------------------------------------------------*/
-#ifndef __STDEXT_AOP_EVENTCONTAINER_H__
-#define __STDEXT_AOP_EVENTCONTAINER_H__
+#ifndef STDEXT_AOP_EVENTCONTAINER_H
+#define STDEXT_AOP_EVENTCONTAINER_H
 
-#ifndef __STDEXT_AOP_INTERFACE_H__
+#ifndef STDEXT_AOP_INTERFACE_H
 #include "Interface.h"
 #endif
 
-#ifndef __STDEXT_ARRAY_H__
+#ifndef STDEXT_ARRAY_H
 #include "../Array.h"
 #endif
 
@@ -86,7 +86,7 @@ __NS_STD_END
 
 #if defined(STD_UNITTEST)
 
-#ifndef __STDEXT_AOP_EVENT_H__
+#ifndef STDEXT_AOP_EVENT_H
 #include "Event.h"
 #endif
 
@@ -214,4 +214,4 @@ __NS_STD_END
 // -------------------------------------------------------------------------
 // $Log: $
 
-#endif /* __STDEXT_AOP_EVENTCONTAINER_H__ */
+#endif /* STDEXT_AOP_EVENTCONTAINER_H */

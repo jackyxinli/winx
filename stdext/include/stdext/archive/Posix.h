@@ -19,23 +19,23 @@
 #ifndef STDEXT_ARCHIVE_POSIX_H
 #define STDEXT_ARCHIVE_POSIX_H
 
-#ifndef __STDEXT_ARCHIVE_WRITER_H__
+#ifndef STDEXT_ARCHIVE_WRITER_H
 #include "Writer.h"
 #endif
 
-#ifndef __STDEXT_ARCHIVE_READER_H__
+#ifndef STDEXT_ARCHIVE_READER_H
 #include "Reader.h"
 #endif
 
-#ifndef __STDEXT_ARCHIVE_WRITEARCHIVE_H__
+#ifndef STDEXT_ARCHIVE_WRITEARCHIVE_H
 #include "WriteArchive.h"
 #endif
 
-#ifndef __STDEXT_ARCHIVE_READARCHIVE_H__
+#ifndef STDEXT_ARCHIVE_READARCHIVE_H
 #include "ReadArchive.h"
 #endif
 
-#ifndef __STDEXT_ARCHIVE_POSIX_CONFIG_H__
+#ifndef STDEXT_ARCHIVE_POSIX_CONFIG_H
 #include "posix/Config.h"
 #endif
 

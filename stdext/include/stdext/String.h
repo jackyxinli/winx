@@ -16,26 +16,26 @@
 // 
 // $Id: String.h,v 1.3 2007/01/10 09:35:16 xushiwei Exp $
 // -----------------------------------------------------------------------*/
-#ifndef __STDEXT_STRING_H__
-#define __STDEXT_STRING_H__
+#ifndef STDEXT_STRING_H
+#define STDEXT_STRING_H
 
-#ifndef __STDEXT_BASIC_H__
+#ifndef STDEXT_BASIC_H
 #include "Basic.h"
 #endif
 
-#ifndef __STDEXT_TEXT_BASICALGO_H__
+#ifndef STDEXT_TEXT_BASICALGO_H
 #include "text/BasicAlgo.h"
 #endif
 
-#ifndef __STDEXT_TEXT_BASICSTRING_H__
+#ifndef STDEXT_TEXT_BASICSTRING_H
 #include "text/BasicString.h"
 #endif
 
-#ifndef __STDEXT_TEXT_BASICSTRINGBUILDER_H__
+#ifndef STDEXT_TEXT_BASICSTRINGBUILDER_H
 #include "text/BasicStringBuilder.h"
 #endif
 
-#ifndef __STDEXT_TEXT_STRINGALGO_H__
+#ifndef STDEXT_TEXT_STRINGALGO_H
 #include "text/StringAlgo.h"
 #endif
 
@@ -173,4 +173,4 @@ public:
 
 __NS_STD_END
 
-#endif /* __STDEXT_STRING_H__ */
+#endif /* STDEXT_STRING_H */

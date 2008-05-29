@@ -55,15 +55,15 @@ ptrdiff_t* _Dist_type(const stdext::_Deque_iterator<_Tp, _Ref, _Ptr>&)
 
 #if defined(SGI_DEQUE_UNITTEST)
 
-#ifndef __STD_DEQUE_H__
+#ifndef STD_DEQUE_H
 #include "../../std/deque.h"
 #endif
 
-#ifndef __STDEXT_MEMORY_H__
+#ifndef STDEXT_MEMORY_H
 #include "../Memory.h"
 #endif
 
-#ifndef __STDEXT_COUNTER_H__
+#ifndef STDEXT_COUNTER_H
 #include "../Counter.h"
 #endif
 

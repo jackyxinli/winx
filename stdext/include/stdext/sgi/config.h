@@ -36,7 +36,7 @@
 
 // -------------------------------------------------------------------------
 
-#ifndef __STDEXT_MEMORY_H__
+#ifndef STDEXT_MEMORY_H
 #include "../Memory.h"
 #endif
 

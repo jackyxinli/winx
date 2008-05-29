@@ -16,8 +16,8 @@
 // 
 // $Id: windef.h,v 1.6 2007/01/10 09:38:10 xushiwei Exp $
 // -----------------------------------------------------------------------*/
-#ifndef __STDEXT_WINAPI_WINDEF_H__
-#define __STDEXT_WINAPI_WINDEF_H__
+#ifndef STDEXT_WINAPI_WINDEF_H
+#define STDEXT_WINAPI_WINDEF_H
 
 // -------------------------------------------------------------------------
 
@@ -28,4 +28,4 @@
 // -------------------------------------------------------------------------
 // $Log: $
 
-#endif /* __STDEXT_WINAPI_WINDEF_H__ */
+#endif /* STDEXT_WINAPI_WINDEF_H */

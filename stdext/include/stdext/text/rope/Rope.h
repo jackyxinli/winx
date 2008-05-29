@@ -16,8 +16,8 @@
 // 
 // $Id: Rope.h,v 1.1 2006/10/18 12:13:39 xushiwei Exp $
 // -----------------------------------------------------------------------*/
-#ifndef __STDEXT_TEXT_ROPE_ROPE_H__
-#define __STDEXT_TEXT_ROPE_ROPE_H__
+#ifndef STDEXT_TEXT_ROPE_ROPE_H
+#define STDEXT_TEXT_ROPE_ROPE_H
 
 #ifndef __SGI_NUMERIC_H__
 #include "../../sgi/numeric.h"
@@ -31,7 +31,7 @@
 #include "../../sgi/functional.h"
 #endif
 
-#ifndef __STDEXT_TEXT_ROPE_ROPEREP_H__
+#ifndef STDEXT_TEXT_ROPE_ROPEREP_H
 #include "RopeRep.h"
 #endif
 
@@ -940,19 +940,19 @@ const typename Rope<_CharT, _Alloc>::size_type Rope<_CharT, _Alloc>::npos =
 
 __NS_STD_END
 
-#ifndef __STDEXT_TEXT_ROPE_ROPEITER_H__
+#ifndef STDEXT_TEXT_ROPE_ROPEITER_H
 #include "RopeIter.h"
 #endif
 
-#ifndef __STDEXT_TEXT_ROPE_ROPEIMPL_H__
+#ifndef STDEXT_TEXT_ROPE_ROPEIMPL_H
 #include "RopeImpl.h"
 #endif
 
-#ifndef __STDEXT_TEXT_ROPE_CHARPROXY_H__
+#ifndef STDEXT_TEXT_ROPE_CHARPROXY_H
 #include "CharProxy.h"
 #endif
 
 // -------------------------------------------------------------------------
 // $Log: Rope.h,v $
 
-#endif /* __STDEXT_TEXT_ROPE_ROPE_H__ */
+#endif /* STDEXT_TEXT_ROPE_ROPE_H */

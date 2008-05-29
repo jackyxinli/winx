@@ -16,10 +16,10 @@
 // 
 // $Id: RecycleBuffer.h,v 1.1 2006/10/18 12:13:39 xushiwei Exp $
 // -----------------------------------------------------------------------*/
-#ifndef __STDEXT_MEMORY_RECYCLEBUFFER_H__
-#define __STDEXT_MEMORY_RECYCLEBUFFER_H__
+#ifndef STDEXT_MEMORY_RECYCLEBUFFER_H
+#define STDEXT_MEMORY_RECYCLEBUFFER_H
 
-#ifndef __STDEXT_MEMORY_BASIC_H__
+#ifndef STDEXT_MEMORY_BASIC_H
 #include "Basic.h"
 #endif
 
@@ -75,4 +75,4 @@ public:
 
 __NS_STD_END
 
-#endif /* __STDEXT_MEMORY_RECYCLEBUFFER_H__ */
+#endif /* STDEXT_MEMORY_RECYCLEBUFFER_H */

@@ -16,14 +16,14 @@
 // 
 // $Id: $
 // -----------------------------------------------------------------------*/
-#ifndef __STDEXT_VC_UUIDOF_H__
-#define __STDEXT_VC_UUIDOF_H__
+#ifndef STDEXT_VC_UUIDOF_H
+#define STDEXT_VC_UUIDOF_H
 
 // =========================================================================
 
 #if defined(STD_NO_WINSDK)
 
-#ifndef __STDEXT_WINAPI_WTYPES_H__
+#ifndef STDEXT_WINAPI_WTYPES_H
 #include "../winapi/wtypes.h"
 #endif
 
@@ -286,4 +286,4 @@ DEFINE_IID_ALTER(IErrorInfo)
 // =========================================================================
 // $Log: $
 
-#endif /* __STDEXT_VC_UUIDOF_H__ */
+#endif /* STDEXT_VC_UUIDOF_H */

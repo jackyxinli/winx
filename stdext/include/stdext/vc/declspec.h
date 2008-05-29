@@ -16,8 +16,8 @@
 // 
 // $Id: $
 // -----------------------------------------------------------------------*/
-#ifndef __STDEXT_VC_DECLSPEC_H__
-#define __STDEXT_VC_DECLSPEC_H__
+#ifndef STDEXT_VC_DECLSPEC_H
+#define STDEXT_VC_DECLSPEC_H
 
 // =========================================================================
 // function calltype
@@ -79,15 +79,15 @@ Type _WINX_SELECTANY(Var, _Unused)
 // =========================================================================
 // uuidof
 
-#ifndef __STDEXT_VC_UUIDOF_H__
+#ifndef STDEXT_VC_UUIDOF_H
 #include "uuidof.h"
 #endif
 
-#ifndef __STDEXT_VC_PROPERTY_H__
+#ifndef STDEXT_VC_PROPERTY_H
 #include "property.h"
 #endif
 
 // =========================================================================
 // $Log: $
 
-#endif /* __STDEXT_VC_DECLSPEC_H__ */
+#endif /* STDEXT_VC_DECLSPEC_H */

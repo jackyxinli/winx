@@ -17,10 +17,10 @@
 // 
 // $Id: $
 // -----------------------------------------------------------------------*/
-#ifndef __STDEXT_AOP_INTERFACE_H__
-#define __STDEXT_AOP_INTERFACE_H__
+#ifndef STDEXT_AOP_INTERFACE_H
+#define STDEXT_AOP_INTERFACE_H
 
-#ifndef __STDEXT_BASIC_H__
+#ifndef STDEXT_BASIC_H
 #include "../Basic.h"
 #endif
 
@@ -133,4 +133,4 @@ interface IEventContainer
 
 __NS_STD_END
 
-#endif /* __STDEXT_AOP_INTERFACE_H__ */
+#endif /* STDEXT_AOP_INTERFACE_H */

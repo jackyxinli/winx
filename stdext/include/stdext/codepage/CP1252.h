@@ -16,10 +16,10 @@
 // 
 // $Id: CP1252.h,v 1.4 2006/12/14 09:15:04 xushiwei Exp $
 // -----------------------------------------------------------------------*/
-#ifndef __STDEXT_CODEPAGE_CP1252_H__
-#define __STDEXT_CODEPAGE_CP1252_H__
+#ifndef STDEXT_CODEPAGE_CP1252_H
+#define STDEXT_CODEPAGE_CP1252_H
 
-#ifndef __STDEXT_BASIC_H__
+#ifndef STDEXT_BASIC_H
 #include "../Basic.h"
 #endif
 
@@ -157,4 +157,4 @@ public:
 
 __NS_STD_END
 
-#endif /* __STDEXT_CODEPAGE_CP1252_H__ */
+#endif /* STDEXT_CODEPAGE_CP1252_H */

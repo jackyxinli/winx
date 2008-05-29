@@ -16,10 +16,10 @@
 // 
 // $Id: Rand.h,v 1.1 2006/10/18 12:13:39 xushiwei Exp $
 // -----------------------------------------------------------------------*/
-#ifndef __STDEXT_RAND_H__
-#define __STDEXT_RAND_H__
+#ifndef STDEXT_RAND_H
+#define STDEXT_RAND_H
 
-#ifndef __STDEXT_BASIC_H__
+#ifndef STDEXT_BASIC_H
 #include "Basic.h"
 #endif
 
@@ -421,4 +421,4 @@ __NS_STD_END
 // -------------------------------------------------------------------------
 // $Log: Rand.h,v $
 
-#endif /* __STDEXT_RAND_H__ */
+#endif /* STDEXT_RAND_H */

@@ -16,8 +16,8 @@
 // 
 // $Id: RopeRep.h,v 1.1 2006/10/18 12:13:39 xushiwei Exp $
 // -----------------------------------------------------------------------*/
-#ifndef __STDEXT_TEXT_ROPE_ROPEREP_H__
-#define __STDEXT_TEXT_ROPE_ROPEREP_H__
+#ifndef STDEXT_TEXT_ROPE_ROPEREP_H
+#define STDEXT_TEXT_ROPE_ROPEREP_H
 
 #define GC_REGISTER_FINALIZER(a0, a1, a2, a3, a4) //@@todo
 
@@ -232,4 +232,4 @@ _CharT _Rope_RopeRep<_CharT>::_S_fetch(_Rope_RopeRep<_CharT>* __r, size_t __i)
 
 __NS_STD_END
 
-#endif /* __STDEXT_TEXT_ROPE_ROPEREP_H__ */
+#endif /* STDEXT_TEXT_ROPE_ROPEREP_H */

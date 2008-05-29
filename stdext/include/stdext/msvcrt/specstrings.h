@@ -16,8 +16,8 @@
 // 
 // $Id: $
 // -----------------------------------------------------------------------*/
-#ifndef __STDEXT_MSVCRT_SPECSTRINGS_H__
-#define __STDEXT_MSVCRT_SPECSTRINGS_H__
+#ifndef STDEXT_MSVCRT_SPECSTRINGS_H
+#define STDEXT_MSVCRT_SPECSTRINGS_H
 
 // -------------------------------------------------------------------------
 
@@ -200,4 +200,4 @@
 // -------------------------------------------------------------------------
 // $Log: $
 
-#endif /* __STDEXT_MSVCRT_SPECSTRINGS_H__ */
+#endif /* STDEXT_MSVCRT_SPECSTRINGS_H */

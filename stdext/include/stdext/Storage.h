@@ -16,14 +16,14 @@
 // 
 // $Id: Storage.h,v 1.4 2006/12/22 10:17:16 xushiwei Exp $
 // -----------------------------------------------------------------------*/
-#ifndef __STDEXT_STORAGE_H__
-#define __STDEXT_STORAGE_H__
+#ifndef STDEXT_STORAGE_H
+#define STDEXT_STORAGE_H
 
-#ifndef __STDEXT_BASIC_H__
+#ifndef STDEXT_BASIC_H
 #include "Basic.h"
 #endif
 
-#ifndef __STDEXT_ARRAY_H__
+#ifndef STDEXT_ARRAY_H
 #include "Array.h"
 #endif
 
@@ -312,4 +312,4 @@ public:
 
 __NS_STD_END
 
-#endif /* __STDEXT_STORAGE_H__ */
+#endif /* STDEXT_STORAGE_H */

@@ -16,14 +16,14 @@
 // 
 // $Id: ThreadModel.h,v 1.1 2006/10/18 12:13:39 xushiwei Exp $
 // -----------------------------------------------------------------------*/
-#ifndef __STDEXT_THREADMODEL_H__
-#define __STDEXT_THREADMODEL_H__
+#ifndef STDEXT_THREADMODEL_H
+#define STDEXT_THREADMODEL_H
 
-#ifndef __STDEXT_BASIC_H__
+#ifndef STDEXT_BASIC_H
 #include "Basic.h"
 #endif
 
-#ifndef __STDEXT_BOOST_MEMORY_H__
+#ifndef STDEXT_BOOST_MEMORY_H
 #include "boost/Memory.h"
 #endif
 
@@ -95,4 +95,4 @@ typedef SingleThreadModel DefaultThreadModel;
 
 __NS_STD_END
 
-#endif /* __STDEXT_THREADMODEL_H__ */
+#endif /* STDEXT_THREADMODEL_H */

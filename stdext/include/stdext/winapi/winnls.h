@@ -16,10 +16,10 @@
 // 
 // $Id: $
 // -----------------------------------------------------------------------*/
-#ifndef __STDEXT_WINAPI_WINNLS_H__
-#define __STDEXT_WINAPI_WINNLS_H__
+#ifndef STDEXT_WINAPI_WINNLS_H
+#define STDEXT_WINAPI_WINNLS_H
 
-#ifndef __STDEXT_WINAPI_WINBASE_H__
+#ifndef STDEXT_WINAPI_WINBASE_H
 #include "winbase.h"
 #endif
 
@@ -67,4 +67,4 @@ inline int WINAPI WideCharToMultiByte(
 // -------------------------------------------------------------------------
 // $Log: $
 
-#endif /* __STDEXT_WINAPI_WINNLS_H__ */
+#endif /* STDEXT_WINAPI_WINNLS_H */

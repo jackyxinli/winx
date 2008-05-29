@@ -19,15 +19,15 @@
 #ifndef STDEXT_LIST_H
 #define STDEXT_LIST_H
 
-#ifndef __STDEXT_BASIC_H__
+#ifndef STDEXT_BASIC_H
 #include "Basic.h"
 #endif
 
-#ifndef __STDEXT_MEMORY_H__
+#ifndef STDEXT_MEMORY_H
 #include "Memory.h"
 #endif
 
-#ifndef __STD_LIST_H__
+#ifndef STD_LIST_H
 #include "../std/list.h"
 #endif
 

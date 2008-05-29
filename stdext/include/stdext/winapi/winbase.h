@@ -16,8 +16,8 @@
 // 
 // $Id: winbase.h,v 1.6 2007/01/10 09:38:10 xushiwei Exp $
 // -----------------------------------------------------------------------*/
-#ifndef __STDEXT_WINAPI_WINBASE_H__
-#define __STDEXT_WINAPI_WINBASE_H__
+#ifndef STDEXT_WINAPI_WINBASE_H
+#define STDEXT_WINAPI_WINBASE_H
 
 #ifndef BOOST_DETAIL_WINAPI_WINBASE_H
 #include "../../../../memory/boost/detail/winapi/winbase.h"
@@ -35,7 +35,7 @@
 	#include <crtdbg.h>
 	#endif
 #else
-	#ifndef __STDEXT_MSVCRT_CRTDBG_H__
+	#ifndef STDEXT_MSVCRT_CRTDBG_H
 	#include "../msvcrt/crtdbg.h"
 	#endif
 #endif
@@ -709,4 +709,4 @@ inline BOOL WINAPI CloseHandle(
 // -------------------------------------------------------------------------
 // $Log: $
 
-#endif /* __STDEXT_WINAPI_WINBASE_H__ */
+#endif /* STDEXT_WINAPI_WINBASE_H */

@@ -16,8 +16,8 @@
 // 
 // $Id: string.h,v 1.1 2006/12/22 10:19:55 xushiwei Exp $
 // -----------------------------------------------------------------------*/
-#ifndef __STDEXT_PATCH_VC6_STRING_H__
-#define __STDEXT_PATCH_VC6_STRING_H__
+#ifndef STDEXT_PATCH_VC6_STRING_H
+#define STDEXT_PATCH_VC6_STRING_H
 
 #if !defined(_MSC_VER) || _MSC_VER > 1200
 #error "Don't include me: just for vc++ 6.0"
@@ -657,4 +657,4 @@ _STD_END
 // STL-Patch: std::basic_string::_Split function bugfix (vc6)
 //
 
-#endif /* __STDEXT_PATCH_VC6_STRING_H__ */
+#endif /* STDEXT_PATCH_VC6_STRING_H */

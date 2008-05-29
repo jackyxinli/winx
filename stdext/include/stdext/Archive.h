@@ -16,8 +16,8 @@
 // 
 // $Id: Archive.h,v 1.2 2006/11/30 03:19:17 xushiwei Exp $
 // -----------------------------------------------------------------------*/
-#ifndef __STDEXT_ARCHIVE_H__
-#define __STDEXT_ARCHIVE_H__
+#ifndef STDEXT_ARCHIVE_H
+#define STDEXT_ARCHIVE_H
 
 #if (0)
 #define STD_STREAM_ARCHIVE
@@ -25,59 +25,59 @@
 
 // -------------------------------------------------------------------------
 
-#ifndef __STDEXT_BASIC_H__
+#ifndef STDEXT_BASIC_H
 #include "Basic.h"
 #endif
 
-#ifndef __STDEXT_ARCHIVE_BASIC_H__
+#ifndef STDEXT_ARCHIVE_BASIC_H
 #include "archive/Basic.h"
 #endif
 
-#ifndef __STDEXT_ARCHIVE_WRITER_H__
+#ifndef STDEXT_ARCHIVE_WRITER_H
 #include "archive/Writer.h"
 #endif
 
-#ifndef __STDEXT_ARCHIVE_READER_H__
+#ifndef STDEXT_ARCHIVE_READER_H
 #include "archive/Reader.h"
 #endif
 
-#ifndef __STDEXT_ARCHIVE_WRITEARCHIVE_H__
+#ifndef STDEXT_ARCHIVE_WRITEARCHIVE_H
 #include "archive/WriteArchive.h"
 #endif
 
-#ifndef __STDEXT_ARCHIVE_READARCHIVE_H__
+#ifndef STDEXT_ARCHIVE_READARCHIVE_H
 #include "archive/ReadArchive.h"
 #endif
 
-#ifndef __STDEXT_ARCHIVE_STDIO_H__
+#ifndef STDEXT_ARCHIVE_STDIO_H
 #include "archive/Stdio.h"
 #endif
 
-#ifndef __STDEXT_ARCHIVE_POSIX_H__
+#ifndef STDEXT_ARCHIVE_POSIX_H
 #include "archive/Posix.h"
 #endif
 
-#ifndef __STDEXT_ARCHIVE_MEMARCHIVE_H__
+#ifndef STDEXT_ARCHIVE_MEMARCHIVE_H
 #include "archive/MemArchive.h"
 #endif
 
-#ifndef __STDEXT_ARCHIVE_RECORD_H__
+#ifndef STDEXT_ARCHIVE_RECORD_H
 #include "archive/Record.h"
 #endif
 
-#ifndef __STDEXT_ARCHIVE_MEM_H__
+#ifndef STDEXT_ARCHIVE_MEM_H
 #include "archive/Mem.h"
 #endif
 
 #if defined(X_OS_WINDOWS)
 
 #if defined(STD_STREAM_ARCHIVE)
-	#ifndef __STDEXT_ARCHIVE_STREAM_H__
+	#ifndef STDEXT_ARCHIVE_STREAM_H
 	#include "archive/Stream.h"
 	#endif
 #endif // defined(STD_STREAM_ARCHIVE)
 
-#ifndef __STDEXT_ARCHIVE_WINREG_H__
+#ifndef STDEXT_ARCHIVE_WINREG_H
 #include "archive/WinReg.h"
 #endif
 
@@ -168,4 +168,4 @@ __NS_STD_END
 // -------------------------------------------------------------------------
 // $Log: Archive.h,v $
 
-#endif /* __STDEXT_ARCHIVE_H__ */
+#endif /* STDEXT_ARCHIVE_H */

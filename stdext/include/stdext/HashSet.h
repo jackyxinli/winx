@@ -16,24 +16,24 @@
 // 
 // $Id: HashSet.h,v 1.1 2006/10/18 12:13:39 xushiwei Exp $
 // -----------------------------------------------------------------------*/
-#ifndef __STDEXT_HASHSET_H__
-#define __STDEXT_HASHSET_H__
+#ifndef STDEXT_HASHSET_H
+#define STDEXT_HASHSET_H
 
-#ifndef __STDEXT_BASIC_H__
+#ifndef STDEXT_BASIC_H
 #include "Basic.h"
 #endif
 
-#ifndef __STD_HASH_SET_H__
+#ifndef STD_HASH_SET_H
 #include "../std/hash_set.h"
 #endif
 
 #ifndef _WINX_NO_HASH_SET
 
-#ifndef __STDEXT_HASH_H__
+#ifndef STDEXT_HASH_H
 #include "Hash.h"
 #endif
 
-#ifndef __STDEXT_MEMORY_H__
+#ifndef STDEXT_MEMORY_H
 #include "Memory.h"
 #endif
 
@@ -271,4 +271,4 @@ __NS_STD_END
 
 #endif // _WINX_NO_HASH_SET
 
-#endif /* __STDEXT_HASHSET_H__ */
+#endif /* STDEXT_HASHSET_H */

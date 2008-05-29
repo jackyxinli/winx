@@ -16,10 +16,10 @@
 // 
 // $Id: ReadArchive.h,v 1.4 2006/12/14 09:15:04 xushiwei Exp $
 // -----------------------------------------------------------------------*/
-#ifndef __STDEXT_ARCHIVE_READARCHIVE_H__
-#define __STDEXT_ARCHIVE_READARCHIVE_H__
+#ifndef STDEXT_ARCHIVE_READARCHIVE_H
+#define STDEXT_ARCHIVE_READARCHIVE_H
 
-#ifndef __STDEXT_ARCHIVE_BASIC_H__
+#ifndef STDEXT_ARCHIVE_BASIC_H
 #include "Basic.h"
 #endif
 
@@ -390,4 +390,4 @@ public:
 
 __NS_STD_END
 
-#endif /* __STDEXT_ARCHIVE_READARCHIVE_H__ */
+#endif /* STDEXT_ARCHIVE_READARCHIVE_H */

@@ -16,8 +16,8 @@
 // 
 // $Id: $
 // -----------------------------------------------------------------------*/
-#ifndef __STDEXT_PLATFORM_H__
-#define __STDEXT_PLATFORM_H__
+#ifndef STDEXT_PLATFORM_H
+#define STDEXT_PLATFORM_H
 
 // =========================================================================
 // --> Platform(OS) Detection
@@ -248,4 +248,4 @@
 // $Log: platform.h,v $
 //
 
-#endif /* __STDEXT_PLATFORM_H__ */
+#endif /* STDEXT_PLATFORM_H */

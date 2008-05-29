@@ -16,8 +16,8 @@
 // 
 // $Id: $
 // -----------------------------------------------------------------------*/
-#ifndef __STDEXT_REGEX_H__
-#define __STDEXT_REGEX_H__
+#ifndef STDEXT_REGEX_H
+#define STDEXT_REGEX_H
 
 #if (0)
 #define WINX_USE_DEFBOOST
@@ -67,4 +67,4 @@ public:
 // -------------------------------------------------------------------------
 // $Log: $
 
-#endif /* __STDEXT_REGEX_H__ */
+#endif /* STDEXT_REGEX_H */

@@ -16,8 +16,8 @@
 // 
 // $Id: LinkLib.h,v 1.1 2006/11/30 08:45:42 xushiwei Exp $
 // -----------------------------------------------------------------------*/
-#ifndef __STDEXT_LINKLIB_H__
-#define __STDEXT_LINKLIB_H__
+#ifndef STDEXT_LINKLIB_H
+#define STDEXT_LINKLIB_H
 
 // -------------------------------------------------------------------------
 
@@ -28,4 +28,4 @@
 // -------------------------------------------------------------------------
 // $Log: LinkLib.h,v $
 
-#endif /* __STDEXT_LINKLIB_H__ */
+#endif /* STDEXT_LINKLIB_H */

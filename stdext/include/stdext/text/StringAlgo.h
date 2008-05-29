@@ -16,14 +16,14 @@
 // 
 // $Id: StringAlgo.h,v 1.1 2006/10/18 12:13:39 xushiwei Exp $
 // -----------------------------------------------------------------------*/
-#ifndef __STDEXT_TEXT_STRINGALGO_H__
-#define __STDEXT_TEXT_STRINGALGO_H__
+#ifndef STDEXT_TEXT_STRINGALGO_H
+#define STDEXT_TEXT_STRINGALGO_H
 
-#ifndef __STDEXT_TEXT_BASICSTRING_H__
+#ifndef STDEXT_TEXT_BASICSTRING_H
 #include "BasicString.h"
 #endif
 
-#ifndef __STDEXT_MSVCRT_VARGS_H__
+#ifndef STDEXT_MSVCRT_VARGS_H
 #include "../msvcrt/vargs.h"
 #endif
 
@@ -199,4 +199,4 @@ public:
 
 __NS_STD_END
 
-#endif /* __STDEXT_TEXT_STRINGALGO_H__ */
+#endif /* STDEXT_TEXT_STRINGALGO_H */

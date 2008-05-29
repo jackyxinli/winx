@@ -16,20 +16,20 @@
 // 
 // $Id: $
 // -----------------------------------------------------------------------*/
-#ifndef __STDEXT_FILEMAPPING_H__
-#define __STDEXT_FILEMAPPING_H__
+#ifndef STDEXT_FILEMAPPING_H
+#define STDEXT_FILEMAPPING_H
 
 // -------------------------------------------------------------------------
 
-#ifndef __STDEXT_FILEMAPPING_SIMPLEFILEMAPPING_H__
+#ifndef STDEXT_FILEMAPPING_SIMPLEFILEMAPPING_H
 #include "filemapping/SimpleFileMapping.h"
 #endif
 
-#ifndef __STDEXT_FILEMAPPING_FILEMAPPINGIMPL_H__
+#ifndef STDEXT_FILEMAPPING_FILEMAPPINGIMPL_H
 #include "filemapping/FileMappingImpl.h"
 #endif
 
 // -------------------------------------------------------------------------
 // $Log: $
 
-#endif /* __STDEXT_FILEMAPPING_H__ */
+#endif /* STDEXT_FILEMAPPING_H */

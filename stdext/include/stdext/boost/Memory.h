@@ -16,8 +16,8 @@
 // 
 // $Id$
 // -----------------------------------------------------------------------*/
-#ifndef __STDEXT_BOOST_MEMORY_H__
-#define __STDEXT_BOOST_MEMORY_H__
+#ifndef STDEXT_BOOST_MEMORY_H
+#define STDEXT_BOOST_MEMORY_H
 
 // -------------------------------------------------------------------------
 
@@ -53,4 +53,4 @@
 // -------------------------------------------------------------------------
 // $Log: Memory.h,v $
 
-#endif /* __STDEXT_BOOST_MEMORY_H__ */
+#endif /* STDEXT_BOOST_MEMORY_H */

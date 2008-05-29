@@ -16,8 +16,8 @@
 // 
 // $Id: CharProxy.h,v 1.1 2006/10/18 12:13:39 xushiwei Exp $
 // -----------------------------------------------------------------------*/
-#ifndef __STDEXT_TEXT_ROPE_CHARPROXY_H__
-#define __STDEXT_TEXT_ROPE_CHARPROXY_H__
+#ifndef STDEXT_TEXT_ROPE_CHARPROXY_H
+#define STDEXT_TEXT_ROPE_CHARPROXY_H
 
 __NS_STD_BEGIN
 
@@ -170,4 +170,4 @@ inline bool operator!= (const _Rope_char_ptr_proxy<_CharT,_Alloc>& __x,
 
 __NS_STD_END
 
-#endif /* __STDEXT_TEXT_ROPE_CHARPROXY_H__ */
+#endif /* STDEXT_TEXT_ROPE_CHARPROXY_H */

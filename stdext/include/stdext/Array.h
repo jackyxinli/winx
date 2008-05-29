@@ -16,22 +16,22 @@
 // 
 // $Id: Array.h,v 1.2 2007/01/10 09:33:50 xushiwei Exp $
 // -----------------------------------------------------------------------*/
-#ifndef __STDEXT_ARRAY_H__
-#define __STDEXT_ARRAY_H__
+#ifndef STDEXT_ARRAY_H
+#define STDEXT_ARRAY_H
 
-#ifndef __STDEXT_BASIC_H__
+#ifndef STDEXT_BASIC_H
 #include "Basic.h"
 #endif
 
-#ifndef __STD_FUNCTIONAL_H__
+#ifndef STD_FUNCTIONAL_H
 #include "../std/functional.h"
 #endif
 
-#ifndef __STD_ALGORITHM_H__
+#ifndef STD_ALGORITHM_H
 #include "../std/algorithm.h"
 #endif
 
-#ifndef __STD_STDEXCEPT_H__
+#ifndef STD_STDEXCEPT_H
 #include "../std/stdexcept.h"
 #endif
 
@@ -252,4 +252,4 @@ public:
 
 __NS_STD_END
 
-#endif /* __STDEXT_ARRAY_H__ */
+#endif /* STDEXT_ARRAY_H */

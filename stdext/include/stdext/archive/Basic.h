@@ -16,19 +16,19 @@
 // 
 // $Id: Basic.h,v 1.4 2006/12/14 09:15:04 xushiwei Exp $
 // -----------------------------------------------------------------------*/
-#ifndef __STDEXT_ARCHIVE_BASIC_H__
-#define __STDEXT_ARCHIVE_BASIC_H__
+#ifndef STDEXT_ARCHIVE_BASIC_H
+#define STDEXT_ARCHIVE_BASIC_H
 
 #if (0)
 #define BYTESWAP
 #define __BYTESWAP__
 #endif
 
-#ifndef __STDEXT_CHARTYPE_H__
+#ifndef STDEXT_CHARTYPE_H
 #include "../CharType.h"
 #endif
 
-#ifndef __STDEXT_MEMORY_H__
+#ifndef STDEXT_MEMORY_H
 #include "../Memory.h"
 #endif
 
@@ -386,4 +386,4 @@ inline void winx_call put_n(_OStream& __o, size_t __n, const _CharT& __val)
 
 __NS_STD_END
 
-#endif /* __STDEXT_ARCHIVE_BASIC_H__ */
+#endif /* STDEXT_ARCHIVE_BASIC_H */

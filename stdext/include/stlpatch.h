@@ -16,10 +16,10 @@
 // 
 // $Id: stlpatch.h,v 1.1 2006/12/22 10:19:55 xushiwei Exp $
 // -----------------------------------------------------------------------*/
-#ifndef __STLPATCH_H__
-#define __STLPATCH_H__
+#ifndef STLPATCH_H
+#define STLPATCH_H
 
-#ifndef __STDEXT_PLATFORM_H__
+#ifndef STDEXT_PLATFORM_H
 #include "stdext/Platform.h"
 #endif
 
@@ -31,7 +31,7 @@
 
 #pragma warning(disable:4786)
 
-#ifndef __STDEXT_PATCH_STRING_H__
+#ifndef STDEXT_PATCH_STRING_H
 #include "stdext/patch/string.h"
 #endif
 
@@ -98,4 +98,4 @@ typename _Container::value_type* resize(_Container& container, size_t newSize)
 
 } // namespace std
 
-#endif /* __STLPATCH_H__ */
+#endif /* STLPATCH_H */

@@ -16,10 +16,10 @@
 // 
 // $Id: Rope.h,v 1.1 2006/10/18 12:13:39 xushiwei Exp $
 // -----------------------------------------------------------------------*/
-#ifndef __STDEXT_TEXT_ROPE_H__
-#define __STDEXT_TEXT_ROPE_H__
+#ifndef STDEXT_TEXT_ROPE_H
+#define STDEXT_TEXT_ROPE_H
 
-#ifndef __STDEXT_HASH_H__
+#ifndef STDEXT_HASH_H
 #include "../Hash.h"
 #endif
 
@@ -29,23 +29,23 @@
 
 #if defined(USE_SGISTL_ROPE) && !defined(NO_SGISTL)
 
-#ifndef __STDEXT_TEXT_SGI_ROPE_H__
+#ifndef STDEXT_TEXT_SGI_ROPE_H
 #include "sgi/Rope.h"
 #endif
 
 #else
 
-#ifndef __STDEXT_TEXT_ROPE_SEQUENCEBUFFER_H__
+#ifndef STDEXT_TEXT_ROPE_SEQUENCEBUFFER_H
 #include "rope/SequenceBuffer.h"
 #endif
 
-#ifndef __STDEXT_TEXT_ROPE_ROPE_H__
+#ifndef STDEXT_TEXT_ROPE_ROPE_H
 #include "rope/Rope.h"
 #endif
 
 #endif
 
-#ifndef __STDEXT_TEXT_BASICSTRING_H__
+#ifndef STDEXT_TEXT_BASICSTRING_H
 #include "BasicString.h"
 #endif
 
@@ -293,4 +293,4 @@ public:
 
 __NS_STD_END
 
-#endif /* __STDEXT_TEXT_ROPE_H__ */
+#endif /* STDEXT_TEXT_ROPE_H */

@@ -16,8 +16,8 @@
 // 
 // $Id: memop.h,v 1.1 2006/10/18 12:13:39 xushiwei Exp $
 // -----------------------------------------------------------------------*/
-#ifndef __STDEXT_TCHAR_MEMOP_H__
-#define __STDEXT_TCHAR_MEMOP_H__
+#ifndef STDEXT_TCHAR_MEMOP_H
+#define STDEXT_TCHAR_MEMOP_H
 
 #ifndef __template_xchar_inline
 #define __template_xchar_inline	// template <class xchar> inline
@@ -76,4 +76,4 @@ xchar* __xdecl __xcharfunc(memset)(xchar *_S, xchar _C, size_t _N)
 //   namespace std::tchar(std::tchar::strlen, std::tchar::strlwr, etc)
 //
 
-#endif /* __STDEXT_TCHAR_MEMOP_H__ */
+#endif /* STDEXT_TCHAR_MEMOP_H */

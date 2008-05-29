@@ -19,7 +19,7 @@
 #ifndef STDEXT_ARCHIVE_MEMARCHIVE_H
 #define STDEXT_ARCHIVE_MEMARCHIVE_H
 
-#ifndef __STDEXT_ARCHIVE_BASIC_H__
+#ifndef STDEXT_ARCHIVE_BASIC_H
 #include "Basic.h"
 #endif
 

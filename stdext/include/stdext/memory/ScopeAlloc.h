@@ -16,20 +16,20 @@
 // 
 // $Id: ScopeAlloc.h,v 1.1 2006/10/18 12:13:39 xushiwei Exp $
 // -----------------------------------------------------------------------*/
-#ifndef __STDEXT_MEMORY_SCOPEALLOC_H__
-#define __STDEXT_MEMORY_SCOPEALLOC_H__
+#ifndef STDEXT_MEMORY_SCOPEALLOC_H
+#define STDEXT_MEMORY_SCOPEALLOC_H
 
 #error "outdated: move to http://svn.boost.org/svn/boost/sandbox/memory/boost/memory/scoped_alloc.hpp"
 
-#ifndef __STDEXT_MEMORY_BASIC_H__
+#ifndef STDEXT_MEMORY_BASIC_H
 #include "Basic.h"
 #endif
 
-#ifndef __STDEXT_MEMORY_AUTOFREEALLOC_H__
+#ifndef STDEXT_MEMORY_AUTOFREEALLOC_H
 #include "AutoFreeAlloc.h"
 #endif
 
-#ifndef __STDEXT_THREAD_TLS_H__
+#ifndef STDEXT_THREAD_TLS_H
 #include "../thread/TLS.h"
 #endif
 
@@ -304,4 +304,4 @@ public:
 
 __NS_STD_END
 
-#endif /* __STDEXT_MEMORY_SCOPEALLOC_H__ */
+#endif /* STDEXT_MEMORY_SCOPEALLOC_H */

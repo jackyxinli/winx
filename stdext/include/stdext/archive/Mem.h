@@ -19,15 +19,15 @@
 #ifndef STDEXT_ARCHIVE_MEM_H
 #define STDEXT_ARCHIVE_MEM_H
 
-#ifndef __STDEXT_ARCHIVE_WRITER_H__
+#ifndef STDEXT_ARCHIVE_WRITER_H
 #include "Writer.h"
 #endif
 
-#ifndef __STDEXT_ARCHIVE_READER_H__
+#ifndef STDEXT_ARCHIVE_READER_H
 #include "Reader.h"
 #endif
 
-#ifndef __STDEXT_ARCHIVE_MEMARCHIVE_H__
+#ifndef STDEXT_ARCHIVE_MEMARCHIVE_H
 #include "MemArchive.h"
 #endif
 
@@ -68,7 +68,7 @@ typedef Reader<StlStringReadArchive> StlStringReader;
 // -------------------------------------------------------------------------
 // class DequeReader/DequeWriter, TextPoolReader/TextPoolWriter
 
-#ifdef __STDEXT_DEQUE_H__
+#ifdef STDEXT_DEQUE_H
 
 typedef std::Deque<char> CharDeque;
 
@@ -96,12 +96,12 @@ class TestMemArchive : public TestCase
 	WINX_TEST_SUITE(TestMemArchive);
 		WINX_TEST(testVector);
 		WINX_TEST(testStlString);
-#ifdef __STDEXT_DEQUE_H__
+#ifdef STDEXT_DEQUE_H
 		WINX_TEST(testDeque);
 #endif
 	WINX_TEST_SUITE_END();
 
-#ifdef __STDEXT_DEQUE_H__
+#ifdef STDEXT_DEQUE_H
 	void testDeque(LogT& log)
 	{
 		std::BlockPool recycle;

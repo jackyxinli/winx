@@ -16,10 +16,10 @@
 // 
 // $Id: LargeInteger.h,v 1.1 2006/11/30 03:19:17 xushiwei Exp $
 // -----------------------------------------------------------------------*/
-#ifndef __STDEXT_LARGEINTEGER_H__
-#define __STDEXT_LARGEINTEGER_H__
+#ifndef STDEXT_LARGEINTEGER_H
+#define STDEXT_LARGEINTEGER_H
 
-#ifndef __STDEXT_BASIC_H__
+#ifndef STDEXT_BASIC_H
 #include "Basic.h"
 #endif
 
@@ -378,4 +378,4 @@ inline const ULargeInteger& winx_call ULargeInteger::operator=(const LargeIntege
 
 __NS_STD_END
 
-#endif /* __STDEXT_LARGEINTEGER_H__ */
+#endif /* STDEXT_LARGEINTEGER_H */

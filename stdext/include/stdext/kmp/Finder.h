@@ -16,8 +16,8 @@
 // 
 // $Id: Finder.h,v 1.5 2006/12/26 10:54:04 xushiwei Exp $
 // -----------------------------------------------------------------------*/
-#ifndef __STDEXT_KMP_FINDER_H__
-#define __STDEXT_KMP_FINDER_H__
+#ifndef STDEXT_KMP_FINDER_H
+#define STDEXT_KMP_FINDER_H
 
 #ifndef _INC_CTYPE
 #include <ctype.h>
@@ -539,4 +539,4 @@ public:
 
 __STD_KMP_END
 
-#endif /* __STDEXT_KMP_FINDER_H__ */
+#endif /* STDEXT_KMP_FINDER_H */

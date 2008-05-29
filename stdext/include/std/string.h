@@ -19,7 +19,7 @@
 #ifndef STD_STRING_H
 #define STD_STRING_H
 
-#ifndef __STLPATCH_H__
+#ifndef STLPATCH_H
 #include "../stlpatch.h"
 #endif
 

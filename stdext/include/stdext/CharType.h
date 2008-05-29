@@ -19,7 +19,7 @@
 #ifndef STDEXT_CHARTYPE_H
 #define STDEXT_CHARTYPE_H
 
-#ifndef __STDEXT_BASIC_H__
+#ifndef STDEXT_BASIC_H
 #include "Basic.h"
 #endif
 

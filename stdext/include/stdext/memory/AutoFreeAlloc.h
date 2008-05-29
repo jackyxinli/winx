@@ -16,12 +16,12 @@
 // 
 // $Id: AutoFreeAlloc.h,v 1.1 2006/10/18 12:13:39 xushiwei Exp $
 // -----------------------------------------------------------------------*/
-#ifndef __STDEXT_MEMORY_AUTOFREEALLOC_H__
-#define __STDEXT_MEMORY_AUTOFREEALLOC_H__
+#ifndef STDEXT_MEMORY_AUTOFREEALLOC_H
+#define STDEXT_MEMORY_AUTOFREEALLOC_H
 
 #error "outdated: move to http://svn.boost.org/svn/boost/sandbox/memory/boost/memory/auto_alloc.hpp"
 	
-#ifndef __STDEXT_MEMORY_SYSTEMALLOC_H__
+#ifndef STDEXT_MEMORY_SYSTEMALLOC_H
 #include "SystemAlloc.h"
 #endif
 
@@ -263,4 +263,4 @@ public:
 
 __NS_STD_END
 
-#endif /* __STDEXT_MEMORY_AUTOFREEALLOC_H__ */
+#endif /* STDEXT_MEMORY_AUTOFREEALLOC_H */

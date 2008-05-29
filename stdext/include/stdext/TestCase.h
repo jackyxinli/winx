@@ -16,14 +16,14 @@
 // 
 // $Id: TestCase.h,v 1.4 2007/01/10 09:32:25 xushiwei Exp $
 // -----------------------------------------------------------------------*/
-#ifndef __STDEXT_TESTCASE_H__
-#define __STDEXT_TESTCASE_H__
+#ifndef STDEXT_TESTCASE_H
+#define STDEXT_TESTCASE_H
 
-#ifndef __STDEXT_BASIC_H__
+#ifndef STDEXT_BASIC_H
 #include "Basic.h"
 #endif
 
-#ifndef __STD_ITERATOR_H__
+#ifndef STD_ITERATOR_H
 #include "../std/iterator.h"
 #endif
 
@@ -337,4 +337,4 @@ inline AutoRun& __autoRun_impl()
 
 __NS_STD_END
 
-#endif /* __STDEXT_TESTCASE_H__ */
+#endif /* STDEXT_TESTCASE_H */

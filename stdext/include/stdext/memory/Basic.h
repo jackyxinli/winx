@@ -16,12 +16,12 @@
 // 
 // $Id: Basic.h,v 1.2 2006/12/02 06:44:45 xushiwei Exp $
 // -----------------------------------------------------------------------*/
-#ifndef __STDEXT_MEMORY_BASIC_H__
-#define __STDEXT_MEMORY_BASIC_H__
+#ifndef STDEXT_MEMORY_BASIC_H
+#define STDEXT_MEMORY_BASIC_H
 
 #error "outdated"
 
-#ifndef __STDEXT_BASIC_H__
+#ifndef STDEXT_BASIC_H
 #include "../Basic.h"
 #endif
 
@@ -241,4 +241,4 @@ __NS_STD_END
 // =========================================================================
 // $Log: Basic.h,v $
 
-#endif /* __STDEXT_MEMORY_BASIC_H__ */
+#endif /* STDEXT_MEMORY_BASIC_H */
