@@ -1,0 +1,6 @@
+while read Line; do
+	if [ -f $Line ]; then
+		echo $Line
+	fi
+done
+
