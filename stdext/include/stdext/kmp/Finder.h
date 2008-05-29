@@ -137,10 +137,11 @@ struct MatchCase
 {
 	typedef CharT char_type;
 
-	__forceinline static void winx_call copy(char_type* dest, const char_type* src, int n)
+	template <class Iterator>
+	__forceinline static void winx_call copy(char_type* dest, Iterator src, int n)
 	{
 		while (n--)
-			dest[n] = src[n];
+			*dest++ = *src++;
 	}
 
 	template <class ArchiveT>
@@ -164,10 +165,11 @@ struct MatchNoCase
 {
 	typedef CharT char_type;
 
-	static void winx_call copy(char_type* dest, const char_type* src, int n)
+	template <class Iterator>
+	static void winx_call copy(char_type* dest, Iterator src, int n)
 	{
 		while (n--)
-			dest[n] = toupper( src[n] );
+			*dest++ = toupper( *src++ );
 	}
 
 	template <class ArchiveT>
@@ -225,7 +227,7 @@ public:
 	@*/
 	Finder(const char_type* szPattern, size_type cchLen) : m_str_find(NULL)
 	{
-		initPattern(szPattern, cchLen);
+		initPattern(szPattern, szPattern + cchLen);
 	}
 
 	/*
@@ -248,7 +250,13 @@ public:
 	template <class Tr, class AllocT2>
 	Finder(const std::basic_string<CharT, Tr, AllocT2>& strPattern) : m_str_find(NULL)
 	{
-		initPattern(strPattern.c_str(), strPattern.size());
+		initPattern(strPattern.begin(), strPattern.end());
+	}
+
+	template <class Iterator>
+	Finder(Iterator patternBegin, Iterator patternEnd) : m_str_find(NULL)
+	{
+		initPattern(patternBegin, patternEnd);
 	}
 
 	~Finder() {
@@ -263,21 +271,23 @@ public:
 	@arg [in] cchLen		The length of pattern string.
 	@see Finder, initPattern, getPattern
 	@*/
-	HRESULT winx_call initPattern(const char_type* szPattern, size_type cchLen)
+	template <class Iterator>
+	HRESULT winx_call initPattern(Iterator patternBegin, Iterator patternEnd)
 	{
 		WINX_STATIC_ASSERT(sizeof(char_type) == sizeof(uchar_type));
 
-		if (szPattern == NULL || cchLen <= 0)
+		if (patternBegin == patternEnd)
 			return E_INVALIDARG;
 
 		if (m_str_find)
 			AllocT::deallocate(m_str_find);
 		
+		size_type cchLen = std::distance(patternBegin, patternEnd);
 		m_str_find = (uchar_type*)AllocT::allocate( (sizeof(uchar_type) + sizeof(size_type)) * cchLen);
 		m_next = (size_type*)(m_str_find + cchLen);
 		m_size = cchLen;
 		
-		Strategy::copy((char_type*)m_str_find, szPattern, cchLen);
+		Strategy::copy((char_type*)m_str_find, patternBegin, cchLen);
 		
 		size_type k;
 		m_next[0] = npos;
@@ -301,7 +311,7 @@ public:
 	{
 		if (szPattern == NULL)
 			return E_INVALIDARG;
-		return initPattern(szPattern, std::char_traits<CharT>::length(szPattern));
+		return initPattern(szPattern, szPattern + std::char_traits<CharT>::length(szPattern));
 	}
 
 	/*
