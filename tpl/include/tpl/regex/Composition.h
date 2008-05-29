@@ -87,6 +87,30 @@ __forceinline Rule<Eos> TPL_CALL eof() {
 	return Rule<Eos>();
 }
 
+// -------------------------------------------------------------------------
+// function done
+
+// Usage: done() --- means: seek to end-of-stream and return ok
+
+class Done
+{
+public:
+	enum { character = 0 };
+	enum { vtype = 0 };
+
+	typedef AutoConvertible convertible_type;
+
+	template <class SourceT, class ContextT>
+	bool TPL_CALL match(SourceT& ar, ContextT& context) const {
+		ar.seek_end();
+		return true;
+	}
+};
+
+__forceinline Rule<Done> TPL_CALL done() {
+	return Rule<Done>();
+}
+
 // =========================================================================
 // class LenStr
 

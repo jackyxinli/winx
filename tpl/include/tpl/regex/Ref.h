@@ -128,6 +128,13 @@ public:
 		rule_type x(der);
 		return x.match(ar, context);
 	}
+
+	template <class SourceT>
+	bool TPL_CALL match(typename SourceT::int_type c) const {
+		dereference_type der(m_ref());
+		rule_type x(der);
+		return x.match<SourceT>(c);
+	}
 };
 
 #define TPL_RULE_REF_UNARY_OP_(op, Op)										\
@@ -204,7 +211,7 @@ public:
 	RefStr_(const StringT& s) : m_s(s) {}
 
 public:
-	typedef StringT dereference_type;
+	typedef const StringT& dereference_type;
 	typedef Eq_<Iterator_> rule_type;
 
 	dereference_type TPL_CALL operator()() const {
@@ -261,43 +268,58 @@ Reference<typename ReferenceTratis<Type>::reference_type> TPL_CALL ref(const Typ
 }
 
 // =========================================================================
+// function class OpRef
+
+template <class Type, class OpType>
+class OpRef
+{
+private:
+	typedef typename ReferenceTratis<Type>::reference_type reference_type;
+	typedef typename reference_type::dereference_type dereference_type;
+	typedef OpType op_type;
+
+	reference_type m_ref;
+
+public:
+	OpRef(const Type& var_) : m_ref(var_) {}
+
+public:
+	enum { character = op_type::character };
+	enum { vtype = op_type::vtype };
+
+	typedef typename op_type::convertible_type convertible_type;
+
+	template <class SourceT, class ContextT>
+	bool TPL_CALL match(SourceT& ar, ContextT& context) const {
+		dereference_type der(m_ref());
+		op_type x(der);
+		return x.match(ar, context);
+	}
+};
+
+// =========================================================================
 // function find_ref(var) = find(ref(var))
 
 template <class Type, bool bEat = false>
-class FindRef
+class FindRefTraits
 {
 private:
 	typedef typename ReferenceTratis<Type>::reference_type reference_type;
 	typedef typename reference_type::dereference_type dereference_type;
 	typedef typename FindTraits<dereference_type, bEat>::find_type find_type;
 
-	reference_type m_ref;
-
 public:
-	FindRef(const Type& var_) : m_ref(var_) {}
-
-public:
-	enum { character = find_type::character };
-	enum { vtype = find_type::vtype };
-
-	typedef typename find_type::convertible_type convertible_type;
-
-	template <class SourceT, class ContextT>
-	bool TPL_CALL match(SourceT& ar, ContextT& context) const {
-		dereference_type der(m_ref());
-		find_type x(der);
-		return x.match(ar, context);
-	}
+	typedef OpRef<Type, find_type> find_ref_type;
 };
 
 template <bool bEat, class Type> __forceinline
-Rule<FindRef<Type, bEat> > TPL_CALL find_ref(const Type& var_) {
-	return Rule<FindRef<Type, bEat> >(var_);
+Rule<typename FindRefTraits<Type, bEat>::find_ref_type> TPL_CALL find_ref(const Type& var_) {
+	return Rule<typename FindRefTraits<Type, bEat>::find_ref_type>(var_);
 }
 
 template <class Type> __forceinline
-Rule<FindRef<Type, false> > TPL_CALL find_ref(const Type& var_) {
-	return Rule<FindRef<Type, false> >(var_);
+Rule<typename FindRefTraits<Type, false>::find_ref_type> TPL_CALL find_ref(const Type& var_) {
+	return Rule<typename FindRefTraits<Type, false>::find_ref_type>(var_);
 }
 
 // =========================================================================

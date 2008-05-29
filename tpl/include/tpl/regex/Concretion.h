@@ -32,14 +32,6 @@ NS_TPL_BEGIN
 // =========================================================================
 // class Concretion
 
-template <class Imp, int bFail>
-struct ConcretionImpTr_ {};
-
-template <class Imp>
-struct ConcretionImpTr_<Imp, 0> {
-	typedef Imp impl_type;
-};
-
 template <int uCharacter, class SourceT, class ContextT, bool bManaged = false>
 class Concretion
 {
@@ -95,7 +87,7 @@ private:
 			: m_x(static_cast<const RegExT&>(x)) {
 		}
 
-		enum { character = RegExT::character };
+		enum { characterImpl = RegExT::character };
 
 		typedef typename RegExT::convertible_type convertible_type;
 
@@ -103,15 +95,15 @@ private:
 			const RegExT& x = ((const Impl*)pThis)->m_x;
 			return x.match(ar, context);
 		}
+
+		TPL_REQUIRE((characterImpl & ~character) == 0, CharacterRequired_);
 	};
 
 public:
 	template <class AllocT, class RegExT>
 	void TPL_CALL assign(AllocT& alloc, const Rule<RegExT>& x)
 	{
-		typedef Impl<RegExT> Imp_;
-		typedef typename ConcretionImpTr_<Imp_, Imp_::character & ~character>::impl_type Imp;
-
+		typedef Impl<RegExT> Imp;
 		if (bManaged)
 			m_this = TPL_NEW(alloc, Imp)(x);
 		else

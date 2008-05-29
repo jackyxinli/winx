@@ -152,6 +152,29 @@ public:
 #endif
 
 // =========================================================================
+// function strict_eol(), eol()
+
+// strict_eol = \r\n? | \n
+// eol = strict_eol | eof
+
+typedef Ch<'\r'> Return;
+typedef Ch<'\n'> NewLine;
+
+typedef Or<UAnd<Return, Repeat01<NewLine> >, NewLine> StrictEol;
+typedef Or<StrictEol, Eof> Eol;
+
+TPL_REGEX_GUARD0(StrictEol, StrictEolG, VTYPE_NONE)
+TPL_REGEX_GUARD0(Eol, EolG, VTYPE_NONE)
+
+inline Rule<StrictEolG> TPL_CALL strict_eol() {
+	return Rule<StrictEolG>();
+}
+
+inline Rule<EolG> TPL_CALL eol() {
+	return Rule<EolG>();
+}
+
+// =========================================================================
 // function c_symbol, xml_symbol, etc.
 
 // Usage: c_symbol()		--- means: matching a CSymbol. that is: [a-zA-Z_][0-9a-zA-Z_]*

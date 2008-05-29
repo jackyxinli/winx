@@ -230,6 +230,9 @@ public:
 	template <class T1, class T2, class T3>
 	Rule(const T1& x, const T2& y, const T3& z) : RegExT(x, y, z) {}
 
+	template <class T1, class T2, class T3>
+	Rule(const T1& x, const T2& y, T3& z) : RegExT(x, y, z) {}
+
 private:
 	const Grammar<Gr<RegExT> >& TPL_CALL cast_grammar_(AutoConvertible) const {
 		return *(const Grammar<Gr<RegExT> >*)this;

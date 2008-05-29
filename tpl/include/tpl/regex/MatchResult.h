@@ -43,9 +43,9 @@ NS_TPL_BEGIN
 template <class Iterator>
 class Leaf
 {
-public:
-	Iterator const first;
-	Iterator const second;
+private:
+	Iterator first;
+	Iterator second;
 
 private:
 	typedef std::iterator_traits<Iterator> Tr_;
@@ -80,12 +80,14 @@ public:
 
 public:
 	void TPL_CALL assign(Iterator first_, Iterator second_) {
-		new(this) Leaf(first_, second_);
+		first = first_;
+		second = second_;
 	}
 
 	template <class StringT>
 	void TPL_CALL assign(const StringT& str_) {
-		new(this) Leaf(str_.begin(), str_.end());
+		first = str_.begin();
+		second = str_.end();
 	}
 	
 	size_type TPL_CALL length() const {

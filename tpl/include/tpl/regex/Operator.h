@@ -360,6 +360,48 @@ Rule<Repeat01<T1> > TPL_CALL operator!(const Rule<T1>& x) {
 TPL_RULE_UNARY_OP_(!, Repeat01)
 
 // =========================================================================
+// operator~
+
+// Usage: ~ChRange
+
+template <class RegExT>
+class Not // ~Rule
+{
+private:
+	RegExT m_x;
+
+public:
+	Not() {}
+	Not(const RegExT& x) : m_x(x) {}
+
+public:
+	enum { character = RegExT::character };
+	enum { vtype = RegExT::vtype };
+
+	typedef typename RegExT::convertible_type convertible_type;
+
+	template <class SourceT, class ContextT>
+	bool TPL_CALL match(SourceT& ar, ContextT& context) const
+	{
+		typename SourceT::int_type c = ar.get();
+		if (!m_x.match<SourceT>(c))
+			return true;
+		ar.unget(c);
+		return false;
+	}
+
+private:
+	TPL_REQUIRE(VTYPE_CHAR & vtype, ChRangeRule_);
+};
+
+template <class T1> __forceinline
+Rule<Not<T1> > TPL_CALL operator~(const Rule<T1>& x) {
+	return Rule<Not<T1> >(x);
+}
+
+TPL_RULE_UNARY_OP_(~, Not)
+
+// =========================================================================
 // function repeat
 
 // Usage:

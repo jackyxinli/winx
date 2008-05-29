@@ -46,6 +46,11 @@ public:
 	bool TPL_CALL match(SourceT& ar, ContextT& context) const {
 		return ar.get() != SourceT::endch;
 	}
+
+	template <class SourceT>
+	bool TPL_CALL match(typename SourceT::int_type c) const {
+		return c != SourceT::endch;
+	}
 };
 
 __forceinline Rule<ChAny> TPL_CALL ch_any() {
@@ -88,6 +93,11 @@ public:
 		ar.unget(c);
 		return false;
 	}
+
+	template <class SourceT>
+	bool TPL_CALL match(typename SourceT::int_type c) const {
+		return m_pred(c);
+	}
 };
 
 // -------------------------------------------------------------------------
@@ -119,26 +129,8 @@ __forceinline Rule<ChRange<m_c1, m_c2> > TPL_CALL ch_range() {
 // Usage: not_ch<'a'>()			--- means: ~ch('a')
 // Usage: not_ch<'a', 'b'>()	--- means: ~(ch('a') | ~ch('b'))
 
-template <int m_c>
-class N1_
-{
-public:
-	__forceinline bool TPL_CALL operator()(int c) const {
-		return m_c != c;
-	}
-};
-
-template <int m_c1, int m_c2>
-class N2_
-{
-public:
-	__forceinline bool TPL_CALL operator()(int c) const {
-		return m_c1 != c && m_c2 != c;
-	}
-};
-
-template <int m_c1, int m_c2, int m_c3>
-class N3_
+template <int m_c1, int m_c2 = m_c1, int m_c3 = m_c2>
+class N_
 {
 public:
 	__forceinline bool TPL_CALL operator()(int c) const {
@@ -146,16 +138,26 @@ public:
 	}
 };
 
-template <int m_c1, int m_c2 = m_c1, int m_c3 = m_c2>
-class NotCh : public EqCh<N3_<m_c1, m_c2, m_c3> > {
-};
-
 template <int m_c1, int m_c2>
-class NotCh<m_c1, m_c2, m_c2> : public EqCh<N2_<m_c1, m_c2> > {
+class N_<m_c1, m_c2, m_c2>
+{
+public:
+	__forceinline bool TPL_CALL operator()(int c) const {
+		return m_c1 != c && m_c2 != c;
+	}
 };
 
 template <int m_c>
-class NotCh<m_c, m_c, m_c> : public EqCh<N1_<m_c> > {
+class N_<m_c, m_c, m_c>
+{
+public:
+	__forceinline bool TPL_CALL operator()(int c) const {
+		return m_c != c;
+	}
+};
+
+template <int m_c1, int m_c2 = m_c1, int m_c3 = m_c2>
+class NotCh : public EqCh<N_<m_c1, m_c2, m_c3> > {
 };
 
 template <int m_c>
@@ -179,26 +181,8 @@ __forceinline Rule<NotCh<m_c1, m_c2, m_c3> > TPL_CALL not_ch() {
 // Usage: ch<'a'>()			--- means: ch('a')
 // Usage: ch<'a', 'b'>()	--- means: ch('a') | ch('b')
 
-template <int m_c>
-class C1_
-{
-public:
-	__forceinline bool TPL_CALL operator()(int c) const {
-		return m_c == c;
-	}
-};
-
-template <int m_c1, int m_c2>
-class C2_
-{
-public:
-	__forceinline bool TPL_CALL operator()(int c) const {
-		return m_c1 == c || m_c2 == c;
-	}
-};
-
-template <int m_c1, int m_c2, int m_c3>
-class C3_
+template <int m_c1, int m_c2 = m_c1, int m_c3 = m_c2>
+class C_
 {
 public:
 	__forceinline bool TPL_CALL operator()(int c) const {
@@ -206,16 +190,26 @@ public:
 	}
 };
 
-template <int m_c1, int m_c2 = m_c1, int m_c3 = m_c2>
-class Ch : public EqCh<C3_<m_c1, m_c2, m_c3> > {
-};
-
 template <int m_c1, int m_c2>
-class Ch<m_c1, m_c2, m_c2> : public EqCh<C2_<m_c1, m_c2> > {
+class C_<m_c1, m_c2, m_c2>
+{
+public:
+	__forceinline bool TPL_CALL operator()(int c) const {
+		return m_c1 == c || m_c2 == c;
+	}
 };
 
 template <int m_c>
-class Ch<m_c, m_c, m_c> : public EqCh<C1_<m_c> > {
+class C_<m_c, m_c, m_c>
+{
+public:
+	__forceinline bool TPL_CALL operator()(int c) const {
+		return m_c == c;
+	}
+};
+
+template <int m_c1, int m_c2 = m_c1, int m_c3 = m_c2>
+class Ch : public EqCh<C_<m_c1, m_c2, m_c3> > {
 };
 
 template <int m_c>
@@ -347,7 +341,6 @@ typedef ChRange<'A', 'Z'> UpperAlpha;
 typedef EqCh<std::CharType::IsSpace> Space;
 typedef EqCh<std::CharType::IsAlpha> Alpha;
 typedef EqCh<std::CharType::IsXDigit> XDigit;
-typedef EqCh<std::CharType::IsEOL> EOL;
 
 typedef EqCh<std::CharType::IsCSymbolFirstChar> CSymbolFirstChar;
 typedef EqCh<std::CharType::IsCSymbolNextChar> CSymbolNextChar;
@@ -377,10 +370,6 @@ inline Rule<Digit> TPL_CALL digit() {
 
 inline Rule<XDigit> TPL_CALL xdigit() {
 	return Rule<XDigit>();
-}
-
-inline Rule<EOL> TPL_CALL eol() {
-	return Rule<EOL>();
 }
 
 // -------------------------------------------------------------------------
