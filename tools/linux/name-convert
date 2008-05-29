@@ -1,0 +1,5 @@
+find . -type f -name '*.h' | xargs -l1 sed -i -e 's|__STDEXT_\(.*\)_H__|STDEXT_\1_H|'
+find . -type f -name '*.h' | xargs -l1 sed -i -e 's|__STD_\(.*\)_H__|STD_\1_H|'
+find . -type f -name '*.h' | xargs -l1 sed -i -e 's|__STDEXT_H__|STDEXT_H|'
+find . -type f -name '*.h' | xargs -l1 sed -i -e 's|__STLPATCH_H__|STLPATCH_H|'
+
