@@ -38,7 +38,7 @@
 NS_TPL_BEGIN
 
 // =========================================================================
-// function find_if
+// function find_if, find_eol, find_strict_eol
 
 template <bool bEat, class SourceT, class PredT>
 inline bool TPL_CALL do_find_if(SourceT& ar, PredT pred)
@@ -49,10 +49,60 @@ inline bool TPL_CALL do_find_if(SourceT& ar, PredT pred)
 		typename SourceT::int_type c = ar.get();
 		if (pred(c)) {
 			if (!bEat)
-				ar.unget();
+				ar.unget(c);
 			return true;
 		}
 		else if (c == SourceT::endch) {
+			ar.seek(pos);
+			return false;
+		}
+	}
+}
+
+template <bool bEat, class SourceT>
+inline bool TPL_CALL do_find_eol(SourceT& ar)
+{
+	for (;;)
+	{
+		typename SourceT::int_type c = ar.get();
+		switch (c)
+		{
+		case '\r':
+			if (!bEat)
+				ar.unget('\r');
+			if (ar.peek() == '\n')
+				ar.get();
+			return true;
+		case '\n':
+			if (!bEat)
+				ar.unget('\n');
+			return true;
+		case SourceT::endch:
+			return true;
+		}
+	}
+}
+
+template <bool bEat, class SourceT>
+inline bool TPL_CALL do_find_strict_eol(SourceT& ar)
+{
+	typename SourceT::iterator pos = ar.position();
+	for (;;)
+	{
+		typename SourceT::int_type c = ar.get();
+		switch (c)
+		{
+		case '\r':
+			if (!bEat)
+				ar.unget('\r');
+			if (ar.peek() == '\n')
+				ar.get();
+			return true;
+		case '\n':
+			if (!bEat)
+				ar.unget('\n');
+			return true;
+		case SourceT::endch:
 			ar.seek(pos);
 			return false;
 		}
@@ -83,6 +133,24 @@ public:
 	}
 };
 
+template <bool bEat = false, bool bStrict = false>
+class FindEol
+{
+public:
+	enum { character = 0 };
+	enum { vtype = 0 };
+
+	typedef ExplicitConvertible convertible_type;
+
+	template <class SourceT, class ContextT>
+	bool TPL_CALL match(SourceT& ar, ContextT& context) const {
+		if (bStrict)
+			return do_find_strict_eol<bEat>(ar);
+		else
+			return do_find_eol<bEat>(ar);
+	}
+};
+
 template <bool bEat, class PredT>
 __forceinline Rule<FindIf<PredT, bEat> > TPL_CALL find_if(PredT pred) {
 	return Rule<FindIf<PredT, bEat> >(pred);
@@ -91,6 +159,24 @@ __forceinline Rule<FindIf<PredT, bEat> > TPL_CALL find_if(PredT pred) {
 template <class PredT>
 __forceinline Rule<FindIf<PredT, false> > TPL_CALL find_if(PredT pred) {
 	return Rule<FindIf<PredT, false> >(pred);
+}
+
+template <bool bEat>
+__forceinline Rule<FindEol<bEat, false> > TPL_CALL find_eol() {
+	return Rule<FindEol<bEat, false> >();
+}
+
+__forceinline Rule<FindEol<false, false> > TPL_CALL find_eol() {
+	return Rule<FindEol<false, false> >();
+}
+
+template <bool bEat>
+__forceinline Rule<FindEol<bEat, true> > TPL_CALL find_strict_eol() {
+	return Rule<FindEol<bEat, true> >();
+}
+
+__forceinline Rule<FindEol<false, true> > TPL_CALL find_strict_eol() {
+	return Rule<FindEol<false, true> >();
 }
 
 // =========================================================================

@@ -196,10 +196,6 @@ public:
 		return m_transf(m_ar.get());
 	}
 
-	void TPL_CALL unget() const {
-		m_ar.unget();
-	}
-
 	void TPL_CALL unget(int_type c) const {
 		m_ar.unget(c);
 	}
