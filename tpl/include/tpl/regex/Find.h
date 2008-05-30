@@ -125,12 +125,14 @@ public:
 	enum { character = 0 };
 	enum { vtype = 0 };
 
-	typedef ExplicitConvertible convertible_type;
+	typedef SelfConvertible convertible_type;
 
 	template <class SourceT, class ContextT>
 	bool TPL_CALL match(SourceT& ar, ContextT& context) const {
 		return do_find_if<bEat>(ar, m_pred);
 	}
+
+	TPL_SIMPLEST_GRAMMAR_();
 };
 
 template <bool bEat = false, bool bStrict = false>
@@ -140,7 +142,7 @@ public:
 	enum { character = 0 };
 	enum { vtype = 0 };
 
-	typedef ExplicitConvertible convertible_type;
+	typedef SelfConvertible convertible_type;
 
 	template <class SourceT, class ContextT>
 	bool TPL_CALL match(SourceT& ar, ContextT& context) const {
@@ -149,6 +151,8 @@ public:
 		else
 			return do_find_eol<bEat>(ar);
 	}
+
+	TPL_SIMPLEST_GRAMMAR_();
 };
 
 template <bool bEat, class PredT>
@@ -229,7 +233,7 @@ public:
 	enum { character = 0 };
 	enum { vtype = 0 };
 
-	typedef ExplicitConvertible convertible_type;
+	typedef SelfConvertible convertible_type;
 
 	template <class SourceT, class ContextT>
 	bool TPL_CALL match(SourceT& ar, ContextT& context) const {
@@ -249,6 +253,8 @@ public:
 			return true;
 		}
 	}
+
+	TPL_SIMPLEST_GRAMMAR_();
 };
 
 template <class CharT, bool bEat = false>
@@ -353,6 +359,8 @@ public:
 		op_type x(der);
 		return x.match(ar, context);
 	}
+
+	TPL_SIMPLEST_GRAMMAR_();
 };
 
 template <class RefT, bool bEat>

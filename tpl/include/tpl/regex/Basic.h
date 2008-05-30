@@ -175,7 +175,7 @@ enum RuleVType
 
 // ConvertableType
 
-struct SelfConvertible {}; // The Rule can convert itself to a Grammar automatically.
+struct SelfConvertible {}; // The Rule itself is a Grammar.
 struct AutoConvertible {}; // Convert a Rule to a Grammar automatically.
 struct ExplicitConvertible {}; // Should convert a Rule to a Grammar manually.
 
@@ -238,12 +238,16 @@ private:
 		return *(const Grammar<Gr<RegExT> >*)this;
 	}
 
+	const Grammar<RegExT>& TPL_CALL cast_grammar_(SelfConvertible) const {
+		return *(const Grammar<RegExT>*)this;
+	}
+
 public:
-	const Grammar<Gr<RegExT> >& TPL_CALL cast_grammar() const {
+	Grammar<Gr<RegExT> > TPL_CALL cast_grammar() const {
 		return cast_grammar_(typename RegExT::convertible_type());
 	}
 
-	const Grammar<Gr<RegExT> >& TPL_CALL grammar() const {
+	Grammar<Gr<RegExT> > TPL_CALL grammar() const {
 		return *(const Grammar<Gr<RegExT> >*)this;
 	}
 
@@ -265,6 +269,15 @@ __forceinline Grammar<Op<Gr<T1>, T2> > TPL_CALL operator op(const Rule<T1>& x, c
 template <class T1, class T2>												\
 __forceinline Grammar<Op<T1, Gr<T2> > > TPL_CALL operator op(const Grammar<T1>& x, const Rule<T2>& y) \
 	{ return x op y.cast_grammar(); }
+
+// =========================================================================
+// TPL_SIMPLEST_GRAMMAR_
+
+#define TPL_SIMPLEST_GRAMMAR_()												\
+	template <class SourceT, class ContextT, class SkipperT>				\
+	bool TPL_CALL match(SourceT& ar, ContextT& context, const Skipper<SkipperT>& skipper_) const { \
+	return match(ar, context);											\
+}
 
 // =========================================================================
 // class Grammar

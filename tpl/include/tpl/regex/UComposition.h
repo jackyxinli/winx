@@ -223,6 +223,31 @@ inline Rule<IntegerG> TPL_CALL integer()
 }
 
 // -------------------------------------------------------------------------
+// DateTime
+
+typedef Repeat<Digit, 1, 2> Digit12_;
+typedef Repeat<Digit, 2, 2> Digit2_;
+typedef Repeat<Digit, 4, 4> Digit4_;
+typedef Repeat<Digit2_, 1, 2> Digit24_;
+
+TPL_REGEX_GUARD(Digit4_, Year4G, VTYPE_U_INTEGER)
+TPL_REGEX_GUARD(Digit2_, Year2G, VTYPE_U_INTEGER)
+TPL_REGEX_GUARD(Digit24_, YearG, VTYPE_U_INTEGER)
+
+TPL_REGEX_GUARD0(Digit12_, MonthG, VTYPE_U_INTEGER)
+TPL_REGEX_GUARD0(Digit12_, DayG, VTYPE_U_INTEGER)
+TPL_REGEX_GUARD0(Digit12_, HourG, VTYPE_U_INTEGER)
+TPL_REGEX_GUARD0(Digit12_, MinuteG, VTYPE_U_INTEGER)
+TPL_REGEX_GUARD0(Digit12_, SecondG, VTYPE_U_INTEGER)
+
+inline Rule<YearG> TPL_CALL t_year()		{ return Rule<YearG>(); }
+inline Rule<MonthG> TPL_CALL t_month()		{ return Rule<MonthG>(); }
+inline Rule<DayG> TPL_CALL t_day()			{ return Rule<DayG>(); }
+inline Rule<HourG> TPL_CALL t_hour()		{ return Rule<HourG>(); }
+inline Rule<MinuteG> TPL_CALL t_minute()	{ return Rule<MinuteG>(); }
+inline Rule<SecondG> TPL_CALL t_second()	{ return Rule<SecondG>(); }
+
+// -------------------------------------------------------------------------
 // function strict_fraction, fraction, etc.
 
 typedef Ch<'.'> DecimalPointer;

@@ -38,12 +38,14 @@ public:
 	enum { character = 0 };
 	enum { vtype = 0 };
 
-	typedef ExplicitConvertible convertible_type;
+	typedef SelfConvertible convertible_type;
 
 	template <class SourceT, class ContextT>
 	bool TPL_CALL match(SourceT& ar, ContextT& context) const {
 		return bOk;
 	}
+
+	TPL_SIMPLEST_GRAMMAR_();
 };
 
 class Eps : public Null<true> {};
@@ -130,9 +132,11 @@ const size_t LenStr<CharT, m_s>::m_len = std::char_traits<CharT>::length(m_s);
 template <class Iterator, class SourceT, class ContextT>
 inline bool TPL_CALL match_str(Iterator first, Iterator last, SourceT& ar, ContextT& context)
 {
+	typedef typename std::ArchiveIteratorTraits<Iterator>::value_type char_type;
+	typedef typename std::ArchiveCharTraits<char_type>::uchar_type uchar_type;
 	typename SourceT::iterator pos = ar.position();
 	for (; first != last; ++first) {
-		if (ar.get() != *first) {
+		if (ar.get() != (uchar_type)*first) {
 			ar.seek(pos);
 			return false;
 		}
