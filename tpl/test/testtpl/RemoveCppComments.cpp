@@ -25,8 +25,8 @@ void remove_cpp_comments()
 			'\\' + !eol() + rCppEol | eol()
 		));
 
-	char delim;
-	impl::Rule rString( alloc, ch('\'', '\"')/assign(delim) + *('\\' + ch_any() | ~ref(delim)) + ref(delim) );
+	Var<char> delim;
+	impl::Rule rString( alloc, ch('\'', '\"')/assign(delim) + *('\\' + ch_any() | ~delim) + delim );
 
 	impl::Rule rItem( alloc,
 		find_set<'/', '\'', '\"'>()/assign(result) + 

@@ -27,7 +27,7 @@ void demo()
 	impl::LeafMark tagPairValue;
 	impl::NodeMark tagPair;
 
-	impl::MarkedRule rPair( alloc, (c_symbol()/tagSym + '=' + real()/tagValue/&dblValue)/tagPair/tagPairValue );
+	impl::MarkedRule rPair( alloc, (c_symbol()/tagSym + '=' + real()/tagValue/assign(dblValue))/tagPair/tagPairValue );
 	impl::MarkedRule rDoc( alloc, (skipws() + rPair) % ',' );
 
 	// ---- do match ----

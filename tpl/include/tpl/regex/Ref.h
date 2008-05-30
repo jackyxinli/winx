@@ -257,6 +257,19 @@ Rule<Deref<typename ReferenceTratis<Type>::reference_type> > TPL_CALL ref(const 
 }
 
 // =========================================================================
+// class Var
+
+template <class Type>
+class Var : public Rule<Deref<typename ReferenceTratis<Type>::reference_type> >
+{
+public:
+	Type val;
+
+public:
+	Var() : Rule<Deref<typename ReferenceTratis<Type>::reference_type> >(val) {}
+};
+
+// =========================================================================
 // $Log: $
 
 NS_TPL_END

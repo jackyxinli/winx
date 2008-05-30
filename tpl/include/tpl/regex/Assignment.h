@@ -27,6 +27,10 @@
 #include "MatchResult.h"
 #endif
 
+#ifndef TPL_REGEX_REF_H
+#include "Ref.h"
+#endif
+
 #if !defined(_STRING_) && !defined(_STRING)
 #include <string>
 #endif
@@ -37,9 +41,7 @@ NS_TPL_BEGIN
 // class AssigStr
 
 // Usage: Rule/assign(a_string_var)
-// Usage: Rule/&a_string_var
 // Usage: Rule/assign(a_leaf_node_var)
-// Usage: Rule/&a_leaf_node_var
 
 template <class StringT>
 class AssigStr
@@ -58,30 +60,6 @@ public:
 		m_result.assign(pos, pos2);
 	}
 };
-
-template <class CharT> __forceinline
-Action<AssigStr<std::basic_string<CharT> > > TPL_CALL assign(std::basic_string<CharT>& result) {
-	return Action<AssigStr<std::basic_string<CharT> > >(result);
-}
-
-template <class Iterator> __forceinline
-Action<AssigStr<Leaf<Iterator> > > TPL_CALL assign(Leaf<Iterator>& result) {
-	return Action<AssigStr<Leaf<Iterator> > >(result);
-}
-
-template <class T1, class CharT>
-__forceinline
-Rule<Act<T1, AssigStr<std::basic_string<CharT> > > >
-TPL_CALL operator/(const Rule<T1>& x, std::basic_string<CharT>* result) {
-	return x / assign(*result);
-}
-
-template <class T1, class Iterator>
-__forceinline
-Rule<Act<T1, AssigStr<Leaf<Iterator> > > >
-TPL_CALL operator/(const Rule<T1>& x, Leaf<Iterator>* result) {
-	return x / assign(*result);
-}
 
 // -------------------------------------------------------------------------
 // class AssigCh
@@ -106,14 +84,6 @@ public:
 		m_result = *pos;
 	}
 };
-
-__forceinline Action<AssigCh<char> > TPL_CALL assign(char& result) {
-	return Action<AssigCh<char> >(result);
-}
-
-__forceinline Action<AssigCh<wchar_t> > TPL_CALL assign(wchar_t& result) {
-	return Action<AssigCh<wchar_t> >(result);
-}
 
 // -------------------------------------------------------------------------
 // class AssigUInt
@@ -150,17 +120,6 @@ public:
 		_parseUInt(m_result, pos, pos2);
 	}
 };
-
-__forceinline Action<AssigUInt<unsigned> > TPL_CALL assign(unsigned& result) {
-	return Action<AssigUInt<unsigned> >(result);
-}
-
-template <class T1>
-__forceinline
-Rule<Act<T1, AssigUInt<unsigned> > >
-TPL_CALL operator/(const Rule<T1>& x, unsigned* result) {
-	return x / assign(*result);
-}
 
 // -------------------------------------------------------------------------
 // class AssigInt
@@ -199,17 +158,6 @@ public:
 		_parseInt(m_result, pos, pos2);
 	}
 };
-
-__forceinline Action<AssigInt<int> > TPL_CALL assign(int& result) {
-	return Action<AssigInt<int> >(result);
-}
-
-template <class T1>
-__forceinline
-Rule<Act<T1, AssigInt<int> > >
-TPL_CALL operator/(const Rule<T1>& x, int* result) {
-	return x / assign(*result);
-}
 
 // -------------------------------------------------------------------------
 // class AssigReal
@@ -250,28 +198,6 @@ public:
 		_parseReal(m_result, pos, pos2);
 	}
 };
-
-__forceinline Action<AssigReal<double> > TPL_CALL assign(double& result) {
-	return Action<AssigReal<double> >(result);
-}
-
-__forceinline Action<AssigReal<float> > TPL_CALL assign(float& result) {
-	return Action<AssigReal<float> >(result);
-}
-
-template <class T1>
-__forceinline
-Rule<Act<T1, AssigReal<double> > >
-TPL_CALL operator/(const Rule<T1>& x, double* result) {
-	return x / assign(*result);
-}
-
-template <class T1>
-__forceinline
-Rule<Act<T1, AssigReal<float> > >
-TPL_CALL operator/(const Rule<T1>& x, float* result) {
-	return x / assign(*result);
-}
 
 // -------------------------------------------------------------------------
 // class AssignmentTypeTraits
@@ -319,6 +245,20 @@ template <>
 struct AssignmentTypeTraits<double> {
 	typedef AssigReal<double> assignment_type;
 };
+
+template <class ValueType>
+__forceinline 
+Action<typename AssignmentTypeTraits<ValueType>::assignment_type>
+TPL_CALL assign(ValueType& result) {
+	return Action<typename AssignmentTypeTraits<ValueType>::assignment_type>(result);
+}
+
+template <class ValueType>
+__forceinline 
+Action<typename AssignmentTypeTraits<ValueType>::assignment_type>
+TPL_CALL assign(Var<ValueType>& result) {
+	return Action<typename AssignmentTypeTraits<ValueType>::assignment_type>(result.val);
+}
 
 // -------------------------------------------------------------------------
 // class Cast

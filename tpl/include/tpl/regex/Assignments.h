@@ -75,13 +75,6 @@ Action<AssigStk<Type, Container> > TPL_CALL assign(std::stack<Type, Container>& 
 	return Action<AssigStk<Type, Container> >(result);
 }
 
-template <class T1, class Type, class Container>
-__forceinline
-Rule<Act<T1, AssigStk<Type, Container> > >
-TPL_CALL operator/(const Rule<T1>& x, std::stack<Type, Container>* result) {
-	return x / assign(*result);
-}
-
 #endif // defined(TPL_HAS_STACK)
 
 // -------------------------------------------------------------------------
@@ -129,13 +122,6 @@ Action<AssigVec<Type, Ax> > TPL_CALL assign(std::vector<Type, Ax>& result) {
 	return Action<AssigVec<Type, Ax> >(result);
 }
 
-template <class T1, class Type, class Ax>
-__forceinline
-Rule<Act<T1, AssigVec<Type, Ax> > >
-TPL_CALL operator/(const Rule<T1>& x, std::vector<Type, Ax>* result) {
-	return x / assign(*result);
-}
-
 #endif // defined(TPL_HAS_VECTOR)
 
 // -------------------------------------------------------------------------
@@ -155,13 +141,6 @@ Action<AssigDeq<Type, Ax> > TPL_CALL assign(std::deque<Type, Ax>& result) {
 	return Action<AssigDeq<Type, Ax> >(result);
 }
 
-template <class T1, class Type, class Ax>
-__forceinline
-Rule<Act<T1, AssigDeq<Type, Ax> > >
-TPL_CALL operator/(const Rule<T1>& x, std::deque<Type, Ax>* result) {
-	return x / assign(*result);
-}
-
 #endif
 
 // -------------------------------------------------------------------------
@@ -179,13 +158,6 @@ public:
 template <class Type, class Ax> __forceinline
 Action<AssigLst<Type, Ax> > TPL_CALL assign(std::list<Type, Ax>& result) {
 	return Action<AssigLst<Type, Ax> >(result);
-}
-
-template <class T1, class Type, class Ax>
-__forceinline
-Rule<Act<T1, AssigLst<Type, Ax> > >
-TPL_CALL operator/(const Rule<T1>& x, std::list<Type, Ax>* result) {
-	return x / assign(*result);
 }
 
 #endif
@@ -235,13 +207,6 @@ Action<AssigSet<Type, Pr, Ax> > TPL_CALL assign(std::set<Type, Pr, Ax>& result) 
 	return Action<AssigSet<Type, Pr, Ax> >(result);
 }
 
-template <class T1, class Type, class Pr, class Ax>
-__forceinline
-Rule<Act<T1, AssigSet<Type, Pr, Ax> > >
-TPL_CALL operator/(const Rule<T1>& x, std::set<Type, Pr, Ax>* result) {
-	return x / assign(*result);
-}
-
 template <class Type, class Pr, class Ax>
 class AssigMSet : public AssigSetT<std::multiset<Type, Pr, Ax> >
 {
@@ -253,13 +218,6 @@ public:
 template <class Type, class Pr, class Ax> __forceinline
 Action<AssigMSet<Type, Pr, Ax> > TPL_CALL assign(std::multiset<Type, Pr, Ax>& result) {
 	return Action<AssigMSet<Type, Pr, Ax> >(result);
-}
-
-template <class T1, class Type, class Pr, class Ax>
-__forceinline
-Rule<Act<T1, AssigMSet<Type, Pr, Ax> > >
-TPL_CALL operator/(const Rule<T1>& x, std::multiset<Type, Pr, Ax>* result) {
-	return x / assign(*result);
 }
 
 #endif
