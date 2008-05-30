@@ -44,6 +44,9 @@ NS_TPL_BEGIN
 // =========================================================================
 // TPL_RULE_UNARY_OP_, TPL_REGEX_BINARY_OP_
 
+#define TPL_RULE_REF_UNARY_OP_(op, Op)
+#define TPL_RULE_REF_BINARY_OP_(op, Op)
+
 #define TPL_RULE_UNARY_OP_(op, Op)											\
 	TPL_RULE_REF_UNARY_OP_(op, Op)
 
@@ -118,7 +121,7 @@ public:
 
 public:
 	enum { character = RegExT1::character | RegExT2::character };
-	enum { vtype = 0 };
+	enum { vtype = RegExT1::vtype & RegExT2::vtype };
 
 	typedef ExplicitConvertible convertible_type;
 
@@ -126,6 +129,10 @@ public:
 	bool TPL_CALL match(SourceT& ar, ContextT& context) const
 	{
 		return m_x.match(ar, context) || m_y.match(ar, context);
+	}
+
+	bool TPL_CALL operator()(int c) const {
+		return m_x(c) || m_y(c);
 	}
 };
 
@@ -384,10 +391,14 @@ public:
 	bool TPL_CALL match(SourceT& ar, ContextT& context) const
 	{
 		typename SourceT::int_type c = ar.get();
-		if (!m_x.match<SourceT>(c))
+		if (!m_x(c))
 			return true;
 		ar.unget(c);
 		return false;
+	}
+
+	bool TPL_CALL operator()(int c) const {
+		return !m_x(c);
 	}
 
 private:

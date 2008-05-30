@@ -23,10 +23,6 @@
 #include "Basic.h"
 #endif
 
-#ifndef TPL_REGEX_FIND_H
-#include "Find.h" // match_while
-#endif
-
 #ifndef TPL_REGEX_TERMINAL_H
 #include "Terminal.h"
 #endif
@@ -103,18 +99,23 @@ __forceinline Grammar<GRef<T1> > TPL_CALL ref(const Grammar<T1>& x) {
 // =========================================================================
 // Dereference for Rule
 
-template <class RefT>
-class Deref
-{
-private:
-	RefT m_ref;
+// RefT(Reference) concept:
+//
+// typedef typename RefT::value_type value_type;
+// typedef typename RefT::rule_type rule_type;
+// typedef typename RefT::dereference_type dereference_type;
+//
+// dereference_type TPL_CALL operator()() const;
 
+template <class RefT>
+class Deref : public RefT
+{
 private:
 	typedef typename RefT::dereference_type dereference_type;
 	typedef typename RefT::rule_type rule_type;
 
 public:
-	Deref(const RefT& ref_) : m_ref(ref_) {}
+	Deref(const RefT& ref_) : RefT(ref_) {}
 
 public:
 	enum { character = rule_type::character };
@@ -124,31 +125,17 @@ public:
 
 	template <class SourceT, class ContextT>
 	bool TPL_CALL match(SourceT& ar, ContextT& context) const {
-		dereference_type der(m_ref());
+		dereference_type der(RefT::operator()());
 		rule_type x(der);
 		return x.match(ar, context);
 	}
 
-	template <class SourceT>
-	bool TPL_CALL match(typename SourceT::int_type c) const {
-		dereference_type der(m_ref());
+	bool TPL_CALL operator()(int c) const {
+		dereference_type der(RefT::operator()());
 		rule_type x(der);
-		return x.match<SourceT>(c);
+		return x(c);
 	}
 };
-
-#define TPL_RULE_REF_UNARY_OP_(op, Op)										\
-template <class T1> __forceinline 											\
-Rule<Op<Deref<T1> > > TPL_CALL operator op(const Reference<T1>& x)			\
-	{ return Rule<Op<Deref<T1> > >(x); }
-
-#define TPL_RULE_REF_BINARY_OP_(op, Op)										\
-template <class T1, class T2>												\
-__forceinline Rule<Op<Deref<T1>, T2> > TPL_CALL operator op(const Reference<T1>& x, const Rule<T2>& y) \
-	{ return Rule<Op<Deref<T1>, T2> >(x, y); }								\
-template <class T1, class T2>												\
-__forceinline Rule<Op<T1, Deref<T2> > > TPL_CALL operator op(const Rule<T1>& x, const Reference<T2>& y) \
-	{ return Rule<Op<T1, Deref<T2> > >(x, y); }
 
 // =========================================================================
 // function ref(a_ch_var)
@@ -188,6 +175,7 @@ public:
 	RefCh(const CharT& c) : m_c(c) {}
 
 public:
+	typedef CharT value_type;
 	typedef int dereference_type;
 	typedef Ch1_ rule_type;
 
@@ -211,6 +199,7 @@ public:
 	RefStr_(const StringT& s) : m_s(s) {}
 
 public:
+	typedef StringT value_type;
 	typedef const StringT& dereference_type;
 	typedef Eq_<Iterator_> rule_type;
 
@@ -263,63 +252,8 @@ struct ReferenceTratis<wchar_t> {
 };
 
 template <class Type> __forceinline
-Reference<typename ReferenceTratis<Type>::reference_type> TPL_CALL ref(const Type& var_) {
-	return Reference<typename ReferenceTratis<Type>::reference_type>(var_);
-}
-
-// =========================================================================
-// function class OpRef
-
-template <class Type, class OpType>
-class OpRef
-{
-private:
-	typedef typename ReferenceTratis<Type>::reference_type reference_type;
-	typedef typename reference_type::dereference_type dereference_type;
-	typedef OpType op_type;
-
-	reference_type m_ref;
-
-public:
-	OpRef(const Type& var_) : m_ref(var_) {}
-
-public:
-	enum { character = op_type::character };
-	enum { vtype = op_type::vtype };
-
-	typedef typename op_type::convertible_type convertible_type;
-
-	template <class SourceT, class ContextT>
-	bool TPL_CALL match(SourceT& ar, ContextT& context) const {
-		dereference_type der(m_ref());
-		op_type x(der);
-		return x.match(ar, context);
-	}
-};
-
-// =========================================================================
-// function find_ref(var) = find(ref(var))
-
-template <class Type, bool bEat = false>
-class FindRefTraits
-{
-private:
-	typedef typename ReferenceTratis<Type>::reference_type reference_type;
-	typedef typename reference_type::dereference_type dereference_type;
-	typedef typename FindTraits<dereference_type, bEat>::find_type find_type;
-
-public:
-	typedef OpRef<Type, find_type> find_ref_type;
-};
-
-template <bool bEat, class Type> __forceinline
-Rule<typename FindRefTraits<Type, bEat>::find_ref_type> TPL_CALL find_ref(const Type& var_) {
-	return Rule<typename FindRefTraits<Type, bEat>::find_ref_type>(var_);
-}
-
-template <class Type> __forceinline
-Rule<typename FindRefTraits<Type, false>::find_ref_type> TPL_CALL find_ref(const Type& var_) {
-	return Rule<typename FindRefTraits<Type, false>::find_ref_type>(var_);
+Rule<Deref<typename ReferenceTratis<Type>::reference_type> > TPL_CALL ref(const Type& var_) {
+	return Rule<Deref<typename ReferenceTratis<Type>::reference_type> >(var_);
 }
 
 // =========================================================================

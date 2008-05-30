@@ -27,13 +27,17 @@
 #include "Terminal.h"
 #endif
 
+#ifndef TPL_REGEX_REF_H
+#include "Ref.h"
+#endif
+
 #ifndef STDEXT_KMP_FINDER_H
 #include "../../../../stdext/include/stdext/kmp/Finder.h"
 #endif
 
 NS_TPL_BEGIN
 
-// -------------------------------------------------------------------------
+// =========================================================================
 // function find_if
 
 template <bool bEat, class SourceT, class PredT>
@@ -89,7 +93,7 @@ __forceinline Rule<FindIf<PredT, false> > TPL_CALL find_if(PredT pred) {
 	return Rule<FindIf<PredT, false> >(pred);
 }
 
-// -------------------------------------------------------------------------
+// =========================================================================
 // class FindCh
 
 template <bool bEat>
@@ -169,7 +173,15 @@ public:
 		: FindStr_<const CharT*, bEat>(s_, s_ + std::char_traits<CharT>::length(s_)) {};
 };
 
-// -------------------------------------------------------------------------
+template <class Iterator, bool bEat = false>
+class FindLeaf : public FindStr_<Iterator, bEat>
+{
+public:
+	FindLeaf(const Leaf<Iterator>& s_)
+		: FindStr_<Iterator, bEat>(s_.begin(), s_.end()) {};
+};
+
+// =========================================================================
 // function find(val)
 
 // Usage: find('c')				--- means: find character 'c'. ('c' remains in the inputstream)
@@ -209,9 +221,74 @@ struct FindTraits<CharT[sz], bEat> {
 	typedef FindStr<CharT, bEat> find_type;
 };
 
-template <class CharT, size_t sz, bool bEat>
-struct FindTraits<const CharT[sz], bEat> {
-	typedef FindStr<CharT, bEat> find_type;
+template <class Iterator, bool bEat>
+struct FindTraits<Leaf<Iterator>, bEat> {
+	typedef FindLeaf<Iterator, bEat> find_type;
+};
+
+template <class RegExT, bool bEat>
+struct FindTraits<Rule<RegExT>, bEat> {
+	typedef FindIf<RegExT, bEat> find_type;
+	TPL_REQUIRE(VTYPE_CHAR & RegExT::vtype, ChRuleRequire_);
+};
+
+template <class Type, bool bEat>
+struct FindTraits<const Type&, bEat> {
+	typedef typename FindTraits<Type, bEat>::find_type find_type;
+};
+
+// -------------------------------------------------------------------------
+// function class OpRef
+
+template <class RefT, class OpType>
+class OpRef
+{
+private:
+	typedef typename RefT::value_type value_type;
+	typedef RefT reference_type;
+	typedef typename reference_type::dereference_type dereference_type;
+	typedef OpType op_type;
+
+	reference_type m_ref;
+
+public:
+	OpRef(const value_type& var_) : m_ref(var_) {}
+	OpRef(const RefT& ref_) : m_ref(ref_) {}
+
+public:
+	enum { character = op_type::character };
+	enum { vtype = op_type::vtype };
+
+	typedef typename op_type::convertible_type convertible_type;
+
+	template <class SourceT, class ContextT>
+	bool TPL_CALL match(SourceT& ar, ContextT& context) const {
+		dereference_type der(m_ref());
+		op_type x(der);
+		return x.match(ar, context);
+	}
+};
+
+template <class RefT, bool bEat>
+struct FindTraits<Rule<Deref<RefT> >, bEat> {
+	typedef typename RefT::dereference_type dereference_type;
+	typedef typename FindTraits<dereference_type, bEat>::find_type op_type;
+	typedef OpRef<RefT, op_type> find_type;
+};
+
+// -------------------------------------------------------------------------
+// function find_ref(var) = find(ref(var))
+
+template <class Type, bool bEat = false>
+class FindRefTraits
+{
+private:
+	typedef typename ReferenceTratis<Type>::reference_type reference_type;
+	typedef typename reference_type::dereference_type dereference_type;
+	typedef typename FindTraits<dereference_type, bEat>::find_type op_type;
+
+public:
+	typedef OpRef<reference_type, op_type> find_type;
 };
 
 template <bool bEat, class Type> __forceinline
@@ -224,7 +301,17 @@ Rule<typename FindTraits<Type, false>::find_type> TPL_CALL find(const Type& val)
 	return Rule<typename FindTraits<Type, false>::find_type>(val);
 }
 
-// -------------------------------------------------------------------------
+template <bool bEat, class Type> __forceinline
+Rule<typename FindRefTraits<Type, bEat>::find_type> TPL_CALL find_ref(const Type& var_) {
+	return Rule<typename FindRefTraits<Type, bEat>::find_type>(var_);
+}
+
+template <class Type> __forceinline
+Rule<typename FindRefTraits<Type, false>::find_type> TPL_CALL find_ref(const Type& var_) {
+	return Rule<typename FindRefTraits<Type, false>::find_type>(var_);
+}
+
+// =========================================================================
 // $Log: $
 
 NS_TPL_END

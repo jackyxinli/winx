@@ -373,25 +373,6 @@ private:
 };
 
 // =========================================================================
-// class Reference - Reference of a Rule
-
-template <class RefT>
-class Reference : public RefT
-{
-public:
-	template <class T1>
-	Reference(const T1& x) : RefT(x) {}
-
-private:
-	// concept:
-
-	typedef typename RefT::rule_type rule_type;
-	typedef typename RefT::dereference_type dereference_type;
-
-	dereference_type TPL_CALL operator()() const;
-};
-
-// =========================================================================
 // class Transformation
 
 template <class TransformT>

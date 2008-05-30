@@ -39,17 +39,20 @@ class ChAny
 public:
 	enum { character = 0 };
 	enum { vtype = VTYPE_CHAR };
+	enum { endch = -1 };
 
 	typedef ExplicitConvertible convertible_type;
 
 	template <class SourceT, class ContextT>
-	bool TPL_CALL match(SourceT& ar, ContextT& context) const {
+	bool TPL_CALL match(SourceT& ar, ContextT& context) const
+	{
+		TPL_REQUIRE(endch == SourceT::endch, ConstConsistent_);
+		TPL_REQUIRE(sizeof(int) == sizeof(typename SourceT::int_type), SizeConsistent_);
 		return ar.get() != SourceT::endch;
 	}
 
-	template <class SourceT>
-	bool TPL_CALL match(typename SourceT::int_type c) const {
-		return c != SourceT::endch;
+	bool TPL_CALL operator()(int c) const {
+		return c != endch;
 	}
 };
 
@@ -61,22 +64,19 @@ __forceinline Rule<ChAny> TPL_CALL ch_any() {
 // class EqCh
 
 template <class PredT>
-class EqCh // Match a Char
+class EqCh : public PredT // Match a Char
 {
-private:
-	PredT m_pred;
-
 public:
 	EqCh() {}
 	
 	template <class T1>
-	EqCh(const T1& x) : m_pred(x) {}
+	EqCh(const T1& x) : PredT(x) {}
 
 	template <class T1, class T2>
-	EqCh(const T1& x, const T2& y) : m_pred(x, y) {}
+	EqCh(const T1& x, const T2& y) : PredT(x, y) {}
 
 	template <class T1, class T2, class T3>
-	EqCh(const T1& x, const T2& y, const T3& z) : m_pred(x, y, z) {}
+	EqCh(const T1& x, const T2& y, const T3& z) : PredT(x, y, z) {}
 
 public:
 	enum { character = 0 };
@@ -88,15 +88,10 @@ public:
 	bool TPL_CALL match(SourceT& ar, ContextT& context) const
 	{
 		typename SourceT::int_type c = ar.get();
-		if (m_pred(c))
+		if (PredT::operator()(c))
 			return true;
 		ar.unget(c);
 		return false;
-	}
-
-	template <class SourceT>
-	bool TPL_CALL match(typename SourceT::int_type c) const {
-		return m_pred(c);
 	}
 };
 
