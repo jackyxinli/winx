@@ -13,11 +13,9 @@ using namespace tpl;
 
 void simple_grammar()
 {
-	simple::Allocator alloc;
-
 	std::vector<double> values; // you can change vector to other stl containers.
 	
-	if ( simple::match(" -.1 , -0.1 , +32. , -22323.2e+12 ", real()/assign(values) % gr(','), skipws(), alloc) )
+	if ( simple::match(" -.1 , -0.1 , +32. , -22323.2e+12 ", real()/assign(values) % gr(','), skipws()) )
 	{
 		for (std::vector<double>::iterator it = values.begin(); it != values.end(); ++it)
 		{

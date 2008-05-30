@@ -194,19 +194,19 @@ private:
 public:
 	// Skipper
 
-	template <class AllocT, class SkipperT>
-	static Skipper<SkipperImpl<SkipperT, Source, Context> > TPL_CALL skipper(AllocT& alloc, const tpl::Rule<SkipperT>& skipper_) {
-		return Skipper<SkipperImpl<SkipperT, Source, Context> >(alloc, skipper_);
+	template <class SkipperT>
+	static Skipper<SkipperImpl<SkipperT, Source, Context> > TPL_CALL skipper(const tpl::Rule<SkipperT>& skipper_) {
+		return Skipper<SkipperImpl<SkipperT, Source, Context> >(skipper_);
 	}
 
 	template <class AllocT>
-	static Skipper<ConcretionSkipper_> TPL_CALL skipper(AllocT& alloc, const tpl::Rule<ConcretionSkipper_>& skipper_) {
+	static Skipper<ConcretionSkipper_> TPL_CALL skipper(const tpl::Rule<ConcretionSkipper_>& skipper_) {
 		return (const Skipper<ConcretionSkipper_>&)skipper_;
 	}
 
 	template <class AllocT>
-	static Skipper<SkipperImpl<SkipWhiteSpaces, Source, Context> > TPL_CALL skipws(AllocT& alloc) {
-		return skipper(alloc, tpl::skipws());
+	static Skipper<SkipperImpl<SkipWhiteSpaces, Source, Context> > TPL_CALL skipws() {
+		return skipper(tpl::skipws());
 	}
 
 public:
@@ -238,30 +238,30 @@ public:
 public:
 	// Grammar helper functions:
 
-	template <class RegExT, class SkipperT, class AllocT>
+	template <class RegExT, class SkipperT>
 	static inline bool TPL_CALL match(
 		Iterator pos, Iterator pos2, const tpl::Grammar<RegExT>& grammar_, 
-		const tpl::Rule<SkipperT>& skipper_, AllocT& alloc_)
+		const tpl::Rule<SkipperT>& skipper_)
 	{
 		// equal to:
-		//	 return match(pos, pos2, skipper(alloc_, skipper_) >> grammar_);
+		//	 return match(pos, pos2, skipper(skipper_) >> grammar_);
 
 		Source source(pos, pos2);
 		Context context;
-		return grammar_.match(source, context, skipper(alloc_, skipper_));
+		return grammar_.match(source, context, skipper(skipper_));
 	}
 
-	template <class RegExT, class SkipperT, class AllocT>
+	template <class RegExT, class SkipperT>
 	static inline bool TPL_CALL match(
 		Iterator pos, const tpl::Grammar<RegExT>& grammar_,
-		const tpl::Rule<SkipperT>& skipper_, AllocT& alloc_)
+		const tpl::Rule<SkipperT>& skipper_)
 	{
 		// equal to:
-		//	 return match(pos, skipper(alloc_, skipper_) >> grammar_);
+		//	 return match(pos, skipper(skipper_) >> grammar_);
 
 		Source source(pos);
 		Context context;
-		return grammar_.match(source, context, skipper(alloc_, skipper_));
+		return grammar_.match(source, context, skipper(skipper_));
 	}
 };
 

@@ -89,7 +89,6 @@ public:
 // class AssigUInt
 
 // Usage: Rule/assign(a_uint_var)
-// Usage: Rule/&a_uint_var
 
 template <class Iterator, class UIntT>
 inline Iterator TPL_CALL _parseUInt(UIntT& result, Iterator first, Iterator last)
@@ -125,7 +124,6 @@ public:
 // class AssigInt
 
 // Usage: Rule/assign(a_int_var)
-// Usage: Rule/&a_int_var
 
 template <class Iterator, class IntT>
 inline Iterator TPL_CALL _parseInt(IntT& result, Iterator first, Iterator last)
@@ -163,7 +161,6 @@ public:
 // class AssigReal
 
 // Usage: Rule/assign(a_real_var)
-// Usage: Rule/&a_real_var
 
 template <class RealT>
 inline const char* TPL_CALL _parseReal(RealT& result, const char* first, const char* last)

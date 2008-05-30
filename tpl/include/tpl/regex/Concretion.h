@@ -75,7 +75,7 @@ public:
 		return *this;
 	}
 
-private:
+public:
 	template <class RegExT>
 	class Impl
 	{

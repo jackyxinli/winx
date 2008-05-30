@@ -84,13 +84,15 @@ class SkipperImpl : public SkipperT
 private:
 	typedef SkipperTraits<SourceT, ContextT> Tr_;
 	typedef typename Tr_::concretion_type ConcretionT;
+	typedef typename ConcretionT::template Impl<SkipperT> ConcretionImplT;
 
 	ConcretionT m_alter;
 
 public:
-	template <class AllocT>
-	SkipperImpl(AllocT& alloc, const Rule<SkipperT>& x)
-		: SkipperT(x), m_alter(alloc, x) {}
+	SkipperImpl(const Rule<SkipperT>& skipper_) : SkipperT(skipper_) {
+		const ConcretionImplT* impl_ = (const ConcretionImplT*)&skipper_;
+		m_alter.assign(impl_, ConcretionImplT::match);
+	}
 
 public:
 	typedef const ConcretionT& concreation_type;
