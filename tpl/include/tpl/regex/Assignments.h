@@ -223,6 +223,31 @@ Action<AssigMSet<Type, Pr, Ax> > TPL_CALL assign(std::multiset<Type, Pr, Ax>& re
 #endif
 
 // -------------------------------------------------------------------------
+// function push_back
+
+template <class ContainerT, class ValueType>
+class PushBack
+{
+private:
+	ContainerT& m_cont;
+	const ValueType& m_ref;
+
+public:
+	PushBack(ContainerT& cont, const ValueType& val)
+		: m_cont(cont), m_ref(val) {
+	}
+
+	void TPL_CALL operator()() const {
+		m_cont.push_back(m_ref);
+	}
+};
+
+template <class ContainerT, class ValueType> __forceinline
+SimpleAction<PushBack<ContainerT, ValueType> > push_back(ContainerT& cont, const ValueType& val) {
+	return SimpleAction<PushBack<ContainerT, ValueType> >(cont, val);
+}
+
+// -------------------------------------------------------------------------
 // $Log: $
 
 NS_TPL_END
