@@ -46,7 +46,7 @@ public:
 	template <class SourceT, class ContextT>
 	bool TPL_CALL match(SourceT& ar, ContextT& context) const
 	{
-		TPL_REQUIRE(endch == SourceT::endch, ConstConsistent_);
+		TPL_REQUIRE(endch == (int)SourceT::endch, ConstConsistent_);
 		TPL_REQUIRE(sizeof(int) == sizeof(typename SourceT::int_type), SizeConsistent_);
 		return ar.get() != SourceT::endch;
 	}
