@@ -166,34 +166,34 @@ public:
 // function length
 
 template <class Type>
-inline size_t TPL_CALL length(const Cons<Type>* hd) {
+inline size_t TPL_CALL length(const Cons<Type>* hd_) {
 	size_t len = 0;
-	for (; hd; hd = hd->tail)
+	for (; hd_; hd_ = hd_->tail)
 		++len;
 	return len;
 }
 
 template <class Type, bool bManaged>
-__forceinline size_t TPL_CALL length(const ConsList<Type, bManaged>& hd) {
-	return length(hd.data());
+__forceinline size_t TPL_CALL length(const ConsList<Type, bManaged>& hd_) {
+	return length(hd_.data());
 }
 
 // -------------------------------------------------------------------------
 // function count_if
 
 template <class Type, class CondT>
-inline size_t TPL_CALL count_if(const Cons<Type>* hd, CondT cond) {
+inline size_t TPL_CALL count_if(const Cons<Type>* hd_, CondT cond) {
 	size_t len = 0;
-	for (; hd; hd = hd->tail) {
-		if (cond(hd->value))	
+	for (; hd_; hd_ = hd_->tail) {
+		if (cond(hd_->value))	
 			++len;
 	}
 	return len;
 }
 
 template <class Type, bool bManaged, class CondT>
-__forceinline size_t TPL_CALL count_if(const ConsList<Type, bManaged>& hd, CondT cond) {
-	return count_if(hd.data(), cond);
+__forceinline size_t TPL_CALL count_if(const ConsList<Type, bManaged>& hd_, CondT cond) {
+	return count_if(hd_.data(), cond);
 }
 
 // -------------------------------------------------------------------------

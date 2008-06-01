@@ -36,9 +36,9 @@ class Null
 {
 public:
 	enum { character = 0 };
-	enum { vtype = 0 };
 
 	typedef SelfConvertible convertible_type;
+	typedef TagAssigNone assig_tag;
 
 	template <class SourceT, class ContextT>
 	bool TPL_CALL match(SourceT& ar, ContextT& context) const {
@@ -69,9 +69,9 @@ class Eos
 {
 public:
 	enum { character = 0 };
-	enum { vtype = 0 };
 
 	typedef AutoConvertible convertible_type;
+	typedef TagAssigNone assig_tag;
 
 	template <class SourceT, class ContextT>
 	bool TPL_CALL match(SourceT& ar, ContextT& context) const {
@@ -98,9 +98,9 @@ class Done
 {
 public:
 	enum { character = 0 };
-	enum { vtype = 0 };
 
 	typedef AutoConvertible convertible_type;
+	typedef TagAssigNone assig_tag;
 
 	template <class SourceT, class ContextT>
 	bool TPL_CALL match(SourceT& ar, ContextT& context) const {
@@ -200,9 +200,9 @@ public:
 
 public:
 	enum { character = 0 };
-	enum { vtype = 0 };
 
 	typedef AutoConvertible convertible_type;
+	typedef TagAssigNone assig_tag;
 
 	template <class SourceT, class ContextT>
 	bool TPL_CALL match(SourceT& ar, ContextT& context) const {

@@ -34,42 +34,32 @@ NS_TPL_BEGIN
 // -------------------------------------------------------------------------
 // class Lambda
 
-template <class Type, class OperaT, int arity = boost::lambda::get_arity<OperaT>::value >
+template <class ValueT, class OperaT, int arity = boost::lambda::get_arity<OperaT>::value >
 class Calc
 {
 };
 
-template <class Type, class OperaT>
-class Calc<Type, OperaT, 0x01>
+template <class ValueT, class OperaT>
+class Calc<ValueT, OperaT, 0x01>
 {
 private:
-	typedef AssignmentTypeTraits<Type> Tr_;
-	typedef typename Tr_::assignment_type assignment_type;
-	typedef Type value_type;
-
 	OperaT m_opera;
 
 public:
+	typedef ValueT value_type;
 	typedef Action<Calc> action_type;
 
 public:
-	Calc(const OperaT& opera)
-		: m_opera(opera) {
+	Calc(const OperaT& opera) : m_opera(opera) {
 	}
 
-	enum { required_vtypes = assignment_type::required_vtypes };
-
-	template <class Iterator>
-	void TPL_CALL operator()(Iterator pos, Iterator pos2) const {
-		value_type val = value_type();
-		assignment_type assig(val);
-		assig(pos, pos2);
+	void TPL_CALL operator()(const value_type& val) const {
 		m_opera(val);
 	}
 };
 
-template <class Type, class OperaT>
-class Calc<Type, OperaT, 0x00>
+template <class ValueT, class OperaT>
+class Calc<ValueT, OperaT, 0x00>
 {
 private:
 	OperaT m_opera;
@@ -78,8 +68,7 @@ public:
 	typedef SimpleAction<Calc> action_type;
 
 public:
-	Calc(const OperaT& opera)
-		: m_opera(opera) {
+	Calc(const OperaT& opera) : m_opera(opera) {
 	}
 
 	void TPL_CALL operator()() const {
@@ -87,36 +76,44 @@ public:
 	}
 };
 
-template <class Type>
+template <class ValueT>
 class Lambda
 {
 public:
 	template <class OperaT>
-	typename Calc<Type, OperaT>::action_type TPL_CALL operator[](const OperaT& op) const {
-		return typename Calc<Type, OperaT>::action_type(op);
+	typename Calc<ValueT, OperaT>::action_type TPL_CALL operator[](const OperaT& op) const {
+		return typename Calc<ValueT, OperaT>::action_type(op);
 	}
 };
 
 // -------------------------------------------------------------------------
-// class tpl::Local<T>::Ref
+// class tpl::Local<ValueT>::Ref
 
-template <class T>
+template <class ValueT>
 class Local
 {
 public:
-	typedef boost::lambda::lambda_functor<boost::lambda::identity<T&> > Ref;
+	typedef boost::lambda::lambda_functor<boost::lambda::identity<ValueT&> > Ref;
 };
 
-#define TPL_LOCAL(T, variable)												\
-	T _tpl_##variable = T();												\
-	tpl::Local<T>::Ref variable = boost::lambda::var(_tpl_##variable)
+#define TPL_LOCAL(ValueT, variable)												\
+	ValueT _tpl_##variable = ValueT();											\
+	tpl::Local<ValueT>::Ref variable = boost::lambda::var(_tpl_##variable)
 
-template <class T>
-__forceinline Action<typename AssignmentTypeTraits<T>::assignment_type> TPL_CALL assign(
-	const boost::lambda::lambda_functor<boost::lambda::identity<T&> >& var_)
+template <class ValueT>
+__forceinline Action<Assign<ValueT> > TPL_CALL assign(
+	const boost::lambda::lambda_functor<boost::lambda::identity<ValueT&> >& var_)
 {
-	T& result = var_();
-	return Action<typename AssignmentTypeTraits<T>::assignment_type>(result);
+	ValueT& result = var_();
+	return Action<Assign<ValueT> >(result);
+}
+
+template <class ValueT>
+__forceinline Action<Assign<ValueT> > TPL_CALL assign(
+	boost::lambda::lambda_functor<boost::lambda::identity<ValueT&> >& var_)
+{
+	ValueT& result = var_();
+	return Action<Assign<ValueT> >(result);
 }
 
 // -------------------------------------------------------------------------
@@ -125,4 +122,3 @@ __forceinline Action<typename AssignmentTypeTraits<T>::assignment_type> TPL_CALL
 NS_TPL_END
 
 #endif /* TPL_REGEXP_H */
-

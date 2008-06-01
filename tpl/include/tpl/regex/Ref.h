@@ -51,9 +51,9 @@ public:
 
 public:
 	enum { character = RegExT::character };
-	enum { vtype = RegExT::vtype };
 
 	typedef typename RegExT::convertible_type convertible_type;
+	typedef typename RegExT::assig_tag assig_tag;
 
 	template <class SourceT, class ContextT>
 	bool TPL_CALL match(SourceT& ar, ContextT& context) const {
@@ -119,9 +119,9 @@ public:
 
 public:
 	enum { character = rule_type::character };
-	enum { vtype = rule_type::vtype };
 
 	typedef typename rule_type::convertible_type convertible_type;
+	typedef typename rule_type::assig_tag assig_tag;
 
 	template <class SourceT, class ContextT>
 	bool TPL_CALL match(SourceT& ar, ContextT& context) const {

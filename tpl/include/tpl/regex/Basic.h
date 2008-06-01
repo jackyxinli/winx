@@ -61,6 +61,20 @@
 #endif
 #endif
 
+#ifndef TPL_TRACE
+#if defined(WINX_TRACE)
+#define TPL_TRACE	WINX_TRACE
+#elif defined(_DEBUG)
+#define TPL_TRACE	printf
+#else
+#define TPL_TRACE	__noop
+#endif
+#endif
+
+#ifndef TPL_TRACEW
+#define TPL_TRACEW	WINX_TRACE
+#endif
+
 #ifndef NS_TPL_BEGIN
 #define NS_TPL_BEGIN			namespace tpl {
 #define NS_TPL_END				}
@@ -86,9 +100,24 @@ struct RequireFeatureTraits<false> {
 	struct RequireFeatureFailed {};
 };
 
+template <class T1, class T2>
+struct RequireClassTraits {
+	struct RequireClassFailed {};
+};
+
+template <class ClassT>
+struct RequireClassTraits<ClassT, ClassT> {
+	typedef ClassT class_type;
+};
+
 #ifndef TPL_REQUIRE
 #define TPL_REQUIRE(e, RequireFeature_)										\
 	typedef typename tpl::RequireFeatureTraits<(e) != 0>::feature_type RequireFeature_;
+#endif
+
+#ifndef TPL_REQUIRE_CLASS
+#define TPL_REQUIRE_CLASS(T1, T2, RequireFeature_)							\
+	typedef typename tpl::RequireClassTraits<T1, T2>::class_type RequireFeature_;
 #endif
 
 // =========================================================================
@@ -112,10 +141,10 @@ public:
 
 //	concept (as a Rule):
 //
-//	enum { vtype = SkipperT::vtype };
 //	enum { character = SkipperT::character };
 //
 //	typedef typename SkipperT::convertible_type convertible_type;
+//	typedef typename RegExT::assig_tag assig_tag;
 //
 //	template <class SourceT, class ContextT>
 //	bool TPL_CALL match(SourceT& ar, ContextT& context) const;
@@ -162,15 +191,28 @@ enum RuleCharacter
 	CHARACTER_SKIPPER	= CHARACTER_NONE,
 };
 
-enum RuleVType
-{
-	VTYPE_NONE			= 0,
-	VTYPE_USER_DEFINED	= 0x0001,
-	VTYPE_CHAR			= 0x0002,
-	VTYPE_U_INTEGER		= 0x0004,
-	VTYPE_INTEGER		= 0x0008,
-	VTYPE_U_REAL		= 0x0010,
-	VTYPE_REAL			= 0x0020,
+// RuleAssigTag
+
+struct TagAssigNone {};
+struct TagAssigChar {};
+struct TagAssigUInteger {};	// dec radix
+struct TagAssigInteger {};		// dec radix
+struct TagAssigHexUInteger {};	// hex radix
+struct TagAssigOctUInteger {};	// oct radix
+struct TagAssigBinUInteger {};	// binary radix
+struct TagAssigUReal {};		// unsigned real
+struct TagAssigReal {};		// real
+struct TagAssigUFraction {};
+struct TagAssigFraction {};
+
+template <class Tag1, class Tag2>
+struct AndAssigTag {
+	typedef TagAssigNone assig_tag;
+};
+
+template <class AssigTag>
+struct AndAssigTag<AssigTag, AssigTag> {
+	typedef AssigTag assig_tag;
 };
 
 // ConvertableType
@@ -194,15 +236,25 @@ struct OrConvertable<ExplicitConvertible, AutoConvertible> {
 	typedef AutoConvertible convertible_type;
 };
 
+template <class CT1, class CT2>
+struct AndConvertable {
+	typedef ExplicitConvertible convertible_type;
+};
+
+template <class CT>
+struct AndConvertable<CT, CT> {
+	typedef CT convertible_type;
+};
+
 // class RuleBase
 
 class RuleBase
 {
 public:
-	enum { vtype = VTYPE_NONE };
 	enum { character = CHARACTER_MARKED };
 
 	typedef ExplicitConvertible convertible_type;
+	typedef TagAssigNone assig_tag;
 };
 
 // class Rule
@@ -223,6 +275,9 @@ public:
 
 	template <class T1, class T2>
 	Rule(const T1& x, const T2& y) : RegExT(x, y) {}
+
+	template <class T1, class T2>
+	Rule(const T1& x, T2& y) : RegExT(x, y) {}
 
 	template <class T1, class T2>
 	Rule(T1& x, const T2& y) : RegExT(x, y) {}
@@ -253,10 +308,10 @@ public:
 
 //	concept:
 //
-//	enum { vtype = RegExT::vtype };
 //	enum { character = RegExT::character };
 //
 //	typedef typename RegExT::convertible_type convertible_type;
+//	typedef typename RegExT::assig_tag assig_tag;
 //
 //	template <class SourceT, class ContextT>
 //	bool TPL_CALL match(SourceT& ar, ContextT& context) const;
@@ -379,10 +434,9 @@ public:
 private:
 	// concept:
 
-	enum { required_vtypes = ActionT::required_vtypes };
+	typedef typename ActionT::value_type value_type;
 
-	template <class Iterator>
-	void TPL_CALL operator()(Iterator first, Iterator last) const;
+	void TPL_CALL operator()(const value_type& val) const;
 };
 
 // =========================================================================

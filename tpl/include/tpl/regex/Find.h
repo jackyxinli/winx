@@ -123,9 +123,9 @@ public:
 
 public:
 	enum { character = 0 };
-	enum { vtype = 0 };
 
 	typedef SelfConvertible convertible_type;
+	typedef TagAssigNone assig_tag;
 
 	template <class SourceT, class ContextT>
 	bool TPL_CALL match(SourceT& ar, ContextT& context) const {
@@ -140,9 +140,9 @@ class FindEol
 {
 public:
 	enum { character = 0 };
-	enum { vtype = 0 };
 
 	typedef SelfConvertible convertible_type;
+	typedef TagAssigNone assig_tag;
 
 	template <class SourceT, class ContextT>
 	bool TPL_CALL match(SourceT& ar, ContextT& context) const {
@@ -231,9 +231,9 @@ public:
 
 public:
 	enum { character = 0 };
-	enum { vtype = 0 };
 
 	typedef SelfConvertible convertible_type;
+	typedef TagAssigNone assig_tag;
 
 	template <class SourceT, class ContextT>
 	bool TPL_CALL match(SourceT& ar, ContextT& context) const {
@@ -321,7 +321,7 @@ struct FindTraits<Leaf<Iterator>, bEat> {
 template <class RegExT, bool bEat>
 struct FindTraits<Rule<RegExT>, bEat> {
 	typedef FindIf<RegExT, bEat> find_type;
-	TPL_REQUIRE(VTYPE_CHAR & RegExT::vtype, ChRuleRequire_);
+	TPL_REQUIRE_CLASS(typename RegExT::assig_tag, TagAssigChar, ChRuleRequire_);
 };
 
 template <class Type, bool bEat>
@@ -349,9 +349,9 @@ public:
 
 public:
 	enum { character = op_type::character };
-	enum { vtype = op_type::vtype };
 
 	typedef typename op_type::convertible_type convertible_type;
+	typedef typename op_type::assig_tag assig_tag;
 
 	template <class SourceT, class ContextT>
 	bool TPL_CALL match(SourceT& ar, ContextT& context) const {

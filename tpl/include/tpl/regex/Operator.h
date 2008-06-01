@@ -75,9 +75,9 @@ public:
 
 public:
 	enum { character = RegExT1::character | RegExT2::character };
-	enum { vtype = 0 };
 
 	typedef ExplicitConvertible convertible_type;
+	typedef TagAssigNone assig_tag;
 
 	template <class SourceT, class ContextT>
 	bool TPL_CALL match(SourceT& ar, ContextT& context) const
@@ -112,6 +112,11 @@ template <class RegExT1, class RegExT2>
 class Or // Rule1 | Rule2
 {
 private:
+	typedef typename RegExT1::convertible_type CT1;
+	typedef typename RegExT2::convertible_type CT2;
+	typedef typename RegExT1::assig_tag AT1;
+	typedef typename RegExT2::assig_tag AT2;
+
 	RegExT1 m_x;
 	RegExT2 m_y;
 
@@ -121,9 +126,9 @@ public:
 
 public:
 	enum { character = RegExT1::character | RegExT2::character };
-	enum { vtype = RegExT1::vtype & RegExT2::vtype };
 
-	typedef ExplicitConvertible convertible_type;
+	typedef typename AndConvertable<CT1, CT2>::convertible_type convertible_type;
+	typedef typename AndAssigTag<AT1, AT2>::assig_tag assig_tag;
 
 	template <class SourceT, class ContextT>
 	bool TPL_CALL match(SourceT& ar, ContextT& context) const
@@ -227,9 +232,9 @@ public:
 
 public:
 	enum { character = RegExT1::character | RegExT2::character };
-	enum { vtype = RegExT1::vtype };
 
 	typedef typename OrConvertable<CT1, CT2>::convertible_type convertible_type;
+	typedef typename RegExT1::assig_tag assig_tag;
 
 	template <class SourceT, class ContextT>
 	bool TPL_CALL match(SourceT& ar, ContextT& context) const
@@ -271,9 +276,9 @@ public:
 
 public:
 	enum { character = RegExT::character };
-	enum { vtype = 0 };
 
 	typedef ExplicitConvertible convertible_type;
+	typedef TagAssigNone assig_tag;
 
 	template <class SourceT, class ContextT>
 	bool TPL_CALL match(SourceT& ar, ContextT& context) const
@@ -308,9 +313,9 @@ public:
 
 public:
 	enum { character = RegExT::character };
-	enum { vtype = 0 };
 
 	typedef ExplicitConvertible convertible_type;
+	typedef TagAssigNone assig_tag;
 
 	template <class SourceT, class ContextT>
 	bool TPL_CALL match(SourceT& ar, ContextT& context) const
@@ -347,9 +352,9 @@ public:
 
 public:
 	enum { character = RegExT::character };
-	enum { vtype = 0 };
 
 	typedef ExplicitConvertible convertible_type;
+	typedef TagAssigNone assig_tag;
 
 	template <class SourceT, class ContextT>
 	bool TPL_CALL match(SourceT& ar, ContextT& context) const
@@ -383,9 +388,9 @@ public:
 
 public:
 	enum { character = RegExT::character };
-	enum { vtype = RegExT::vtype };
 
 	typedef typename RegExT::convertible_type convertible_type;
+	typedef typename RegExT::assig_tag assig_tag;
 
 	template <class SourceT, class ContextT>
 	bool TPL_CALL match(SourceT& ar, ContextT& context) const
@@ -402,7 +407,7 @@ public:
 	}
 
 private:
-	TPL_REQUIRE(VTYPE_CHAR & vtype, ChRangeRule_);
+	TPL_REQUIRE_CLASS(typename RegExT::assig_tag, TagAssigChar, ChRuleRequire_);
 };
 
 template <class T1> __forceinline
@@ -433,9 +438,9 @@ public:
 
 public:
 	enum { character = RegExT::character };
-	enum { vtype = 0 };
 
 	typedef ExplicitConvertible convertible_type;
+	typedef TagAssigNone assig_tag;
 
 	template <class SourceT, class ContextT>
 	bool TPL_CALL match(SourceT& ar, ContextT& context) const

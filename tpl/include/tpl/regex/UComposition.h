@@ -53,7 +53,9 @@ public:
 
 public:
 	enum { character = 0 };
-	enum { vtype = 0 };
+
+	typedef ExplicitConvertible convertible_type;
+	typedef TagAssigNone assig_tag;
 
 	template <class SourceT, class ContextT>
 	bool TPL_CALL match(SourceT& ar, ContextT& context) const {
@@ -80,7 +82,8 @@ public:
 
 public:
 	enum { character = 0 };
-	enum { vtype = 0 };
+
+	typedef TagAssigNone assig_tag;
 
 	template <class SourceT, class ContextT>
 	bool TPL_CALL match(SourceT& ar, ContextT& context) const
@@ -100,7 +103,7 @@ public:
 // Usage: UGuad<Rule>	--- usually Rule contains some UAnd operators.
 // Note: Rule cannot contain any Mark operators (See <tpl/regex/Mark.h>)
 
-template <class RegExT, int uVType>
+template <class RegExT, class AssigTag>
 class UGuard
 {
 private:
@@ -116,9 +119,9 @@ public:
 
 public:
 	enum { character = 0 };
-	enum { vtype = uVType };
 
 	typedef AutoConvertible convertible_type;
+	typedef AssigTag assig_tag;
 
 	template <class SourceT, class ContextT>
 	bool TPL_CALL match(SourceT& ar, ContextT& context) const
@@ -136,19 +139,19 @@ public:
 
 #ifndef TPL_REGEX_GUARD
 #if defined(TPL_NO_REDUCE_NAME)
-#define TPL_REGEX_GUARD(UnGuard, Guard, uVType)								\
-	typedef UGuard<UnGuard, uVType> Guard;
+#define TPL_REGEX_GUARD(UnGuard, Guard, AssigTag)							\
+	typedef UGuard<UnGuard, AssigTag> Guard;
 #else
-#define TPL_REGEX_GUARD(UnGuard, Guard, uVType)								\
-	class Guard : public UGuard<UnGuard, uVType> {};
+#define TPL_REGEX_GUARD(UnGuard, Guard, AssigTag)							\
+	class Guard : public UGuard<UnGuard, AssigTag> {};
 #endif
 #endif
 
 #ifndef TPL_REGEX_GUARD0
-#define TPL_REGEX_GUARD0(UnGuard, Guard, uVType)							\
+#define TPL_REGEX_GUARD0(UnGuard, Guard, AssigTag)							\
 	class Guard : public UnGuard {											\
 	public:																	\
-		enum { vtype = uVType };											\
+		typedef AssigTag assig_tag;											\
 		typedef AutoConvertible convertible_type;							\
 	};
 #endif
@@ -165,8 +168,8 @@ typedef Ch<'\n'> NewLine;
 typedef Or<UAnd<Return, Repeat01<NewLine> >, NewLine> StrictEol;
 typedef Or<StrictEol, Eof> Eol;
 
-TPL_REGEX_GUARD0(StrictEol, StrictEolG, VTYPE_NONE)
-TPL_REGEX_GUARD0(Eol, EolG, VTYPE_NONE)
+TPL_REGEX_GUARD0(StrictEol, StrictEolG, TagAssigNone)
+TPL_REGEX_GUARD0(Eol, EolG, TagAssigNone)
 
 inline Rule<StrictEolG> TPL_CALL strict_eol() {
 	return Rule<StrictEolG>();
@@ -185,8 +188,8 @@ inline Rule<EolG> TPL_CALL eol() {
 typedef UAnd<CSymbolFirstChar, Repeat0<CSymbolNextChar> > CSymbol;
 typedef UAnd<XmlSymbolFirstChar, Repeat0<XmlSymbolNextChar> > XmlSymbol;
 
-TPL_REGEX_GUARD0(CSymbol, CSymbolG, VTYPE_NONE)
-TPL_REGEX_GUARD0(XmlSymbol, XmlSymbolG, VTYPE_NONE)
+TPL_REGEX_GUARD0(CSymbol, CSymbolG, TagAssigNone)
+TPL_REGEX_GUARD0(XmlSymbol, XmlSymbolG, TagAssigNone)
 
 inline Rule<CSymbolG> TPL_CALL c_symbol()
 {
@@ -209,8 +212,8 @@ typedef Repeat1<Digit> UInteger;
 typedef Ch<'+', '-'> Sign;
 typedef UAnd<Repeat01<Sign>, UInteger> Integer; // [+-]?d+
 
-TPL_REGEX_GUARD0(UInteger, UIntegerG, VTYPE_U_INTEGER)
-TPL_REGEX_GUARD(Integer, IntegerG, VTYPE_INTEGER)
+TPL_REGEX_GUARD0(UInteger, UIntegerG, TagAssigUInteger)
+TPL_REGEX_GUARD(Integer, IntegerG, TagAssigInteger)
 
 inline Rule<UIntegerG> TPL_CALL u_integer()
 {
@@ -230,15 +233,15 @@ typedef Repeat<Digit, 2, 2> Digit2_;
 typedef Repeat<Digit, 4, 4> Digit4_;
 typedef Repeat<Digit2_, 1, 2> Digit24_;
 
-TPL_REGEX_GUARD(Digit4_, Year4G, VTYPE_U_INTEGER)
-TPL_REGEX_GUARD(Digit2_, Year2G, VTYPE_U_INTEGER)
-TPL_REGEX_GUARD(Digit24_, YearG, VTYPE_U_INTEGER)
+TPL_REGEX_GUARD(Digit4_, Year4G, TagAssigUInteger)
+TPL_REGEX_GUARD(Digit2_, Year2G, TagAssigUInteger)
+TPL_REGEX_GUARD(Digit24_, YearG, TagAssigUInteger)
 
-TPL_REGEX_GUARD0(Digit12_, MonthG, VTYPE_U_INTEGER)
-TPL_REGEX_GUARD0(Digit12_, DayG, VTYPE_U_INTEGER)
-TPL_REGEX_GUARD0(Digit12_, HourG, VTYPE_U_INTEGER)
-TPL_REGEX_GUARD0(Digit12_, MinuteG, VTYPE_U_INTEGER)
-TPL_REGEX_GUARD0(Digit12_, SecondG, VTYPE_U_INTEGER)
+TPL_REGEX_GUARD0(Digit12_, MonthG, TagAssigUInteger)
+TPL_REGEX_GUARD0(Digit12_, DayG, TagAssigUInteger)
+TPL_REGEX_GUARD0(Digit12_, HourG, TagAssigUInteger)
+TPL_REGEX_GUARD0(Digit12_, MinuteG, TagAssigUInteger)
+TPL_REGEX_GUARD0(Digit12_, SecondG, TagAssigUInteger)
 
 inline Rule<YearG> TPL_CALL t_year()		{ return Rule<YearG>(); }
 inline Rule<MonthG> TPL_CALL t_month()		{ return Rule<MonthG>(); }
@@ -264,10 +267,10 @@ typedef Or<DecimalPointerStarted_, DigitStartedUFraction_> UFraction; // \.d+ | 
 typedef UAnd<Repeat01<Sign>, UStrictFraction> StrictFraction;
 typedef UAnd<Repeat01<Sign>, UFraction> Fraction;
 
-TPL_REGEX_GUARD(UStrictFraction, UStrictFractionG, VTYPE_U_REAL)
-TPL_REGEX_GUARD(StrictFraction, StrictFractionG, VTYPE_REAL)
-TPL_REGEX_GUARD(UFraction, UFractionG, VTYPE_U_REAL)
-TPL_REGEX_GUARD(Fraction, FractionG, VTYPE_REAL)
+TPL_REGEX_GUARD(UStrictFraction, UStrictFractionG, TagAssigUFraction)
+TPL_REGEX_GUARD(StrictFraction, StrictFractionG, TagAssigFraction)
+TPL_REGEX_GUARD(UFraction, UFractionG, TagAssigUFraction)
+TPL_REGEX_GUARD(Fraction, FractionG, TagAssigFraction)
 
 inline Rule<UStrictFractionG> TPL_CALL u_strict_fraction()
 {
@@ -311,10 +314,10 @@ typedef UAnd<Repeat01<Sign>, UStrictReal> StrictReal;
 typedef UAnd<UFraction, Repeat01<Exponent> > UReal;
 typedef UAnd<Repeat01<Sign>, UReal> Real;
 
-TPL_REGEX_GUARD(UStrictReal, UStrictRealG, VTYPE_U_REAL)
-TPL_REGEX_GUARD(StrictReal, StrictRealG, VTYPE_REAL)
-TPL_REGEX_GUARD(UReal, URealG, VTYPE_U_REAL)
-TPL_REGEX_GUARD(Real, RealG, VTYPE_REAL)
+TPL_REGEX_GUARD(UStrictReal, UStrictRealG, TagAssigUReal)
+TPL_REGEX_GUARD(StrictReal, StrictRealG, TagAssigReal)
+TPL_REGEX_GUARD(UReal, URealG, TagAssigUReal)
+TPL_REGEX_GUARD(Real, RealG, TagAssigReal)
 
 inline Rule<UStrictRealG> TPL_CALL u_strict_real()
 {

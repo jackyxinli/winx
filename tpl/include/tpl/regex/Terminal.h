@@ -38,10 +38,10 @@ class ChAny
 {
 public:
 	enum { character = 0 };
-	enum { vtype = VTYPE_CHAR };
 	enum { endch = -1 };
 
 	typedef ExplicitConvertible convertible_type;
+	typedef TagAssigChar assig_tag;
 
 	template <class SourceT, class ContextT>
 	bool TPL_CALL match(SourceT& ar, ContextT& context) const
@@ -80,9 +80,9 @@ public:
 
 public:
 	enum { character = 0 };
-	enum { vtype = VTYPE_CHAR };
 
 	typedef AutoConvertible convertible_type;
+	typedef TagAssigChar assig_tag;
 
 	template <class SourceT, class ContextT>
 	bool TPL_CALL match(SourceT& ar, ContextT& context) const
@@ -274,15 +274,15 @@ typedef EqCh<C1> Ch1_;
 typedef EqCh<C2> Ch2_;
 typedef EqCh<C3> Ch3_;
 
-__forceinline Rule<Ch1_> TPL_CALL ch(int x) {
+__forceinline Rule<Ch1_> TPL_CALL ch(const int x) {
 	return Rule<Ch1_>(x);
 }
 
-__forceinline Rule<Ch2_> TPL_CALL ch(int c1, int c2) {
+__forceinline Rule<Ch2_> TPL_CALL ch(const int c1, const int c2) {
 	return Rule<Ch2_>(c1, c2);
 }
 
-__forceinline Rule<Ch3_> TPL_CALL ch(int c1, int c2, int c3) {
+__forceinline Rule<Ch3_> TPL_CALL ch(const int c1, const int c2, const int c3) {
 	return Rule<Ch3_>(c1, c2, c3);
 }
 

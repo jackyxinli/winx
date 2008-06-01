@@ -61,8 +61,8 @@ public:
 
 public:
 	enum { character = uCharacter };
-	enum { vtype = 0 };
 
+	typedef TagAssigNone assig_tag;
 	typedef ExplicitConvertible convertible_type;
 	typedef const Concretion& concreation_type;
 
@@ -89,6 +89,7 @@ public:
 
 		enum { characterImpl = RegExT::character };
 
+		typedef typename RegExT::assig_tag assig_tag;
 		typedef typename RegExT::convertible_type convertible_type;
 
 		static bool TPL_CALL match(const void* pThis, SourceT& ar, ContextT& context) {

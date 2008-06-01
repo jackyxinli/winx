@@ -29,78 +29,70 @@
 
 NS_TPL_BEGIN
 
-// -------------------------------------------------------------------------
-// class AssigStackT
+// =========================================================================
+// class Push_
 
 template <class StackT>
-class AssigStackT
+class Push_
 {
 private:
-	typedef typename StackT::value_type value_type;
-	typedef AssignmentTypeTraits<value_type> Tr_;
-	typedef typename Tr_::assignment_type assignment_type;
-
 	StackT& m_result;
 
 public:
-	AssigStackT(StackT& result) : m_result(result) {
+	Push_(StackT& result) : m_result(result) {
 	}
 
-	enum { required_vtypes = assignment_type::required_vtypes };
+	typedef typename StackT::value_type value_type;
 
-	template <class Iterator>
-	void TPL_CALL operator()(Iterator pos, Iterator pos2) const {
-		value_type val = value_type();
-		assignment_type assig(val);
-		assig(pos, pos2);
+	void TPL_CALL operator()(const value_type& val) const {
 		m_result.push(val);
 	}
 };
 
 // -------------------------------------------------------------------------
-// class AssigStk
 
 #if defined(TPL_HAS_STACK)
 
-template <class Type, class Container>
-class AssigStk : public AssigStackT<std::stack<Type, Container> >
+template <class ValueT, class Container>
+class Assign<std::stack<ValueT, Container> > : public Push_<std::stack<ValueT, Container> >
 {
 public:
-	AssigStk(std::stack<Type, Container>& result)
-		: AssigStackT<std::stack<Type, Container> >(result) {}
+	Assign(std::stack<ValueT, Container>& result)
+		: Push_<std::stack<ValueT, Container> >(result) {}
 };
-
-template <class Type, class Container> __forceinline
-Action<AssigStk<Type, Container> > TPL_CALL assign(std::stack<Type, Container>& result) {
-	return Action<AssigStk<Type, Container> >(result);
-}
 
 #endif // defined(TPL_HAS_STACK)
 
 // -------------------------------------------------------------------------
-// class AssigContainerT
+
+#if defined(TPL_HAS_QUEUE)
+
+template <class ValueT, class Container>
+class Assign<std::queue<ValueT, Container> > : public Push_<std::queue<ValueT, Container> >
+{
+public:
+	Assign(std::queue<ValueT, Container>& result)
+		: Push_<std::queue<ValueT, Container> >(result) {}
+};
+
+#endif // defined(TPL_HAS_QUEUE)
+
+// =========================================================================
+// class PushBack_
 
 template <class ContainerT>
-class AssigContainerT
+class PushBack_
 {
 private:
-	typedef typename ContainerT::value_type value_type;
-	typedef AssignmentTypeTraits<value_type> Tr_;
-	typedef typename Tr_::assignment_type assignment_type;
-
 	ContainerT& m_result;
 
 public:
-	AssigContainerT(ContainerT& result) : m_result(result) {
+	PushBack_(ContainerT& result) : m_result(result) {
 	}
 
-	enum { required_vtypes = assignment_type::required_vtypes };
+	typedef typename ContainerT::value_type value_type;
 
-	template <class Iterator>
-	void TPL_CALL operator()(Iterator pos, Iterator pos2) const {
-		value_type val = value_type();
-		assignment_type assig(val);
-		assig(pos, pos2);
+	void TPL_CALL operator()(const value_type& val) const {
 		m_result.push_back(val);
 	}
 };
@@ -109,18 +101,13 @@ public:
 
 #if defined(TPL_HAS_VECTOR)
 
-template <class Type, class Ax>
-class AssigVec : public AssigContainerT<std::vector<Type, Ax> >
+template <class ValueT, class Ax>
+class Assign<std::vector<ValueT, Ax> > : public PushBack_<std::vector<ValueT, Ax> >
 {
 public:
-	AssigVec(std::vector<Type, Ax>& result)
-		: AssigContainerT<std::vector<Type, Ax> >(result) {}
+	Assign(std::vector<ValueT, Ax>& result)
+		: PushBack_<std::vector<ValueT, Ax> >(result) {}
 };
-
-template <class Type, class Ax> __forceinline
-Action<AssigVec<Type, Ax> > TPL_CALL assign(std::vector<Type, Ax>& result) {
-	return Action<AssigVec<Type, Ax> >(result);
-}
 
 #endif // defined(TPL_HAS_VECTOR)
 
@@ -128,18 +115,13 @@ Action<AssigVec<Type, Ax> > TPL_CALL assign(std::vector<Type, Ax>& result) {
 
 #if defined(TPL_HAS_DEQUE)
 
-template <class Type, class Ax>
-class AssigDeq : public AssigContainerT<std::deque<Type, Ax> >
+template <class ValueT, class Ax>
+class Assign<std::deque<ValueT, Ax> > : public PushBack_<std::deque<ValueT, Ax> >
 {
 public:
-	AssigDeq(std::deque<Type, Ax>& result)
-		: AssigContainerT<std::deque<Type, Ax> >(result) {}
+	Assign(std::deque<ValueT, Ax>& result)
+		: PushBack_<std::deque<ValueT, Ax> >(result) {}
 };
-
-template <class Type, class Ax> __forceinline
-Action<AssigDeq<Type, Ax> > TPL_CALL assign(std::deque<Type, Ax>& result) {
-	return Action<AssigDeq<Type, Ax> >(result);
-}
 
 #endif
 
@@ -147,45 +129,32 @@ Action<AssigDeq<Type, Ax> > TPL_CALL assign(std::deque<Type, Ax>& result) {
 
 #if defined(TPL_HAS_LIST)
 
-template <class Type, class Ax>
-class AssigLst : public AssigContainerT<std::list<Type, Ax> >
+template <class ValueT, class Ax>
+class Assign<std::list<ValueT, Ax> > : public PushBack_<std::list<ValueT, Ax> >
 {
 public:
-	AssigLst(std::list<Type, Ax>& result)
-		: AssigContainerT<std::list<Type, Ax> >(result) {}
+	Assign(std::list<ValueT, Ax>& result)
+		: PushBack_<std::list<ValueT, Ax> >(result) {}
 };
-
-template <class Type, class Ax> __forceinline
-Action<AssigLst<Type, Ax> > TPL_CALL assign(std::list<Type, Ax>& result) {
-	return Action<AssigLst<Type, Ax> >(result);
-}
 
 #endif
 
-// -------------------------------------------------------------------------
-// class AssigSetT
+// =========================================================================
+// class Insert_
 
 template <class ContainerT>
-class AssigSetT
+class Insert_
 {
 private:
-	typedef typename ContainerT::value_type value_type;
-	typedef AssignmentTypeTraits<value_type> Tr_;
-	typedef typename Tr_::assignment_type assignment_type;
-
 	ContainerT& m_result;
 
 public:
-	AssigSetT(ContainerT& result) : m_result(result) {
+	Insert_(ContainerT& result) : m_result(result) {
 	}
 
-	enum { required_vtypes = assignment_type::required_vtypes };
+	typedef typename ContainerT::value_type value_type;
 
-	template <class Iterator>
-	void TPL_CALL operator()(Iterator pos, Iterator pos2) const {
-		value_type val = value_type();
-		assignment_type assig(val);
-		assig(pos, pos2);
+	void TPL_CALL operator()(const value_type& val) const {
 		m_result.insert(val);
 	}
 };
@@ -194,60 +163,25 @@ public:
 
 #if defined(TPL_HAS_SET)
 
-template <class Type, class Pr, class Ax>
-class AssigSet : public AssigSetT<std::set<Type, Pr, Ax> >
+template <class ValueT, class Pr, class Ax>
+class Assign<std::set<ValueT, Pr, Ax> > : public Insert_<std::set<ValueT, Pr, Ax> >
 {
 public:
-	AssigSet(std::set<Type, Pr, Ax>& result)
-		: AssigSetT<std::set<Type, Pr, Ax> >(result) {}
+	Assign(std::set<ValueT, Pr, Ax>& result)
+		: Insert_<std::set<ValueT, Pr, Ax> >(result) {}
 };
 
-template <class Type, class Pr, class Ax> __forceinline
-Action<AssigSet<Type, Pr, Ax> > TPL_CALL assign(std::set<Type, Pr, Ax>& result) {
-	return Action<AssigSet<Type, Pr, Ax> >(result);
-}
-
-template <class Type, class Pr, class Ax>
-class AssigMSet : public AssigSetT<std::multiset<Type, Pr, Ax> >
+template <class ValueT, class Pr, class Ax>
+class Assig<std::multiset<ValueT, Pr, Ax> > : public Insert_<std::multiset<ValueT, Pr, Ax> >
 {
 public:
-	AssigMSet(std::multiset<Type, Pr, Ax>& result)
-		: AssigSetT<std::multiset<Type, Pr, Ax> >(result) {}
+	Assign(std::multiset<ValueT, Pr, Ax>& result)
+		: Insert_<std::multiset<ValueT, Pr, Ax> >(result) {}
 };
-
-template <class Type, class Pr, class Ax> __forceinline
-Action<AssigMSet<Type, Pr, Ax> > TPL_CALL assign(std::multiset<Type, Pr, Ax>& result) {
-	return Action<AssigMSet<Type, Pr, Ax> >(result);
-}
 
 #endif
 
-// -------------------------------------------------------------------------
-// function push_back
-
-template <class ContainerT, class ValueType>
-class PushBack
-{
-private:
-	ContainerT& m_cont;
-	const ValueType& m_ref;
-
-public:
-	PushBack(ContainerT& cont, const ValueType& val)
-		: m_cont(cont), m_ref(val) {
-	}
-
-	void TPL_CALL operator()() const {
-		m_cont.push_back(m_ref);
-	}
-};
-
-template <class ContainerT, class ValueType> __forceinline
-SimpleAction<PushBack<ContainerT, ValueType> > push_back(ContainerT& cont, const ValueType& val) {
-	return SimpleAction<PushBack<ContainerT, ValueType> >(cont, val);
-}
-
-// -------------------------------------------------------------------------
+// =========================================================================
 // $Log: $
 
 NS_TPL_END

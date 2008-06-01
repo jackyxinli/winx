@@ -23,12 +23,20 @@
 #include "Basic.h"
 #endif
 
+#ifndef TPL_REGEX_REF_H
+#include "Ref.h"
+#endif
+
 #ifndef TPL_REGEX_BASIC_H
 #include "Terminal.h"
 #endif
 
 #ifndef TPL_REGEX_COMPOSITION_H
 #include "Composition.h"
+#endif
+
+#if !defined(_STRING_) && !defined(_STRING)
+#include <string>
 #endif
 
 NS_TPL_BEGIN
@@ -50,9 +58,9 @@ public:
 
 public:
 	enum { character = RegExT::character };
-	enum { vtype = RegExT::vtype };
 
 	typedef typename RegExT::convertible_type convertible_type;
+	typedef typename RegExT::assig_tag assig_tag;
 
 	template <class SourceT, class ContextT>
 	bool TPL_CALL match(SourceT& ar, ContextT& context) const
@@ -95,7 +103,58 @@ Rule<Act0<EqWStr, T2> > TPL_CALL operator/(const wchar_t* x, const SimpleAction<
 	return str(x) / y;
 }
 
+// -------------------------------------------------------------------------
+// function push_back
+
+template <class ContainerT, class ValueT>
+class PushBack
+{
+private:
+	ContainerT& m_cont;
+	const ValueT& m_ref;
+
+public:
+	PushBack(ContainerT& cont, const ValueT& val)
+		: m_cont(cont), m_ref(val) {
+	}
+
+	void TPL_CALL operator()() const {
+		m_cont.push_back(m_ref);
+	}
+};
+
+template <class ContainerT, class ValueT> __forceinline
+SimpleAction<PushBack<ContainerT, ValueT> > push_back(ContainerT& cont, const ValueT& val) {
+	return SimpleAction<PushBack<ContainerT, ValueT> >(cont, val);
+}
+
+template <class ContainerT, class ValueT> __forceinline
+SimpleAction<PushBack<ContainerT, ValueT> > push_back(ContainerT& cont, const Var<ValueT>& var_) {
+	return SimpleAction<PushBack<ContainerT, ValueT> >(cont, var_.val);
+}
+
 // =========================================================================
+// Action
+
+// TPL_ASSIG
+
+template <class AssigTag>
+struct AssigTraits {
+};
+
+#define TPL_ASSIG(AssigTag, Assig)											\
+namespace tpl {																\
+	template <>																\
+	struct AssigTraits<AssigTag> {											\
+		typedef Assig assig_type;											\
+	};																		\
+}
+
+template <class AssigTag, class ValueT>
+struct SelectAssig {
+	typedef typename AssigTraits<AssigTag>::assig_type assig_type;
+};
+
 // class Act
 
 template <class RegExT, class ActionT>
@@ -112,25 +171,27 @@ public:
 
 public:
 	enum { character = RegExT::character };
-	enum { vtype = RegExT::vtype };
-	enum { required_vtypes = ActionT::required_vtypes };
 	
 	typedef typename RegExT::convertible_type convertible_type;
+	typedef typename RegExT::assig_tag assig_tag;
 
 	template <class SourceT, class ContextT>
 	bool TPL_CALL match(SourceT& ar, ContextT& context) const
 	{
-		typename SourceT::iterator pos = ar.position();
+		typedef typename SourceT::iterator iterator;
+		typedef typename ActionT::value_type value_type;
+		typedef typename SelectAssig<assig_tag, value_type>::assig_type assig_type;
+
+		iterator pos = ar.position();
 		if (m_x.match(ar, context)) {
-			typename SourceT::iterator pos2 = ar.position();
-			m_action(pos, pos2);
+			iterator pos2 = ar.position();
+			value_type val = value_type();
+			assig_type::assign(val, pos, pos2, this);
+			m_action(val);
 			return true;
 		}
 		return false;
 	}
-
-private:
-	TPL_REQUIRE(required_vtypes == 0 || (vtype & required_vtypes), RequreVTypes_);
 };
 
 // -------------------------------------------------------------------------
@@ -164,31 +225,39 @@ Rule<Act<EqWStr, T2> > TPL_CALL operator/(const wchar_t* x, const Action<T2>& y)
 }
 
 // =========================================================================
-// class Info
+// function info
 
 // Usage: Rule/info("...")
 
+inline void TPL_CALL _trace_info(const char* prompt_, const std::string& val) {
+	TPL_TRACE("%s: %s\n", prompt_, val.c_str());
+}
+
+inline void TPL_CALL _trace_info(const wchar_t* prompt_, const std::wstring& val) {
+	TPL_TRACEW(L"%s: %s\n", prompt_, val.c_str());
+}
+
+template <class CharT>
 class Info
 {
 private:
-	const char* m_prompt;
+	const CharT* m_prompt;
 
 public:
-	Info(const char* prompt_) : m_prompt(prompt_) {
+	Info(const CharT* prompt_) : m_prompt(prompt_) {
 	}
 
 public:
-	enum { required_vtypes = 0 };
+	typedef std::basic_string<CharT> value_type;
 
-	template <class Iterator>
-	void operator()(Iterator pos, Iterator pos2) const {
-		std::string str_(pos, pos2);
-		printf("%s: %s\n", m_prompt, str_.c_str());
+	void TPL_CALL operator()(const value_type& val) const {
+		_trace_info(m_prompt, val);
 	}
 };
 
-inline Action<Info> TPL_CALL info(const char* prompt_) {
-	return Action<Info>(prompt_);
+template <class CharT>
+inline Action<Info<CharT> > TPL_CALL info(const CharT* prompt_) {
+	return Action<Info<CharT> >(prompt_);
 }
 
 // =========================================================================
