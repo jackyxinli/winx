@@ -23,6 +23,10 @@
 #include "Basic.h"
 #endif
 
+#ifndef STDEXT_ARCHIVE_BASIC_H
+#include "../../../../stdext/include/stdext/archive/Basic.h"
+#endif
+
 NS_TPL_BEGIN
 
 // =========================================================================
