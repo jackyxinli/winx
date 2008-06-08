@@ -33,128 +33,122 @@
 #include <boost/type_traits/is_convertible.hpp>
 #endif
 
-// -------------------------------------------------------------------------
-
 NS_TPL_BEGIN
 
-inline void throw_arity_error() {
-	throw std::invalid_argument("function arity is not consistent!");
-}
+// =========================================================================
+// class Caller
 
-// class UnaryFn
+template <int nArity>
+struct Caller {};
 
-template <class Op, class StackT>
-class UnaryFn
+template <>
+struct Caller<1> {
+	template <class Op, class ValT>
+	__forceinline static ValT TPL_CALL call(const Op& op_, const ValT args[]) {
+		return op_(args[0]);
+	}
+};
+
+template <>
+struct Caller<2> {
+	template <class Op, class ValT>
+	__forceinline static ValT TPL_CALL call(const Op& op_, const ValT args[]) {
+		return op_(args[0], args[1]);
+	}
+};
+
+template <>
+struct Caller<3> {
+	template <class Op, class ValT>
+	__forceinline static ValT TPL_CALL call(const Op& op_, const ValT args[]) {
+		return op_(args[0], args[1], args[2]);
+	}
+};
+
+template <>
+struct Caller<4> {
+	template <class Op, class ValT>
+	__forceinline static ValT TPL_CALL call(const Op& op_, const ValT args[]) {
+		return op_(args[0], args[1], args[2], args[3]);
+	}
+};
+
+template <>
+struct Caller<5> {
+	template <class Op, class ValT>
+	__forceinline static ValT TPL_CALL call(const Op& op_, const ValT args[]) {
+		return op_(args[0], args[1], args[2], args[3], args[4]);
+	}
+};
+
+template <>
+struct Caller<6> {
+	template <class Op, class ValT>
+	__forceinline static ValT TPL_CALL call(const Op& op_, const ValT args[]) {
+		return op_(args[0], args[1], args[2], args[3], args[4], args[5]);
+	}
+};
+
+// =========================================================================
+// class Function
+
+template <class Op, class StackT, int nArity>
+class Function
 {
 private:
 	typedef typename StackT::value_type value_type;
 
 private:
 	StackT& m_stk;
-	Op m_op;
+	const Op m_op;
 
 public:
-	UnaryFn(StackT& stk) : m_stk(stk) {}
+	Function(StackT& stk) : m_stk(stk), m_op() {}
 
 	template <class T1>
-	UnaryFn(StackT& stk, const T1& arg) : m_stk(stk), m_op(arg) {}
+	Function(StackT& stk, const T1& arg) : m_stk(stk), m_op(arg) {}
+
+public:
+	void TPL_CALL operator()() const {
+		TPL_ASSERT(m_stk.size() >= nArity);
+		value_type args[nArity];
+		for (int i = nArity; i--;) {		
+			args[i] = m_stk.back();
+			m_stk.pop_back();
+		}
+		m_stk.push_back(Caller<nArity>::call(m_op, args));
+	}
+};
+
+// class Unary-Function
+
+template <class Op, class StackT>
+class Function<Op, StackT, 1>
+{
+private:
+	typedef typename StackT::value_type value_type;
+
+private:
+	StackT& m_stk;
+	const Op m_op;
+
+public:
+	Function(StackT& stk) : m_stk(stk), m_op() {}
+
+	template <class T1>
+	Function(StackT& stk, const T1& arg) : m_stk(stk), m_op(arg) {}
 
 public:
 	void TPL_CALL operator()() const {
 		TPL_ASSERT(m_stk.size() >= 1);
-		if (m_stk.size() < 1)
-			throw_arity_error();
-		value_type x = m_stk.top();
-		m_stk.pop();
-		m_stk.push(m_op(x));
-	}
-};
-
-// class BinaryFn
-
-template <class Op, class StackT>
-class BinaryFn
-{
-private:
-	typedef typename StackT::value_type value_type;
-
-private:
-	StackT& m_stk;
-	Op m_op;
-
-public:
-	BinaryFn(StackT& stk) : m_stk(stk) {}
-
-	template <class T1>
-	BinaryFn(StackT& stk, const T1& arg) : m_stk(stk), m_op(arg) {}
-
-public:
-	void TPL_CALL operator()() const {
-		TPL_ASSERT(m_stk.size() >= 2);
-		value_type y = m_stk.top();
-		if (m_stk.size() < 2)
-			throw_arity_error();
-		m_stk.pop();
-		value_type x = m_stk.top();
-		m_stk.pop();
-		m_stk.push(m_op(x, y));
-	}
-};
-
-// class TernaryFn: 3-ary
-
-template <class Op, class StackT>
-class TernaryFn
-{
-private:
-	typedef typename StackT::value_type value_type;
-
-private:
-	StackT& m_stk;
-	Op m_op;
-
-public:
-	TernaryFn(StackT& stk) : m_stk(stk) {}
-
-	template <class T1>
-	TernaryFn(StackT& stk, const T1& arg) : m_stk(stk), m_op(arg) {}
-
-public:
-	void TPL_CALL operator()() const {
-		TPL_ASSERT(m_stk.size() >= 3);
-		if (m_stk.size() < 3)
-			throw_arity_error();
-		value_type z = m_stk.top();
-		m_stk.pop();
-		value_type y = m_stk.top();
-		m_stk.pop();
-		value_type x = m_stk.top();
-		m_stk.pop();
-		m_stk.push(m_op(x, y, z));
+		value_type x = m_stk.back();
+		m_stk.pop_back();
+		m_stk.push_back(m_op(x));
 	}
 };
 
 // -------------------------------------------------------------------------
 // function calc/1-ary
-
-template <int nArity, class Op, class StackT>
-struct CalcActionTraits_ {
-};
-
-template <class Op, class StackT>
-struct CalcActionTraits_<1, Op, StackT> {
-	typedef UnaryFn<Op, StackT> action_type;
-};
-
-template <class Op, class StackT>
-struct CalcActionTraits_<2, Op, StackT> {
-	typedef BinaryFn<Op, StackT> action_type;
-};
-
-template <class Op, class StackT>
-struct CalcActionTraits_<3, Op, StackT> {
-	typedef TernaryFn<Op, StackT> action_type;
-};
 
 template <int isUnary, int isBinary, int isTernary = 0>
 struct ArityTratis_ {};
@@ -179,7 +173,7 @@ private:
 	enum { n_arity = ArityTratis_<is_unary, is_binary>::value };
 
 public:
-	typedef typename CalcActionTraits_<n_arity, Op, StackT>::action_type action_type;
+	typedef Function<Op, StackT, n_arity> action_type;
 };
 
 template <template <class Type> class Op_, class StackT> __forceinline
@@ -187,66 +181,185 @@ SimpleAction<typename CalcTraits_<Op_, StackT>::action_type> TPL_CALL calc(Stack
 	return SimpleAction<typename CalcTraits_<Op_, StackT>::action_type>(stk);	
 }
 
+// =========================================================================
+// function check_arity
+
+// Usage: check_arity<nArity>(nArgv)
+
+inline void throw_arity_error() {
+	throw std::invalid_argument("function arity is not consistent!");
+}
+
+template <int nArity>
+class CheckArity
+{
+private:
+	const int& m_nArgv;
+
+public:
+	CheckArity(const int& nArgv)
+		: m_nArgv(nArgv) {}
+
+public:
+	void TPL_CALL operator()() const {
+		if (m_nArgv != nArity)
+			throw_arity_error();
+	}
+};
+
+template <int nArity> __forceinline
+SimpleAction<CheckArity<nArity> > TPL_CALL check_arity(const int& nArgv) {
+	return SimpleAction<CheckArity<nArity> >(nArgv);	
+}
+
+// =========================================================================
+// function calc/2-ary, calc/3-ary
+
+template <int nArity, class StackT>
+struct CalcTraits_N_ {};
+
+template <class StackT>
+struct CalcTraits_N_<1, StackT>
+{
+	typedef typename StackT::value_type Ty;
+	typedef Ty (*Op)(Ty);
+	typedef Function<Op, StackT, 1> action_type;
+};
+
+template <class StackT>
+struct CalcTraits_N_<2, StackT>
+{
+	typedef typename StackT::value_type Ty;
+	typedef Ty (*Op)(Ty, Ty);
+	typedef Function<Op, StackT, 2> action_type;
+};
+
+template <class StackT>
+struct CalcTraits_N_<3, StackT>
+{
+	typedef typename StackT::value_type Ty;
+	typedef Ty (*Op)(Ty, Ty, Ty);
+	typedef Function<Op, StackT, 3> action_type;
+};
+
+template <class StackT>
+struct CalcTraits_N_<4, StackT>
+{
+	typedef typename StackT::value_type Ty;
+	typedef Ty (*Op)(Ty, Ty, Ty, Ty);
+	typedef Function<Op, StackT, 4> action_type;
+};
+
+template <class StackT>
+struct CalcTraits_N_<5, StackT>
+{
+	typedef typename StackT::value_type Ty;
+	typedef Ty (*Op)(Ty, Ty, Ty, Ty, Ty);
+	typedef Function<Op, StackT, 5> action_type;
+};
+
+template <class StackT>
+struct CalcTraits_N_<6, StackT>
+{
+	typedef typename StackT::value_type Ty;
+	typedef Ty (*Op)(Ty, Ty, Ty, Ty, Ty, Ty);
+	typedef Function<Op, StackT, 6> action_type;
+};
+
+template <int nArity, class StackT>
+struct CalcTraitsEx_
+{
+	typedef CalcTraits_N_<nArity, StackT> Tr_;
+	typedef CheckArity<nArity> Action1;
+	typedef typename Tr_::action_type Action2;
+	typedef typename Tr_::Op Op;
+	typedef AndSAct<Action1, Action2> action_type;
+};
+
+#define TPL_CALC_IMPL2_(nArity)															\
+template <class StackT> __forceinline													\
+SimpleAction<typename CalcTraits_N_<nArity, StackT>::action_type> TPL_CALL				\
+calc(StackT& stk, typename CalcTraits_N_<nArity, StackT>::Op fn) {						\
+	return SimpleAction<typename CalcTraits_N_<nArity, StackT>::action_type>(stk, fn);	\
+}
+
+#define TPL_CALC_IMPL3_(nArity)															\
+template <class StackT> __forceinline													\
+SimpleAction<typename CalcTraitsEx_<nArity, StackT>::action_type> TPL_CALL				\
+calc(StackT& stk, typename CalcTraitsEx_<nArity, StackT>::Op fn, const int& nArgv) {	\
+	return SimpleAction<typename CalcTraitsEx_<nArity, StackT>::Action1>(nArgv) +		\
+			SimpleAction<typename CalcTraitsEx_<nArity, StackT>::Action2>(stk, fn);		\
+}
+
+#define TPL_CALC_IMPL_(nArity)															\
+	TPL_CALC_IMPL2_(nArity)																\
+	TPL_CALC_IMPL3_(nArity)
+
+TPL_CALC_IMPL_(1)
+TPL_CALC_IMPL_(2)
+TPL_CALC_IMPL_(3)
+TPL_CALC_IMPL_(4)
+TPL_CALC_IMPL_(5)
+TPL_CALC_IMPL_(6)
+
+// =========================================================================
+// class VargFunction
+
+template <class Op, class StackT>
+class VargFunction
+{
+private:
+	typedef typename StackT::value_type value_type;
+
+private:
+	StackT& m_stk;
+	const Op m_op;
+	const int& m_nArgv;
+
+public:
+	VargFunction(StackT& stk, const Op& op, const int& nArgv)
+		: m_stk(stk), m_op(op), m_nArgv(nArgv) {}
+
+public:
+	void TPL_CALL operator()() const {
+		const int count = m_nArgv;
+		value_type* args = (value_type*)alloca(sizeof(value_type) * count);	
+		for (int i = count; i--;) {		
+			args[i] = m_stk.back();
+			m_stk.pop_back();
+		}
+		m_stk.push_back(m_op(static_cast<const value_type*>(args), count));
+	}
+};
+
 // -------------------------------------------------------------------------
-// function calc/2-ary
+// function calc/3-ary
 
-template <class StackT>
-class CalcTraits_1_
+template <class StackT, class IntT>
+class CalcTraits_Varg_
 {
-private:
-	typedef typename StackT::value_type Ty;
-	typedef typename StackT::value_type (*fn_)(typename StackT::value_type);
-	typedef fn_ Op;
-
 public:
-	typedef typename CalcActionTraits_<1, Op, StackT>::action_type action_type;
-};
-
-template <class StackT>
-class CalcTraits_2_
-{
-private:
 	typedef typename StackT::value_type Ty;
-	typedef typename StackT::value_type (*fn_)(typename StackT::value_type, typename StackT::value_type);
-	typedef fn_ Op;
-
-public:
-	typedef typename CalcActionTraits_<2, Op, StackT>::action_type action_type;
-};
-
-template <class StackT>
-class CalcTraits_3_
-{
-private:
-	typedef typename StackT::value_type Ty;
-	typedef typename StackT::value_type (*fn_)(typename StackT::value_type, typename StackT::value_type, typename StackT::value_type);
-	typedef fn_ Op;
-
-public:
-	typedef typename CalcActionTraits_<3, Op, StackT>::action_type action_type;
+	typedef Ty (*Op)(const Ty args[], IntT count);
+	typedef VargFunction<Op, StackT> action_type;
 };
 
 template <class StackT> __forceinline
-SimpleAction<typename CalcTraits_1_<StackT>::action_type>
-TPL_CALL calc(StackT& stk, typename StackT::value_type (*fn)(typename StackT::value_type)) {
-	return SimpleAction<typename CalcTraits_1_<StackT>::action_type>(stk, fn);
+SimpleAction<typename CalcTraits_Varg_<StackT, int>::action_type> TPL_CALL
+calc(StackT& stk, typename CalcTraits_Varg_<StackT, int>::Op fn, const int& nArity) {
+	return SimpleAction<typename CalcTraits_Varg_<StackT, int>::action_type>(stk, fn, nArity);
 }
 
 template <class StackT> __forceinline
-SimpleAction<typename CalcTraits_2_<StackT>::action_type>
-TPL_CALL calc(StackT& stk, typename StackT::value_type (*fn)(typename StackT::value_type, typename StackT::value_type)) {
-	return SimpleAction<typename CalcTraits_2_<StackT>::action_type>(stk, fn);
+SimpleAction<typename CalcTraits_Varg_<StackT, size_t>::action_type> TPL_CALL
+calc(StackT& stk, typename CalcTraits_Varg_<StackT, size_t>::Op fn, const int& nArity) {
+	return SimpleAction<typename CalcTraits_Varg_<StackT, size_t>::action_type>(stk, fn, nArity);
 }
 
-template <class StackT> __forceinline
-SimpleAction<typename CalcTraits_3_<StackT>::action_type>
-TPL_CALL calc(StackT& stk, typename StackT::value_type (*fn)(typename StackT::value_type, typename StackT::value_type, typename StackT::value_type)) {
-	return SimpleAction<typename CalcTraits_3_<StackT>::action_type>(stk, fn);
-}
-
-// -------------------------------------------------------------------------
+// =========================================================================
 // $Log: $
 
 NS_TPL_END
 
 #endif /* TPL_EXT_CALCULATOR_H */
+

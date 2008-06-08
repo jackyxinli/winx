@@ -194,6 +194,7 @@ enum RuleCharacter
 // RuleAssigTag
 
 struct TagAssigNone {};
+struct TagAssigLst {};
 struct TagAssigChar {};
 struct TagAssigUInteger {};	// dec radix
 struct TagAssigInteger {};		// dec radix
@@ -397,6 +398,9 @@ public:
 
 	template <class T1, class T2>
 	SimpleAction(T1& x, T2& y) : ActionT(x, y) {}
+
+	template <class T1, class T2, class T3>
+	SimpleAction(T1& x, const T2& y, const T3& z) : ActionT(x, y, z) {}
 
 private:
 	// concept:

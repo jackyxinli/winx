@@ -47,12 +47,12 @@ NS_TPL_BEGIN
 template <class RegExT, class ActionT>
 class Act0
 {
-private:
-	RegExT m_x;
-	ActionT m_action;
+public:
+	const RegExT m_x;
+	const ActionT m_action;
 
 public:
-	Act0() {}
+	Act0() : m_x(), m_action() {}
 	Act0(const RegExT& x, const ActionT& act)
 		: m_x(x), m_action(act) {}
 
@@ -101,6 +101,34 @@ Rule<Act0<EqStr, T2> > TPL_CALL operator/(const char* x, const SimpleAction<T2>&
 template <class T2> __forceinline
 Rule<Act0<EqWStr, T2> > TPL_CALL operator/(const wchar_t* x, const SimpleAction<T2>& y) {
 	return str(x) / y;
+}
+
+// -------------------------------------------------------------------------
+// operator+
+
+// Usage: SimpleAction1 + SimpleAction2
+
+template <class T1, class T2>
+class AndSAct
+{
+public:
+	const T1 m_x;
+	const T2 m_y;
+
+public:
+	AndSAct() : m_x(), m_y() {}
+	AndSAct(const T1& x, const T2& y) : m_x(x), m_y(y) {}
+
+public:
+	void TPL_CALL operator()() const {
+		m_x();
+		m_y();
+	}
+};
+
+template <class T1, class T2> __forceinline
+SimpleAction<AndSAct<T1, T2> > TPL_CALL operator+(const SimpleAction<T1>& x, const SimpleAction<T2>& y) {
+	return SimpleAction<AndSAct<T1, T2> >(x, y);
 }
 
 // -------------------------------------------------------------------------
@@ -160,12 +188,12 @@ struct SelectAssig {
 template <class RegExT, class ActionT>
 class Act
 {
-private:
-	RegExT m_x;
-	ActionT m_action;
+public:
+	const RegExT m_x;
+	const ActionT m_action;
 
 public:
-	Act() {}
+	Act() : m_x(), m_action() {}
 	Act(const RegExT& x, const ActionT& act)
 		: m_x(x), m_action(act) {}
 
@@ -186,7 +214,7 @@ public:
 		if (m_x.match(ar, context)) {
 			iterator pos2 = ar.position();
 			value_type val = value_type();
-			assig_type::assign(val, pos, pos2, this);
+			assig_type::assign(val, pos, pos2, &m_x);
 			m_action(val);
 			return true;
 		}

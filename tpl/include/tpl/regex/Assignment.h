@@ -136,6 +136,18 @@ public:
 };
 
 // -------------------------------------------------------------------------
+// class AssigLst
+
+class AssigLst
+{
+public:
+	template <class IntT, class Iterator, class LstOpT>
+	static void TPL_CALL assign(IntT& result, Iterator pos, Iterator pos2, const LstOpT* lst) {
+		result = lst->size();
+	}
+};
+
+// -------------------------------------------------------------------------
 // SelectAssig
 
 template <class AssigTag, class CharT, class Tr, class Ax>
@@ -153,6 +165,7 @@ NS_TPL_END
 // =========================================================================
 
 TPL_ASSIG(TagAssigNone, AssigStr)
+TPL_ASSIG(TagAssigLst, AssigLst)
 TPL_ASSIG(TagAssigChar, AssigCh)
 TPL_ASSIG(TagAssigUInteger, AssigUInt)
 TPL_ASSIG(TagAssigInteger, AssigInt)

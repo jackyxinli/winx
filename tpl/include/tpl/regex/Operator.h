@@ -65,12 +65,12 @@ NS_TPL_BEGIN
 template <class RegExT1, class RegExT2>
 class And // Rule1 Rule2
 {
-private:
-	RegExT1 m_x;
-	RegExT2 m_y;
+public:
+	const RegExT1 m_x;
+	const RegExT2 m_y;
 
 public:
-	And() {}
+	And() : m_x(), m_y() {}
 	And(const RegExT1& x, const RegExT2& y) : m_x(x), m_y(y) {}
 
 public:
@@ -117,11 +117,12 @@ private:
 	typedef typename RegExT1::assig_tag AT1;
 	typedef typename RegExT2::assig_tag AT2;
 
-	RegExT1 m_x;
-	RegExT2 m_y;
+public:
+	const RegExT1 m_x;
+	const RegExT2 m_y;
 
 public:
-	Or() {}
+	Or() : m_x(), m_y() {}
 	Or(const RegExT1& x, const RegExT2& y) : m_x(x), m_y(y) {}
 
 public:
@@ -218,15 +219,16 @@ TPL_CALL eq_s(const CharT* s1, const CharT* s2, const CharT* s3, const CharT* s4
 template <class RegExT1, class RegExT2>
 class Restr // Rule1 / Rule2
 {
-private:
-	RegExT1 m_x;
-	RegExT2 m_y;
+public:
+	const RegExT1 m_x;
+	const RegExT2 m_y;
 
+private:
 	typedef typename RegExT1::convertible_type CT1;
 	typedef typename RegExT2::convertible_type CT2;
 
 public:
-	Restr() {}
+	Restr() : m_x(), m_y() {}
 	Restr(const RegExT1& x, const RegExT2& y)
 		: m_x(x), m_y(y) {}
 
@@ -267,11 +269,11 @@ TPL_REGEX_BINARY_OP_(/, Restr)
 template <class RegExT>
 class Repeat0 // Rule*
 {
-private:
-	RegExT m_x;
+public:
+	const RegExT m_x;
 
 public:
-	Repeat0() {}
+	Repeat0() : m_x() {}
 	Repeat0(const RegExT& x) : m_x(x) {}
 
 public:
@@ -304,11 +306,11 @@ TPL_RULE_UNARY_OP_(*, Repeat0)
 template <class RegExT>
 class Repeat1 // Rule+
 {
-private:
-	RegExT m_x;
+public:
+	const RegExT m_x;
 
 public:
-	Repeat1() {}
+	Repeat1() : m_x() {}
 	Repeat1(const RegExT& x) : m_x(x) {}
 
 public:
@@ -343,11 +345,11 @@ TPL_RULE_UNARY_OP_(+, Repeat1)
 template <class RegExT>
 class Repeat01 // Rule?
 {
-private:
-	RegExT m_x;
+public:
+	const RegExT m_x;
 
 public:
-	Repeat01() {}
+	Repeat01() : m_x() {}
 	Repeat01(const RegExT& x) : m_x(x) {}
 
 public:
@@ -379,11 +381,11 @@ TPL_RULE_UNARY_OP_(!, Repeat01)
 template <class RegExT>
 class Not // ~Rule
 {
-private:
-	RegExT m_x;
+public:
+	const RegExT m_x;
 
 public:
-	Not() {}
+	Not() : m_x() {}
 	Not(const RegExT& x) : m_x(x) {}
 
 public:
@@ -429,11 +431,11 @@ TPL_RULE_UNARY_OP_(~, Not)
 template <class RegExT, unsigned nMin, unsigned nMax = UINT_MAX>
 class Repeat // Rule{nMin, nMax}
 {
-private:
-	RegExT m_x;
+public:
+	const RegExT m_x;
 
 public:
-	Repeat() {}
+	Repeat() : m_x() {}
 	Repeat(const RegExT& x) : m_x(x) {}
 
 public:
@@ -487,6 +489,8 @@ Rule<Repeat<T1, nMin, nMax> > TPL_CALL repeat(const Rule<T1>& x) {
 
 // Usage: Rule1 % Rule2		--- means: Rule1 + *(Rule2 + Rule1)
 
+#if 1
+
 template <class T1, class T2>
 class Lst : public And<T1, Repeat0<And<T2, T1> > > // Rule1 % Rule2 <=> Rule1 (Rule2 Rule1)*
 {
@@ -497,6 +501,49 @@ public:
 	Lst() {}
 	Lst(const Rule<T1>& x, const Rule<T2>& y) : Base(x + *(y + x)) {}
 };
+
+#else
+
+template <class T1, class T2>
+class Lst // Rule1 % Rule2 <=> Rule1 (Rule2 Rule1)*
+{
+public:
+	typedef int size_type;
+
+private:
+	const And<T2, T1> m_y_and_x;
+	mutable size_type m_count;
+
+public:
+	Lst() : m_y_and_x() {}
+	Lst(const Rule<T1>& x, const Rule<T2>& y) : m_y_and_x(y + x) {}
+
+public:
+	enum { character = T1::character | T2::character };
+
+	typedef ExplicitConvertible convertible_type;
+	typedef TagAssigLst assig_tag;
+
+	template <class SourceT, class ContextT>
+	bool TPL_CALL match(SourceT& ar, ContextT& context) const
+	{
+		if (m_y_and_x.m_y.match(ar, context)) {
+			size_type n = 1;
+			while (m_y_and_x.match(ar, context))
+				++n;
+			m_count = n;
+			return true;
+		}
+		m_count = 0;
+		return false;
+	}
+
+	size_type TPL_CALL size() const {
+		return m_count;
+	}
+};
+
+#endif
 
 template <class T1, class T2> __forceinline
 Rule<Lst<T1, T2> > TPL_CALL operator%(const Rule<T1>& x, const Rule<T2>& y) {

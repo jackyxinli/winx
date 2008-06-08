@@ -47,7 +47,11 @@ namespace policy
 	public:
 		typedef DefaultTag Tag;
 		typedef std::PointerReadArchive Source;
+#if defined(TPL_USE_AUTO_ALLOC)
+		typedef std::AutoFreeAlloc Allocator;
+#else
 		typedef std::ScopeAlloc Allocator;
+#endif
 	};
 }
 

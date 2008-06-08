@@ -58,12 +58,12 @@ NS_TPL_BEGIN
 template <class GrammarT1, class GrammarT2>
 class GAnd // Grammar1 Grammar2
 {
-private:
-	GrammarT1 m_x;
-	GrammarT2 m_y;
+public:
+	const GrammarT1 m_x;
+	const GrammarT2 m_y;
 
 public:
-	GAnd() {}
+	GAnd() : m_x(), m_y() {}
 	GAnd(const GrammarT1& x, const GrammarT2& y) : m_x(x), m_y(y) {}
 
 public:
@@ -101,12 +101,12 @@ TPL_GRAMMAR_BINARY_OP_(+, GAnd)
 template <class GrammarT1, class GrammarT2>
 class GOr // Grammar1 | Grammar2
 {
-private:
-	GrammarT1 m_x;
-	GrammarT2 m_y;
+public:
+	const GrammarT1 m_x;
+	const GrammarT2 m_y;
 
 public:
-	GOr() {}
+	GOr() : m_x(), m_y() {}
 	GOr(const GrammarT1& x, const GrammarT2& y) : m_x(x), m_y(y) {}
 
 public:
@@ -134,12 +134,12 @@ TPL_GRAMMAR_BINARY_OP_(|, GOr)
 template <class GrammarT1, class GrammarT2>
 class GRestr // Grammar1 / Grammar2
 {
-private:
-	GrammarT1 m_x;
-	GrammarT2 m_y;
+public:
+	const GrammarT1 m_x;
+	const GrammarT2 m_y;
 
 public:
-	GRestr() {}
+	GRestr() : m_x(), m_y() {}
 	GRestr(const GrammarT1& x, const GrammarT2& y)
 		: m_x(x), m_y(y) {}
 
@@ -177,11 +177,11 @@ TPL_GRAMMAR_BINARY_OP_(/, GRestr)
 template <class GrammarT>
 class GRepeat0 // Grammar*
 {
-private:
-	GrammarT m_x;
+public:
+	const GrammarT m_x;
 
 public:
-	GRepeat0() {}
+	GRepeat0() : m_x() {}
 	GRepeat0(const GrammarT& x) : m_x(x) {}
 
 public:
@@ -211,11 +211,11 @@ TPL_GRAMMAR_UNARY_OP_(*, GRepeat0)
 template <class GrammarT>
 class GRepeat1 // Grammar+
 {
-private:
-	GrammarT m_x;
+public:
+	const GrammarT m_x;
 
 public:
-	GRepeat1() {}
+	GRepeat1() : m_x() {}
 	GRepeat1(const GrammarT& x) : m_x(x) {}
 
 public:
@@ -247,11 +247,11 @@ TPL_GRAMMAR_UNARY_OP_(+, GRepeat1)
 template <class GrammarT>
 class GRepeat01 // Grammar?
 {
-private:
-	GrammarT m_x;
+public:
+	const GrammarT m_x;
 
 public:
-	GRepeat01() {}
+	GRepeat01() : m_x() {}
 	GRepeat01(const GrammarT& x) : m_x(x) {}
 
 public:
@@ -284,11 +284,11 @@ TPL_GRAMMAR_UNARY_OP_(!, GRepeat01)
 template <class GrammarT, unsigned nMin, unsigned nMax = UINT_MAX>
 class GRepeat // Grammar{nMin, nMax}
 {
-private:
-	GrammarT m_x;
+public:
+	const GrammarT m_x;
 
 public:
-	GRepeat() {}
+	GRepeat() : m_x() {}
 	GRepeat(const GrammarT& x) : m_x(x) {}
 
 public:
@@ -339,6 +339,8 @@ Grammar<GRepeat<T1, nMin, nMax> > TPL_CALL repeat(const Grammar<T1>& x) {
 
 // Usage: Grammar1 % Grammar2		--- means: Grammar1 + *(Grammar2 + Grammar1)
 
+#if 0
+
 template <class T1, class T2>
 class GLst : public GAnd<T1, GRepeat0<GAnd<T2, T1> > > // Grammar1 % Grammar2 <=> Grammar1 (Grammar2 Grammar1)*
 {
@@ -349,6 +351,48 @@ public:
 	GLst() {}
 	GLst(const Grammar<T1>& x, const Grammar<T2>& y) : Base(x + *(y + x)) {}
 };
+
+#else
+
+template <class T1, class T2>
+class GLst // Grammar1 % Grammar2 <=> Grammar1 (Grammar2 Grammar1)*
+{
+public:
+	typedef int size_type;
+
+private:
+	const GAnd<T2, T1> m_y_and_x;
+	mutable size_type m_count;
+
+public:
+	GLst() : m_y_and_x() {}
+	GLst(const Grammar<T1>& x, const Grammar<T2>& y) : m_y_and_x(y + x) {}
+
+public:
+	enum { character = T1::character | T2::character };
+
+	typedef TagAssigLst assig_tag;
+
+	template <class SourceT, class ContextT, class SkipperT>
+	bool TPL_CALL match(SourceT& ar, ContextT& context, const Skipper<SkipperT>& skipper_) const
+	{
+		if (m_y_and_x.m_y.match(ar, context, skipper_)) {
+			size_type n = 1;
+			while (m_y_and_x.match(ar, context, skipper_))
+				++n;
+			m_count = n;
+			return true;
+		}
+		m_count = 0;
+		return false;
+	}
+
+	size_type TPL_CALL size() const {
+		return m_count;
+	}
+};
+
+#endif
 
 template <class T1, class T2> __forceinline
 Grammar<GLst<T1, T2> > TPL_CALL operator%(const Grammar<T1>& x, const Grammar<T2>& y) {

@@ -1,4 +1,7 @@
-#include "stdafx.h"
+#define TPL_USE_AUTO_ALLOC
+#include <vector>		// std::vector
+#include <iostream> 	// std::cout
+#include <tpl/RegExp.h>
 
 using namespace tpl;
 
@@ -11,7 +14,7 @@ using namespace tpl;
 //	* Rules: /assign(), %, real(), gr(','), skipws()
 //	* Matching: tpl::simple::match()
 
-void simple_grammar()
+int main()
 {
 	std::vector<double> values; // you can change vector to other stl containers.
 	
@@ -22,6 +25,8 @@ void simple_grammar()
 			std::cout << *it << "\n";
 		}
 	}
+	return 0;
 }
 
 // -------------------------------------------------------------------------
+

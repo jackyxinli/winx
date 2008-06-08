@@ -11,7 +11,6 @@ void parse_class();
 void html_process();
 void circuit();
 void calculate();
-void calculate2();
 void remove_cpp_comments();
 
 int main()
@@ -26,7 +25,6 @@ int main()
 // 	xml_process();
 // 	demo();
 //	calculate();
-//	calculate2();
 	return 0;
 }
 

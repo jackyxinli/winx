@@ -23,8 +23,8 @@
 #include "../Basic.h"
 #endif
 
-#ifndef TPL_REGEX_CONCRETION_H
-#include "../Concretion.h"
+#ifndef TPL_REGEX_ACTION_H
+#include "../Action.h"
 #endif
 
 NS_TPL_BEGIN
@@ -35,12 +35,12 @@ NS_TPL_BEGIN
 template <class GrammarT, class ActionT>
 class GAct0
 {
-private:
-	GrammarT m_x;
-	ActionT m_action;
+public:
+	const GrammarT m_x;
+	const ActionT m_action;
 
 public:
-	GAct0() {}
+	GAct0() : m_x(), m_action() {}
 	GAct0(const GrammarT& x, const ActionT& act)
 		: m_x(x), m_action(act) {}
 
@@ -71,37 +71,41 @@ Grammar<GAct0<T1, T2> > TPL_CALL operator/(const Grammar<T1>& x, const SimpleAct
 // =========================================================================
 // class GAct
 
-/*
 template <class GrammarT, class ActionT>
 class GAct
 {
-private:
-	GrammarT m_x;
-	ActionT m_action;
+public:
+	const GrammarT m_x;
+	const ActionT m_action;
 
 public:
-	GAct() {}
+	GAct() : m_x(), m_action() {}
 	GAct(const GrammarT& x, const ActionT& act)
 		: m_x(x), m_action(act) {}
 
 public:
 	enum { character = GrammarT::character };
 
+	typedef typename GrammarT::assig_tag assig_tag;
+
 	template <class SourceT, class ContextT, class SkipperT>
 	bool TPL_CALL match(SourceT& ar, ContextT& context, const Skipper<SkipperT>& skipper_) const
 	{
-		typename SourceT::iterator pos = ar.position();
+		typedef typename SourceT::iterator iterator;
+		typedef typename ActionT::value_type value_type;
+		typedef typename SelectAssig<assig_tag, value_type>::assig_type assig_type;
+
+		iterator pos = ar.position();
 		if (m_x.match(ar, context, skipper_)) {
-			typename SourceT::iterator pos2 = ar.position();
-			m_action(pos, pos2);
+			iterator pos2 = ar.position();
+			value_type val = value_type();
+			assig_type::assign(val, pos, pos2, &m_x);
+			m_action(val);
 			return true;
 		}
 		return false;
 	}
 };
-
-// -------------------------------------------------------------------------
-// operator/
 
 // Usage: Grammar/Action	--- eg. Grammar/assign(a_variable)
 
@@ -109,7 +113,6 @@ template <class T1, class T2> __forceinline
 Grammar<GAct<T1, T2> > TPL_CALL operator/(const Grammar<T1>& x, const Action<T2>& y) {
 	return Grammar<GAct<T1, T2> >(x, y);
 }
-*/
 
 // =========================================================================
 // $Log: $
