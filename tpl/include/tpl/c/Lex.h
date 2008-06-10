@@ -19,18 +19,6 @@
 #ifndef TPL_C_LEX_H
 #define TPL_C_LEX_H
 
-#ifndef TPL_REGEX_BASIC_H
-#include "../regex/Basic.h"
-#endif
-
-#ifndef TPL_REGEX_TERMINAL_H
-#include "../regex/Terminal.h"
-#endif
-
-#ifndef TPL_REGEX_COMPOSITION_H
-#include "../regex/Composition.h"
-#endif
-
 #ifndef TPL_REGEX_UCOMPOSITION_H
 #include "../regex/UComposition.h"
 #endif
@@ -42,22 +30,95 @@
 NS_TPL_BEGIN
 
 // =========================================================================
-// function c_comment()
+// function c_find_continuable_eol()
+
+class CFindContinuableEol
+{
+public:
+	enum { character = 0 };
+
+	typedef SelfConvertible convertible_type;
+	typedef TagAssigNone assig_tag;
+
+	template <class SourceT, class ContextT>
+	bool TPL_CALL match(SourceT& ar, ContextT& context) const
+	{
+		for (;;)
+		{
+			typename SourceT::int_type c = ar.get();
+			switch (c)
+			{
+			case '\r':
+				if (ar.peek() == '\n')
+					ar.get();
+				return true;
+			case '\n':
+				return true;
+			case '\\':
+				if (ar.get() == '\r') {
+					if (ar.peek() == '\n')
+						ar.get();
+				}
+				break;
+			case SourceT::endch:
+				return true;
+			}
+		}
+	}
+
+	TPL_SIMPLEST_GRAMMAR_();
+};
+
+typedef CFindContinuableEol CFindContinuableEolG;
+
+inline Rule<CFindContinuableEolG> TPL_CALL c_find_continuable_eol() {
+	return Rule<CFindContinuableEolG>();
+}
+
+// =========================================================================
+// function cpp_single_line_comment()
 
 typedef Ch<'/'> ChDiv_;
+
+typedef UAnd<ChDiv_, CFindContinuableEolG> CppSingleLineCommentEnd_;
+
+typedef UAnd<ChDiv_, CppSingleLineCommentEnd_> CppSingleLineComment;
+
+TPL_REGEX_GUARD(CppSingleLineComment, CppSingleLineCommentG, TagAssigNone);
+
+inline Rule<CppSingleLineCommentG> TPL_CALL cpp_single_line_comment() {
+	return Rule<CppSingleLineCommentG>();
+}
+
+// =========================================================================
+// function c_comment()
+
 typedef Ch<'*'> ChMul_;
-typedef UAnd<ChDiv_, ChMul_> CCommentStart_;
 
 struct FindCCommentEnd_ : UFindStr<char> {
 	FindCCommentEnd_() : UFindStr<char>("*/") {}
 };
 
-typedef UAnd<CCommentStart_, FindCCommentEnd_> CComment;
+typedef UAnd<ChMul_, FindCCommentEnd_> CCommentEnd_;
+typedef UAnd<ChDiv_, CCommentEnd_> CComment;
 
 TPL_REGEX_GUARD(CComment, CCommentG, TagAssigNone);
 
 inline Rule<CCommentG> TPL_CALL c_comment() {
 	return Rule<CCommentG>();
+}
+
+// =========================================================================
+// function cpp_comment()
+
+typedef Or<CppSingleLineCommentEnd_, CCommentEnd_> CppCommentEnd_;
+
+typedef UAnd<ChDiv_, CppCommentEnd_> CppComment;
+
+TPL_REGEX_GUARD(CppComment, CppCommentG, TagAssigNone);
+
+inline Rule<CppCommentG> TPL_CALL cpp_comment() {
+	return Rule<CppCommentG>();
 }
 
 // =========================================================================
