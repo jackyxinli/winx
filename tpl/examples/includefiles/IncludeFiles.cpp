@@ -2,7 +2,7 @@
 #include <vector>		// std::vector
 #include <iostream> 	// std::cout
 #include <tpl/RegExp.h>
-#include <stdext/FileBuf.h>
+/* is */ # /* it */ include /* supported? no problem! */ <stdext/FileBuf.h>
 
 using namespace tpl;
 
