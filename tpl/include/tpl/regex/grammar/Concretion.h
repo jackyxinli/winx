@@ -43,6 +43,7 @@ public:
 	enum { character = GrammarT::character | SkipperT::character };
 
 	typedef SelfConvertible convertible_type;
+	typedef TagAssigNone assig_tag;
 	typedef const Grammar<GrammarT>& grammar_type;
 
 	template <class SourceT, class ContextT>

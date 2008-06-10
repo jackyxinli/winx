@@ -72,7 +72,13 @@
 #endif
 
 #ifndef TPL_TRACEW
-#define TPL_TRACEW	WINX_TRACE
+#if defined(WINX_TRACEW)
+#define TPL_TRACEW	WINX_TRACEW
+#elif defined(_DEBUG)
+#define TPL_TRACEW	wprintf
+#else
+#define TPL_TRACEW	__noop
+#endif
 #endif
 
 #ifndef NS_TPL_BEGIN

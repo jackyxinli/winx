@@ -107,6 +107,8 @@ do {																		\
 #define WINX_TRACE			TRACEA
 #elif defined(TRACE)
 #define WINX_TRACE			TRACE
+#elif defined(_DEBUG)
+#define WINX_TRACE			printf
 #else
 #define WINX_TRACE			__noop
 #endif
