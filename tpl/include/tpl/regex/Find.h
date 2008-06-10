@@ -213,7 +213,7 @@ __forceinline Rule<FindChSet<false, m_c1, m_c2, m_c3> > TPL_CALL find_set() {
 // -------------------------------------------------------------------------
 // class FindStr
 
-template <class Iterator, bool bEat = false>
+template <class Iterator, bool bEat = false, bool bGuard = true>
 class FindStr_
 {
 private:
@@ -238,19 +238,24 @@ public:
 	template <class SourceT, class ContextT>
 	bool TPL_CALL match(SourceT& ar, ContextT& context) const {
 		Finder_ finder(m_begin, m_end);
-		const typename SourceT::iterator pos = ar.position();
-		if (finder.next(ar) != S_OK) {
-			ar.seek(pos);
-			return false;
+		if (bGuard) {
+			const typename SourceT::iterator pos = ar.position();
+			if (finder.next(ar) != S_OK) {
+				ar.seek(pos);
+				return false;
+			}
+			else {
+				if (!bEat) {
+					typename SourceT::iterator seekTo = pos;
+					const typename SourceT::iterator pos2 = ar.position();
+					std::advance(seekTo, std::distance(pos, pos2) - finder.size());
+					ar.seek(seekTo);
+				}
+				return true;
+			}
 		}
 		else {
-			if (!bEat) {
-				typename SourceT::iterator seekTo = pos;
-				const typename SourceT::iterator pos2 = ar.position();
-				std::advance(seekTo, std::distance(pos, pos2) - finder.size());
-				ar.seek(seekTo);
-			}
-			return true;
+			return finder.next(ar) == S_OK;
 		}
 	}
 
@@ -271,6 +276,14 @@ class FindLeaf : public FindStr_<Iterator, bEat>
 public:
 	FindLeaf(const Leaf<Iterator>& s_)
 		: FindStr_<Iterator, bEat>(s_.begin(), s_.end()) {};
+};
+
+template <class CharT>
+class UFindStr : public FindStr_<const CharT*, true, false>
+{
+public:
+	UFindStr(const CharT* s_)
+		: FindStr_<const CharT*, true, false>(s_, s_ + std::char_traits<CharT>::length(s_)) {};
 };
 
 // =========================================================================

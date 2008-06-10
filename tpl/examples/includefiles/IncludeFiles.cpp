@@ -1,6 +1,7 @@
 #define TPL_USE_AUTO_ALLOC
 #include <vector>		// std::vector
 #include <iostream> 	// std::cout
+#include <tpl/c/Lex.h>	// c_comment()
 #include <tpl/RegExp.h>
 /* is */ # /* it */ include /* supported? no problem! */ <stdext/FileBuf.h>
 
@@ -16,7 +17,7 @@ int main()
 	simple::Allocator alloc;
 
 	simple::Rule rInclude( alloc,
-		simple::skipper( skipws() % ("/*" + find<true>("*/")) ) >>
+		simple::skipper( skipws() % c_comment() /* ("/*" + find<true>("*\/")) */ ) >>
 		(gr('#') + "include" + '<' + find('>')/assign(result) + '>') );
 
 	simple::Rule rDoc( alloc, *(!rInclude + find_strict_eol<true>()) );
