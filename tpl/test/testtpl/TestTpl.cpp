@@ -12,10 +12,11 @@ void html_process();
 void circuit();
 void calculate();
 void remove_cpp_comments();
+void word_text();
 
 int main()
 {
-	remove_cpp_comments();
+//	remove_cpp_comments();
 //	simple_grammar();
 //	simplest();
 // 	circuit();
@@ -25,6 +26,7 @@ int main()
 // 	xml_process();
 // 	demo();
 //	calculate();
+	word_text();
 	return 0;
 }
 

@@ -35,6 +35,18 @@
 #include "binary/Storage.h"
 #endif
 
+#ifndef TPL_BINARY_MATCHRESULT_H
+#include "binary/MatchResult.h"
+#endif
+
+#ifndef TPL_BINARY_TERMINAL_H
+#include "binary/Terminal.h"
+#endif
+
+#ifndef TPL_BINARY_CUSTOMIZATION_H
+#include "binary/Customization.h"
+#endif
+
 // -------------------------------------------------------------------------
 // $Log: $
 

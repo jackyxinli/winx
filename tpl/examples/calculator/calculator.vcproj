@@ -2,9 +2,9 @@
 <VisualStudioProject
 	ProjectType="Visual C++"
 	Version="8.00"
-	Name="TestTpl"
+	Name="calculator"
 	ProjectGUID="{5B83CA94-A2A6-43A6-8363-E5F4731443F7}"
-	RootNamespace="TestTpl"
+	RootNamespace="calculator"
 	Keyword="Win32Proj"
 	>
 	<Platforms>
@@ -52,7 +52,7 @@
 				TreatWChar_tAsBuiltInType="true"
 				ForceConformanceInForLoopScope="true"
 				RuntimeTypeInfo="true"
-				UsePrecompiledHeader="2"
+				UsePrecompiledHeader="0"
 				PrecompiledHeaderThrough="stdafx.h"
 				PrecompiledHeaderFile="$(IntDir)\$(TargetName).pch"
 				WarningLevel="3"
@@ -70,11 +70,11 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				OutputFile="$(OutDir)/TestTpl.exe"
+				OutputFile="$(OutDir)/calculator.exe"
 				LinkIncremental="2"
 				AdditionalLibraryDirectories="..\..\..\stdext\lib"
 				GenerateDebugInformation="true"
-				ProgramDatabaseFile="$(OutDir)/TestTpl.pdb"
+				ProgramDatabaseFile="$(OutDir)/calculator.pdb"
 				SubSystem="1"
 				TargetMachine="1"
 			/>
@@ -132,7 +132,7 @@
 				AdditionalUsingDirectories=""
 				PreprocessorDefinitions="WIN32;NDEBUG;_CONSOLE;_SCL_SECURE_NO_DEPRECATE;_CRT_SECURE_NO_DEPRECATE"
 				RuntimeLibrary="2"
-				UsePrecompiledHeader="2"
+				UsePrecompiledHeader="0"
 				PrecompiledHeaderThrough="stdafx.h"
 				AssemblerOutput="4"
 				WarningLevel="3"
@@ -150,7 +150,7 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				OutputFile="$(OutDir)/TestTpl.exe"
+				OutputFile="$(OutDir)/calculator.exe"
 				LinkIncremental="1"
 				AdditionalLibraryDirectories="..\..\..\stdext\lib"
 				GenerateDebugInformation="true"
@@ -189,96 +189,7 @@
 	</References>
 	<Files>
 		<File
-			RelativePath=".\Calculator.cpp"
-			>
-		</File>
-		<File
-			RelativePath=".\Calculator2.cpp"
-			>
-		</File>
-		<File
-			RelativePath=".\Circuit.cpp"
-			>
-		</File>
-		<File
-			RelativePath=".\Customization.cpp"
-			>
-		</File>
-		<File
-			RelativePath=".\Demo.cpp"
-			>
-		</File>
-		<File
-			RelativePath=".\ParseClass.cpp"
-			>
-		</File>
-		<File
-			RelativePath=".\RemoveCppComments.cpp"
-			>
-		</File>
-		<File
-			RelativePath=".\SimpleBinary.cpp"
-			>
-		</File>
-		<File
-			RelativePath=".\SimpleGrammar.cpp"
-			>
-		</File>
-		<File
-			RelativePath=".\Simplest.cpp"
-			>
-		</File>
-		<File
-			RelativePath=".\StdAfx.cpp"
-			>
-			<FileConfiguration
-				Name="Debug|Win32"
-				>
-				<Tool
-					Name="VCCLCompilerTool"
-					UsePrecompiledHeader="1"
-					PrecompiledHeaderThrough="stdafx.h"
-					PrecompiledHeaderFile="$(IntDir)\$(TargetName).pch"
-				/>
-			</FileConfiguration>
-			<FileConfiguration
-				Name="Release|Win32"
-				>
-				<Tool
-					Name="VCCLCompilerTool"
-					UsePrecompiledHeader="1"
-				/>
-			</FileConfiguration>
-		</File>
-		<File
-			RelativePath=".\stdafx.h"
-			>
-			<FileConfiguration
-				Name="Debug|Win32"
-				>
-				<Tool
-					Name="VCCustomBuildTool"
-				/>
-			</FileConfiguration>
-		</File>
-		<File
-			RelativePath=".\TestTpl.cpp"
-			>
-		</File>
-		<File
-			RelativePath=".\Transformation.cpp"
-			>
-		</File>
-		<File
-			RelativePath=".\WordText.cpp"
-			>
-		</File>
-		<File
-			RelativePath=".\XmlProcess.cpp"
-			>
-		</File>
-		<File
-			RelativePath=".\XmlWellformed.cpp"
+			RelativePath=".\Calc.cpp"
 			>
 		</File>
 	</Files>

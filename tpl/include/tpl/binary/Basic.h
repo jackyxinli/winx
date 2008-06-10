@@ -23,6 +23,10 @@
 #include "../regex/Basic.h"
 #endif
 
+#if defined(WINX_BYTESWAP) || defined(BYTESWAP) || defined(__BYTESWAP__)
+#define TPL_BYTESWAP
+#endif
+
 NS_TPL_BEGIN
 
 // =========================================================================
