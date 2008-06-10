@@ -25,7 +25,7 @@ int main()
 	rCppEol.assign( alloc,
 		find_set<'\r', '\n', '\\'>() + 
 		(
-			'\\' + !eol() + rCppEol | eol()
+			'\\' + !eol() + rCppEol | eol()/assign(result)
 		));
 
 	Var<char> delim;

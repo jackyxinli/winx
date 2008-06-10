@@ -70,7 +70,7 @@ inline bool TPL_CALL do_find_eol(SourceT& ar)
 		case '\r':
 			if (!bEat)
 				ar.unget('\r');
-			if (ar.peek() == '\n')
+			else if (ar.peek() == '\n')
 				ar.get();
 			return true;
 		case '\n':
@@ -95,7 +95,7 @@ inline bool TPL_CALL do_find_strict_eol(SourceT& ar)
 		case '\r':
 			if (!bEat)
 				ar.unget('\r');
-			if (ar.peek() == '\n')
+			else if (ar.peek() == '\n')
 				ar.get();
 			return true;
 		case '\n':

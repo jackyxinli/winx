@@ -30,8 +30,9 @@
 NS_TPL_BEGIN
 
 // =========================================================================
-// function c_find_continuable_eol()
+// function c_find_continuable_eol<bEat>()
 
+template <bool bEat = false>
 class CFindContinuableEol
 {
 public:
@@ -49,10 +50,14 @@ public:
 			switch (c)
 			{
 			case '\r':
-				if (ar.peek() == '\n')
+				if (!bEat)
+					ar.unget('\r');
+				else if (ar.peek() == '\n')
 					ar.get();
 				return true;
 			case '\n':
+				if (!bEat)
+					ar.unget('\n');
 				return true;
 			case '\\':
 				if (ar.get() == '\r') {
@@ -69,25 +74,46 @@ public:
 	TPL_SIMPLEST_GRAMMAR_();
 };
 
-typedef CFindContinuableEol CFindContinuableEolG;
+template <bool bEat>
+inline Rule<CFindContinuableEol<bEat> > TPL_CALL c_find_continuable_eol() {
+	return Rule<CFindContinuableEol<bEat> >();
+}
 
-inline Rule<CFindContinuableEolG> TPL_CALL c_find_continuable_eol() {
-	return Rule<CFindContinuableEolG>();
+inline Rule<CFindContinuableEol<false> > TPL_CALL c_find_continuable_eol() {
+	return Rule<CFindContinuableEol<false> >();
 }
 
 // =========================================================================
-// function cpp_single_line_comment()
+// function cpp_single_line_comment<bEatEol>()
 
 typedef Ch<'/'> ChDiv_;
 
-typedef UAnd<ChDiv_, CFindContinuableEolG> CppSingleLineCommentEnd_;
+typedef UAnd<ChDiv_, CFindContinuableEol<false> > CppSingleLineCommentEnd_;
+typedef UAnd<ChDiv_, CFindContinuableEol<true> > CppSingleLineCommentEnd_EatEol_;
 
 typedef UAnd<ChDiv_, CppSingleLineCommentEnd_> CppSingleLineComment;
+typedef UAnd<ChDiv_, CppSingleLineCommentEnd_EatEol_> CppSingleLineCommentEatEol;
 
 TPL_REGEX_GUARD(CppSingleLineComment, CppSingleLineCommentG, TagAssigNone);
+TPL_REGEX_GUARD(CppSingleLineCommentEatEol, CppSingleLineCommentEatEolG, TagAssigNone);
 
 inline Rule<CppSingleLineCommentG> TPL_CALL cpp_single_line_comment() {
 	return Rule<CppSingleLineCommentG>();
+}
+
+template <bool bEatEol = false>
+struct CppSingleLineCommentTraits {
+	typedef CppSingleLineCommentG rule_type;
+};
+
+template <>
+struct CppSingleLineCommentTraits<true> {
+	typedef CppSingleLineCommentEatEolG rule_type;
+};
+
+template <bool bEatEol>
+inline Rule<typename CppSingleLineCommentTraits<bEatEol>::rule_type> TPL_CALL cpp_single_line_comment() {
+	return Rule<typename CppSingleLineCommentTraits<bEatEol>::rule_type>();
 }
 
 // =========================================================================
@@ -109,16 +135,34 @@ inline Rule<CCommentG> TPL_CALL c_comment() {
 }
 
 // =========================================================================
-// function cpp_comment()
+// function cpp_comment<bEatEol>()
 
 typedef Or<CppSingleLineCommentEnd_, CCommentEnd_> CppCommentEnd_;
+typedef Or<CppSingleLineCommentEnd_EatEol_, CCommentEnd_> CppCommentEnd_EatEol_;
 
 typedef UAnd<ChDiv_, CppCommentEnd_> CppComment;
+typedef UAnd<ChDiv_, CppCommentEnd_EatEol_> CppCommentEatEol;
 
 TPL_REGEX_GUARD(CppComment, CppCommentG, TagAssigNone);
+TPL_REGEX_GUARD(CppCommentEatEol, CppCommentEatEolG, TagAssigNone);
 
 inline Rule<CppCommentG> TPL_CALL cpp_comment() {
 	return Rule<CppCommentG>();
+}
+
+template <bool bEatEol = false>
+struct CppCommentTraits {
+	typedef CppCommentG rule_type;
+};
+
+template <>
+struct CppCommentTraits<true> {
+	typedef CppCommentEatEolG rule_type;
+};
+
+template <bool bEatEol>
+inline Rule<typename CppCommentTraits<bEatEol>::rule_type> TPL_CALL cpp_comment() {
+	return Rule<typename CppCommentTraits<bEatEol>::rule_type>();
 }
 
 // =========================================================================
