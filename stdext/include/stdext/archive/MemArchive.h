@@ -294,6 +294,29 @@ public:
 		}
 	}
 
+	bool winx_call try_skip(size_type nMax)
+	{
+		const size_type nRest = m_last - m_pos;
+		if (nRest < nMax)
+			return false;
+		else {
+			m_pos += nMax;
+			return true;
+		}
+	}
+
+	bool winx_call try_get(char_type* lpBuf, size_type nMax)
+	{
+		const size_type nRest = m_last - m_pos;
+		if (nRest < nMax)
+			return false;
+		else {
+			std::copy(m_pos, m_pos + nMax, lpBuf);
+			m_pos += nMax;
+			return true;
+		}
+	}
+
 	const char_type* winx_call get(size_type nMax)
 	{
 		const size_type nRest = m_last - m_pos;
