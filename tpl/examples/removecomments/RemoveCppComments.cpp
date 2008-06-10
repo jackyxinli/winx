@@ -1,4 +1,7 @@
-#include "stdafx.h"
+#define TPL_USE_AUTO_ALLOC
+#include <vector>		// std::vector
+#include <iostream> 	// std::cout
+#include <tpl/RegExp.h>
 #include <stdext/FileBuf.h>
 #pragma warning(disable:4010)
 
@@ -7,7 +10,7 @@ using namespace tpl;
 // -------------------------------------------------------------------------
 // remove_cpp_comments()
 
-void remove_cpp_comments()
+int main()
 {
 	typedef SimpleImplementation impl;
 
@@ -46,5 +49,6 @@ void remove_cpp_comments()
 		for (std::vector<impl::Leaf>::iterator it = result.begin(); it != result.end(); ++it)
 			std::cout << *it;
 	}
+	return 0;
 }
 
