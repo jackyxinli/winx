@@ -213,8 +213,7 @@ public:
 		iterator pos = ar.position();
 		if (m_x.match(ar, context)) {
 			iterator pos2 = ar.position();
-			value_type val = value_type();
-			assig_type::assign(val, pos, pos2, &m_x);
+			value_type val(assig_type::get<value_type>(pos, pos2, &m_x));
 			m_action(val);
 			return true;
 		}

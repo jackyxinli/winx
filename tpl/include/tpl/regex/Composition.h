@@ -14,7 +14,7 @@
 // Email: xushiweizh@gmail.com
 // Date: 2006-8-13 9:41:58
 // 
-// $Id$
+// $Id: Composition.h 619 2008-06-01 16:00:35Z xushiweizh $
 // -----------------------------------------------------------------------*/
 #ifndef TPL_REGEX_COMPOSITION_H
 #define TPL_REGEX_COMPOSITION_H

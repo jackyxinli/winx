@@ -70,6 +70,13 @@
 #endif
 
 // -------------------------------------------------------------------------
+// std::basic_ostream
+
+#if defined(_OSTREAM_) || defined(_OSTREAM) || defined(_GLIBCXX_OSTREAM)
+#define TPL_HAS_OSTREAM
+#endif
+
+// -------------------------------------------------------------------------
 // $Log: $
 
 #endif /* TPL_REGEX_STLHEADERS_H */

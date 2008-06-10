@@ -43,8 +43,8 @@ class AssigStr
 {
 public:
 	template <class StringT, class Iterator>
-	static void TPL_CALL assign(StringT& result, Iterator pos, Iterator pos2, const void* pExtra) {
-		result.assign(pos, pos2);
+	static StringT TPL_CALL get(Iterator pos, Iterator pos2, const void* pExtra) {
+		return StringT(pos, pos2);
 	}
 };
 
@@ -57,9 +57,9 @@ class AssigCh
 {
 public:
 	template <class CharT, class Iterator>
-	static void TPL_CALL assign(CharT& result, Iterator pos, Iterator pos2, const void* pExtra) {
+	static CharT TPL_CALL get(Iterator pos, Iterator pos2, const void* pExtra) {
 		TPL_ASSERT(std::distance(pos, pos2) == 1);
-		result = *pos;
+		return *pos;
 	}
 };
 
@@ -72,15 +72,15 @@ class AssigUInt
 {
 public:
 	template <class UIntT, class Iterator>
-	static void TPL_CALL assign(UIntT& result, Iterator first, Iterator last, const void* pExtra)
+	static UIntT TPL_CALL get(Iterator first, Iterator last, const void* pExtra)
 	{
 		UIntT val = 0;
 		for (; first != last; ++first) {
 			TPL_ASSERT(*first >= '0' && *first <= '9');
 			val = val * 10 + (*first - '0');
 		}
-		result = val;
 		TPL_ASSERT(first == last);
+		return val;
 	}
 };
 
@@ -93,17 +93,15 @@ class AssigInt
 {
 public:
 	template <class IntT, class Iterator>
-	static void TPL_CALL assign(IntT& result, Iterator first, Iterator last, const void* pExtra)
+	static IntT TPL_CALL get(Iterator first, Iterator last, const void* pExtra)
 	{
 		if (*first == '-') {
-			AssigUInt::assign(result, first+1, last, pExtra);
-			result = -result;
-			return;
+			return -AssigUInt::get<IntT>(first+1, last, pExtra);
 		}
 		else if (*first == '+') {
 			++first;
 		}
-		return AssigUInt::assign(result, first, last, pExtra);
+		return AssigUInt::get<IntT>(first, last, pExtra);
 	}
 };
 
@@ -113,25 +111,27 @@ public:
 // Usage: Rule/assign(a_real_var)
 
 template <class RealT>
-inline void TPL_CALL _parseReal(RealT& result, const char* first, const char* last)
+inline RealT TPL_CALL _getReal(const char* first, const char* last)
 {
-	result = (RealT)strtod(first, (char**)&first);
+	RealT result = (RealT)strtod(first, (char**)&first);
 	TPL_ASSERT(first == last);
+	return result;
 }
 
 template <class RealT>
-inline void TPL_CALL _parseReal(RealT& result, const wchar_t* first, const wchar_t* last)
+inline RealT TPL_CALL _getReal(const wchar_t* first, const wchar_t* last)
 {
-	result = (RealT)wcstod(first, (wchar_t**)&first);
+	RealT result = (RealT)wcstod(first, (wchar_t**)&first);
 	TPL_ASSERT(first == last);
+	return result;
 }
 
 class AssigReal
 {
 public:
 	template <class RealT, class Iterator>
-	static void TPL_CALL assign(RealT& result, Iterator pos, Iterator pos2, const void* pExtra) {
-		_parseReal(result, pos, pos2);
+	static RealT TPL_CALL get(Iterator pos, Iterator pos2, const void* pExtra) {
+		return _getReal<RealT>(pos, pos2);
 	}
 };
 
@@ -142,8 +142,8 @@ class AssigLst
 {
 public:
 	template <class IntT, class Iterator, class LstOpT>
-	static void TPL_CALL assign(IntT& result, Iterator pos, Iterator pos2, const LstOpT* lst) {
-		result = lst->size();
+	static IntT TPL_CALL get(Iterator pos, Iterator pos2, const LstOpT* lst) {
+		return lst->size();
 	}
 };
 

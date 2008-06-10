@@ -31,6 +31,10 @@
 #include "Cons.h"
 #endif
 
+#ifndef TPL_REGEX_STLHEADERS_H
+#include "STLHeaders.h"
+#endif
+
 #if !defined(_STRING_) && !defined(_STRING)
 #include <string>
 #endif
@@ -111,10 +115,11 @@ public:
 	}
 };
 
-#if defined(_OSTREAM_) || defined(_OSTREAM) || defined(_GLIBCXX_OSTREAM)
+#if defined(TPL_HAS_OSTREAM)
 
 template <class CharT, class Tr, class Iterator>
-inline std::basic_ostream<CharT, Tr>& operator<<(std::basic_ostream<CharT, Tr>& os, const Leaf<Iterator>& v) {
+inline std::basic_ostream<CharT, Tr>& 
+TPL_CALL operator<<(std::basic_ostream<CharT, Tr>& os, const Leaf<Iterator>& v) {
 	std::copy(v.begin(), v.end(), std::ostream_iterator<CharT>(os));
 	return os;
 }
