@@ -329,6 +329,7 @@ Grammar< Op<T1, Gr<Ch1_> > > TPL_CALL operator op(const Grammar<T1>& x, CharT y)
 // Usage: alpha()		--- means: matching ONE Alpha Character
 // Usage: ...
 
+typedef Ch<' ', '\t'> NonEolSpace;
 typedef ChRange<'0', '9'> Digit;
 typedef ChRange<'a', 'z'> LowerAlpha;
 typedef ChRange<'A', 'Z'> UpperAlpha;
@@ -342,6 +343,10 @@ typedef EqCh<std::CharType::IsCSymbolNextChar> CSymbolNextChar;
 
 typedef EqCh<std::CharType::IsXmlSymbolFirstChar> XmlSymbolFirstChar;
 typedef EqCh<std::CharType::IsXmlSymbolNextChar> XmlSymbolNextChar;
+
+inline Rule<NonEolSpace> TPL_CALL non_eol_space() {
+	return Rule<NonEolSpace>();
+}
 
 inline Rule<Space> TPL_CALL space() {
 	return Rule<Space>();

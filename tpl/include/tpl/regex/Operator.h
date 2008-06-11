@@ -561,6 +561,9 @@ TPL_REGEX_BINARY_OP_(%, Lst)
 typedef Repeat0<Space> SkipWhiteSpaces; // w*
 typedef Repeat1<Space> WhiteSpaces; // w+
 
+typedef Repeat0<NonEolSpace> SkipNonEolSpaces;
+typedef Repeat1<NonEolSpace> NonEolSpaces;
+
 inline Rule<WhiteSpaces> TPL_CALL ws()
 {
 	return Rule<WhiteSpaces>();
@@ -569,6 +572,16 @@ inline Rule<WhiteSpaces> TPL_CALL ws()
 inline Rule<SkipWhiteSpaces> TPL_CALL skipws()
 {
 	return Rule<SkipWhiteSpaces>();
+}
+
+inline Rule<NonEolSpaces> TPL_CALL non_eol_ws()
+{
+	return Rule<NonEolSpaces>();
+}
+
+inline Rule<SkipNonEolSpaces> TPL_CALL skip_non_eol_ws()
+{
+	return Rule<SkipNonEolSpaces>();
 }
 
 // =========================================================================

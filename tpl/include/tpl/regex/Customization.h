@@ -203,14 +203,16 @@ public:
 		return Skipper<SkipperImpl<SkipperT, Source, Context> >(skipper_);
 	}
 
-	template <class AllocT>
 	static Skipper<ConcretionSkipper_> TPL_CALL skipper(const tpl::Rule<ConcretionSkipper_>& skipper_) {
 		return (const Skipper<ConcretionSkipper_>&)skipper_;
 	}
 
-	template <class AllocT>
 	static Skipper<SkipperImpl<SkipWhiteSpaces, Source, Context> > TPL_CALL skipws() {
 		return skipper(tpl::skipws());
+	}
+
+	static Skipper<SkipperImpl<SkipNonEolSpaces, Source, Context> > TPL_CALL skip_non_eol_ws() {
+		return skipper(tpl::skip_non_eol_ws());
 	}
 
 public:

@@ -83,7 +83,7 @@ inline Rule<CFindContinuableEol<false> > TPL_CALL c_find_continuable_eol() {
 	return Rule<CFindContinuableEol<false> >();
 }
 
-// =========================================================================
+// -------------------------------------------------------------------------
 // function cpp_single_line_comment<bEatEol>()
 
 typedef Ch<'/'> ChDiv_;
@@ -116,7 +116,7 @@ inline Rule<typename CppSingleLineCommentTraits<bEatEol>::rule_type> TPL_CALL cp
 	return Rule<typename CppSingleLineCommentTraits<bEatEol>::rule_type>();
 }
 
-// =========================================================================
+// -------------------------------------------------------------------------
 // function c_comment()
 
 typedef Ch<'*'> ChMul_;
@@ -134,7 +134,7 @@ inline Rule<CCommentG> TPL_CALL c_comment() {
 	return Rule<CCommentG>();
 }
 
-// =========================================================================
+// -------------------------------------------------------------------------
 // function cpp_comment<bEatEol>()
 
 typedef Or<CppSingleLineCommentEnd_, CCommentEnd_> CppCommentEnd_;
@@ -164,6 +164,27 @@ template <bool bEatEol>
 inline Rule<typename CppCommentTraits<bEatEol>::rule_type> TPL_CALL cpp_comment() {
 	return Rule<typename CppCommentTraits<bEatEol>::rule_type>();
 }
+
+// =========================================================================
+// function c_skip(), cpp_skip()
+
+typedef Lst<SkipWhiteSpaces, CCommentG> CSkipG; // for C
+typedef Lst<SkipNonEolSpaces, CCommentG> CSkipNonEolG; // for C Preprocessor
+typedef Lst<SkipWhiteSpaces, CppCommentEatEolG> CppSkipG; // for C++
+
+inline Rule<CSkipG> TPL_CALL c_skip() {
+	return Rule<CSkipG>();
+}
+
+inline Rule<CSkipNonEolG> TPL_CALL c_skip_non_eol() {
+	return Rule<CSkipNonEolG>();
+}
+
+inline Rule<CppSkipG> TPL_CALL cpp_skip() {
+	return Rule<CppSkipG>();
+}
+
+// =========================================================================
 
 // =========================================================================
 // $Log: $
