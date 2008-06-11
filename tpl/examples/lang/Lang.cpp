@@ -3,6 +3,7 @@
 #include <iostream> 	// std::cout
 #include <tpl/RegExp.h>
 #include <tpl/c/Lex.h>
+#include <stdext/FileBuf.h>
 
 using namespace tpl;
 
@@ -29,8 +30,13 @@ public:
 	}
 };
 
-int main()
+int main(int argc, const char* argv[])
 {
+	if (argc < 2) {
+		std::cout << "Usage: " << argv[0] << " LangFile\n";
+		return -1;
+	}
+	
 	typedef SimpleImplementation impl;
 	
 	const char* keywords[] = {
@@ -135,25 +141,19 @@ int main()
 		]);
 
 	// ---- do match ----
-	
-	for (;;)
-	{
-		std::string strExp;
-		std::cout << "input an expression (q to quit): ";
-		if (!std::getline(std::cin, strExp) || strExp == "q") {
-			std::cout << '\n';
-			return 0;
-		}
 
-		try {
-			if ( !impl::match(strExp.c_str(), rLang + eos(), skipws() % ("//" + find_eol<true>())) )
-				std::cout << ">>> ERROR: invalid expression!\n";
-			else
-				std::cout << "passed!" << '\n';
-		}
-		catch (const std::logic_error& e) {
-			std::cout << ">>> ERROR: " << e.what() << '\n';
-		}
+	std::FileBuf file(argv[1]);
+	if (!file.good()) {
+		std::cout << ">>> ERROR: open file failed!\n";
+	}
+	try {
+		if ( !impl::match(file.begin(), file.end(), rLang + eos(), skipws() % ("//" + find_eol<true>())) )
+			std::cout << ">>> ERROR: invalid grammar!\n";
+		else
+			std::cout << "passed!" << '\n';
+	}
+	catch (const std::logic_error& e) {
+		std::cout << ">>> ERROR: " << e.what() << '\n';
 	}
 }
 
