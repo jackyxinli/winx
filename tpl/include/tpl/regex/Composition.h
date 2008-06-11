@@ -188,7 +188,7 @@ public:
 	template <class Iterator>
 	bool TPL_CALL operator()(Iterator first, Iterator last) const {
 		size_t len = std::distance(first, last);
-		return len == LenStrT::m_len && std::equal(first, last, m_s);
+		return len == LenStrT::m_len && std::equal(m_s, m_s + len, first);
 	}
 
 public:
@@ -230,6 +230,13 @@ public:
 	Eq_(Iterator s, size_t n) {
 		m_s = s;
 		m_len = n;
+	}
+
+public:
+	template <class Iterator2>
+	bool TPL_CALL operator()(Iterator2 first, Iterator2 last) const {
+		size_t len = std::distance(first, last);
+		return len == m_len && std::equal(m_s, m_s + len, first);
 	}
 
 public:

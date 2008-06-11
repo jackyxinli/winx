@@ -172,7 +172,7 @@ public:
 };
 
 template <class ValueT, class Pr, class Ax>
-class Assig<std::multiset<ValueT, Pr, Ax> > : public Insert_<std::multiset<ValueT, Pr, Ax> >
+class Assign<std::multiset<ValueT, Pr, Ax> > : public Insert_<std::multiset<ValueT, Pr, Ax> >
 {
 public:
 	Assign(std::multiset<ValueT, Pr, Ax>& result)

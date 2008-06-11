@@ -69,6 +69,8 @@ public:
 public:
 	enum { character = GrammarT1::character | GrammarT2::character };
 
+	typedef TagAssigNone assig_tag;
+
 	template <class SourceT, class ContextT, class SkipperT>
 	bool TPL_CALL match(SourceT& ar, ContextT& context, const Skipper<SkipperT>& skipper_) const
 	{
@@ -112,6 +114,8 @@ public:
 public:
 	enum { character = GrammarT1::character | GrammarT2::character };
 
+	typedef TagAssigNone assig_tag;
+
 	template <class SourceT, class ContextT, class SkipperT>
 	bool TPL_CALL match(SourceT& ar, ContextT& context, const Skipper<SkipperT>& skipper_) const
 	{
@@ -145,6 +149,8 @@ public:
 
 public:
 	enum { character = GrammarT1::character | GrammarT2::character };
+
+	typedef TagAssigNone assig_tag;
 
 	template <class SourceT, class ContextT, class SkipperT>
 	bool TPL_CALL match(SourceT& ar, ContextT& context, const Skipper<SkipperT>& skipper_) const
@@ -187,6 +193,8 @@ public:
 public:
 	enum { character = GrammarT::character };
 
+	typedef TagAssigNone assig_tag;
+
 	template <class SourceT, class ContextT, class SkipperT>
 	bool TPL_CALL match(SourceT& ar, ContextT& context, const Skipper<SkipperT>& skipper_) const
 	{
@@ -220,6 +228,8 @@ public:
 
 public:
 	enum { character = GrammarT::character };
+
+	typedef TagAssigNone assig_tag;
 
 	template <class SourceT, class ContextT, class SkipperT>
 	bool TPL_CALL match(SourceT& ar, ContextT& context, const Skipper<SkipperT>& skipper_) const
@@ -257,6 +267,8 @@ public:
 public:
 	enum { character = GrammarT::character };
 
+	typedef TagAssigNone assig_tag;
+
 	template <class SourceT, class ContextT, class SkipperT>
 	bool TPL_CALL match(SourceT& ar, ContextT& context, const Skipper<SkipperT>& skipper_) const
 	{
@@ -293,6 +305,8 @@ public:
 
 public:
 	enum { character = GrammarT::character };
+
+	typedef TagAssigNone assig_tag;
 
 	template <class SourceT, class ContextT, class SkipperT>
 	bool TPL_CALL match(SourceT& ar, ContextT& context, const Skipper<SkipperT>& skipper_) const

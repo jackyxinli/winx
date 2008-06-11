@@ -14,7 +14,7 @@
 // Email: xushiweizh@gmail.com
 // Date: 2006-8-13 9:41:58
 // 
-// $Id: RegExp.h 618 2008-06-01 03:33:32Z xushiweizh $
+// $Id$
 // -----------------------------------------------------------------------*/
 #ifndef TPL_REGEXP_H
 #define TPL_REGEXP_H
@@ -73,6 +73,10 @@
 
 #ifndef TPL_REGEX_FIND_H
 #include "regex/Find.h"
+#endif
+
+#ifndef TPL_REGEX_CONDITION_H
+#include "regex/Condition.h"
 #endif
 
 #ifndef TPL_REGEX_TRANSFORMATION_H

@@ -1,13 +1,43 @@
 #define TPL_USE_AUTO_ALLOC
+#include <set>
 #include <iostream> 	// std::cout
 #include <tpl/RegExp.h>
 #include <tpl/c/Lex.h>
 
 using namespace tpl;
 
+template <class CharT>
+class IsNotKeywords
+{
+private:
+	typedef std::basic_string<CharT> key_t;
+	typedef std::set<key_t> set_t;
+	
+	set_t m_set;
+	
+public:
+	IsNotKeywords(const CharT* keywords[], size_t n) {
+		while (n--) {
+			m_set.insert(keywords[n]);
+		}
+	}
+	
+	template <class Iterator>
+	bool TPL_CALL operator()(Iterator pos, Iterator pos2) const {
+		key_t k(pos, pos2);
+		return m_set.find(k) == m_set.end();
+	}
+};
+
 int main()
 {
 	typedef SimpleImplementation impl;
+	
+	const char* keywords[] = {
+		"if", "elif", "else",
+		"case", "of", "default",
+	};
+	IsNotKeywords<char> not_keywords(keywords, countof(keywords));
 
 	impl::Allocator alloc;
 
@@ -70,28 +100,39 @@ int main()
 	// <factor> ::=
 	//		real() |
 	//		c_string() |
-	//		'-' <factor> |
 	//		'(' <assignment> % ',' ')' |
+	//		'-' <factor> |
+	//		'+' <factor> |
 	//		'if' '(' <expr> ')' <assignment> ('elif' '(' <expr> ')' <assignment>)* 'else' <assignment> |
 	//		'case' <expr> 'of'
 	//			((<compare> | <expr>) ':' <assignment>)*
 	//			'default' ':' <assignment> |
-	//		c_symbol() ('(' <assignment> % ',' ')')? |
-	//		'+' <factor>
+	//		c_symbol() ('(' <assignment> % ',' ')')?
 	rFactor.assign( alloc,
 		real() |
 		c_string() |
 		'-' + rFactor |
+		'+' + rFactor |
 		'(' + rAssignment % ',' + ')' |
-		gr("if") + '(' + rExpr + ')' + rAssignment +
-			*(gr("elif") + '(' + rExpr + ')' + rAssignment) +
-			c_symbol("else") + rAssignment |
-		c_symbol("case") + rExpr + "of" +
-			*((rCompare | rExpr) + ':' + rAssignment) +
-			gr("default") + ':' + rAssignment |
-		c_symbol() + !('(' + rAssignment % ',' + ')') |
-		'+' + rFactor
-		);
+		c_symbol()
+		[
+			case_(not_keywords)
+			[
+				!('(' + rAssignment % ',' + ')')
+			],
+			case_("if")
+			[
+				'(' + rExpr + ')' + rAssignment +
+				*(gr("elif") + '(' + rExpr + ')' + rAssignment) +
+				c_symbol("else") + rAssignment
+			],
+			case_("case")
+			[
+				rExpr + "of" +
+				*((rCompare | rExpr) + ':' + rAssignment + ',') +
+				gr("default") + ':' + rAssignment
+			]
+		]);
 
 	// ---- do match ----
 	
