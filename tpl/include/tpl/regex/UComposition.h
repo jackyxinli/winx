@@ -268,6 +268,35 @@ inline Rule<XmlSymbolG> TPL_CALL xml_symbol()
 	return Rule<XmlSymbolG>();
 }
 
+#define TPL_RESTR_SYMBOL_1_(symbol, SymbolG)									\
+template <class CharT> __forceinline											\
+Rule<Restr<SymbolG, And<Eq<CharT>, Eos> > >										\
+TPL_CALL symbol(const CharT* sym) {												\
+	return symbol() / eq_s(sym);												\
+}
+
+#define TPL_RESTR_SYMBOL_2_(symbol, SymbolG)									\
+template <class CharT> __forceinline											\
+Rule<Restr<SymbolG, And<Or<Eq<CharT>, Eq<CharT> >, Eos> > >						\
+TPL_CALL symbol(const CharT* sym1, const CharT* sym2) {							\
+	return symbol() / eq_s(sym1, sym2);											\
+}
+
+#define TPL_RESTR_SYMBOL_3_(symbol, SymbolG)									\
+template <class CharT> __forceinline											\
+Rule<Restr<SymbolG, And<Or<Or<Eq<CharT>, Eq<CharT> >, Eq<CharT> >, Eos> > >		\
+TPL_CALL symbol(const CharT* sym1, const CharT* sym2, const CharT* sym3) {		\
+	return symbol() / eq_s(sym1, sym2, sym3);									\
+}
+
+#define TPL_RESTR_SYMBOL(symbol, SymbolG)										\
+	TPL_RESTR_SYMBOL_1_(symbol, SymbolG)										\
+	TPL_RESTR_SYMBOL_2_(symbol, SymbolG)										\
+	TPL_RESTR_SYMBOL_3_(symbol, SymbolG)
+
+TPL_RESTR_SYMBOL(c_symbol, CSymbolG)
+TPL_RESTR_SYMBOL(xml_symbol, XmlSymbolG)
+
 // -------------------------------------------------------------------------
 // function u_integer, integer, etc.
 

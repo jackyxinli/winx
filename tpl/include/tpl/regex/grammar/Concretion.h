@@ -151,6 +151,8 @@ public:
 
 public:
 	enum { character = uCharacter };
+	
+	typedef TagAssigNone assig_tag;
 
 	template <class SkipperT>
 	bool TPL_CALL match(SourceT& ar, ContextT& context, const Skipper<SkipperT>& skipper_) const {

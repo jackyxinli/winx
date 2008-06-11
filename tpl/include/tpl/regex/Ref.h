@@ -89,6 +89,8 @@ public:
 public:
 	enum { character = GrammarT::character };
 
+	typedef typename GrammarT::assig_tag assig_tag;
+
 	template <class SourceT, class ContextT, class SkipperT>
 	bool TPL_CALL match(SourceT& ar, ContextT& context, const Skipper<SkipperT>& skipper_) const {
 		return m_x.match(ar, context, skipper_);
