@@ -14,7 +14,7 @@
 // Email: xushiweizh@gmail.com
 // Date: 2006-8-13 9:41:58
 // 
-// $Id: Composition.h 619 2008-06-01 16:00:35Z xushiweizh $
+// $Id$
 // -----------------------------------------------------------------------*/
 #ifndef TPL_REGEX_COMPOSITION_H
 #define TPL_REGEX_COMPOSITION_H
@@ -91,6 +91,36 @@ __forceinline Rule<Eos> TPL_CALL eos() {
 
 __forceinline Rule<Eos> TPL_CALL eof() {
 	return Rule<Eos>();
+}
+
+// -------------------------------------------------------------------------
+// function not_eos/not_eof
+
+// Usage: not_eos() --- means: true if current position is not end-of-stream
+// Usage: not_eof() --- same as: not_eos()
+
+class NotEos
+{
+public:
+	enum { character = 0 };
+
+	typedef AutoConvertible convertible_type;
+	typedef TagAssigNone assig_tag;
+
+	template <class SourceT, class ContextT>
+	bool TPL_CALL match(SourceT& ar, ContextT& context) const {
+		return ar.peek() != SourceT::endch;
+	}
+};
+
+typedef NotEos NotEof;
+
+__forceinline Rule<NotEos> TPL_CALL not_eos() {
+	return Rule<NotEos>();
+}
+
+__forceinline Rule<NotEos> TPL_CALL not_eof() {
+	return Rule<NotEos>();
 }
 
 // -------------------------------------------------------------------------
