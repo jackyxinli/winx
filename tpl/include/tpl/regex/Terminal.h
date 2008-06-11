@@ -122,7 +122,7 @@ __forceinline Rule<ChRange<m_c1, m_c2> > TPL_CALL ch_range() {
 // function not_ch
 
 // Usage: not_ch<'a'>()			--- means: ~ch('a')
-// Usage: not_ch<'a', 'b'>()	--- means: ~(ch('a') | ~ch('b'))
+// Usage: not_ch<'a', 'b'>()	--- means: ~ch('a', 'b')
 
 template <int m_c1, int m_c2 = m_c1, int m_c3 = m_c2>
 class N_

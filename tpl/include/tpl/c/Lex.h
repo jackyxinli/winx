@@ -185,6 +185,44 @@ inline Rule<CppSkipG> TPL_CALL cpp_skip() {
 }
 
 // =========================================================================
+// function c_string(), c_char()
+
+struct TagAssigCString {};
+struct TagAssigCChar {};
+
+template <int delim = '\"'>
+class CStringTraits
+{
+private:
+	typedef Ch<delim> Delim_;
+	
+	typedef Ch<'\\'> Esc_;
+	typedef UAnd<Esc_, ChAny> EscChar_;
+	
+	typedef NotCh<delim, '\r', '\n'> NotStopChar_;
+	typedef Or<EscChar_, NotStopChar_> Char_;
+	typedef Repeat0<Char_> Chars_;
+	
+public:
+	typedef UAnd<Delim_, Chars_, Delim_> rule_type;
+};
+
+TPL_REGEX_GUARD(CStringTraits<'\"'>::rule_type, CStringG, TagAssigCString);
+TPL_REGEX_GUARD(CStringTraits<'\''>::rule_type, CCharG, TagAssigCChar);
+
+typedef Or<CStringG, CCharG> CStringOrCharG;
+
+inline Rule<CStringG> TPL_CALL c_string() {
+	return Rule<CStringG>();
+}
+
+inline Rule<CCharG> TPL_CALL c_char() {
+	return Rule<CCharG>();
+}
+
+inline Rule<CStringOrCharG> TPL_CALL c_string_or_char() {
+	return Rule<CStringOrCharG>();
+}
 
 // =========================================================================
 // $Log: $

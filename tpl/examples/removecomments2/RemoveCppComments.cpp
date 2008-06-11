@@ -20,17 +20,14 @@ int main()
 	std::vector<impl::Leaf> result;
 
 	impl::Allocator alloc;
-
-	Var<char> delim;
-	impl::Rule rString( alloc, ch('\'', '\"')/assign(delim) + *('\\' + ch_any() | ~delim) + delim );
-
+	
 	impl::Rule rItem( alloc,
 		find_set<'/', '\'', '\"'>()/assign(result) + 
 		(
 			cpp_comment() |		/*	I will be removed haha~  */
-			//	Multiline \
-				comments are also allowed. haha~
-			('/' | rString)/assign(result)
+								//	Multiline \
+									comments are also allowed. haha~
+			('/' | c_string_or_char())/assign(result)
 		));
 	
 	impl::Rule rDoc( alloc, *rItem + done()/assign(result) );

@@ -36,15 +36,82 @@ NS_TPL_BEGIN
 // Note: Rule1 and Rule2 cannot contain any Mark operators (See <tpl/regex/Mark.h>)
 // If Rule1 or Rule2 contains Mark operators, you should use And operator instead of UAnd.
 
-template <class RegExT1, class RegExT2>
-class UAnd // Rule1 * Rule2
+template <class RegExT1, class RegExT2, class RegExT3 = void, class RegExT4 = void>
+class UAnd
 {
 private:
-	RegExT1 m_x;
-	RegExT2 m_y;
+	const RegExT1 m_x;
+	const RegExT2 m_y;
+	const RegExT3 m_z;
+	const RegExT4 m_u;
 
 public:
-	UAnd() {
+	UAnd() : m_x(), m_y(), m_z(), m_u() {
+		TPL_ASSERT(
+			RegExT1::character == 0 && RegExT2::character == 0 &&
+			RegExT3::character == 0 && RegExT4::character == 0);
+	}
+	UAnd(const RegExT1& x, const RegExT2& y, const RegExT3& z, const RegExT4& u)
+		: m_x(x), m_y(y), m_z(z), m_u(u) {
+		TPL_ASSERT(
+			RegExT1::character == 0 && RegExT2::character == 0 &&
+			RegExT3::character == 0 && RegExT4::character == 0);
+	}
+
+public:
+	enum { character = 0 };
+
+	typedef ExplicitConvertible convertible_type;
+	typedef TagAssigNone assig_tag;
+
+	template <class SourceT, class ContextT>
+	bool TPL_CALL match(SourceT& ar, ContextT& context) const {
+		return m_x.match(ar, context) && m_y.match(ar, context) &&
+			m_z.match(ar, context) && m_u.match(ar, context);
+	}
+};
+
+template <class RegExT1, class RegExT2, class RegExT3>
+class UAnd<RegExT1, RegExT2, RegExT3, void>
+{
+private:
+	const RegExT1 m_x;
+	const RegExT2 m_y;
+	const RegExT3 m_z;
+
+public:
+	UAnd() : m_x(), m_y(), m_z() {
+		TPL_ASSERT(
+			RegExT1::character == 0 && RegExT2::character == 0 &&
+			RegExT3::character == 0);
+	}
+	UAnd(const RegExT1& x, const RegExT2& y, const RegExT3& z) : m_x(x), m_y(y), m_z(z) {
+		TPL_ASSERT(
+			RegExT1::character == 0 && RegExT2::character == 0 &&
+			RegExT3::character == 0);
+	}
+
+public:
+	enum { character = 0 };
+
+	typedef ExplicitConvertible convertible_type;
+	typedef TagAssigNone assig_tag;
+
+	template <class SourceT, class ContextT>
+	bool TPL_CALL match(SourceT& ar, ContextT& context) const {
+		return m_x.match(ar, context) && m_y.match(ar, context) && m_z.match(ar, context);
+	}
+};
+
+template <class RegExT1, class RegExT2>
+class UAnd<RegExT1, RegExT2, void, void>
+{
+private:
+	const RegExT1 m_x;
+	const RegExT2 m_y;
+
+public:
+	UAnd() : m_x(), m_y() {
 		TPL_ASSERT(RegExT1::character == 0 && RegExT2::character == 0);
 	}
 	UAnd(const RegExT1& x, const RegExT2& y) : m_x(x), m_y(y) {
