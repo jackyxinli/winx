@@ -145,6 +145,7 @@ int main(int argc, const char* argv[])
 	std::FileBuf file(argv[1]);
 	if (!file.good()) {
 		std::cout << ">>> ERROR: open file failed!\n";
+		return -2;
 	}
 	try {
 		if ( !impl::match(file.begin(), file.end(), rLang + eos(), skipws() % ("//" + find_eol<true>())) )
