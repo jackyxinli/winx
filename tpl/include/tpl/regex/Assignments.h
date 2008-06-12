@@ -249,6 +249,14 @@ assign(std::map<KeyT, MappedT, Pr, Ax>& result, const KeyT& key) {
 	return Action<InsertPair_<std::map<KeyT, MappedT, Pr, Ax>, false> >(result, key);
 }
 
+template <bool bOverwrite, class KeyT, class MappedT, class Pr, class Ax>
+__forceinline
+Action<InsertPair_<std::multimap<KeyT, MappedT, Pr, Ax>, false> >
+TPL_CALL
+assign(std::multimap<KeyT, MappedT, Pr, Ax>& result, const KeyT& key) {
+	return Action<InsertPair_<std::multimap<KeyT, MappedT, Pr, Ax>, false> >(result, key);
+}
+
 template <class KeyT, class MappedT, class Pr, class Ax>
 __forceinline
 Action<InsertPair_<std::multimap<KeyT, MappedT, Pr, Ax>, false> >
