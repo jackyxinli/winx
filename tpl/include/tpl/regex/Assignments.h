@@ -182,6 +182,84 @@ public:
 #endif
 
 // =========================================================================
+// class InsertPair_
+
+template <class ContainerT, bool bOverwrite = false>
+class InsertPair_
+{
+private:
+	typedef typename ContainerT::key_type KeyT;
+	typedef typename ContainerT::mapped_type MappedT;
+	
+	ContainerT& m_result;
+	const KeyT& m_key;
+
+public:
+	InsertPair_(ContainerT& result, const KeyT& key)
+		: m_result(result), m_key(key) {
+	}
+	
+	typedef MappedT value_type;
+
+	void TPL_CALL operator()(const MappedT& val) const {
+		m_result.insert(typename ContainerT::value_type(m_key, val));
+	}
+};
+
+template <class ContainerT>
+class InsertPair_<ContainerT, true>
+{
+private:
+	typedef typename ContainerT::key_type KeyT;
+	typedef typename ContainerT::mapped_type MappedT;
+	
+	ContainerT& m_result;
+	const KeyT& m_key;
+
+public:
+	InsertPair_(ContainerT& result, const KeyT& key)
+		: m_result(result), m_key(key) {
+	}
+	
+	typedef MappedT value_type;
+
+	void TPL_CALL operator()(const MappedT& val) const {
+		m_result[m_key] = val;
+	}
+};
+
+// -------------------------------------------------------------------------
+// function assign
+
+#if defined(TPL_HAS_MAP)
+
+template <bool bOverwrite, class KeyT, class MappedT, class Pr, class Ax>
+__forceinline
+Action<InsertPair_<std::map<KeyT, MappedT, Pr, Ax>, bOverwrite> >
+TPL_CALL
+assign(std::map<KeyT, MappedT, Pr, Ax>& result, const KeyT& key) {
+	return Action<InsertPair_<std::map<KeyT, MappedT, Pr, Ax>, bOverwrite> >(result, key);
+}
+
+template <class KeyT, class MappedT, class Pr, class Ax>
+__forceinline
+Action<InsertPair_<std::map<KeyT, MappedT, Pr, Ax>, false> >
+TPL_CALL
+assign(std::map<KeyT, MappedT, Pr, Ax>& result, const KeyT& key) {
+	return Action<InsertPair_<std::map<KeyT, MappedT, Pr, Ax>, false> >(result, key);
+}
+
+template <class KeyT, class MappedT, class Pr, class Ax>
+__forceinline
+Action<InsertPair_<std::multimap<KeyT, MappedT, Pr, Ax>, false> >
+TPL_CALL
+assign(std::multimap<KeyT, MappedT, Pr, Ax>& result, const KeyT& key) {
+	return Action<InsertPair_<std::multimap<KeyT, MappedT, Pr, Ax>, false> >(result, key);
+}
+
+#endif
+
+// =========================================================================
 // $Log: $
 
 NS_TPL_END
