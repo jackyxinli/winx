@@ -92,7 +92,7 @@ public:
 		m_ip = ip;
 	}
 
-	void TPL_CALL jump(int delta) {
+	void TPL_CALL jump(ptrdiff_t delta) {
 		m_ip += delta;
 	}
 	
@@ -142,11 +142,26 @@ void TPL_CALL exec(const CodeT& code, size_t ipFrom, size_t ipTo, typename CodeT
 }
 
 // =========================================================================
+// class Assign
+
+template <class ValT>
+class Assign : public std::binary_function<ValT, ValT, ValT>
+{
+public:
+	ValT TPL_CALL operator()(const ValT& x, const ValT& y) const {
+		return *(ValT*)(size_t)x = y;
+	}
+};
+
+// =========================================================================
 // class CPU
 
-template <class ValT, class CodeT = Code<ValT> >
+template <class ValT>
 class CPU
 {
+private:
+	typedef Code<ValT> CodeT;
+
 public:
 	typedef CodeT code_type;
 	typedef typename CodeT::stack_type stack_type;
@@ -164,7 +179,7 @@ public:
 		return OpInstr<Op_, StackT, ContextT>::instr();
 	}
 	
-#define TPL_EMU_OP_(op, op_)		\
+#define TPL_EMU_OP_(op, op_)			\
 	static InstructionT TPL_CALL op() {	\
 		return OpInstr<op_, StackT, ContextT>::instr(); \
 	}
@@ -174,6 +189,7 @@ public:
 	TPL_EMU_OP_(mul, std::multiplies)
 	TPL_EMU_OP_(div, std::divides)
 	TPL_EMU_OP_(mod, std::modulus)
+	TPL_EMU_OP_(assign, Assign)
 	
 	TPL_EMU_OP_(neg, std::negate)
 	
@@ -202,15 +218,19 @@ public:
 		return Push<StackT, ContextT>::instr(alloc, val);
 	}
 	
-	static InstructionT TPL_CALL pop(size_t n = 1) {
+	static InstructionT TPL_CALL pop(size_t n) {
 		return Pop<StackT, ContextT>::instr(n);
 	}
 
-	static InstructionT TPL_CALL jmp(int delta) {
+	static InstructionT TPL_CALL pop() {
+		return Pop<StackT, ContextT>::instr();
+	}
+
+	static InstructionT TPL_CALL jmp(ptrdiff_t delta) {
 		return Jmp<StackT, ContextT>::instr(delta);
 	}
 
-	static InstructionT TPL_CALL je(int delta) {
+	static InstructionT TPL_CALL je(ptrdiff_t delta) {
 		return JmpIfFalse<StackT, ContextT>::instr(delta);
 	}
 
@@ -222,19 +242,31 @@ public:
 		return Local<StackT, ContextT>::instr(n);
 	}
 
-	static InstructionT TPL_CALL load_arg(int delta) {
-		return LoadArg<StackT, ContextT>::instr(delta);
+	static InstructionT TPL_CALL push_arg(ptrdiff_t delta) {
+		return PushArg<StackT, ContextT>::instr(delta);
 	}
 
-	static InstructionT TPL_CALL load_vargs() {
-		return LoadVArgs<StackT, ContextT>::instr();
+	static InstructionT TPL_CALL push_vargs() {
+		return PushVArgs<StackT, ContextT>::instr();
 	}
 
-	static InstructionT TPL_CALL load_local(size_t delta) {
-		return LoadLocal<StackT, ContextT>::instr(delta);
+	static InstructionT TPL_CALL push_local(size_t delta) {
+		return PushLocal<StackT, ContextT>::instr(delta);
 	}
 
-	static InstructionT TPL_CALL call(int delta) {
+	static InstructionT TPL_CALL lea_arg(ptrdiff_t delta) {
+		return LeaArg<StackT, ContextT>::instr(delta);
+	}
+
+	static InstructionT TPL_CALL lea_vargs() {
+		return LeaVArgs<StackT, ContextT>::instr();
+	}
+
+	static InstructionT TPL_CALL lea_local(size_t delta) {
+		return LeaLocal<StackT, ContextT>::instr(delta);
+	}
+
+	static InstructionT TPL_CALL call(ptrdiff_t delta) {
 		return Call<StackT, ContextT>::instr(delta);
 	}
 

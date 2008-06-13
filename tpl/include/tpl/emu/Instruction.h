@@ -30,8 +30,8 @@ NS_TPL_EMU_BEGIN
 
 union Operand
 {
-	int ival;
 	size_t val;
+	ptrdiff_t ival; 
 	const void* ptr;
 };
 
@@ -47,8 +47,8 @@ public:
 
 public:
 	Instruction(Op op_) : op(op_) {}
-	Instruction(Op op_, int val_) : op(op_) 		{ para.ival = val_; }
 	Instruction(Op op_, size_t val_) : op(op_)	 	{ para.val = val_; }
+	Instruction(Op op_, ptrdiff_t val_) : op(op_) 	{ para.ival = val_; }
 	Instruction(Op op_, const void* ptr_) : op(op_) { para.ptr = ptr_; }
 
 	__forceinline void TPL_CALL operator()(StackT& stk, ExecuteContextT& context) const {
@@ -139,11 +139,19 @@ template <class StackT, class ExecuteContextT>
 class Pop
 {
 public:
+	static void op1(Operand para, StackT& stk, ExecuteContextT&) {
+		stk.pop_back();
+	}
+
 	static void op(Operand para, StackT& stk, ExecuteContextT&) {
 		stk.resize(stk.size() - para.val);
 	}
 	
-	static Instruction<StackT, ExecuteContextT> TPL_CALL instr(size_t n = 1) {
+	static Instruction<StackT, ExecuteContextT> TPL_CALL instr() {
+		return Instruction<StackT, ExecuteContextT>(op1);
+	}
+
+	static Instruction<StackT, ExecuteContextT> TPL_CALL instr(size_t n) {
 		return Instruction<StackT, ExecuteContextT>(op, n);
 	}
 };
@@ -161,7 +169,7 @@ public:
 		context.jump(para.ival);
 	}
 	
-	static Instruction<StackT, ExecuteContextT> TPL_CALL instr(int delta) {
+	static Instruction<StackT, ExecuteContextT> TPL_CALL instr(ptrdiff_t delta) {
 		return Instruction<StackT, ExecuteContextT>(op, delta);
 	}
 };
@@ -182,7 +190,7 @@ public:
 			context.jump(para.ival);
 	}
 	
-	static Instruction<StackT, ExecuteContextT> TPL_CALL instr(int delta) {
+	static Instruction<StackT, ExecuteContextT> TPL_CALL instr(ptrdiff_t delta) {
 		return Instruction<StackT, ExecuteContextT>(op, delta);
 	}
 };
@@ -251,7 +259,7 @@ public:
 	
 public:
 	template <class StackT, class ExecuteContextT>
-	static void TPL_CALL call(StackT& stk, ExecuteContextT& context, int delta) {
+	static void TPL_CALL call(StackT& stk, ExecuteContextT& context, ptrdiff_t delta) {
 		stk.push_back(context.position());
 		stk.push_back(context.frame());
 		context.frame(stk.size());
@@ -279,7 +287,14 @@ public:
 	typename StackT::value_type TPL_CALL vargs(StackT& stk, ExecuteContextT& context) const {
 		const size_t arity_idx_ = context.frame() + ARITY;
 		const size_t arity_ = stk[arity_idx_];
-		return typename StackT::value_type::array(stk, arity_idx_ - arity_, arity_);
+		return typename StackT::value_type::array(stk.begin() + (arity_idx_ - arity_), arity_);
+	}
+
+	template <class StackT, class ExecuteContextT>
+	typename StackT::value_type TPL_CALL lea_vargs(StackT& stk, ExecuteContextT& context) const {
+		const size_t arity_idx_ = context.frame() + ARITY;
+		const size_t arity_ = stk[arity_idx_];
+		return typename StackT::value_type::array(stk.begin() + (arity_idx_ - arity_), arity_);
 	}
 };
 
@@ -312,63 +327,7 @@ public:
 		CallerFrame::call(stk, context, para.ival);
 	}
 	
-	static Instruction<StackT, ExecuteContextT> TPL_CALL instr(int delta) {
-		return Instruction<StackT, ExecuteContextT>(op, delta);
-	}
-};
-
-// =========================================================================
-// class LoadArg/LoadVArgs/LoadLocal
-
-// Usage: load_arg <offset>	; here <offset> can be -n ~ -1
-//	 arg1 = load_arg -n
-//	 arg2 = load_arg -(n-1)
-//	 ...
-//	 argn = load_arg -1
-
-template <class StackT, class ExecuteContextT>
-class LoadArg
-{
-public:
-	static void op(Operand para, StackT& stk, ExecuteContextT& context) {
-		stk.push_back(stk[context.frame() + para.ival]);
-	}
-	
-	static Instruction<StackT, ExecuteContextT> TPL_CALL instr(int delta) {
-		return Instruction<StackT, ExecuteContextT>(op, delta - CallerFrame::SIZE);
-	}
-};
-
-// Usage: load_vargs
-
-template <class StackT, class ExecuteContextT>
-class LoadVArgs
-{
-public:	
-	static void op(Operand para, StackT& stk, ExecuteContextT& context) {
-		stk.push_back(CallerFrame::vargs(stk, context));
-	}
-	
-	static Instruction<StackT, ExecuteContextT> TPL_CALL instr() {
-		return Instruction<StackT, ExecuteContextT>(op);
-	}
-};
-
-// Usage: load_local <index> ; here <index> can be 0 ~ n-1
-//	 local_var1 = load_local 0
-//	 local_var2 = load_local 1
-//	 ...
-//	 local_varn = load_local n-1
-
-template <class StackT, class ExecuteContextT>
-class LoadLocal
-{
-public:
-	static void op(Operand para, StackT& stk, ExecuteContextT& context) {
-		stk.push_back(stk[context.frame() + para.val]);
-	}
-	
-	static Instruction<StackT, ExecuteContextT> TPL_CALL instr(size_t delta) {
+	static Instruction<StackT, ExecuteContextT> TPL_CALL instr(ptrdiff_t delta) {
 		return Instruction<StackT, ExecuteContextT>(op, delta);
 	}
 };
@@ -380,15 +339,15 @@ public:
 //
 // Example1:
 //	 proc my_pow
-//		load_arg -2		; push arg1
-//		load_arg -1		; push arg2
+//		push_arg -2		; push arg1
+//		push_arg -1		; push arg2
 //		pow				; call pow instruction 
 //		ret 2			; return
 //	end proc
 //
 // Example2:
 //	 proc my_max
-//		load_vargs		; push arg[]
+//		push_vargs		; push arg[]
 //		max_n			; call max_n instruction
 //		ret				; return
 //	 end proc
@@ -417,6 +376,122 @@ public:
 	
 	static Instruction<StackT, ExecuteContextT> TPL_CALL instr() {
 		return Instruction<StackT, ExecuteContextT>(op);
+	}
+};
+
+// =========================================================================
+// class PushArg/PushVArgs/PushLocal
+
+// Usage: push_arg <offset>	; here <offset> can be -n ~ -1
+//	 arg1 = push_arg -n
+//	 arg2 = push_arg -(n-1)
+//	 ...
+//	 argn = push_arg -1
+
+template <class StackT, class ExecuteContextT>
+class PushArg
+{
+public:
+	static void op(Operand para, StackT& stk, ExecuteContextT& context) {
+		stk.push_back(stk[context.frame() + para.ival]);
+	}
+	
+	static Instruction<StackT, ExecuteContextT> TPL_CALL instr(ptrdiff_t delta) {
+		return Instruction<StackT, ExecuteContextT>(op, delta - CallerFrame::SIZE);
+	}
+};
+
+// Usage: push_vargs
+
+template <class StackT, class ExecuteContextT>
+class PushVArgs
+{
+public:	
+	static void op(Operand para, StackT& stk, ExecuteContextT& context) {
+		stk.push_back(CallerFrame::vargs(stk, context));
+	}
+	
+	static Instruction<StackT, ExecuteContextT> TPL_CALL instr() {
+		return Instruction<StackT, ExecuteContextT>(op);
+	}
+};
+
+// Usage: push_local <index> ; here <index> can be 0 ~ n-1
+//	 local_var1 = push_local 0
+//	 local_var2 = push_local 1
+//	 ...
+//	 local_varn = push_local n-1
+
+template <class StackT, class ExecuteContextT>
+class PushLocal
+{
+public:
+	static void op(Operand para, StackT& stk, ExecuteContextT& context) {
+		stk.push_back(stk[context.frame() + para.val]);
+	}
+	
+	static Instruction<StackT, ExecuteContextT> TPL_CALL instr(size_t delta) {
+		return Instruction<StackT, ExecuteContextT>(op, delta);
+	}
+};
+
+// =========================================================================
+// class LeaArg/LeaVArgs/LeaLocal
+
+// Usage: lea_arg <offset>	; here <offset> can be -n ~ -1
+//	 arg1 = lea_arg -n
+//	 arg2 = lea_arg -(n-1)
+//	 ...
+//	 argn = lea_arg -1
+
+template <class StackT, class ExecuteContextT>
+class LeaArg
+{
+public:
+	static void op(Operand para, StackT& stk, ExecuteContextT& context) {
+		typedef typename StackT::value_type ValT;
+		size_t addr = (size_t)&stk[context.frame() + para.ival];
+		stk.push_back(addr);
+	}
+	
+	static Instruction<StackT, ExecuteContextT> TPL_CALL instr(ptrdiff_t delta) {
+		return Instruction<StackT, ExecuteContextT>(op, delta - CallerFrame::SIZE);
+	}
+};
+
+// Usage: lea_vargs
+
+template <class StackT, class ExecuteContextT>
+class LeaVArgs
+{
+public:	
+	static void op(Operand para, StackT& stk, ExecuteContextT& context) {
+		stk.push_back(CallerFrame::lea_vargs(stk, context));
+	}
+	
+	static Instruction<StackT, ExecuteContextT> TPL_CALL instr() {
+		return Instruction<StackT, ExecuteContextT>(op);
+	}
+};
+
+// Usage: lea_local <index> ; here <index> can be 0 ~ n-1
+//	 local_var1 = lea_local 0
+//	 local_var2 = lea_local 1
+//	 ...
+//	 local_varn = lea_local n-1
+
+template <class StackT, class ExecuteContextT>
+class LeaLocal
+{
+public:
+	static void op(Operand para, StackT& stk, ExecuteContextT& context) {
+		typedef typename StackT::value_type ValT;
+		size_t addr = (size_t)&stk[context.frame() + para.val];
+		stk.push_back(addr);
+	}
+	
+	static Instruction<StackT, ExecuteContextT> TPL_CALL instr(size_t delta) {
+		return Instruction<StackT, ExecuteContextT>(op, delta);
 	}
 };
 
