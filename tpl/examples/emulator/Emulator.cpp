@@ -6,7 +6,7 @@
 class TestEmulator
 {
 public:
-	typedef tpl::emu::CPU<double> cpu;
+	typedef tpl::emu::CPU<double, true> cpu;
 
 	void simplest()
 	{
@@ -106,6 +106,33 @@ public:
 	
 		std::cout << stk.top() << "\n";
 	}
+
+	void call_proc2()
+	{
+		std::AutoFreeAlloc alloc;
+		
+		cpu::proc_type<0> my_div;
+		cpu::label_type<0> my_label;
+		
+		cpu::code_type code;
+		
+		code <<
+			cpu::proc(my_div),
+			cpu::push_arg(-2),
+			cpu::push_arg(-1),
+			cpu::div(),
+			cpu::ret(2),
+			
+			cpu::label(my_label),
+			cpu::push(alloc, 2.0),
+			cpu::push(alloc, 3.0),
+			cpu::call(my_div);
+
+		cpu::stack_type stk;
+		tpl::emu::exec(code, my_label, code.size(), stk);
+	
+		std::cout << stk.top() << "\n";
+	}
 };
 
 int main()
@@ -115,6 +142,7 @@ int main()
 	test.local_var();
 	test.local_var_optimization();
 	test.call_proc();
+	test.call_proc2();
 }
 
 // -------------------------------------------------------------------------

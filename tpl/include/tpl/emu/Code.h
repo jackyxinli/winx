@@ -23,12 +23,12 @@
 #include "Function.h"
 #endif
 
-#ifndef TPL_ENU_INSTRUCTION_H
+#ifndef TPL_EMU_INSTRUCTION_H
 #include "Instruction.h"
 #endif
 
-#ifndef STDEXT_ARRAY_H
-#include "../../../../stdext/include/stdext/Array.h"
+#ifndef TPL_EMU_LABEL_H
+#include "Label.h"
 #endif
 
 #if !defined(_DEQUE_) && !defined(_GLIBCXX_DEQUE) && !defined(_DEQUE)
@@ -67,6 +67,7 @@ public:
 // =========================================================================
 // class ExecuteContext
 
+template <bool bDebug = false>
 class ExecuteContext
 {
 private:
@@ -74,6 +75,8 @@ private:
 	size_t m_frame;
 
 public:
+	enum { debug = bDebug };
+
 	ExecuteContext(size_t ip)
 		: m_ip(ip), m_frame(0) {
 	}
@@ -107,49 +110,7 @@ public:
 };
 
 // =========================================================================
-// class Label
-
-#define TPL_EMU_UNDEFINED_LABEL	((size_t)-1)
-
-template <size_t n>
-class Label
-{
-private:
-	typedef ptrdiff_t* Reference;
-	typedef std::Array<Reference, n> References;
-	
-	size_t m_label;
-	References m_refs;
-
-public:
-	Label()
-		: m_label(TPL_EMU_UNDEFINED_LABEL) {
-	}
-	
-	bool TPL_CALL defined() const {
-		return m_label != TPL_EMU_UNDEFINED_LABEL;
-	}
-	
-	template <class CodeT>
-	void TPL_CALL define(const CodeT& code) {
-		TPL_ASSERT(!defined());
-		m_label = code.size();
-		for (size_t i = m_refs.size(); i--; )
-			*m_refs[i] += m_label;
-	}
-	
-	template <class CodeT>
-	void TPL_CALL refer(CodeT& code) {
-		if (m_label == TPL_EMU_UNDEFINED_LABEL) {
-			Reference ref_ = &code.back().para.ival;
-			*ref_ = -code.size();
-			m_refs.push_back(ref_);
-		}
-		else {
-			code.back().para.ival = m_label - code.size();
-		}
-	}
-};
+// class Label(Define/Refer)
 
 template <class LabelT>
 class LabelDefine
@@ -176,15 +137,15 @@ public:
 // =========================================================================
 // class Code
 
-template <class ValT>
-class Code : public std::deque<Instruction<Stack<ValT>, ExecuteContext> >
+template <class ValT, bool bDebug = false>
+class Code : public std::deque<Instruction<Stack<ValT>, ExecuteContext<bDebug> > >
 {
 private:
-	typedef std::deque<Instruction<Stack<ValT>, ExecuteContext> > Base;
+	typedef std::deque<Instruction<Stack<ValT>, ExecuteContext<bDebug> > > Base;
 	
 public:
 	typedef Stack<ValT> stack_type;
-	typedef ExecuteContext execute_context;
+	typedef ExecuteContext<bDebug> execute_context;
 	typedef Instruction<stack_type, execute_context> instruction_type;
 	
 public:
@@ -232,7 +193,7 @@ public:
 template <class CodeT> inline
 void TPL_CALL exec(const CodeT& code, size_t ipFrom, size_t ipTo, typename CodeT::stack_type& stk)
 {
-	ExecuteContext context(ipFrom);
+	typename CodeT::execute_context context(ipFrom);
 	while (context.position() != ipTo) {
 		const typename CodeT::instruction_type& instr_ = context.next(code);
 		instr_(stk, context);
@@ -254,11 +215,11 @@ public:
 // =========================================================================
 // class CPU
 
-template <class ValT>
+template <class ValT, bool bDebug = false>
 class CPU
 {
 private:
-	typedef Code<ValT> CodeT;
+	typedef Code<ValT, bDebug> CodeT;
 
 public:
 	typedef CodeT code_type;
@@ -340,6 +301,10 @@ public:
 	TPL_EMU_FN_IMPL_(6)
 
 public:
+	static InstructionT TPL_CALL nop() {
+		return Nop<StackT, ContextT>::instr();
+	}
+
 	template <class AllocT>
 	static InstructionT TPL_CALL push(AllocT& alloc, const ValT& val) {
 		return Push<StackT, ContextT>::instr(alloc, val);

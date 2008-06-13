@@ -25,8 +25,12 @@
 #include "emu/Function.h"
 #endif
 
-#ifndef TPL_ENU_INSTRUCTION_H
+#ifndef TPL_EMU_INSTRUCTION_H
 #include "emu/Instruction.h"
+#endif
+
+#ifndef TPL_EMU_LABEL_H
+#include "emu/Label.h"
 #endif
 
 #ifndef TPL_EMU_CODE_H

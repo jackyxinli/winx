@@ -16,14 +16,64 @@
 // 
 // $Id: Instruction.h 588 2008-05-28 07:22:04Z xushiweizh $
 // -----------------------------------------------------------------------*/
-#ifndef TPL_ENU_INSTRUCTION_H
-#define TPL_ENU_INSTRUCTION_H
+#ifndef TPL_EMU_INSTRUCTION_H
+#define TPL_EMU_INSTRUCTION_H
 
 #ifndef TPL_EMU_FUNCTION_H
 #include "Function.h"
 #endif
 
+#if defined(TPL_EMU_DEBUG) || defined(_DEBUG)
+
+#if !defined(_IOSTREAM_) && !defined(_GLIBCXX_IOSTREAM) && !defined(_IOSTREAM)
+#include <iostream>
+#endif
+
+#define TPL_EMU_INSTR_DEBUG(msg)				\
+	do {										\
+		if (ExecuteContextT::debug)				\
+			std::cout << msg << "\n";			\
+	} while (0)
+
+#define TPL_EMU_INSTR_OP_NAME(Op)				\
+	NS_TPL_EMU::crackOpName(typeid(Op).name())
+
+#else
+
+#define TPL_EMU_INSTR_DEBUG(msg)
+#define TPL_EMU_INSTR_OP_NAME(Op)	"op"
+
+#endif // !defined(TPL_EMU_DEBUG)
+
 NS_TPL_EMU_BEGIN
+
+// =========================================================================
+// crackOpName
+
+#define TPL_EMU_INSTR_OP_(op, name)					\
+	if (strstr(name_, #name) != NULL)				\
+		return #op;
+
+inline const char* TPL_CALL crackOpName(const char* name_)
+{
+	TPL_EMU_INSTR_OP_(assign, Assign)
+	TPL_EMU_INSTR_OP_(add, plus)
+	TPL_EMU_INSTR_OP_(sub, minus)
+	TPL_EMU_INSTR_OP_(mul, multiplies)
+	TPL_EMU_INSTR_OP_(div, divides)
+	TPL_EMU_INSTR_OP_(mod, modulus)
+	
+	TPL_EMU_INSTR_OP_(neg, negate)
+	
+	TPL_EMU_INSTR_OP_(ne, not_equal_to)
+	TPL_EMU_INSTR_OP_(eq, equal_to)
+	TPL_EMU_INSTR_OP_(ge, greater_equal)
+	TPL_EMU_INSTR_OP_(gt, greater)
+	TPL_EMU_INSTR_OP_(le, less_equal)
+	TPL_EMU_INSTR_OP_(lt, less)
+	
+	return name_;
+}
 
 // =========================================================================
 // Instruction
@@ -74,6 +124,7 @@ private:
 
 public:
 	static void op(Operand, StackT& stk, ExecuteContextT&) {
+		TPL_EMU_INSTR_DEBUG(TPL_EMU_INSTR_OP_NAME(Op_<Ty>));
 		Function<Op_<Ty>, n_arity> fn_;
 		fn_(stk);
 	}
@@ -101,12 +152,31 @@ public:
 	typedef typename OpTraits<nArity, Ty>::op_type op_type;
 
 	static void op(StackT& stk, Operand para) {
+		TPL_EMU_INSTR_DEBUG("fn");
 		Function<op_type, nArity> fn_((op_type)para.ptr);
 		fn_(stk);
 	}
 
 	static Instruction<StackT, ExecuteContextT> TPL_CALL instr(op_type fn) {
 		return Instruction<StackT, ExecuteContextT>(op, fn);
+	}
+};
+
+// =========================================================================
+// class Nop
+
+// Usage: nop
+
+template <class StackT, class ExecuteContextT>
+class Nop
+{
+public:
+	static void op(Operand, StackT&, ExecuteContextT&) {
+		TPL_EMU_INSTR_DEBUG("nop");
+	}
+
+	static Instruction<StackT, ExecuteContextT> TPL_CALL instr() {
+		return Instruction<StackT, ExecuteContextT>(op);
 	}
 };
 
@@ -123,6 +193,7 @@ private:
 
 public:
 	static void op(Operand para, StackT& stk, ExecuteContextT& context) {
+		TPL_EMU_INSTR_DEBUG("push " << *(const ValT*)para.ptr);
 		stk.push_back(*(const ValT*)para.ptr);
 	}
 	
@@ -140,10 +211,12 @@ class Pop
 {
 public:
 	static void op1(Operand para, StackT& stk, ExecuteContextT&) {
+		TPL_EMU_INSTR_DEBUG("pop");
 		stk.pop_back();
 	}
 
 	static void op(Operand para, StackT& stk, ExecuteContextT&) {
+		TPL_EMU_INSTR_DEBUG("pop " << para.val);
 		stk.resize(stk.size() - para.val);
 	}
 	
@@ -166,6 +239,7 @@ class Jmp
 {
 public:
 	static void op(Operand para, StackT& stk, ExecuteContextT& context) {
+		TPL_EMU_INSTR_DEBUG("jmp " << para.ival);
 		context.jump(para.ival);
 	}
 	
@@ -186,6 +260,7 @@ public:
 	static void op(Operand para, StackT& stk, ExecuteContextT& context) {
 		const typename StackT::value_type val = stk.back();
 		stk.pop_back();
+		TPL_EMU_INSTR_DEBUG("je " << para.ival << "\t; condition: " << val);
 		if (!val)
 			context.jump(para.ival);
 	}
@@ -205,6 +280,7 @@ class Arity
 {
 public:
 	static void op(Operand para, StackT& stk, ExecuteContextT&) {
+		TPL_EMU_INSTR_DEBUG("arity " << para.val);
 		stk.push_back(para.val);
 	}
 	
@@ -223,6 +299,7 @@ class Local
 {
 public:
 	static void op(Operand para, StackT& stk, ExecuteContextT&) {
+		TPL_EMU_INSTR_DEBUG("local " << para.val);
 		stk.resize(stk.size() + para.val);
 	}
 	
@@ -324,6 +401,7 @@ class Call
 {
 public:
 	static void op(Operand para, StackT& stk, ExecuteContextT& context) {
+		TPL_EMU_INSTR_DEBUG("call " << para.ival);
 		CallerFrame::call(stk, context, para.ival);
 	}
 	
@@ -357,6 +435,7 @@ class RetN
 {
 public:
 	static void op(Operand para, StackT& stk, ExecuteContextT& context) {
+		TPL_EMU_INSTR_DEBUG("ret " << para.val - CallerFrame::SIZE << "\t; pop: " << para.val);
 		CallerFrame::ret(stk, context, para.val);
 	}
 	
@@ -371,6 +450,7 @@ class Ret
 public:
 	static void op(Operand para, StackT& stk, ExecuteContextT& context) {
 		const size_t n = CallerFrame::arity(stk, context) + (CallerFrame::SIZE + 1);
+		TPL_EMU_INSTR_DEBUG("ret\t; pop: " << n);
 		CallerFrame::ret(stk, context, n);
 	}
 	
@@ -393,6 +473,9 @@ class PushArg
 {
 public:
 	static void op(Operand para, StackT& stk, ExecuteContextT& context) {
+		TPL_EMU_INSTR_DEBUG(
+			"push_arg " << para.ival + CallerFrame::SIZE <<
+			"\t; push: " << stk[context.frame() + para.ival] );
 		stk.push_back(stk[context.frame() + para.ival]);
 	}
 	
@@ -427,6 +510,9 @@ class PushLocal
 {
 public:
 	static void op(Operand para, StackT& stk, ExecuteContextT& context) {
+		TPL_EMU_INSTR_DEBUG(
+			"push_local " << para.val <<
+			"\t; push: " << stk[context.frame() + para.val] );
 		stk.push_back(stk[context.frame() + para.val]);
 	}
 	
@@ -449,6 +535,7 @@ class LeaArg
 {
 public:
 	static void op(Operand para, StackT& stk, ExecuteContextT& context) {
+		TPL_EMU_INSTR_DEBUG("lea_arg " << para.ival + CallerFrame::SIZE);
 		typedef typename StackT::value_type ValT;
 		size_t addr = (size_t)&stk[context.frame() + para.ival];
 		stk.push_back(addr);
@@ -485,6 +572,7 @@ class LeaLocal
 {
 public:
 	static void op(Operand para, StackT& stk, ExecuteContextT& context) {
+		TPL_EMU_INSTR_DEBUG("lea_local " << para.val);
 		typedef typename StackT::value_type ValT;
 		size_t addr = (size_t)&stk[context.frame() + para.val];
 		stk.push_back(addr);
@@ -505,6 +593,9 @@ class AssignArg
 {
 public:
 	static void op(Operand para, StackT& stk, ExecuteContextT& context) {
+		TPL_EMU_INSTR_DEBUG(
+			"assgin_arg " << para.ival + CallerFrame::SIZE <<
+			"\t; value: " << stk[context.frame() + para.ival] << " => " << stk.back() );
 		stk[context.frame() + para.ival] = stk.back();
 	}
 	
@@ -520,6 +611,9 @@ class AssignLocal
 {
 public:
 	static void op(Operand para, StackT& stk, ExecuteContextT& context) {
+		TPL_EMU_INSTR_DEBUG(
+			"assgin_local " << para.val <<
+			"\t; value: " << stk[context.frame() + para.val] << " => " << stk.back() );
 		stk[context.frame() + para.val] = stk.back();
 	}
 	
@@ -533,5 +627,5 @@ public:
 
 NS_TPL_EMU_END
 
-#endif /* TPL_ENU_INSTRUCTION_H */
+#endif /* TPL_EMU_INSTRUCTION_H */
 

@@ -11,7 +11,7 @@ Libraries
 
 [Config Debug]
 Product		Exe Debug/emu
-Options		Debug; MultiThread; AnsiChar; NoRtti; Exception
+Options		Debug; MultiThread; AnsiChar; Rtti; Exception
 ObjDir		Debug
 LibDir		
 Libraries	
