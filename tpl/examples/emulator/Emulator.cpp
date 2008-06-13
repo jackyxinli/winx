@@ -10,8 +10,8 @@ public:
 
 	void simplest()
 	{
-		std::AutoFreeAlloc alloc;
-		cpu::code_type code;
+		cpu::alloc_type alloc;
+		cpu::code_type code(alloc);
 		
 		// 2.0 * 3.0
 		code <<
@@ -27,8 +27,8 @@ public:
 	
 	void local_var()
 	{
-		std::AutoFreeAlloc alloc;
-		cpu::code_type code;
+		cpu::alloc_type alloc;
+		cpu::code_type code(alloc);
 		
 		// x = 2.0
 		// y = 3.0
@@ -58,8 +58,8 @@ public:
 	
 	void local_var_optimization()
 	{
-		std::AutoFreeAlloc alloc;
-		cpu::code_type code;
+		cpu::alloc_type alloc;
+		cpu::code_type code(alloc);
 		
 		// x = 2.0
 		// y = 3.0
@@ -80,12 +80,11 @@ public:
 	
 	void call_proc()
 	{
-		std::AutoFreeAlloc alloc;
+		cpu::alloc_type alloc;
+		cpu::proc_type<> my_div;
+		cpu::label_type<> my_label;
 		
-		cpu::proc_type<1> my_div;
-		cpu::label_type<1> my_label;
-		
-		cpu::code_type code;
+		cpu::code_type code(alloc);
 		
 		code <<
 			cpu::jmp(my_label),
@@ -109,12 +108,11 @@ public:
 
 	void call_proc2()
 	{
-		std::AutoFreeAlloc alloc;
-		
+		cpu::alloc_type alloc;
 		cpu::proc_type<0> my_div;
 		cpu::label_type<0> my_label;
 		
-		cpu::code_type code;
+		cpu::code_type code(alloc);
 		
 		code <<
 			cpu::proc(my_div),

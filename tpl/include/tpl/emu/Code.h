@@ -31,8 +31,8 @@
 #include "Label.h"
 #endif
 
-#if !defined(_DEQUE_) && !defined(_GLIBCXX_DEQUE) && !defined(_DEQUE)
-#include <deque>
+#ifndef STDEXT_DEQUE_H
+#include "../../../../stdext/include/stdext/Deque.h"
 #endif
 
 #if !defined(_FUNCTIONAL_) && !defined(_GLIBCXX_FUNCTIONAL) && !defined(_FUNCTIONAL)
@@ -137,17 +137,22 @@ public:
 // =========================================================================
 // class Code
 
-template <class ValT, bool bDebug = false>
-class Code : public std::deque<Instruction<Stack<ValT>, ExecuteContext<bDebug> > >
+template <class ValT, bool bDebug = false, class AllocT = DefaultAllocator>
+class Code : public std::Deque<Instruction<Stack<ValT>, ExecuteContext<bDebug> >, AllocT>
 {
 private:
-	typedef std::deque<Instruction<Stack<ValT>, ExecuteContext<bDebug> > > Base;
+	typedef std::Deque<Instruction<Stack<ValT>, ExecuteContext<bDebug> >, AllocT> Base;
 	
 public:
+	typedef AllocT alloc_type;
 	typedef Stack<ValT> stack_type;
 	typedef ExecuteContext<bDebug> execute_context;
 	typedef Instruction<stack_type, execute_context> instruction_type;
-	
+
+	explicit Code(AllocT& alloc)
+		: Base(alloc) {
+	}
+
 public:
 	Code& TPL_CALL operator,(const instruction_type& instr_) {
 		Base::push_back(instr_);
@@ -212,13 +217,14 @@ public:
 // =========================================================================
 // class CPU
 
-template <class ValT, bool bDebug = false>
+template <class ValT, bool bDebug = false, class AllocT = DefaultAllocator>
 class CPU
 {
 private:
-	typedef Code<ValT, bDebug> CodeT;
+	typedef Code<ValT, bDebug, AllocT> CodeT;
 
 public:
+	typedef AllocT alloc_type;
 	typedef CodeT code_type;
 	typedef typename CodeT::stack_type stack_type;
 	typedef typename CodeT::execute_context execute_context;
@@ -230,11 +236,11 @@ private:
 	typedef instruction_type InstructionT;
 	
 public:
-	template <size_t n>
+	template <size_t n = TPL_EMU_DYNAMIC_LABEL>
 	class label_type : public Label<n> {
 	};
 	
-	template <size_t n>
+	template <size_t n = TPL_EMU_DYNAMIC_LABEL>
 	class proc_type : public Label<n> {
 	};
 	
@@ -302,8 +308,8 @@ public:
 		return Nop<StackT, ContextT>::instr();
 	}
 
-	template <class AllocT>
-	static InstructionT TPL_CALL push(AllocT& alloc, const ValT& val) {
+	template <class AllocT2>
+	static InstructionT TPL_CALL push(AllocT2& alloc, const ValT& val) {
 		return Push<StackT, ContextT>::instr(alloc, val);
 	}
 	

@@ -98,6 +98,15 @@
 NS_TPL_BEGIN
 
 // =========================================================================
+// class DefaultAllocator
+
+#if defined(TPL_USE_AUTO_ALLOC)
+typedef std::AutoFreeAlloc DefaultAllocator;
+#else
+typedef std::ScopedAlloc DefaultAllocator;
+#endif
+
+// =========================================================================
 // TPL_REQUIRE(e, Require) -- see BOOST_STATIC_ASSERT(e)
 
 template <bool bOk>

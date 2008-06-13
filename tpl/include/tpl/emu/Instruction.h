@@ -23,6 +23,8 @@
 #include "Function.h"
 #endif
 
+// -------------------------------------------------------------------------
+
 #if defined(TPL_EMU_DEBUG) || defined(_DEBUG)
 
 #if !defined(_IOSTREAM_) && !defined(_GLIBCXX_IOSTREAM) && !defined(_IOSTREAM)
@@ -44,6 +46,8 @@
 #define TPL_EMU_INSTR_OP_NAME(Op)	"op"
 
 #endif // !defined(TPL_EMU_DEBUG)
+
+// -------------------------------------------------------------------------
 
 NS_TPL_EMU_BEGIN
 

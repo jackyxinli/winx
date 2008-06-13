@@ -19,10 +19,6 @@
 #ifndef TPL_REGEX_CUSTOMIZATION_H
 #define TPL_REGEX_CUSTOMIZATION_H
 
-#ifndef STDEXT_MEMORY_H
-#include "../../../../stdext/include/stdext/Memory.h"
-#endif
-
 #ifndef STDEXT_ARCHIVE_MEM_H
 #include "../../../../stdext/include/stdext/archive/Mem.h"
 #endif
@@ -47,11 +43,7 @@ namespace policy
 	public:
 		typedef DefaultTag Tag;
 		typedef std::PointerReadArchive Source;
-#if defined(TPL_USE_AUTO_ALLOC)
-		typedef std::AutoFreeAlloc Allocator;
-#else
-		typedef std::ScopeAlloc Allocator;
-#endif
+		typedef tpl::DefaultAllocator Allocator;
 	};
 }
 

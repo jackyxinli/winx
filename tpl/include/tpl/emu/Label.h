@@ -28,9 +28,10 @@ NS_TPL_EMU_BEGIN
 // =========================================================================
 // class Label
 
+#define TPL_EMU_DYNAMIC_LABEL	((size_t)-1)
 #define TPL_EMU_UNDEFINED_LABEL	((size_t)-1)
 
-template <size_t n>
+template <size_t n = TPL_EMU_DYNAMIC_LABEL>
 class Label
 {
 private:
@@ -105,6 +106,55 @@ public:
 	void TPL_CALL refer(CodeT& code) {
 		TPL_ASSERT(defined());
 		code.back().para.ival = m_label - code.size();
+	}
+};
+
+template <>
+class Label<TPL_EMU_DYNAMIC_LABEL>
+{
+private:
+	struct Reference {
+		ptrdiff_t* delta;
+		Reference* prev;
+	};
+
+	size_t m_label;
+	Reference* m_refs;
+	
+public:
+	Label()
+		: m_label(TPL_EMU_UNDEFINED_LABEL), m_refs(NULL) {
+	}
+	
+	operator size_t() const {
+		TPL_ASSERT(defined());
+		return m_label;
+	}
+	
+	bool TPL_CALL defined() const {
+		return m_label != TPL_EMU_UNDEFINED_LABEL;
+	}
+	
+	template <class CodeT>
+	void TPL_CALL define(const CodeT& code) {
+		TPL_ASSERT(!defined());
+		m_label = code.size();
+		for (Reference* ref_ = m_refs; ref_; ref_ = ref_->prev)
+			*ref_->delta += m_label;
+	}
+	
+	template <class CodeT>
+	void TPL_CALL refer(CodeT& code) {
+		if (m_label == TPL_EMU_UNDEFINED_LABEL) {
+			Reference* ref_ = TPL_ALLOC(code.get_alloc(), Reference);
+			ref_->delta = &code.back().para.ival;
+			*ref_->delta = -code.size();
+			ref_->prev = m_refs;
+			m_refs = ref_;
+		}
+		else {
+			code.back().para.ival = m_label - code.size();
+		}
 	}
 };
 
