@@ -30,7 +30,7 @@
 	#include "../../../stl/deque.h"
 	#endif
 #else
-	#if !defined(_DEQUE_) && !defined(_DEQUE)
+	#if !defined(_DEQUE_) && !defined(_GLIBCXX_DEQUE) && !defined(_DEQUE)
 	#include <deque>
 	#endif
 #endif

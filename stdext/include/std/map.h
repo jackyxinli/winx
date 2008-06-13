@@ -30,7 +30,7 @@
 	#include "../../../stl/map.h"
 	#endif
 #else
-	#if !defined(_MAP_) && !defined(_MAP)
+	#if !defined(_MAP_) && !defined(_GLIBCXX_MAP) && !defined(_MAP)
 	#include <map>
 	#endif
 #endif

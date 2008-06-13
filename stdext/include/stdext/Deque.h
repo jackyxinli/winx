@@ -83,6 +83,13 @@ public:
 	void winx_call copy(const _Base& from) {
 		_Base::operator=(from);
 	}
+
+public:
+	typedef AllocT alloc_type;
+	
+	AllocT& get_alloc() const {
+		return _Base::get_allocator().get_alloc();
+	}
 };
 
 // -------------------------------------------------------------------------
