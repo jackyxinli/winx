@@ -32,7 +32,11 @@
 #endif
 
 #ifndef TPL_ALLOC_ARRAY
-#define TPL_ALLOC_ARRAY(alloc, Type, n)	(Type*)(alloc).allocate((n)*sizeof(Type))
+#define TPL_ALLOC_ARRAY(alloc, Type, n)	((Type*)(alloc).allocate((n)*sizeof(Type)))
+#endif
+
+#ifndef TPL_ALLOC
+#define TPL_ALLOC(alloc, Type)	((Type*)(alloc).allocate(sizeof(Type)))
 #endif
 
 #ifndef TPL_NEW

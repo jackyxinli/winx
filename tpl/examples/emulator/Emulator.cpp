@@ -55,6 +55,57 @@ public:
 	
 		std::cout << stk.top() << "\n";
 	}
+	
+	void local_var_optimization()
+	{
+		std::AutoFreeAlloc alloc;
+		cpu::code_type code;
+		
+		// x = 2.0
+		// y = 3.0
+		// x * y
+		code <<
+			cpu::local(2),
+			cpu::push(alloc, 2.0),
+			cpu::assign_local(0),
+			cpu::push(alloc, 3.0),
+			cpu::assign_local(1),
+			cpu::mul();
+
+		cpu::stack_type stk;
+		tpl::emu::exec(code, 0, code.size(), stk);
+	
+		std::cout << stk.top() << "\n";
+	}
+	
+	void call_proc()
+	{
+		std::AutoFreeAlloc alloc;
+		
+		cpu::proc_type<1> my_div;
+		cpu::label_type<1> my_label;
+		
+		cpu::code_type code;
+		
+		code <<
+			cpu::jmp(my_label),
+
+			cpu::proc(my_div),
+			cpu::push_arg(-2),
+			cpu::push_arg(-1),
+			cpu::div(),
+			cpu::ret(2),
+			
+			cpu::label(my_label),
+			cpu::push(alloc, 2.0),
+			cpu::push(alloc, 3.0),
+			cpu::call(my_div);
+
+		cpu::stack_type stk;
+		tpl::emu::exec(code, 0, code.size(), stk);
+	
+		std::cout << stk.top() << "\n";
+	}
 };
 
 int main()
@@ -62,6 +113,8 @@ int main()
 	TestEmulator test;
 	test.simplest();
 	test.local_var();
+	test.local_var_optimization();
+	test.call_proc();
 }
 
 // -------------------------------------------------------------------------

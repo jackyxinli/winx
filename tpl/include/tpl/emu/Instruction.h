@@ -270,8 +270,8 @@ public:
 	static void TPL_CALL ret(StackT& stk, ExecuteContextT& context, size_t n) {
 		typename StackT::value_type val = stk.top();
 		size_t frame_ = context.frame();
-		context.frame(stk[frame_ + BP]);
-		context.position(stk[frame_ + RETURN_IP]);
+		context.frame((size_t)stk[frame_ + BP]);
+		context.position((size_t)stk[frame_ + RETURN_IP]);
 		stk.resize(frame_ - n);
 		stk.push_back(val);
 	}
@@ -488,6 +488,39 @@ public:
 		typedef typename StackT::value_type ValT;
 		size_t addr = (size_t)&stk[context.frame() + para.val];
 		stk.push_back(addr);
+	}
+	
+	static Instruction<StackT, ExecuteContextT> TPL_CALL instr(size_t delta) {
+		return Instruction<StackT, ExecuteContextT>(op, delta);
+	}
+};
+
+// =========================================================================
+// class AssignArg/AssignLocal
+
+// Usage: assgin_arg <offset>	; here <offset> can be -n ~ -1
+
+template <class StackT, class ExecuteContextT>
+class AssignArg
+{
+public:
+	static void op(Operand para, StackT& stk, ExecuteContextT& context) {
+		stk[context.frame() + para.ival] = stk.back();
+	}
+	
+	static Instruction<StackT, ExecuteContextT> TPL_CALL instr(ptrdiff_t delta) {
+		return Instruction<StackT, ExecuteContextT>(op, delta - CallerFrame::SIZE);
+	}
+};
+
+// Usage: assign_local <index> ; here <index> can be 0 ~ n-1
+
+template <class StackT, class ExecuteContextT>
+class AssignLocal
+{
+public:
+	static void op(Operand para, StackT& stk, ExecuteContextT& context) {
+		stk[context.frame() + para.val] = stk.back();
 	}
 	
 	static Instruction<StackT, ExecuteContextT> TPL_CALL instr(size_t delta) {

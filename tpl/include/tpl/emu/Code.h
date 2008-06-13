@@ -27,6 +27,10 @@
 #include "Instruction.h"
 #endif
 
+#ifndef STDEXT_ARRAY_H
+#include "../../../../stdext/include/stdext/Array.h"
+#endif
+
 #if !defined(_DEQUE_) && !defined(_GLIBCXX_DEQUE) && !defined(_DEQUE)
 #include <deque>
 #endif
@@ -103,6 +107,73 @@ public:
 };
 
 // =========================================================================
+// class Label
+
+#define TPL_EMU_UNDEFINED_LABEL	((size_t)-1)
+
+template <size_t n>
+class Label
+{
+private:
+	typedef ptrdiff_t* Reference;
+	typedef std::Array<Reference, n> References;
+	
+	size_t m_label;
+	References m_refs;
+
+public:
+	Label()
+		: m_label(TPL_EMU_UNDEFINED_LABEL) {
+	}
+	
+	bool TPL_CALL defined() const {
+		return m_label != TPL_EMU_UNDEFINED_LABEL;
+	}
+	
+	template <class CodeT>
+	void TPL_CALL define(const CodeT& code) {
+		TPL_ASSERT(!defined());
+		m_label = code.size();
+		for (size_t i = m_refs.size(); i--; )
+			*m_refs[i] += m_label;
+	}
+	
+	template <class CodeT>
+	void TPL_CALL refer(CodeT& code) {
+		if (m_label == TPL_EMU_UNDEFINED_LABEL) {
+			Reference ref_ = &code.back().para.ival;
+			*ref_ = -code.size();
+			m_refs.push_back(ref_);
+		}
+		else {
+			code.back().para.ival = m_label - code.size();
+		}
+	}
+};
+
+template <class LabelT>
+class LabelDefine
+{
+public:
+	LabelT& m_label;
+	
+	LabelDefine(LabelT& label_) : m_label(label_) {
+	}
+};
+
+template <class LabelT, class InstructionT>
+class LabelRefer
+{
+public:
+	typedef InstructionT instruction_type;
+
+	LabelT& m_label;
+		
+	LabelRefer(LabelT& label_) : m_label(label_) {
+	}
+};
+
+// =========================================================================
 // class Code
 
 template <class ValT>
@@ -117,13 +188,40 @@ public:
 	typedef Instruction<stack_type, execute_context> instruction_type;
 	
 public:
+	Code& TPL_CALL operator,(const instruction_type& instr_) {
+		Base::push_back(instr_);
+		return *this;
+	}
+
 	Code& TPL_CALL operator<<(const instruction_type& instr_) {
 		Base::push_back(instr_);
 		return *this;
 	}
 
-	Code& TPL_CALL operator,(const instruction_type& instr_) {
-		Base::push_back(instr_);
+public:
+	template <class LabelT>
+	Code& TPL_CALL operator,(const LabelDefine<LabelT>& a) {
+		a.m_label.define(*this);
+		return *this;
+	}
+
+	template <class LabelT>
+	Code& TPL_CALL operator<<(const LabelDefine<LabelT>& a) {
+		a.m_label.define(*this);
+		return *this;
+	}
+
+	template <class LabelT, class InstructionT>
+	Code& TPL_CALL operator,(const LabelRefer<LabelT, InstructionT>& a) {
+		Base::push_back(InstructionT::instr(0));
+		a.m_label.refer(*this);
+		return *this;
+	}
+
+	template <class LabelT, class InstructionT>
+	Code& TPL_CALL operator<<(const LabelRefer<LabelT, InstructionT>& a) {
+		Base::push_back(InstructionT::instr(0));
+		a.m_label.refer(*this);
 		return *this;
 	}
 };
@@ -172,6 +270,35 @@ private:
 	typedef stack_type StackT;
 	typedef execute_context ContextT;
 	typedef instruction_type InstructionT;
+	
+public:
+	template <size_t n>
+	class label_type : public Label<n> {
+	};
+	
+	template <size_t n>
+	class proc_type : public Label<n> {
+	};
+	
+	template <size_t n>
+	static LabelDefine<Label<n> > TPL_CALL label(Label<n>& label_) {
+		return LabelDefine<Label<n> >(label_);
+	}
+
+	template <size_t n>
+	static LabelDefine<Label<n> > TPL_CALL proc(Label<n>& label_) {
+		return LabelDefine<Label<n> >(label_);
+	}
+	
+#define TPL_EMU_LABEL_REF_(op, InstrT)	\
+	template <size_t n>					\
+	static LabelRefer<Label<n>, InstrT<StackT, ContextT> > TPL_CALL op(Label<n>& label_) {	\
+		return LabelRefer<Label<n>, InstrT<StackT, ContextT> >(label_);	\
+	}
+	
+	TPL_EMU_LABEL_REF_(call, Call)
+	TPL_EMU_LABEL_REF_(jmp, Jmp)
+	TPL_EMU_LABEL_REF_(je, JmpIfFalse)
 	
 public:
 	template <template <class Type> class Op_>
@@ -264,6 +391,14 @@ public:
 
 	static InstructionT TPL_CALL lea_local(size_t delta) {
 		return LeaLocal<StackT, ContextT>::instr(delta);
+	}
+
+	static InstructionT TPL_CALL assign_arg(ptrdiff_t delta) {
+		return AssignArg<StackT, ContextT>::instr(delta);
+	}
+
+	static InstructionT TPL_CALL assign_local(size_t delta) {
+		return AssignLocal<StackT, ContextT>::instr(delta);
 	}
 
 	static InstructionT TPL_CALL call(ptrdiff_t delta) {
