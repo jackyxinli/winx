@@ -210,7 +210,7 @@ class Assign : public std::binary_function<ValT, ValT, ValT>
 {
 public:
 	ValT TPL_CALL operator()(const ValT& x, const ValT& y) const {
-		return *(ValT*)(size_t)x = y;
+		return variant_to_ref(x) = y;
 	}
 };
 
@@ -354,7 +354,7 @@ public:
 	}
 
 	static InstructionT TPL_CALL lea_vargs() {
-		return LeaVArgs<StackT, ContextT>::instr();
+		return PushVArgs<StackT, ContextT>::instr();
 	}
 
 	static InstructionT TPL_CALL lea_local(size_t delta) {

@@ -34,7 +34,7 @@
 #define TPL_EMU_INSTR_DEBUG(msg)				\
 	do {										\
 		if (ExecuteContextT::debug)				\
-			std::cout << msg << "\n";			\
+			std::cout << msg << std::endl;		\
 	} while (0)
 
 #define TPL_EMU_INSTR_OP_NAME(Op)				\
@@ -47,11 +47,33 @@
 
 #endif // !defined(TPL_EMU_DEBUG)
 
-// -------------------------------------------------------------------------
+// =========================================================================
 
 NS_TPL_EMU_BEGIN
 
-// =========================================================================
+// function ref_to_variant/variant_to_ref
+// function size_to_variant/variant_to_size
+
+template <class ValT>
+__forceinline ValT TPL_CALL ref_to_variant(ValT& ref_) {
+	return (size_t)(&ref_);
+}
+
+template <class ValT>
+__forceinline ValT TPL_CALL size_to_variant(size_t size_) {
+	return size_;
+}
+
+template <class ValT>
+__forceinline ValT& TPL_CALL variant_to_ref(const ValT& val_) {
+	return *(ValT*)(size_t)val_;
+}
+
+template <class ValT>
+__forceinline size_t TPL_CALL variant_to_size(const ValT& val_) {
+	return (size_t)val_;
+}
+
 // crackOpName
 
 #define TPL_EMU_INSTR_OP_(op, name)					\
@@ -285,7 +307,9 @@ class Arity
 public:
 	static void op(Operand para, StackT& stk, ExecuteContextT&) {
 		TPL_EMU_INSTR_DEBUG("arity " << para.val);
-		stk.push_back(para.val);
+		stk.push_back(
+			size_to_variant<typename StackT::value_type>(para.val)
+			);
 	}
 	
 	static Instruction<StackT, ExecuteContextT> TPL_CALL instr(size_t n) {
@@ -341,18 +365,26 @@ public:
 public:
 	template <class StackT, class ExecuteContextT>
 	static void TPL_CALL call(StackT& stk, ExecuteContextT& context, ptrdiff_t delta) {
-		stk.push_back(context.position());
-		stk.push_back(context.frame());
+		stk.push_back(
+			size_to_variant<typename StackT::value_type>(context.position())
+			);
+		stk.push_back(
+			size_to_variant<typename StackT::value_type>(context.frame())
+			);
 		context.frame(stk.size());
 		context.jump(delta);
 	}
 
 	template <class StackT, class ExecuteContextT>
 	static void TPL_CALL ret(StackT& stk, ExecuteContextT& context, size_t n) {
-		typename StackT::value_type val = stk.top();
+		const typename StackT::value_type val = stk.top();
 		size_t frame_ = context.frame();
-		context.frame((size_t)stk[frame_ + BP]);
-		context.position((size_t)stk[frame_ + RETURN_IP]);
+		context.frame(
+			variant_to_size(stk[frame_ + BP])
+			);
+		context.position(
+			variant_to_size(stk[frame_ + RETURN_IP])
+			);
 		stk.resize(frame_ - n);
 		stk.push_back(val);
 	}
@@ -361,20 +393,13 @@ public:
 	template <class StackT, class ExecuteContextT>
 	size_t TPL_CALL arity(StackT& stk, ExecuteContextT& context) const {
 		const size_t arity_idx_ = context.frame() + ARITY;
-		return stk[arity_idx_];
+		return variant_to_size(stk[arity_idx_]);
 	}
 
 	template <class StackT, class ExecuteContextT>
 	typename StackT::value_type TPL_CALL vargs(StackT& stk, ExecuteContextT& context) const {
 		const size_t arity_idx_ = context.frame() + ARITY;
-		const size_t arity_ = stk[arity_idx_];
-		return typename StackT::value_type::array(stk.begin() + (arity_idx_ - arity_), arity_);
-	}
-
-	template <class StackT, class ExecuteContextT>
-	typename StackT::value_type TPL_CALL lea_vargs(StackT& stk, ExecuteContextT& context) const {
-		const size_t arity_idx_ = context.frame() + ARITY;
-		const size_t arity_ = stk[arity_idx_];
+		const size_t arity_ = variant_to_size(stk[arity_idx_]);
 		return typename StackT::value_type::array(stk.begin() + (arity_idx_ - arity_), arity_);
 	}
 };
@@ -526,7 +551,7 @@ public:
 };
 
 // =========================================================================
-// class LeaArg/LeaVArgs/LeaLocal
+// class LeaArg/LeaLocal
 
 // Usage: lea_arg <offset>	; here <offset> can be -n ~ -1
 //	 arg1 = lea_arg -n
@@ -539,29 +564,16 @@ class LeaArg
 {
 public:
 	static void op(Operand para, StackT& stk, ExecuteContextT& context) {
-		TPL_EMU_INSTR_DEBUG("lea_arg " << para.ival + CallerFrame::SIZE);
-		typedef typename StackT::value_type ValT;
-		size_t addr = (size_t)&stk[context.frame() + para.ival];
-		stk.push_back(addr);
+		TPL_EMU_INSTR_DEBUG(
+			"lea_arg " << para.ival + CallerFrame::SIZE <<
+			"\t; value: " << stk[context.frame() + para.ival] );
+		stk.push_back(
+			ref_to_variant(stk[context.frame() + para.ival])
+			);
 	}
 	
 	static Instruction<StackT, ExecuteContextT> TPL_CALL instr(ptrdiff_t delta) {
 		return Instruction<StackT, ExecuteContextT>(op, delta - CallerFrame::SIZE);
-	}
-};
-
-// Usage: lea_vargs
-
-template <class StackT, class ExecuteContextT>
-class LeaVArgs
-{
-public:	
-	static void op(Operand para, StackT& stk, ExecuteContextT& context) {
-		stk.push_back(CallerFrame::lea_vargs(stk, context));
-	}
-	
-	static Instruction<StackT, ExecuteContextT> TPL_CALL instr() {
-		return Instruction<StackT, ExecuteContextT>(op);
 	}
 };
 
@@ -576,10 +588,12 @@ class LeaLocal
 {
 public:
 	static void op(Operand para, StackT& stk, ExecuteContextT& context) {
-		TPL_EMU_INSTR_DEBUG("lea_local " << para.val);
-		typedef typename StackT::value_type ValT;
-		size_t addr = (size_t)&stk[context.frame() + para.val];
-		stk.push_back(addr);
+		TPL_EMU_INSTR_DEBUG(
+			"lea_local " << para.val <<
+			"\t; value: " << stk[context.frame() + para.val] );
+		stk.push_back(
+			ref_to_variant(stk[context.frame() + para.val])
+			);
 	}
 	
 	static Instruction<StackT, ExecuteContextT> TPL_CALL instr(size_t delta) {
