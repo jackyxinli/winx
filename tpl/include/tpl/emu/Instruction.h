@@ -23,7 +23,7 @@
 #include "Function.h"
 #endif
 
-NS_TPL_ENU_BEGIN
+NS_TPL_EMU_BEGIN
 
 // =========================================================================
 // Instruction
@@ -32,7 +32,7 @@ union Operand
 {
 	int ival;
 	size_t val;
-	void* ptr;
+	const void* ptr;
 };
 
 template <class StackT, class ExecuteContextT>
@@ -47,9 +47,13 @@ public:
 
 public:
 	Instruction(Op op_) : op(op_) {}
-	Instruction(Op op_, int val_) : op(op_) 	{ para.ival = val_; }
-	Instruction(Op op_, size_t val_) : op(op_) 	{ para.val = val_; }
-	Instruction(Op op_, void* ptr_) : op(op_) 	{ para.ptr = ptr_; }
+	Instruction(Op op_, int val_) : op(op_) 		{ para.ival = val_; }
+	Instruction(Op op_, size_t val_) : op(op_)	 	{ para.val = val_; }
+	Instruction(Op op_, const void* ptr_) : op(op_) { para.ptr = ptr_; }
+
+	__forceinline void TPL_CALL operator()(StackT& stk, ExecuteContextT& context) const {
+		op(para, stk, context);
+	}
 };
 
 // =========================================================================
@@ -92,20 +96,22 @@ class FnInstr
 {
 private:
 	typedef typename StackT::value_type Ty; 
-	typedef typename OpTraits<nArity, Ty>::op_type Op;
+	
+public:
+	typedef typename OpTraits<nArity, Ty>::op_type op_type;
 
 	static void op(StackT& stk, Operand para) {
-		Function<Op, nArity> fn_((Op)para.ptr);
+		Function<op_type, nArity> fn_((op_type)para.ptr);
 		fn_(stk);
 	}
 
-	static Instruction<StackT, ExecuteContextT> TPL_CALL instr(Op fn) {
+	static Instruction<StackT, ExecuteContextT> TPL_CALL instr(op_type fn) {
 		return Instruction<StackT, ExecuteContextT>(op, fn);
 	}
 };
 
 // =========================================================================
-// class Push
+// class Push/Pop
 
 // Usage: push <val>
 
@@ -124,6 +130,21 @@ public:
 	static Instruction<StackT, ExecuteContextT> TPL_CALL instr(AllocT& alloc, const ValT& val) {
 		const ValT* p = TPL_NEW(alloc, ValT)(val);
 		return Instruction<StackT, ExecuteContextT>(op, p);
+	}
+};
+
+// Usage: pop <count>
+
+template <class StackT, class ExecuteContextT>
+class Pop
+{
+public:
+	static void op(Operand para, StackT& stk, ExecuteContextT&) {
+		stk.resize(stk.size() - para.val);
+	}
+	
+	static Instruction<StackT, ExecuteContextT> TPL_CALL instr(size_t n = 1) {
+		return Instruction<StackT, ExecuteContextT>(op, n);
 	}
 };
 
@@ -253,6 +274,13 @@ public:
 		const size_t arity_idx_ = context.frame() + ARITY;
 		return stk[arity_idx_];
 	}
+
+	template <class StackT, class ExecuteContextT>
+	typename StackT::value_type TPL_CALL vargs(StackT& stk, ExecuteContextT& context) const {
+		const size_t arity_idx_ = context.frame() + ARITY;
+		const size_t arity_ = stk[arity_idx_];
+		return typename StackT::value_type::array(stk, arity_idx_ - arity_, arity_);
+	}
 };
 
 // =========================================================================
@@ -318,9 +346,7 @@ class LoadVArgs
 {
 public:	
 	static void op(Operand para, StackT& stk, ExecuteContextT& context) {
-		typedef typename StackT::value_type ValT;
-		const size_t arity_ = CallerFrame::arity(stk, context);
-		stk.push_back(ValT::array(stk, arity_idx_ - arity_, arity_));
+		stk.push_back(CallerFrame::vargs(stk, context));
 	}
 	
 	static Instruction<StackT, ExecuteContextT> TPL_CALL instr() {

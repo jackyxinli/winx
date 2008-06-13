@@ -29,13 +29,13 @@
 #include <boost/type_traits/is_convertible.hpp>
 #endif
 
-#ifndef NS_TPL_ENU_BEGIN
-#define NS_TPL_ENU_BEGIN	namespace tpl { namespace emu {
-#define NS_TPL_ENU_END		}}
-#define NS_TPL_ENU			tpl::emu
+#ifndef NS_TPL_EMU_BEGIN
+#define NS_TPL_EMU_BEGIN	namespace tpl { namespace emu {
+#define NS_TPL_EMU_END		} }
+#define NS_TPL_EMU			tpl::emu
 #endif
 
-NS_TPL_ENU_BEGIN
+NS_TPL_EMU_BEGIN
 
 // =========================================================================
 // class Caller
@@ -212,7 +212,7 @@ struct OpTraits<6, Ty> {
 // =========================================================================
 // $Log: $
 
-NS_TPL_ENU_END
+NS_TPL_EMU_END
 
 #endif /* TPL_EMU_FUNCTION_H */
 
