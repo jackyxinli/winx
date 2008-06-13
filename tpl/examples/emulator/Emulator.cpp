@@ -20,7 +20,7 @@ public:
 			cpu::mul();
 
 		cpu::stack_type stk;
-		tpl::emu::exec(code, 0, code.size(), stk);
+		code.exec(0, code.size(), stk);
 	
 		std::cout << stk.top() << "\n";
 	}
@@ -51,7 +51,7 @@ public:
 			cpu::mul();
 
 		cpu::stack_type stk;
-		tpl::emu::exec(code, 0, code.size(), stk);
+		code.exec(0, code.size(), stk);
 	
 		std::cout << stk.top() << "\n";
 	}
@@ -73,7 +73,7 @@ public:
 			cpu::mul();
 
 		cpu::stack_type stk;
-		tpl::emu::exec(code, 0, code.size(), stk);
+		code.exec(0, code.size(), stk);
 	
 		std::cout << stk.top() << "\n";
 	}
@@ -102,7 +102,7 @@ public:
 			cpu::call(my_div);
 
 		cpu::stack_type stk;
-		tpl::emu::exec(code, 0, code.size(), stk);
+		code.exec(0, code.size(), stk);
 	
 		std::cout << stk.top() << "\n";
 	}
@@ -129,7 +129,7 @@ public:
 			cpu::call(my_div);
 
 		cpu::stack_type stk;
-		tpl::emu::exec(code, my_label, code.size(), stk);
+		code.exec(my_label, code.size(), stk);
 	
 		std::cout << stk.top() << "\n";
 	}

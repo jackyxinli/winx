@@ -185,20 +185,17 @@ public:
 		a.m_label.refer(*this);
 		return *this;
 	}
-};
 
-// =========================================================================
-// function exec
-
-template <class CodeT> inline
-void TPL_CALL exec(const CodeT& code, size_t ipFrom, size_t ipTo, typename CodeT::stack_type& stk)
-{
-	typename CodeT::execute_context context(ipFrom);
-	while (context.position() != ipTo) {
-		const typename CodeT::instruction_type& instr_ = context.next(code);
-		instr_(stk, context);
+public:
+	void TPL_CALL exec(size_t ipFrom, size_t ipTo, stack_type& stk) const
+	{
+		execute_context context(ipFrom);
+		while (context.position() != ipTo) {
+			const instruction_type& instr_ = context.next(*this);
+			instr_(stk, context);
+		}
 	}
-}
+};
 
 // =========================================================================
 // class Assign
