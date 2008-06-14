@@ -1,7 +1,14 @@
 #define TPL_USE_AUTO_ALLOC
 #include <cmath>		// sin, cos, pow
 #include <iostream> 	// std::cout
+#include <algorithm>	// std::max_element
 #include <tpl/Emulator.h>
+#include <tpl/ext/Calculator.h>
+
+double max_value(const double x[], int count)
+{
+	return *std::max_element(x, x+count);
+}
 
 class TestEmulator
 {
@@ -15,8 +22,8 @@ public:
 		
 		// 2.0 * 3.0
 		code <<
-			cpu::push(alloc, 2.0),
-			cpu::push(alloc, 3.0),
+			cpu::push(2.0),
+			cpu::push(3.0),
 			cpu::mul();
 
 		cpu::stack_type stk;
@@ -37,12 +44,12 @@ public:
 			cpu::local(2),
 			
 			cpu::lea_local(0),
-			cpu::push(alloc, 2.0),
+			cpu::push(2.0),
 			cpu::assign(),
 			cpu::pop(),
 			
 			cpu::lea_local(1),
-			cpu::push(alloc, 3.0),
+			cpu::push(3.0),
 			cpu::assign(),
 			cpu::pop(),
 
@@ -66,9 +73,9 @@ public:
 		// x * y
 		code <<
 			cpu::local(2),
-			cpu::push(alloc, 2.0),
+			cpu::push(2.0),
 			cpu::assign_local(0),
-			cpu::push(alloc, 3.0),
+			cpu::push(3.0),
 			cpu::assign_local(1),
 			cpu::mul();
 
@@ -78,14 +85,34 @@ public:
 		std::cout << stk.top() << "\n";
 	}
 	
+	void vargs()
+	{
+		cpu::alloc_type alloc;
+		cpu::code_type code(alloc);
+
+		// max(2.0, 3.0, sin(4.0))
+		code <<
+			cpu::push(2.0),
+			cpu::push(3.0),
+			cpu::push(4.0),
+			cpu::op(sin),
+			cpu::arity(3),
+			cpu::op(max_value);
+		
+		cpu::stack_type stk;
+		code.exec(0, code.size(), stk);
+
+		std::cout << stk.top() << "\n";
+	}
+	
 	void call_proc()
 	{
 		cpu::alloc_type alloc;
+		cpu::code_type code(alloc);
+
 		cpu::proc_type<> my_div;
 		cpu::label_type<> my_label;
-		
-		cpu::code_type code(alloc);
-		
+
 		code <<
 			cpu::jmp(my_label),
 
@@ -94,36 +121,36 @@ public:
 			cpu::push_arg(-1),
 			cpu::div(),
 			cpu::ret(2),
-			
+
 			cpu::label(my_label),
-			cpu::push(alloc, 2.0),
-			cpu::push(alloc, 3.0),
+			cpu::push(2.0),
+			cpu::push(3.0),
 			cpu::call(my_div);
 
 		cpu::stack_type stk;
 		code.exec(0, code.size(), stk);
-	
+
 		std::cout << stk.top() << "\n";
 	}
 
 	void call_proc2()
 	{
 		cpu::alloc_type alloc;
+		cpu::code_type code(alloc);
+
 		cpu::proc_type<0> my_div;
 		cpu::label_type<0> my_label;
-		
-		cpu::code_type code(alloc);
-		
+
 		code <<
 			cpu::proc(my_div),
 			cpu::push_arg(-2),
 			cpu::push_arg(-1),
 			cpu::div(),
 			cpu::ret(2),
-			
+
 			cpu::label(my_label),
-			cpu::push(alloc, 2.0),
-			cpu::push(alloc, 3.0),
+			cpu::push(2.0),
+			cpu::push(3.0),
 			cpu::call(my_div);
 
 		cpu::stack_type stk;
@@ -139,6 +166,7 @@ int main()
 	test.simplest();
 	test.local_var();
 	test.local_var_optimization();
+	test.vargs();
 	test.call_proc();
 	test.call_proc2();
 }

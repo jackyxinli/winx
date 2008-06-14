@@ -51,29 +51,6 @@
 
 NS_TPL_EMU_BEGIN
 
-// function ref_to_variant/variant_to_ref
-// function size_to_variant/variant_to_size
-
-template <class ValT>
-__forceinline ValT TPL_CALL ref_to_variant(ValT& ref_) {
-	return (size_t)(&ref_);
-}
-
-template <class ValT>
-__forceinline ValT TPL_CALL size_to_variant(size_t size_) {
-	return size_;
-}
-
-template <class ValT>
-__forceinline ValT& TPL_CALL variant_to_ref(const ValT& val_) {
-	return *(ValT*)(size_t)val_;
-}
-
-template <class ValT>
-__forceinline size_t TPL_CALL variant_to_size(const ValT& val_) {
-	return (size_t)val_;
-}
-
 // crackOpName
 
 #define TPL_EMU_INSTR_OP_(op, name)					\
@@ -102,12 +79,36 @@ inline const char* TPL_CALL crackOpName(const char* name_)
 }
 
 // =========================================================================
+// function ref_to_variant/variant_to_ref
+// function size_to_variant/variant_to_size
+
+template <class ValT>
+__forceinline ValT TPL_CALL ref_to_variant(ValT& ref_) {
+	return (size_t)(&ref_);
+}
+
+template <class ValT>
+__forceinline ValT TPL_CALL size_to_variant(size_t size_) {
+	return size_;
+}
+
+template <class ValT>
+__forceinline ValT& TPL_CALL variant_to_ref(const ValT& val_) {
+	return *(ValT*)(size_t)val_;
+}
+
+template <class ValT>
+__forceinline size_t TPL_CALL variant_to_size(const ValT& val_) {
+	return (size_t)val_;
+}
+
+// =========================================================================
 // Instruction
 
 union Operand
 {
 	size_t val;
-	ptrdiff_t ival; 
+	ptrdiff_t ival;
 	const void* ptr;
 };
 
@@ -129,62 +130,6 @@ public:
 
 	__forceinline void TPL_CALL operator()(StackT& stk, ExecuteContextT& context) const {
 		op(para, stk, context);
-	}
-};
-
-// =========================================================================
-// class OpInstr
-
-// Usage:
-//		add		; OpInstr<std::plus, StackT, ContextT>::instr()
-//		sub		; OpInstr<std::minus, StackT, ContextT>::instr()
-//		mul		; OpInstr<std::multiplies, StackT, ContextT>::instr()
-//		div		; OpInstr<std::divides, StackT, ContextT>::instr()
-
-template <template <class Type> class Op_, class StackT, class ExecuteContextT>
-class OpInstr
-{
-private:
-	typedef typename StackT::value_type Ty;
-	enum { n_arity = ArityTraits<Op_, Ty>::value };
-
-public:
-	static void op(Operand, StackT& stk, ExecuteContextT&) {
-		TPL_EMU_INSTR_DEBUG(TPL_EMU_INSTR_OP_NAME(Op_<Ty>));
-		Function<Op_<Ty>, n_arity> fn_;
-		fn_(stk);
-	}
-	
-	static Instruction<StackT, ExecuteContextT> TPL_CALL instr() {
-		return Instruction<StackT, ExecuteContextT>(op);
-	}
-};
-
-// =========================================================================
-// class FnInstr
-
-// Usage:
-//		pow		; FnInstr<2, StackT, ContextT>::instr(pow)
-//		sin		; FnInstr<1, StackT, ContextT>::instr(sin)
-//		cos		; FnInstr<1, StackT, ContextT>::instr(cos)
-
-template <int nArity, class StackT, class ExecuteContextT>
-class FnInstr
-{
-private:
-	typedef typename StackT::value_type Ty; 
-	
-public:
-	typedef typename OpTraits<nArity, Ty>::op_type op_type;
-
-	static void op(StackT& stk, Operand para) {
-		TPL_EMU_INSTR_DEBUG("fn");
-		Function<op_type, nArity> fn_((op_type)para.ptr);
-		fn_(stk);
-	}
-
-	static Instruction<StackT, ExecuteContextT> TPL_CALL instr(op_type fn) {
-		return Instruction<StackT, ExecuteContextT>(op, fn);
 	}
 };
 
@@ -637,6 +582,118 @@ public:
 	
 	static Instruction<StackT, ExecuteContextT> TPL_CALL instr(size_t delta) {
 		return Instruction<StackT, ExecuteContextT>(op, delta);
+	}
+};
+
+// =========================================================================
+// class OpInstr
+
+// Usage:
+//		add		; OpInstr<std::plus, StackT, ContextT>::instr()
+//		sub		; OpInstr<std::minus, StackT, ContextT>::instr()
+//		mul		; OpInstr<std::multiplies, StackT, ContextT>::instr()
+//		div		; OpInstr<std::divides, StackT, ContextT>::instr()
+
+template <template <class Type> class Op_, class StackT, class ExecuteContextT>
+class OpInstr
+{
+private:
+	typedef typename StackT::value_type Ty;
+	enum { n_arity = ArityTraits<Op_, Ty>::value };
+
+public:
+	static void op(Operand, StackT& stk, ExecuteContextT&) {
+		TPL_EMU_INSTR_DEBUG(TPL_EMU_INSTR_OP_NAME(Op_<Ty>));
+		Function<Op_<Ty>, n_arity> fn_;
+		fn_(stk);
+	}
+	
+	static Instruction<StackT, ExecuteContextT> TPL_CALL instr() {
+		return Instruction<StackT, ExecuteContextT>(op);
+	}
+};
+
+// =========================================================================
+// class FnInstr
+
+// Usage:
+//		pow		; FnInstr<2, StackT, ContextT>::instr(pow)
+//		sin		; FnInstr<1, StackT, ContextT>::instr(sin)
+//		cos		; FnInstr<1, StackT, ContextT>::instr(cos)
+
+template <int nArity, class StackT, class ExecuteContextT>
+class FnInstr
+{
+private:
+	typedef typename StackT::value_type Ty; 
+	
+public:
+	typedef typename OpTraits<nArity, Ty>::op_type op_type;
+
+	static void op(Operand para, StackT& stk, ExecuteContextT&) {
+		TPL_EMU_INSTR_DEBUG("op " << para.ptr);
+		Function<op_type, nArity> fn_((op_type)para.ptr);
+		fn_(stk);
+	}
+
+	static Instruction<StackT, ExecuteContextT> TPL_CALL instr(op_type fn) {
+		return Instruction<StackT, ExecuteContextT>(op, (const void*)fn);
+	}
+};
+
+// =========================================================================
+// class VargsFnInstr
+
+template <class Ty>
+struct Array_ {
+	const Ty* data;
+	size_t n;
+};
+
+template <class Ty>
+inline Array_<Ty> TPL_CALL array_(const Ty* data, size_t n) {
+	Array_<Ty> a = { data, n };
+	return a;
+}
+
+template <class OStreamT, class Ty>
+OStreamT& operator<<(OStreamT& os, const Array_<Ty>& array_) {
+	os << "[ ";
+	for (size_t i = 0; i < array_.n; ++i)
+		os << array_.data[i] << ' ';
+	os << "]";
+	return os;
+}
+
+template <class IntT, class StackT, class ExecuteContextT>
+class VargsFnInstr
+{
+private:
+	typedef typename StackT::value_type Ty;
+	typedef typename VargsOpTraits<Ty, IntT>::op_type Op;
+
+public:
+	typedef Op op_type;
+
+	static void op(Operand para, StackT& stk, ExecuteContextT&)
+	{
+		const IntT count = variant_to_size(stk.back());
+		stk.pop_back();
+		
+		Ty* args = (Ty*)alloca(sizeof(Ty) * count);	
+		for (IntT i = count; i--;) {		
+			args[i] = stk.back();
+			stk.pop_back();
+		}
+		
+		TPL_EMU_INSTR_DEBUG("op " << para.ptr << "\t; vargs: " << array_(args, count));
+		stk.push_back(
+			((op_type)para.ptr)(static_cast<const Ty*>(args), count)
+			);
+	}
+	
+	static Instruction<StackT, ExecuteContextT> TPL_CALL instr(op_type fn) {
+		return Instruction<StackT, ExecuteContextT>(op, (const void*)fn);
 	}
 };
 

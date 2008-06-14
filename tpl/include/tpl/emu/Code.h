@@ -35,10 +35,6 @@
 #include "../../../../stdext/include/stdext/Deque.h"
 #endif
 
-#if !defined(_FUNCTIONAL_) && !defined(_GLIBCXX_FUNCTIONAL) && !defined(_FUNCTIONAL)
-#include <functional>
-#endif
-
 NS_TPL_EMU_BEGIN
 
 // =========================================================================
@@ -135,6 +131,19 @@ public:
 };
 
 // =========================================================================
+// class PushCode
+
+template <class ValT>
+class PushCode
+{
+public:
+	const ValT m_val;
+	
+	PushCode(const ValT& val) : m_val(val) {
+	}
+};
+
+// =========================================================================
 // class Code
 
 template <class ValT, bool bDebug = false, class AllocT = DefaultAllocator>
@@ -154,6 +163,8 @@ public:
 	}
 
 public:
+	// Instruction:
+	
 	Code& TPL_CALL operator,(const instruction_type& instr_) {
 		Base::push_back(instr_);
 		return *this;
@@ -165,6 +176,27 @@ public:
 	}
 
 public:
+	// Push:
+	
+	template <class ValT2>
+	Code& TPL_CALL operator,(const PushCode<ValT2>& a) {
+		Base::push_back(
+			Push<stack_type, execute_context>::instr(Base::get_alloc(), a.m_val)
+			);
+		return *this;
+	}
+	
+	template <class ValT2>
+	Code& TPL_CALL operator<<(const PushCode<ValT2>& a) {
+		Base::push_back(
+			Push<stack_type, execute_context>::instr(Base::get_alloc(), a.m_val)
+			);
+		return *this;
+	}
+
+public:
+	// Label:
+	
 	template <class LabelT>
 	Code& TPL_CALL operator,(const LabelDefine<LabelT>& a) {
 		a.m_label.define(*this);
@@ -192,6 +224,8 @@ public:
 	}
 
 public:
+	// Execute:
+	
 	void TPL_CALL exec(size_t ipFrom, size_t ipTo, stack_type& stk) const
 	{
 		execute_context context(ipFrom);
@@ -199,186 +233,6 @@ public:
 			const instruction_type& instr_ = context.next(*this);
 			instr_(stk, context);
 		}
-	}
-};
-
-// =========================================================================
-// class Assign
-
-template <class ValT>
-class Assign : public std::binary_function<ValT, ValT, ValT>
-{
-public:
-	ValT TPL_CALL operator()(const ValT& x, const ValT& y) const {
-		return variant_to_ref(x) = y;
-	}
-};
-
-// =========================================================================
-// class CPU
-
-template <class ValT, bool bDebug = false, class AllocT = DefaultAllocator>
-class CPU
-{
-private:
-	typedef Code<ValT, bDebug, AllocT> CodeT;
-
-public:
-	typedef AllocT alloc_type;
-	typedef CodeT code_type;
-	typedef typename CodeT::stack_type stack_type;
-	typedef typename CodeT::execute_context execute_context;
-	typedef typename CodeT::instruction_type instruction_type;
-
-private:
-	typedef stack_type StackT;
-	typedef execute_context ContextT;
-	typedef instruction_type InstructionT;
-	
-public:
-	template <size_t n = TPL_EMU_DYNAMIC_LABEL>
-	class label_type : public Label<n> {
-	};
-	
-	template <size_t n = TPL_EMU_DYNAMIC_LABEL>
-	class proc_type : public Label<n> {
-	};
-	
-	template <size_t n>
-	static LabelDefine<Label<n> > TPL_CALL label(Label<n>& label_) {
-		return LabelDefine<Label<n> >(label_);
-	}
-
-	template <size_t n>
-	static LabelDefine<Label<n> > TPL_CALL proc(Label<n>& label_) {
-		return LabelDefine<Label<n> >(label_);
-	}
-	
-#define TPL_EMU_LABEL_REF_(op, InstrT)	\
-	template <size_t n>					\
-	static LabelRefer<Label<n>, InstrT<StackT, ContextT> > TPL_CALL op(Label<n>& label_) {	\
-		return LabelRefer<Label<n>, InstrT<StackT, ContextT> >(label_);	\
-	}
-	
-	TPL_EMU_LABEL_REF_(call, Call)
-	TPL_EMU_LABEL_REF_(jmp, Jmp)
-	TPL_EMU_LABEL_REF_(je, JmpIfFalse)
-	
-public:
-	template <template <class Type> class Op_>
-	static InstructionT TPL_CALL op() {
-		return OpInstr<Op_, StackT, ContextT>::instr();
-	}
-	
-#define TPL_EMU_OP_(op, op_)			\
-	static InstructionT TPL_CALL op() {	\
-		return OpInstr<op_, StackT, ContextT>::instr(); \
-	}
-
-	TPL_EMU_OP_(add, std::plus)
-	TPL_EMU_OP_(sub, std::minus)
-	TPL_EMU_OP_(mul, std::multiplies)
-	TPL_EMU_OP_(div, std::divides)
-	TPL_EMU_OP_(mod, std::modulus)
-	TPL_EMU_OP_(assign, Assign)
-	
-	TPL_EMU_OP_(neg, std::negate)
-	
-	TPL_EMU_OP_(eq, std::equal_to)
-	TPL_EMU_OP_(ne, std::not_equal_to)
-	TPL_EMU_OP_(gt, std::greater)
-	TPL_EMU_OP_(ge, std::greater_equal)
-	TPL_EMU_OP_(lt, std::less)
-	TPL_EMU_OP_(le, std::less_equal)
-	
-#define TPL_EMU_FN_IMPL_(n) 		\
-	static InstructionT TPL_CALL op(typename FnInstr<n, StackT, ContextT>::op_type fn) { \
-		return FnInstr<n, StackT, ContextT>::instr(fn); \
-	}
-	
-	TPL_EMU_FN_IMPL_(1)
-	TPL_EMU_FN_IMPL_(2)
-	TPL_EMU_FN_IMPL_(3)
-	TPL_EMU_FN_IMPL_(4)
-	TPL_EMU_FN_IMPL_(5)
-	TPL_EMU_FN_IMPL_(6)
-
-public:
-	static InstructionT TPL_CALL nop() {
-		return Nop<StackT, ContextT>::instr();
-	}
-
-	template <class AllocT2>
-	static InstructionT TPL_CALL push(AllocT2& alloc, const ValT& val) {
-		return Push<StackT, ContextT>::instr(alloc, val);
-	}
-	
-	static InstructionT TPL_CALL pop(size_t n) {
-		return Pop<StackT, ContextT>::instr(n);
-	}
-
-	static InstructionT TPL_CALL pop() {
-		return Pop<StackT, ContextT>::instr();
-	}
-
-	static InstructionT TPL_CALL jmp(ptrdiff_t delta) {
-		return Jmp<StackT, ContextT>::instr(delta);
-	}
-
-	static InstructionT TPL_CALL je(ptrdiff_t delta) {
-		return JmpIfFalse<StackT, ContextT>::instr(delta);
-	}
-
-	static InstructionT TPL_CALL arity(size_t n) {
-		return Arity<StackT, ContextT>::instr(n);
-	}
-
-	static InstructionT TPL_CALL local(size_t n) {
-		return Local<StackT, ContextT>::instr(n);
-	}
-
-	static InstructionT TPL_CALL push_arg(ptrdiff_t delta) {
-		return PushArg<StackT, ContextT>::instr(delta);
-	}
-
-	static InstructionT TPL_CALL push_vargs() {
-		return PushVArgs<StackT, ContextT>::instr();
-	}
-
-	static InstructionT TPL_CALL push_local(size_t delta) {
-		return PushLocal<StackT, ContextT>::instr(delta);
-	}
-
-	static InstructionT TPL_CALL lea_arg(ptrdiff_t delta) {
-		return LeaArg<StackT, ContextT>::instr(delta);
-	}
-
-	static InstructionT TPL_CALL lea_vargs() {
-		return PushVArgs<StackT, ContextT>::instr();
-	}
-
-	static InstructionT TPL_CALL lea_local(size_t delta) {
-		return LeaLocal<StackT, ContextT>::instr(delta);
-	}
-
-	static InstructionT TPL_CALL assign_arg(ptrdiff_t delta) {
-		return AssignArg<StackT, ContextT>::instr(delta);
-	}
-
-	static InstructionT TPL_CALL assign_local(size_t delta) {
-		return AssignLocal<StackT, ContextT>::instr(delta);
-	}
-
-	static InstructionT TPL_CALL call(ptrdiff_t delta) {
-		return Call<StackT, ContextT>::instr(delta);
-	}
-
-	static InstructionT TPL_CALL ret(size_t n) {
-		return RetN<StackT, ContextT>::instr(n);
-	}
-
-	static InstructionT TPL_CALL ret() {
-		return Ret<StackT, ContextT>::instr();
 	}
 };
 

@@ -148,10 +148,10 @@ TPL_CALC_IMPL_(5)
 TPL_CALC_IMPL_(6)
 
 // =========================================================================
-// class VargFunction
+// class VargsFunction
 
 template <class Op, class StackT>
-class VargFunction
+class VargsFunction
 {
 private:
 	typedef typename StackT::value_type value_type;
@@ -162,7 +162,7 @@ private:
 	const int& m_nArgv;
 
 public:
-	VargFunction(StackT& stk, const Op& op, const int& nArgv)
+	VargsFunction(StackT& stk, const Op& op, const int& nArgv)
 		: m_stk(stk), m_op(op), m_nArgv(nArgv) {}
 
 public:
@@ -186,7 +186,7 @@ class CalcTraits_Varg_
 public:
 	typedef typename StackT::value_type Ty;
 	typedef Ty (*Op)(const Ty args[], IntT count);
-	typedef VargFunction<Op, StackT> action_type;
+	typedef VargsFunction<Op, StackT> action_type;
 };
 
 template <class StackT> __forceinline

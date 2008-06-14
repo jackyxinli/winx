@@ -174,7 +174,7 @@ public:
 };
 
 // =========================================================================
-// struct OpTraits
+// struct OpTraits/VargsOpTraits
 
 template <int nArity, class Ty>
 struct OpTraits {};
@@ -207,6 +207,11 @@ struct OpTraits<5, Ty> {
 template <class Ty>
 struct OpTraits<6, Ty> {
 	typedef Ty (*op_type)(Ty, Ty, Ty, Ty, Ty, Ty);
+};
+
+template <class Ty, class IntT>
+struct VargsOpTraits {
+	typedef Ty (*op_type)(const Ty args[], IntT count);
 };
 
 // =========================================================================

@@ -37,6 +37,10 @@
 #include "emu/Code.h"
 #endif
 
+#ifndef TPL_EMU_CPU_H
+#include "emu/CPU.h"
+#endif
+
 // =========================================================================
 // $Log: $
 
