@@ -315,7 +315,7 @@ public:
 	using Base::func;
 	
 	template <template <class Type> class Op_>
-	static InstructionT TPL_CALL op() {
+	static InstructionT TPL_CALL ext_op() {
 		return ExtOpInstr<Op_, StackT, ContextT>::instr();
 	}
 	
