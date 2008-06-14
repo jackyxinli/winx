@@ -56,7 +56,7 @@ public:
 	}
 	
 	template <class AllocT, class ValueT>
-	void WINX_CALL assign(AllocT& alloc, const ValueT& val) {
+	void winx_call assign(AllocT& alloc, const ValueT& val) {
 		m_vt = TypeTraitsT<ValueT>::type();
 		if (sizeof(ValueT) <= sizeof(m_ptr)) {
 			new(&m_ptr) ValueT(val);
@@ -66,31 +66,31 @@ public:
 		}
 	}
 	
-	void WINX_CALL swap(Variant& o) {
+	void winx_call swap(Variant& o) {
 		swap((void*)this, (void*)&o, sizeof(o));
 	}
 
-	bool WINX_CALL empty() const {
+	bool winx_call empty() const {
 		return m_vt != TypeTraitsT<void>::type();
 	}
 	
-	type_id WINX_CALL type() const {
+	type_id winx_call type() const {
 		return m_vt;
 	}
 	
 	template <class ValueT>
-	bool WINX_CALL is() const {
+	bool winx_call is() const {
 		return m_vt == TypeTraitsT<ValueT>::type();
 	}
 	
 	template <class ValueT>
-	ValueT& WINX_CALL cast() {
+	ValueT& winx_call get() {
 		WINX_ASSERT(m_vt == TypeTraitsT<ValueT>::type());
 		return *WINX_VARIANT_CAST_TO_TYPE_(ValueT);
 	}
 
 	template <class ValueT>
-	const ValueT& WINX_CALL cast() const {
+	const ValueT& winx_call get() const {
 		WINX_ASSERT(m_vt == TypeTraitsT<ValueT>::type());
 		return *WINX_VARIANT_CAST_TO_TYPE_(ValueT);
 	}
@@ -99,20 +99,56 @@ public:
 // -------------------------------------------------------------------------
 // class Any
 
+#if defined(_RTTI) || defined(__RTTI__)
+
 template <class ValueT>
 struct AnyTypeTraits
 {
 	typedef std::type_info type_id;
 	
-	__forceinline static type_id WINX_CALL type() {
+	__forceinline static type_id winx_call type() {
 		return typeid(ValueT);
 	}
 };
 
 typedef Variant<AnyTypeTraits> Any;
 
+#endif
+
+// -------------------------------------------------------------------------
+
+#define WINX_VARIANT_TYPES_BEGIN(ns, typeId, vtNone)						\
+namespace ns {																\
+																			\
+	typedef typeId TypeId_;													\
+																			\
+	template <class Ty>														\
+	struct TypeTraits_ {													\
+	};																		\
+																			\
+	template <>																\
+	struct TypeTraits_<void> {												\
+		typedef TypeId_ type_id;											\
+		static TypeId_ TPL_CALL type() {									\
+			return vtNone;													\
+		}																	\
+	};
+
+#define WINX_VARIANT_TYPE(Type, vt)											\
+	template <>																\
+	struct TypeTraits_<Type> {												\
+		static TypeId_ TPL_CALL type() {									\
+			return vt;														\
+		}																	\
+	};
+
+#define WINX_VARIANT_TYPES_END()											\
+	typedef std::Variant<TypeTraits_> Variant;								\
+}
+
 // -------------------------------------------------------------------------
 
 NS_STD_END
 
 #endif /* STDEXT_VARIANT_H */
+
