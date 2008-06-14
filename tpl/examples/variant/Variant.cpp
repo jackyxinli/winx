@@ -19,6 +19,17 @@ WINX_VARIANT_TYPES_END()
 
 typedef test::Variant Variant;
 
+inline double TPL_CALL to_double(const Variant& a)
+{
+	switch (a.type())
+	{
+	case vtDouble:	return a.get<double>();
+	case vtInt:		return a.get<int>();
+	default:		throw std::bad_cast();
+	}
+	return 0;
+}
+
 namespace std {
 
 template <class OStreamT>
@@ -32,17 +43,11 @@ inline OStreamT& TPL_CALL operator<<(OStreamT& os, const test::Variant& a)
 	}
 }
 
+inline bool operator<(const test::Variant& a, const test::Variant& b)
+{
+	return to_double(a) < to_double(b);
 }
 
-inline double TPL_CALL to_double(const Variant& a)
-{
-	switch (a.type())
-	{
-	case vtDouble:	return a.get<double>();
-	case vtInt:		return a.get<int>();
-	default:		throw std::bad_cast();
-	}
-	return 0;
 }
 
 template <class AllocT>
@@ -152,6 +157,36 @@ public:
 		std::cout << stk.top() << "\n";
 	}
 	
+	static Variant my_sin(cpu::alloc_type& alloc, const Variant& x)
+	{
+		return Variant(alloc, sin(to_double(x)));
+	}
+
+	static Variant max_value(const Variant x[], int count)
+	{
+		return *std::max_element(x, x+count);
+	}
+
+	void vargs()
+	{
+		cpu::alloc_type alloc;
+		cpu::code_type code(alloc);
+
+		// max(2.0, 3.0, sin(4.0))
+		code <<
+			cpu::push(2.0),
+			cpu::push(3.0),
+			cpu::push(4.0),
+			cpu::func(my_sin),
+			cpu::arity(3),
+			cpu::func(max_value);
+		
+		cpu::stack_type stk;
+		code.exec(alloc, 0, code.size(), stk);
+
+		std::cout << stk.top() << "\n";
+	}
+
 	void call_proc()
 	{
 		cpu::alloc_type alloc;
@@ -213,6 +248,7 @@ int main()
 	test.simplest();
 	test.local_var();
 	test.local_var_optimization();
+	test.vargs();
 	test.call_proc();
 	test.call_proc2();
 }

@@ -95,9 +95,9 @@ public:
 			cpu::push(2.0),
 			cpu::push(3.0),
 			cpu::push(4.0),
-			cpu::op(sin),
+			cpu::func(sin),
 			cpu::arity(3),
-			cpu::op(max_value);
+			cpu::func(max_value);
 		
 		cpu::stack_type stk;
 		code.exec(0, code.size(), stk);

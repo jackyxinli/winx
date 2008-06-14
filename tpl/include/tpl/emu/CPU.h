@@ -156,7 +156,7 @@ public:
 	TPL_EMU_OP_(le, std::less_equal)
 	
 #define TPL_EMU_FN_IMPL_(n) 		\
-	static InstructionT TPL_CALL op(typename FnInstr<n, StackT, ContextT>::op_type fn) { \
+	static InstructionT TPL_CALL func(typename FnInstr<n, StackT, ContextT>::op_type fn) { \
 		return FnInstr<n, StackT, ContextT>::instr(fn); \
 	}
 	
@@ -168,7 +168,7 @@ public:
 	TPL_EMU_FN_IMPL_(6)
 	
 #define TPL_EMU_VARGS_IMPL_(IntT)	\
-	static InstructionT TPL_CALL op(typename VargsFnInstr<IntT, StackT, ContextT>::op_type fn) { \
+	static InstructionT TPL_CALL func(typename VargsFnInstr<IntT, StackT, ContextT>::op_type fn) { \
 		return VargsFnInstr<IntT, StackT, ContextT>::instr(fn);	\
 	}
 	
@@ -312,6 +312,8 @@ private:
 	typedef typename Base::execute_context ContextT;
 
 public:
+	using Base::func;
+	
 	template <template <class Type> class Op_>
 	static InstructionT TPL_CALL op() {
 		return ExtOpInstr<Op_, StackT, ContextT>::instr();
@@ -337,9 +339,9 @@ public:
 	TPL_EMU_EXTOP_(ge, NS_TPL_EMU::greater_equal)
 	TPL_EMU_EXTOP_(lt, NS_TPL_EMU::less)
 	TPL_EMU_EXTOP_(le, NS_TPL_EMU::less_equal)
-	
+
 #define TPL_EMU_EXTFN_IMPL_(n) 		\
-	static InstructionT TPL_CALL op(typename ExtFnInstr<n, StackT, ContextT>::op_type fn) { \
+	static InstructionT TPL_CALL func(typename ExtFnInstr<n, StackT, ContextT>::op_type fn) { \
 		return ExtFnInstr<n, StackT, ContextT>::instr(fn); \
 	}
 	
@@ -351,7 +353,7 @@ public:
 	TPL_EMU_EXTFN_IMPL_(6)
 	
 #define TPL_EMU_EXTVARGS_IMPL_(IntT)	\
-	static InstructionT TPL_CALL op(typename ExtVargsFnInstr<IntT, StackT, ContextT>::op_type fn) { \
+	static InstructionT TPL_CALL func(typename ExtVargsFnInstr<IntT, StackT, ContextT>::op_type fn) { \
 		return ExtVargsFnInstr<IntT, StackT, ContextT>::instr(fn);	\
 	}
 	
