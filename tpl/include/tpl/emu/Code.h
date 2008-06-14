@@ -61,19 +61,16 @@ public:
 };
 
 // =========================================================================
-// class ExecuteContext
+// class Context: Execute Context
 
-template <bool bDebug = false>
-class ExecuteContext
+class ContextBase
 {
 private:
 	size_t m_ip;
 	size_t m_frame;
 
 public:
-	enum { debug = bDebug };
-
-	ExecuteContext(size_t ip)
+	ContextBase(size_t ip)
 		: m_ip(ip), m_frame(0) {
 	}
 
@@ -105,6 +102,37 @@ public:
 	}
 };
 
+template <class AllocT, bool bDebug = false>
+class Context : public ContextBase
+{
+private:
+	AllocT& m_alloc;
+
+public:
+	enum { debug = bDebug };
+
+	typedef AllocT alloc_type;
+	
+	Context(AllocT& alloc, size_t ip)
+		: m_alloc(alloc), ContextBase(ip) {
+	}
+	
+	AllocT& TPL_CALL get_alloc() const {
+		return m_alloc;
+	}
+};
+
+template <bool bDebug>
+class Context<void, bDebug> : public ContextBase
+{
+public:
+	enum { debug = bDebug };
+
+	Context(size_t ip)
+		: ContextBase(ip) {
+	}
+};
+
 // =========================================================================
 // class Label(Define/Refer)
 
@@ -131,7 +159,7 @@ public:
 };
 
 // =========================================================================
-// class PushCode
+// class PushCode/ExtPushCode
 
 template <class ValT>
 class PushCode
@@ -143,19 +171,29 @@ public:
 	}
 };
 
+template <class ValT>
+class ExtPushCode
+{
+public:
+	const ValT m_val;
+	
+	ExtPushCode(const ValT& val) : m_val(val) {
+	}
+};
+
 // =========================================================================
 // class Code
 
-template <class ValT, bool bDebug = false, class AllocT = DefaultAllocator>
-class Code : public std::Deque<Instruction<Stack<ValT>, ExecuteContext<bDebug> >, AllocT>
+template <class ValT, class ExecuteContextT, class AllocT = DefaultAllocator>
+class Code : public std::Deque<Instruction<Stack<ValT>, ExecuteContextT>, AllocT>
 {
 private:
-	typedef std::Deque<Instruction<Stack<ValT>, ExecuteContext<bDebug> >, AllocT> Base;
+	typedef std::Deque<Instruction<Stack<ValT>, ExecuteContextT>, AllocT> Base;
 	
 public:
 	typedef AllocT alloc_type;
 	typedef Stack<ValT> stack_type;
-	typedef ExecuteContext<bDebug> execute_context;
+	typedef ExecuteContextT execute_context;
 	typedef Instruction<stack_type, execute_context> instruction_type;
 
 	explicit Code(AllocT& alloc)
@@ -190,6 +228,26 @@ public:
 	Code& TPL_CALL operator<<(const PushCode<ValT2>& a) {
 		Base::push_back(
 			Push<stack_type, execute_context>::instr(Base::get_alloc(), a.m_val)
+			);
+		return *this;
+	}
+	
+	// ExtPush:
+
+	template <class ValT2>
+	Code& TPL_CALL operator,(const ExtPushCode<ValT2>& a) {
+		AllocT& alloc = Base::get_alloc();
+		Base::push_back(
+			Push<stack_type, execute_context>::instr(alloc, ValT(alloc, a.m_val))
+			);
+		return *this;
+	}
+	
+	template <class ValT2>
+	Code& TPL_CALL operator<<(const ExtPushCode<ValT2>& a) {
+		AllocT& alloc = Base::get_alloc();
+		Base::push_back(
+			Push<stack_type, execute_context>::instr(alloc, ValT(alloc, a.m_val))
 			);
 		return *this;
 	}
@@ -229,6 +287,16 @@ public:
 	void TPL_CALL exec(size_t ipFrom, size_t ipTo, stack_type& stk) const
 	{
 		execute_context context(ipFrom);
+		while (context.position() != ipTo) {
+			const instruction_type& instr_ = context.next(*this);
+			instr_(stk, context);
+		}
+	}
+
+	template <class AllocT2>
+	void TPL_CALL exec(AllocT2& alloc, size_t ipFrom, size_t ipTo, stack_type& stk) const
+	{
+		execute_context context(alloc, ipFrom);
 		while (context.position() != ipTo) {
 			const instruction_type& instr_ = context.next(*this);
 			instr_(stk, context);

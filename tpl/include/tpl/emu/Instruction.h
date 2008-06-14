@@ -23,6 +23,10 @@
 #include "Function.h"
 #endif
 
+#ifndef STDEXT_VARIANT_H
+#include "../../../../stdext/include/stdext/Variant.h"
+#endif
+
 // -------------------------------------------------------------------------
 
 #if defined(TPL_EMU_DEBUG) || defined(_DEBUG)
@@ -80,27 +84,43 @@ inline const char* TPL_CALL crackOpName(const char* name_)
 
 // =========================================================================
 // function ref_to_variant/variant_to_ref
-// function size_to_variant/variant_to_size
+
+template <class ValT>
+struct VariantTraits {
+	static ValT TPL_CALL cast(size_t size_) {
+		return size_;
+	}
+	static size_t TPL_CALL cast(const ValT& val_) {
+		return (size_t)val_;
+	}
+};
 
 template <class ValT>
 __forceinline ValT TPL_CALL ref_to_variant(ValT& ref_) {
-	return (size_t)(&ref_);
-}
-
-template <class ValT>
-__forceinline ValT TPL_CALL size_to_variant(size_t size_) {
-	return size_;
+	return VariantTraits<ValT>::cast((size_t)&ref_);
 }
 
 template <class ValT>
 __forceinline ValT& TPL_CALL variant_to_ref(const ValT& val_) {
-	return *(ValT*)(size_t)val_;
+	return *(ValT*)VariantTraits<ValT>::cast(val_);
 }
 
-template <class ValT>
-__forceinline size_t TPL_CALL variant_to_size(const ValT& val_) {
-	return (size_t)val_;
-}
+template <template <class ValueT> class TypeTraitsT>
+struct VariantTraits<std::Variant<TypeTraitsT> >
+{
+private:
+	typedef std::Variant<TypeTraitsT> ValT;
+
+public:
+	static ValT TPL_CALL cast(size_t size_) {
+		ValT val_;
+		*(size_t*)&val_ = size_;
+		return val_;
+	}
+	static size_t TPL_CALL cast(const ValT& val_) {
+		return *(size_t*)&val_;
+	}
+};
 
 // =========================================================================
 // Instruction
@@ -249,12 +269,13 @@ public:
 template <class StackT, class ExecuteContextT>
 class Arity
 {
+private:
+	typedef VariantTraits<typename StackT::value_type> Tr_;
+	
 public:
 	static void op(Operand para, StackT& stk, ExecuteContextT&) {
 		TPL_EMU_INSTR_DEBUG("arity " << para.val);
-		stk.push_back(
-			size_to_variant<typename StackT::value_type>(para.val)
-			);
+		stk.push_back(Tr_::cast(para.val));
 	}
 	
 	static Instruction<StackT, ExecuteContextT> TPL_CALL instr(size_t n) {
@@ -310,26 +331,20 @@ public:
 public:
 	template <class StackT, class ExecuteContextT>
 	static void TPL_CALL call(StackT& stk, ExecuteContextT& context, ptrdiff_t delta) {
-		stk.push_back(
-			size_to_variant<typename StackT::value_type>(context.position())
-			);
-		stk.push_back(
-			size_to_variant<typename StackT::value_type>(context.frame())
-			);
+		typedef VariantTraits<typename StackT::value_type> Tr_;
+		stk.push_back(Tr_::cast(context.position()));
+		stk.push_back(Tr_::cast(context.frame()));
 		context.frame(stk.size());
 		context.jump(delta);
 	}
 
 	template <class StackT, class ExecuteContextT>
 	static void TPL_CALL ret(StackT& stk, ExecuteContextT& context, size_t n) {
+		typedef VariantTraits<typename StackT::value_type> Tr_;
 		const typename StackT::value_type val = stk.top();
 		size_t frame_ = context.frame();
-		context.frame(
-			variant_to_size(stk[frame_ + BP])
-			);
-		context.position(
-			variant_to_size(stk[frame_ + RETURN_IP])
-			);
+		context.frame(Tr_::cast(stk[frame_ + BP]));
+		context.position(Tr_::cast(stk[frame_ + RETURN_IP]));
 		stk.resize(frame_ - n);
 		stk.push_back(val);
 	}
@@ -337,14 +352,16 @@ public:
 public:
 	template <class StackT, class ExecuteContextT>
 	size_t TPL_CALL arity(StackT& stk, ExecuteContextT& context) const {
+		typedef VariantTraits<typename StackT::value_type> Tr_;
 		const size_t arity_idx_ = context.frame() + ARITY;
-		return variant_to_size(stk[arity_idx_]);
+		return Tr_::cast(stk[arity_idx_]);
 	}
 
 	template <class StackT, class ExecuteContextT>
 	typename StackT::value_type TPL_CALL vargs(StackT& stk, ExecuteContextT& context) const {
+		typedef VariantTraits<typename StackT::value_type> Tr_;
 		const size_t arity_idx_ = context.frame() + ARITY;
-		const size_t arity_ = variant_to_size(stk[arity_idx_]);
+		const size_t arity_ = Tr_::cast(stk[arity_idx_]);
 		return typename StackT::value_type::array(stk.begin() + (arity_idx_ - arity_), arity_);
 	}
 };
@@ -586,7 +603,7 @@ public:
 };
 
 // =========================================================================
-// class OpInstr
+// class OpInstr/ExtOpInstr
 
 // Usage:
 //		add		; OpInstr<std::plus, StackT, ContextT>::instr()
@@ -613,8 +630,27 @@ public:
 	}
 };
 
+template <template <class Type> class Op_, class StackT, class ExecuteContextT>
+class ExtOpInstr
+{
+private:
+	typedef typename StackT::value_type Ty;
+	enum { n_arity = ArityTraits<Op_, Ty>::value };
+
+public:
+	static void op(Operand, StackT& stk, ExecuteContextT& context) {
+		TPL_EMU_INSTR_DEBUG(TPL_EMU_INSTR_OP_NAME(Op_<Ty>));
+		Function<Op_<Ty>, n_arity> fn_;
+		fn_(context.get_alloc(), stk);
+	}
+	
+	static Instruction<StackT, ExecuteContextT> TPL_CALL instr() {
+		return Instruction<StackT, ExecuteContextT>(op);
+	}
+};
+
 // =========================================================================
-// class FnInstr
+// class FnInstr/ExtFnInstr
 
 // Usage:
 //		pow		; FnInstr<2, StackT, ContextT>::instr(pow)
@@ -625,7 +661,7 @@ template <int nArity, class StackT, class ExecuteContextT>
 class FnInstr
 {
 private:
-	typedef typename StackT::value_type Ty; 
+	typedef typename StackT::value_type Ty;
 	
 public:
 	typedef typename OpTraits<nArity, Ty>::op_type op_type;
@@ -641,8 +677,29 @@ public:
 	}
 };
 
+template <int nArity, class StackT, class ExecuteContextT>
+class ExtFnInstr
+{
+private:
+	typedef typename StackT::value_type Ty;
+	typedef typename ExecuteContextT::alloc_type AllocT;
+	
+public:
+	typedef typename ExtOpTraits<nArity, Ty, AllocT>::op_type op_type;
+
+	static void op(Operand para, StackT& stk, ExecuteContextT& context) {
+		TPL_EMU_INSTR_DEBUG("op " << para.ptr);
+		Function<op_type, nArity> fn_((op_type)para.ptr);
+		fn_(context.get_alloc(), stk);
+	}
+
+	static Instruction<StackT, ExecuteContextT> TPL_CALL instr(op_type fn) {
+		return Instruction<StackT, ExecuteContextT>(op, (const void*)fn);
+	}
+};
+
 // =========================================================================
-// class VargsFnInstr
+// class VargsFnInstr/ExtVargsFnInstr
 
 template <class Ty>
 struct Array_ {
@@ -677,7 +734,8 @@ public:
 
 	static void op(Operand para, StackT& stk, ExecuteContextT&)
 	{
-		const IntT count = variant_to_size(stk.back());
+		typedef VariantTraits<Ty> Tr_;
+		const IntT count = Tr_::cast(stk.back());
 		stk.pop_back();
 		
 		Ty* args = (Ty*)alloca(sizeof(Ty) * count);	
@@ -689,6 +747,40 @@ public:
 		TPL_EMU_INSTR_DEBUG("op " << para.ptr << "\t; vargs: " << array_(args, count));
 		stk.push_back(
 			((op_type)para.ptr)(static_cast<const Ty*>(args), count)
+			);
+	}
+	
+	static Instruction<StackT, ExecuteContextT> TPL_CALL instr(op_type fn) {
+		return Instruction<StackT, ExecuteContextT>(op, (const void*)fn);
+	}
+};
+
+template <class IntT, class StackT, class ExecuteContextT>
+class ExtVargsFnInstr
+{
+private:
+	typedef typename StackT::value_type Ty;
+	typedef typename ExecuteContextT::alloc_type AllocT;
+	typedef typename ExtVargsOpTraits<Ty, IntT, AllocT>::op_type Op;
+
+public:
+	typedef Op op_type;
+
+	static void op(Operand para, StackT& stk, ExecuteContextT& context)
+	{
+		typedef VariantTraits<Ty> Tr_;
+		const IntT count = Tr_::cast(stk.back());
+		stk.pop_back();
+		
+		Ty* args = (Ty*)alloca(sizeof(Ty) * count);	
+		for (IntT i = count; i--;) {		
+			args[i] = stk.back();
+			stk.pop_back();
+		}
+		
+		TPL_EMU_INSTR_DEBUG("op " << para.ptr << "\t; vargs: " << array_(args, count));
+		stk.push_back(
+			((op_type)para.ptr)(context.get_alloc(), static_cast<const Ty*>(args), count)
 			);
 	}
 	

@@ -38,15 +38,24 @@ NS_TPL_EMU_BEGIN
 
 namespace policy
 {
+	template <bool bDebug>
 	class Default
 	{
 	public:
-		typedef tpl::DefaultAllocator alloc_type;
+		typedef DefaultAllocator alloc_type;
+		typedef Context<void, bDebug> execute_context;
+	};
+	
+	template <bool bDebug>
+	class ExtDefault : public Default<bDebug>
+	{
+	public:
+		typedef Context<DefaultAllocator, bDebug> execute_context;
 	};
 }
 
 // =========================================================================
-// class Assign
+// class Assign/ExtAssign
 
 template <class ValT>
 class Assign : public std::binary_function<ValT, ValT, ValT>
@@ -57,21 +66,32 @@ public:
 	}
 };
 
+template <class ValT>
+class ExtAssign : public std::binary_function<ValT, ValT, ValT>
+{
+public:
+	template <class AllocT>
+	ValT TPL_CALL operator()(AllocT& alloc, const ValT& x, const ValT& y) const {
+		return ext_assign(alloc, variant_to_ref(x), y);
+	}
+};
+
 // =========================================================================
 // class CPU
 
-template <class ValT, bool bDebug = false, class PolicyT = policy::Default>
+template <class ValT, bool bDebug = false, class PolicyT = policy::Default<bDebug> >
 class CPU
 {
 private:
 	typedef typename PolicyT::alloc_type AllocT;
-	typedef Code<ValT, bDebug, AllocT> CodeT;
+	typedef typename PolicyT::execute_context ExecuteContextT;
+	typedef Code<ValT, ExecuteContextT, AllocT> CodeT;
 
 public:
 	typedef AllocT alloc_type;
 	typedef CodeT code_type;
+	typedef ExecuteContextT execute_context;
 	typedef typename CodeT::stack_type stack_type;
-	typedef typename CodeT::execute_context execute_context;
 	typedef typename CodeT::instruction_type instruction_type;
 
 private:
@@ -236,6 +256,116 @@ public:
 
 	static InstructionT TPL_CALL ret() {
 		return Ret<StackT, ContextT>::instr();
+	}
+};
+
+// =========================================================================
+// ExtCPU: ext-operators
+
+#define TPL_EMU_BINARY_EXTOP_(op) 											\
+template <class ValT>														\
+class op : public std::binary_function<ValT, ValT, ValT>					\
+{																			\
+public:																		\
+	template <class AllocT>													\
+	ValT TPL_CALL operator()(AllocT& alloc, const ValT& x, const ValT& y) const { \
+		return ext_##op(alloc, x, y);										\
+	}																		\
+};
+
+TPL_EMU_BINARY_EXTOP_(plus)
+TPL_EMU_BINARY_EXTOP_(minus)
+TPL_EMU_BINARY_EXTOP_(multiplies)
+TPL_EMU_BINARY_EXTOP_(divides)
+TPL_EMU_BINARY_EXTOP_(modulus)
+
+TPL_EMU_BINARY_EXTOP_(equal_to)
+TPL_EMU_BINARY_EXTOP_(not_equal_to)
+TPL_EMU_BINARY_EXTOP_(greater)
+TPL_EMU_BINARY_EXTOP_(greater_equal)
+TPL_EMU_BINARY_EXTOP_(less)
+TPL_EMU_BINARY_EXTOP_(less_equal)
+
+#define TPL_EMU_UNARY_EXTOP_(op) 											\
+template <class ValT>														\
+class op : public std::unary_function<ValT, ValT>							\
+{																			\
+public:																		\
+	template <class AllocT>													\
+	ValT TPL_CALL operator()(AllocT& alloc, const ValT& x) const {			\
+		return ext_##op(alloc, x);											\
+	}																		\
+};
+
+TPL_EMU_UNARY_EXTOP_(negate)
+
+// -------------------------------------------------------------------------
+// class ExtCPU
+
+template <class ValT, bool bDebug = false, class PolicyT = policy::ExtDefault<bDebug> >
+class ExtCPU : public CPU<ValT, bDebug, PolicyT>
+{
+private:
+	typedef CPU<ValT, bDebug, PolicyT> Base;
+	typedef typename Base::instruction_type InstructionT;
+	typedef typename Base::stack_type StackT;
+	typedef typename Base::execute_context ContextT;
+
+public:
+	template <template <class Type> class Op_>
+	static InstructionT TPL_CALL op() {
+		return ExtOpInstr<Op_, StackT, ContextT>::instr();
+	}
+	
+#define TPL_EMU_EXTOP_(op, op_)			\
+	static InstructionT TPL_CALL op() {	\
+		return ExtOpInstr<op_, StackT, ContextT>::instr(); \
+	}
+
+	TPL_EMU_EXTOP_(add, NS_TPL_EMU::plus)
+	TPL_EMU_EXTOP_(sub, NS_TPL_EMU::minus)
+	TPL_EMU_EXTOP_(mul, NS_TPL_EMU::multiplies)
+	TPL_EMU_EXTOP_(div, NS_TPL_EMU::divides)
+	TPL_EMU_EXTOP_(mod, NS_TPL_EMU::modulus)
+	TPL_EMU_EXTOP_(assign, ExtAssign)
+	
+	TPL_EMU_EXTOP_(neg, NS_TPL_EMU::negate)
+	
+	TPL_EMU_EXTOP_(eq, NS_TPL_EMU::equal_to)
+	TPL_EMU_EXTOP_(ne, NS_TPL_EMU::not_equal_to)
+	TPL_EMU_EXTOP_(gt, NS_TPL_EMU::greater)
+	TPL_EMU_EXTOP_(ge, NS_TPL_EMU::greater_equal)
+	TPL_EMU_EXTOP_(lt, NS_TPL_EMU::less)
+	TPL_EMU_EXTOP_(le, NS_TPL_EMU::less_equal)
+	
+#define TPL_EMU_EXTFN_IMPL_(n) 		\
+	static InstructionT TPL_CALL op(typename ExtFnInstr<n, StackT, ContextT>::op_type fn) { \
+		return ExtFnInstr<n, StackT, ContextT>::instr(fn); \
+	}
+	
+	TPL_EMU_EXTFN_IMPL_(1)
+	TPL_EMU_EXTFN_IMPL_(2)
+	TPL_EMU_EXTFN_IMPL_(3)
+	TPL_EMU_EXTFN_IMPL_(4)
+	TPL_EMU_EXTFN_IMPL_(5)
+	TPL_EMU_EXTFN_IMPL_(6)
+	
+#define TPL_EMU_EXTVARGS_IMPL_(IntT)	\
+	static InstructionT TPL_CALL op(typename ExtVargsFnInstr<IntT, StackT, ContextT>::op_type fn) { \
+		return ExtVargsFnInstr<IntT, StackT, ContextT>::instr(fn);	\
+	}
+	
+	TPL_EMU_EXTVARGS_IMPL_(size_t)
+	TPL_EMU_EXTVARGS_IMPL_(int)
+
+public:
+	template <class ValT2>
+	static ExtPushCode<ValT2> TPL_CALL push(const ValT2& val) {
+		return ExtPushCode<ValT2>(val);
+	}
+
+	static PushCode<ValT> TPL_CALL push(const ValT& val) {
+		return PushCode<ValT>(val);
 	}
 };
 

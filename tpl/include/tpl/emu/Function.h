@@ -49,6 +49,11 @@ struct Caller<1> {
 	__forceinline static ValT TPL_CALL call(const Op& op_, const ValT args[]) {
 		return op_(args[0]);
 	}
+	
+	template <class AllocT, class Op, class ValT>
+	__forceinline static ValT TPL_CALL call(AllocT& alloc, const Op& op_, const ValT args[]) {
+		return op_(alloc, args[0]);
+	}
 };
 
 template <>
@@ -56,6 +61,11 @@ struct Caller<2> {
 	template <class Op, class ValT>
 	__forceinline static ValT TPL_CALL call(const Op& op_, const ValT args[]) {
 		return op_(args[0], args[1]);
+	}
+
+	template <class AllocT, class Op, class ValT>
+	__forceinline static ValT TPL_CALL call(AllocT& alloc, const Op& op_, const ValT args[]) {
+		return op_(alloc, args[0], args[1]);
 	}
 };
 
@@ -65,6 +75,11 @@ struct Caller<3> {
 	__forceinline static ValT TPL_CALL call(const Op& op_, const ValT args[]) {
 		return op_(args[0], args[1], args[2]);
 	}
+
+	template <class AllocT, class Op, class ValT>
+	__forceinline static ValT TPL_CALL call(AllocT& alloc, const Op& op_, const ValT args[]) {
+		return op_(alloc, args[0], args[1], args[2]);
+	}
 };
 
 template <>
@@ -72,6 +87,11 @@ struct Caller<4> {
 	template <class Op, class ValT>
 	__forceinline static ValT TPL_CALL call(const Op& op_, const ValT args[]) {
 		return op_(args[0], args[1], args[2], args[3]);
+	}
+
+	template <class AllocT, class Op, class ValT>
+	__forceinline static ValT TPL_CALL call(AllocT& alloc, const Op& op_, const ValT args[]) {
+		return op_(alloc, args[0], args[1], args[2], args[3]);
 	}
 };
 
@@ -81,6 +101,11 @@ struct Caller<5> {
 	__forceinline static ValT TPL_CALL call(const Op& op_, const ValT args[]) {
 		return op_(args[0], args[1], args[2], args[3], args[4]);
 	}
+
+	template <class AllocT, class Op, class ValT>
+	__forceinline static ValT TPL_CALL call(AllocT& alloc, const Op& op_, const ValT args[]) {
+		return op_(alloc, args[0], args[1], args[2], args[3], args[4]);
+	}
 };
 
 template <>
@@ -88,6 +113,11 @@ struct Caller<6> {
 	template <class Op, class ValT>
 	__forceinline static ValT TPL_CALL call(const Op& op_, const ValT args[]) {
 		return op_(args[0], args[1], args[2], args[3], args[4], args[5]);
+	}
+
+	template <class AllocT, class Op, class ValT>
+	__forceinline static ValT TPL_CALL call(AllocT& alloc, const Op& op_, const ValT args[]) {
+		return op_(alloc, args[0], args[1], args[2], args[3], args[4], args[5]);
 	}
 };
 
@@ -118,6 +148,18 @@ public:
 		}
 		stk.push_back(Caller<nArity>::call(m_op, args));
 	}
+
+	template <class AllocT, class StackT>
+	void TPL_CALL operator()(AllocT& alloc, StackT& stk) const {
+		typedef typename StackT::value_type value_type;
+		TPL_ASSERT(stk.size() >= nArity);
+		value_type args[nArity];
+		for (int i = nArity; i--;) {		
+			args[i] = stk.back();
+			stk.pop_back();
+		}
+		stk.push_back(Caller<nArity>::call(alloc, m_op, args));
+	}
 };
 
 // class Unary-Function
@@ -142,6 +184,15 @@ public:
 		value_type x = stk.back();
 		stk.pop_back();
 		stk.push_back(m_op(x));
+	}
+
+	template <class AllocT, class StackT>
+	void TPL_CALL operator()(AllocT& alloc, StackT& stk) const {
+		typedef typename StackT::value_type value_type;
+		TPL_ASSERT(stk.size() >= 1);
+		value_type x = stk.back();
+		stk.pop_back();
+		stk.push_back(m_op(alloc, x));
 	}
 };
 
@@ -212,6 +263,47 @@ struct OpTraits<6, Ty> {
 template <class Ty, class IntT>
 struct VargsOpTraits {
 	typedef Ty (*op_type)(const Ty args[], IntT count);
+};
+
+// =========================================================================
+// struct ExtOpTraits/ExtVargsOpTraits
+
+template <int nArity, class Ty, class AllocT>
+struct ExtOpTraits {};
+
+template <class Ty, class AllocT>
+struct ExtOpTraits<1, Ty, AllocT> {
+	typedef Ty (*op_type)(AllocT&, const Ty&);
+};
+
+template <class Ty, class AllocT>
+struct ExtOpTraits<2, Ty, AllocT> {
+	typedef Ty (*op_type)(AllocT&, const Ty&, const Ty&);
+};
+
+template <class Ty, class AllocT>
+struct ExtOpTraits<3, Ty, AllocT> {
+	typedef Ty (*op_type)(AllocT&, const Ty&, const Ty&, const Ty&);
+};
+
+template <class Ty, class AllocT>
+struct ExtOpTraits<4, Ty, AllocT> {
+	typedef Ty (*op_type)(AllocT&, const Ty&, const Ty&, const Ty&, const Ty&);
+};
+
+template <class Ty, class AllocT>
+struct ExtOpTraits<5, Ty, AllocT> {
+	typedef Ty (*op_type)(AllocT&, const Ty&, const Ty&, const Ty&, const Ty&, const Ty&);
+};
+
+template <class Ty, class AllocT>
+struct ExtOpTraits<6, Ty, AllocT> {
+	typedef Ty (*op_type)(AllocT&, const Ty&, const Ty&, const Ty&, const Ty&, const Ty&, const Ty&);
+};
+
+template <class Ty, class IntT, class AllocT>
+struct ExtVargsOpTraits {
+	typedef Ty (*op_type)(AllocT&, const Ty args[], IntT count);
 };
 
 // =========================================================================
