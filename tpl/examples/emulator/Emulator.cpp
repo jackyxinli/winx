@@ -187,8 +187,7 @@ public:
 			//	return my_factal(n-1)*n;
 			cpu::label(ge_1),
 			cpu::push_arg(-1), // load n
-			cpu::push(1),
-			cpu::sub(),
+			cpu::dec(),
 			cpu::call(my_factal),
 			cpu::push_arg(-1),
 			cpu::mul(),

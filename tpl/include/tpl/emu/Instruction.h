@@ -263,6 +263,30 @@ public:
 };
 
 // =========================================================================
+// class Inc
+
+// Usage: inc <value>
+// Example: inc 2	; x += 2
+// Example: inc -2	; x += -2
+
+template <class StackT, class ExecuteContextT>
+class Inc
+{
+private:
+	typedef typename StackT::value_type ValT;
+
+public:
+	static void op(Operand para, StackT& stk, ExecuteContextT& context) {
+		stk.back() += para.ival;
+		TPL_EMU_INSTR_DEBUG("inc " << para.ival << "\t; return: " << stk.back());
+	}
+
+	static Instruction<StackT, ExecuteContextT> TPL_CALL instr(ptrdiff_t val = 1) {
+		return Instruction<StackT, ExecuteContextT>(op, val);
+	}
+};
+
+// =========================================================================
 // class Jmp
 
 // Usage: jmp <position>

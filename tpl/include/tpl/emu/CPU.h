@@ -180,6 +180,14 @@ public:
 		return Nop<StackT, ContextT>::instr();
 	}
 
+	static InstructionT TPL_CALL inc(ptrdiff_t val = 1) {
+		return Inc<StackT, ContextT>::instr(val);
+	}
+
+	static InstructionT TPL_CALL dec(ptrdiff_t val = 1) {
+		return Inc<StackT, ContextT>::instr(-val);
+	}
+
 	template <class ValT2>
 	static InstrCode<ValT2, Push<StackT, ContextT> > TPL_CALL push(const ValT2& val) {
 		return InstrCode<ValT2, Push<StackT, ContextT> >(val);
