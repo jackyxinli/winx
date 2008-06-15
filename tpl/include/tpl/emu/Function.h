@@ -216,7 +216,9 @@ private:
 	typedef Ty_ Ty;
 	typedef Op_<Ty_> Op;
 	enum { is_unary = boost::is_convertible<Op, std::unary_function<Ty, Ty> >::value };
-	enum { is_binary = boost::is_convertible<Op, std::binary_function<Ty, Ty, Ty> >::value };
+	enum { is_binary1 = boost::is_convertible<Op, std::binary_function<Ty, Ty, Ty> >::value };
+	enum { is_binary2 = boost::is_convertible<Op, std::binary_function<Ty, Ty, bool> >::value };
+	enum { is_binary = is_binary1 | is_binary2 };
 
 public:
 	enum { value = ArityTratis_<is_unary, is_binary>::value };

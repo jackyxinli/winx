@@ -312,6 +312,24 @@ public:
 };
 
 // =========================================================================
+// Imposible:
+
+template <class StackT, class ExecuteContextT, class AnyT>
+void TPL_CALL operator,(const Instruction<StackT, ExecuteContextT>& a, const AnyT& b);
+
+template <class LabelT, class AnyT>
+void TPL_CALL operator,(const LabelDefine<LabelT>& a, const AnyT& b);
+
+template <class LabelT, class InstructionT, class AnyT>
+void TPL_CALL operator,(const LabelRefer<LabelT, InstructionT>& a, const AnyT& b);
+
+template <class ValT2, class InstructionT, class AnyT>
+void TPL_CALL operator,(const InstrCode<ValT2, InstructionT>& a, const AnyT& b);
+
+template <class ValT2, class InstructionT, class ValT3, class AnyT>
+void TPL_CALL operator,(const ExtInstrCode<ValT2, InstructionT, ValT3>& a, const AnyT& b);
+
+// =========================================================================
 // $Log: $
 
 NS_TPL_EMU_END

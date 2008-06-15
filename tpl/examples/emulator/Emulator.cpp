@@ -29,7 +29,7 @@ public:
 		cpu::stack_type stk;
 		code.exec(0, code.size(), stk);
 	
-		std::cout << stk.top() << "\n";
+		std::cout << stk.top() << "\n\n";
 	}
 	
 	void local_var()
@@ -60,7 +60,7 @@ public:
 		cpu::stack_type stk;
 		code.exec(0, code.size(), stk);
 	
-		std::cout << stk.top() << "\n";
+		std::cout << stk.top() << "\n\n";
 	}
 	
 	void local_var_optimization()
@@ -82,7 +82,7 @@ public:
 		cpu::stack_type stk;
 		code.exec(0, code.size(), stk);
 	
-		std::cout << stk.top() << "\n";
+		std::cout << stk.top() << "\n\n";
 	}
 	
 	void vargs()
@@ -102,7 +102,7 @@ public:
 		cpu::stack_type stk;
 		code.exec(0, code.size(), stk);
 
-		std::cout << stk.top() << "\n";
+		std::cout << stk.top() << "\n\n";
 	}
 	
 	void call_proc()
@@ -130,7 +130,7 @@ public:
 		cpu::stack_type stk;
 		code.exec(0, code.size(), stk);
 
-		std::cout << stk.top() << "\n";
+		std::cout << stk.top() << "\n\n";
 	}
 
 	void call_proc2()
@@ -156,7 +156,51 @@ public:
 		cpu::stack_type stk;
 		code.exec(my_label, code.size(), stk);
 	
-		std::cout << stk.top() << "\n";
+		std::cout << stk.top() << "\n\n";
+	}
+	
+	void factal()
+	{
+		typedef tpl::emu::CPU<size_t, true> cpu;
+
+		cpu::alloc_type alloc;
+		cpu::code_type code(alloc);
+
+		cpu::proc_type<0> my_factal;
+		cpu::label_type<0> my_label;
+		cpu::label_type<1> ge_1;
+		
+		code <<
+			// --> begin of procedure my_factal(n)
+			cpu::proc(my_factal),
+			
+			// if (n <= 1)
+			//	return 1;
+			cpu::push_arg(-1), // load n
+			cpu::push(1),
+			cpu::le(), // n <= 1?
+			cpu::je(ge_1), // jmp if false
+			cpu::push(1),
+			cpu::ret(1),
+			
+			cpu::label(ge_1),
+			cpu::push_arg(-1), // load n
+			cpu::push(1),
+			cpu::sub(),
+			cpu::call(my_factal),
+			cpu::push_arg(-1),
+			cpu::mul(),
+			cpu::ret(1),
+			// --> end of procedure
+
+			cpu::label(my_label),
+			cpu::push(4),
+			cpu::call(my_factal);
+
+		cpu::stack_type stk;
+		code.exec(my_label, code.size(), stk);
+	
+		std::cout << stk.top() << "\n\n";
 	}
 };
 
@@ -169,6 +213,7 @@ int main()
 	test.vargs();
 	test.call_proc();
 	test.call_proc2();
+	test.factal();
 }
 
 // -------------------------------------------------------------------------

@@ -106,6 +106,13 @@ struct VariantTraits<double> {
 	}
 };
 
+template <>
+struct VariantTraits<size_t> {
+	static size_t TPL_CALL cast(size_t size_) {
+		return size_;
+	}
+};
+
 template <class ValT>
 __forceinline ValT TPL_CALL ref_to_variant(ValT& ref_) {
 	return VariantTraits<ValT>::cast((size_t)&ref_);
@@ -178,14 +185,25 @@ private:
 
 public:
 	static void op(Operand para, StackT& stk, ExecuteContextT& context) {
-		TPL_EMU_INSTR_DEBUG("push " << *(const ValT*)para.ptr);
-		stk.push_back(*(const ValT*)para.ptr);
+		if (sizeof(ValT) > sizeof(void*)) {
+			TPL_EMU_INSTR_DEBUG("push " << *(const ValT*)para.ptr);
+			stk.push_back(*(const ValT*)para.ptr);
+		}
+		else {
+			TPL_EMU_INSTR_DEBUG("push " << *(const ValT*)&para.ptr);
+			stk.push_back(*(const ValT*)&para.ptr);
+		}
 	}
 	
 	template <class AllocT>
 	static Instruction<StackT, ExecuteContextT> TPL_CALL instr(AllocT& alloc, const ValT& val) {
-		const ValT* p = TPL_NEW(alloc, ValT)(val);
-		return Instruction<StackT, ExecuteContextT>(op, p);
+		if (sizeof(ValT) > sizeof(void*)) {
+			return Instruction<StackT, ExecuteContextT>(op, TPL_NEW(alloc, ValT)(val));
+		}
+		else {
+			void* p;
+			return Instruction<StackT, ExecuteContextT>(op, *(void**)new(&p) ValT(val));
+		}
 	}
 };
 
@@ -222,14 +240,25 @@ private:
 
 public:
 	static void op(Operand para, StackT& stk, ExecuteContextT& context) {
-		TPL_EMU_INSTR_DEBUG("repush " << *(const ValT*)para.ptr);
-		stk.back() = *(const ValT*)para.ptr;
+		if (sizeof(ValT) > sizeof(void*)) {
+			TPL_EMU_INSTR_DEBUG("repush " << *(const ValT*)para.ptr);
+			stk.back() = *(const ValT*)para.ptr;
+		}
+		else {
+			TPL_EMU_INSTR_DEBUG("repush " << *(const ValT*)&para.ptr);
+			stk.back() = *(const ValT*)&para.ptr;
+		}
 	}
 	
 	template <class AllocT>
 	static Instruction<StackT, ExecuteContextT> TPL_CALL instr(AllocT& alloc, const ValT& val) {
-		const ValT* p = TPL_NEW(alloc, ValT)(val);
-		return Instruction<StackT, ExecuteContextT>(op, p);
+		if (sizeof(ValT) > sizeof(void*)) {
+			return Instruction<StackT, ExecuteContextT>(op, TPL_NEW(alloc, ValT)(val));
+		}
+		else {
+			void* p;
+			return Instruction<StackT, ExecuteContextT>(op, *(void**)new(&p) ValT(val));
+		}
 	}
 };
 
