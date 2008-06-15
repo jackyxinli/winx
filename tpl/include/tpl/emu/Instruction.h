@@ -468,8 +468,8 @@ class RetN
 {
 public:
 	static void op(Operand para, StackT& stk, ExecuteContextT& context) {
-		TPL_EMU_INSTR_DEBUG("ret " << para.val - CallerFrame::SIZE << "\t; pop: " << para.val);
 		CallerFrame::ret(stk, context, para.val);
+		TPL_EMU_INSTR_DEBUG("ret " << para.val - CallerFrame::SIZE << "\t; return: " << stk.back());
 	}
 	
 	static Instruction<StackT, ExecuteContextT> TPL_CALL instr(size_t n) {
@@ -483,8 +483,8 @@ class Ret
 public:
 	static void op(Operand para, StackT& stk, ExecuteContextT& context) {
 		const size_t n = CallerFrame::arity(stk, context) + (CallerFrame::SIZE + 1);
-		TPL_EMU_INSTR_DEBUG("ret\t; pop: " << n);
 		CallerFrame::ret(stk, context, n);
+		TPL_EMU_INSTR_DEBUG("ret\t; return: " << stk.back());
 	}
 	
 	static Instruction<StackT, ExecuteContextT> TPL_CALL instr() {

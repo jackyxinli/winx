@@ -171,7 +171,7 @@ public:
 		cpu::label_type<1> ge_1;
 		
 		code <<
-			// --> begin of procedure my_factal(n)
+			// --> proc my_factal(n)
 			cpu::proc(my_factal),
 			
 			// if (n <= 1)
@@ -183,6 +183,8 @@ public:
 			cpu::push(1),
 			cpu::ret(1),
 			
+			// else
+			//	return my_factal(n-1)*n;
 			cpu::label(ge_1),
 			cpu::push_arg(-1), // load n
 			cpu::push(1),
@@ -191,16 +193,16 @@ public:
 			cpu::push_arg(-1),
 			cpu::mul(),
 			cpu::ret(1),
-			// --> end of procedure
+			// --> end proc
 
 			cpu::label(my_label),
 			cpu::push(4),
-			cpu::call(my_factal);
+			cpu::call(my_factal); // call my_factal(4)
 
 		cpu::stack_type stk;
 		code.exec(my_label, code.size(), stk);
 	
-		std::cout << stk.top() << "\n\n";
+		std::cout << "4! = " << stk.top() << "\n\n";
 	}
 };
 
