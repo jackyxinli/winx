@@ -181,13 +181,23 @@ public:
 	}
 
 	template <class ValT2>
-	static PushCode<ValT2> TPL_CALL push(const ValT2& val) {
-		return PushCode<ValT2>(val);
+	static InstrCode<ValT2, Push<StackT, ContextT> > TPL_CALL push(const ValT2& val) {
+		return InstrCode<ValT2, Push<StackT, ContextT> >(val);
 	}
 	
 	template <class AllocT2, class ValT2>
 	static InstructionT TPL_CALL push(AllocT2& alloc, const ValT2& val) {
 		return Push<StackT, ContextT>::instr(alloc, val);
+	}
+
+	template <class ValT2>
+	static InstrCode<ValT2, Repush<StackT, ContextT> > TPL_CALL repush(const ValT2& val) {
+		return InstrCode<ValT2, Repush<StackT, ContextT> >(val);
+	}
+	
+	template <class AllocT2, class ValT2>
+	static InstructionT TPL_CALL repush(AllocT2& alloc, const ValT2& val) {
+		return Repush<StackT, ContextT>::instr(alloc, val);
 	}
 
 	static InstructionT TPL_CALL pop(size_t n) {
@@ -223,6 +233,10 @@ public:
 	}
 
 	static InstructionT TPL_CALL push_local(size_t delta) {
+		return PushLocal<StackT, ContextT>::instr(delta);
+	}
+
+	static InstructionT TPL_CALL push_operand(ptrdiff_t delta) {
 		return PushLocal<StackT, ContextT>::instr(delta);
 	}
 
@@ -362,12 +376,21 @@ public:
 
 public:
 	template <class ValT2>
-	static ExtPushCode<ValT2> TPL_CALL push(const ValT2& val) {
-		return ExtPushCode<ValT2>(val);
+	static ExtInstrCode<ValT2, Push<StackT, ContextT>, ValT> TPL_CALL push(const ValT2& val) {
+		return ExtInstrCode<ValT2, Push<StackT, ContextT>, ValT>(val);
 	}
 
-	static PushCode<ValT> TPL_CALL push(const ValT& val) {
-		return PushCode<ValT>(val);
+	static InstrCode<ValT, Push<StackT, ContextT> > TPL_CALL push(const ValT& val) {
+		return InstrCode<ValT, Push<StackT, ContextT> >(val);
+	}
+
+	template <class ValT2>
+	static ExtInstrCode<ValT2, Repush<StackT, ContextT>, ValT> TPL_CALL repush(const ValT2& val) {
+		return ExtInstrCode<ValT2, Repush<StackT, ContextT>, ValT>(val);
+	}
+
+	static InstrCode<ValT, Repush<StackT, ContextT> > TPL_CALL repush(const ValT& val) {
+		return InstrCode<ValT, Repush<StackT, ContextT> >(val);
 	}
 };
 

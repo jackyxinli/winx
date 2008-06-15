@@ -92,10 +92,6 @@ public:
 		m_ip = ip;
 	}
 
-	void TPL_CALL jump(ptrdiff_t delta) {
-		m_ip += delta;
-	}
-	
 	template <class CodeT>
 	const typename CodeT::instruction_type& TPL_CALL next(const CodeT& code) {
 		return code[m_ip++];
@@ -159,26 +155,37 @@ public:
 };
 
 // =========================================================================
-// class PushCode/ExtPushCode
+// class InstrCode/ExtInstrCode
 
-template <class ValT>
-class PushCode
+template <class ValT, class InstructionT>
+class InstrCode
 {
 public:
 	const ValT m_val;
-	
-	PushCode(const ValT& val) : m_val(val) {
+
+	typedef InstructionT instruction_type;
+
+	InstrCode(const ValT& val) : m_val(val) {
 	}
 };
 
-template <class ValT>
-class ExtPushCode
+template <class ValT, class InstructionT, class ValT2>
+class ExtInstrCode
 {
 public:
 	const ValT m_val;
-	
-	ExtPushCode(const ValT& val) : m_val(val) {
+
+	typedef ValT2 target_type;
+	typedef InstructionT instruction_type;
+
+	ExtInstrCode(const ValT& val) : m_val(val) {
 	}
+};
+
+template <class ValT, class InstructionT>
+class ExtInstrCode<ValT, InstructionT, ValT>
+{
+	// error!
 };
 
 // =========================================================================
@@ -214,40 +221,40 @@ public:
 	}
 
 public:
-	// Push:
+	// InstrCode: push, repush, etc
 	
-	template <class ValT2>
-	Code& TPL_CALL operator,(const PushCode<ValT2>& a) {
+	template <class ValT2, class InstructionT>
+	Code& TPL_CALL operator,(const InstrCode<ValT2, InstructionT>& a) {
 		Base::push_back(
-			Push<stack_type, execute_context>::instr(Base::get_alloc(), a.m_val)
+			InstructionT::instr(Base::get_alloc(), a.m_val)
 			);
 		return *this;
 	}
 	
-	template <class ValT2>
-	Code& TPL_CALL operator<<(const PushCode<ValT2>& a) {
+	template <class ValT2, class InstructionT>
+	Code& TPL_CALL operator<<(const InstrCode<ValT2, InstructionT>& a) {
 		Base::push_back(
-			Push<stack_type, execute_context>::instr(Base::get_alloc(), a.m_val)
+			InstructionT::instr(Base::get_alloc(), a.m_val)
 			);
 		return *this;
 	}
 	
-	// ExtPush:
+	// ExtInstrCode:
 
-	template <class ValT2>
-	Code& TPL_CALL operator,(const ExtPushCode<ValT2>& a) {
+	template <class ValT2, class InstructionT, class ValT3>
+	Code& TPL_CALL operator,(const ExtInstrCode<ValT2, InstructionT, ValT3>& a) {
 		AllocT& alloc = Base::get_alloc();
 		Base::push_back(
-			Push<stack_type, execute_context>::instr(alloc, ValT(alloc, a.m_val))
+			InstructionT::instr(alloc, ValT3(alloc, a.m_val))
 			);
 		return *this;
 	}
 	
-	template <class ValT2>
-	Code& TPL_CALL operator<<(const ExtPushCode<ValT2>& a) {
+	template <class ValT2, class InstructionT, class ValT3>
+	Code& TPL_CALL operator<<(const ExtInstrCode<ValT2, InstructionT, ValT3>& a) {
 		AllocT& alloc = Base::get_alloc();
 		Base::push_back(
-			Push<stack_type, execute_context>::instr(alloc, ValT(alloc, a.m_val))
+			InstructionT::instr(alloc, ValT3(alloc, a.m_val))
 			);
 		return *this;
 	}

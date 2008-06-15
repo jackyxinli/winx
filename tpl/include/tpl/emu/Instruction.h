@@ -23,10 +23,6 @@
 #include "Function.h"
 #endif
 
-#ifndef STDEXT_VARIANT_H
-#include "../../../../stdext/include/stdext/Variant.h"
-#endif
-
 // -------------------------------------------------------------------------
 
 #if defined(TPL_EMU_DEBUG) || defined(_DEBUG)
@@ -86,7 +82,22 @@ inline const char* TPL_CALL crackOpName(const char* name_)
 // function ref_to_variant/variant_to_ref
 
 template <class ValT>
-struct VariantTraits {
+struct VariantTraits
+{
+public:
+	static ValT TPL_CALL cast(size_t size_) {
+		ValT val_;
+		*(size_t*)&val_ = size_;
+		return val_;
+	}
+	static size_t TPL_CALL cast(const ValT& val_) {
+		return *(size_t*)&val_;
+	}
+};
+
+template <>
+struct VariantTraits<double> {
+	typedef double ValT;
 	static ValT TPL_CALL cast(size_t size_) {
 		return size_;
 	}
@@ -104,23 +115,6 @@ template <class ValT>
 __forceinline ValT& TPL_CALL variant_to_ref(const ValT& val_) {
 	return *(ValT*)VariantTraits<ValT>::cast(val_);
 }
-
-template <template <class ValueT> class TypeTraitsT>
-struct VariantTraits<std::Variant<TypeTraitsT> >
-{
-private:
-	typedef std::Variant<TypeTraitsT> ValT;
-
-public:
-	static ValT TPL_CALL cast(size_t size_) {
-		ValT val_;
-		*(size_t*)&val_ = size_;
-		return val_;
-	}
-	static size_t TPL_CALL cast(const ValT& val_) {
-		return *(size_t*)&val_;
-	}
-};
 
 // =========================================================================
 // Instruction
@@ -172,7 +166,7 @@ public:
 };
 
 // =========================================================================
-// class Push/Pop
+// class Push/Pop/Repush(PopAndPush)
 
 // Usage: push <val>
 
@@ -220,29 +214,48 @@ public:
 	}
 };
 
+template <class StackT, class ExecuteContextT>
+class Repush // PopAndPush
+{
+private:
+	typedef typename StackT::value_type ValT;
+
+public:
+	static void op(Operand para, StackT& stk, ExecuteContextT& context) {
+		TPL_EMU_INSTR_DEBUG("repush " << *(const ValT*)para.ptr);
+		stk.back() = *(const ValT*)para.ptr;
+	}
+	
+	template <class AllocT>
+	static Instruction<StackT, ExecuteContextT> TPL_CALL instr(AllocT& alloc, const ValT& val) {
+		const ValT* p = TPL_NEW(alloc, ValT)(val);
+		return Instruction<StackT, ExecuteContextT>(op, p);
+	}
+};
+
 // =========================================================================
 // class Jmp
 
-// Usage: jmp <delta>
+// Usage: jmp <position>
 
 template <class StackT, class ExecuteContextT>
 class Jmp
 {
 public:
 	static void op(Operand para, StackT& stk, ExecuteContextT& context) {
-		TPL_EMU_INSTR_DEBUG("jmp " << para.ival);
-		context.jump(para.ival);
+		TPL_EMU_INSTR_DEBUG("jmp " << para.val);
+		context.position(para.val);
 	}
 	
-	static Instruction<StackT, ExecuteContextT> TPL_CALL instr(ptrdiff_t delta) {
-		return Instruction<StackT, ExecuteContextT>(op, delta);
+	static Instruction<StackT, ExecuteContextT> TPL_CALL instr(size_t offset) {
+		return Instruction<StackT, ExecuteContextT>(op, offset);
 	}
 };
 
 // =========================================================================
 // class JmpIfFalse
 
-// Usage: je <delta>
+// Usage: je <position>
 
 template <class StackT, class ExecuteContextT>
 class JmpIfFalse
@@ -251,13 +264,13 @@ public:
 	static void op(Operand para, StackT& stk, ExecuteContextT& context) {
 		const typename StackT::value_type val = stk.back();
 		stk.pop_back();
-		TPL_EMU_INSTR_DEBUG("je " << para.ival << "\t; condition: " << val);
+		TPL_EMU_INSTR_DEBUG("je " << para.val << "\t; condition: " << val);
 		if (!val)
-			context.jump(para.ival);
+			context.position(para.val);
 	}
 	
-	static Instruction<StackT, ExecuteContextT> TPL_CALL instr(ptrdiff_t delta) {
-		return Instruction<StackT, ExecuteContextT>(op, delta);
+	static Instruction<StackT, ExecuteContextT> TPL_CALL instr(size_t offset) {
+		return Instruction<StackT, ExecuteContextT>(op, offset);
 	}
 };
 
@@ -330,12 +343,12 @@ public:
 	
 public:
 	template <class StackT, class ExecuteContextT>
-	static void TPL_CALL call(StackT& stk, ExecuteContextT& context, ptrdiff_t delta) {
+	static void TPL_CALL call(StackT& stk, ExecuteContextT& context, size_t offset) {
 		typedef VariantTraits<typename StackT::value_type> Tr_;
 		stk.push_back(Tr_::cast(context.position()));
 		stk.push_back(Tr_::cast(context.frame()));
 		context.frame(stk.size());
-		context.jump(delta);
+		context.position(offset);
 	}
 
 	template <class StackT, class ExecuteContextT>
@@ -369,7 +382,7 @@ public:
 // =========================================================================
 // class Call
 
-// Usage: call <delta>
+// Usage: call <position>
 //
 // Example1:
 //	push 3.0
@@ -392,12 +405,12 @@ class Call
 {
 public:
 	static void op(Operand para, StackT& stk, ExecuteContextT& context) {
-		TPL_EMU_INSTR_DEBUG("call " << para.ival);
-		CallerFrame::call(stk, context, para.ival);
+		TPL_EMU_INSTR_DEBUG("call " << para.val);
+		CallerFrame::call(stk, context, para.val);
 	}
 	
-	static Instruction<StackT, ExecuteContextT> TPL_CALL instr(ptrdiff_t delta) {
-		return Instruction<StackT, ExecuteContextT>(op, delta);
+	static Instruction<StackT, ExecuteContextT> TPL_CALL instr(size_t offset) {
+		return Instruction<StackT, ExecuteContextT>(op, offset);
 	}
 };
 
@@ -451,9 +464,9 @@ public:
 };
 
 // =========================================================================
-// class PushArg/PushVArgs/PushLocal
+// class PushArg/PushVArgs/PushLocal/PushOperand
 
-// Usage: push_arg <offset>	; here <offset> can be -n ~ -1
+// Usage: push_arg <delta>	; here <delta> can be -n ~ -1
 //	 arg1 = push_arg -n
 //	 arg2 = push_arg -(n-1)
 //	 ...
@@ -508,6 +521,28 @@ public:
 	}
 	
 	static Instruction<StackT, ExecuteContextT> TPL_CALL instr(size_t delta) {
+		return Instruction<StackT, ExecuteContextT>(op, delta);
+	}
+};
+
+// Usage: push_operand <delta> ; here <delta> can be -n ~ -1
+//	 oprand1 = push_operand -n
+//	 oprand2 = push_operand -(n-1)
+//	 ...
+//	 oprandn = push_operand -1
+
+template <class StackT, class ExecuteContextT>
+class PushOperand
+{
+public:
+	static void op(Operand para, StackT& stk, ExecuteContextT& context) {
+		TPL_EMU_INSTR_DEBUG(
+			"push_operand " << para.ival <<
+			"\t; push: " << stk[context.size() + para.ival] );
+		stk.push_back(stk[context.size() + para.ival]);
+	}
+	
+	static Instruction<StackT, ExecuteContextT> TPL_CALL instr(ptrdiff_t delta) {
 		return Instruction<StackT, ExecuteContextT>(op, delta);
 	}
 };

@@ -35,7 +35,7 @@ template <size_t n = TPL_EMU_DYNAMIC_LABEL>
 class Label
 {
 private:
-	typedef ptrdiff_t* Reference;
+	typedef size_t* Reference;
 	typedef std::Array<Reference, n> References;
 	
 	size_t m_label;
@@ -60,18 +60,16 @@ public:
 		TPL_ASSERT(!defined());
 		m_label = code.size();
 		for (size_t i = m_refs.size(); i--; )
-			*m_refs[i] += m_label;
+			*m_refs[i] = m_label;
 	}
 	
 	template <class CodeT>
 	void TPL_CALL refer(CodeT& code) {
 		if (m_label == TPL_EMU_UNDEFINED_LABEL) {
-			Reference ref_ = &code.back().para.ival;
-			*ref_ = -code.size();
-			m_refs.push_back(ref_);
+			m_refs.push_back(&code.back().para.val);
 		}
 		else {
-			code.back().para.ival = m_label - code.size();
+			code.back().para.val = m_label;
 		}
 	}
 };
@@ -105,7 +103,7 @@ public:
 	template <class CodeT>
 	void TPL_CALL refer(CodeT& code) {
 		TPL_ASSERT(defined());
-		code.back().para.ival = m_label - code.size();
+		code.back().para.val = m_label;
 	}
 };
 
@@ -114,7 +112,7 @@ class Label<TPL_EMU_DYNAMIC_LABEL>
 {
 private:
 	struct Reference {
-		ptrdiff_t* delta;
+		size_t* offset;
 		Reference* prev;
 	};
 
@@ -140,20 +138,19 @@ public:
 		TPL_ASSERT(!defined());
 		m_label = code.size();
 		for (Reference* ref_ = m_refs; ref_; ref_ = ref_->prev)
-			*ref_->delta += m_label;
+			*ref_->offset = m_label;
 	}
 	
 	template <class CodeT>
 	void TPL_CALL refer(CodeT& code) {
 		if (m_label == TPL_EMU_UNDEFINED_LABEL) {
 			Reference* ref_ = TPL_ALLOC(code.get_alloc(), Reference);
-			ref_->delta = &code.back().para.ival;
-			*ref_->delta = -code.size();
+			ref_->offset = &code.back().para.val;
 			ref_->prev = m_refs;
 			m_refs = ref_;
 		}
 		else {
-			code.back().para.ival = m_label - code.size();
+			code.back().para.val = m_label;
 		}
 	}
 };

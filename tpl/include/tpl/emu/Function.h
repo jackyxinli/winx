@@ -181,18 +181,16 @@ public:
 	void TPL_CALL operator()(StackT& stk) const {
 		typedef typename StackT::value_type value_type;
 		TPL_ASSERT(stk.size() >= 1);
-		value_type x = stk.back();
-		stk.pop_back();
-		stk.push_back(m_op(x));
+		value_type& x = stk.back();
+		x = m_op(x);
 	}
 
 	template <class AllocT, class StackT>
 	void TPL_CALL operator()(AllocT& alloc, StackT& stk) const {
 		typedef typename StackT::value_type value_type;
 		TPL_ASSERT(stk.size() >= 1);
-		value_type x = stk.back();
-		stk.pop_back();
-		stk.push_back(m_op(alloc, x));
+		value_type& x = stk.back();
+		x = m_op(alloc, x);
 	}
 };
 
