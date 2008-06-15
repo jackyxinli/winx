@@ -38,6 +38,7 @@ public:
 		cpu::code_type code(alloc);
 		
 		// x = 2.0
+		// ++x
 		// y = 3.0
 		// x * y
 		code <<
@@ -46,6 +47,8 @@ public:
 			cpu::lea_local(0),
 			cpu::push(2.0),
 			cpu::assign(),
+			cpu::lea_local(0),
+			cpu::inc(),
 			cpu::pop(),
 			
 			cpu::lea_local(1),
@@ -69,12 +72,15 @@ public:
 		cpu::code_type code(alloc);
 		
 		// x = 2.0
+		// ++x
 		// y = 3.0
 		// x * y
 		code <<
 			cpu::local(2),
 			cpu::push(2.0),
 			cpu::assign_local(0),
+			cpu::lea_local(0),
+			cpu::inc(),
 			cpu::push(3.0),
 			cpu::assign_local(1),
 			cpu::mul();
@@ -187,7 +193,7 @@ public:
 			//	return my_factal(n-1)*n;
 			cpu::label(ge_1),
 			cpu::push_arg(-1), // load n
-			cpu::dec(),
+			cpu::sub(1),
 			cpu::call(my_factal),
 			cpu::push_arg(-1),
 			cpu::mul(),

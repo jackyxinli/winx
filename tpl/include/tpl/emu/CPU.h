@@ -180,6 +180,14 @@ public:
 		return Nop<StackT, ContextT>::instr();
 	}
 
+	static InstructionT TPL_CALL add(ptrdiff_t val) {
+		return Add<StackT, ContextT>::instr(val);
+	}
+
+	static InstructionT TPL_CALL sub(ptrdiff_t val) {
+		return Add<StackT, ContextT>::instr(-val);
+	}
+
 	static InstructionT TPL_CALL inc(ptrdiff_t val = 1) {
 		return Inc<StackT, ContextT>::instr(val);
 	}
