@@ -3,7 +3,6 @@
 #include <iostream> 	// std::cout
 #include <algorithm>	// std::max_element
 #include <tpl/Emulator.h>
-#include <tpl/ext/Calculator.h>
 
 double max_value(const double x[], int count)
 {
