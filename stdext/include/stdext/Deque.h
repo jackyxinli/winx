@@ -29,20 +29,20 @@
 		#include "../std/deque.h"
 		#endif
 		#define _WINX_DEQUE_BASE(DataT, AllocT) \
-			std::_Deque<DataT, StlAlloc<DataT, AllocT> >
+			std::_Deque<DataT, std::StlAlloc<DataT, AllocT> >
 	#else
 		#ifndef __SGI_DEQUE_H__
 		#include "sgi/deque.h"
 		#endif
 		#define _WINX_DEQUE_BASE(DataT, AllocT) \
-			stdext::deque<DataT, StlAlloc<DataT, AllocT> >
+			stdext::deque<DataT, std::StlAlloc<DataT, AllocT> >
 	#endif
 #else
-	#if !defined(_DEQUE) && !defined(_DEQUE_)
+	#if !defined(_DEQUE) && !defined(_GLIBCXX_DEQUE) && !defined(_DEQUE_)
 	#include <deque>
 	#endif
 	#define _WINX_DEQUE_BASE(DataT, AllocT) \
-		std::deque<DataT, StlAlloc<DataT, AllocT> >
+		std::deque<DataT, std::StlAlloc<DataT, AllocT> >
 #endif
 
 #if defined(STD_UNITTEST)

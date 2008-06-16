@@ -99,29 +99,29 @@ struct _HashComp : public stdext::hash_compare<KeyT, typename HashCompT::key_pre
 #define _WINX_BASE_HASHMAP(KeyT, DataT, HashCompT, AllocT)					\
 	stdext::hash_map<														\
 		KeyT, DataT,														\
-		_HashComp<KeyT, HashCompT>,											\
-		StlAlloc<DataT, AllocT>												\
+		std::_HashComp<KeyT, HashCompT>,											\
+		std::StlAlloc<DataT, AllocT>												\
 	>
 
 #define _WINX_BASE_HASHMULTIMAP(KeyT, DataT, HashCompT, AllocT)				\
 	stdext::hash_multimap<													\
 		KeyT, DataT,														\
-		_HashComp<KeyT, HashCompT>,											\
-		StlAlloc<DataT, AllocT>												\
+		std::_HashComp<KeyT, HashCompT>,											\
+		std::StlAlloc<DataT, AllocT>												\
 	>
 
 #define _WINX_BASE_HASHSET(ValT, HashCompT, AllocT)							\
 	stdext::hash_set<														\
 		ValT,																\
-		_HashComp<ValT, HashCompT>,											\
-		StlAlloc<ValT, AllocT>												\
+		std::_HashComp<ValT, HashCompT>,											\
+		std::StlAlloc<ValT, AllocT>												\
 	>
 
 #define _WINX_BASE_HASHMULTISET(ValT, HashCompT, AllocT)					\
 	stdext::hash_multiset<													\
 		ValT,																\
-		_HashComp<ValT, HashCompT>,											\
-		StlAlloc<ValT, AllocT>												\
+		std::_HashComp<ValT, HashCompT>,											\
+		std::StlAlloc<ValT, AllocT>												\
 	>
 
 #else
@@ -131,7 +131,7 @@ struct _HashComp : public stdext::hash_compare<KeyT, typename HashCompT::key_pre
 		KeyT, DataT,														\
 		typename HashCompT::hasher,											\
 		typename HashCompT::key_equal,										\
-		StlAlloc<DataT, AllocT>												\
+		std::StlAlloc<DataT, AllocT>												\
 		>
 
 #define _WINX_BASE_HASHMULTIMAP(KeyT, DataT, HashCompT, AllocT)				\
@@ -139,7 +139,7 @@ struct _HashComp : public stdext::hash_compare<KeyT, typename HashCompT::key_pre
 		KeyT, DataT,														\
 		typename HashCompT::hasher,											\
 		typename HashCompT::key_equal,										\
-		StlAlloc<DataT, AllocT>												\
+		std::StlAlloc<DataT, AllocT>												\
 	>
 
 #define _WINX_BASE_HASHSET(ValT, HashCompT, AllocT)							\
@@ -147,7 +147,7 @@ struct _HashComp : public stdext::hash_compare<KeyT, typename HashCompT::key_pre
 		ValT,																\
 		typename HashCompT::hasher,											\
 		typename HashCompT::key_equal,										\
-		StlAlloc<ValT, AllocT>												\
+		std::StlAlloc<ValT, AllocT>												\
 		>
 
 #define _WINX_BASE_HASHMULTISET(ValT, HashCompT, AllocT)					\
@@ -155,7 +155,7 @@ struct _HashComp : public stdext::hash_compare<KeyT, typename HashCompT::key_pre
 		ValT,																\
 		typename HashCompT::hasher,											\
 		typename HashCompT::key_equal,										\
-		StlAlloc<ValT, AllocT>												\
+		std::StlAlloc<ValT, AllocT>												\
 	>
 
 #endif
