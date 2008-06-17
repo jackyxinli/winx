@@ -35,28 +35,31 @@ public:
 	{
 		cpu::alloc_type alloc;
 		cpu::code_type code(alloc);
+		cpu::var_type x, y;
 		
-		// x = 2.0
-		// ++x
-		// y = 3.0
-		// x * y
+		// x = 2.0;
+		// ++x;
+		// y = 3.0;
+		// x * y;
 		code <<
-			cpu::local(2),
+			cpu::var(x, y),
 			
-			cpu::lea_local(0),
+			cpu::lea(x),
 			cpu::push(2.0),
 			cpu::assign(),
-			cpu::lea_local(0),
+			cpu::pop(),
+			
+			cpu::lea(x),
 			cpu::inc(),
 			cpu::pop(),
 			
-			cpu::lea_local(1),
+			cpu::lea(y),
 			cpu::push(3.0),
 			cpu::assign(),
 			cpu::pop(),
 
-			cpu::push_local(0),
-			cpu::push_local(1),
+			cpu::push(x),
+			cpu::push(y),
 			cpu::mul();
 
 		cpu::stack_type stk;
@@ -69,19 +72,25 @@ public:
 	{
 		cpu::alloc_type alloc;
 		cpu::code_type code(alloc);
+		cpu::var_type x, y;
 		
-		// x = 2.0
-		// ++x
-		// y = 3.0
-		// x * y
-		code <<
-			cpu::local(2),
+		// x = 2.0;
+		// ++x;
+		// y = 3.0;
+		// x * y;
+		code <<			
 			cpu::push(2.0),
-			cpu::assign_local(0),
-			cpu::lea_local(0),
+			cpu::var_init(x),
+			
+			cpu::lea(x),
 			cpu::inc(),
+			cpu::pop(),
+			
 			cpu::push(3.0),
-			cpu::assign_local(1),
+			cpu::var_init(y),
+			
+			cpu::push(x),
+			cpu::push(y),
 			cpu::mul();
 
 		cpu::stack_type stk;
@@ -117,13 +126,17 @@ public:
 
 		cpu::proc_type<> my_div;
 		cpu::label_type<> my_label;
+		cpu::var_type x, y;
 
 		code <<
 			cpu::jmp(my_label),
 
 			cpu::proc(my_div),
-			cpu::push_arg(-2),
-			cpu::push_arg(-1),
+			cpu::arg(x),
+			cpu::arg(y),
+			cpu::end_arglist(),
+			cpu::push(x),
+			cpu::push(y),
 			cpu::div(),
 			cpu::ret(2),
 
@@ -145,11 +158,12 @@ public:
 
 		cpu::proc_type<0> my_div;
 		cpu::label_type<0> my_label;
+		cpu::var_type x, y;
 
 		code <<
-			cpu::proc(my_div),
-			cpu::push_arg(-2),
-			cpu::push_arg(-1),
+			cpu::proc(my_div, x, y),
+			cpu::push(x),
+			cpu::push(y),
 			cpu::div(),
 			cpu::ret(2),
 
@@ -170,18 +184,19 @@ public:
 
 		cpu::alloc_type alloc;
 		cpu::code_type code(alloc);
-
+		
 		cpu::proc_type<0> my_factal;
 		cpu::label_type<0> my_label;
 		cpu::label_type<1> ge_1;
+		cpu::var_type n;
 		
 		code <<
 			// --> proc my_factal(n)
-			cpu::proc(my_factal),
+			cpu::proc(my_factal, n),
 			
 			// if (n <= 1)
 			//	return 1;
-			cpu::push_arg(-1), // load n
+			cpu::push(n),
 			cpu::push(1),
 			cpu::le(), // n <= 1?
 			cpu::je(ge_1), // jmp if false
@@ -191,10 +206,10 @@ public:
 			// else
 			//	return my_factal(n-1)*n;
 			cpu::label(ge_1),
-			cpu::push_arg(-1), // load n
+			cpu::push(n),
 			cpu::sub(1),
 			cpu::call(my_factal),
-			cpu::push_arg(-1),
+			cpu::push(n),
 			cpu::mul(),
 			cpu::ret(1),
 			// --> end proc

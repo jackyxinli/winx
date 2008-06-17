@@ -23,6 +23,10 @@
 #include "../../../../stdext/include/stdext/Array.h"
 #endif
 
+#ifndef TPL_EMU_VAR_H
+#include "Var.h"
+#endif
+
 NS_TPL_EMU_BEGIN
 
 // =========================================================================
@@ -152,6 +156,202 @@ public:
 		else {
 			code.back().para.val = m_label;
 		}
+	}
+};
+
+// =========================================================================
+// class Label(Define/Refer)
+
+template <class LabelT>
+class LabelDefine
+{
+private:
+	LabelT& m_label;
+
+public:	
+	LabelDefine(LabelT& label_) : m_label(label_) {
+	}
+
+	template <class CodeT>
+	void TPL_CALL generate(CodeT& code) const {
+		m_label.define(code);
+	}
+};
+
+template <class LabelT, class InstructionT>
+class LabelRefer
+{
+private:
+	LabelT& m_label;
+
+public:
+	LabelRefer(LabelT& label_) : m_label(label_) {
+	}
+
+	template <class CodeT>
+	void TPL_CALL generate(CodeT& code) const {
+		code.push_back(InstructionT::instr(0));
+		m_label.refer(code);
+	}
+};
+
+// =========================================================================
+// class ProcDefine
+
+template <class LabelT>
+class ProcDefine
+{
+private:
+	LabelT& m_proc;
+
+public:	
+	ProcDefine(LabelT& proc_) : m_proc(proc_) {
+	}
+
+	template <class CodeT>
+	void TPL_CALL generate(CodeT& code) const {
+		m_proc.define(code);
+		code.get_context().begin_arglist();
+	}
+};
+
+class EndArgList
+{
+public:
+	template <class CodeT>
+	void TPL_CALL generate(CodeT& code) const {
+		code.get_context().end_arglist();
+	}
+};
+
+// =========================================================================
+
+template <class LabelT>
+class Proc1Arg
+{
+private:
+	LabelT& m_proc;
+	Variable& m_var;
+	
+public:
+	Proc1Arg(LabelT& proc_, Variable& var_)
+		: m_proc(proc_), m_var(var_) {
+	}
+
+	template <class CodeT>
+	void TPL_CALL generate(CodeT& code) const {
+		m_proc.define(code);
+		code.get_context().arglist(m_var);
+	}
+};
+
+template <class LabelT>
+class Proc2Arg
+{
+private:
+	LabelT& m_proc;
+	Variable& m_var;
+	Variable& m_var2;
+	
+public:
+	Proc2Arg(LabelT& proc_, Variable& var_, Variable& var2_)
+		: m_proc(proc_), m_var(var_), m_var2(var2_) {
+	}
+
+	template <class CodeT>
+	void TPL_CALL generate(CodeT& code) const {
+		m_proc.define(code);
+		code.get_context().arglist(m_var, m_var2);
+	}
+};
+
+template <class LabelT>
+class Proc3Arg
+{
+private:
+	LabelT& m_proc;
+	Variable& m_var;
+	Variable& m_var2;
+	Variable& m_var3;
+	
+public:
+	Proc3Arg(LabelT& proc_, Variable& var_, Variable& var2_, Variable& var3_)
+		: m_proc(proc_), m_var(var_), m_var2(var2_), m_var3(var3_) {
+	}
+
+	template <class CodeT>
+	void TPL_CALL generate(CodeT& code) const {
+		m_proc.define(code);
+		code.get_context().arglist(m_var, m_var2, m_var3);
+	}
+};
+
+template <class LabelT>
+class Proc4Arg
+{
+private:
+	LabelT& m_proc;
+	Variable& m_var;
+	Variable& m_var2;
+	Variable& m_var3;
+	Variable& m_var4;
+	
+public:
+	Proc4Arg(LabelT& proc_, Variable& var_, Variable& var2_, Variable& var3_, Variable& var4_)
+		: m_proc(proc_), m_var(var_), m_var2(var2_), m_var3(var3_), m_var4(var4_) {
+	}
+
+	template <class CodeT>
+	void TPL_CALL generate(CodeT& code) const {
+		m_proc.define(code);
+		code.get_context().arglist(m_var, m_var2, m_var3, m_var4);
+	}
+};
+
+template <class LabelT>
+class Proc5Arg
+{
+private:
+	LabelT& m_proc;
+	Variable& m_var;
+	Variable& m_var2;
+	Variable& m_var3;
+	Variable& m_var4;
+	Variable& m_var5;
+	
+public:
+	Proc5Arg(LabelT& proc_, Variable& var_, Variable& var2_, Variable& var3_, Variable& var4_, Variable& var5_)
+		: m_proc(proc_), m_var(var_), m_var2(var2_), m_var3(var3_), m_var4(var4_), m_var5(var5_) {
+	}
+
+	template <class CodeT>
+	void TPL_CALL generate(CodeT& code) const {
+		m_proc.define(code);
+		code.get_context().arglist(m_var, m_var2, m_var3, m_var4, m_var5);
+	}
+};
+
+template <class LabelT>
+class Proc6Arg
+{
+private:
+	LabelT& m_proc;
+	Variable& m_var;
+	Variable& m_var2;
+	Variable& m_var3;
+	Variable& m_var4;
+	Variable& m_var5;
+	Variable& m_var6;
+	
+public:
+	Proc6Arg(LabelT& proc_, Variable& var_, Variable& var2_, Variable& var3_, Variable& var4_, Variable& var5_, Variable& var6_)
+		: m_proc(proc_), m_var(var_), m_var2(var2_), m_var3(var3_), m_var4(var4_), m_var5(var5_), m_var6(var6_) {
+	}
+
+	template <class CodeT>
+	void TPL_CALL generate(CodeT& code) const {
+		m_proc.define(code);
+		code.get_context().arglist(m_var, m_var2, m_var3, m_var4, m_var5, m_var6);
 	}
 };
 

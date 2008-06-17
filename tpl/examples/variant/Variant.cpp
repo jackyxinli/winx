@@ -101,60 +101,64 @@ public:
 		cpu::stack_type stk;
 		code.exec(alloc, 0, code.size(), stk);
 	
-		std::cout << stk.top() << "\n";
+		std::cout << stk.top() << "\n\n";
 	}
 	
 	void local_var()
 	{
 		cpu::alloc_type alloc;
 		cpu::code_type code(alloc);
+		cpu::var_type x, y;
 		
 		// x = 2
 		// y = 3.0
 		// x * y
 		code <<
-			cpu::local(2),
+			cpu::var(x, y),
 			
-			cpu::lea_local(0),
+			cpu::lea(x),
 			cpu::push(2),
 			cpu::assign(),
 			cpu::pop(),
 			
-			cpu::lea_local(1),
+			cpu::lea(y),
 			cpu::push(3.0),
 			cpu::assign(),
 			cpu::pop(),
 
-			cpu::push_local(0),
-			cpu::push_local(1),
+			cpu::push(x),
+			cpu::push(y),
 			cpu::mul();
 
 		cpu::stack_type stk;
 		code.exec(alloc, 0, code.size(), stk);
 
-		std::cout << stk.top() << "\n";
+		std::cout << stk.top() << "\n\n";
 	}
 	
 	void local_var_optimization()
 	{
 		cpu::alloc_type alloc;
 		cpu::code_type code(alloc);
+		cpu::var_type x, y;
 		
 		// x = 2.0
 		// y = 3.0
 		// x * y
 		code <<
-			cpu::local(2),
 			cpu::push(2.0),
-			cpu::assign_local(0),
+			cpu::var_init(x),
 			cpu::push(3.0),
-			cpu::assign_local(1),
+			cpu::var_init(y),
+			
+			cpu::push(x),
+			cpu::push(y),
 			cpu::mul();
 
 		cpu::stack_type stk;
 		code.exec(alloc, 0, code.size(), stk);
 	
-		std::cout << stk.top() << "\n";
+		std::cout << stk.top() << "\n\n";
 	}
 	
 	static Variant my_sin(cpu::alloc_type& alloc, const Variant& x)
@@ -184,7 +188,7 @@ public:
 		cpu::stack_type stk;
 		code.exec(alloc, 0, code.size(), stk);
 
-		std::cout << stk.top() << "\n";
+		std::cout << stk.top() << "\n\n";
 	}
 
 	void call_proc()
@@ -194,13 +198,17 @@ public:
 
 		cpu::proc_type<> my_div;
 		cpu::label_type<> my_label;
+		cpu::var_type x, y;
 
 		code <<
 			cpu::jmp(my_label),
 
 			cpu::proc(my_div),
-			cpu::push_arg(-2),
-			cpu::push_arg(-1),
+			cpu::arg(x),
+			cpu::arg(y),
+			cpu::end_arglist(),
+			cpu::push(x),
+			cpu::push(y),
 			cpu::div(),
 			cpu::ret(2),
 
@@ -212,7 +220,7 @@ public:
 		cpu::stack_type stk;
 		code.exec(alloc, 0, code.size(), stk);
 
-		std::cout << stk.top() << "\n";
+		std::cout << stk.top() << "\n\n";
 	}
 
 	void call_proc2()
@@ -222,11 +230,12 @@ public:
 
 		cpu::proc_type<0> my_div;
 		cpu::label_type<0> my_label;
+		cpu::var_type x, y;
 
 		code <<
-			cpu::proc(my_div),
-			cpu::push_arg(-2),
-			cpu::push_arg(-1),
+			cpu::proc(my_div, x, y),
+			cpu::push(x),
+			cpu::push(y),
 			cpu::div(),
 			cpu::ret(2),
 
@@ -238,7 +247,7 @@ public:
 		cpu::stack_type stk;
 		code.exec(alloc, my_label, code.size(), stk);
 	
-		std::cout << stk.top() << "\n";
+		std::cout << stk.top() << "\n\n";
 	}
 };
 

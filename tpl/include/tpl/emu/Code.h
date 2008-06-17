@@ -31,6 +31,10 @@
 #include "Label.h"
 #endif
 
+#ifndef TPL_EMU_VAR_H
+#include "Var.h"
+#endif
+
 #ifndef STDEXT_DEQUE_H
 #include "../../../../stdext/include/stdext/Deque.h"
 #endif
@@ -130,55 +134,69 @@ public:
 };
 
 // =========================================================================
-// class Label(Define/Refer)
+// class CodeContext
 
-template <class LabelT>
-class LabelDefine
+class CodeContext : public Variable::Context
 {
-public:
-	LabelT& m_label;
-	
-	LabelDefine(LabelT& label_) : m_label(label_) {
-	}
 };
 
-template <class LabelT, class InstructionT>
-class LabelRefer
+// =========================================================================
+// class CodeGenerator
+
+template <class GenT>
+class CodeGenerator : public GenT
 {
 public:
-	typedef InstructionT instruction_type;
+	CodeGenerator() : GenT() {} 
 
-	LabelT& m_label;
-		
-	LabelRefer(LabelT& label_) : m_label(label_) {
-	}
+	template <class T1>
+	CodeGenerator(const T1& x) : GenT(x) {} 
+
+	template <class T1>
+	CodeGenerator(T1& x) : GenT(x) {} 
+
+	template <class T1, class T2>
+	CodeGenerator(T1& x, T2& y) : GenT(x, y) {} 
+
+// concept:
+//
+//	template <class CodeT>
+//	void TPL_CALL generate(CodeT& code) const;
 };
 
 // =========================================================================
 // class InstrCode/ExtInstrCode
 
 template <class ValT, class InstructionT>
-class InstrCode
+class InstrCode // InstrCode: push, repush, etc
 {
-public:
+private:
 	const ValT m_val;
 
-	typedef InstructionT instruction_type;
-
+public:
 	InstrCode(const ValT& val) : m_val(val) {
+	}
+
+	template <class CodeT>
+	void TPL_CALL generate(CodeT& code) const {
+		code.push_back(InstructionT::instr(code.get_alloc(), m_val));
 	}
 };
 
 template <class ValT, class InstructionT, class ValT2>
 class ExtInstrCode
 {
-public:
+private:
 	const ValT m_val;
 
-	typedef ValT2 target_type;
-	typedef InstructionT instruction_type;
-
+public:
 	ExtInstrCode(const ValT& val) : m_val(val) {
+	}
+
+	template <class CodeT>
+	void TPL_CALL generate(CodeT& code) const {
+		typename CodeT::alloc_type& alloc = code.get_alloc();
+		code.push_back(InstructionT::instr(alloc, ValT2(alloc, m_val)));
 	}
 };
 
@@ -197,14 +215,24 @@ class Code : public std::Deque<Instruction<Stack<ValT>, ExecuteContextT>, AllocT
 private:
 	typedef std::Deque<Instruction<Stack<ValT>, ExecuteContextT>, AllocT> Base;
 	
+	Code(const Code&);
+	void operator=(const Code&);
+
+	CodeContext m_context;
+
 public:
 	typedef AllocT alloc_type;
 	typedef Stack<ValT> stack_type;
+	typedef CodeContext code_context;
 	typedef ExecuteContextT execute_context;
 	typedef Instruction<stack_type, execute_context> instruction_type;
 
 	explicit Code(AllocT& alloc)
 		: Base(alloc) {
+	}
+
+	CodeContext& TPL_CALL get_context() {
+		return m_context;
 	}
 
 public:
@@ -214,77 +242,23 @@ public:
 		Base::push_back(instr_);
 		return *this;
 	}
-
+	
 	Code& TPL_CALL operator<<(const instruction_type& instr_) {
 		Base::push_back(instr_);
 		return *this;
 	}
 
-public:
-	// InstrCode: push, repush, etc
+	// CodeGenerator:
 	
-	template <class ValT2, class InstructionT>
-	Code& TPL_CALL operator,(const InstrCode<ValT2, InstructionT>& a) {
-		Base::push_back(
-			InstructionT::instr(Base::get_alloc(), a.m_val)
-			);
-		return *this;
-	}
-	
-	template <class ValT2, class InstructionT>
-	Code& TPL_CALL operator<<(const InstrCode<ValT2, InstructionT>& a) {
-		Base::push_back(
-			InstructionT::instr(Base::get_alloc(), a.m_val)
-			);
-		return *this;
-	}
-	
-	// ExtInstrCode:
-
-	template <class ValT2, class InstructionT, class ValT3>
-	Code& TPL_CALL operator,(const ExtInstrCode<ValT2, InstructionT, ValT3>& a) {
-		AllocT& alloc = Base::get_alloc();
-		Base::push_back(
-			InstructionT::instr(alloc, ValT3(alloc, a.m_val))
-			);
-		return *this;
-	}
-	
-	template <class ValT2, class InstructionT, class ValT3>
-	Code& TPL_CALL operator<<(const ExtInstrCode<ValT2, InstructionT, ValT3>& a) {
-		AllocT& alloc = Base::get_alloc();
-		Base::push_back(
-			InstructionT::instr(alloc, ValT3(alloc, a.m_val))
-			);
+	template <class GenT>
+	Code& TPL_CALL operator,(const CodeGenerator<GenT>& gen_) {
+		gen_.generate(*this);
 		return *this;
 	}
 
-public:
-	// Label:
-	
-	template <class LabelT>
-	Code& TPL_CALL operator,(const LabelDefine<LabelT>& a) {
-		a.m_label.define(*this);
-		return *this;
-	}
-
-	template <class LabelT>
-	Code& TPL_CALL operator<<(const LabelDefine<LabelT>& a) {
-		a.m_label.define(*this);
-		return *this;
-	}
-
-	template <class LabelT, class InstructionT>
-	Code& TPL_CALL operator,(const LabelRefer<LabelT, InstructionT>& a) {
-		Base::push_back(InstructionT::instr(0));
-		a.m_label.refer(*this);
-		return *this;
-	}
-
-	template <class LabelT, class InstructionT>
-	Code& TPL_CALL operator<<(const LabelRefer<LabelT, InstructionT>& a) {
-		Base::push_back(InstructionT::instr(0));
-		a.m_label.refer(*this);
+	template <class GenT>
+	Code& TPL_CALL operator<<(const CodeGenerator<GenT>& gen_) {
+		gen_.generate(*this);
 		return *this;
 	}
 
@@ -317,17 +291,8 @@ public:
 template <class StackT, class ExecuteContextT, class AnyT>
 void TPL_CALL operator,(const Instruction<StackT, ExecuteContextT>& a, const AnyT& b);
 
-template <class LabelT, class AnyT>
-void TPL_CALL operator,(const LabelDefine<LabelT>& a, const AnyT& b);
-
-template <class LabelT, class InstructionT, class AnyT>
-void TPL_CALL operator,(const LabelRefer<LabelT, InstructionT>& a, const AnyT& b);
-
-template <class ValT2, class InstructionT, class AnyT>
-void TPL_CALL operator,(const InstrCode<ValT2, InstructionT>& a, const AnyT& b);
-
-template <class ValT2, class InstructionT, class ValT3, class AnyT>
-void TPL_CALL operator,(const ExtInstrCode<ValT2, InstructionT, ValT3>& a, const AnyT& b);
+template <class GenT, class AnyT>
+void TPL_CALL operator,(const CodeGenerator<GenT>& a, const AnyT& b);
 
 // =========================================================================
 // $Log: $

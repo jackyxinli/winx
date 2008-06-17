@@ -184,7 +184,7 @@ private:
 	typedef typename StackT::value_type ValT;
 
 public:
-	static void op(Operand para, StackT& stk, ExecuteContextT& context) {
+	static void op(Operand para, StackT& stk, ExecuteContextT&) {
 		if (sizeof(ValT) > sizeof(void*)) {
 			TPL_EMU_INSTR_DEBUG("push " << *(const ValT*)para.ptr);
 			stk.push_back(*(const ValT*)para.ptr);
@@ -194,7 +194,7 @@ public:
 			stk.push_back(*(const ValT*)&para.ptr);
 		}
 	}
-	
+
 	template <class AllocT>
 	static Instruction<StackT, ExecuteContextT> TPL_CALL instr(AllocT& alloc, const ValT& val) {
 		if (sizeof(ValT) > sizeof(void*)) {
@@ -372,25 +372,6 @@ public:
 };
 
 // =========================================================================
-// class Local
-
-// Usage: local <count>
-
-template <class StackT, class ExecuteContextT>
-class Local
-{
-public:
-	static void op(Operand para, StackT& stk, ExecuteContextT&) {
-		TPL_EMU_INSTR_DEBUG("local " << para.val);
-		stk.resize(stk.size() + para.val);
-	}
-	
-	static Instruction<StackT, ExecuteContextT> TPL_CALL instr(size_t n) {
-		return Instruction<StackT, ExecuteContextT>(op, n);
-	}
-};
-
-// =========================================================================
 // class CallerFrame
 
 // Function Stack Frame
@@ -535,180 +516,6 @@ public:
 	
 	static Instruction<StackT, ExecuteContextT> TPL_CALL instr() {
 		return Instruction<StackT, ExecuteContextT>(op);
-	}
-};
-
-// =========================================================================
-// class PushArg/PushVArgs/PushLocal/PushOperand
-
-// Usage: push_arg <delta>	; here <delta> can be -n ~ -1
-//	 arg1 = push_arg -n
-//	 arg2 = push_arg -(n-1)
-//	 ...
-//	 argn = push_arg -1
-
-template <class StackT, class ExecuteContextT>
-class PushArg
-{
-public:
-	static void op(Operand para, StackT& stk, ExecuteContextT& context) {
-		TPL_EMU_INSTR_DEBUG(
-			"push_arg " << para.ival + CallerFrame::SIZE <<
-			"\t; push: " << stk[context.frame() + para.ival] );
-		stk.push_back(stk[context.frame() + para.ival]);
-	}
-	
-	static Instruction<StackT, ExecuteContextT> TPL_CALL instr(ptrdiff_t delta) {
-		return Instruction<StackT, ExecuteContextT>(op, delta - CallerFrame::SIZE);
-	}
-};
-
-// Usage: push_vargs
-
-template <class StackT, class ExecuteContextT>
-class PushVArgs
-{
-public:	
-	static void op(Operand para, StackT& stk, ExecuteContextT& context) {
-		stk.push_back(CallerFrame::vargs(stk, context));
-	}
-	
-	static Instruction<StackT, ExecuteContextT> TPL_CALL instr() {
-		return Instruction<StackT, ExecuteContextT>(op);
-	}
-};
-
-// Usage: push_local <index> ; here <index> can be 0 ~ n-1
-//	 local_var1 = push_local 0
-//	 local_var2 = push_local 1
-//	 ...
-//	 local_varn = push_local n-1
-
-template <class StackT, class ExecuteContextT>
-class PushLocal
-{
-public:
-	static void op(Operand para, StackT& stk, ExecuteContextT& context) {
-		TPL_EMU_INSTR_DEBUG(
-			"push_local " << para.val <<
-			"\t; push: " << stk[context.frame() + para.val] );
-		stk.push_back(stk[context.frame() + para.val]);
-	}
-	
-	static Instruction<StackT, ExecuteContextT> TPL_CALL instr(size_t delta) {
-		return Instruction<StackT, ExecuteContextT>(op, delta);
-	}
-};
-
-// Usage: push_operand <delta> ; here <delta> can be -n ~ -1
-//	 oprand1 = push_operand -n
-//	 oprand2 = push_operand -(n-1)
-//	 ...
-//	 oprandn = push_operand -1
-
-template <class StackT, class ExecuteContextT>
-class PushOperand
-{
-public:
-	static void op(Operand para, StackT& stk, ExecuteContextT& context) {
-		TPL_EMU_INSTR_DEBUG(
-			"push_operand " << para.ival <<
-			"\t; push: " << stk[context.size() + para.ival] );
-		stk.push_back(stk[context.size() + para.ival]);
-	}
-	
-	static Instruction<StackT, ExecuteContextT> TPL_CALL instr(ptrdiff_t delta) {
-		return Instruction<StackT, ExecuteContextT>(op, delta);
-	}
-};
-
-// =========================================================================
-// class LeaArg/LeaLocal
-
-// Usage: lea_arg <offset>	; here <offset> can be -n ~ -1
-//	 arg1 = lea_arg -n
-//	 arg2 = lea_arg -(n-1)
-//	 ...
-//	 argn = lea_arg -1
-
-template <class StackT, class ExecuteContextT>
-class LeaArg
-{
-public:
-	static void op(Operand para, StackT& stk, ExecuteContextT& context) {
-		TPL_EMU_INSTR_DEBUG(
-			"lea_arg " << para.ival + CallerFrame::SIZE <<
-			"\t; value: " << stk[context.frame() + para.ival] );
-		stk.push_back(
-			ref_to_variant(stk[context.frame() + para.ival])
-			);
-	}
-	
-	static Instruction<StackT, ExecuteContextT> TPL_CALL instr(ptrdiff_t delta) {
-		return Instruction<StackT, ExecuteContextT>(op, delta - CallerFrame::SIZE);
-	}
-};
-
-// Usage: lea_local <index> ; here <index> can be 0 ~ n-1
-//	 local_var1 = lea_local 0
-//	 local_var2 = lea_local 1
-//	 ...
-//	 local_varn = lea_local n-1
-
-template <class StackT, class ExecuteContextT>
-class LeaLocal
-{
-public:
-	static void op(Operand para, StackT& stk, ExecuteContextT& context) {
-		TPL_EMU_INSTR_DEBUG(
-			"lea_local " << para.val <<
-			"\t; value: " << stk[context.frame() + para.val] );
-		stk.push_back(
-			ref_to_variant(stk[context.frame() + para.val])
-			);
-	}
-	
-	static Instruction<StackT, ExecuteContextT> TPL_CALL instr(size_t delta) {
-		return Instruction<StackT, ExecuteContextT>(op, delta);
-	}
-};
-
-// =========================================================================
-// class AssignArg/AssignLocal
-
-// Usage: assgin_arg <offset>	; here <offset> can be -n ~ -1
-
-template <class StackT, class ExecuteContextT>
-class AssignArg
-{
-public:
-	static void op(Operand para, StackT& stk, ExecuteContextT& context) {
-		TPL_EMU_INSTR_DEBUG(
-			"assgin_arg " << para.ival + CallerFrame::SIZE <<
-			"\t; value: " << stk[context.frame() + para.ival] << " => " << stk.back() );
-		stk[context.frame() + para.ival] = stk.back();
-	}
-	
-	static Instruction<StackT, ExecuteContextT> TPL_CALL instr(ptrdiff_t delta) {
-		return Instruction<StackT, ExecuteContextT>(op, delta - CallerFrame::SIZE);
-	}
-};
-
-// Usage: assign_local <index> ; here <index> can be 0 ~ n-1
-
-template <class StackT, class ExecuteContextT>
-class AssignLocal
-{
-public:
-	static void op(Operand para, StackT& stk, ExecuteContextT& context) {
-		TPL_EMU_INSTR_DEBUG(
-			"assgin_local " << para.val <<
-			"\t; value: " << stk[context.frame() + para.val] << " => " << stk.back() );
-		stk[context.frame() + para.val] = stk.back();
-	}
-	
-	static Instruction<StackT, ExecuteContextT> TPL_CALL instr(size_t delta) {
-		return Instruction<StackT, ExecuteContextT>(op, delta);
 	}
 };
 
@@ -902,6 +709,24 @@ public:
 	
 	static Instruction<StackT, ExecuteContextT> TPL_CALL instr(op_type fn) {
 		return Instruction<StackT, ExecuteContextT>(op, (const void*)fn);
+	}
+};
+
+// =========================================================================
+// class PushVArgs
+
+// Usage: push_vargs
+
+template <class StackT, class ExecuteContextT>
+class PushVArgs
+{
+public:	
+	static void op(Operand para, StackT& stk, ExecuteContextT& context) {
+		stk.push_back(CallerFrame::vargs(stk, context));
+	}
+	
+	static Instruction<StackT, ExecuteContextT> TPL_CALL instr() {
+		return Instruction<StackT, ExecuteContextT>(op);
 	}
 };
 
