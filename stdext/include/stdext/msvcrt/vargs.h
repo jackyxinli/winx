@@ -127,7 +127,7 @@
 	template <class TempParaT>												\
 	RetType __cdecl func(ExParaT exarg, ParaT& a1, ParaT& a2)				\
 	{																		\
-		ParaT** args = _alloca_array(ParaT*, 2);							\
+		ParaT* args[2];														\
 		args[0] = &a1;														\
 		args[1] = &a2;														\
 		return call(exarg, args, 2);										\
@@ -135,7 +135,7 @@
 	template <class TempParaT>												\
 	RetType __cdecl func(ExParaT exarg, ParaT& a1, ParaT& a2, ParaT& a3)	\
 	{																		\
-		ParaT** args = _alloca_array(ParaT*, 3);							\
+		ParaT* args[3];														\
 		args[0] = &a1;														\
 		args[1] = &a2;														\
 		args[2] = &a3;														\
@@ -144,7 +144,7 @@
 	template <class TempParaT>												\
 	RetType __cdecl func(ExParaT exarg, ParaT& a1, ParaT& a2, ParaT& a3, ParaT& a4)	\
 	{																		\
-		ParaT** args = _alloca_array(ParaT*, 4);							\
+		ParaT* args[4];														\
 		args[0] = &a1;														\
 		args[1] = &a2;														\
 		args[2] = &a3;														\
@@ -154,7 +154,7 @@
 	template <class TempParaT>												\
 	RetType __cdecl func(ExParaT exarg, ParaT& a1, ParaT& a2, ParaT& a3, ParaT& a4, ParaT& a5) \
 	{																		\
-		ParaT** args = _alloca_array(ParaT*, 5);							\
+		ParaT* args[5];														\
 		args[0] = &a1;														\
 		args[1] = &a2;														\
 		args[2] = &a3;														\
@@ -165,7 +165,7 @@
 	template <class TempParaT>												\
 	RetType __cdecl func(ExParaT exarg, ParaT& a1, ParaT& a2, ParaT& a3, ParaT& a4, ParaT& a5, ParaT& a6) \
 	{																		\
-		ParaT** args = _alloca_array(ParaT*, 6);							\
+		ParaT* args[6];														\
 		args[0] = &a1;														\
 		args[1] = &a2;														\
 		args[2] = &a3;														\
@@ -177,7 +177,7 @@
 	template <class TempParaT>												\
 	RetType __cdecl func(ExParaT exarg, ParaT& a1, ParaT& a2, ParaT& a3, ParaT& a4, ParaT& a5, ParaT& a6, ParaT& a7) \
 	{																		\
-		ParaT** args = _alloca_array(ParaT*, 7);							\
+		ParaT* args[7];														\
 		args[0] = &a1;														\
 		args[1] = &a2;														\
 		args[2] = &a3;														\
@@ -190,7 +190,7 @@
 	template <class TempParaT>												\
 	RetType __cdecl func(ExParaT exarg, ParaT& a1, ParaT& a2, ParaT& a3, ParaT& a4, ParaT& a5, ParaT& a6, ParaT& a7, ParaT& a8) \
 	{																		\
-		ParaT** args = _alloca_array(ParaT*, 8);							\
+		ParaT* args[8];														\
 		args[0] = &a1;														\
 		args[1] = &a2;														\
 		args[2] = &a3;														\
@@ -204,7 +204,7 @@
 	template <class TempParaT>												\
 	RetType __cdecl func(ExParaT exarg, ParaT& a1, ParaT& a2, ParaT& a3, ParaT& a4, ParaT& a5, ParaT& a6, ParaT& a7, ParaT& a8, ParaT& a9) \
 	{																		\
-		ParaT** args = _alloca_array(ParaT*, 9);							\
+		ParaT* args[9];														\
 		args[0] = &a1;														\
 		args[1] = &a2;														\
 		args[2] = &a3;														\
