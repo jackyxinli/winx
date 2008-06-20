@@ -30,7 +30,7 @@
 *       <0 if dst < src
 *        0 if dst = src
 *       >0 if dst > src
-*       This range of return values may differ from other *cmp/*coll functions.
+*       This range of return values may differ from other *cmp|*coll functions.
 *
 *Exceptions:
 *

@@ -221,11 +221,11 @@ typedef struct _CrtMemState
 #define _CrtSetReportFile(t, f)             ((void)0)
 
 #define _CrtDbgBreak()						_assert("_CrtDbgBreak", __FILE__, __LINE__)
-#define _CrtSetBreakAlloc(a)                ((long)0)
-#define _CrtSetAllocHook(f)                 ((void)0)
+#define _CrtSetBreakAlloc(a)                
+#define _CrtSetAllocHook(f)                 
 
 #define _CrtCheckMemory()                   ((int)1)
-#define _CrtSetDbgFlag(f)					((int)0)
+#define _CrtSetDbgFlag(f)					
 #define _CrtDoForAllClientObjects(f, c)     ((void)0)
 #define _CrtIsValidPointer(p, n, r)         ((int)1)
 #define _CrtIsValidHeapPointer(p)           ((int)1)

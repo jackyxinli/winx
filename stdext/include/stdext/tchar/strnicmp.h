@@ -36,7 +36,7 @@
 *       -1 if first < last
 *        0 if first == last
 *        1 if first > last
-*       This range of return values may differ from other *cmp/*coll functions.
+*       This range of return values may differ from other *cmp|*coll functions.
 *
 *Exceptions:
 *

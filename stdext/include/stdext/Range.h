@@ -69,7 +69,7 @@ public:
 	}
 
 	template <class ContainerT>
-	Range(ContainerT& cont)
+	explicit Range(ContainerT& cont)
 		: first(cont.begin()), second(cont.end()) {
 	}
 
@@ -118,6 +118,19 @@ public:
 template <class Type>
 class BasicArray : public Range<const Type*>
 {
+private:
+	typedef Range<const Type*> Base;
+	
+public:
+	BasicArray() {}
+	BasicArray(const Type* arr, size_t n)
+		: Base(arr, arr+n) {}
+	BasicArray(const Type* first_, const Type* second_)
+		: Base(first_, second_) {}
+
+	template <class ContainerT>
+	explicit BasicArray(ContainerT& cont)
+		: Base(cont) {}
 };
 
 // =========================================================================

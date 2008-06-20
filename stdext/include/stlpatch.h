@@ -29,7 +29,9 @@
 
 // -------------------------------------------------------------------------
 
+#if defined(_MSC_VER)
 #pragma warning(disable:4786)
+#endif
 
 #ifndef STDEXT_PATCH_STRING_H
 #include "stdext/patch/string.h"

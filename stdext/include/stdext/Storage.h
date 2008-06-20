@@ -69,7 +69,9 @@ interface ILogStorage
 // -------------------------------------------------------------------------
 // class FILEStorage
 
+#if defined(_MSC_VER)
 #pragma warning(disable:4996) // XXX  was declared deprecated
+#endif
 
 template <bool bOwn = true, class Base = ILogStorage>
 class FILEStorageT : public Base
@@ -143,14 +145,18 @@ public:
 	void winx_call putv(const WCHAR* fmt, va_list args)	{ vfwprintf(m_fp, fmt, args); }
 };
 
+#if defined(_MSC_VER)
 #pragma warning(default:4996) // XXX  was declared deprecated
+#endif
 
 typedef FILEStorageT<false, StorageBase> FILEStorage;
 
 // -------------------------------------------------------------------------
 // class StringStorage
 
+#if defined(_MSC_VER)
 #pragma warning(disable:4996) // XXX  was declared deprecated
+#endif
 
 template <class StringT, class Base = StorageBase>
 class StringStorage : public StringT, public Base
@@ -212,7 +218,8 @@ public:
 	}
 };
 
-#pragma warning(default:4996) // XXX  was declared deprecated
+#if defined(_MSC_VER)#pragma warning(default:4996) // XXX  was declared deprecated
+#endif
 
 // -------------------------------------------------------------------------
 // class MultiStorage

@@ -93,7 +93,9 @@ NS_STD_END
 
 NS_STD_BEGIN
 
+#if defined(_MSC_VER)
 #pragma warning(disable:4996) // XXX  was declared deprecated
+#endif
 
 inline void _ReportCountLeak(unsigned nRef, const char* szClass, const char* szFile, int nLine)
 {
@@ -112,7 +114,9 @@ inline void _ReportCountLeak(unsigned nRef, const char* szClass, const char* szF
 	OutputDebugStringA(szBuf);
 }
 
+#if defined(_MSC_VER)
 #pragma warning(default:4996) // XXX  was declared deprecated
+#endif
 
 class _CountChecker
 {

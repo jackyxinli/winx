@@ -361,6 +361,16 @@ namespace stdext = __gnu_cxx;
 #endif
 
 // -------------------------------------------------------------------------
+// --> interface Support
+
+#if defined(__GNUC__) && (__GNUC__ >= 4 && __GNUC_MINOR__ >= 2)
+#pragma GCC diagnostic ignored "-Wnon-virtual-dtor"
+// struct 'XXX' has virtual functions but non-virtual destructor
+	// see http://www.khp.com.cn/zhuanti/0613_1360GCC/c-002.htm
+	// see http://gcc.gnu.org/onlinedocs/gcc/Diagnostic-Pragmas.html
+#endif
+
+// -------------------------------------------------------------------------
 // $Log: Basic.h,v $
 
 #endif /* STDEXT_BASIC_H */
