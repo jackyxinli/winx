@@ -4,5 +4,5 @@ AppPath=`dirname $0`
 cd $AppPath/../../boostmm
 
 find boost -type f -name '*.hpp' | xargs rm 
-bcp --boost=$BoostRoot type_traits/is_convertible . > /dev/null
+bcp --boost=$BoostRoot type_traits/is_convertible.hpp pool/pool.hpp . > /dev/null
 
