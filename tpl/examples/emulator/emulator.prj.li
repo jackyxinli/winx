@@ -1,6 +1,7 @@
 [Include]
 ../../../tpl/include
 ../../../boost
+../../../boostmm
 
 [Config Release]
 Product		Exe Release/emu
