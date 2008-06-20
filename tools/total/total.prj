@@ -1,7 +1,7 @@
 [Include]
 
 [Config Release]
-Product		Exe Release/total
+Product		Exe ../linux/total
 Options		Release; MultiThread; AnsiChar; NoRtti; Exception
 ObjDir		Release
 LibDir		
