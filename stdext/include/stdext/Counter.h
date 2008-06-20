@@ -19,7 +19,9 @@
 #ifndef STDEXT_COUNTER_H
 #define STDEXT_COUNTER_H
 
+#if defined(_MSC_VER)
 #pragma warning(disable:4996) // XXX  was declared deprecated
+#endif
 
 #ifndef STDEXT_BASIC_H
 #include "Basic.h"
@@ -208,6 +210,8 @@ typedef AccumulatorT<> Accumulator;
 
 NS_STD_END
 
+#if defined(_MSC_VER)
 #pragma warning(default:4996) // XXX  was declared deprecated
+#endif
 
 #endif /* STDEXT_COUNTER_H */

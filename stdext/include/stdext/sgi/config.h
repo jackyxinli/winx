@@ -19,7 +19,9 @@
 #ifndef __SGI_CONFIG_H__
 #define __SGI_CONFIG_H__
 
+#if defined(_MSC_VER)
 #pragma warning(disable:4010) // vc6: single-line comment contains line-continuation character
+#endif
 
 // -------------------------------------------------------------------------
 // std::allocator
