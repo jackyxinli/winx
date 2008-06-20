@@ -88,7 +88,9 @@ typedef DequeReader TextPoolReader;
 
 #if defined(STD_UNITTEST)
 
+#if defined(_MSC_VER)
 #pragma warning(disable:4996) // XXX  was declared deprecated
+#endif
 
 template <class LogT>
 class TestMemArchive : public TestCase
@@ -204,7 +206,9 @@ class TestMemArchive : public TestCase
 	}
 };
 
+#if defined(_MSC_VER)
 #pragma warning(default:4996) // XXX  was declared deprecated
+#endif
 
 #endif // defined(STD_UNITTEST)
 

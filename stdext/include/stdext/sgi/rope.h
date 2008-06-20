@@ -42,7 +42,9 @@
 #include "numeric.h"
 #endif
 
+#if defined(_MSC_VER)
 #pragma warning(disable:4355)
+#endif
 
 #if defined(X_STL_GCC)
 	#ifndef __SGI_ITERATOR_H__
@@ -77,20 +79,26 @@
 #define __GC
 #define GC_REGISTER_FINALIZER(a0, a1, a2, a3, a4)
 
+#if defined(_MSC_VER)
 #pragma warning(disable:4521)
 #pragma warning(disable:4522)
+#endif
 
 #ifndef __SGI_STL_ROPE_H
 #include "../../../../stl/rope.h"
 #endif
 
+#if defined(_MSC_VER)
 #pragma warning(default:4521) // multiple copy constructors specified
 #pragma warning(default:4522) // multiple assignment operators specified
+#endif
 
 #undef __GC
 #undef GC_REGISTER_FINALIZER
 
+#if defined(_MSC_VER)
 #pragma warning(default:4355)
+#endif
 
 // -------------------------------------------------------------------------
 // $Log: rope.h,v $

@@ -143,7 +143,8 @@ public:
 				boost::pool<> alloc(sizeof(int));
 				for (int i = 0; i < PerAlloc; ++i)
 				{
-					int* p = (int*)alloc.malloc();
+					int* p;
+					p = (int*)alloc.malloc();
 				}
 			}
 		}
@@ -159,7 +160,8 @@ public:
 				boost::object_pool<int> alloc;
 				for (int i = 0; i < PerAlloc; ++i)
 				{
-					int* p = alloc.construct();
+					int* p;
+					p = alloc.construct();
 				}
 			}
 		}
@@ -177,7 +179,8 @@ public:
 				apr_pool_create(&alloc, m_pool);
 				for (int i = 0; i < PerAlloc; ++i)
 				{
-					int* p = (int*)apr_palloc(alloc, sizeof(int));
+					int* p;
+					p = (int*)apr_palloc(alloc, sizeof(int));
 				}
 				apr_pool_destroy(alloc);
 			}
@@ -195,7 +198,8 @@ public:
 				std::AutoFreeAlloc alloc;
 				for (int i = 0; i < PerAlloc; ++i)
 				{
-					int* p = STD_NEW(alloc, int);
+					int* p;
+					p = STD_NEW(alloc, int);
 				}
 			}
 		}
@@ -212,7 +216,8 @@ public:
 				std::ScopeAlloc alloc;
 				for (int i = 0; i < PerAlloc; ++i)
 				{
-					int* p = STD_NEW(alloc, int);
+					int* p;
+					p = STD_NEW(alloc, int);
 				}
 			}
 		}
@@ -229,7 +234,8 @@ public:
 				std::ScopeAlloc alloc(m_recycle);
 				for (int i = 0; i < PerAlloc; ++i)
 				{
-					int* p = STD_NEW(alloc, int);
+					int* p;
+					p = STD_NEW(alloc, int);
 				}
 			}
 		}

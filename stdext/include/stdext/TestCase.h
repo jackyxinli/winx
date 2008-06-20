@@ -116,6 +116,7 @@ inline void pause()
 }
 
 struct PauseOnExit {
+	PauseOnExit() {}
 	~PauseOnExit() { pause(); }
 };
 

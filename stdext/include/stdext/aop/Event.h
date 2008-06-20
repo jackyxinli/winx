@@ -41,7 +41,7 @@ public:
 
 public:
 	BasicConnection(FakeTarget* aTarget, FakeMethod aMethod, DclList<BasicConnection>& lst)
-		: target(aTarget), method(aMethod), DclListNode<BasicConnection>(lst, insertAtFront)
+		: DclListNode<BasicConnection>(lst, insertAtFront), target(aTarget), method(aMethod)
 	{
 	}
 

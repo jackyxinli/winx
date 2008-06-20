@@ -139,7 +139,7 @@ public:
 		head.m_next = this;
 	}
 	_DclListNodeBase(_DclListNodeBase& head, InsertBack)
-		: m_next(&head), m_prev(head.m_prev)
+		: m_prev(head.m_prev), m_next(&head)
 	{
 		head.m_prev->m_next = this;
 		head.m_prev = this;

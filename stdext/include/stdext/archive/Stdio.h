@@ -44,7 +44,9 @@ NS_STD_BEGIN
 // -------------------------------------------------------------------------
 // class StdioAdapter
 
+#if defined(_MSC_VER)
 #pragma warning(disable:4996) // XXX  was declared deprecated
+#endif
 
 class StdioAdapter
 {
@@ -195,7 +197,9 @@ public:
 	}
 };
 
+#if defined(_MSC_VER)
 #pragma warning(default:4996) // XXX  was declared deprecated
+#endif
 
 // -------------------------------------------------------------------------
 
@@ -210,7 +214,9 @@ typedef Reader<StdioReadArchive> StdioReader;
 
 #if defined(STD_UNITTEST)
 
+#if defined(_MSC_VER)
 #pragma warning(disable:4996) // XXX  was declared deprecated
+#endif
 
 template <class LogT>
 class TestStdioArchive : public TestCase
@@ -312,7 +318,9 @@ public:
 	}
 };
 
+#if defined(_MSC_VER)
 #pragma warning(default:4996) // XXX  was declared deprecated
+#endif
 
 #endif // defined(STD_UNITTEST)
 

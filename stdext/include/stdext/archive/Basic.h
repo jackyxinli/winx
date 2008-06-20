@@ -161,7 +161,7 @@ private:
 
 public:
 	IoException(HRESULT sc, const char* errMsg = "Io Exception")
-		: m_scode(sc), std::exception(errMsg) {
+		: std::exception(errMsg), m_scode(sc) {
 	}
 	
 	HRESULT winx_call getError() const {

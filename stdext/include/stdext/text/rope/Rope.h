@@ -199,13 +199,13 @@ class Rope {
 				{
 					_RopeFunction* __f = (_RopeFunction*)__r;
 					size_t __len = __end - __begin;
-					bool __result = false;
+					bool __result;
 					_CharT* __buffer = STD_ALLOC_ARRAY(__a, _CharT, __len);
 					__STL_TRY {
 						(*(__f->_M_fn))(__begin, __len, __buffer);
 						__result = __c(__buffer, __len);
 					}
-					__STL_UNWIND(0)
+					__STL_UNWIND(__result=false)
 					return __result;
 				}
 			default:
@@ -453,7 +453,7 @@ class Rope {
 
         void winx_call push_front(_CharT __x)
         {
-            _RopeRep* __old = _M_tree_ptr;
+            //_RopeRep* __old = _M_tree_ptr;
             _RopeRep* __left =
 				__STL_ROPE_FROM_UNOWNED_CHAR_PTR(&__x, 1, *_M_alloc);
 			_M_tree_ptr = _S_concat(__left, _M_tree_ptr, *_M_alloc);

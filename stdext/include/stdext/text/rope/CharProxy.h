@@ -41,9 +41,9 @@ class _Rope_char_ref_proxy
     typedef Rope<_CharT,_Alloc> _My_rope;
 
     size_t _M_pos;
-    _My_rope* _M_root;     // The whole Rope.
     _CharT _M_current;
     bool _M_current_valid;
+    _My_rope* _M_root;     // The whole Rope.
 
 public:
 	_Rope_char_ref_proxy(_My_rope* __r, size_t __p)

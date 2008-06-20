@@ -18,9 +18,11 @@ LibDir		LDebug
 Libraries	rt; apr-1; dlmalloc; stdext
 
 [Source]
-// testlinux.dsp
+testlinux.dsp
 // TestTLS.cpp
 // AllocatorPerformance.cpp
-TestLinux.cpp
-RopePerformance.cpp
+// TestLinux.cpp
+// RopePerformance.cpp
+// TestMemory.cpp
+// TestString.cpp
 

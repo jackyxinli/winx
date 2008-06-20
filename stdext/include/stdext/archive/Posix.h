@@ -44,7 +44,9 @@ NS_STD_BEGIN
 // -------------------------------------------------------------------------
 // class PosixAdapter
 
+#if defined(_MSC_VER)
 #pragma warning(disable:4996) // XXX  was declared deprecated
+#endif
 
 class PosixAdapter
 {
@@ -199,7 +201,9 @@ public:
 	}
 };
 
+#if defined(_MSC_VER)
 #pragma warning(default:4996) // XXX  was declared deprecated
+#endif
 
 // -------------------------------------------------------------------------
 
@@ -214,7 +218,9 @@ typedef Reader<PosixReadArchive> PosixReader;
 
 #if defined(STD_UNITTEST)
 
+#if defined(_MSC_VER)
 #pragma warning(disable:4996) // XXX  was declared deprecated
+#endif
 
 template <class LogT>
 class TestPosixArchive : public TestCase
@@ -320,7 +326,9 @@ public:
 	}
 };
 
+#if defined(_MSC_VER)
 #pragma warning(default:4996) // XXX  was declared deprecated
+#endif
 
 #endif // defined(STD_UNITTEST)
 

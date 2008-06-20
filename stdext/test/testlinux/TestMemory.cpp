@@ -26,20 +26,32 @@
 void testAutoFreeAlloc()
 {
     std::AutoFreeAlloc alloc;
-    int* a = STD_NEW(alloc, int);
-    int* b = STD_NEW_ARRAY(alloc, int, 100);
-    int* c = STD_ALLOC(alloc, int);
-    int* d = STD_ALLOC_ARRAY(alloc, int, 100);
+    
+    int* a;
+    a = STD_NEW(alloc, int);
+    
+    int* b;
+    b = STD_NEW_ARRAY(alloc, int, 100);
+    
+    int* c;
+    c = STD_ALLOC(alloc, int);
+    
+    int* d;
+    d = STD_ALLOC_ARRAY(alloc, int, 100);
     
     std::AutoFreeAlloc* suballoc = STD_NEW(alloc, std::AutoFreeAlloc);
-    int* e = STD_NEW(*suballoc, int);
+    
+    int* e;
+    e = STD_NEW(*suballoc, int);
 }
 
 void testScopeAlloc()
 {
     std::BlockPool recycle;
     std::ScopeAlloc alloc(recycle);
-    int* a = STD_NEW(alloc, int);
+    
+    int* a;
+    a = STD_NEW(alloc, int);
     // ... --> same as std::AutoFreeAlloc
 }
 
