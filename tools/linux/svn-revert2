@@ -1,2 +1,0 @@
-svn status | cut -f2 | xargs svn revert
-
