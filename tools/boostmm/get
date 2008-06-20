@@ -1,5 +1,8 @@
+BoostRoot=../tools/boost
+
 AppPath=`dirname $0`
 cd $AppPath/../../boostmm
-rm -rf boost boost.png doc libs
-bcp --boost=../boost type_traits/is_convertible . > /dev/null
+
+find boost -type f -name '*.hpp' | xargs rm 
+bcp --boost=$BoostRoot type_traits/is_convertible . > /dev/null
 
