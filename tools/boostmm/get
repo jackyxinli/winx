@@ -1,4 +1,5 @@
 AppPath=`dirname $0`
-cd $AppPath/../../
-bcp --boost=boost type_traits/is_convertible filesystem boostmm > /dev/null
+cd $AppPath/../../boostmm
+rm -rf boost boost.png doc libs
+bcp --boost=../boost type_traits/is_convertible . > /dev/null
 
