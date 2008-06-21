@@ -34,9 +34,9 @@
 #endif
 
 // -------------------------------------------------------------------------
-// _winx_A2WHelper/_winx_W2AHelper
+// winx_A2WHelper_/winx_W2AHelper_
 
-inline LPWSTR winx_call _winx_A2WHelper(LPWSTR lpw, LPCSTR lpa, int nWideChars)
+inline LPWSTR winx_call winx_A2WHelper_(LPWSTR lpw, LPCSTR lpa, int nWideChars)
 {
 	// verify that no illegal character present
 	// since lpw was allocated based on the size of lpa
@@ -47,7 +47,7 @@ inline LPWSTR winx_call _winx_A2WHelper(LPWSTR lpw, LPCSTR lpa, int nWideChars)
 	return lpw;
 }
 
-inline LPSTR __stdcall _winx_W2AHelper(LPSTR lpa, LPCWSTR lpw, int nWideChars)
+inline LPSTR winx_call winx_W2AHelper_(LPSTR lpa, LPCWSTR lpw, int nWideChars)
 {
 	// verify that no illegal character present
 	// since lpa was allocated based on the size of lpw
@@ -69,18 +69,35 @@ inline LPSTR __stdcall _winx_W2AHelper(LPSTR lpa, LPCWSTR lpw, int nWideChars)
 	int _convert; _convert = 0; LPCWSTR _lpw; _lpw = 0; LPCSTR _lpa; _lpa = 0
 #endif
 
-#define WINX_A2W(lpa) (\
-	((_lpa = lpa) == NULL) ? NULL : (\
-		_convert = (int)(strlen(_lpa)+1),\
-		_winx_A2WHelper((LPWSTR)_alloca(_convert<<1), _lpa, _convert)))
+#define WINX_A2W(lpa)	\
+	( _convert = (int)(strlen(_lpa = lpa)+1), \
+		winx_A2WHelper_((LPWSTR)_alloca(_convert<<1), _lpa, _convert) )
 
-#define WINX_W2A(lpw) (\
-	((_lpw = lpw) == NULL) ? NULL : (\
-		_convert = (int)(wcslen(_lpw)+1), \
-		_winx_W2AHelper((LPSTR)_alloca(_convert<<1), _lpw, _convert)))
+#define WINX_W2A(lpw)	\
+	( _convert = (int)(wcslen(_lpw = lpw)+1), \
+		winx_W2AHelper_((LPSTR)_alloca(_convert<<1), _lpw, _convert) )
 
 #define WINX_A2CW(lpa) ((LPCWSTR)WINX_A2W(lpa))
 #define WINX_W2CA(lpw) ((LPCSTR)WINX_W2A(lpw))
+
+// -------------------------------------------------------------------------
+// ATL_A2W/ATL_W2A
+
+#define ATL_USES_CONVERSION \
+	WINX_USES_CONVERSION
+
+#define ATL_A2W(lpa) (\
+	((_lpa = lpa) == NULL) ? NULL : (\
+		_convert = (int)(strlen(_lpa)+1),\
+		winx_A2WHelper_((LPWSTR)_alloca(_convert<<1), _lpa, _convert)))
+
+#define ATL_W2A(lpw) (\
+	((_lpw = lpw) == NULL) ? NULL : (\
+		_convert = (int)(wcslen(_lpw)+1), \
+		winx_W2AHelper_((LPSTR)_alloca(_convert<<1), _lpw, _convert)))
+
+#define ATL_A2CW(lpa) ((LPCWSTR)ATL_A2W(lpa))
+#define ATL_W2CA(lpw) ((LPCSTR)ATL_W2A(lpw))
 
 // -------------------------------------------------------------------------
 // WINX_T2A/WINX_A2T/WINX_T2W/WINX_W2T
@@ -104,6 +121,30 @@ inline LPSTR __stdcall _winx_W2AHelper(LPSTR lpa, LPCWSTR lpw, int nWideChars)
 	inline LPTSTR WINX_A2T(LPSTR lp) { return lp; }
 	inline LPCSTR WINX_T2CA(LPCTSTR lp) { return lp; }
 	inline LPCTSTR WINX_A2CT(LPCSTR lp) { return lp; }
+#endif
+
+// -------------------------------------------------------------------------
+// ATL_T2A/ATL_A2T/ATL_T2W/ATL_W2T
+// ATL_T2CA/ATL_A2CT/ATL_T2CW/ATL_W2CT
+
+#ifdef _UNICODE
+	#define ATL_T2A ATL_W2A
+	#define ATL_A2T ATL_A2W
+	#define ATL_T2CA ATL_W2CA
+	#define ATL_A2CT ATL_A2CW
+	inline LPWSTR ATL_T2W(LPTSTR lp) { return lp; }
+	inline LPTSTR ATL_W2T(LPWSTR lp) { return lp; }
+	inline LPCWSTR ATL_T2CW(LPCTSTR lp) { return lp; }
+	inline LPCTSTR ATL_W2CT(LPCWSTR lp) { return lp; }
+#else
+	#define ATL_T2W ATL_A2W
+	#define ATL_W2T ATL_W2A
+	#define ATL_T2CW ATL_A2CW
+	#define ATL_W2CT ATL_W2CA
+	inline LPSTR ATL_T2A(LPTSTR lp) { return lp; }
+	inline LPTSTR ATL_A2T(LPSTR lp) { return lp; }
+	inline LPCSTR ATL_T2CA(LPCTSTR lp) { return lp; }
+	inline LPCTSTR ATL_A2CT(LPCSTR lp) { return lp; }
 #endif
 
 // -------------------------------------------------------------------------
