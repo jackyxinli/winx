@@ -1,2 +1,0 @@
-svn status | grep -e '^!.*' | sed -e 's|. *\(.*\)|\1|' | xargs svn revert
-
