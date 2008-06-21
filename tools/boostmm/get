@@ -1,8 +1,0 @@
-BoostRoot=../tools/boost
-
-AppPath=`dirname $0`
-cd $AppPath/../../boostmm
-
-find boost -type f -name '*.hpp' | xargs rm 
-bcp --boost=$BoostRoot type_traits/is_convertible.hpp pool/object_pool.hpp . > /dev/null
-
