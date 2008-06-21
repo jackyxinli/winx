@@ -1,5 +1,5 @@
-if [ -z "$1" ]; then
-	echo "  Usage: tag-stdext <tag>"
+if [ -z "$2" ]; then
+	echo "  Usage: tag-stdext <tag> <boost-memory-version>"
 	echo
 	exit 1
 fi
@@ -12,4 +12,7 @@ echo "cp https://winx.googlecode.com/svn/trunk/stdext/ ok!!!"
 
 svn cp https://winx.googlecode.com/svn/trunk/stl/ https://winx.googlecode.com/svn/tags/$1/ -m "cp stl"
 echo "cp https://winx.googlecode.com/svn/trunk/stl/ ok!!!"
+
+svn cp https://winx.googlecode.com/svn/tags/$2 https://winx.googlecode.com/svn/tags/$1/memory -m "cp boost-memory"
+echo "cp https://winx.googlecode.com/svn/tags/$2 ok!!!"
 
