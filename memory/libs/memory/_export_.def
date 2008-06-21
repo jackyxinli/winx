@@ -1,0 +1,8 @@
+EXPORTED {
+global:
+	_boost_TlsBlockPool;
+	_boost_SystemPoolAlloc;
+	_boost_SystemPoolFree;
+	_boost_SystemPoolSize;
+local: *;
+};
