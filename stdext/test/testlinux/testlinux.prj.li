@@ -1,0 +1,28 @@
+[Include]
+../../../stdext/include
+../../../boost
+../../../boostmm
+
+[Config Release]
+Product		Exe LRelease/testlinux
+Options		Release; MultiThread; AnsiChar; NoRtti; Exception
+ObjDir		LRelease
+LibDir		LRelease
+Libraries	rt; apr-1; dlmalloc; stdext
+
+[Config Debug]
+Product		Exe LDebug/testlinux
+Options		Debug; MultiThread; AnsiChar; NoRtti; Exception; -Wall
+ObjDir		LDebug
+LibDir		LDebug
+Libraries	rt; apr-1; dlmalloc; stdext
+
+[Source]
+testlinux.dsp
+// TestTLS.cpp
+// AllocatorPerformance.cpp
+// TestLinux.cpp
+// RopePerformance.cpp
+// TestMemory.cpp
+// TestString.cpp
+

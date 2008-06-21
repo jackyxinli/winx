@@ -1,0 +1,20 @@
+[Include]
+../../../stdext/include
+
+[Config Release]
+Product		Exe LRelease/mk
+Options		Release; MultiThread; AnsiChar; NoRtti; Exception
+ObjDir		LRelease
+LibDir		
+Libraries	
+
+[Config Debug]
+Product		Exe LDebug/mk
+Options		Debug; MultiThread; AnsiChar; NoRtti; Exception
+ObjDir		LDebug
+LibDir		
+Libraries	
+
+[Source]
+// test.cpp
+TestStdExt.dsp

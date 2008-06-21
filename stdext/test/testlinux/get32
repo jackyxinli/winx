@@ -1,0 +1,8 @@
+BITS=32
+sudo apt-get install libapr1-dev
+cd /usr/include
+ln -s -f apr-1.0 apr
+mkdir -p LDebug LRelease
+cp ../../../wrapper/dlmalloc/bin/linux/$BITS/libdlmalloc.so LDebug
+cp ../../../wrapper/dlmalloc/bin/linux/$BITS/libdlmalloc.so LRelease
+
