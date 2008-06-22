@@ -173,7 +173,7 @@ public:
 	
 	TPL_EMU_LABEL_REF_(call, Call)
 	TPL_EMU_LABEL_REF_(jmp, Jmp)
-	TPL_EMU_LABEL_REF_(je, JmpIfFalse)
+	TPL_EMU_LABEL_REF_(jz, JmpIfFalse)
 	
 public:
 	template <template <class Type> class Op_>
@@ -272,20 +272,8 @@ public:
 		return Pop<StackT, ContextT>::instr();
 	}
 
-	static InstructionT TPL_CALL jmp(ptrdiff_t delta) {
-		return Jmp<StackT, ContextT>::instr(delta);
-	}
-
-	static InstructionT TPL_CALL je(ptrdiff_t delta) {
-		return JmpIfFalse<StackT, ContextT>::instr(delta);
-	}
-
 	static InstructionT TPL_CALL arity(size_t n) {
 		return Arity<StackT, ContextT>::instr(n);
-	}
-
-	static InstructionT TPL_CALL call(ptrdiff_t delta) {
-		return Call<StackT, ContextT>::instr(delta);
 	}
 
 	static InstructionT TPL_CALL ret(size_t n) {

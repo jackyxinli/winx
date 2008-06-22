@@ -199,7 +199,7 @@ public:
 			cpu::push(n),
 			cpu::push(1),
 			cpu::le(), // n <= 1?
-			cpu::je(ge_1), // jmp if false
+			cpu::jz(ge_1), // jmp if false
 			cpu::push(1),
 			cpu::ret(1),
 			

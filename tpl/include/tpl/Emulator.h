@@ -33,6 +33,10 @@
 #include "emu/Label.h"
 #endif
 
+#ifndef TPL_EMU_VAR_H
+#include "emu/Var.h"
+#endif
+
 #ifndef TPL_EMU_CODE_H
 #include "emu/Code.h"
 #endif

@@ -309,47 +309,6 @@ public:
 };
 
 // =========================================================================
-// class Jmp
-
-// Usage: jmp <position>
-
-template <class StackT, class ExecuteContextT>
-class Jmp
-{
-public:
-	static void op(Operand para, StackT& stk, ExecuteContextT& context) {
-		TPL_EMU_INSTR_DEBUG("jmp " << para.val);
-		context.position(para.val);
-	}
-	
-	static Instruction<StackT, ExecuteContextT> TPL_CALL instr(size_t offset) {
-		return Instruction<StackT, ExecuteContextT>(op, offset);
-	}
-};
-
-// =========================================================================
-// class JmpIfFalse
-
-// Usage: je <position>
-
-template <class StackT, class ExecuteContextT>
-class JmpIfFalse
-{
-public:
-	static void op(Operand para, StackT& stk, ExecuteContextT& context) {
-		const typename StackT::value_type val = stk.back();
-		stk.pop_back();
-		TPL_EMU_INSTR_DEBUG("je " << para.val << "\t\t; condition: " << val);
-		if (!val)
-			context.position(para.val);
-	}
-	
-	static Instruction<StackT, ExecuteContextT> TPL_CALL instr(size_t offset) {
-		return Instruction<StackT, ExecuteContextT>(op, offset);
-	}
-};
-
-// =========================================================================
 // class Arity
 
 // Usage: arity <count>
