@@ -4,5 +4,16 @@ AppPath=`dirname $0`
 cd $AppPath/../../boostmm
 
 find boost -type f -name '*.hpp' | xargs rm 
+
+#
+# passed:
+# 	boost::is_convertible
+# 	boost::pool
+# 	boost::object_pool
+#
+# awaiting:
+#	lambda/lambda.hpp
+#	filesystem.hpp
+#
 bcp --boost=$BoostRoot type_traits/is_convertible.hpp pool/object_pool.hpp . > /dev/null
 
