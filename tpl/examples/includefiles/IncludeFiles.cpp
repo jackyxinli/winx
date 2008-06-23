@@ -25,12 +25,12 @@ using namespace tpl;
 
 int main()
 {
-	std::vector<impl::Leaf> result;
+	std::vector<std::string> result;
 
 	const std::FileBuf file(__FILE__);
 	simple::match(file.begin(), file.end(), LIST_GRAMMAR, c_skip_non_eol());
 
-	for (std::vector<impl::Leaf>::iterator it = result.begin(); it != result.end(); ++it)
+	for (std::vector<std::string>::iterator it = result.begin(); it != result.end(); ++it)
 		std::cout << *it << '\n';
 	return 0;
 }
