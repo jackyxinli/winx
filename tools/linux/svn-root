@@ -1,0 +1,2 @@
+svn info . | grep 'Repository Root: .*' | sed -e 's|Repository Root: \(.*\)|\1|'
+

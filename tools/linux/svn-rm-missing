@@ -1,0 +1,4 @@
+AppPath=`dirname $0`
+SvnUrl=`$AppPath/svn-url`
+svn status | grep -e '^!.*' | sed -e 's|. *\(.*\)|\1|' | xargs --no-run-if-empty -l1 $AppPath/do-svn-rm-missing $SvnUrl
+

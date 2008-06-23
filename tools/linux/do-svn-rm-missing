@@ -1,0 +1,3 @@
+echo "remove $1/$2"
+svn rm $1/$2 -m "svn rm"
+

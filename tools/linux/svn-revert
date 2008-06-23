@@ -1,2 +1,2 @@
-svn status | grep -e '^!.*' | sed -e 's|. *\(.*\)|\1|' | xargs svn revert
+svn status | grep -e '^[!ADM].*' | sed -e 's|. *\(.*\)|\1|' | xargs --no-run-if-empty svn revert
 

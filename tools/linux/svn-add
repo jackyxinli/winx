@@ -1,3 +1,2 @@
-AppPath=`dirname $0`
-svn status | grep -e '^?.*' | sed -e 's|. *\(.*\)|\1|' | xargs --no-run-if-empty $AppPath/do-svn-add
+svn status | grep -e '^?.*' | sed -e 's|. *\(.*\)|\1|' | xargs --no-run-if-empty svn add
 
