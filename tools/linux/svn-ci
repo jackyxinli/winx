@@ -1,0 +1,3 @@
+AppPath=`dirname $0`
+svn status | grep -e '^?.*' | sed -e 's|. *\(.*\)|\1|' | xargs --no-run-if-empty -l32 $AppPath/do-svn-ci
+

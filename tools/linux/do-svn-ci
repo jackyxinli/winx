@@ -1,0 +1,3 @@
+svn add $*
+svn ci $* -m "svn commit"
+

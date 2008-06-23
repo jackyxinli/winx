@@ -10,6 +10,8 @@ if [ -d $Arg ]; then
 	svn ci $Arg -m "mkdir $Arg"
 	mv $Arg.svn-ci-temp/* $Arg
 	rmdir $Arg.svn-ci-temp
-	echo "mkdir $Arg ok!!!"
+
+	AppPath=`dirname $0`
+	echo "" > svn-ci-dir.temp
 fi
 
