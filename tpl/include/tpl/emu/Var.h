@@ -149,8 +149,10 @@ public:
 	class Context
 	{
 	private:
-		Variable* m_head;
-		ptrdiff_t m_var;
+		union {
+			Variable* m_head; // for defining procedure arglist
+			ptrdiff_t m_var;  // for defining local variables
+		};
 		friend class Variable;
 
 	public:
@@ -160,7 +162,6 @@ public:
 		
 		void TPL_CALL begin_arglist() {
 			m_head = NULL;
-			TPL_ASSERT(m_var == 0);
 		}
 	
 		void TPL_CALL end_arglist() {
@@ -169,7 +170,7 @@ public:
 				p->m_var = var_;
 				--var_;
 			}
-			TPL_ASSERT(m_var == 0);
+			m_var = 0;
 		}
 		
 		void TPL_CALL arglist(Variable& a) {
