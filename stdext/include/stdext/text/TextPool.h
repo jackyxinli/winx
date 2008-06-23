@@ -31,7 +31,7 @@
 #include "../Deque.h"
 #endif
 
-NS_STD_BEGIN
+NS_STDEXT_BEGIN
 
 // -------------------------------------------------------------------------
 
@@ -506,6 +506,6 @@ public:
 // -------------------------------------------------------------------------
 // $Log: TextPool.h,v $
 
-NS_STD_END
+NS_STDEXT_END
 
 #endif /* STDEXT_TEXT_TEXTPOOL_H */

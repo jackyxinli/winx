@@ -39,7 +39,7 @@
 #include "../std/string.h"
 #endif
 
-NS_STD_BEGIN
+NS_STDEXT_BEGIN
 
 // =========================================================================
 // __STD_LOG_PRINT
@@ -905,6 +905,6 @@ public:
 // =========================================================================
 // $Log: Log.h,v $
 
-NS_STD_END
+NS_STDEXT_END
 
 #endif /* STDEXT_LOG_H */

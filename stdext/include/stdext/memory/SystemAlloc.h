@@ -43,7 +43,7 @@
 #include <stdlib.h> // malloc,free
 #endif
 
-NS_STD_BEGIN
+NS_STDEXT_BEGIN
 
 // -------------------------------------------------------------------------
 // __STD_FAKE_DBG_ALLOCATE
@@ -543,6 +543,6 @@ public:
 // -------------------------------------------------------------------------
 // $Log: $
 
-NS_STD_END
+NS_STDEXT_END
 
 #endif /* STDEXT_MEMORY_SYSTEMALLOC_H */

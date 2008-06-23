@@ -39,7 +39,7 @@
 #define WINX_FILTER_TEST_CASE
 #endif
 
-NS_STD_BEGIN
+NS_STDEXT_BEGIN
 
 // =========================================================================
 // class TestRunner
@@ -336,6 +336,6 @@ inline AutoRun& __autoRun_impl()
 //  UnitTestAssert(AssertExp, AssertEq, AssertEqBuf)
 //
 
-NS_STD_END
+NS_STDEXT_END
 
 #endif /* STDEXT_TESTCASE_H */

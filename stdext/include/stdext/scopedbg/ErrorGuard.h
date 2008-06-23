@@ -32,7 +32,7 @@
 #include "ScopeLog.h"
 #endif
 
-NS_STD_BEGIN
+NS_STDEXT_BEGIN
 
 // =========================================================================
 // WINX_GUARD_LOG
@@ -244,7 +244,7 @@ public:
 // =========================================================================
 // $Log: $
 
-NS_STD_END
+NS_STDEXT_END
 
 
 #endif /* STDEXT_SCOPEDBG_ERRORGUARD_H */

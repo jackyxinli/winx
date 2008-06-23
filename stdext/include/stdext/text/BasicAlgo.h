@@ -37,7 +37,7 @@
 	#endif
 #endif
 
-NS_STD_BEGIN
+NS_STDEXT_BEGIN
 
 // -------------------------------------------------------------------------
 // end, length
@@ -383,6 +383,6 @@ namespace tchar { using std::strecpy; }
 // -------------------------------------------------------------------------
 // $Log: BasicAlgo.h,v $
 
-NS_STD_END
+NS_STDEXT_END
 
 #endif /* STDEXT_TEXT_BASICALGO_H */

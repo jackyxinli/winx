@@ -61,7 +61,7 @@
 	#endif
 #endif
 
-NS_STD_BEGIN
+NS_STDEXT_BEGIN
 
 // -------------------------------------------------------------------------
 // toInt, toUInt
@@ -526,6 +526,6 @@ public:
 // -------------------------------------------------------------------------
 // $Log: Stream.h,v $
 
-NS_STD_END
+NS_STDEXT_END
 
 #endif /* STDEXT_ARCHIVE_STREAM_H */

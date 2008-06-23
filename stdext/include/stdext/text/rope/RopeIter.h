@@ -19,7 +19,7 @@
 #ifndef STDEXT_TEXT_ROPE_ROPEITER_H
 #define STDEXT_TEXT_ROPE_ROPEITER_H
 
-NS_STD_BEGIN
+NS_STDEXT_BEGIN
 
 // Rope iterators:
 // Unlike in the C version, we cache only part of the stack
@@ -695,6 +695,6 @@ winx_call operator+(ptrdiff_t __n, const _Rope_const_iterator<_CharT>& __x) {
 // -------------------------------------------------------------------------
 // $Log: RopeIter.h,v $
 
-NS_STD_END
+NS_STDEXT_END
 
 #endif /* STDEXT_TEXT_ROPE_ROPEITER_H */

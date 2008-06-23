@@ -23,7 +23,7 @@
 #include "Basic.h"
 #endif
 
-NS_STD_BEGIN
+NS_STDEXT_BEGIN
 
 // -------------------------------------------------------------------------
 // class WriteArchive
@@ -273,6 +273,6 @@ public:
 // -------------------------------------------------------------------------
 // $Log: WriteArchive.h,v $
 
-NS_STD_END
+NS_STDEXT_END
 
 #endif /* STDEXT_ARCHIVE_WRITEARCHIVE_H */

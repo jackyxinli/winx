@@ -67,7 +67,7 @@
 // =========================================================================
 // ConstructorTraits, DestructorTraits
 
-NS_STD_BEGIN
+NS_STDEXT_BEGIN
 
 struct ArrayDestructHeader
 {
@@ -126,13 +126,13 @@ struct DestructorTraits
 	}
 };
 
-NS_STD_END
+NS_STDEXT_END
 
 // =========================================================================
 // STD_NO_DESTRUCTOR
 
 #define STD_NO_DESTRUCTOR(Type)												\
-NS_STD_BEGIN																\
+NS_STDEXT_BEGIN																\
 template <>																	\
 struct DestructorTraits< Type >												\
 {																			\
@@ -148,13 +148,13 @@ struct DestructorTraits< Type >												\
 		return alloc.allocate(sizeof(Type)*count);							\
 	}																		\
 };																			\
-NS_STD_END
+NS_STDEXT_END
 
 // -------------------------------------------------------------------------
 // STD_NO_CONSTRUCTOR
 
 #define STD_NO_CONSTRUCTOR(Type)											\
-NS_STD_BEGIN																\
+NS_STDEXT_BEGIN																\
 template <>																	\
 struct ConstructorTraits< Type >											\
 {																			\
@@ -165,7 +165,7 @@ struct ConstructorTraits< Type >											\
 		return array;														\
 	}																		\
 };																			\
-NS_STD_END
+NS_STDEXT_END
 
 // -------------------------------------------------------------------------
 // C Standard Types Support
@@ -221,7 +221,7 @@ BOOST_DECL_CTYPE(unsigned long);
 
 // =========================================================================
 
-NS_STD_BEGIN
+NS_STDEXT_BEGIN
 
 inline void winx_call enableMemoryLeakCheck()
 {
@@ -236,7 +236,7 @@ inline void winx_call swap(void* a, void* b, size_t cb)
 	memcpy(b, t, cb);
 }
 
-NS_STD_END
+NS_STDEXT_END
 
 // =========================================================================
 // $Log: Basic.h,v $

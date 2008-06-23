@@ -27,7 +27,7 @@
 #include "../msvcrt/vargs.h"
 #endif
 
-NS_STD_BEGIN
+NS_STDEXT_BEGIN
 
 // -------------------------------------------------------------------------
 // codepage_t
@@ -197,6 +197,6 @@ public:
 // -------------------------------------------------------------------------
 // $Log: StringAlgo.h,v $
 
-NS_STD_END
+NS_STDEXT_END
 
 #endif /* STDEXT_TEXT_STRINGALGO_H */

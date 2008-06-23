@@ -35,7 +35,7 @@
 #include "../std/stdexcept.h"
 #endif
 
-NS_STD_BEGIN
+NS_STDEXT_BEGIN
 
 // -------------------------------------------------------------------------
 // class Array - see boost::array
@@ -250,6 +250,6 @@ public:
 // STL-Extension: Container(Array), Log(MultiStorage, MultiLog)
 //
 
-NS_STD_END
+NS_STDEXT_END
 
 #endif /* STDEXT_ARRAY_H */

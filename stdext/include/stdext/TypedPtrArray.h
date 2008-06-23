@@ -31,13 +31,13 @@
 #include "../std/algorithm.h"
 #endif
 
-#ifndef NS_STD
-#define NS_STD			std::
-#define NS_STD_BEGIN		namespace std {
-#define NS_STD_END		}
+#ifndef NS_STDEXT
+#define NS_STDEXT			std::
+#define NS_STDEXT_BEGIN		namespace std {
+#define NS_STDEXT_END		}
 #endif
 
-NS_STD_BEGIN
+NS_STDEXT_BEGIN
 
 // -------------------------------------------------------------------------
 // class TypedPtrArray
@@ -415,6 +415,6 @@ public:
 // -------------------------------------------------------------------------
 // $Log: TypedPtrArray.h,v $
 
-NS_STD_END
+NS_STDEXT_END
 
 #endif /* STDEXT_TYPEDPTRARRAY_H */

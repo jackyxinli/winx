@@ -49,7 +49,7 @@
 #include "BasicString.h"
 #endif
 
-NS_STD_BEGIN
+NS_STDEXT_BEGIN
 
 // -------------------------------------------------------------------------
 // Rope::operator+ & Rope::operator+=
@@ -295,6 +295,6 @@ public:
 // -------------------------------------------------------------------------
 // $Log: Rope.h,v $
 
-NS_STD_END
+NS_STDEXT_END
 
 #endif /* STDEXT_TEXT_ROPE_H */

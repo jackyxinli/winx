@@ -67,7 +67,7 @@
 // valid.  Thus ropes can be logically copied by just copying
 // a pointer value.
 
-NS_STD_BEGIN
+NS_STDEXT_BEGIN
 
 // -------------------------------------------------------------------------
 // class _Rope_insert_char_consumer
@@ -938,7 +938,7 @@ template <class _CharT, class _Alloc>
 const typename Rope<_CharT, _Alloc>::size_type Rope<_CharT, _Alloc>::npos =
                         (size_type)(-1);
 
-NS_STD_END
+NS_STDEXT_END
 
 #ifndef STDEXT_TEXT_ROPE_ROPEITER_H
 #include "RopeIter.h"

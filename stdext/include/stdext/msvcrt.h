@@ -80,8 +80,10 @@
 #define _ultoa		std::tchar::ultoa
 #define	_i64toa		std::tchar::i64toa
 #define _ui64toa	std::tchar::ui64toa
-#define _ui64tow    std::tchar::ui64toa
-#define _gcvt       gcvt
+#define _ui64tow	std::tchar::ui64toa
+#define _gcvt		gcvt
+#define _ecvt		ecvt
+#define _fcvt		fcvt
 
 inline void __not_impl(const char* szFeature)
 {

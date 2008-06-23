@@ -27,7 +27,7 @@
 #include "../text/BasicString.h"
 #endif
 
-NS_STD_BEGIN
+NS_STDEXT_BEGIN
 
 // -------------------------------------------------------------------------
 // class Reader
@@ -352,6 +352,6 @@ public:
 // -------------------------------------------------------------------------
 // $Log: Reader.h,v $
 
-NS_STD_END
+NS_STDEXT_END
 
 #endif /* STDEXT_ARCHIVE_READER_H */

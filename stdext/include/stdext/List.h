@@ -31,7 +31,7 @@
 #include "../std/list.h"
 #endif
 
-NS_STD_BEGIN
+NS_STDEXT_BEGIN
 
 // -------------------------------------------------------------------------
 // class List
@@ -486,6 +486,6 @@ public:
 // -------------------------------------------------------------------------
 // $Log: List.h,v $
 
-NS_STD_END
+NS_STDEXT_END
 
 #endif /* STDEXT_LIST_H */

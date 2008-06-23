@@ -23,7 +23,7 @@
 #include <limits.h>
 #endif
 
-NS_STD_BEGIN
+NS_STDEXT_BEGIN
 
 // -------------------------------------------------------------------------
 // template char type functions
@@ -66,17 +66,11 @@ namespace tchar {
 
 // -------------------------------------------------------------------------
 // $Log: tchar.h,v $
-// Revision 1.1  2006/10/18 12:13:39  xushiwei
-// stdext as independent component
-//
-// Revision 1.2  2006/08/23 05:42:04  xushiwei
-// std::strecpy
-//
 // Revision 1.1  2006/08/23 04:48:32  xushiwei
 // STL-Extension:
 //   namespace std::tchar(std::tchar::strlen, std::tchar::strlwr, etc)
 //
 
-NS_STD_END
+NS_STDEXT_END
 
 #endif /* STDEXT_TCHAR_H */

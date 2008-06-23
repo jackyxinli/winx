@@ -37,7 +37,7 @@
 #endif
 #endif
 
-NS_STD_BEGIN
+NS_STDEXT_BEGIN
 
 // -------------------------------------------------------------------------
 // class PerformanceCounter
@@ -208,7 +208,7 @@ typedef AccumulatorT<> Accumulator;
 // -------------------------------------------------------------------------
 // $Log: Counter.h,v $
 
-NS_STD_END
+NS_STDEXT_END
 
 #if defined(_MSC_VER)
 #pragma warning(default:4996) // XXX  was declared deprecated

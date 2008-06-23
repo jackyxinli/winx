@@ -27,7 +27,7 @@
 #include "../std/iterator.h"
 #endif
 
-NS_STD_BEGIN
+NS_STDEXT_BEGIN
 
 // =========================================================================
 // class Range
@@ -136,7 +136,7 @@ public:
 // =========================================================================
 // $Log: $
 
-NS_STD_END
+NS_STDEXT_END
 
 #endif /* STDEXT_RANGE_H */
 

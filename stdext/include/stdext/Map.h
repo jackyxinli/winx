@@ -27,7 +27,7 @@
 #include "../std/map.h"
 #endif
 
-NS_STD_BEGIN
+NS_STDEXT_BEGIN
 
 // -------------------------------------------------------------------------
 // class Map
@@ -237,6 +237,6 @@ public:
 // -------------------------------------------------------------------------
 // $Log: Map.h,v $
 
-NS_STD_END
+NS_STDEXT_END
 
 #endif /* STDEXT_MAP_H */

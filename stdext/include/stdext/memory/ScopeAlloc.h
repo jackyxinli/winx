@@ -37,7 +37,7 @@
 #include <limits.h>
 #endif
 
-NS_STD_BEGIN
+NS_STDEXT_BEGIN
 
 // -------------------------------------------------------------------------
 // class ProxyAlloc
@@ -302,6 +302,6 @@ public:
 // -------------------------------------------------------------------------
 // $Log: $
 
-NS_STD_END
+NS_STDEXT_END
 
 #endif /* STDEXT_MEMORY_SCOPEALLOC_H */

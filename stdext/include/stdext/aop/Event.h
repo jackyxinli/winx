@@ -31,7 +31,7 @@
 // -------------------------------------------------------------------------
 // class BasicConnection
 
-NS_STD_BEGIN
+NS_STDEXT_BEGIN
 
 class BasicConnection : public DclListNode<BasicConnection>, public IConnection
 {
@@ -63,7 +63,7 @@ public:
 	}
 };
 
-NS_STD_END
+NS_STDEXT_END
 
 // -------------------------------------------------------------------------
 // Declaration of no destructor - for GC Allocator
@@ -77,7 +77,7 @@ STD_NO_DESTRUCTOR(std::BasicConnection);
 // -------------------------------------------------------------------------
 // class BasicEvent
 
-NS_STD_BEGIN
+NS_STDEXT_BEGIN
 
 template <class EventT, class AllocT>
 class BasicEvent : public EventT
@@ -95,7 +95,7 @@ public:
 	}
 };
 
-NS_STD_END
+NS_STDEXT_END
 
 // -------------------------------------------------------------------------
 // IMPLEMENT_EVENT
@@ -138,7 +138,7 @@ public:																		\
 
 #if defined(STD_UNITTEST)
 
-NS_STD_BEGIN
+NS_STDEXT_BEGIN
 
 namespace test_event {
 
@@ -259,7 +259,7 @@ public:
 	}
 };
 
-NS_STD_END
+NS_STDEXT_END
 
 #endif // defined(STD_UNITTEST)
 

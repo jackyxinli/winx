@@ -25,7 +25,7 @@
 
 #pragma pack(1)
 
-NS_STD_BEGIN
+NS_STDEXT_BEGIN
 
 // -------------------------------------------------------------------------
 // class SegmentAllocBufferT - as a simplest allocator
@@ -788,7 +788,7 @@ public:
 // -------------------------------------------------------------------------
 // $Log: $
 
-NS_STD_END
+NS_STDEXT_END
 
 #pragma pack()
 

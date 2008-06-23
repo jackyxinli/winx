@@ -39,7 +39,7 @@
 #include "posix/Config.h"
 #endif
 
-NS_STD_BEGIN
+NS_STDEXT_BEGIN
 
 // -------------------------------------------------------------------------
 // class PosixAdapter
@@ -335,6 +335,6 @@ public:
 // -------------------------------------------------------------------------
 // $Log: Posix.h,v $
 
-NS_STD_END
+NS_STDEXT_END
 
 #endif /* STDEXT_ARCHIVE_POSIX_H */

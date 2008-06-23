@@ -40,7 +40,7 @@
 #define ARCHIVE_ROUND_SIZE	4096
 #endif
 
-NS_STD_BEGIN
+NS_STDEXT_BEGIN
 
 // -------------------------------------------------------------------------
 // class ArchiveCharTraits
@@ -389,6 +389,6 @@ inline void winx_call put_n(_OStream& __o, size_t __n, const _CharT& __val)
 // -------------------------------------------------------------------------
 // $Log: Basic.h,v $
 
-NS_STD_END
+NS_STDEXT_END
 
 #endif /* STDEXT_ARCHIVE_BASIC_H */

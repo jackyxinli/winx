@@ -23,7 +23,7 @@
 #include "TempString.h"
 #endif
 
-NS_STD_BEGIN
+NS_STDEXT_BEGIN
 
 // -------------------------------------------------------------------------
 // class CompareNoCase
@@ -336,14 +336,14 @@ typedef WString TString;
 typedef String TString;
 #endif
 
-NS_STD_END
+NS_STDEXT_END
 
 STD_NO_DESTRUCTOR(std::String);
 STD_NO_DESTRUCTOR(std::WString);
 
 // -------------------------------------------------------------------------
 
-NS_STD_BEGIN
+NS_STDEXT_BEGIN
 
 template <class _E, class _T2> __forceinline
 	bool winx_call operator==(const BasicString<_E>& a, const _T2& b)
@@ -568,6 +568,6 @@ public:
 // -------------------------------------------------------------------------
 // $Log: BasicString.h,v $
 
-NS_STD_END
+NS_STDEXT_END
 
 #endif /* STDEXT_TEXT_BASICSTRING_H */

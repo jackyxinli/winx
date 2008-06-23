@@ -27,7 +27,7 @@
 #include "boost/Memory.h"
 #endif
 
-NS_STD_BEGIN
+NS_STDEXT_BEGIN
 
 // -------------------------------------------------------------------------
 // class RefCountST
@@ -93,6 +93,6 @@ typedef SingleThreadModel DefaultThreadModel;
 // -------------------------------------------------------------------------
 //	$Log: $
 
-NS_STD_END
+NS_STDEXT_END
 
 #endif /* STDEXT_THREADMODEL_H */

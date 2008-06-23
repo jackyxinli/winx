@@ -51,7 +51,7 @@
 	#endif
 #endif
 
-NS_STD_BEGIN
+NS_STDEXT_BEGIN
 
 // -------------------------------------------------------------------------
 // class Deque
@@ -184,6 +184,6 @@ public:
 // -------------------------------------------------------------------------
 // $Log: Deque.h,v $
 
-NS_STD_END
+NS_STDEXT_END
 
 #endif /* STDEXT_DEQUE_H */

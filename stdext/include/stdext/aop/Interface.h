@@ -24,7 +24,7 @@
 #include "../Basic.h"
 #endif
 
-NS_STD_BEGIN
+NS_STDEXT_BEGIN
 
 // -------------------------------------------------------------------------
 // interface IConnection
@@ -131,6 +131,6 @@ interface IEventContainer
 // -------------------------------------------------------------------------
 // $Log: $
 
-NS_STD_END
+NS_STDEXT_END
 
 #endif /* STDEXT_AOP_INTERFACE_H */

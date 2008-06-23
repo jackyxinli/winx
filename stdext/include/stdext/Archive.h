@@ -86,7 +86,7 @@
 // -------------------------------------------------------------------------
 // class FileReader/FileWriter
 
-NS_STD_BEGIN
+NS_STDEXT_BEGIN
 
 typedef PosixReadArchive FileReadArchive;
 typedef Reader<FileReadArchive> FileReader;
@@ -94,14 +94,14 @@ typedef Reader<FileReadArchive> FileReader;
 typedef PosixWriteArchive FileWriteArchive;
 typedef Writer<FileWriteArchive> FileWriter;
 
-NS_STD_END
+NS_STDEXT_END
 
 // -------------------------------------------------------------------------
 // class TestRecord
 
 #if defined(STD_UNITTEST)
 
-NS_STD_BEGIN
+NS_STDEXT_BEGIN
 
 template <class LogT>
 class TestRecord : public TestCase
@@ -161,7 +161,7 @@ public:
 	}
 };
 
-NS_STD_END
+NS_STDEXT_END
 
 #endif // defined(STD_UNITTEST)
 
