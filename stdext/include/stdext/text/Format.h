@@ -96,6 +96,15 @@ __forceinline char* winx_call to_str(char buf[], double val, int ndigit = 12) {
 	return _gcvt(val, ndigit, buf);
 }
 
+inline wchar_t* winx_call to_str(wchar_t buf[], double val, int ndigit = 12) {
+	enum { bufsize = WINX_STRBUF_SIZE(double) };
+	char cbuf[bufsize];
+	_gcvt(val, ndigit, cbuf);
+	for (size_t i = 0; cbuf[i]; ++i)
+		buf[i] = cbuf[i];
+	return buf;
+}
+
 // -------------------------------------------------------------------------
 // function str
 
@@ -133,9 +142,126 @@ __forceinline BasicString<E> winx_call str(AllocT& alloc, const E val) {
 	return BasicString<E>(alloc, &val, 1);
 }
 
+NS_STDEXT_END
+
+// -------------------------------------------------------------------------
+// class TestFormat
+
+#if defined(STD_UNITTEST)
+
+#include <sstream>
+#include "../Rand.h"
+#include "../Memory.h"
+
+template <class LogT>
+class TestFormat : public TestCase
+{
+	WINX_TEST_SUITE(TestFormat);
+		WINX_TEST(testBasic);
+		WINX_TEST(testIntToStr);
+		WINX_TEST(testRealToStr);
+	WINX_TEST_SUITE_END();
+
+public:
+	template <class IntT>
+	void doTestIntToStr(const IntT& val, LogT& log)
+	{
+		std::AutoFreeAlloc alloc;
+		std::ostringstream os;
+		os << val;
+		AssertExp(os.str() == std::str<char>(alloc, val));
+	}
+
+	void testIntToStr(LogT& log)
+	{
+		std::Rand rnd;
+		size_t i;
+		for (i = 0; i < 1000; ++i) {
+			const int val = rnd.rand();
+			doTestIntToStr(val, log);
+		}		
+		for (i = 0; i < 1000; ++i) {
+			const long val = rnd.rand();
+			doTestIntToStr(val, log);
+		}
+		for (i = 0; i < 1000; ++i) {
+			const unsigned long val = rnd.rand();
+			doTestIntToStr(val, log);
+		}
+		for (i = 0; i < 1000; ++i) {
+			const unsigned int val = rnd.rand();
+			doTestIntToStr(val, log);
+		}
+#ifndef _NO_INT64
+		for (i = 0; i < 1000; ++i) {
+			const __int64 val = ((__int64)rnd.rand() << 32) | rnd.rand();
+			doTestIntToStr(val, log);
+		}
+		for (i = 0; i < 1000; ++i) {
+			const __uint64 val = (__uint64)(((__int64)rnd.rand() << 32) | rnd.rand());
+			doTestIntToStr(val, log);
+		}
+#endif
+	}
+
+	template <class RealT>
+	void doTestRealToStr(const RealT& val, LogT& log)
+	{
+		std::AutoFreeAlloc alloc;
+		std::String s = std::str<char>(alloc, val);
+		std::string s1 = s.stl_str();
+		std::istringstream is(s1);
+		RealT val2;
+		is >> val2;
+		AssertExp(val == val2);
+	}
+	
+	void testRealToStr(LogT& log)
+	{
+		std::Rand rnd;
+		size_t i;
+		for (i = 0; i < 1000; ++i) {
+			const float val = (float)rnd.frand();
+			doTestRealToStr(val, log);
+		}		
+	}
+
+	void testRealToStr(LogT& log)
+	{
+		std::Rand rnd;
+		size_t i;
+		for (i = 0; i < 1000; ++i) {
+			const float val = (float)rnd.frand();
+			doTestRealToStr(val, log);
+		}		
+		for (i = 0; i < 1000; ++i) {
+			const double val = (double)rnd.frand();
+			doTestRealToStr(val, log);
+		}
+	}
+	
+	void testBasic(LogT& log)
+	{
+		std::AutoFreeAlloc alloc;
+		std::String s;
+		std::WString ws;
+		
+		s = std::str<char>(alloc, 123);
+		AssertExp(s == "123");
+		
+		ws = std::str<wchar_t>(alloc, 123, 16);
+		AssertExp(ws == L"7B");
+		
+		s = std::str<char>(alloc, 12.3);
+		AssertExp(s == "12.3");
+		
+		ws = std::str<wchar_t>(alloc, 12.3);
+		AssertExp(ws == L"12.3");
+	}
+};
+
 // -------------------------------------------------------------------------
 // $Log: Format.h,v $
 
-NS_STDEXT_END
-
 #endif /* STDEXT_TEXT_FORMAT_H */
+

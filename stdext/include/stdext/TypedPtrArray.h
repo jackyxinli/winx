@@ -31,12 +31,6 @@
 #include "../std/algorithm.h"
 #endif
 
-#ifndef NS_STDEXT
-#define NS_STDEXT			std::
-#define NS_STDEXT_BEGIN		namespace std {
-#define NS_STDEXT_END		}
-#endif
-
 NS_STDEXT_BEGIN
 
 // -------------------------------------------------------------------------
