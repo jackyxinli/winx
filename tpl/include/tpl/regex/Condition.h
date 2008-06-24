@@ -26,6 +26,147 @@
 NS_TPL_BEGIN
 
 // =========================================================================
+// class Condition
+
+template <class RegExT> class Rule;
+template <class GrammarT> class Grammar;
+
+template <class ConditionT>
+class Condition : public ConditionT
+{
+public:
+	Condition() {}
+
+	template <class T1>
+	Condition(T1& x) : ConditionT(x) {}
+
+	template <class T1>
+	Condition(const T1& x) : ConditionT(x) {}
+
+	template <class T1, class T2>
+	Condition(const T1& x, const T2& y) : ConditionT(x, y) {}
+
+//	concept:
+//
+//	enum { character = ConditionT::character };
+//
+//	template <class Iterator, class SourceT, class ContextT>
+//	bool TPL_CALL match_if(
+//		Iterator pos, Iterator pos2,
+//		SourceT& ar, ContextT& context) const;
+};
+
+template <class ConditionT>
+class GCondition : public ConditionT
+{
+public:
+	GCondition() {}
+
+	template <class T1>
+	GCondition(T1& x) : ConditionT(x) {}
+
+	template <class T1>
+	GCondition(const T1& x) : ConditionT(x) {}
+
+	template <class T1, class T2>
+	GCondition(const T1& x, const T2& y) : ConditionT(x, y) {}
+
+//	concept:
+//
+//	enum { character = ConditionT::character };
+//
+//	template <class Iterator, class SourceT, class ContextT, SkipperT>
+//	bool TPL_CALL match_if(
+//		Iterator pos, Iterator pos2,
+//		SourceT& ar, ContextT& context, const Skipper<SkipperT>& skipper_) const;
+};
+
+// =========================================================================
+// class Cond/GCond
+
+template <class RegExT, class ConditionT>
+class Cond
+{
+public:
+	const RegExT m_x;
+	const ConditionT m_y;
+	
+public:
+	Cond() : m_x(), m_y() {}
+	Cond(const RegExT& x, const ConditionT& y) : m_x(x), m_y(y) {}
+	
+public:
+	enum { character = RegExT::character | ConditionT::character };
+
+	typedef ExplicitConvertible convertible_type;
+	typedef TagAssigNone assig_tag;
+
+	template <class SourceT, class ContextT>
+	bool TPL_CALL match(SourceT& ar, ContextT& context) const {
+		typename ContextT::template trans_type<RegExT::character> trans(ar, context);
+		typename SourceT::iterator pos = ar.position();
+		if (m_x.match(ar, context)) {
+			typename SourceT::iterator pos2 = ar.position();
+			if (m_y.match_if(pos, pos2, ar, context))
+				return true;
+		}
+		trans.rollback(ar);
+		return false;
+	}
+};
+
+template <class RegExT, class ConditionT>
+class GCond
+{
+public:
+	const RegExT m_x;
+	const ConditionT m_y;
+	
+public:
+	GCond() : m_x(), m_y() {}
+	GCond(const RegExT& x, const ConditionT& y) : m_x(x), m_y(y) {}
+	
+public:
+	enum { character = RegExT::character | ConditionT::character };
+
+	typedef TagAssigNone assig_tag;
+
+	template <class SourceT, class ContextT, class SkipperT>
+	bool TPL_CALL match(SourceT& ar, ContextT& context, const Skipper<SkipperT>& skipper_) const {
+		skipper_.match(ar, context);
+		typename ContextT::template trans_type<RegExT::character> trans(ar, context);
+		typename SourceT::iterator pos = ar.position();
+		if (m_x.match(ar, context)) {
+			typename SourceT::iterator pos2 = ar.position();
+			if (m_y.match_if(pos, pos2, ar, context, skipper_))
+				return true;
+		}
+		trans.rollback(ar);
+		return false;
+	}
+};
+
+template <class RegExT, class ConditionT>
+struct BindTraits<Rule<RegExT>, Condition<ConditionT> >
+{
+	typedef Rule<Cond<RegExT, ConditionT> > bind_type;
+
+	static bind_type TPL_CALL bind(const Rule<RegExT>& rule_, const Condition<ConditionT>& cond_) {
+		return bind_type(rule_, cond_);
+	}
+};
+
+template <class RegExT, class ConditionT>
+struct BindTraits<Rule<RegExT>, GCondition<ConditionT> >
+{
+	typedef Grammar<GCond<RegExT, ConditionT> > bind_type;
+
+	static bind_type TPL_CALL bind(const Rule<RegExT>& rule_, const GCondition<ConditionT>& cond_) {
+		return bind_type(rule_, cond_);
+	}
+};
+
+// =========================================================================
 // function case_()
 
 template <class CondT, class NextT>

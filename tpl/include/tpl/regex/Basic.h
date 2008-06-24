@@ -25,10 +25,47 @@
 
 NS_TPL_BEGIN
 
+template <class RegExT> class Rule;
+template <class GrammarT> class Grammar;
+template <class SkipperT> class Skipper;
+
+// =========================================================================
+// class Gr: Wrapper a Rule to Grammar
+
+template <class RegExT>
+class Gr : public RegExT
+{
+public:
+	Gr() {}
+	Gr(const RegExT& x) : RegExT(x) {}
+
+public:
+	const Rule<RegExT>& TPL_CALL rule() const {
+		return *(const Rule<RegExT>*)this;
+	}
+
+	template <class SourceT, class ContextT, class SkipperT>
+	bool TPL_CALL match(SourceT& ar, ContextT& context, const Skipper<SkipperT>& skipper_) const {
+		skipper_.match(ar, context);
+		return RegExT::match(ar, context);
+	}
+};
+
+// =========================================================================
+// struct BindTraits
+
+template <class T1, class T2>
+struct BindTraits
+{
+//	concept:
+//
+//	typename bind_type;
+//
+//	static bind_type TPL_CALL bind(const T1& o1, const T2& o2);
+};
+
 // =========================================================================
 // class Skipper
-
-template <class RegExT> class Rule;
 
 template <class SkipperT>
 class Skipper : public SkipperT
@@ -63,81 +100,21 @@ public:
 };
 
 // =========================================================================
-// class Gr: Wrapper a Rule to Grammar
+// class Transformation
 
-template <class RegExT>
-class Gr : public RegExT
+template <class TransformT>
+class Transformation : public TransformT
 {
 public:
-	Gr() {}
-	Gr(const RegExT& x) : RegExT(x) {}
-
-public:
-	const Rule<RegExT>& TPL_CALL rule() const {
-		return *(const Rule<RegExT>*)this;
-	}
-
-	template <class SourceT, class ContextT, class SkipperT>
-	bool TPL_CALL match(SourceT& ar, ContextT& context, const Skipper<SkipperT>& skipper_) const {
-		skipper_.match(ar, context);
-		return RegExT::match(ar, context);
-	}
-};
-
-// =========================================================================
-// class Condition
-
-template <class RegExT> class Rule;
-template <class GrammarT> class Grammar;
-
-template <class ConditionT>
-class Condition : public ConditionT
-{
-public:
-	Condition() {}
+	Transformation() {}
 
 	template <class T1>
-	Condition(T1& x) : ConditionT(x) {}
+	Transformation(const T1& x) : TransformT(x) {}
 
-	template <class T1>
-	Condition(const T1& x) : ConditionT(x) {}
+private:
+	// concept:
 
-	template <class T1, class T2>
-	Condition(const T1& x, const T2& y) : ConditionT(x, y) {}
-
-//	concept:
-//
-//	enum { character = ConditionT::character };
-//
-//	template <class Iterator, class SourceT, class ContextT>
-//	bool TPL_CALL match_if(
-//		Iterator pos, Iterator pos2,
-//		SourceT& ar, ContextT& context) const;
-};
-
-template <class ConditionT>
-class GCondition : public ConditionT
-{
-public:
-	GCondition() {}
-
-	template <class T1>
-	GCondition(T1& x) : ConditionT(x) {}
-
-	template <class T1>
-	GCondition(const T1& x) : ConditionT(x) {}
-
-	template <class T1, class T2>
-	GCondition(const T1& x, const T2& y) : ConditionT(x, y) {}
-
-//	concept:
-//
-//	enum { character = ConditionT::character };
-//
-//	template <class Iterator, class SourceT, class ContextT, SkipperT>
-//	bool TPL_CALL match_if(
-//		Iterator pos, Iterator pos2,
-//		SourceT& ar, ContextT& context, const Skipper<SkipperT>& skipper_) const;
+	int TPL_CALL operator()(int ch) const;
 };
 
 // =========================================================================
@@ -219,72 +196,6 @@ public:
 	typedef TagAssigNone assig_tag;
 };
 
-// class Cond
-
-template <class RegExT, class ConditionT>
-class Cond
-{
-public:
-	const RegExT m_x;
-	const ConditionT m_y;
-	
-public:
-	Cond() : m_x(), m_y() {}
-	Cond(const RegExT& x, const ConditionT& y) : m_x(x), m_y(y) {}
-	
-public:
-	enum { character = RegExT::character | ConditionT::character };
-
-	typedef ExplicitConvertible convertible_type;
-	typedef TagAssigNone assig_tag;
-
-	template <class SourceT, class ContextT>
-	bool TPL_CALL match(SourceT& ar, ContextT& context) const {
-		typename ContextT::template trans_type<RegExT::character> trans(ar, context);
-		typename SourceT::iterator pos = ar.position();
-		if (m_x.match(ar, context)) {
-			typename SourceT::iterator pos2 = ar.position();
-			if (m_y.match_if(pos, pos2, ar, context))
-				return true;
-		}
-		trans.rollback(ar);
-		return false;
-	}
-};
-
-// class GCond
-
-template <class RegExT, class ConditionT>
-class GCond
-{
-public:
-	const RegExT m_x;
-	const ConditionT m_y;
-	
-public:
-	GCond() : m_x(), m_y() {}
-	GCond(const RegExT& x, const ConditionT& y) : m_x(x), m_y(y) {}
-	
-public:
-	enum { character = RegExT::character | ConditionT::character };
-
-	typedef TagAssigNone assig_tag;
-
-	template <class SourceT, class ContextT, class SkipperT>
-	bool TPL_CALL match(SourceT& ar, ContextT& context, const Skipper<SkipperT>& skipper_) const {
-		skipper_.match(ar, context);
-		typename ContextT::template trans_type<RegExT::character> trans(ar, context);
-		typename SourceT::iterator pos = ar.position();
-		if (m_x.match(ar, context)) {
-			typename SourceT::iterator pos2 = ar.position();
-			if (m_y.match_if(pos, pos2, ar, context, skipper_))
-				return true;
-		}
-		trans.rollback(ar);
-		return false;
-	}
-};
-
 // class Rule
 
 template <class RegExT>
@@ -332,17 +243,11 @@ public:
 		return *(const Grammar<Gr<RegExT> >*)this;
 	}
 
-public:
-	template <class ConditionT>
-	Rule<Cond<RegExT, ConditionT> > TPL_CALL operator[](const Condition<ConditionT>& cond) const {
-		return Rule<Cond<RegExT, ConditionT> >(*this, cond);
+	template <class T2>
+	typename BindTraits<Rule<RegExT>, T2>::bind_type TPL_CALL operator[](const T2& obj) const {
+		return BindTraits<Rule<RegExT>, T2>::bind(*this, obj);
 	}
-
-	template <class ConditionT>
-	Grammar<GCond<RegExT, ConditionT> > TPL_CALL operator[](const GCondition<ConditionT>& cond) const {
-		return Grammar<GCond<RegExT, ConditionT> >(*this, cond);
-	}
-
+	
 //	concept:
 //
 //	enum { character = RegExT::character };
@@ -476,24 +381,6 @@ private:
 	typedef typename ActionT::value_type value_type;
 
 	void TPL_CALL operator()(const value_type& val) const;
-};
-
-// =========================================================================
-// class Transformation
-
-template <class TransformT>
-class Transformation : public TransformT
-{
-public:
-	Transformation() {}
-
-	template <class T1>
-	Transformation(const T1& x) : TransformT(x) {}
-
-private:
-	// concept:
-
-	int TPL_CALL operator()(int ch) const;
 };
 
 // =========================================================================
