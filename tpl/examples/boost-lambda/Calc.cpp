@@ -1,10 +1,12 @@
-#include "stdafx.h"
+#define TPL_USE_AUTO_ALLOC
+#include <iostream> 	// std::cout
+#include <tpl/RegExp.h>
 #include <tpl/boost/Lambda.h>
 
 using namespace tpl;
 using namespace boost::lambda;
 
-void calculate()
+int main()
 {
 	typedef SimpleImplementation impl;
 
@@ -48,3 +50,4 @@ void calculate()
 }
 
 // -------------------------------------------------------------------------
+

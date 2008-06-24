@@ -56,7 +56,6 @@ NS_TPL_BEGIN
 	TPL_RULE_REF_BINARY_OP_(op, Op)
 
 // =========================================================================
-// operator>> (boost::spirit, xpressive compatible)
 // operator+
 
 // Usage: Rule1 >> Rule2
@@ -91,16 +90,10 @@ public:
 };
 
 template <class T1, class T2> __forceinline
-Rule<And<T1, T2> > TPL_CALL operator>>(const Rule<T1>& x, const Rule<T2>& y) {
-	return Rule<And<T1, T2> >(x, y);
-}
-
-template <class T1, class T2> __forceinline
 Rule<And<T1, T2> > TPL_CALL operator+(const Rule<T1>& x, const Rule<T2>& y) {
 	return Rule<And<T1, T2> >(x, y);
 }
 
-TPL_REGEX_BINARY_OP_(>>, And)
 TPL_REGEX_BINARY_OP_(+, And)
 
 // =========================================================================

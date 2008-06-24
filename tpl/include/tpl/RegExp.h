@@ -100,6 +100,17 @@
 #endif
 
 // -------------------------------------------------------------------------
+// operator>>
+
+template <class ContainerT, class RegExT> inline 
+bool TPL_CALL operator>>(const ContainerT& src_, const tpl::Rule<RegExT>& rule_)
+{
+	tpl::simple::Source source(src_);
+	tpl::simple::Context context;
+	return rule_.match(source, context);
+}
+
+// -------------------------------------------------------------------------
 // $Log: $
 
 #endif /* TPL_REGEXP_H */

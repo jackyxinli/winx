@@ -49,7 +49,6 @@ NS_TPL_BEGIN
 	TPL_GRAMMAR_RULE_BINARY_OP_(op, Op)
 
 // =========================================================================
-// operator>> (boost::spirit, xpressive compatible)
 // operator+
 
 // Usage: Grammar1 >> Grammar2
@@ -83,16 +82,10 @@ public:
 };
 
 template <class T1, class T2> __forceinline
-Grammar<GAnd<T1, T2> > TPL_CALL operator>>(const Grammar<T1>& x, const Grammar<T2>& y) {
-	return Grammar<GAnd<T1, T2> >(x, y);
-}
-
-template <class T1, class T2> __forceinline
 Grammar<GAnd<T1, T2> > TPL_CALL operator+(const Grammar<T1>& x, const Grammar<T2>& y) {
 	return Grammar<GAnd<T1, T2> >(x, y);
 }
 
-TPL_GRAMMAR_BINARY_OP_(>>, GAnd)
 TPL_GRAMMAR_BINARY_OP_(+, GAnd)
 
 // =========================================================================

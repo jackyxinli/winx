@@ -140,6 +140,11 @@ struct RequireClassTraits<ClassT, ClassT> {
 #endif
 
 // =========================================================================
+// TPL_CONST
+
+#define TPL_CONST(Type, var)	const Type var
+
+// =========================================================================
 // $Log: $
 
 NS_TPL_END

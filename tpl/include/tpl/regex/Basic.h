@@ -36,7 +36,7 @@ template <class RegExT>
 class Gr : public RegExT
 {
 public:
-	Gr() {}
+	Gr() : RegExT() {}
 	Gr(const RegExT& x) : RegExT(x) {}
 
 public:
@@ -71,6 +71,7 @@ template <class SkipperT>
 class Skipper : public SkipperT
 {
 public:
+	Skipper() : SkipperT() {}
 	Skipper(const SkipperT& x) : SkipperT(x) {}
 
 	template <class T1, class T2>
@@ -79,6 +80,12 @@ public:
 public:
 	const Rule<SkipperT>& TPL_CALL rule() const {
 		return (const Rule<SkipperT>&)*this;
+	}
+
+	template <class GrammarT>
+	typename BindTraits<Skipper<SkipperT>, Grammar<GrammarT> >::bind_type
+	TPL_CALL operator[](const Grammar<GrammarT>& grammar_) const {
+		return BindTraits<Skipper<SkipperT>, Grammar<GrammarT> >::bind(*this, grammar_);
 	}
 
 //	concept (as a Rule):
@@ -106,7 +113,7 @@ template <class TransformT>
 class Transformation : public TransformT
 {
 public:
-	Transformation() {}
+	Transformation() : TransformT() {}
 
 	template <class T1>
 	Transformation(const T1& x) : TransformT(x) {}
@@ -202,7 +209,7 @@ template <class RegExT>
 class Rule : public RegExT
 {
 public:
-	Rule() {}
+	Rule() : RegExT() {}
 
 	template <class T1>
 	Rule(T1& x) : RegExT(x) {}
@@ -280,7 +287,7 @@ template <class GrammarT>
 class Grammar : public GrammarT
 {
 public:
-	Grammar() {}
+	Grammar() : GrammarT() {}
 
 	template <class T1>
 	Grammar(T1& x) : GrammarT(x) {}
@@ -319,7 +326,7 @@ template <class ActionT>
 class SimpleAction : public ActionT
 {
 public:
-	SimpleAction() {}
+	SimpleAction() : ActionT() {}
 
 	template <class T1>
 	SimpleAction(const T1& x) : ActionT(x) {}
@@ -355,7 +362,7 @@ template <class ActionT>
 class Action : public ActionT
 {
 public:
-	Action() {}
+	Action() : ActionT() {}
 
 	template <class T1>
 	Action(const T1& x) : ActionT(x) {}

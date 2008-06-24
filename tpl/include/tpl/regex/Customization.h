@@ -176,9 +176,9 @@ public:
 	}
 
 	template <class RegExT>
-	static inline bool TPL_CALL match(Iterator pos, const tpl::Rule<RegExT>& rule_)
+	static inline bool TPL_CALL match(Iterator src, const tpl::Rule<RegExT>& rule_)
 	{
-		Source source(pos);
+		Source source(src);
 		Context context;
 		return rule_.match(source, context);
 	}
@@ -196,15 +196,19 @@ public:
 	}
 
 	static Skipper<ConcretionSkipper_> TPL_CALL skipper(const tpl::Rule<ConcretionSkipper_>& skipper_) {
-		return (const Skipper<ConcretionSkipper_>&)skipper_;
+		return *(const Skipper<ConcretionSkipper_>*)&skipper_;
 	}
 
-	static Skipper<SkipperImpl<SkipWhiteSpaces, Source, Context> > TPL_CALL skipws() {
-		return skipper(tpl::skipws());
+public:
+	typedef Skipper<SkipperImpl<SkipWhiteSpaces, Source, Context> > WhiteSpacesSkipper;
+	typedef Skipper<SkipperImpl<SkipNonEolSpaces, Source, Context> > NonEolSpacesSkipper;
+	
+	static WhiteSpacesSkipper TPL_CALL skipws() {
+		return WhiteSpacesSkipper();
 	}
 
-	static Skipper<SkipperImpl<SkipNonEolSpaces, Source, Context> > TPL_CALL skip_non_eol_ws() {
-		return skipper(tpl::skip_non_eol_ws());
+	static NonEolSpacesSkipper TPL_CALL skip_non_eol_ws() {
+		return NonEolSpacesSkipper();
 	}
 
 public:
@@ -269,6 +273,9 @@ public:
 typedef Customization<policy::Default, false> SimpleImplementation;
 
 typedef SimpleImplementation simple;
+
+TPL_CONST(simple::WhiteSpacesSkipper, skipws_);
+TPL_CONST(simple::NonEolSpacesSkipper, skip_non_eol_ws_);
 
 // -------------------------------------------------------------------------
 // DefaultImplementation

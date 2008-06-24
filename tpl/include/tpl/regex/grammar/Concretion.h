@@ -60,10 +60,15 @@ public:
 	}
 };
 
-template <class GrammarT, class SkipperT> __forceinline
-Rule<GrBind<GrammarT, SkipperT> > TPL_CALL operator>>(const Skipper<SkipperT>& y, const Grammar<GrammarT>& x) {
-	return Rule<GrBind<GrammarT, SkipperT> >(x, y);
-}
+template <class SkipperT, class GrammarT>
+struct BindTraits<Skipper<SkipperT>, Grammar<GrammarT> >
+{
+	typedef Rule<GrBind<GrammarT, SkipperT> > bind_type;
+
+	static bind_type TPL_CALL bind(const Skipper<SkipperT>& y, const Grammar<GrammarT>& x) {
+		return bind_type(x, y);
+	}
+};
 
 // =========================================================================
 // Skipper Implementation
@@ -90,8 +95,13 @@ private:
 	ConcretionT m_alter;
 
 public:
+	SkipperImpl() : SkipperT() {
+		const ConcretionImplT* impl_ = (const ConcretionImplT*)this;
+		m_alter.assign(impl_, ConcretionImplT::match);
+	}
+	
 	SkipperImpl(const Rule<SkipperT>& skipper_) : SkipperT(skipper_) {
-		const ConcretionImplT* impl_ = (const ConcretionImplT*)&skipper_;
+		const ConcretionImplT* impl_ = (const ConcretionImplT*)this;
 		m_alter.assign(impl_, ConcretionImplT::match);
 	}
 
