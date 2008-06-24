@@ -1,4 +1,8 @@
-#include "stdafx.h"
+#define TPL_USE_AUTO_ALLOC
+#include <iostream> 	// std::cout
+#include <tpl/RegExp.h>
+
+using namespace tpl;
 
 // -------------------------------------------------------------------------
 // circuit
@@ -7,10 +11,8 @@
 //	if two rules A, B circularly refer to each other (or a rule A refer to itself),
 //	we need use Rule::Var to break the circuit.
 
-void circuit()
+int main()
 {
-	using namespace tpl;
-
 	typedef simple impl;
 
 	// ---- define rules ----
@@ -27,12 +29,13 @@ void circuit()
 
 	// ---- do match ----
 
-	if (impl::match("10,97,37", rDoc))
-	{
+	if ("10,97,37" >> rDoc) {	
 		for (std::vector<int>::const_iterator it = values.begin(); it != values.end(); ++it) {
 			std::cout << *it << "\n";
 		}
 	}
+	return 0;
 }
 
 // -------------------------------------------------------------------------
+

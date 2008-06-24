@@ -1,4 +1,3 @@
-#define TPL_USE_AUTO_ALLOC
 #include <vector>		// std::vector
 #include <iostream> 	// std::cout
 #include <tpl/RegExp.h>

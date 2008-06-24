@@ -1,4 +1,3 @@
-#define TPL_USE_AUTO_ALLOC
 #include <map>			// std::map/multimap
 #include <iostream> 	// std::cout
 #include <tpl/RegExp.h>

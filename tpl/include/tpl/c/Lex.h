@@ -19,12 +19,8 @@
 #ifndef TPL_C_LEX_H
 #define TPL_C_LEX_H
 
-#ifndef TPL_REGEX_UCOMPOSITION_H
-#include "../regex/UComposition.h"
-#endif
-
-#ifndef TPL_REGEX_FIND_H
-#include "../regex/Find.h"
+#ifndef TPL_REGEXP_H
+#include "../RegExp.h"
 #endif
 
 NS_TPL_BEGIN
@@ -183,6 +179,14 @@ inline Rule<CSkipNonEolG> TPL_CALL c_skip_non_eol() {
 inline Rule<CppSkipG> TPL_CALL cpp_skip() {
 	return Rule<CppSkipG>();
 }
+
+typedef Skipper<SkipperImpl<CSkipG, simple::Source, simple::Context> > CSkipper;
+typedef Skipper<SkipperImpl<CppSkipG, simple::Source, simple::Context> > CppSkipper;
+typedef Skipper<SkipperImpl<CSkipNonEolG, simple::Source, simple::Context> > CNonEolSkipper;
+
+TPL_CONST(CSkipper, c_skip_);
+TPL_CONST(CNonEolSkipper, c_skip_non_eol_);
+TPL_CONST(CppSkipper, cpp_skip_);
 
 // =========================================================================
 // function c_string(), c_char()

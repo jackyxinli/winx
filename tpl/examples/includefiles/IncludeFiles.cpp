@@ -1,4 +1,3 @@
-#define TPL_USE_AUTO_ALLOC
 #include <vector>		// std::vector
 #include <iostream> 	// std::cout
 #include <tpl/c/Lex.h>
@@ -28,7 +27,7 @@ int main()
 	std::vector<std::string> result;
 
 	const std::FileBuf file(__FILE__);
-	simple::match(file.begin(), file.end(), LIST_GRAMMAR, c_skip_non_eol());
+	file >> c_skip_non_eol_[LIST_GRAMMAR];
 
 	for (std::vector<std::string>::iterator it = result.begin(); it != result.end(); ++it)
 		std::cout << *it << '\n';
