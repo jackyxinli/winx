@@ -59,6 +59,12 @@ public:
 	{
 	}
 
+	explicit MemWriteArchive(BaseStg& stg)
+		: m_stg(&stg)
+	{
+		m_pos = stg.begin();
+	}
+
 	explicit MemWriteArchive(BaseStg* stg)
 		: m_stg(stg)
 	{
@@ -216,8 +222,8 @@ public:
 	}
 
 	template <class ContainerT>
-	explicit MemReadArchive(const ContainerT* cont)
-		: m_pos(cont->begin()), m_first(m_pos), m_last(cont->end())
+	explicit MemReadArchive(const ContainerT& cont)
+		: m_pos(cont.begin()), m_first(m_pos), m_last(cont.end())
 	{
 	}
 
