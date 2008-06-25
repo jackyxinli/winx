@@ -14,7 +14,7 @@
 // Email: xushiweizh@gmail.com
 // Date: 2006-8-13 9:41:58
 // 
-// $Id: Basic.h 638 2008-06-11 19:52:41Z xushiweizh@gmail.com $
+// $Id: Basic.h 731 2008-06-11 19:52:41Z xushiweizh@gmail.com $
 // -----------------------------------------------------------------------*/
 #ifndef TPL_BASIC_H
 #define TPL_BASIC_H

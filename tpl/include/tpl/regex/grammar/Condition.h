@@ -14,7 +14,7 @@
 // Email: xushiweizh@gmail.com
 // Date: 2006-8-13 9:41:58
 // 
-// $Id: Condition.h 636 2008-06-11 07:19:52Z xushiweizh@gmail.com $
+// $Id: Condition.h 731 2008-06-25 21:47:21Z xushiweizh@gmail.com $
 // -----------------------------------------------------------------------*/
 #ifndef TPL_REGEX_GRAMMAR_CONDITION_H
 #define TPL_REGEX_GRAMMAR_CONDITION_H
