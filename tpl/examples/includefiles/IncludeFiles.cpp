@@ -11,10 +11,10 @@ using namespace tpl;
 // list include files
 
 #define LIST_INC_STDFILE		\
-	('<' + find('>')/assign(result) + '>')
+	('<' + find('>')/append(result) + '>')
 
 #define LIST_INC_FILE			\
-	('\"' + find('\"')/assign(result) + '\"')
+	('\"' + find('\"')/append(result) + '\"')
 	
 #define LIST_INC				\
 	gr(LIST_INC_STDFILE | LIST_INC_FILE)

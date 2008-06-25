@@ -22,23 +22,22 @@ int main()
 	impl::Allocator alloc;
 	
 	impl::Rule rItem( alloc,
-		find_set<'/', '\'', '\"'>()/assign(result) + 
+		find_set<'/', '\'', '\"'>()/append(result) + 
 		(
 			cpp_comment() |		/*	I will be removed haha~  */
 								//	Multiline \
 									comments are also allowed. haha~
-			('/' | c_string_or_char())/assign(result)
+			('/' | c_string_or_char())/append(result)
 		));
 	
-	impl::Rule rDoc( alloc, *rItem + done()/assign(result) );
-
 	// ---- do match ----
 
 	const std::FileBuf file(__FILE__);
-	if ( impl::match(file.begin(), file.end(), rDoc) ) {
-		for (std::vector<impl::Leaf>::iterator it = result.begin(); it != result.end(); ++it)
-			std::cout << *it;
-	}
+	file >> *rItem + done()/append(result);
+
+	for (std::vector<impl::Leaf>::iterator it = result.begin(); it != result.end(); ++it)
+		std::cout << *it;
+		
 	return 0;
 }
 

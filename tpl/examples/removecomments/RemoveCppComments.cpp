@@ -25,30 +25,31 @@ int main()
 	rCppEol.assign( alloc,
 		find_set<'\r', '\n', '\\'>() + 
 		(
-			'\\' + !eol() + rCppEol | eol()/assign(result)
+			'\\' + !eol() + rCppEol | eol()/append(result)
 		));
 
 	Var<char> delim;
 	impl::Rule rString( alloc, ch('\'', '\"')/assign(delim) + *('\\' + ch_any() | ~delim) + delim );
 
 	impl::Rule rItem( alloc,
-		find_set<'/', '\'', '\"'>()/assign(result) + 
+		find_set<'/', '\'', '\"'>()/append(result) + 
 		(
 			"/*" + find<true>("*/") |		/*	I will be removed haha~  */
 			"//" + rCppEol |				//	Multiline \
 												comments are also allowed. haha~
-			('/' | rString)/assign(result)
+			('/' | rString)/append(result)
 		));
 	
-	impl::Rule rDoc( alloc, *rItem + done()/assign(result) );
+	impl::Rule rDoc( alloc, *rItem + done()/append(result) );
 
 	// ---- do match ----
 
 	const std::FileBuf file(__FILE__);
-	if ( impl::match(file.begin(), file.end(), rDoc) ) {
-		for (std::vector<impl::Leaf>::iterator it = result.begin(); it != result.end(); ++it)
-			std::cout << *it;
-	}
+	impl::match(file, rDoc);
+	
+	for (std::vector<impl::Leaf>::iterator it = result.begin(); it != result.end(); ++it)
+		std::cout << *it;
+
 	return 0;
 }
 

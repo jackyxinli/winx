@@ -131,36 +131,6 @@ SimpleAction<AndSAct<T1, T2> > TPL_CALL operator+(const SimpleAction<T1>& x, con
 	return SimpleAction<AndSAct<T1, T2> >(x, y);
 }
 
-// -------------------------------------------------------------------------
-// function push_back
-
-template <class ContainerT, class ValueT>
-class PushBack
-{
-private:
-	ContainerT& m_cont;
-	const ValueT& m_ref;
-
-public:
-	PushBack(ContainerT& cont, const ValueT& val)
-		: m_cont(cont), m_ref(val) {
-	}
-
-	void TPL_CALL operator()() const {
-		m_cont.push_back(m_ref);
-	}
-};
-
-template <class ContainerT, class ValueT> __forceinline
-SimpleAction<PushBack<ContainerT, ValueT> > push_back(ContainerT& cont, const ValueT& val) {
-	return SimpleAction<PushBack<ContainerT, ValueT> >(cont, val);
-}
-
-template <class ContainerT, class ValueT> __forceinline
-SimpleAction<PushBack<ContainerT, ValueT> > push_back(ContainerT& cont, const Var<ValueT>& var_) {
-	return SimpleAction<PushBack<ContainerT, ValueT> >(cont, var_.val);
-}
-
 // =========================================================================
 // Action
 

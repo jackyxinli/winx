@@ -9,18 +9,18 @@
 // of this license. You must not remove this notice, or any other, from
 // this software.
 // 
-// Module: tpl/regex/Assignments.h
+// Module: tpl/regex/Append.h
 // Creator: xushiwei
 // Email: xushiweizh@gmail.com
 // Date: 2006-8-13 9:41:58
 // 
 // $Id$
 // -----------------------------------------------------------------------*/
-#ifndef TPL_REGEX_ASSIGNMENTS_H
-#define TPL_REGEX_ASSIGNMENTS_H
+#ifndef TPL_REGEX_APPEND_H
+#define TPL_REGEX_APPEND_H
 
-#ifndef TPL_REGEX_ASSIGNMENT_H
-#include "Assignment.h"
+#ifndef TPL_REGEX_ASSIGN_H
+#include "Assign.h"
 #endif
 
 #ifndef TPL_REGEX_STLHEADERS_H
@@ -30,110 +30,139 @@
 NS_TPL_BEGIN
 
 // =========================================================================
-// class Push_
 
-template <class StackT>
-class Push_
+#define TPL_ACTION_CONTAINER_METHOD1_(Op, op)								\
+template <class ContainerT>													\
+class Op																	\
+{																			\
+private:																	\
+	ContainerT& m_result;													\
+																			\
+public:																		\
+	Op(ContainerT& result) : m_result(result) {								\
+	}																		\
+																			\
+	typedef typename ContainerT::value_type value_type;						\
+																			\
+	void TPL_CALL operator()(const value_type& val) const {					\
+		m_result.op(val);													\
+	}																		\
+};
+
+#define TPL_ACTION_CONTAINER_FN1_(Op, op)									\
+																			\
+template <class ContainerT> __forceinline									\
+Action<Op<ContainerT> > TPL_CALL op(ContainerT& result) {					\
+	return Action<Op<ContainerT> >(result);									\
+}																			\
+																			\
+template <class ContainerT> __forceinline									\
+Action<Op<ContainerT> > TPL_CALL op(Var<ContainerT>& result) {				\
+	return Action<Op<ContainerT> >(result.val);								\
+}
+
+#define TPL_ACTION_CONTAINER_OP_(Op, op)									\
+	TPL_ACTION_CONTAINER_METHOD1_(Op, op)									\
+	TPL_ACTION_CONTAINER_FN1_(Op, op)
+
+// =========================================================================
+// class Append
+
+template <class ContainerT>
+class Append
 {
 private:
-	StackT& m_result;
+	ContainerT& m_result;
 
 public:
-	Push_(StackT& result) : m_result(result) {
+	Append(ContainerT& result) : m_result(result) {
 	}
 
-	typedef typename StackT::value_type value_type;
+	typedef typename ContainerT::value_type value_type;
 
 	void TPL_CALL operator()(const value_type& val) const {
-		m_result.push(val);
+		m_result.append(val);
 	}
 };
 
-// -------------------------------------------------------------------------
+// Usage: Rule/append(cont)
+
+template <class ContainerT> __forceinline
+Action<Append<ContainerT> > TPL_CALL append(ContainerT& result) {
+	return Action<Append<ContainerT> >(result);
+}
+
+template <class ContainerT> __forceinline
+Action<Append<ContainerT> > TPL_CALL append(Var<ContainerT>& result) {
+	return Action<Append<ContainerT> >(result.val);
+}
+
+// =========================================================================
+// function push
+
+TPL_ACTION_CONTAINER_OP_(Push_, push)
 
 #if defined(TPL_HAS_STACK)
 
 template <class ValueT, class Container>
-class Assign<std::stack<ValueT, Container> > : public Push_<std::stack<ValueT, Container> >
+class Append<std::stack<ValueT, Container> > : public Push_<std::stack<ValueT, Container> >
 {
 public:
-	Assign(std::stack<ValueT, Container>& result)
+	Append(std::stack<ValueT, Container>& result)
 		: Push_<std::stack<ValueT, Container> >(result) {}
 };
 
 #endif // defined(TPL_HAS_STACK)
 
-// -------------------------------------------------------------------------
-
 #if defined(TPL_HAS_QUEUE)
 
 template <class ValueT, class Container>
-class Assign<std::queue<ValueT, Container> > : public Push_<std::queue<ValueT, Container> >
+class Append<std::queue<ValueT, Container> > : public Push_<std::queue<ValueT, Container> >
 {
 public:
-	Assign(std::queue<ValueT, Container>& result)
+	Append(std::queue<ValueT, Container>& result)
 		: Push_<std::queue<ValueT, Container> >(result) {}
 };
 
 #endif // defined(TPL_HAS_QUEUE)
 
 // =========================================================================
-// class PushBack_
+// class PushBack_/PushFront_
 
-template <class ContainerT>
-class PushBack_
-{
-private:
-	ContainerT& m_result;
-
-public:
-	PushBack_(ContainerT& result) : m_result(result) {
-	}
-
-	typedef typename ContainerT::value_type value_type;
-
-	void TPL_CALL operator()(const value_type& val) const {
-		m_result.push_back(val);
-	}
-};
-
-// -------------------------------------------------------------------------
+TPL_ACTION_CONTAINER_OP_(PushBack_, push_back)
+TPL_ACTION_CONTAINER_OP_(PushFront_, push_front)
 
 #if defined(TPL_HAS_VECTOR)
 
 template <class ValueT, class Ax>
-class Assign<std::vector<ValueT, Ax> > : public PushBack_<std::vector<ValueT, Ax> >
+class Append<std::vector<ValueT, Ax> > : public PushBack_<std::vector<ValueT, Ax> >
 {
 public:
-	Assign(std::vector<ValueT, Ax>& result)
+	Append(std::vector<ValueT, Ax>& result)
 		: PushBack_<std::vector<ValueT, Ax> >(result) {}
 };
 
 #endif // defined(TPL_HAS_VECTOR)
 
-// -------------------------------------------------------------------------
-
 #if defined(TPL_HAS_DEQUE)
 
 template <class ValueT, class Ax>
-class Assign<std::deque<ValueT, Ax> > : public PushBack_<std::deque<ValueT, Ax> >
+class Append<std::deque<ValueT, Ax> > : public PushBack_<std::deque<ValueT, Ax> >
 {
 public:
-	Assign(std::deque<ValueT, Ax>& result)
+	Append(std::deque<ValueT, Ax>& result)
 		: PushBack_<std::deque<ValueT, Ax> >(result) {}
 };
 
 #endif
 
-// -------------------------------------------------------------------------
-
 #if defined(TPL_HAS_LIST)
 
 template <class ValueT, class Ax>
-class Assign<std::list<ValueT, Ax> > : public PushBack_<std::list<ValueT, Ax> >
+class Append<std::list<ValueT, Ax> > : public PushBack_<std::list<ValueT, Ax> >
 {
 public:
-	Assign(std::list<ValueT, Ax>& result)
+	Append(std::list<ValueT, Ax>& result)
 		: PushBack_<std::list<ValueT, Ax> >(result) {}
 };
 
@@ -142,40 +171,23 @@ public:
 // =========================================================================
 // class Insert_
 
-template <class ContainerT>
-class Insert_
-{
-private:
-	ContainerT& m_result;
-
-public:
-	Insert_(ContainerT& result) : m_result(result) {
-	}
-
-	typedef typename ContainerT::value_type value_type;
-
-	void TPL_CALL operator()(const value_type& val) const {
-		m_result.insert(val);
-	}
-};
-
-// -------------------------------------------------------------------------
+TPL_ACTION_CONTAINER_OP_(Insert_, insert)
 
 #if defined(TPL_HAS_SET)
 
 template <class ValueT, class Pr, class Ax>
-class Assign<std::set<ValueT, Pr, Ax> > : public Insert_<std::set<ValueT, Pr, Ax> >
+class Append<std::set<ValueT, Pr, Ax> > : public Insert_<std::set<ValueT, Pr, Ax> >
 {
 public:
-	Assign(std::set<ValueT, Pr, Ax>& result)
+	Append(std::set<ValueT, Pr, Ax>& result)
 		: Insert_<std::set<ValueT, Pr, Ax> >(result) {}
 };
 
 template <class ValueT, class Pr, class Ax>
-class Assign<std::multiset<ValueT, Pr, Ax> > : public Insert_<std::multiset<ValueT, Pr, Ax> >
+class Append<std::multiset<ValueT, Pr, Ax> > : public Insert_<std::multiset<ValueT, Pr, Ax> >
 {
 public:
-	Assign(std::multiset<ValueT, Pr, Ax>& result)
+	Append(std::multiset<ValueT, Pr, Ax>& result)
 		: Insert_<std::multiset<ValueT, Pr, Ax> >(result) {}
 };
 
@@ -229,7 +241,7 @@ public:
 };
 
 // -------------------------------------------------------------------------
-// function assign
+// function append
 
 #if defined(TPL_HAS_MAP)
 
@@ -237,7 +249,7 @@ template <bool bOverwrite, class KeyT, class MappedT, class Pr, class Ax>
 __forceinline
 Action<InsertPair_<std::map<KeyT, MappedT, Pr, Ax>, bOverwrite> >
 TPL_CALL
-assign(std::map<KeyT, MappedT, Pr, Ax>& result, const KeyT& key) {
+append(std::map<KeyT, MappedT, Pr, Ax>& result, const KeyT& key) {
 	return Action<InsertPair_<std::map<KeyT, MappedT, Pr, Ax>, bOverwrite> >(result, key);
 }
 
@@ -245,7 +257,7 @@ template <class KeyT, class MappedT, class Pr, class Ax>
 __forceinline
 Action<InsertPair_<std::map<KeyT, MappedT, Pr, Ax>, false> >
 TPL_CALL
-assign(std::map<KeyT, MappedT, Pr, Ax>& result, const KeyT& key) {
+append(std::map<KeyT, MappedT, Pr, Ax>& result, const KeyT& key) {
 	return Action<InsertPair_<std::map<KeyT, MappedT, Pr, Ax>, false> >(result, key);
 }
 
@@ -253,7 +265,7 @@ template <bool bOverwrite, class KeyT, class MappedT, class Pr, class Ax>
 __forceinline
 Action<InsertPair_<std::multimap<KeyT, MappedT, Pr, Ax>, false> >
 TPL_CALL
-assign(std::multimap<KeyT, MappedT, Pr, Ax>& result, const KeyT& key) {
+append(std::multimap<KeyT, MappedT, Pr, Ax>& result, const KeyT& key) {
 	return Action<InsertPair_<std::multimap<KeyT, MappedT, Pr, Ax>, false> >(result, key);
 }
 
@@ -261,7 +273,7 @@ template <class KeyT, class MappedT, class Pr, class Ax>
 __forceinline
 Action<InsertPair_<std::multimap<KeyT, MappedT, Pr, Ax>, false> >
 TPL_CALL
-assign(std::multimap<KeyT, MappedT, Pr, Ax>& result, const KeyT& key) {
+append(std::multimap<KeyT, MappedT, Pr, Ax>& result, const KeyT& key) {
 	return Action<InsertPair_<std::multimap<KeyT, MappedT, Pr, Ax>, false> >(result, key);
 }
 
@@ -272,4 +284,4 @@ assign(std::multimap<KeyT, MappedT, Pr, Ax>& result, const KeyT& key) {
 
 NS_TPL_END
 
-#endif /* TPL_REGEX_ASSIGNMENTS_H */
+#endif /* TPL_REGEX_APPEND_H */

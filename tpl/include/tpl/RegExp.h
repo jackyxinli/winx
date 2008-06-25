@@ -59,12 +59,12 @@
 #include "regex/Action.h"
 #endif
 
-#ifndef TPL_REGEX_ASSIGNMENT_H
-#include "regex/Assignment.h"
+#ifndef TPL_REGEX_ASSIGN_H
+#include "regex/Assign.h"
 #endif
 
-#ifndef TPL_REGEX_ASSIGNMENTS_H
-#include "regex/Assignments.h"
+#ifndef TPL_REGEX_APPEND_H
+#include "regex/Append.h"
 #endif
 
 #ifndef TPL_REGEX_REF_H

@@ -14,7 +14,7 @@
 // Email: xushiweizh@gmail.com
 // Date: 2006-8-13 9:41:58
 // 
-// $Id: RegExp.h 619 2008-06-01 16:00:35Z xushiweizh $
+// $Id: Lex.h 619 2008-06-01 16:00:35Z xushiweizh $
 // -----------------------------------------------------------------------*/
 #ifndef TPL_C_LEX_H
 #define TPL_C_LEX_H
