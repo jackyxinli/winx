@@ -78,7 +78,7 @@ public:
 //	template <class Iterator, class SourceT, class ContextT, SkipperT>
 //	bool TPL_CALL match_if(
 //		Iterator pos, Iterator pos2,
-//		SourceT& ar, ContextT& context, const Skipper<SkipperT>& skipper_) const;
+//		SourceT& ar, ContextT& context, const SkipperT& skipper_) const;
 };
 
 // =========================================================================
@@ -132,7 +132,7 @@ public:
 	typedef TagAssigNone assig_tag;
 
 	template <class SourceT, class ContextT, class SkipperT>
-	bool TPL_CALL match(SourceT& ar, ContextT& context, const Skipper<SkipperT>& skipper_) const {
+	bool TPL_CALL match(SourceT& ar, ContextT& context, const SkipperT& skipper_) const {
 		skipper_.match(ar, context);
 		typename ContextT::template trans_type<RegExT::character> trans(ar, context);
 		typename SourceT::iterator pos = ar.position();
@@ -216,7 +216,7 @@ public:
 	template <class Iterator, class SourceT, class ContextT, class SkipperT>
 	bool TPL_CALL match_if(
 		Iterator pos, Iterator pos2,
-		SourceT& ar, ContextT& context, const Skipper<SkipperT>& skipper_) const
+		SourceT& ar, ContextT& context, const SkipperT& skipper_) const
 	{
 		return m_cond(pos, pos2) && m_next.match(ar, context, skipper_);
 	}
@@ -308,7 +308,7 @@ public:
 	template <class Iterator, class SourceT, class ContextT, class SkipperT>
 	bool TPL_CALL match_if(
 		Iterator pos, Iterator pos2,
-		SourceT& ar, ContextT& context, const Skipper<SkipperT>& skipper_) const
+		SourceT& ar, ContextT& context, const SkipperT& skipper_) const
 	{
 		return m_x.match_if(pos, pos2, ar, context, skipper_) ||
 			m_y.match_if(pos, pos2, ar, context, skipper_);

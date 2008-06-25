@@ -31,9 +31,9 @@ NS_TPL_BEGIN
 template <class GrammarT, class SkipperT>
 class GrBind
 {
-private:
-	GrammarT m_gr;
-	SkipperT m_skipper;
+public:
+	const GrammarT m_gr;
+	const SkipperT m_skipper;
 
 public:
 	GrBind(const GrammarT& gr_, const SkipperT& skipper_)
@@ -48,91 +48,50 @@ public:
 
 	template <class SourceT, class ContextT>
 	bool TPL_CALL match(SourceT& ar, ContextT& context) const {
-		return m_gr.match(ar, context, (const Skipper<SkipperT>&)m_skipper);
-	}
-
-	grammar_type TPL_CALL grammar() const {
-		return (grammar_type)m_gr;
-	}
-
-	const Skipper<SkipperT>& TPL_CALL skipper() const {
-		return (const Skipper<SkipperT>&) m_skipper;
+		return m_gr.match(ar, context, m_skipper);
 	}
 };
 
 template <class SkipperT, class GrammarT>
-struct BindTraits<Skipper<SkipperT>, Grammar<GrammarT> >
+struct BindTraits<Rule<SkipperT>, Grammar<GrammarT> >
 {
 	typedef Rule<GrBind<GrammarT, SkipperT> > bind_type;
 
-	static bind_type TPL_CALL bind(const Skipper<SkipperT>& y, const Grammar<GrammarT>& x) {
+	static bind_type TPL_CALL bind(const Rule<SkipperT>& y, const Grammar<GrammarT>& x) {
 		return bind_type(x, y);
 	}
 };
 
 // =========================================================================
-// Skipper Implementation
-
 // class SkipperTraits
 
-template <class SourceT, class ContextT>
+template <class SkipperT, class SourceT, class ContextT>
 class SkipperTraits
 {
+private:
+	typedef Concretion<CHARACTER_SKIPPER, SourceT, ContextT, false> ConcretionT;
+	typedef typename ConcretionT::template Impl<SkipperT> ConcretionImplT;
+	
 public:
-	typedef Concretion<CHARACTER_SKIPPER, SourceT, ContextT, false> concretion_type;
+	typedef ConcretionT concreation_type;
+
+	static concreation_type TPL_CALL concretion(const SkipperT& skipper_) {
+		const ConcretionImplT* impl_ = (const ConcretionImplT*)&skipper_;
+		return ConcretionT(impl_, ConcretionImplT::match);
+	}
 };
 
-// class SkipperImpl
-
-template <class SkipperT, class SourceT, class ContextT>
-class SkipperImpl : public SkipperT
+template <class SourceT, class ContextT>
+class SkipperTraits<Concretion<CHARACTER_SKIPPER, SourceT, ContextT, false>, SourceT, ContextT>
 {
 private:
-	typedef SkipperTraits<SourceT, ContextT> Tr_;
-	typedef typename Tr_::concretion_type ConcretionT;
-	typedef typename ConcretionT::template Impl<SkipperT> ConcretionImplT;
-
-	ConcretionT m_alter;
-
-public:
-	SkipperImpl() : SkipperT() {
-		const ConcretionImplT* impl_ = (const ConcretionImplT*)this;
-		m_alter.assign(impl_, ConcretionImplT::match);
-	}
+	typedef Concretion<CHARACTER_SKIPPER, SourceT, ContextT, false> ConcretionT;
 	
-	SkipperImpl(const Rule<SkipperT>& skipper_) : SkipperT(skipper_) {
-		const ConcretionImplT* impl_ = (const ConcretionImplT*)this;
-		m_alter.assign(impl_, ConcretionImplT::match);
-	}
-
 public:
 	typedef const ConcretionT& concreation_type;
 
-	concreation_type TPL_CALL concretion() const {
-		return m_alter;
-	}
-};
-
-// -------------------------------------------------------------------------
-// class NullSkipper
-
-inline bool TPL_CALL null_skipper_match_(const void* pThis, int& ar, int& context) {
-	return true;
-}
-
-template <class SourceT, class ContextT>
-class NullSkipper : public Null<true>
-{
-private:
-	typedef SkipperTraits<SourceT, ContextT> Tr_;
-	typedef typename Tr_::concretion_type ConcretionT;
-
-	typedef bool TPL_CALL _FN_match(const void* pThis, SourceT& ar, ContextT& context);
-	typedef _FN_match* FN_match;
-
-public:
-	const ConcretionT TPL_CALL concretion() const {
-		return ConcretionT(NULL, (FN_match)null_skipper_match_);
+	static concreation_type TPL_CALL concretion(const ConcretionT& skipper_) {
+		return skipper_;
 	}
 };
 
@@ -143,8 +102,7 @@ template <int uCharacter, class SourceT, class ContextT, bool bManaged = false>
 class GConcretion
 {
 private:
-	typedef SkipperTraits<SourceT, ContextT> Tr_;
-	typedef typename Tr_::concretion_type ConcretionT;
+	typedef Concretion<CHARACTER_SKIPPER, SourceT, ContextT, false> ConcretionT;
 	typedef bool TPL_CALL _FN_match(const void* pThis, SourceT& ar, ContextT& context, const ConcretionT& skipper_);
 	typedef _FN_match* FN_match;
 
@@ -165,9 +123,10 @@ public:
 	typedef TagAssigNone assig_tag;
 
 	template <class SkipperT>
-	bool TPL_CALL match(SourceT& ar, ContextT& context, const Skipper<SkipperT>& skipper_) const {
+	bool TPL_CALL match(SourceT& ar, ContextT& context, const SkipperT& skipper_) const {
 		TPL_ASSERT(m_this);
-		return m_fn(m_this, ar, context, skipper_.concretion());
+		typedef SkipperTraits<SkipperT, SourceT, ContextT> Tr_;
+		return m_fn(m_this, ar, context, Tr_::concretion(skipper_));
 	}
 
 private:
@@ -186,7 +145,7 @@ private:
 
 		static bool TPL_CALL match(const void* pThis, SourceT& ar, ContextT& context, const ConcretionT& skipper_) {
 			const GrammarT& x = ((const Impl*)pThis)->m_x;
-			return x.match(ar, context, (const Skipper<ConcretionT>&)(skipper_));
+			return x.match(ar, context, skipper_);
 		}
 	};
 

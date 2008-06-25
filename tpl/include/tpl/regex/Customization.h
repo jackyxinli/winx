@@ -119,8 +119,7 @@ public:
 	class RuleT : public tpl::Rule<Concretion<uCharacter, Source, Context, false> >
 	{
 	private:
-		typedef Concretion<uCharacter, Source, Context, false> Impl;
-		typedef tpl::Rule<Impl> Base;
+		typedef tpl::Rule<Concretion<uCharacter, Source, Context, false> > Base;
 
 	public:
 		RuleT() {}
@@ -128,11 +127,6 @@ public:
 		template <class AllocT, class RegExT>
 		RuleT(AllocT& alloc, const RegExT& x)
 			: Base(alloc, x) {}
-	
-		template <class SourceT, class ContextT> __forceinline
-		bool TPL_CALL match(SourceT& ar, ContextT& context) const {
-			return Impl::match(ar, context);
-		}
 	};
 
 	typedef RuleT<0> Rule;
@@ -145,8 +139,7 @@ public:
 	class ManagedRuleT : public tpl::Rule<Concretion<uCharacter, Source, Context, true> >
 	{
 	private:
-		typedef Concretion<uCharacter, Source, Context, true> Impl;
-		typedef tpl::Rule<Impl> Base;
+		typedef tpl::Rule<Concretion<uCharacter, Source, Context, true> > Base;
 
 	public:
 		ManagedRuleT() {}
@@ -154,11 +147,6 @@ public:
 		template <class AllocT, class RegExT>
 		ManagedRuleT(AllocT& alloc, const RegExT& x)
 			: Base(alloc, x) {}
-
-		template <class SourceT, class ContextT> __forceinline
-		bool TPL_CALL match(SourceT& ar, ContextT& context) const {
-			return Impl::match(ar, context);
-		}
 	};
 
 	typedef ManagedRuleT<0> ManagedRule;
@@ -168,47 +156,19 @@ public:
 	// Rule helper functions:
 
 	template <class RegExT>
-	static inline bool TPL_CALL match(Iterator pos, Iterator pos2, const tpl::Rule<RegExT>& rule_)
+	static bool TPL_CALL match(Iterator pos, Iterator pos2, const tpl::Rule<RegExT>& rule_)
 	{
 		Source source(pos, pos2);
 		Context context;
 		return rule_.match(source, context);
 	}
 
-	template <class RegExT>
-	static inline bool TPL_CALL match(Iterator src, const tpl::Rule<RegExT>& rule_)
+	template <class ContainerT, class RegExT>
+	static bool TPL_CALL match(const ContainerT& src, const tpl::Rule<RegExT>& rule_)
 	{
 		Source source(src);
 		Context context;
 		return rule_.match(source, context);
-	}
-
-private:
-	typedef SkipperTraits<Source, Context> SkipperTr_;
-	typedef typename SkipperTr_::concretion_type ConcretionSkipper_;
-
-public:
-	// Skipper
-
-	template <class SkipperT>
-	static Skipper<SkipperImpl<SkipperT, Source, Context> > TPL_CALL skipper(const tpl::Rule<SkipperT>& skipper_) {
-		return Skipper<SkipperImpl<SkipperT, Source, Context> >(skipper_);
-	}
-
-	static Skipper<ConcretionSkipper_> TPL_CALL skipper(const tpl::Rule<ConcretionSkipper_>& skipper_) {
-		return *(const Skipper<ConcretionSkipper_>*)&skipper_;
-	}
-
-public:
-	typedef Skipper<SkipperImpl<SkipWhiteSpaces, Source, Context> > WhiteSpacesSkipper;
-	typedef Skipper<SkipperImpl<SkipNonEolSpaces, Source, Context> > NonEolSpacesSkipper;
-	
-	static WhiteSpacesSkipper TPL_CALL skipws() {
-		return WhiteSpacesSkipper();
-	}
-
-	static NonEolSpacesSkipper TPL_CALL skip_non_eol_ws() {
-		return NonEolSpacesSkipper();
 	}
 
 public:
@@ -218,8 +178,7 @@ public:
 	class GrammarT : public tpl::Grammar<GConcretion<uCharacter, Source, Context, false> >
 	{
 	private:
-		typedef GConcretion<uCharacter, Source, Context, false> Impl;
-		typedef tpl::Grammar<Impl> Base;
+		typedef tpl::Grammar<GConcretion<uCharacter, Source, Context, false> > Base;
 
 	public:
 		GrammarT() {}
@@ -227,11 +186,6 @@ public:
 		template <class AllocT, class RegExT>
 		GrammarT(AllocT& alloc, const RegExT& x)
 			: Base(alloc, x) {}
-
-		template <class SourceT, class ContextT, class SkipperT> __forceinline
-		bool TPL_CALL match(SourceT& ar, ContextT& context, const Skipper<SkipperT>& skipper_) const {
-			return Impl::match(ar, context, skipper_);
-		}
 	};
 
 	typedef GrammarT<0> Grammar;
@@ -245,25 +199,19 @@ public:
 		Iterator pos, Iterator pos2, const tpl::Grammar<RegExT>& grammar_, 
 		const tpl::Rule<SkipperT>& skipper_)
 	{
-		// equal to:
-		//	 return match(pos, pos2, skipper(skipper_) >> grammar_);
-
 		Source source(pos, pos2);
 		Context context;
-		return grammar_.match(source, context, skipper(skipper_));
+		return grammar_.match(source, context, skipper_);
 	}
 
-	template <class RegExT, class SkipperT>
+	template <class ContainerT, class RegExT, class SkipperT>
 	static inline bool TPL_CALL match(
-		Iterator pos, const tpl::Grammar<RegExT>& grammar_,
+		const ContainerT& src, const tpl::Grammar<RegExT>& grammar_,
 		const tpl::Rule<SkipperT>& skipper_)
 	{
-		// equal to:
-		//	 return match(pos, skipper(skipper_) >> grammar_);
-
-		Source source(pos);
+		Source source(src);
 		Context context;
-		return grammar_.match(source, context, skipper(skipper_));
+		return grammar_.match(source, context, skipper_);
 	}
 };
 
@@ -273,9 +221,6 @@ public:
 typedef Customization<policy::Default, false> SimpleImplementation;
 
 typedef SimpleImplementation simple;
-
-TPL_CONST(simple::WhiteSpacesSkipper, skipws_);
-TPL_CONST(simple::NonEolSpacesSkipper, skip_non_eol_ws_);
 
 // -------------------------------------------------------------------------
 // DefaultImplementation

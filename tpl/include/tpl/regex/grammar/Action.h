@@ -48,7 +48,7 @@ public:
 	enum { character = GrammarT::character };
 
 	template <class SourceT, class ContextT, class SkipperT>
-	bool TPL_CALL match(SourceT& ar, ContextT& context, const Skipper<SkipperT>& skipper_) const
+	bool TPL_CALL match(SourceT& ar, ContextT& context, const SkipperT& skipper_) const
 	{
 		if (m_x.match(ar, context, skipper_)) {
 			m_action();
@@ -89,7 +89,7 @@ public:
 	typedef typename GrammarT::assig_tag assig_tag;
 
 	template <class SourceT, class ContextT, class SkipperT>
-	bool TPL_CALL match(SourceT& ar, ContextT& context, const Skipper<SkipperT>& skipper_) const
+	bool TPL_CALL match(SourceT& ar, ContextT& context, const SkipperT& skipper_) const
 	{
 		typedef typename SourceT::iterator iterator;
 		typedef typename ActionT::value_type value_type;

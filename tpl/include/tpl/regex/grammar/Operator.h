@@ -71,7 +71,7 @@ public:
 	typedef TagAssigNone assig_tag;
 
 	template <class SourceT, class ContextT, class SkipperT>
-	bool TPL_CALL match(SourceT& ar, ContextT& context, const Skipper<SkipperT>& skipper_) const
+	bool TPL_CALL match(SourceT& ar, ContextT& context, const SkipperT& skipper_) const
 	{
 		typename ContextT::template trans_type<GrammarT1::character> trans(ar, context);
 		if (m_x.match(ar, context, skipper_) && m_y.match(ar, context, skipper_))
@@ -110,7 +110,7 @@ public:
 	typedef TagAssigNone assig_tag;
 
 	template <class SourceT, class ContextT, class SkipperT>
-	bool TPL_CALL match(SourceT& ar, ContextT& context, const Skipper<SkipperT>& skipper_) const
+	bool TPL_CALL match(SourceT& ar, ContextT& context, const SkipperT& skipper_) const
 	{
 		return m_x.match(ar, context, skipper_) || m_y.match(ar, context, skipper_);
 	}
@@ -146,7 +146,7 @@ public:
 	typedef TagAssigNone assig_tag;
 
 	template <class SourceT, class ContextT, class SkipperT>
-	bool TPL_CALL match(SourceT& ar, ContextT& context, const Skipper<SkipperT>& skipper_) const
+	bool TPL_CALL match(SourceT& ar, ContextT& context, const SkipperT& skipper_) const
 	{
 		typename SourceT::iterator pos = ar.position();
 		typename ContextT::template trans_type<character> trans(ar, context);
@@ -189,7 +189,7 @@ public:
 	typedef TagAssigNone assig_tag;
 
 	template <class SourceT, class ContextT, class SkipperT>
-	bool TPL_CALL match(SourceT& ar, ContextT& context, const Skipper<SkipperT>& skipper_) const
+	bool TPL_CALL match(SourceT& ar, ContextT& context, const SkipperT& skipper_) const
 	{
 		while (m_x.match(ar, context, skipper_))
 			;
@@ -225,7 +225,7 @@ public:
 	typedef TagAssigNone assig_tag;
 
 	template <class SourceT, class ContextT, class SkipperT>
-	bool TPL_CALL match(SourceT& ar, ContextT& context, const Skipper<SkipperT>& skipper_) const
+	bool TPL_CALL match(SourceT& ar, ContextT& context, const SkipperT& skipper_) const
 	{
 		unsigned n = 0;
 		while (m_x.match(ar, context, skipper_))
@@ -263,7 +263,7 @@ public:
 	typedef TagAssigNone assig_tag;
 
 	template <class SourceT, class ContextT, class SkipperT>
-	bool TPL_CALL match(SourceT& ar, ContextT& context, const Skipper<SkipperT>& skipper_) const
+	bool TPL_CALL match(SourceT& ar, ContextT& context, const SkipperT& skipper_) const
 	{
 		m_x.match(ar, context, skipper_);
 		return true;
@@ -302,7 +302,7 @@ public:
 	typedef TagAssigNone assig_tag;
 
 	template <class SourceT, class ContextT, class SkipperT>
-	bool TPL_CALL match(SourceT& ar, ContextT& context, const Skipper<SkipperT>& skipper_) const
+	bool TPL_CALL match(SourceT& ar, ContextT& context, const SkipperT& skipper_) const
 	{
 		unsigned n;
 		typename ContextT::template trans_type<character> trans(ar, context);
@@ -381,7 +381,7 @@ public:
 	typedef TagAssigLst assig_tag;
 
 	template <class SourceT, class ContextT, class SkipperT>
-	bool TPL_CALL match(SourceT& ar, ContextT& context, const Skipper<SkipperT>& skipper_) const
+	bool TPL_CALL match(SourceT& ar, ContextT& context, const SkipperT& skipper_) const
 	{
 		if (m_y_and_x.m_y.match(ar, context, skipper_)) {
 			size_type n = 1;

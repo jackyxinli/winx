@@ -557,25 +557,24 @@ typedef Repeat1<Space> WhiteSpaces; // w+
 typedef Repeat0<NonEolSpace> SkipNonEolSpaces;
 typedef Repeat1<NonEolSpace> NonEolSpaces;
 
-inline Rule<WhiteSpaces> TPL_CALL ws()
-{
+inline Rule<WhiteSpaces> TPL_CALL ws() {
 	return Rule<WhiteSpaces>();
 }
 
-inline Rule<SkipWhiteSpaces> TPL_CALL skipws()
-{
+inline Rule<SkipWhiteSpaces> TPL_CALL skipws() {
 	return Rule<SkipWhiteSpaces>();
 }
 
-inline Rule<NonEolSpaces> TPL_CALL non_eol_ws()
-{
+inline Rule<NonEolSpaces> TPL_CALL non_eol_ws() {
 	return Rule<NonEolSpaces>();
 }
 
-inline Rule<SkipNonEolSpaces> TPL_CALL skip_non_eol_ws()
-{
+inline Rule<SkipNonEolSpaces> TPL_CALL skip_non_eol_ws() {
 	return Rule<SkipNonEolSpaces>();
 }
+
+TPL_CONST(Rule<SkipWhiteSpaces>, skipws_);
+TPL_CONST(Rule<SkipNonEolSpaces>, skip_non_eol_ws_);
 
 // =========================================================================
 // $Log: $

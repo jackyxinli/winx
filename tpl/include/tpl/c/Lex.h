@@ -180,13 +180,9 @@ inline Rule<CppSkipG> TPL_CALL cpp_skip() {
 	return Rule<CppSkipG>();
 }
 
-typedef Skipper<SkipperImpl<CSkipG, simple::Source, simple::Context> > CSkipper;
-typedef Skipper<SkipperImpl<CppSkipG, simple::Source, simple::Context> > CppSkipper;
-typedef Skipper<SkipperImpl<CSkipNonEolG, simple::Source, simple::Context> > CNonEolSkipper;
-
-TPL_CONST(CSkipper, c_skip_);
-TPL_CONST(CNonEolSkipper, c_skip_non_eol_);
-TPL_CONST(CppSkipper, cpp_skip_);
+TPL_CONST(Rule<CSkipG>, c_skip_);
+TPL_CONST(Rule<CSkipNonEolG>, c_skip_non_eol_);
+TPL_CONST(Rule<CppSkipG>, cpp_skip_);
 
 // =========================================================================
 // function c_string(), c_char()

@@ -27,7 +27,6 @@ NS_TPL_BEGIN
 
 template <class RegExT> class Rule;
 template <class GrammarT> class Grammar;
-template <class SkipperT> class Skipper;
 
 // =========================================================================
 // class Gr: Wrapper a Rule to Grammar
@@ -45,7 +44,7 @@ public:
 	}
 
 	template <class SourceT, class ContextT, class SkipperT>
-	bool TPL_CALL match(SourceT& ar, ContextT& context, const Skipper<SkipperT>& skipper_) const {
+	bool TPL_CALL match(SourceT& ar, ContextT& context, const SkipperT& skipper_) const {
 		skipper_.match(ar, context);
 		return RegExT::match(ar, context);
 	}
@@ -62,48 +61,6 @@ struct BindTraits
 //	typename bind_type;
 //
 //	static bind_type TPL_CALL bind(const T1& o1, const T2& o2);
-};
-
-// =========================================================================
-// class Skipper
-
-template <class SkipperT>
-class Skipper : public SkipperT
-{
-public:
-	Skipper() : SkipperT() {}
-	Skipper(const SkipperT& x) : SkipperT(x) {}
-
-	template <class T1, class T2>
-	Skipper(T1& x, const T2& y) : SkipperT(x, y) {}
-
-public:
-	const Rule<SkipperT>& TPL_CALL rule() const {
-		return (const Rule<SkipperT>&)*this;
-	}
-
-	template <class GrammarT>
-	typename BindTraits<Skipper<SkipperT>, Grammar<GrammarT> >::bind_type
-	TPL_CALL operator[](const Grammar<GrammarT>& grammar_) const {
-		return BindTraits<Skipper<SkipperT>, Grammar<GrammarT> >::bind(*this, grammar_);
-	}
-
-//	concept (as a Rule):
-//
-//	enum { character = SkipperT::character };
-//
-//	typedef typename SkipperT::convertible_type convertible_type;
-//	typedef typename RegExT::assig_tag assig_tag;
-//
-//	template <class SourceT, class ContextT>
-//	bool TPL_CALL match(SourceT& ar, ContextT& context) const;
-//
-
-//	concept (as a Skipper):
-//
-//	typedef typename SkipperT::concreation_type concreation_type;
-//
-//	concreation_type TPL_CALL concretion() const;
 };
 
 // =========================================================================
@@ -276,7 +233,7 @@ __forceinline Grammar<Op<T1, Gr<T2> > > TPL_CALL operator op(const Grammar<T1>& 
 
 #define TPL_SIMPLEST_GRAMMAR_()												\
 	template <class SourceT, class ContextT, class SkipperT>				\
-	bool TPL_CALL match(SourceT& ar, ContextT& context, const Skipper<SkipperT>& skipper_) const { \
+	bool TPL_CALL match(SourceT& ar, ContextT& context, const SkipperT& skipper_) const { \
 		return match(ar, context);											\
 	}
 
@@ -311,7 +268,7 @@ public:
 //	typedef typename GrammarT::assig_tag assig_tag;
 //
 //	template <class SourceT, class ContextT, class SkipperT>
-//	bool TPL_CALL match(SourceT& ar, ContextT& context, const Skipper<SkipperT>& skipper_) const;
+//	bool TPL_CALL match(SourceT& ar, ContextT& context, const SkipperT& skipper_) const;
 };
 
 template <class RegExT>
