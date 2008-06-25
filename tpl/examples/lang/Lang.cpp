@@ -23,9 +23,11 @@ public:
 		}
 	}
 	
-	template <class Iterator>
-	bool TPL_CALL operator()(Iterator pos, Iterator pos2) const {
-		key_t k(pos, pos2);
+	typedef key_t value_type;
+	
+	template <class ValueT>
+	bool TPL_CALL operator()(const ValueT& val) const {
+		key_t k(val.begin(), val.end());
 		return m_set.find(k) == m_set.end();
 	}
 };

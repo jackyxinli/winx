@@ -297,13 +297,18 @@ Action<Op<VarT, ValueT> > TPL_CALL op(VarT& var_, const ValueT value_) {		\
 } 																				\
 																				\
 template <class ValueT, class VarT> __forceinline								\
-Action<Op<VarT, ValueT&> > TPL_CALL op(VarT& var_, ValueT& value_) {			\
-	return Action<Op<VarT, ValueT&> >(var_, value_);							\
+Action<Op<VarT, const ValueT&> > TPL_CALL op(VarT& var_, ValueT& value_) {		\
+	return Action<Op<VarT, const ValueT&> >(var_, value_);						\
 }																				\
 																				\
 template <class ValueT, class VarT> __forceinline								\
-Action<Op<VarT, ValueT&> > TPL_CALL op(VarT& var_, const Var<ValueT>& value_) { \
-	return Action<Op<VarT, ValueT&> >(var_, value_.val);						\
+Action<Op<VarT, const ValueT&> > TPL_CALL op(VarT& var_, const Var<ValueT>& value_) { \
+	return Action<Op<VarT, const ValueT&> >(var_, value_.val);					\
+}																				\
+																				\
+template <class ValueT, class VarT> __forceinline								\
+Action<Op<VarT, const ValueT&> > TPL_CALL op(VarT& var_, Var<ValueT>& value_) { \
+	return Action<Op<VarT, const ValueT&> >(var_, value_.val);					\
 }																				\
 																				\
 template <class ValueT, class VarT> __forceinline								\
@@ -312,13 +317,18 @@ Action<Op<VarT, ValueT> > TPL_CALL op(Var<VarT>& var_, const ValueT value_) { 	\
 }																				\
 																				\
 template <class ValueT, class VarT> __forceinline								\
-Action<Op<VarT, ValueT&> > TPL_CALL op(Var<VarT>& var_, ValueT& value_) {		\
-	return Action<Op<VarT, ValueT&> >(var_.val, value_);						\
+Action<Op<VarT, const ValueT&> > TPL_CALL op(Var<VarT>& var_, ValueT& value_) {	\
+	return Action<Op<VarT, const ValueT&> >(var_.val, value_);					\
 }																				\
 																				\
 template <class ValueT, class VarT> __forceinline								\
-Action<Op<VarT, ValueT&> > TPL_CALL op(Var<VarT>& var_, const Var<ValueT>& value_) { \
-	return Action<Op<VarT, ValueT&> >(var_.val, value_.val);					\
+Action<Op<VarT, const ValueT&> > TPL_CALL op(Var<VarT>& var_, const Var<ValueT>& value_) { \
+	return Action<Op<VarT, const ValueT&> >(var_.val, value_.val);				\
+}																				\
+																				\
+template <class ValueT, class VarT> __forceinline								\
+Action<Op<VarT, const ValueT&> > TPL_CALL op(Var<VarT>& var_, Var<ValueT>& value_) { \
+	return Action<Op<VarT, const ValueT&> >(var_.val, value_.val);				\
 }
 
 #define TPL_SIMPLE_ACTION_BINARY_OP_(Op, fn, op)								\

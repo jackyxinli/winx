@@ -42,6 +42,36 @@
 NS_TPL_BEGIN
 
 // =========================================================================
+// TPL_ACTION_DO_
+
+#define TPL_ACTION_DO_(Rule, Act, Action)										\
+																				\
+template <class T1, class T2> __forceinline										\
+Rule<Act<T1, T2> > TPL_CALL operator/(const Rule<T1>& x, const Action<T2>& y) {	\
+	return Rule<Act<T1, T2> >(x, y);											\
+}																				\
+																				\
+template <class T2> __forceinline												\
+Rule<Act<Ch1_, T2> > TPL_CALL operator/(char x, const Action<T2>& y) {			\
+	return ch((unsigned char)x) / y;											\
+}																				\
+																				\
+template <class T2> __forceinline												\
+Rule<Act<Ch1_, T2> > TPL_CALL operator/(wchar_t x, const Action<T2>& y) {		\
+	return ch(x) / y;															\
+}																				\
+																				\
+template <class T2> __forceinline												\
+Rule<Act<EqStr, T2> > TPL_CALL operator/(const char* x, const Action<T2>& y) {	\
+	return str(x) / y;															\
+}																				\
+																				\
+template <class T2> __forceinline												\
+Rule<Act<EqWStr, T2> > TPL_CALL operator/(const wchar_t* x, const Action<T2>& y) { \
+	return str(x) / y;															\
+}
+
+// =========================================================================
 // class Act0
 
 template <class RegExT, class ActionT>
@@ -78,30 +108,7 @@ public:
 
 // Usage: Rule/SimpleAction
 
-template <class T1, class T2> __forceinline
-Rule<Act0<T1, T2> > TPL_CALL operator/(const Rule<T1>& x, const SimpleAction<T2>& y) {
-	return Rule<Act0<T1, T2> >(x, y);
-}
-
-template <class T2> __forceinline
-Rule<Act0<Ch1_, T2> > TPL_CALL operator/(char x, const SimpleAction<T2>& y) {
-	return ch((unsigned char)x) / y;
-}
-
-template <class T2> __forceinline
-Rule<Act0<Ch1_, T2> > TPL_CALL operator/(wchar_t x, const SimpleAction<T2>& y) {
-	return ch(x) / y;
-}
-
-template <class T2> __forceinline
-Rule<Act0<EqStr, T2> > TPL_CALL operator/(const char* x, const SimpleAction<T2>& y) {
-	return str(x) / y;
-}
-
-template <class T2> __forceinline
-Rule<Act0<EqWStr, T2> > TPL_CALL operator/(const wchar_t* x, const SimpleAction<T2>& y) {
-	return str(x) / y;
-}
+TPL_ACTION_DO_(Rule, Act0, SimpleAction)
 
 // -------------------------------------------------------------------------
 // operator+
@@ -177,13 +184,14 @@ public:
 	bool TPL_CALL match(SourceT& ar, ContextT& context) const
 	{
 		typedef typename SourceT::iterator iterator;
-		typedef typename ActionT::value_type value_type;
+		typedef SelectValueType<typename ActionT::value_type, Leaf<iterator> > SelectT;
+		typedef typename SelectT::value_type value_type;
 		typedef typename SelectAssig<assig_tag, value_type>::assig_type assig_type;
 
-		iterator pos = ar.position();
+		const iterator pos = ar.position();
 		if (m_x.match(ar, context)) {
-			iterator pos2 = ar.position();
-			value_type val(assig_type::template get<value_type>(pos, pos2, &m_x));
+			const iterator pos2 = ar.position();
+			const value_type val(assig_type::template get<value_type>(pos, pos2, &m_x));
 			m_action(val);
 			return true;
 		}
@@ -196,30 +204,7 @@ public:
 
 // Usage: Rule/Action	--- eg. Rule/assign(a_variable)
 
-template <class T1, class T2> __forceinline
-Rule<Act<T1, T2> > TPL_CALL operator/(const Rule<T1>& x, const Action<T2>& y) {
-	return Rule<Act<T1, T2> >(x, y);
-}
-
-template <class T2> __forceinline
-Rule<Act<Ch1_, T2> > TPL_CALL operator/(char x, const Action<T2>& y) {
-	return ch((unsigned char)x) / y;
-}
-
-template <class T2> __forceinline
-Rule<Act<Ch1_, T2> > TPL_CALL operator/(wchar_t x, const Action<T2>& y) {
-	return ch(x) / y;
-}
-
-template <class T2> __forceinline
-Rule<Act<EqStr, T2> > TPL_CALL operator/(const char* x, const Action<T2>& y) {
-	return str(x) / y;
-}
-
-template <class T2> __forceinline
-Rule<Act<EqWStr, T2> > TPL_CALL operator/(const wchar_t* x, const Action<T2>& y) {
-	return str(x) / y;
-}
+TPL_ACTION_DO_(Rule, Act, Action)
 
 // =========================================================================
 // function info

@@ -9,83 +9,56 @@
 // of this license. You must not remove this notice, or any other, from
 // this software.
 // 
-// Module: tpl/regex/Condition.h
+// Module: tpl/regex/grammar/Condition.h
 // Creator: xushiwei
 // Email: xushiweizh@gmail.com
 // Date: 2006-8-13 9:41:58
 // 
 // $Id: Condition.h 636 2008-06-11 07:19:52Z xushiweizh@gmail.com $
 // -----------------------------------------------------------------------*/
-#ifndef TPL_REGEX_CONDITION_H
-#define TPL_REGEX_CONDITION_H
+#ifndef TPL_REGEX_GRAMMAR_CONDITION_H
+#define TPL_REGEX_GRAMMAR_CONDITION_H
 
 #ifndef TPL_REGEX_BASIC_H
-#include "Basic.h"
+#include "../Basic.h"
 #endif
 
 NS_TPL_BEGIN
 
 // =========================================================================
-// AndValueType
-
-template <class T1, class T2>
-struct AndValueType {
-};
-
-template <class T1>
-struct AndValueType<T1, T1> {
-	typedef T1 value_type;
-};
-
-template <class T1>
-struct AndValueType<T1, void> {
-	typedef void value_type;
-};
-
-template <class T2>
-struct AndValueType<void, T2> {
-	typedef void value_type;
-};
-
-template <>
-struct AndValueType<void, void> {
-	typedef void value_type;
-};
-
-// =========================================================================
-// class Cond
+// class GCond
 
 template <class RegExT, class ConditionT>
-class Cond
+class GCond
 {
 public:
 	const RegExT m_x;
 	const ConditionT m_y;
 	
 public:
-	Cond() : m_x(), m_y() {}
-	Cond(const RegExT& x, const ConditionT& y) : m_x(x), m_y(y) {}
+	GCond() : m_x(), m_y() {}
+	GCond(const RegExT& x, const ConditionT& y) : m_x(x), m_y(y) {}
 	
 public:
 	enum { character = RegExT::character | ConditionT::character };
 
 	typedef TagAssigNone assig_tag;
-	typedef ExplicitConvertible convertible_type;
 
-	template <class SourceT, class ContextT>
-	bool TPL_CALL match(SourceT& ar, ContextT& context) const
+	template <class SourceT, class ContextT, class SkipperT>
+	bool TPL_CALL match(SourceT& ar, ContextT& context, const SkipperT& skipper_) const
 	{
 		typedef typename SourceT::iterator iterator;
 		typedef SelectValueType<typename ConditionT::value_type, Leaf<iterator> > SelectT;
 		typedef typename SelectT::value_type value_type;
 		typedef typename SelectAssig<typename RegExT::assig_tag, value_type>::assig_type assig_type;
-		
+
+		skipper_.match(ar, context);
 		typename ContextT::template trans_type<RegExT::character> trans(ar, context);
 		const iterator pos = ar.position();
 		if (m_x.match(ar, context)) {
 			const iterator pos2 = ar.position();
 			const value_type val(assig_type::template get<value_type>(pos, pos2, &m_x));
-			if (m_y.match_if(val, ar, context))
+			if (m_y.match_if(val, ar, context, skipper_))
 				return true;
 		}
 		trans.rollback(ar);
@@ -94,39 +67,40 @@ public:
 };
 
 template <class RegExT, class ConditionT>
-struct BindTraits<Rule<RegExT>, Condition<ConditionT> >
+struct BindTraits<Rule<RegExT>, GCondition<ConditionT> >
 {
-	typedef Rule<Cond<RegExT, ConditionT> > bind_type;
+	typedef Grammar<GCond<RegExT, ConditionT> > bind_type;
 
-	static bind_type TPL_CALL bind(const Rule<RegExT>& rule_, const Condition<ConditionT>& cond_) {
+	static bind_type TPL_CALL bind(const Rule<RegExT>& rule_, const GCondition<ConditionT>& cond_) {
 		return bind_type(rule_, cond_);
 	}
 };
 
 // =========================================================================
-// class CondBind
+// class GCondBind
 
 template <class CondT, class NextT>
-class CondBind
+class GCondBind
 {
 public:
 	const CondT m_cond;
 	const NextT m_next;
 
 public:
-	CondBind() : m_cond(), m_next() {}
-	CondBind(const CondT& cond, const NextT& next_)
+	GCondBind() : m_cond(), m_next() {}
+	GCondBind(const CondT& cond, const NextT& next_)
 		: m_cond(cond), m_next(next_) {}
-
+	
 public:
 	enum { character = NextT::character };
-
+	
 	typedef typename CondT::value_type value_type;
-
-	template <class ValueT, class SourceT, class ContextT>
-	bool TPL_CALL match_if(const ValueT& val, SourceT& ar, ContextT& context) const
+	
+	template <class ValueT, class SourceT, class ContextT, class SkipperT>
+	bool TPL_CALL match_if(
+		const ValueT& val, SourceT& ar, ContextT& context, const SkipperT& skipper_) const
 	{
-		return m_cond(val) && m_next.match(ar, context);
+		return m_cond(val) && m_next.match(ar, context, skipper_);
 	}
 };
 
@@ -134,36 +108,38 @@ public:
 // operator,
 
 template <class CondT1, class CondT2>
-class CondOr
+class GCondOr
 {
 private:
 	const CondT1 m_x;
 	const CondT2 m_y;
-
+	
 	typedef typename CondT1::value_type T1;
 	typedef typename CondT2::value_type T2;
 
 public:
-	CondOr(const CondT1& x, const CondT2& y)
+	GCondOr(const CondT1& x, const CondT2& y)
 		: m_x(x), m_y(y) {}
 
 public:
 	enum { character = CondT1::character | CondT2::character };
 	
 	typedef typename AndValueType<T1, T2>::value_type value_type;
-	
-	template <class ValueT, class SourceT, class ContextT>
-	bool TPL_CALL match_if(const ValueT& val, SourceT& ar, ContextT& context) const
+
+	template <class ValueT, class SourceT, class ContextT, class SkipperT>
+	bool TPL_CALL match_if(
+		const ValueT& val, SourceT& ar, ContextT& context, const SkipperT& skipper_) const
 	{
-		return m_x.match_if(val, ar, context) || m_y.match_if(val, ar, context);
+		return m_x.match_if(val, ar, context, skipper_) ||
+			m_y.match_if(val, ar, context, skipper_);
 	}
 };
 
 template <class T1, class T2>
 __forceinline
-Condition<CondOr<T1, T2> >
-TPL_CALL operator,(const Condition<T1>& x, const Condition<T2>& y) {
-	return Condition<CondOr<T1, T2> >(x, y);
+GCondition<GCondOr<T1, T2> >
+TPL_CALL operator,(const GCondition<T1>& x, const GCondition<T2>& y) {
+	return GCondition<GCondOr<T1, T2> >(x, y);
 }
 
 // =========================================================================
@@ -171,4 +147,4 @@ TPL_CALL operator,(const Condition<T1>& x, const Condition<T2>& y) {
 
 NS_TPL_END
 
-#endif /* TPL_REGEX_CONDITION_H */
+#endif /* TPL_REGEX_GRAMMAR_CONDITION_H */

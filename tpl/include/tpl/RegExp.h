@@ -79,6 +79,10 @@
 #include "regex/Condition.h"
 #endif
 
+#ifndef TPL_REGEX_CASE_H
+#include "regex/Case.h"
+#endif
+
 #ifndef TPL_REGEX_TRANSFORMATION_H
 #include "regex/Transformation.h"
 #endif
@@ -93,6 +97,10 @@
 
 #ifndef TPL_REGEX_GRAMMAR_CONCRETION_H
 #include "regex/grammar/Concretion.h"
+#endif
+
+#ifndef TPL_REGEX_GRAMMAR_CONDITION_H
+#include "regex/grammar/Condition.h"
 #endif
 
 #ifndef TPL_REGEX_CUSTOMIZATION_H

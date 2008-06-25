@@ -92,13 +92,14 @@ public:
 	bool TPL_CALL match(SourceT& ar, ContextT& context, const SkipperT& skipper_) const
 	{
 		typedef typename SourceT::iterator iterator;
-		typedef typename ActionT::value_type value_type;
+		typedef SelectValueType<typename ActionT::value_type, Leaf<iterator> > SelectT;
+		typedef typename SelectT::value_type value_type;
 		typedef typename SelectAssig<assig_tag, value_type>::assig_type assig_type;
 
-		iterator pos = ar.position();
+		const iterator pos = ar.position();
 		if (m_x.match(ar, context, skipper_)) {
-			iterator pos2 = ar.position();
-			value_type val(assig_type::template get<value_type>(pos, pos2, &m_x));
+			const iterator pos2 = ar.position();
+			const value_type val(assig_type::template get<value_type>(pos, pos2, &m_x));
 			m_action(val);
 			return true;
 		}

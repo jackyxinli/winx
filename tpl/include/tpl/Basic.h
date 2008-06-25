@@ -145,6 +145,19 @@ struct RequireClassTraits<ClassT, ClassT> {
 #define TPL_CONST(Type, var)	const Type var
 
 // =========================================================================
+// SelectValueType
+
+template <class ValueT, class DefaultValT>
+struct SelectValueType {
+	typedef ValueT value_type;
+};
+
+template <class DefaultValT>
+struct SelectValueType<void, DefaultValT> {
+	typedef DefaultValT value_type;
+};
+
+// =========================================================================
 // $Log: $
 
 NS_TPL_END

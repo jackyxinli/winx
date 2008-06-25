@@ -306,10 +306,9 @@ public:
 	template <class T1, class T2, class T3>
 	SimpleAction(T1& x, const T2& y, const T3& z) : ActionT(x, y, z) {}
 
-private:
-	// concept:
-
-	void TPL_CALL operator()() const;
+//	concept:
+//
+//	void TPL_CALL operator()() const;
 };
 
 // =========================================================================
@@ -339,12 +338,68 @@ public:
 	template <class T1, class T2>
 	Action(T1& x, T2& y) : ActionT(x, y) {}
 
-private:
-	// concept:
+//	concept:
+//
+//	typedef typename ActionT::value_type value_type;
+//
+//	void TPL_CALL operator()(const value_type& val) const;
+};
 
-	typedef typename ActionT::value_type value_type;
+// =========================================================================
+// class Condition
 
-	void TPL_CALL operator()(const value_type& val) const;
+template <class ConditionT>
+class Condition : public ConditionT
+{
+public:
+	Condition() {}
+
+	template <class T1>
+	Condition(T1& x) : ConditionT(x) {}
+
+	template <class T1>
+	Condition(const T1& x) : ConditionT(x) {}
+
+	template <class T1, class T2>
+	Condition(const T1& x, const T2& y) : ConditionT(x, y) {}
+
+//	concept:
+//
+//	enum { character = ConditionT::character };
+//
+//	typedef typename ContitionT::value_type value_type;
+//
+//	template <class ValueT, class SourceT, class ContextT>
+//	bool TPL_CALL match_if(const ValueT& val, SourceT& ar, ContextT& context) const;
+};
+
+// =========================================================================
+// class GCondition
+
+template <class ConditionT>
+class GCondition : public ConditionT
+{
+public:
+	GCondition() {}
+
+	template <class T1>
+	GCondition(T1& x) : ConditionT(x) {}
+
+	template <class T1>
+	GCondition(const T1& x) : ConditionT(x) {}
+
+	template <class T1, class T2>
+	GCondition(const T1& x, const T2& y) : ConditionT(x, y) {}
+
+//	concept:
+//
+//	enum { character = ConditionT::character };
+//
+//	typedef typename ContitionT::value_type value_type;
+//
+//	template <class ValueT, class SourceT, class ContextT, class SkipperT>
+//	bool TPL_CALL match_if(
+//		const ValueT& val, SourceT& ar, ContextT& context, const SkipperT& skipper_) const;
 };
 
 // =========================================================================
