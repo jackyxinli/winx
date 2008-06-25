@@ -10,7 +10,7 @@ using namespace tpl;
 #define MAP				map		// can be map or multimap
 #define OVERWRITE		true	// can be true or false
 #define RULE			*(	\
-	*ch('&') + find('=')/assign(key) + '=' + find_set<'&', EOF>()/append<OVERWRITE>(values, key) )
+	*ch('&') + find('=')/assign(key) + '=' + find_set<'&', EOF>()/insert<OVERWRITE>(values, key) )
 
 int main()
 {

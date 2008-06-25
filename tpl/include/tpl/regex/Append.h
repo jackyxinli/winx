@@ -241,7 +241,7 @@ public:
 };
 
 // -------------------------------------------------------------------------
-// function append
+// function insert
 
 #if defined(TPL_HAS_MAP)
 
@@ -249,7 +249,7 @@ template <bool bOverwrite, class KeyT, class MappedT, class Pr, class Ax>
 __forceinline
 Action<InsertPair_<std::map<KeyT, MappedT, Pr, Ax>, bOverwrite> >
 TPL_CALL
-append(std::map<KeyT, MappedT, Pr, Ax>& result, const KeyT& key) {
+insert(std::map<KeyT, MappedT, Pr, Ax>& result, const KeyT& key) {
 	return Action<InsertPair_<std::map<KeyT, MappedT, Pr, Ax>, bOverwrite> >(result, key);
 }
 
@@ -257,7 +257,7 @@ template <class KeyT, class MappedT, class Pr, class Ax>
 __forceinline
 Action<InsertPair_<std::map<KeyT, MappedT, Pr, Ax>, false> >
 TPL_CALL
-append(std::map<KeyT, MappedT, Pr, Ax>& result, const KeyT& key) {
+insert(std::map<KeyT, MappedT, Pr, Ax>& result, const KeyT& key) {
 	return Action<InsertPair_<std::map<KeyT, MappedT, Pr, Ax>, false> >(result, key);
 }
 
@@ -265,7 +265,7 @@ template <bool bOverwrite, class KeyT, class MappedT, class Pr, class Ax>
 __forceinline
 Action<InsertPair_<std::multimap<KeyT, MappedT, Pr, Ax>, false> >
 TPL_CALL
-append(std::multimap<KeyT, MappedT, Pr, Ax>& result, const KeyT& key) {
+insert(std::multimap<KeyT, MappedT, Pr, Ax>& result, const KeyT& key) {
 	return Action<InsertPair_<std::multimap<KeyT, MappedT, Pr, Ax>, false> >(result, key);
 }
 
@@ -273,7 +273,7 @@ template <class KeyT, class MappedT, class Pr, class Ax>
 __forceinline
 Action<InsertPair_<std::multimap<KeyT, MappedT, Pr, Ax>, false> >
 TPL_CALL
-append(std::multimap<KeyT, MappedT, Pr, Ax>& result, const KeyT& key) {
+insert(std::multimap<KeyT, MappedT, Pr, Ax>& result, const KeyT& key) {
 	return Action<InsertPair_<std::multimap<KeyT, MappedT, Pr, Ax>, false> >(result, key);
 }
 
