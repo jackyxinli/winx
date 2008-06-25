@@ -131,6 +131,23 @@ public:
 };
 
 // =========================================================================
+// class CondTrue
+
+template <class ValT>
+class CondTrue
+{
+public:
+	enum { character = 0 };
+
+	typedef ValT value_type;
+
+	template <class ValueT, class SourceT, class ContextT>
+	bool TPL_CALL match_if(const ValueT& val, SourceT& ar, ContextT& context) const {
+		return true;
+	}
+};
+
+// =========================================================================
 // operator,
 
 template <class CondT1, class CondT2>
@@ -164,6 +181,15 @@ __forceinline
 Condition<CondOr<T1, T2> >
 TPL_CALL operator,(const Condition<T1>& x, const Condition<T2>& y) {
 	return Condition<CondOr<T1, T2> >(x, y);
+}
+
+template <class T1>
+__forceinline
+Condition<CondOr<T1, CondTrue<typename T1::value_type> > >
+TPL_CALL operator,(const Condition<T1>& x, const bool fTrue) {
+	TPL_ASSERT(fTrue == true);
+	typedef CondTrue<typename T1::value_type> T2;
+	return Condition<CondOr<T1, T2> >(x, T2());
 }
 
 // =========================================================================

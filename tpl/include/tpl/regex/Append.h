@@ -142,6 +142,14 @@ public:
 		: PushBack_<std::vector<ValueT, Ax> >(result) {}
 };
 
+template <class ValueT, class Ax, class ValueT2>
+class AppendVal<std::vector<ValueT, Ax>, ValueT2> : public PushBackVal<std::vector<ValueT, Ax>, ValueT2>
+{
+public:
+	AppendVal(std::vector<ValueT, Ax>& result, const ValueT2 value_)
+		: PushBackVal<std::vector<ValueT, Ax>, ValueT2>(result, value_) {}
+};
+
 #endif // defined(TPL_HAS_VECTOR)
 
 #if defined(TPL_HAS_DEQUE)

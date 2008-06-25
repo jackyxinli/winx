@@ -34,6 +34,70 @@
 NS_TPL_BEGIN
 
 // =========================================================================
+// class CondSel
+
+template <class ValueT, class ConditionT>
+class CondSel
+{
+public:
+	const ValueT& m_x;
+	const ConditionT m_y;
+	
+public:
+	CondSel() : m_x(), m_y() {}
+	CondSel(const ValueT& x, const ConditionT& y) : m_x(x), m_y(y) {}
+	
+public:
+	enum { character = ConditionT::character };
+
+	typedef TagAssigNone assig_tag;
+	typedef ExplicitConvertible convertible_type;
+
+	template <class SourceT, class ContextT>
+	bool TPL_CALL match(SourceT& ar, ContextT& context) const {
+		return m_y.match_if(m_x, ar, context);
+	}
+
+	template <class SourceT, class ContextT, class SkipperT>
+	bool TPL_CALL match(SourceT& ar, ContextT& context, const SkipperT& skipper_) const {
+		return m_y.match_if(m_x, ar, context, skipper_);
+	}
+};
+
+// -------------------------------------------------------------------------
+// class Select
+
+template <class ValueT>
+class Select
+{
+private:
+	const ValueT& m_val;
+	
+public:
+	Select(const ValueT& val) : m_val(val) {}
+	
+	template <class ConditionT>
+	Rule<CondSel<ValueT, ConditionT> > TPL_CALL operator[](const Condition<ConditionT>& cond_) const {
+		return Rule<CondSel<ValueT, ConditionT> >(m_val, cond_);
+	}
+
+	template <class ConditionT>
+	Grammar<CondSel<ValueT, ConditionT> > TPL_CALL operator[](const GCondition<ConditionT>& cond_) const {
+		return Grammar<CondSel<ValueT, ConditionT> >(m_val, cond_);
+	}
+};
+
+template <class ValueT>
+inline Select<ValueT> TPL_CALL select_(const ValueT& val) {
+	return Select<ValueT>(val);
+}
+
+template <class ValueT>
+inline Select<ValueT> TPL_CALL select_(const Var<ValueT>& var_) {
+	return Select<ValueT>(var_.val);
+}
+
+// =========================================================================
 // class Case
 
 template <class CondT>
@@ -60,7 +124,7 @@ public:
 	}
 };
 
-// =========================================================================
+// -------------------------------------------------------------------------
 // ConditionValueTypeTraits
 
 template <class ValueT>
@@ -75,7 +139,7 @@ struct ConditionValueTypeTraits<ValueT const&> {
 	typedef typename ConditionValueTypeTraits<ValueT>::pred_type pred_type;
 };
 
-// =========================================================================
+// -------------------------------------------------------------------------
 // class Pred_
 
 #define TPL_DEFAULT_VT	void
@@ -124,7 +188,7 @@ public:
 	}
 };
 
-// =========================================================================
+// -------------------------------------------------------------------------
 
 #define TPL_CONDITION_VT(ValueT, CondValT)									\
 template <>																	\
@@ -164,7 +228,7 @@ struct ConditionValueTypeTraits<CharT[n]> {
 	typedef Pred_<const CharT*> pred_type;
 };
 
-// =========================================================================
+// -------------------------------------------------------------------------
 // function case_/default_
 
 template <class PredT, class ValueT>
