@@ -217,8 +217,8 @@ public:
 		StringT::append(buf, cch);
 	}
 };
-
-#if defined(_MSC_VER)#pragma warning(default:4996) // XXX  was declared deprecated
+#if defined(_MSC_VER)
+#pragma warning(default:4996) // XXX  was declared deprecated
 #endif
 
 // -------------------------------------------------------------------------
