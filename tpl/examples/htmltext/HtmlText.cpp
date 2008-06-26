@@ -26,8 +26,19 @@ int main()
 				],
 				true
 			] + find<true>('>') |
-			('/' + html_symbol() + '>') / 	// $tag-end$
-				!( "/pre>"/dec(nPre) )
+			(
+				'/' + 
+				html_symbol()				// $tag-end$
+				[
+					case_("pre")
+					[
+						eps()/dec(nPre)
+					],
+					true
+				] +
+				'>'
+			) |
+			done() // invalid grammar!
 		) |
 		select_(nPre) 						// $text$
 		[
