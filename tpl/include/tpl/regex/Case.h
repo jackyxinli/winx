@@ -23,6 +23,10 @@
 #include "Basic.h"
 #endif
 
+#ifndef TPL_REGEX_ACTION_H
+#include "Action.h"
+#endif
+
 #ifndef TPL_REGEX_CONDITION_H
 #include "Condition.h"
 #endif
