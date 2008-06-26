@@ -20,20 +20,14 @@ int main()
 		(
 			html_symbol() 					// $tag-start$
 			[
-				case_("pre")
-				[
-					eps()/inc(nPre)
-				],
+				case_("pre")/inc(nPre),
 				true
 			] + find<true>('>') |
 			(
 				'/' + 
 				html_symbol()				// $tag-end$
 				[
-					case_("pre")
-					[
-						eps()/dec(nPre)
-					],
+					case_("pre")/dec(nPre),
 					true
 				] +
 				'>'
