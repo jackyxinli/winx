@@ -10,14 +10,14 @@ using namespace tpl;
 // A simple grammar example.
 
 // What we use:
-//	* Rules: /assign(), %, real(), gr(','), skipws()
+//	* Rules: /append(), %, real(), gr(','), skipws()
 //	* Matching: operator>>
 
 int main()
 {
 	std::vector<double> values; // you can change vector to other stl containers.
 	
-	if ( " -.1 , -0.1 , +32. , -22323.2e+12 " >> skipws_[real()/assign(values) % gr(',')] )
+	if ( " -.1 , -0.1 , +32. , -22323.2e+12 " >> skipws_[real()/append(values) % gr(',')] )
 	{
 		for (std::vector<double>::iterator it = values.begin(); it != values.end(); ++it)
 		{

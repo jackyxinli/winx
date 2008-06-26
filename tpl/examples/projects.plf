@@ -1,10 +1,15 @@
 simplest/simplest
+simplest2/simplest2
 grammar/grammar
+grammar2/grammar2
 urlparams/urlparams
+boost-lambda/boost-lambda
+circuit/circuit
 calculator/calculator
 removecomments/removecomments
 removecomments2/removecomments2
 includefiles/includefiles
+htmltext/htmltext
 emulator/emulator
 variant/variant
 lang/lang

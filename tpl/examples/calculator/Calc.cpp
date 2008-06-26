@@ -43,7 +43,7 @@ int main()
 		"pow"/calc(stk, pow, arity) | "max"/calc(stk, max_value, arity) );
 
 	rFactor.assign( alloc,
-		real()/assign(stk) |
+		real()/append(stk) |
 		'-' + rFactor/calc<std::negate>(stk) |
 		'(' + rExpr + ')' |
 		(gr(c_symbol()) + '(' + rExpr % ','/assign(arity) + ')')/(gr(rFun) + '(') |

@@ -22,10 +22,10 @@ int main()
 	std::vector<int> values;
 
 	impl::Rule::Var rDoc;
-	rDoc.assign( alloc, integer()/assign(values) + !(',' + rDoc) );
+	rDoc.assign( alloc, integer()/append(values) + !(',' + rDoc) );
 
 	// This is only an example. A better way to do the same thing is:
-	//	rDoc.assign( alloc, integer()/assign(values) % ',' );
+	//	rDoc.assign( alloc, integer()/append(values) % ',' );
 
 	// ---- do match ----
 

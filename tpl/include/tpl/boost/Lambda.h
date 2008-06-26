@@ -25,8 +25,8 @@
 #include <boost/lambda/lambda.hpp>
 #endif
 
-#ifndef TPL_REGEX_ASSIGNMENT_H
-#include "../regex/Assignment.h"
+#ifndef TPL_REGEX_ASSIGN_H
+#include "../regex/Assign.h"
 #endif
 
 NS_TPL_BEGIN

@@ -61,10 +61,24 @@ Action<Op<ContainerT> > TPL_CALL op(Var<ContainerT>& result) {				\
 	return Action<Op<ContainerT> >(result.val);								\
 }
 
-#define TPL_ACTION_CONTAINER_OP_(Op, op)									\
+#define TPL_ACTION_METHOD1_(Op, op)											\
 	TPL_ACTION_CONTAINER_METHOD1_(Op, op)									\
 	TPL_ACTION_CONTAINER_FN1_(Op, op)
 
+// =========================================================================
+// public macro
+
+#define TPL_ACTION_METHOD0(fn)												\
+	namespace tpl {															\
+		TPL_SIMPLE_ACTION_METHOD0_(Act_##fn, fn)							\
+	}
+
+#define TPL_ACTION_METHOD1(fn)												\
+	namespace tpl {															\
+		TPL_ACTION_METHOD1_(Act_##fn, fn)									\
+		TPL_SIMPLE_ACTION_METHOD1_(Act_##fn, fn)							\
+	}
+	
 // =========================================================================
 // class Append
 
@@ -100,7 +114,7 @@ Action<Append<ContainerT> > TPL_CALL append(Var<ContainerT>& result) {
 // =========================================================================
 // function push
 
-TPL_ACTION_CONTAINER_OP_(Push_, push)
+TPL_ACTION_METHOD1_(Push_, push)
 
 #if defined(TPL_HAS_STACK)
 
@@ -129,8 +143,8 @@ public:
 // =========================================================================
 // class PushBack_/PushFront_
 
-TPL_ACTION_CONTAINER_OP_(PushBack_, push_back)
-TPL_ACTION_CONTAINER_OP_(PushFront_, push_front)
+TPL_ACTION_METHOD1_(PushBack_, push_back)
+TPL_ACTION_METHOD1_(PushFront_, push_front)
 
 #if defined(TPL_HAS_VECTOR)
 
@@ -179,7 +193,7 @@ public:
 // =========================================================================
 // class Insert_
 
-TPL_ACTION_CONTAINER_OP_(Insert_, insert)
+TPL_ACTION_METHOD1_(Insert_, insert)
 
 #if defined(TPL_HAS_SET)
 
@@ -298,6 +312,39 @@ insert(std::multimap<KeyT, MappedT, Pr, Ax>& result, const KeyT& key) {
 }
 
 #endif
+
+// =========================================================================
+// class PushBackPair_
+
+template <class ContainerT>
+class PushBackPair_
+{
+private:
+	typedef typename ContainerT::value_type PairT;
+	
+	typedef typename PairT::first_type KeyT;
+	typedef typename PairT::second_type MappedT;
+	
+	ContainerT& m_result;
+	const KeyT& m_key;
+
+public:
+	PushBackPair_(ContainerT& result, const KeyT& key)
+		: m_result(result), m_key(key) {
+	}
+	
+	typedef MappedT value_type;
+
+	void TPL_CALL operator()(const MappedT& val) const {
+		m_result.push_back(typename ContainerT::value_type(m_key, val));
+	}
+};
+
+template <class ContainerT, class KeyT>
+inline Action<PushBackPair_<ContainerT> >
+TPL_CALL push_back_pair(ContainerT& result, const KeyT& key) {
+	return Action<PushBackPair_<ContainerT> >(result, key);
+}
 
 // =========================================================================
 // $Log: $

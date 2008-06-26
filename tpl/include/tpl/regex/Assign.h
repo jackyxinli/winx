@@ -160,6 +160,23 @@ struct SelectAssig<AssigTag, Leaf<Iterator> > {
 	typedef AssigStr assig_type;
 };
 
+#define TPL_TEXT_ASSIG_(AssigTag, AssigType)	\
+												\
+template <class CharT, class Tr, class Ax>		\
+struct SelectAssig<AssigTag, std::basic_string<CharT, Tr, Ax> > {	\
+	typedef AssigType assig_type;									\
+};												\
+												\
+template <class Iterator>						\
+struct SelectAssig<AssigTag, tpl::Leaf<Iterator> > { \
+	typedef AssigType assig_type;				\
+};
+
+#define TPL_TEXT_ASSIG(AssigTag, AssigType)		\
+	namespace tpl {								\
+		TPL_TEXT_ASSIG_(AssigTag, AssigType)	\
+	}
+
 NS_TPL_END
 
 // =========================================================================
