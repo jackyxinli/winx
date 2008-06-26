@@ -248,6 +248,18 @@ public:
 	}
 };
 
+template <class ContainerT, class KeyT>
+inline Action<InsertPair_<ContainerT> >
+TPL_CALL insert_pair(ContainerT& result, const KeyT& key) {
+	return Action<InsertPair_<ContainerT> >(result, key);
+}
+
+template <bool bOverwrite, class ContainerT, class KeyT>
+inline Action<InsertPair_<ContainerT, bOverwrite> >
+TPL_CALL insert_pair(ContainerT& result, const KeyT& key) {
+	return Action<InsertPair_<ContainerT, bOverwrite> >(result, key);
+}
+
 // -------------------------------------------------------------------------
 // function insert
 

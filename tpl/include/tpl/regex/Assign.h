@@ -272,6 +272,22 @@ public:																		\
 	}																		\
 };
 
+#define TPL_SIMPLE_ACTION_METHOD0_CLASS_(Op, op)							\
+template <class VarT>														\
+class Op																	\
+{																			\
+private:																	\
+	VarT& m_var;															\
+																			\
+public:																		\
+	Op(VarT& var_)															\
+		: m_var(var_) {}													\
+																			\
+	void TPL_CALL operator()() const {										\
+		m_var.op();															\
+	}																		\
+};
+
 #define TPL_SIMPLE_ACTION_METHOD1_CLASS_(Op, op)							\
 template <class VarT, class ValueT>											\
 class Op																	\
@@ -340,6 +356,10 @@ Action<Op<VarT, const ValueT&> > TPL_CALL op(Var<VarT>& var_, Var<ValueT>& value
 	TPL_SIMPLE_ACTION_BINARY_OP_CLASS_(Op, op)									\
 	TPL_ACTION_OP_FN2_EX_(SimpleAction, Op, fn)
 	
+#define TPL_SIMPLE_ACTION_METHOD0_(Op, fn)										\
+	TPL_SIMPLE_ACTION_METHOD0_CLASS_(Op, fn)									\
+	TPL_ACTION_OP_FN1_EX_(SimpleAction, Op, fn)
+
 #define TPL_SIMPLE_ACTION_METHOD1_(Op, fn)										\
 	TPL_SIMPLE_ACTION_METHOD1_CLASS_(Op, fn)									\
 	TPL_ACTION_OP_FN2_EX_(SimpleAction, Op, fn)
@@ -360,12 +380,14 @@ TPL_SIMPLE_ACTION_BINARY_OP_(DecVal, dec, -=)
 // Usage: Rule/push_front(cont, value)
 // Usage: Rule/append(cont, value)
 // Usage: Rule/insert(cont, value)
+// Usage: Rule/clear(cont)
 
 TPL_SIMPLE_ACTION_METHOD1_(PushVal, push)
 TPL_SIMPLE_ACTION_METHOD1_(PushBackVal, push_back)
 TPL_SIMPLE_ACTION_METHOD1_(PushFrontVal, push_front)
 TPL_SIMPLE_ACTION_METHOD1_(AppendVal, append)
 TPL_SIMPLE_ACTION_METHOD1_(InsertVal, insert)
+TPL_SIMPLE_ACTION_METHOD0_(ClearVal, clear)
 
 NS_TPL_END
 
