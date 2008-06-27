@@ -19,6 +19,7 @@
 #include <stdext/text/Rope.h>
 #include <stdext/text/StringAlgo.h>
 #include <stdext/text/Format.h>
+#include <stdext/text/Cast.h>
 
 int main()
 {
@@ -45,5 +46,6 @@ int main()
 	WINX_TEST_CLASS(TestTextPool);
 	WINX_TEST_CLASS(TestRope);
 	WINX_TEST_CLASS(TestFormat);
+	WINX_TEST_CLASS(TestCast);
 }
 
