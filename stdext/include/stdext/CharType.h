@@ -126,26 +126,20 @@ typedef DigitTableT<void> DigitTable;
 
 // -------------------------------------------------------------------------
 
-#define __STD_CTYPE_STRING													\
+#define STD_CTYPE_STRING_													\
 	"UPPER", "LOWER", "DIGIT", "UNDERLINE", "XDIGIT", "PATH_SEP"
 
-#define __STD_CTYPE_IS(mask, c)												\
+#define STD_CTYPE_IS_(mask, c)												\
 	(STD_CTYPE_MAX_CHAR > (unsigned)(c) ? ((mask) & data[c]) : 0)
 
-#define __STD_CTYPE_TRANS(op, cnv)											\
-	struct op {																\
-		template <class E>													\
-		void operator()(E& c) const { c = cnv(c); }							\
-	}
-
-#define __STD_CTYPE_OP(op, is)												\
+#define STD_CTYPE_OP_(op, is)												\
 	struct op {																\
 		int operator()(int c) const { return is(c); }						\
 	}
 
-#define __STD_CTYPE_OP_AND_NOT(op, is)										\
-	__STD_CTYPE_OP(op, is);													\
-	__STD_CTYPE_OP(Not##op, !is)
+#define STD_CTYPE_OP_AND_NOT_(op, is)										\
+	STD_CTYPE_OP_(op, is);													\
+	STD_CTYPE_OP_(Not##op, !is)
 
 // -------------------------------------------------------------------------
 // class CharType
@@ -158,47 +152,47 @@ struct CharTypeT
 	static BYTE data[STD_CTYPE_MAX_CHAR];
 
 	static int is(int typeMask, int c) {
-		return __STD_CTYPE_IS(typeMask, c);
+		return STD_CTYPE_IS_(typeMask, c);
 	}
 
 	static int isDigit(int c) {
-		return __STD_CTYPE_IS(STD_CTYPE_DIGIT, c);
+		return STD_CTYPE_IS_(STD_CTYPE_DIGIT, c);
 	}
 
 	static int isLower(int c) {
-		return __STD_CTYPE_IS(STD_CTYPE_LOWER, c);
+		return STD_CTYPE_IS_(STD_CTYPE_LOWER, c);
 	}
 
 	static int isUpper(int c) {
-		return __STD_CTYPE_IS(STD_CTYPE_UPPER, c);
+		return STD_CTYPE_IS_(STD_CTYPE_UPPER, c);
 	}
 
 	static int isAlpha(int c) {
-		return __STD_CTYPE_IS(STD_CTYPE_ALPHA, c);
+		return STD_CTYPE_IS_(STD_CTYPE_ALPHA, c);
 	}
 	
 	static int isXDigit(int c) {
-		return __STD_CTYPE_IS(STD_CTYPE_XDIGIT, c);
+		return STD_CTYPE_IS_(STD_CTYPE_XDIGIT, c);
 	}
 
 	static int isSpace(int c) {
-		return __STD_CTYPE_IS(STD_CTYPE_SPACE, c);
+		return STD_CTYPE_IS_(STD_CTYPE_SPACE, c);
 	}
 
 	static int isCSymbolFirstChar(int c) {
-		return __STD_CTYPE_IS(STD_CSYMBOL_FIRST_CHAR, c);
+		return STD_CTYPE_IS_(STD_CSYMBOL_FIRST_CHAR, c);
 	}
 
 	static int isCSymbolNextChar(int c) {
-		return __STD_CTYPE_IS(STD_CSYMBOL_NEXT_CHAR, c);
+		return STD_CTYPE_IS_(STD_CSYMBOL_NEXT_CHAR, c);
 	}
 
 	static int isXmlSymbolFirstChar(int c) {
-		return __STD_CTYPE_IS(STD_XMLSYMBOL_FIRST_CHAR, c);
+		return STD_CTYPE_IS_(STD_XMLSYMBOL_FIRST_CHAR, c);
 	}
 
 	static int isXmlSymbolNextChar(int c) {
-		return __STD_CTYPE_IS(STD_XMLSYMBOL_NEXT_CHAR, c);
+		return STD_CTYPE_IS_(STD_XMLSYMBOL_NEXT_CHAR, c);
 	}
 
 	static int isPathSeparator(int c) {
@@ -227,25 +221,19 @@ struct CharTypeT
 	struct IsEOL;				struct NotIsEOL;
 	struct IsSpace;				struct NotIsSpace;
 
-	__STD_CTYPE_OP_AND_NOT(IsDigit, isDigit);
-	__STD_CTYPE_OP_AND_NOT(IsLower, isLower);
-	__STD_CTYPE_OP_AND_NOT(IsUpper, isUpper);
-	__STD_CTYPE_OP_AND_NOT(IsAlpha, isAlpha);
-	__STD_CTYPE_OP_AND_NOT(IsXDigit, isXDigit);
-	__STD_CTYPE_OP_AND_NOT(IsUnderline, isUnderline);
-	__STD_CTYPE_OP_AND_NOT(IsPathSeparator, isPathSeparator);
-	__STD_CTYPE_OP_AND_NOT(IsCSymbolFirstChar, isCSymbolFirstChar);
-	__STD_CTYPE_OP_AND_NOT(IsCSymbolNextChar, isCSymbolNextChar);
-	__STD_CTYPE_OP_AND_NOT(IsXmlSymbolFirstChar, isXmlSymbolFirstChar);
-	__STD_CTYPE_OP_AND_NOT(IsXmlSymbolNextChar, isXmlSymbolNextChar);
-	__STD_CTYPE_OP_AND_NOT(IsEOL, isEOL);
-	__STD_CTYPE_OP_AND_NOT(IsSpace, isSpace);
-
-	struct ToUpper;
-	struct ToLower;
-
-	__STD_CTYPE_TRANS(ToUpper, toupper);
-	__STD_CTYPE_TRANS(ToLower, tolower);
+	STD_CTYPE_OP_AND_NOT_(IsDigit, isDigit);
+	STD_CTYPE_OP_AND_NOT_(IsLower, isLower);
+	STD_CTYPE_OP_AND_NOT_(IsUpper, isUpper);
+	STD_CTYPE_OP_AND_NOT_(IsAlpha, isAlpha);
+	STD_CTYPE_OP_AND_NOT_(IsXDigit, isXDigit);
+	STD_CTYPE_OP_AND_NOT_(IsUnderline, isUnderline);
+	STD_CTYPE_OP_AND_NOT_(IsPathSeparator, isPathSeparator);
+	STD_CTYPE_OP_AND_NOT_(IsCSymbolFirstChar, isCSymbolFirstChar);
+	STD_CTYPE_OP_AND_NOT_(IsCSymbolNextChar, isCSymbolNextChar);
+	STD_CTYPE_OP_AND_NOT_(IsXmlSymbolFirstChar, isXmlSymbolFirstChar);
+	STD_CTYPE_OP_AND_NOT_(IsXmlSymbolNextChar, isXmlSymbolNextChar);
+	STD_CTYPE_OP_AND_NOT_(IsEOL, isEOL);
+	STD_CTYPE_OP_AND_NOT_(IsSpace, isSpace);
 };
 
 template <class Unused>
@@ -379,6 +367,63 @@ BYTE CharTypeT<Unused>::data[STD_CTYPE_MAX_CHAR] =
 typedef CharTypeT<void> CharType;
 
 // -------------------------------------------------------------------------
+// CharTraits
+
+template <class CharT>
+struct CharTraits {
+};
+
+template <>
+struct CharTraits<char>
+{
+	typedef int int_type;
+
+	static int_type winx_call upper(int_type c) {
+		return toupper(c);
+	}
+
+	static int_type winx_call lower(int_type c) {
+		return tolower(c);
+	}
+};
+
+template <>
+struct CharTraits<wchar_t>
+{
+	typedef wint_t int_type;
+	
+	static int_type winx_call upper(int_type c) {
+		return towupper(c);
+	}
+
+	static int_type winx_call lower(int_type c) {
+		return towlower(c);
+	}
+};
+
+template <class CharT>
+struct ToUpper
+{
+	typedef CharTraits<CharT> Tr_;
+	typedef typename Tr_::int_type int_type;
+	
+	int_type winx_call operator()(int_type c) const {
+		return Tr_::upper(c);
+	}
+};
+
+template <class CharT>
+struct ToLower
+{
+	typedef CharTraits<CharT> Tr_;
+	typedef typename Tr_::int_type int_type;
+	
+	int_type winx_call operator()(int_type c) const {
+		return Tr_::lower(c);
+	}
+};
+
+// -------------------------------------------------------------------------
 // class TestCharType
 
 #if defined(STD_UNITTEST)
@@ -417,7 +462,7 @@ public:
 		FileLog log("/__ctype__.h");
 
 		BYTE data[128] = { 0 };
-		const char* ctypes[] = { __STD_CTYPE_STRING };
+		const char* ctypes[] = { STD_CTYPE_STRING_ };
 
 		__STD_CTYPE_GEN('a', 'f', STD_CTYPE_XDIGIT);
 		__STD_CTYPE_GEN('a', 'z', STD_CTYPE_LOWER);

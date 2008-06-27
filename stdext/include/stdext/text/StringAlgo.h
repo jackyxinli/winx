@@ -23,6 +23,10 @@
 #include "BasicString.h"
 #endif
 
+#ifndef STDEXT_CHARTYPE_H
+#include "../CharType.h"
+#endif
+
 #ifndef STDEXT_MSVCRT_VARGS_H
 #include "../msvcrt/vargs.h"
 #endif
@@ -99,6 +103,27 @@ __forceinline BasicString<char> winx_call iconv(
 }
 
 // -------------------------------------------------------------------------
+// upper/lower
+
+template <class AllocT, class CharT>
+inline BasicString<CharT> winx_call upper(AllocT& alloc, const TempString<CharT>& str)
+{
+	size_t n = str.size();
+	CharT* p = STD_NEW_ARRAY(alloc, CharT, n);
+	std::transform(str.begin(), str.end(), p, ToUpper<CharT>());
+	return BasicString<CharT>(p, n);
+}
+
+template <class AllocT, class CharT>
+inline BasicString<CharT> winx_call lower(AllocT& alloc, const TempString<CharT>& str)
+{
+	size_t n = str.size();
+	CharT* p = STD_NEW_ARRAY(alloc, CharT, n);
+	std::transform(str.begin(), str.end(), p, ToLower<CharT>());
+	return BasicString<CharT>(p, n);
+}
+
+// -------------------------------------------------------------------------
 // concat
 
 template <class AllocT, class StringT>
@@ -150,7 +175,7 @@ class TestStringAlgo : public TestCase
 {
 	WINX_TEST_SUITE(TestStringAlgo);
 		WINX_TEST(testConcat);
-		WINX_TEST(testIconv);
+//		WINX_TEST(testIconv);
 	WINX_TEST_SUITE_END();
 
 public:

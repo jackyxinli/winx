@@ -154,6 +154,8 @@ NS_STDEXT_END
 #if defined(STD_UNITTEST)
 
 #include <sstream>
+#include <cmath>
+#include "StringAlgo.h"
 #include "../Rand.h"
 #include "../Memory.h"
 
@@ -217,7 +219,7 @@ public:
 		std::istringstream is(s1);
 		RealT val2;
 		is >> val2;
-		AssertExp(val == val2);
+		AssertExp(fabs(val - val2) < 1e-10);
 	}
 	
 	void testRealToStr(LogT& log)
@@ -244,7 +246,7 @@ public:
 		AssertExp(s == "123");
 		
 		ws = std::wstr(alloc, 123, 16);
-		AssertExp(ws == L"7B");
+		AssertExp(std::upper(alloc, ws) == L"7B");
 		
 		s = std::str(alloc, 12.3);
 		AssertExp(s == "12.3");
