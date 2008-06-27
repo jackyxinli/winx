@@ -105,22 +105,34 @@ __forceinline BasicString<char> winx_call iconv(
 // -------------------------------------------------------------------------
 // upper/lower
 
-template <class AllocT, class CharT>
-inline BasicString<CharT> winx_call upper(AllocT& alloc, const TempString<CharT>& str)
+template <class CharT, class AllocT, class TransT>
+inline BasicString<CharT> winx_call transform(
+	AllocT& alloc, const TempString<CharT>& str, const TransT& trans)
 {
 	size_t n = str.size();
 	CharT* p = STD_NEW_ARRAY(alloc, CharT, n);
-	std::transform(str.begin(), str.end(), p, ToUpper<CharT>());
+	std::transform(str.begin(), str.end(), p, trans);
 	return BasicString<CharT>(p, n);
 }
 
-template <class AllocT, class CharT>
-inline BasicString<CharT> winx_call lower(AllocT& alloc, const TempString<CharT>& str)
-{
-	size_t n = str.size();
-	CharT* p = STD_NEW_ARRAY(alloc, CharT, n);
-	std::transform(str.begin(), str.end(), p, ToLower<CharT>());
-	return BasicString<CharT>(p, n);
+template <class AllocT>
+__forceinline BasicString<char> winx_call upper(AllocT& alloc, const TempString<char>& str) {
+	return std::transform(alloc, str, ToUpper<char>());
+}
+
+template <class AllocT>
+__forceinline BasicString<wchar_t> winx_call upper(AllocT& alloc, const TempString<wchar_t>& str) {
+	return std::transform(alloc, str, ToUpper<wchar_t>());
+}
+
+template <class AllocT>
+__forceinline BasicString<char> winx_call lower(AllocT& alloc, const TempString<char>& str) {
+	return std::transform(alloc, str, ToLower<char>());
+}
+
+template <class AllocT>
+__forceinline BasicString<wchar_t> winx_call lower(AllocT& alloc, const TempString<wchar_t>& str) {
+	return std::transform(alloc, str, ToLower<wchar_t>());
 }
 
 // -------------------------------------------------------------------------
@@ -175,14 +187,14 @@ class TestStringAlgo : public TestCase
 {
 	WINX_TEST_SUITE(TestStringAlgo);
 		WINX_TEST(testConcat);
+		WINX_TEST(testConv);
 //		WINX_TEST(testIconv);
 	WINX_TEST_SUITE_END();
 
 public:
 	void testIconv(LogT& log)
 	{
-		std::BlockPool recycle;
-		std::ScopeAlloc alloc(recycle);
+		std::ScopeAlloc alloc;
 
 		std::WString s1 = std::iconv(alloc, std::cp_auto, "Hello, world!");
 		AssertExp(s1 == L"Hello, world!");
@@ -190,11 +202,21 @@ public:
 		std::String s2 = std::iconv(alloc, s1, std::cp_utf8);
 		AssertExp(s2 == "Hello, world!");
 	}
+	
+	void testConv(LogT& log)
+	{
+		std::ScopeAlloc alloc;
+
+		std::string s1 = "ABC";
+		AssertExp(std::lower(alloc, s1) == "abc");
+		
+		std::String s2(alloc, "abc");
+		AssertExp(std::upper(alloc, s2) == "ABC");
+	}
 
 	void testConcat(LogT& log)
 	{
-		std::BlockPool recycle;
-		std::ScopeAlloc alloc(recycle);
+		std::ScopeAlloc alloc;
 
 		std::String s[4];
 		s[0].attach("Hello");
