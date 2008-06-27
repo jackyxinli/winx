@@ -187,7 +187,7 @@ public:
 		
 		cpu::proc_type<0> my_factal;
 		cpu::label_type<0> my_label;
-		cpu::label_type<1> ge_1;
+		cpu::label_type<1> gt_1;
 		cpu::var_type n;
 		
 		code <<
@@ -199,13 +199,13 @@ public:
 			cpu::push(n),
 			cpu::push(1),
 			cpu::le(), // n <= 1?
-			cpu::jz(ge_1), // jmp if false
+			cpu::jz(gt_1), // jmp if false
 			cpu::push(1),
 			cpu::ret(1),
 			
 			// else
 			//	return my_factal(n-1)*n;
-			cpu::label(ge_1),
+			cpu::label(gt_1),
 			cpu::push(n),
 			cpu::sub(1),
 			cpu::call(my_factal),
