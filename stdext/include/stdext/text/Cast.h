@@ -23,6 +23,10 @@
 #include "../Basic.h"
 #endif
 
+#ifndef STD_ITERATOR_H
+#include "../../std/iterator.h"
+#endif
+
 #ifndef STDEXT_TEXT_BASICSTRING_H
 #include "BasicString.h"
 #endif
@@ -117,6 +121,18 @@ struct CastToReal
 			throw_cast_error_();
 		return result;
 	}
+
+	template <class Iterator>
+	static RealT winx_call get(Iterator first, Iterator last)
+	{
+		typedef std::iterator_traits_alter<Iterator> Tr_;
+		typedef typename Tr_::value_type CharT;
+		size_t n = std::distance(first, last);
+		CharT* s = (CharT*)_alloca(sizeof(CharT) * (n+1));
+		std::copy(first, last, s);
+		s[n] = 0;
+		return get(s);
+	}
 };
 
 template <class Type>
@@ -173,14 +189,39 @@ __forceinline Type winx_call cast(Iterator first, Iterator last) {
 	return Cast<Type>::get(first, last);
 }
 
-template <class Type, class Iterator>
-__forceinline Type winx_call cast(Iterator first, unsigned radix) {
-	return Cast<Type>::get(first, radix);
+template <class Type, class CharT>
+__forceinline Type winx_call cast(const CharT* s, unsigned radix) {
+	return Cast<Type>::get(s, radix);
 }
 
-template <class Type, class Iterator>
-__forceinline Type winx_call cast(Iterator first) {
-	return Cast<Type>::get(first);
+template <class Type>
+__forceinline Type winx_call cast(const char* s) {
+	return Cast<Type>::get(s);
+}
+
+template <class Type>
+__forceinline Type winx_call cast(const wchar_t* s) {
+	return Cast<Type>::get(s);
+}
+
+template <class Type>
+__forceinline Type winx_call cast(const TempString<char>& s) {
+	return Cast<Type>::get(s.begin(), s.end());
+}
+
+template <class Type>
+__forceinline Type winx_call cast(const TempString<wchar_t>& s) {
+	return Cast<Type>::get(s.begin(), s.end());
+}
+
+template <class Type>
+__forceinline Type winx_call cast(const TempString<char>& s, unsigned radix) {
+	return Cast<Type>::get(s.begin(), s.end(), radix);
+}
+
+template <class Type>
+__forceinline Type winx_call cast(const TempString<wchar_t>& s, unsigned radix) {
+	return Cast<Type>::get(s.begin(), s.end(), radix);
 }
 
 NS_STDEXT_END
@@ -207,6 +248,16 @@ public:
 		
 		AssertExp(std::cast<double>("1.2e10") == 1.2e10);
 		AssertExp(std::cast<float>("1.2e10") == 1.2e10);
+		
+		std::TempString<wchar_t> s(L"123.4");
+		AssertExp(std::cast<double>(s) == 123.4);
+
+		std::String s2("123.4", 3);
+		AssertExp(std::cast<float>(s2) == 123.);
+
+		std::string s3("123.4");
+		double val = std::cast<double>(s3);
+		AssertExp(val == 123.4);
 	}
 };
 

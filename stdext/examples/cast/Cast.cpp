@@ -24,6 +24,14 @@ int main()
 	float fval = std::cast<float>("1.2e10");
 	std::cout << fval << '\n';
 
+	std::TempString<wchar_t> s(L"123.4");
+	std::cout << std::cast<double>(s) << '\n';
+
+	std::String s2("123.4", 3);
+	std::cout << std::cast<float>(s2) << '\n';
+	
+	std::string s3 = "123.4";
+	std::cout << std::cast<double>(s3) << '\n';
 	return 0;
 }
 
