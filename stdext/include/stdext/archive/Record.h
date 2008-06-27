@@ -165,15 +165,27 @@ public:
 	RecordReader() {}
 
 	template <class InitArgT>
-	explicit RecordReader(InitArgT file)
+	explicit RecordReader(const InitArgT& file)
+		: _Base(file) {}
+
+	template <class InitArgT>
+	explicit RecordReader(InitArgT& file)
 		: _Base(file) {}
 
 	template <class InitArgT1, class InitArgT2>
-	RecordReader(InitArgT1 arg1, InitArgT2 arg2)
+	RecordReader(const InitArgT1& arg1, const InitArgT2& arg2)
+		: _Base(arg1, arg2) {}
+
+	template <class InitArgT1, class InitArgT2>
+	RecordReader(InitArgT1& arg1, InitArgT2& arg2)
 		: _Base(arg1, arg2) {}
 
 	template <class InitArgT1, class InitArgT2, class InitArgT3>
-	RecordReader(InitArgT1 arg1, InitArgT2 arg2, InitArgT3 arg3)
+	RecordReader(const InitArgT1& arg1, const InitArgT2& arg2, const InitArgT3& arg3)
+		: _Base(arg1, arg2, arg3) {}
+
+	template <class InitArgT1, class InitArgT2, class InitArgT3>
+	RecordReader(InitArgT1& arg1, InitArgT2& arg2, InitArgT3& arg3)
 		: _Base(arg1, arg2, arg3) {}
 
 public:
