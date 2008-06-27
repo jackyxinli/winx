@@ -167,6 +167,10 @@ inline int _winx_null_func(int nLevel, const void* fmt, ...) { return 0; }
 #define WINX_TEXT(str)		str
 #endif
 
+#if defined(_OSTREAM_) || defined(_OSTREAM) || defined(_GLIBCXX_OSTREAM)
+#define WINX_HAS_OSTREAM
+#endif
+
 // -------------------------------------------------------------------------
 // winsdk & msvcrt
 

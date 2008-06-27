@@ -185,6 +185,19 @@ STD_NO_DESTRUCTOR(std::TempString<int>);
 STD_NO_DESTRUCTOR(std::TempString<short>);
 
 // -------------------------------------------------------------------------
+
+#if defined(WINX_HAS_OSTREAM)
+
+template <class CharT, class Tr>
+inline std::basic_ostream<CharT, Tr>& 
+winx_call operator<<(std::basic_ostream<CharT, Tr>& os, const std::TempString<CharT>& v) {
+	std::copy(v.begin(), v.end(), std::ostream_iterator<CharT, CharT, Tr>(os));
+	return os;
+}
+
+#endif
+
+// -------------------------------------------------------------------------
 // $Log: TempString.h,v $
 
 #endif /* STDEXT_TEXT_TEMPSTRING_H */

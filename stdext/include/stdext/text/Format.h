@@ -19,8 +19,8 @@
 #ifndef STDEXT_TEXT_FORMAT_H
 #define STDEXT_TEXT_FORMAT_H
 
-#ifndef STDEXT_TCHAR_H
-#include "../tchar.h"
+#ifndef STDEXT_BASIC_H
+#include "../Basic.h"
 #endif
 
 #ifndef STDEXT_TEXT_BASICSTRING_H
@@ -37,7 +37,7 @@ struct StringBufTraits_ {};
 
 #define WINX_STRBUF_TRAITS(Type, nBufSize) \
 template <> \
-struct StringBufTraits_<> { \
+struct StringBufTraits_<Type> { \
 	enum { value = nBufSize }; \
 };
 
@@ -100,47 +100,51 @@ inline wchar_t* winx_call to_str(wchar_t buf[], double val, int ndigit = 12) {
 	enum { bufsize = WINX_STRBUF_SIZE(double) };
 	char cbuf[bufsize];
 	_gcvt(val, ndigit, cbuf);
-	for (size_t i = 0; cbuf[i]; ++i)
-		buf[i] = cbuf[i];
+	for (size_t i = 0; (buf[i] = cbuf[i]) != 0; ++i);
 	return buf;
 }
 
 // -------------------------------------------------------------------------
-// function str
+// function str/wstr
 
-template <class E, class AllocT, class Target>
-__forceinline BasicString<E> winx_call str(AllocT& alloc, const Target& val) {
-	enum { bufsize = WINX_STRBUF_SIZE(Target) };
-	E buf[bufsize];	
-	return BasicString<E>(alloc, to_str(buf, val));
+#define WINX_STRING_FORMAT_IMPL_(str, E) 	\
+											\
+template <class AllocT, class Target>		\
+__forceinline BasicString<E> winx_call str(AllocT& alloc, const Target& val) {	\
+	enum { bufsize = WINX_STRBUF_SIZE(Target) };	\
+	E buf[bufsize];									\
+	return BasicString<E>(alloc, to_str(buf, val));	\
+}											\
+											\
+template <class AllocT, class Target>		\
+__forceinline BasicString<E> winx_call str(AllocT& alloc, const Target& val, int radix) {	\
+	enum { bufsize = WINX_STRBUF_SIZE(Target) };			\
+	E buf[bufsize];											\
+	return BasicString<E>(alloc, to_str(buf, val, radix));	\
+}															\
+															\
+template <class AllocT, class Tr, class AllocT2>			\
+__forceinline BasicString<E> winx_call str(AllocT& alloc, const std::basic_string<E, Tr, AllocT2>& val) { \
+	return BasicString<E>(alloc, val.begin(), val.end());	\
+}															\
+															\
+template <class AllocT, class AllocT2>						\
+__forceinline BasicString<E> winx_call str(AllocT& alloc, const std::vector<E, AllocT2>& val) {	\
+	return BasicString<E>(alloc, val.begin(), val.end());	\
+}															\
+															\
+template <class AllocT>										\
+__forceinline BasicString<E> winx_call str(AllocT& alloc, const E* val) { \
+	return BasicString<E>(alloc, val);						\
+}															\
+															\
+template <class AllocT>										\
+__forceinline BasicString<E> winx_call str(AllocT& alloc, const E val) { \
+	return BasicString<E>(alloc, &val, 1);					\
 }
 
-template <class E, class AllocT, class Target>
-__forceinline BasicString<E> winx_call str(AllocT& alloc, const Target& val, int radix) {
-	enum { bufsize = WINX_STRBUF_SIZE(Target) };
-	E buf[bufsize];
-	return BasicString<E>(alloc, to_str(buf, val, radix));
-}
-
-template <class E, class AllocT, class Tr, class AllocT2>
-__forceinline BasicString<E> winx_call str(AllocT& alloc, const std::basic_string<E, Tr, AllocT2>& val) {
-	return BasicString<E>(alloc, val.begin(), val.end());
-}
-
-template <class E, class AllocT, class AllocT2>
-__forceinline BasicString<E> winx_call str(AllocT& alloc, const std::vector<E, AllocT2>& val) {
-	return BasicString<E>(alloc, val.begin(), val.end());
-}
-
-template <class E, class AllocT>
-__forceinline BasicString<E> winx_call str(AllocT& alloc, const E* val) {
-	return BasicString<E>(alloc, val);
-}
-
-template <class E, class AllocT>
-__forceinline BasicString<E> winx_call str(AllocT& alloc, const E val) {
-	return BasicString<E>(alloc, &val, 1);
-}
+WINX_STRING_FORMAT_IMPL_(str, char)
+WINX_STRING_FORMAT_IMPL_(wstr, wchar_t)
 
 NS_STDEXT_END
 
@@ -169,7 +173,7 @@ public:
 		std::AutoFreeAlloc alloc;
 		std::ostringstream os;
 		os << val;
-		AssertExp(os.str() == std::str<char>(alloc, val));
+		AssertExp(os.str() == std::str(alloc, val));
 	}
 
 	void testIntToStr(LogT& log)
@@ -208,7 +212,7 @@ public:
 	void doTestRealToStr(const RealT& val, LogT& log)
 	{
 		std::AutoFreeAlloc alloc;
-		std::String s = std::str<char>(alloc, val);
+		std::String s = std::str(alloc, val);
 		std::string s1 = s.stl_str();
 		std::istringstream is(s1);
 		RealT val2;
@@ -246,19 +250,21 @@ public:
 		std::String s;
 		std::WString ws;
 		
-		s = std::str<char>(alloc, 123);
+		s = std::str(alloc, 123);
 		AssertExp(s == "123");
 		
-		ws = std::str<wchar_t>(alloc, 123, 16);
+		ws = std::wstr(alloc, 123, 16);
 		AssertExp(ws == L"7B");
 		
-		s = std::str<char>(alloc, 12.3);
+		s = std::str(alloc, 12.3);
 		AssertExp(s == "12.3");
 		
-		ws = std::str<wchar_t>(alloc, 12.3);
+		ws = std::wstr(alloc, 12.3);
 		AssertExp(ws == L"12.3");
 	}
 };
+
+#endif // defined(STD_UNITTEST)
 
 // -------------------------------------------------------------------------
 // $Log: Format.h,v $
