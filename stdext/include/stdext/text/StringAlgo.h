@@ -136,6 +136,51 @@ __forceinline BasicString<wchar_t> winx_call lower(AllocT& alloc, const TempStri
 }
 
 // -------------------------------------------------------------------------
+// trim/trimLeft/trimRight
+
+template <class CharT>
+inline BasicString<CharT> winx_call trimLeft(const BasicString<CharT>& s)
+{
+	typedef typename BasicString<CharT>::const_iterator iterator;
+	const iterator last = s.end();
+	const iterator first = std::find_if(s.begin(), last, CharType::NotIsSpace());
+	return BasicString<CharT>(first, last-first);
+}
+
+template <class CharT>
+inline BasicString<CharT> winx_call trimRight(const BasicString<CharT>& s)
+{
+	typedef typename BasicString<CharT>::const_iterator iterator;
+	const CharType::NotIsSpace notSpace = CharType::NotIsSpace();
+	const iterator first = s.begin();
+	iterator last = s.end();
+	while (first != last) {
+		if (notSpace(*--last)) {
+			++last;
+			break;
+		}
+	}
+	return BasicString<CharT>(first, last-first);
+}
+
+template <class CharT>
+inline BasicString<CharT> winx_call trim(const BasicString<CharT>& s)
+{
+	typedef typename BasicString<CharT>::const_iterator iterator;
+	const CharType::NotIsSpace notSpace = CharType::NotIsSpace();
+	iterator first = s.begin();
+	iterator last = s.end();
+	first = std::find_if(first, last, notSpace);
+	while (first != last) {
+		if (notSpace(*--last)) {
+			++last;
+			break;
+		}
+	}
+	return BasicString<CharT>(first, last-first);
+}
+
+// -------------------------------------------------------------------------
 // concat
 
 template <class AllocT, class StringT>
@@ -188,6 +233,7 @@ class TestStringAlgo : public TestCase
 	WINX_TEST_SUITE(TestStringAlgo);
 		WINX_TEST(testConcat);
 		WINX_TEST(testConv);
+		WINX_TEST(testTrim);
 //		WINX_TEST(testIconv);
 	WINX_TEST_SUITE_END();
 
@@ -212,6 +258,16 @@ public:
 		
 		std::String s2(alloc, "abc");
 		AssertExp(std::upper(alloc, s2) == "ABC");
+	}
+	
+	void testTrim(LogT& log)
+	{
+		std::ScopeAlloc alloc;
+		std::String s(alloc, " \t Hello, world! \t\n");
+		
+		AssertExp(std::trim(s) == "Hello, world!");
+		AssertExp(std::trimLeft(s) == "Hello, world! \t\n");
+		AssertExp(std::trimRight(s) == " \t Hello, world!");
 	}
 
 	void testConcat(LogT& log)

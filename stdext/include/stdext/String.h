@@ -39,6 +39,14 @@
 #include "text/StringAlgo.h"
 #endif
 
+#ifndef STDEXT_TEXT_FORMAT_H
+#include "text/Format.h"
+#endif
+
+#ifndef STDEXT_TEXT_CAST_H
+#include "text/Cast.h"
+#endif
+
 NS_STDEXT_BEGIN
 
 // -------------------------------------------------------------------------
