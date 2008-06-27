@@ -168,9 +168,8 @@ inline BasicString<CharT> winx_call trim(const BasicString<CharT>& s)
 {
 	typedef typename BasicString<CharT>::const_iterator iterator;
 	const CharType::NotIsSpace notSpace = CharType::NotIsSpace();
-	iterator first = s.begin();
 	iterator last = s.end();
-	first = std::find_if(first, last, notSpace);
+	const iterator first = std::find_if(s.begin(), last, notSpace);
 	while (first != last) {
 		if (notSpace(*--last)) {
 			++last;
