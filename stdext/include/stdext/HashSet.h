@@ -174,7 +174,6 @@ class TestHashSet : public TestCase
 	WINX_TEST_SUITE(TestHashSet);
 		WINX_TEST(testSet);
 		WINX_TEST(testMultiSet);
-		WINX_TEST(testCompare);
 	WINX_TEST_SUITE_END();
 
 public:
@@ -214,53 +213,6 @@ public:
 		{
 			log.print(*it).newline();
 		}
-	}
-
-public:
-	enum { N = 20000 };
-
-	void doSet(LogT& log)
-	{
-		typedef std::HashSet<int> SetType;
-		log.print("===== std::HashSet (ScopeAlloc) =====\n");
-		std::PerformanceCounter counter;
-		{
-			std::BlockPool recycle;
-			std::ScopeAlloc alloc(recycle);
-			SetType coll(alloc);
-			for (int i = 0; i < N; ++i)
-				coll.insert(i);
-		}
-		counter.trace(log);
-	}
-
-	void doShareAllocSet(LogT& log)
-	{
-		typedef std::HashSet<int> SetType;
-		std::BlockPool recycle;
-		log.newline();
-		for (int i = 0; i < 5; ++i)
-		{
-			log.print("===== doShareAllocSet =====\n");
-			std::PerformanceCounter counter;
-			{
-				std::ScopeAlloc alloc(recycle);
-				SetType coll(alloc);
-				for (int i = 0; i < N; ++i)
-					coll.insert(i);
-			}
-			counter.trace(log);
-		}
-	}
-
-	void testCompare(LogT& log)
-	{
-		for (int i = 0; i < 5; ++i)
-		{
-			log.newline();
-			doSet(log);
-		}
-		doShareAllocSet(log);
 	}
 };
 

@@ -233,14 +233,16 @@ public:
 		typedef std::StdioReader ReaderT;
 		typedef std::StdioWriter WriterT;
 
-		const char stg[] = "/__teststdio__.txt";
+		const char stg[] = "__teststdio__.txt";
 
 		std::BlockPool recycle;
 		std::ScopeAlloc alloc(recycle);
 
 		WINX_USES_CONVERSION;
 		{
-			WriterT ar(WINX_A2W(stg));
+			WriterT ar(stg);
+			AssertExp(ar.good());
+			
 			ar.put("hello\n");
 			ar.put('\n');
 		}
@@ -279,7 +281,7 @@ public:
 		// ------------------------------------
 		{
 			char szBuf[100];
-			WriterT ar(stg);
+			WriterT ar(WINX_A2W(stg));
 			ar.put(_itoa(13242, szBuf, 10));
 			ar.put(' ');
 			ar.put(_itoa(1111, szBuf, 10));
@@ -317,6 +319,8 @@ public:
 			std::String s5;
 			AssertExp(ar.gets(alloc, s5) != S_OK);
 		}
+
+		remove(stg);
 	}
 };
 

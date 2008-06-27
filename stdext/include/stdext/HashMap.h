@@ -166,17 +166,12 @@ NS_STDEXT_END
 
 #if defined(STD_UNITTEST)
 
-#ifndef STDEXT_COUNTER_H
-#include "Counter.h"
-#endif
-
 template <class LogT>
 class TestHashMap : public TestCase
 {
 	WINX_TEST_SUITE(TestHashMap);
 		WINX_TEST(testMap);
 		WINX_TEST(testMultiMap);
-		WINX_TEST(testCompare);
 	WINX_TEST_SUITE_END();
 
 public:
@@ -222,53 +217,6 @@ public:
 				.print((*it).second)
 				.newline();
 		}
-	}
-
-public:
-	enum { N = 20000 };
-
-	void doMap(LogT& log)
-	{
-		typedef std::HashMap<int, int> MapT;
-		log.print("===== std::HashMap (ScopeAlloc) =====\n");
-		std::PerformanceCounter counter;
-		{
-			std::BlockPool recycle;
-			std::ScopeAlloc alloc(recycle);
-			MapT coll(alloc);
-			for (int i = 0; i < N; ++i)
-				coll.insert(MapT::value_type(i, i));
-		}
-		counter.trace(log);
-	}
-
-	void doShareAllocMap(LogT& log)
-	{
-		typedef std::HashMap<int, int> MapT;
-		std::BlockPool recycle;
-		log.newline();
-		for (int i = 0; i < 5; ++i)
-		{
-			log.print("===== doShareAllocMap =====\n");
-			std::PerformanceCounter counter;
-			{
-				std::ScopeAlloc alloc(recycle);
-				MapT coll(alloc);
-				for (int i = 0; i < N; ++i)
-					coll.insert(MapT::value_type(i, i));
-			}
-			counter.trace(log);
-		}
-	}
-
-	void testCompare(LogT& log)
-	{
-		for (int i = 0; i < 5; ++i)
-		{
-			log.newline();
-			doMap(log);
-		}
-		doShareAllocMap(log);
 	}
 };
 

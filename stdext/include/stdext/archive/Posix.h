@@ -237,7 +237,7 @@ public:
 		typedef std::PosixReader ReaderT;
 		typedef std::PosixWriter WriterT;
 
-		const char stg[] = "/__testposix__.txt";
+		const char stg[] = "__testposix__.txt";
 
 		std::BlockPool recycle;
 		std::ScopeAlloc alloc(recycle);
@@ -325,6 +325,8 @@ public:
 			std::String s5;
 			AssertExp(ar.gets(alloc, s5) != S_OK);
 		}
+		
+		remove(stg);
 	}
 };
 

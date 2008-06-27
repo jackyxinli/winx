@@ -36,14 +36,16 @@
 // -------------------------------------------------------------------------
 // winx_A2WHelper_/winx_W2AHelper_
 
-inline LPWSTR winx_call winx_A2WHelper_(LPWSTR lpw, LPCSTR lpa, int nWideChars)
+#if defined(X_OS_WINDOWS)
+
+inline LPWSTR winx_call winx_A2WHelper_(LPWSTR lpw, LPCSTR lpa, int nChars)
 {
 	// verify that no illegal character present
 	// since lpw was allocated based on the size of lpa
 	// don't worry about the number of chars
 	lpw[0] = '\0';
 	MultiByteToWideChar(
-		CP_ACP, 0, lpa, nWideChars /* nAnsiChar */, lpw, nWideChars);
+		CP_ACP, 0, lpa, nChars /* nAnsiChar */, lpw, nChars);
 	return lpw;
 }
 
@@ -57,6 +59,28 @@ inline LPSTR winx_call winx_W2AHelper_(LPSTR lpa, LPCWSTR lpw, int nWideChars)
 		CP_ACP, 0, lpw, nWideChars, lpa, nWideChars<<1 /* nAnsiChar */, NULL, NULL);
 	return lpa;
 }
+
+#else
+
+#ifndef assert
+#include <assert.h>
+#endif
+
+__forceinline LPWSTR winx_call winx_A2WHelper_(LPWSTR lpw, LPCSTR lpa, int nChars)
+{
+	assert(lpa[nChars-1] == 0);
+	mbstowcs(lpw, lpa, nChars);
+	return lpw;
+}
+
+inline LPSTR winx_call winx_W2AHelper_(LPSTR lpa, LPCWSTR lpw, int nWideChars)
+{
+	assert(lpw[nWideChars-1] == 0);
+	wcstombs(lpa, lpw, nWideChars);
+	return lpa;
+}
+
+#endif
 
 // -------------------------------------------------------------------------
 // WINX_A2W/WINX_W2A
