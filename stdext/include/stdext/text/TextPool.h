@@ -366,6 +366,8 @@ template <class _E, class _AllocT, class _T2> __forceinline
 bool winx_call operator>=(const TextPool<_E, _AllocT>& a, const _T2& b)
 	{return a.compare(b) >= 0; }
 
+NS_STDEXT_END
+
 // -------------------------------------------------------------------------
 // class TestTextPool
 
@@ -505,7 +507,5 @@ public:
 
 // -------------------------------------------------------------------------
 // $Log: TextPool.h,v $
-
-NS_STDEXT_END
 
 #endif /* STDEXT_TEXT_TEXTPOOL_H */

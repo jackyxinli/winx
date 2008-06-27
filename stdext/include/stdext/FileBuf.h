@@ -153,7 +153,9 @@ typedef WinFileBufT<DefaultStaticAlloc> WinFileBuf;
 // -------------------------------------------------------------------------
 // class FILEFileBuf
 
+#if defined(_MSC_VER)
 #pragma warning(disable:4996) // XXX  was declared deprecated
+#endif
 
 template <class _Alloc>
 class FILEFileBufT : public AutoBufferT<_Alloc>
@@ -203,7 +205,9 @@ public:
 	}
 };
 
+#if defined(_MSC_VER)
 #pragma warning(default:4996) // XXX  was declared deprecated
+#endif
 
 typedef FILEFileBufT<DefaultStaticAlloc> FILEFileBuf;
 
@@ -245,12 +249,6 @@ public:
 
 // -------------------------------------------------------------------------
 // $Log: FileBuf.h,v $
-// Revision 1.1  2006/10/18 12:13:39  xushiwei
-// stdext as independent component
-//
-// Revision 1.2  2006/09/26 08:05:56  xushiwei
-// TestFileBuf
-//
 // Revision 1.1  2006/09/25 08:23:36  xushiwei
 // STL-Extension: FileBuf(WinFileBuf, FILEFileBuf)
 //

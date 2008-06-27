@@ -115,17 +115,27 @@ inline void pause()
 	getchar();
 }
 
-struct PauseOnExit {
-	PauseOnExit() {}
-	~PauseOnExit() { pause(); }
+#if defined(_DEBUG) && defined(WINX_GCC)
+#define WINX_DBG_PAUSE()	std::pause()
+#elif defined(WINX_GCC)
+#define WINX_DBG_PAUSE()	printf("\n")
+#else
+#define WINX_DBG_PAUSE()
+#endif
+
+class ExitTestRunner
+{
+public:
+	ExitTestRunner() {}
+	~ExitTestRunner() {
+		WINX_DBG_PAUSE();
+	}
 };
 
-#if defined(_DEBUG) && defined(WINX_GCC)
-#define WINX_DBG_PAUSE_ON_EXIT()	std::PauseOnExit _winx_pause_on_exit
-#define WINX_DBG_PAUSE()			std::pause()
+#if defined(X_OS_WINDOWS)
+#define WINX_TEST_RUNNER_EXIT_()
 #else
-#define WINX_DBG_PAUSE_ON_EXIT()
-#define WINX_DBG_PAUSE()
+#define WINX_TEST_RUNNER_EXIT_()	std::ExitTestRunner _winx_test_runner_exit
 #endif
 
 // -------------------------------------------------------------------------
@@ -138,7 +148,7 @@ struct PauseOnExit {
 	TestCaseLog log
 
 #define WINX_TEST_APP(LogT, Test, Case)										\
-	WINX_DBG_PAUSE_ON_EXIT();												\
+	WINX_TEST_RUNNER_EXIT_();												\
 	WINX_TESTCASE_LOG(LogT);												\
 	log.select(Test, Case)
 

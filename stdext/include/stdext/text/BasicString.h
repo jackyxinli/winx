@@ -490,6 +490,8 @@ public:
 	}
 };
 
+NS_STDEXT_END
+
 // -------------------------------------------------------------------------
 // class TestBasicString
 
@@ -567,7 +569,5 @@ public:
 
 // -------------------------------------------------------------------------
 // $Log: BasicString.h,v $
-
-NS_STDEXT_END
 
 #endif /* STDEXT_TEXT_BASICSTRING_H */

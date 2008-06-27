@@ -584,8 +584,10 @@ inline Rope<_CharT, _Alloc>::Rope(_Alloc& __a, size_t __n, _CharT __c)
     _RopeRep* __remainder;
     Rope<_CharT,_Alloc> __remainder_rope(__a);
 
-    if (0 == __n)
+    if (0 == __n) {
+	  _M_tree_ptr = 0; 
       return;
+    }
     
     __exponent = __n / __exponentiate_threshold;
     __rest = __n % __exponentiate_threshold;

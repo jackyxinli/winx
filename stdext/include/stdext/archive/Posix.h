@@ -213,6 +213,8 @@ typedef Writer<PosixWriteArchive> PosixWriter;
 typedef ReadArchive<int, PosixAdapter> PosixReadArchive;
 typedef Reader<PosixReadArchive> PosixReader;
 
+NS_STDEXT_END
+
 // -------------------------------------------------------------------------
 // class TestPosixArchive
 
@@ -334,7 +336,5 @@ public:
 
 // -------------------------------------------------------------------------
 // $Log: Posix.h,v $
-
-NS_STDEXT_END
 
 #endif /* STDEXT_ARCHIVE_POSIX_H */

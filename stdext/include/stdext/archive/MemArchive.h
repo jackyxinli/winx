@@ -65,12 +65,6 @@ public:
 		m_pos = stg.begin();
 	}
 
-	explicit MemWriteArchive(BaseStg* stg)
-		: m_stg(stg)
-	{
-		m_pos = stg->begin();
-	}
-
 	void winx_call clear_cache()
 	{
 	}
@@ -138,12 +132,12 @@ public:
 	}
 
 public:
-	HRESULT winx_call open(BaseStg* stg)
+	HRESULT winx_call open(BaseStg& stg)
 	{
 		if (good())
 			return E_ACCESSDENIED;
-		m_stg = stg;
-		m_pos = stg->begin();
+		m_stg = &stg;
+		m_pos = stg.begin();
 		return S_OK;
 	}
 

@@ -352,6 +352,8 @@ template <class _E, class _T2> __forceinline
 bool winx_call operator>=(const BasicStringBuilder<_E>& a, const _T2& b)
 	{return a.compare(b) >= 0; }
 
+NS_STDEXT_END
+
 // -------------------------------------------------------------------------
 // class TestStringBuilder
 
@@ -483,7 +485,5 @@ public:
 
 // -------------------------------------------------------------------------
 // $Log: BasicStringBuilder.h,v $
-
-NS_STDEXT_END
 
 #endif /* STDEXT_TEXT_BASICSTRINGBUILDER_H */

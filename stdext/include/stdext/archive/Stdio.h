@@ -209,6 +209,8 @@ typedef Writer<StdioWriteArchive> StdioWriter;
 typedef ReadArchive<FILE*, StdioAdapter> StdioReadArchive;
 typedef Reader<StdioReadArchive> StdioReader;
 
+NS_STDEXT_END
+
 // -------------------------------------------------------------------------
 // class TestStdioArchive
 
@@ -326,7 +328,5 @@ public:
 
 // -------------------------------------------------------------------------
 // $Log: Stdio.h,v $
-
-NS_STDEXT_END
 
 #endif /* STDEXT_ARCHIVE_STDIO_H */

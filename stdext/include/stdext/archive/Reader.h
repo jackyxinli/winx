@@ -50,15 +50,23 @@ public:
 	Reader() {}
 
 	template <class InitArgT>
-	explicit Reader(InitArgT file)
+	explicit Reader(const InitArgT& file)
+		: _Base(file) {}
+
+	template <class InitArgT>
+	explicit Reader(InitArgT& file)
 		: _Base(file) {}
 
 	template <class InitArgT1, class InitArgT2>
-	Reader(InitArgT1 arg1, InitArgT2 arg2)
+	Reader(const InitArgT1& arg1, const InitArgT2& arg2)
+		: _Base(arg1, arg2) {}
+
+	template <class InitArgT1, class InitArgT2>
+	Reader(InitArgT1& arg1, InitArgT2& arg2)
 		: _Base(arg1, arg2) {}
 
 	template <class InitArgT1, class InitArgT2, class InitArgT3>
-	Reader(InitArgT1 arg1, InitArgT2 arg2, InitArgT3 arg3)
+	Reader(InitArgT1& arg1, InitArgT2& arg2, InitArgT3& arg3)
 		: _Base(arg1, arg2, arg3) {}
 
 //

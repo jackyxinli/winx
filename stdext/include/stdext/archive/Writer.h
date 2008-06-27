@@ -53,15 +53,23 @@ public:
 	Writer() {}
 
 	template <class InitArgT>
-	explicit Writer(InitArgT file)
+	explicit Writer(const InitArgT& file)
+		: _Base(file) {}
+
+	template <class InitArgT>
+	explicit Writer(InitArgT& file)
 		: _Base(file) {}
 
 	template <class InitArgT1, class InitArgT2>
-	Writer(InitArgT1 arg1, InitArgT2 arg2)
+	Writer(const InitArgT1& arg1, const InitArgT2& arg2)
+		: _Base(arg1, arg2) {}
+
+	template <class InitArgT1, class InitArgT2>
+	Writer(InitArgT1& arg1, InitArgT2& arg2)
 		: _Base(arg1, arg2) {}
 
 	template <class InitArgT1, class InitArgT2, class InitArgT3>
-	Writer(InitArgT1 arg1, InitArgT2 arg2, InitArgT3 arg3)
+	Writer(InitArgT1& arg1, InitArgT2& arg2, InitArgT3& arg3)
 		: _Base(arg1, arg2, arg3) {}
 
 public:

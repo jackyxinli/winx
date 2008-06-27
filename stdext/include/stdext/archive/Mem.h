@@ -83,6 +83,8 @@ typedef DequeReader TextPoolReader;
 
 #endif
 
+NS_STDEXT_END
+
 // -------------------------------------------------------------------------
 // class TestMemArchive
 
@@ -138,13 +140,14 @@ class TestMemArchive : public TestCase
 		std::ScopeAlloc alloc(recycle);
 
 		{
-			WriterT ar(&stg);
+			WriterT ar(stg);
 			ar.put("hello\n");
 			ar.put('\n');
+			AssertExp(stg.size() == 7);
 		}
 		{
 			char szBuf[100];
-			ReaderT ar(&stg);
+			ReaderT ar(stg);
 			size_t cch = ar.get(szBuf, countof(szBuf));
 			szBuf[cch] = '\0';
 			AssertExp(strcmp(szBuf, "hello\n\n") == 0);
@@ -152,7 +155,7 @@ class TestMemArchive : public TestCase
 		stg.erase(stg.begin(), stg.end());
 		{
 			WriterT ar;
-			ar.open(&stg);
+			ar.open(stg);
 			ar.put("you're welcome!\n");
 		}
 		{
@@ -165,13 +168,13 @@ class TestMemArchive : public TestCase
 		stg.erase(stg.begin(), stg.end());
 		{
 			char szBuf[100];
-			WriterT ar(&stg);
+			WriterT ar(stg);
 			ar.put(_itoa(13242, szBuf, 10));
 			ar.put(' ');
 			ar.put(_itoa(1111, szBuf, 10));
 		}
 		{
-			ReaderT ar(&stg);
+			ReaderT ar(stg);
 			unsigned val;
 			ar.scan_uint(val);
 			AssertExp(val == 13242);
@@ -180,14 +183,14 @@ class TestMemArchive : public TestCase
 		}
 		stg.erase(stg.begin(), stg.end());
 		{
-			WriterT ar(&stg);
+			WriterT ar(stg);
 			ar.puts("Hello");
 			ar.puts(std::string("World!"));
 			ar.puts(std::vector<char>(256, '!'));
 			ar.puts(std::vector<char>(65537, '?'));
 		}
 		{
-			ReaderT ar(&stg);
+			ReaderT ar(stg);
 			std::string s1;
 			AssertExp(ar.gets(s1) == S_OK);
 			AssertExp(s1 == "Hello");
@@ -214,7 +217,5 @@ class TestMemArchive : public TestCase
 
 // -------------------------------------------------------------------------
 // $Log: Mem.h,v $
-
-NS_STDEXT_END
 
 #endif /* STDEXT_ARCHIVE_MEM_H */

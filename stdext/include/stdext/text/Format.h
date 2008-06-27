@@ -79,12 +79,12 @@ WINX_STRBUF_TRAITS(__uint64, 64)
 
 template <class E>
 __forceinline E* winx_call to_str(E buf[], const __int64& i64, int radix = 10) {
-	tchar::i64toa(i64, buf, radix);
+	return tchar::i64toa(i64, buf, radix);
 }
 
 template <class E>
 __forceinline E* winx_call to_str(E buf[], const __uint64& i64, int radix = 10) {
-	tchar::ui64toa(i64, buf, radix);
+	return tchar::ui64toa(i64, buf, radix);
 }
 
 #endif
@@ -220,16 +220,6 @@ public:
 		AssertExp(val == val2);
 	}
 	
-	void testRealToStr(LogT& log)
-	{
-		std::Rand rnd;
-		size_t i;
-		for (i = 0; i < 1000; ++i) {
-			const float val = (float)rnd.frand();
-			doTestRealToStr(val, log);
-		}		
-	}
-
 	void testRealToStr(LogT& log)
 	{
 		std::Rand rnd;

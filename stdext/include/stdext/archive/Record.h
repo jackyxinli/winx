@@ -56,21 +56,35 @@ public:
 	}
 
 	template <class InitArgT>
-	explicit RecordWriter(InitArgT file)
+	explicit RecordWriter(InitArgT& file)
+		: _Base(file)
+	{
+		m_recId = recIdEOF;
+	}
+
+	template <class InitArgT>
+	explicit RecordWriter(const InitArgT& file)
 		: _Base(file)
 	{
 		m_recId = recIdEOF;
 	}
 
 	template <class InitArgT1, class InitArgT2>
-	RecordWriter(InitArgT1 arg1, InitArgT2 arg2)
+	RecordWriter(InitArgT1& arg1, InitArgT2& arg2)
+		: _Base(arg1, arg2)
+	{
+		m_recId = recIdEOF;
+	}
+
+	template <class InitArgT1, class InitArgT2>
+	RecordWriter(const InitArgT1& arg1, const InitArgT2& arg2)
 		: _Base(arg1, arg2)
 	{
 		m_recId = recIdEOF;
 	}
 
 	template <class InitArgT1, class InitArgT2, class InitArgT3>
-	RecordWriter(InitArgT1 arg1, InitArgT2 arg2, InitArgT3 arg3)
+	RecordWriter(InitArgT1& arg1, InitArgT2& arg2, InitArgT3& arg3)
 		: _Base(arg1, arg2, arg3)
 	{
 		m_recId = recIdEOF;

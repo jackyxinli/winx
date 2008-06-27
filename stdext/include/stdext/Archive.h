@@ -101,8 +101,6 @@ NS_STDEXT_END
 
 #if defined(STD_UNITTEST)
 
-NS_STDEXT_BEGIN
-
 template <class LogT>
 class TestRecord : public TestCase
 {
@@ -121,7 +119,7 @@ public:
 	
 		std::CharVector stg;
 		{
-			RecordWriterT ar(&stg);
+			RecordWriterT ar(stg);
 			
 			ar.beginRecord(23);
 			ar.puts("Hello, world!");
@@ -134,12 +132,12 @@ public:
 			ar.endRecord();
 		}
 		{
-			RecordReaderT reader(&stg);
+			RecordReaderT reader(stg);
 			RecordReaderT::record_info info;
 
 			AssertExp(reader.next(info));
 			AssertExp(info.recId == 23);
-			std::MemReader ar1(&info);
+			std::MemReader ar1(info);
 			std::String s;
 			AssertExp(ar1.gets(alloc, s) == S_OK);
 			AssertExp(s == "Hello, world!");
@@ -149,7 +147,7 @@ public:
 
 			AssertExp(reader.next(info));
 			AssertExp(info.recId == 99);
-			std::MemReader ar2(&info);
+			std::MemReader ar2(info);
 			UINT16 w;
 			AssertExp(ar2.get16i(w) == S_OK);
 			AssertExp(w == 32);
@@ -160,8 +158,6 @@ public:
 		}
 	}
 };
-
-NS_STDEXT_END
 
 #endif // defined(STD_UNITTEST)
 

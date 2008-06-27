@@ -159,10 +159,16 @@ public:
 #endif
 };
 
+NS_STDEXT_END
+
 // -------------------------------------------------------------------------
 // class TestHashMap
 
 #if defined(STD_UNITTEST)
+
+#ifndef STDEXT_COUNTER_H
+#include "Counter.h"
+#endif
 
 template <class LogT>
 class TestHashMap : public TestCase
@@ -270,8 +276,6 @@ public:
 
 // -------------------------------------------------------------------------
 // $Log: HashMap.h,v $
-
-NS_STDEXT_END
 
 #endif // _WINX_NO_HASH_MAP
 

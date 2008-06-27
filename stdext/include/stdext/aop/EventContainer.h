@@ -79,6 +79,13 @@ public:
 	}
 };
 
+#if defined(__GNUC__) && (__GNUC__ >= 4 && __GNUC_MINOR__ >= 2)
+#pragma GCC diagnostic ignored "-Wstrict-aliasing"
+// dereferencing type-punned pointer will break strict-aliasing rules
+	// see http://www.zeali.net/entry/454
+	// see http://gcc.gnu.org/onlinedocs/gcc/Diagnostic-Pragmas.html
+#endif
+
 NS_STDEXT_END
 
 // -------------------------------------------------------------------------
@@ -185,8 +192,6 @@ public:
 
 } // namespace test_event_container
 
-NS_STDEXT_BEGIN
-
 template <class LogT>
 class TestEventContainer : public TestCase
 {
@@ -206,8 +211,6 @@ public:
 		dlg.input(13);
 	}
 };
-
-NS_STDEXT_END
 
 #endif // defined(STD_UNITTEST)
 

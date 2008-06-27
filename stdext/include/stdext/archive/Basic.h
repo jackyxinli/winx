@@ -359,6 +359,7 @@ inline HRESULT winx_call scan_uint(ReadArchiveT& ar, UIntType& val, unsigned rad
 	else
 	{
 		ar.unget(ch);
+		val = 0;
 		return E_UNEXPECTED;
 	}
 }

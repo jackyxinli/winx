@@ -138,8 +138,6 @@ public:																		\
 
 #if defined(STD_UNITTEST)
 
-NS_STDEXT_BEGIN
-
 namespace test_event {
 
 //
@@ -258,8 +256,6 @@ public:
 		dlg2.m_edit2.putText(20);
 	}
 };
-
-NS_STDEXT_END
 
 #endif // defined(STD_UNITTEST)
 

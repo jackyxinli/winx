@@ -138,6 +138,8 @@ WINX_VARGS_TFUNC_EP1_REF(
 WINX_VARGS_TFUNC_EP1_REF(
 	BasicString<WCHAR>, concat, AllocT, const TempString<WCHAR>, __concatString);
 
+NS_STDEXT_END
+
 // -------------------------------------------------------------------------
 // class TestStringAlgo
 
@@ -196,7 +198,5 @@ public:
 
 // -------------------------------------------------------------------------
 // $Log: StringAlgo.h,v $
-
-NS_STDEXT_END
 
 #endif /* STDEXT_TEXT_STRINGALGO_H */

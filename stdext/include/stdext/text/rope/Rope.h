@@ -372,37 +372,36 @@ class Rope {
 		}
 
         Rope(_Alloc& __a, const _CharT* __s)
-        : _M_tree_ptr(__STL_ROPE_FROM_UNOWNED_CHAR_PTR(__s, std::length(__s), __a)),
-          _M_alloc(&__a)
+        	: _M_tree_ptr(__STL_ROPE_FROM_UNOWNED_CHAR_PTR(__s, std::length(__s), __a)),
+          	  _M_alloc(&__a)
         { }
 
         Rope(_Alloc& __a, const _CharT* __s, size_t __len)
-        : _M_tree_ptr(__STL_ROPE_FROM_UNOWNED_CHAR_PTR(__s, __len, __a)),
-          _M_alloc(&__a)
+        	: _M_tree_ptr(__STL_ROPE_FROM_UNOWNED_CHAR_PTR(__s, __len, __a)),
+          	  _M_alloc(&__a)
         { }
 
         // Should perhaps be templatized with respect to the iterator type
         // and use Sequence_buffer.  (It should perhaps use sequence_buffer
         // even now.)
         Rope(_Alloc& __a, const _CharT *__s, const _CharT *__e)
-        : _M_tree_ptr(__STL_ROPE_FROM_UNOWNED_CHAR_PTR(__s, __e - __s, __a)),
-          _M_alloc(&__a)
+        	: _M_tree_ptr(__STL_ROPE_FROM_UNOWNED_CHAR_PTR(__s, __e - __s, __a)),
+          	  _M_alloc(&__a)
         { }
 
         Rope(_Alloc& __a, const const_iterator& __s, const const_iterator& __e)
-        : _M_tree_ptr(_S_substring(__s._M_root, __s._M_current_pos,
+        	: _M_tree_ptr(_S_substring(__s._M_root, __s._M_current_pos,
                              __e._M_current_pos)),
-          _M_alloc(&__a)
+          	  _M_alloc(&__a)
         { }
 
         Rope(_Alloc& __a, const iterator& __s, const iterator& __e)
-        : _M_tree_ptr(_S_substring(__s._M_root, __s._M_current_pos,
-                             __e._M_current_pos)),
-          _M_alloc(&__a)
+        	: _M_tree_ptr(_S_substring(__s._M_root, __s._M_current_pos, __e._M_current_pos)),
+          	  _M_alloc(&__a)
         { }
 
         Rope(_Alloc& __a, _CharT __c)
-        : _M_alloc(&__a)
+        	: _M_alloc(&__a)
         {
             _CharT* __buf = STD_ALLOC_ARRAY(__a, _CharT, 1);
             construct(__buf, __c);
@@ -412,11 +411,11 @@ class Rope {
         Rope(_Alloc& __a, size_t __n, _CharT __c);
 
         Rope(_Alloc& __a)
-		: _M_tree_ptr(0), _M_alloc(&__a) {}
+			: _M_tree_ptr(0), _M_alloc(&__a) {}
 
         // Construct a Rope from a function that can compute its members
         Rope(_Alloc& __a, CharProducer<_CharT> *__fn, size_t __len, bool __delete_fn)
-            : _M_alloc(&__a)
+        	: _M_alloc(&__a)
         {
             _M_tree_ptr = (0 == __len) ?
                0 : _S_new_RopeFunction(__fn, __len, __delete_fn, __a);
@@ -956,3 +955,4 @@ NS_STDEXT_END
 // $Log: Rope.h,v $
 
 #endif /* STDEXT_TEXT_ROPE_ROPE_H */
+
