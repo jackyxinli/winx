@@ -69,16 +69,16 @@ public:
 };
 
 // -------------------------------------------------------------------------
-// class Select
+// class Switch
 
 template <class ValueT>
-class Select
+class Switch
 {
 private:
 	const ValueT& m_val;
 	
 public:
-	Select(const ValueT& val) : m_val(val) {}
+	Switch(const ValueT& val) : m_val(val) {}
 	
 	template <class ConditionT>
 	Rule<CondSel<ValueT, ConditionT> > TPL_CALL operator[](const Condition<ConditionT>& cond_) const {
@@ -92,13 +92,13 @@ public:
 };
 
 template <class ValueT>
-inline Select<ValueT> TPL_CALL select_(const ValueT& val) {
-	return Select<ValueT>(val);
+inline Switch<ValueT> TPL_CALL switch_(const ValueT& val) {
+	return Switch<ValueT>(val);
 }
 
 template <class ValueT>
-inline Select<ValueT> TPL_CALL select_(const Var<ValueT>& var_) {
-	return Select<ValueT>(var_.val);
+inline Switch<ValueT> TPL_CALL switch_(const Var<ValueT>& var_) {
+	return Switch<ValueT>(var_.val);
 }
 
 // =========================================================================

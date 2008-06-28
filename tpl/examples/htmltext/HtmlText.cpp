@@ -34,7 +34,7 @@ int main()
 			) |
 			done() // invalid grammar!
 		) |
-		select_(nPre) 						// $text$
+		switch_(nPre) 						// $text$
 		[
 			case_(0) // nPre == 0
 			[
