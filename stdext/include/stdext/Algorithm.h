@@ -23,10 +23,6 @@
 #include "Basic.h"
 #endif
 
-#ifndef STD_ITERATOR_H
-#include "../std/iterator.h"
-#endif
-
 NS_STDEXT_BEGIN
 
 // -------------------------------------------------------------------------
