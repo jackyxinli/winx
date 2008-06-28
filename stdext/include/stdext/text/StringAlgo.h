@@ -257,6 +257,7 @@ class TestStringAlgo : public TestCase
 	WINX_TEST_SUITE(TestStringAlgo);
 		WINX_TEST(testConcat);
 		WINX_TEST(testConv);
+		WINX_TEST(testFlatten);
 		WINX_TEST(testTrim);
 //		WINX_TEST(testIconv);
 	WINX_TEST_SUITE_END();
@@ -303,16 +304,16 @@ public:
 			lst.push_back(" ");
 			lst.push_back("world!");
 		
-			std::BasicArray<char> s = std::flatten(alloc, lst);
+			std::String s = std::flatten(alloc, lst);
 			AssertExp(s == "Hello, world!");
 		}
 		{
 			std::vector<std::string> vec;
 			vec.push_back("Hello,");
 			vec.push_back(" ");
-			vec.push_back("world!\n");
+			vec.push_back("world!");
 		
-			std::BasicArray<char> s = std::flatten(alloc, vec);
+			std::String s = std::flatten(alloc, vec);
 			AssertExp(s == "Hello, world!");
 		}
 	}
