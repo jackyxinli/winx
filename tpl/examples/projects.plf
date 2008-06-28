@@ -3,7 +3,10 @@ simplest2/simplest2
 grammar/grammar
 grammar2/grammar2
 urlparams/urlparams
-boost-lambda/boost-lambda
+boost-lambda/print/print
+boost-lambda/calc/calc
+boost-phoenix/print/print
+boost-phoenix/calc/calc
 circuit/circuit
 calculator/calculator
 removecomments/removecomments
