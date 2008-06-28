@@ -65,6 +65,11 @@ void testExplode()
 		std::cout << arr[i] << '\n';
 		
 	std::cout << "+++++++++++++++++++++\n";
+
+	std::String s2 = std::implode(alloc, " -> ", arr);
+	std::cout << s2 << '\n';
+	
+	std::cout << "+++++++++++++++++++++\n";
 		
 	arr = std::explode<false>(alloc, ' ', s);
 	for (size_t i = 0; i < arr.size(); ++i)
