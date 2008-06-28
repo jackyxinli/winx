@@ -51,10 +51,32 @@ void testImplode()
 	std::cout << s;
 }
 
+void testExplode()
+{
+	std::AutoFreeAlloc alloc;
+
+	std::String s(alloc, "Hello, world!  I am xushiwei!");
+
+	std::BasicArray<std::String> arr = std::explode(alloc, ' ', s);
+	for (size_t i = 0; i < arr.size(); ++i)
+		std::cout << arr[i] << '\n';
+		
+	std::cout << "+++++++++++++++++++++\n";
+		
+	arr = std::explode<false>(alloc, ' ', s);
+	for (size_t i = 0; i < arr.size(); ++i)
+		std::cout << arr[i] << '\n';
+}
+
 int main()
 {
+	std::cout << "----------------------------------\n";
 	testConcat();
+	std::cout << "----------------------------------\n";
 	testImplode();
+	std::cout << "----------------------------------\n";
+	testExplode();
+	std::cout << "----------------------------------\n";
 	return 0;
 }
 

@@ -334,7 +334,8 @@ template <class Iterator, class CharT, class AllocT> __forceinline
 template <class CharT, class Tr, class Iterator>
 inline std::basic_ostream<CharT, Tr>& 
 winx_call operator<<(std::basic_ostream<CharT, Tr>& os, const Range<Iterator>& v) {
-	std::copy(v.begin(), v.end(), std::ostream_iterator<CharT, CharT, Tr>(os));
+	typedef typename Range<Iterator>::value_type ValueT;
+	std::copy(v.begin(), v.end(), std::ostream_iterator<ValueT, CharT, Tr>(os));
 	return os;
 }
 

@@ -184,6 +184,77 @@ inline BasicString<CharT> winx_call trim(const BasicString<CharT>& s)
 }
 
 // -------------------------------------------------------------------------
+// explode
+
+template <bool bEraseEmpty, class CharT, class AllocT, class SepIt>
+inline
+BasicArray<BasicString<CharT> >
+winx_call explode(AllocT& alloc, SepIt sep, SepIt sepEnd, const BasicString<CharT>& s)
+{
+	typedef typename BasicString<CharT>::const_iterator iterator;
+	
+	struct Node {
+		BasicString<CharT> s;
+		const Node* prev;
+	};
+	
+	const Node* lst = NULL;
+	const iterator last = s.end();
+	const size_t sepLen = std::distance(sep, sepEnd);
+	size_t n = 0;
+	iterator first = s.begin();	
+	for (;;) {
+		const iterator it = std::search(first, last, sep, sepEnd);
+		if (!bEraseEmpty || it != first) {
+			Node* p = (Node*)_alloca(sizeof(Node));
+			p->s = BasicString<CharT>(first, it);
+			p->prev = lst;
+			lst = p;
+			++n;
+		}
+		if (it == last)
+			break;
+		first = it + sepLen;
+	}
+	
+	size_t i = n;
+	BasicString<CharT>* arr = STD_ALLOC_ARRAY(alloc, BasicString<CharT>, n);
+	while (i) {
+		arr[--i] = lst->s;
+		lst = lst->prev;
+	}
+	return BasicArray<BasicString<CharT> >(arr, n);
+}
+
+template <bool bEraseEmpty, class AllocT>
+__forceinline
+BasicArray<BasicString<char> >
+winx_call explode(AllocT& alloc, const TempString<char>& sep, const BasicString<char>& s) {
+	return explode<bEraseEmpty>(alloc, sep.begin(), sep.end(), s);
+}
+
+template <class AllocT>
+__forceinline
+BasicArray<BasicString<char> >
+winx_call explode(AllocT& alloc, const TempString<char>& sep, const BasicString<char>& s) {
+	return explode<true>(alloc, sep.begin(), sep.end(), s);
+}
+
+template <bool bEraseEmpty, class AllocT>
+__forceinline
+BasicArray<BasicString<wchar_t> >
+winx_call explode(AllocT& alloc, const TempString<wchar_t>& sep, const BasicString<wchar_t>& s) {
+	return explode<bEraseEmpty>(alloc, sep.begin(), sep.end(), s);
+}
+
+template <class AllocT>
+__forceinline
+BasicArray<BasicString<wchar_t> >
+winx_call explode(AllocT& alloc, const TempString<wchar_t>& sep, const BasicString<wchar_t>& s) {
+	return explode<true>(alloc, sep.begin(), sep.end(), s);
+}
+
+// -------------------------------------------------------------------------
 // implode
 
 template <class AllocT, class GlueIt, class Iterator>
@@ -217,28 +288,28 @@ winx_call implode(AllocT& alloc, const GlueIt glue, size_t n, const Iterator fir
 }
 
 template <class AllocT, class Iterator>
-inline
+__forceinline
 BasicString<char>
 winx_call implode(AllocT& alloc, const TempString<char>& glue, Iterator first, size_t count) {
 	return implode(alloc, glue.begin(), glue.size(), first, count);
 }
 
 template <class AllocT, class Iterator>
-inline
+__forceinline
 BasicString<wchar_t>
 winx_call implode(AllocT& alloc, const TempString<wchar_t>& glue, Iterator first, size_t count) {
 	return implode(alloc, glue.begin(), glue.size(), first, count);
 }
 
 template <class AllocT, class Iterator>
-inline
+__forceinline
 BasicString<char>
 winx_call implode(AllocT& alloc, const char glue, Iterator first, size_t count) {
 	return implode(alloc, &glue, 1, first, count);
 }
 
 template <class AllocT, class Iterator>
-inline
+__forceinline
 BasicString<wchar_t>
 winx_call implode(AllocT& alloc, const wchar_t glue, Iterator first, size_t count) {
 	return implode(alloc, &glue, 1, first, count);
@@ -340,6 +411,7 @@ class TestStringAlgo : public TestCase
 		WINX_TEST(testConcat);
 		WINX_TEST(testConcat2);
 		WINX_TEST(testImplode);
+		WINX_TEST(testExplode);
 		WINX_TEST(testConv);
 		WINX_TEST(testTrim);
 //		WINX_TEST(testIconv);
@@ -396,6 +468,32 @@ public:
 		AssertExp(s == "Hello, -> world! -> I -> am -> xushiwei!\n");
 	}
 	
+	void testExplode(LogT& log)
+	{
+		std::AutoFreeAlloc alloc;
+
+		std::String s(alloc, "Hello, world!  I am xushiwei!");
+
+		std::BasicArray<std::String> arr = std::explode(alloc, ' ', s);
+		AssertExp(arr.size() == 5);
+		AssertExp(
+			arr[0] == "Hello," &&
+			arr[1] == "world!" &&
+			arr[2] == "I" &&
+			arr[3] == "am" &&
+			arr[4] == "xushiwei!");
+		
+		arr = std::explode<false>(alloc, ' ', s);
+		AssertExp(arr.size() == 6);
+		AssertExp(
+			arr[0] == "Hello," &&
+			arr[1] == "world!" &&
+			arr[2] == "" &&
+			arr[3] == "I" &&
+			arr[4] == "am" &&
+			arr[5] == "xushiwei!");
+	}
+
 	void testConcat2(LogT& log)
 	{
 		std::AutoFreeAlloc alloc;
