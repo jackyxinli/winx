@@ -46,209 +46,6 @@
 NS_TPL_BEGIN
 
 // -------------------------------------------------------------------------
-// Leaf
-
-template <class Iterator>
-class Leaf
-{
-private:
-	Iterator first;
-	Iterator second;
-
-private:
-	typedef std::iterator_traits<Iterator> Tr_;
-
-public:
-	typedef Iterator iterator;
-	typedef Iterator const_iterator;
-
-	typedef typename Tr_::iterator_category iterator_category;
-
-	typedef typename Tr_::difference_type difference_type;
-	typedef size_t size_type;
-
-	typedef typename Tr_::value_type value_type;
-	typedef typename Tr_::pointer pointer;
-	typedef typename Tr_::reference reference;
-
-private:
-	typedef std::basic_string<value_type> StlString_;
-
-public:
-	Leaf()
-		: first(), second() {}
-
-	Leaf(Iterator first_, Iterator second_)
-		: first(first_), second(second_) {}
-
-	template <class StringT>
-	Leaf(const StringT& str_)
-		: first(str_.begin()), second(str_.end()) {
-	}
-
-public:
-	void TPL_CALL assign(Iterator first_, Iterator second_) {
-		first = first_;
-		second = second_;
-	}
-
-	template <class StringT>
-	void TPL_CALL assign(const StringT& str_) {
-		first = str_.begin();
-		second = str_.end();
-	}
-	
-	size_type TPL_CALL length() const {
-		return std::distance(first, second);
-	}
-
-	size_type TPL_CALL size() const {
-		return std::distance(first, second);
-	}
-
-	iterator TPL_CALL begin() const {
-		return first;
-	}
-
-	iterator TPL_CALL end() const {
-		return second;
-	}
-
-	StlString_ TPL_CALL stl_str() const {
-		return StlString_(first, second);
-	}
-	
-public:
-	int TPL_CALL compare(const Leaf& b) const
-		{return std::compare(first, second, b.begin(), b.end()); }
-
-	int TPL_CALL compare(const std::TempString<value_type> b) const
-		{return std::compare(first, second, b.begin(), b.end()); }
-
-	int TPL_CALL compare(const value_type* b) const
-		{return std::compare(first, second, b); }
-};
-
-template <class Iterator, class T2> __forceinline
-	bool TPL_CALL operator==(const Leaf<Iterator>& a, const T2& b)
-    {return (a.compare(b) == 0); }
-
-template <class Iterator> __forceinline
-    bool TPL_CALL operator==(const typename Leaf<Iterator>::value_type* a, const Leaf<Iterator>& b)
-    {return (b.compare(a) == 0); }
-
-template <class Iterator, class CharT, class Tr, class AllocT> __forceinline
-    bool TPL_CALL operator==(const std::basic_string<CharT, Tr, AllocT>& a, const Leaf<Iterator>& b)
-    {return (b.compare(a) == 0); }
-
-template <class Iterator, class CharT, class AllocT> __forceinline
-    bool TPL_CALL operator==(const std::vector<CharT, AllocT>& a, const Leaf<Iterator>& b)
-    {return (b.compare(a) == 0); }
-
-// -------------------------------------------------------------------------
-
-template <class Iterator, class T2> __forceinline
-    bool TPL_CALL operator!=(const Leaf<Iterator>& a, const T2& b)
-    {return (a.compare(b) != 0); }
-
-template <class Iterator> __forceinline
-    bool TPL_CALL operator!=(const typename Leaf<Iterator>::value_type* a, const Leaf<Iterator>& b)
-    {return (b.compare(a) != 0); }
-
-template <class Iterator, class CharT, class Tr, class AllocT> __forceinline
-    bool TPL_CALL operator!=(const std::basic_string<CharT, Tr, AllocT>& a, const Leaf<Iterator>& b)
-    {return (b.compare(a) != 0); }
-
-template <class Iterator, class CharT, class AllocT> __forceinline
-    bool TPL_CALL operator!=(const std::vector<CharT, AllocT>& a, const Leaf<Iterator>& b)
-    {return (b.compare(a) != 0); }
-
-// -------------------------------------------------------------------------
-
-template <class Iterator, class T2> __forceinline
-    bool TPL_CALL operator<(const Leaf<Iterator>& a, const T2& b)
-    {return (a.compare(b) < 0); }
-
-template <class Iterator> __forceinline
-    bool TPL_CALL operator<(const typename Leaf<Iterator>::value_type* a, const Leaf<Iterator>& b)
-    {return (b.compare(a) > 0); }
-
-template <class Iterator, class CharT, class Tr, class AllocT> __forceinline
-    bool TPL_CALL operator<(const std::basic_string<CharT, Tr, AllocT>& a, const Leaf<Iterator>& b)
-    {return (b.compare(a) > 0); }
-
-template <class Iterator, class CharT, class AllocT> __forceinline
-    bool TPL_CALL operator<(const std::vector<CharT, AllocT>& a, const Leaf<Iterator>& b)
-    {return (b.compare(a) > 0); }
-
-// -------------------------------------------------------------------------
-
-template <class Iterator, class T2> __forceinline
-    bool TPL_CALL operator>(const Leaf<Iterator>& a, const T2& b)
-    {return (b < a); }
-
-template <class Iterator> __forceinline
-    bool TPL_CALL operator>(const typename Leaf<Iterator>::value_type* a, const Leaf<Iterator>& b)
-    {return (b < a); }
-
-template <class Iterator, class CharT, class Tr, class AllocT> __forceinline
-    bool TPL_CALL operator>(const std::basic_string<CharT, Tr, AllocT>& a, const Leaf<Iterator>& b)
-    {return (b < a); }
-
-template <class Iterator, class CharT, class AllocT> __forceinline
-    bool TPL_CALL operator>(const std::vector<CharT, AllocT>& a, const Leaf<Iterator>& b)
-    {return (b < a); }
-
-// -------------------------------------------------------------------------
-
-template <class Iterator, class T2> __forceinline
-	bool TPL_CALL operator<=(const Leaf<Iterator>& a, const T2& b)
-	{return (!(b < a)); }
-
-template <class Iterator> __forceinline
-	bool TPL_CALL operator<=(const typename Leaf<Iterator>::value_type* a, const Leaf<Iterator>& b)
-	{return (!(b < a)); }
-
-template <class Iterator, class CharT, class Tr, class AllocT> __forceinline
-	bool TPL_CALL operator<=(const std::basic_string<CharT, Tr, AllocT>& a, const Leaf<Iterator>& b)
-	{return (!(b < a)); }
-
-template <class Iterator, class CharT, class AllocT> __forceinline
-	bool TPL_CALL operator<=(const std::vector<CharT, AllocT>& a, const Leaf<Iterator>& b)
-	{return (!(b < a)); }
-
-// -------------------------------------------------------------------------
-
-template <class Iterator, class T2> __forceinline
-	bool TPL_CALL operator>=(const Leaf<Iterator>& a, const T2& b)
-	{return (!(a < b)); }
-
-template <class Iterator> __forceinline
-	bool TPL_CALL operator>=(const typename Leaf<Iterator>::value_type* a, const Leaf<Iterator>& b)
-	{return (!(a < b)); }
-
-template <class Iterator, class CharT, class Tr, class AllocT> __forceinline
-	bool TPL_CALL operator>=(const std::basic_string<CharT, Tr, AllocT>& a, const Leaf<Iterator>& b)
-	{return (!(a < b)); }
-
-template <class Iterator, class CharT, class AllocT> __forceinline
-	bool TPL_CALL operator>=(const std::vector<CharT, AllocT>& a, const Leaf<Iterator>& b)
-	{return (!(a < b)); }
-
-// -------------------------------------------------------------------------
-
-#if defined(TPL_HAS_OSTREAM)
-
-template <class CharT, class Tr, class Iterator>
-inline std::basic_ostream<CharT, Tr>& 
-TPL_CALL operator<<(std::basic_ostream<CharT, Tr>& os, const Leaf<Iterator>& v) {
-	std::copy(v.begin(), v.end(), std::ostream_iterator<CharT>(os));
-	return os;
-}
-
-#endif
-
-// -------------------------------------------------------------------------
 // Node
 
 template <class Iterator, class TagT = DefaultTag>
@@ -258,7 +55,7 @@ private:
 	typedef BasicMark<TagT, LeafAssign> LeafMarkT;
 	typedef BasicMark<TagT, NodeAssign> NodeMarkT;
 
-	typedef Leaf<Iterator> LeafT;
+	typedef std::Range<Iterator> LeafT;
 	typedef Node NodeT;
 
 	typedef std::pair<const void*, const void*> ValueT;
@@ -290,7 +87,7 @@ public:
 	public:
 		typedef const Mark<TagT>& key_type;
 		typedef const DataT& data_type;
-		typedef const Leaf<Iterator>& leaf_data;
+		typedef const LeafT& leaf_data;
 		typedef const Node& node_data;
 
 		Value(const ValueT& val) : m_val(val) {}
@@ -304,7 +101,7 @@ public:
 		}
 
 		leaf_data TPL_CALL leaf() const {
-			return *(const Leaf<Iterator>*)m_val.second;
+			return *(const LeafT*)m_val.second;
 		}
 
 		node_data TPL_CALL node() const {

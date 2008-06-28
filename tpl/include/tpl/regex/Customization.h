@@ -98,7 +98,7 @@ public:
 public:
 	// Leaf, Node, Document
 
-	typedef tpl::Leaf<Iterator> Leaf;
+	typedef std::Range<Iterator> Leaf;
 	typedef tpl::Node<Iterator, Tag> Node;
 	typedef Node Document;
 

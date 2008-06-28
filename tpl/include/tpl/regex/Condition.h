@@ -76,7 +76,7 @@ public:
 	bool TPL_CALL match(SourceT& ar, ContextT& context) const
 	{
 		typedef typename SourceT::iterator iterator;
-		typedef SelectValueType<typename ConditionT::value_type, Leaf<iterator> > SelectT;
+		typedef SelectValueType<typename ConditionT::value_type, std::Range<iterator> > SelectT;
 		typedef typename SelectT::value_type value_type;
 		typedef typename SelectAssig<typename RegExT::assig_tag, value_type>::assig_type assig_type;
 		

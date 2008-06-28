@@ -223,11 +223,11 @@ public:
 };
 
 template <class Iterator>
-class RefLeaf : public RefStr_<Leaf<Iterator> >
+class RefLeaf : public RefStr_<std::Range<Iterator> >
 {
 public:
-	RefLeaf(const Leaf<Iterator>& leaf)
-		: RefStr_<Leaf<Iterator> >(leaf) {}
+	RefLeaf(const std::Range<Iterator>& leaf)
+		: RefStr_<std::Range<Iterator> >(leaf) {}
 };
 
 // =========================================================================
@@ -243,7 +243,7 @@ struct ReferenceTratis<std::basic_string<CharT> > {
 };
 
 template <class Iterator>
-struct ReferenceTratis<Leaf<Iterator> > {
+struct ReferenceTratis<std::Range<Iterator> > {
 	typedef RefLeaf<Iterator> reference_type;
 };
 

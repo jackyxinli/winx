@@ -156,7 +156,7 @@ struct SelectAssig<AssigTag, std::basic_string<CharT, Tr, Ax> > {
 };
 
 template <class AssigTag, class Iterator>
-struct SelectAssig<AssigTag, Leaf<Iterator> > {
+struct SelectAssig<AssigTag, std::Range<Iterator> > {
 	typedef AssigStr assig_type;
 };
 
@@ -168,7 +168,7 @@ struct SelectAssig<AssigTag, std::basic_string<CharT, Tr, Ax> > {	\
 };												\
 												\
 template <class Iterator>						\
-struct SelectAssig<AssigTag, tpl::Leaf<Iterator> > { \
+struct SelectAssig<AssigTag, std::Range<Iterator> > { \
 	typedef AssigType assig_type;				\
 };
 

@@ -92,7 +92,7 @@ public:
 	bool TPL_CALL match(SourceT& ar, ContextT& context, const SkipperT& skipper_) const
 	{
 		typedef typename SourceT::iterator iterator;
-		typedef SelectValueType<typename ActionT::value_type, Leaf<iterator> > SelectT;
+		typedef SelectValueType<typename ActionT::value_type, std::Range<iterator> > SelectT;
 		typedef typename SelectT::value_type value_type;
 		typedef typename SelectAssig<assig_tag, value_type>::assig_type assig_type;
 

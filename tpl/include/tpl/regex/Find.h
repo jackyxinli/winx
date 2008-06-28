@@ -274,7 +274,7 @@ template <class Iterator, bool bEat = false>
 class FindLeaf : public FindStr_<Iterator, bEat>
 {
 public:
-	FindLeaf(const Leaf<Iterator>& s_)
+	FindLeaf(const std::Range<Iterator>& s_)
 		: FindStr_<Iterator, bEat>(s_.begin(), s_.end()) {};
 };
 
@@ -327,7 +327,7 @@ struct FindTraits<CharT[sz], bEat> {
 };
 
 template <class Iterator, bool bEat>
-struct FindTraits<Leaf<Iterator>, bEat> {
+struct FindTraits<std::Range<Iterator>, bEat> {
 	typedef FindLeaf<Iterator, bEat> find_type;
 };
 
