@@ -24,6 +24,9 @@ void testConcat()
 
 	s = std::concat(alloc, vec);
 	std::cout << s;
+	
+	s = std::concat(alloc, "Hello", " ", "world!", " I", " am", " xushiwei!\n");
+	std::cout << s;
 }
 
 void testImplode()
