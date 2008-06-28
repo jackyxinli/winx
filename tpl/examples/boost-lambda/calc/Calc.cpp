@@ -16,8 +16,8 @@ int main()
 
 	Lambda<double> exec;
 
-	TPL_LOCAL(double, term);
-	TPL_LOCAL(double, factor);
+	TPL_LAMBDA_LOCAL(double, term);
+	TPL_LAMBDA_LOCAL(double, factor);
 	
 	impl::Rule rMul( alloc, '*' + real()/exec[factor *= _1] );
 	impl::Rule rDiv( alloc, '/' + real()/exec[factor /= _1] );
@@ -25,11 +25,7 @@ int main()
 
 	impl::Rule rAdd( alloc, '+' + rTerm/exec[term += factor] );
 	impl::Rule rSub( alloc, '-' + rTerm/exec[term -= factor] );
-#if defined(__GNUG__) // work arounds
-	impl::Rule rExpr( alloc, rTerm/exec[term = 0+factor] + *(rAdd | rSub) );
-#else
 	impl::Rule rExpr( alloc, rTerm/exec[term = factor] + *(rAdd | rSub) );
-#endif
 
 	// ---- do match ----
 	

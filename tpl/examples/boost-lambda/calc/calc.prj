@@ -1,7 +1,7 @@
 [Include]
-../../../tpl/include
-../../../boost
-../../../boostmm
+../../../../tpl/include
+../../../../boost
+../../../../boostmm
 
 [Config Release]
 Product		Exe Release/calc

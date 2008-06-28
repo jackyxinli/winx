@@ -5,7 +5,7 @@ ifeq ($(CFG),)
 	CFG = Debug
 endif
 
-IncludeDir = -I../../../tpl/include -I../../../boost 
+IncludeDir = -I../../../../tpl/include -I../../../../boost -I../../../../boostmm 
 
 #
 # Configuration Release
@@ -15,13 +15,15 @@ ifeq ($(CFG), Release)
 	ObjectDir    = Release
 	MocFile      = $(ObjectDir)/temp.moc.cpp
 	Product      = Release/calc
-	CFlags       = $(Defines) -fPIC -D__INTEL__ -D__LINUX__ -DLINUX -DNDEBUG -O2 -D_MT -fexceptions 
+	CFlags       = $(Defines) -fPIC -D__INTEL__ -D__32BIT__ -D__LINUX__ -DLINUX -DNDEBUG -O2 -D_MT -fexceptions 
 	CXXFlags     = $(CFlags) -fno-rtti 
 	CXX          = g++ -c $(IncludeDir) $(CXXFlags) -o $@
 	CompileC     = @gcc -c $(IncludeDir) $(CFlags) -o $@ $<
 	CompileCXX   = @$(CXX) $<
 	CompileMoc   = @moc $< -o $(MocFile) && $(CXX) $(MocFile) && rm -f $(MocFile)
-	Link         = @g++ $(LibDir) -ldl -o $(Product)
+	Link         = @g++ $(LibDir) -o $(Product)
+	CheckLink    = @ldd -u -r $(Product); echo
+
 	LD_LIBRARY_PATH += :$(ProductDir)
 endif
 
@@ -33,13 +35,15 @@ ifeq ($(CFG), Debug)
 	ObjectDir    = Debug
 	MocFile      = $(ObjectDir)/temp.moc.cpp
 	Product      = Debug/calc
-	CFlags       = $(Defines) -fPIC -D__INTEL__ -D__LINUX__ -DLINUX -D_DEBUG -g3 -D_MT -fexceptions 
+	CFlags       = $(Defines) -fPIC -D__INTEL__ -D__32BIT__ -D__LINUX__ -DLINUX -D_DEBUG -g3 -D_MT -fexceptions 
 	CXXFlags     = $(CFlags) -fno-rtti 
 	CXX          = g++ -c $(IncludeDir) $(CXXFlags) -o $@
 	CompileC     = @gcc -c $(IncludeDir) $(CFlags) -o $@ $<
 	CompileCXX   = @$(CXX) $<
 	CompileMoc   = @moc $< -o $(MocFile) && $(CXX) $(MocFile) && rm -f $(MocFile)
-	Link         = @g++ $(LibDir) -ldl -o $(Product)
+	Link         = @g++ $(LibDir) -o $(Product)
+	CheckLink    = @ldd -u -r $(Product); echo
+
 	LD_LIBRARY_PATH += :$(ProductDir)
 endif
 

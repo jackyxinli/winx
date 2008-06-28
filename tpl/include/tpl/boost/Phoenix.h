@@ -9,22 +9,18 @@
 // of this license. You must not remove this notice, or any other, from
 // this software.
 // 
-// Module: tpl/Lambda.h
+// Module: tpl/Phoenix.h
 // Creator: xushiwei
 // Email: xushiweizh@gmail.com
 // Date: 2006-8-13 9:41:58
 // 
-// $Id: Lambda.h 554 2008-05-25 07:50:50Z xushiweizh $
+// $Id: Phoenix.h 554 2008-05-25 07:50:50Z xushiweizh $
 // -----------------------------------------------------------------------*/
-#ifndef TPL_BOOST_LAMBDA_H
-#define TPL_BOOST_LAMBDA_H
+#ifndef TPL_BOOST_PHOENIX_H
+#define TPL_BOOST_PHOENIX_H
 
-#if defined(_MSC_VER)
-#pragma warning(disable:4819)
-#endif
-
-#ifndef BOOST_LAMBDA_LAMBDA_HPP
-#include <boost/lambda/lambda.hpp>
+#ifndef BOOST_SPIRIT_PHOENIX_HPP
+#include <boost/spirit/phoenix.hpp>
 #endif
 
 #ifndef TPL_REGEX_ASSIGN_H
@@ -34,25 +30,23 @@
 NS_TPL_BEGIN
 
 // -------------------------------------------------------------------------
-// class Lambda
+// class Exec
 
-template <class OperaT, class ValueT, int arity = boost::lambda::get_arity<OperaT>::value >
-class LambdaExec_
-{
+struct TplVoid {
 };
 
-template <class OperaT, class ValueT>
-class LambdaExec_<OperaT, ValueT, 0x01>
+template <class OperaT, class ValueT = TplVoid>
+class Exec
 {
 private:
 	OperaT m_opera;
 
 public:
 	typedef ValueT value_type;
-	typedef Action<LambdaExec_> action_type;
+	typedef Action<Exec> action_type;
 
 public:
-	LambdaExec_(const OperaT& opera) : m_opera(opera) {
+	Exec(const OperaT& opera) : m_opera(opera) {
 	}
 
 	void TPL_CALL operator()(const value_type& val) const {
@@ -60,17 +54,17 @@ public:
 	}
 };
 
-template <class OperaT, class ValueT>
-class LambdaExec_<OperaT, ValueT, 0x00>
+template <class OperaT>
+class Exec<OperaT, TplVoid>
 {
 private:
 	OperaT m_opera;
 
 public:
-	typedef SimpleAction<LambdaExec_> action_type;
+	typedef SimpleAction<Exec> action_type;
 
 public:
-	LambdaExec_(const OperaT& opera) : m_opera(opera) {
+	Exec(const OperaT& opera) : m_opera(opera) {
 	}
 
 	void TPL_CALL operator()() const {
@@ -78,13 +72,16 @@ public:
 	}
 };
 
-template <class ValueT>
-class Lambda
+// -------------------------------------------------------------------------
+// class Phoenix
+
+template <class ValueT = TplVoid>
+class Phoenix
 {
 public:
 	template <class OperaT>
-	typename LambdaExec_<OperaT, ValueT>::action_type TPL_CALL operator[](const OperaT& op) const {
-		return typename LambdaExec_<OperaT, ValueT>::action_type(op);
+	typename Exec<OperaT, ValueT>::action_type TPL_CALL operator[](const OperaT& op) const {
+		return typename Exec<OperaT, ValueT>::action_type(op);
 	}
 };
 
@@ -92,19 +89,19 @@ public:
 // TPL_LAMBDA_LOCAL
 
 template <class ValueT>
-class LambdaLocal_
+class PhoenixLocal_
 {
 public:
-	typedef boost::lambda::lambda_functor<boost::lambda::identity<ValueT&> > const Ref;
+	typedef phoenix::actor<phoenix::variable<ValueT> > const Ref;
 };
 
-#define TPL_LAMBDA_LOCAL(ValueT, variable)										\
+#define TPL_PHOENIX_LOCAL(ValueT, variable)										\
 	ValueT _tpl_##variable = ValueT();											\
-	tpl::LambdaLocal_<ValueT>::Ref variable = boost::lambda::var(_tpl_##variable)
+	tpl::PhoenixLocal_<ValueT>::Ref variable(_tpl_##variable)
 
 template <class ValueT>
 __forceinline Action<Assign<ValueT> > TPL_CALL assign(
-	const boost::lambda::lambda_functor<boost::lambda::identity<ValueT&> >& var_)
+	const phoenix::actor<phoenix::variable<ValueT> >& var_)
 {
 	ValueT& result = var_();
 	return Action<Assign<ValueT> >(result);
@@ -112,7 +109,7 @@ __forceinline Action<Assign<ValueT> > TPL_CALL assign(
 
 template <class ValueT>
 __forceinline Action<Assign<ValueT> > TPL_CALL assign(
-	boost::lambda::lambda_functor<boost::lambda::identity<ValueT&> >& var_)
+	phoenix::actor<phoenix::variable<ValueT> >& var_)
 {
 	ValueT& result = var_();
 	return Action<Assign<ValueT> >(result);
