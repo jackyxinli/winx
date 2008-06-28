@@ -35,75 +35,76 @@ NS_STDEXT_BEGIN
 
 // -------------------------------------------------------------------------
 
-#define _WINX_TP_USING_DEQUE												\
+#define WINX_TP_USING_DEQUE_												\
 public:																		\
-	using _Base::insert;													\
-	using _Base::erase;														\
-	using _Base::clear;														\
-	using _Base::begin;														\
-	using _Base::end;														\
-	using _Base::rbegin;													\
-	using _Base::rend;														\
-	using _Base::size
+	using Base::insert;														\
+	using Base::erase;														\
+	using Base::clear;														\
+	using Base::begin;														\
+	using Base::end;														\
+	using Base::rbegin;														\
+	using Base::rend;														\
+	using Base::size
 
 // -------------------------------------------------------------------------
 // class TextPool
 
-template <class _E, class _AllocT = ScopeAlloc>
-class TextPool : public Deque<_E, _AllocT>
+template <class CharT, class AllocT = ScopeAlloc>
+class TextPool : public Deque<CharT, AllocT>
 {
 private:
-	typedef Deque<_E, _AllocT> _Base, BaseClass;
-	typedef TempString<_E> _String;
-	typedef TextPool _Myt;
-	_WINX_TP_USING_DEQUE;
+	typedef Deque<CharT, AllocT> Base, BaseClass;
+	WINX_TP_USING_DEQUE_;
+	
+	typedef std::basic_string<CharT> StlString_;
+	typedef TempString<CharT> String_;
+	typedef TextPool Myt_;
 
 public:
-	typedef typename _Base::size_type size_type;
-	typedef typename _Base::difference_type difference_type;
-	typedef typename _Base::iterator iterator;
-	typedef typename _Base::const_iterator const_iterator;
-	typedef typename _Base::reverse_iterator reverse_iterator;
-	typedef typename _Base::const_reverse_iterator const_reverse_iterator;
+	typedef typename Base::size_type size_type;
+	typedef typename Base::difference_type difference_type;
+	typedef typename Base::iterator iterator;
+	typedef typename Base::const_iterator const_iterator;
+	typedef typename Base::reverse_iterator reverse_iterator;
+	typedef typename Base::const_reverse_iterator const_reverse_iterator;
 
 public:
-	explicit TextPool(_AllocT& alloc)
-		: _Base(alloc) {}
+	explicit TextPool(AllocT& alloc)
+		: Base(alloc) {}
 
-	TextPool(_AllocT& alloc, const _String s)
-		: _Base(alloc, s.begin(), s.end()) {}
+	TextPool(AllocT& alloc, const String_ s)
+		: Base(alloc, s.begin(), s.end()) {}
 
-	TextPool(_AllocT& alloc, size_type cch, _E ch)
-		: _Base(alloc, cch, ch) {}
+	TextPool(AllocT& alloc, size_type cch, CharT ch)
+		: Base(alloc, cch, ch) {}
 
-	TextPool(_AllocT& alloc, const _E* s, size_type count) 
-		: _Base(alloc, s, s+count) {} 
+	TextPool(AllocT& alloc, const CharT* s, size_type count) 
+		: Base(alloc, s, s+count) {} 
 
 	template <class _InputIterator>
-	TextPool(_AllocT& alloc, _InputIterator first, _InputIterator last)
-		: _Base(alloc, first, last) {}
+	TextPool(AllocT& alloc, _InputIterator first, _InputIterator last)
+		: Base(alloc, first, last) {}
 
 public:
-	template <class AllocT>
-	BasicString<_E> winx_call str(AllocT& alloc) const {
-		return BasicString<_E>(alloc, begin(), end());
+	template <class AllocT2>
+	BasicString<CharT> winx_call str(AllocT2& alloc) const {
+		return BasicString<CharT>(alloc, begin(), end());
 	}
 
-	template <class AllocT>
-	BasicString<_E> winx_call substr(
-		AllocT& alloc, size_type from = 0, size_type cch = (size_type)-1) const
+	template <class AllocT2>
+	BasicString<CharT> winx_call substr(
+		AllocT2& alloc, size_type from = 0, size_type cch = (size_type)-1) const
 	{
 		size_type cchMax = size() - from;
 		if ((difference_type)cchMax < 0)
-			__Xran();
+			throw_out_of_range_();
 		size_type cchLength = (cchMax < cch ? cchMax : cch);
 		const_iterator it = begin() + from;
-		return BasicString<_E>(alloc, it, it + cchLength);
+		return BasicString<CharT>(alloc, it, it + cchLength);
 	}
 
-	basic_string<_E> winx_call stl_str() const
-	{
-		return basic_string<_E>(begin(), end());
+	StlString_ winx_call stl_str() const {
+		return StlString_(begin(), end());
 	}
 
 	size_type winx_call length() const {
@@ -112,89 +113,89 @@ public:
 
 public:
 	template <class _InputerIterator>
-	_Myt& winx_call assign(_InputerIterator first, _InputerIterator last)
+	Myt_& winx_call assign(_InputerIterator first, _InputerIterator last)
 	{
-		_Base::assign(first, last);
+		Base::assign(first, last);
 		return *this;
 	}
 
-	_Myt& winx_call assign(const _Base& s)
+	Myt_& winx_call assign(const Base& s)
     {
-		_Base::copy(s);
+		Base::copy(s);
 		return *this;
 	}
 
-	_Myt& winx_call assign(const _String s)
+	Myt_& winx_call assign(const String_ s)
     {
-		_Base::assign(s.begin(), s.end());
+		Base::assign(s.begin(), s.end());
 		return *this;
 	}
 
-	_Myt& winx_call assign(const _E* s, size_type cch)
+	Myt_& winx_call assign(const CharT* s, size_type cch)
 	{
-		_Base::assign(s, s + cch);
+		Base::assign(s, s + cch);
 		return *this;
 	}
 
-	_Myt& winx_call assign(size_type cch, _E ch)
+	Myt_& winx_call assign(size_type cch, CharT ch)
 	{
-		_Base::assign(cch, ch);
+		Base::assign(cch, ch);
 		return *this;
 	}
 
-	_Myt& winx_call operator=(const _String s)
+	Myt_& winx_call operator=(const String_ s)
 	{
-		_Base::assign(s.begin(), s.end());
+		Base::assign(s.begin(), s.end());
 		return *this;
 	}
 
 public:
 	template <class _InputerIterator>
-	_Myt& winx_call append(_InputerIterator first, _InputerIterator last)
+	Myt_& winx_call append(_InputerIterator first, _InputerIterator last)
 	{
-		_Base::insert(end(), first, last);
+		Base::insert(end(), first, last);
 		return *this;
 	}
 
-	_Myt& winx_call append(const _Base& s)
+	Myt_& winx_call append(const Base& s)
 	{
-		_Base::insert(end(), s.begin(), s.end());
+		Base::insert(end(), s.begin(), s.end());
 		return *this;
 	}
 
-	_Myt& winx_call append(const _String s)
+	Myt_& winx_call append(const String_ s)
     {
-		_Base::insert(end(), s.begin(), s.end());
+		Base::insert(end(), s.begin(), s.end());
 		return *this;
 	}
 
-	_Myt& winx_call append(const _E* s, size_type cch)
+	Myt_& winx_call append(const CharT* s, size_type cch)
 	{
-		_Base::insert(end(), s, s + cch);
+		Base::insert(end(), s, s + cch);
 		return *this;
 	}
 
-	_Myt& winx_call append(size_type cch, _E ch)
+	Myt_& winx_call append(size_type cch, CharT ch)
 	{
-		_Base::insert(end(), cch, ch);
+		Base::insert(end(), cch, ch);
 		return *this;
 	}
 
-	_Myt& winx_call operator+=(const _String s)
+	Myt_& winx_call operator+=(const String_ s)
 	{
-		_Base::insert(end(), s.begin(), s.end());
+		Base::insert(end(), s.begin(), s.end());
 		return *this;
 	}
 
-	_Myt& winx_call operator+=(const _Base& s)
+	Myt_& winx_call operator+=(const Base& s)
 	{
-		_Base::insert(end(), s.begin(), s.end());
+		Base::insert(end(), s.begin(), s.end());
 		return *this;
 	}
 
 #if !defined(X_CC_VC6) // (bug) vc++ 6.0
 	template <class _RandIterator>
-	_Myt& winx_call replace(
+	Myt_& winx_call replace(
 		iterator first, iterator last,
 		_RandIterator bfirst, _RandIterator blast)
 	{
@@ -203,167 +204,132 @@ public:
 	}
 #endif
 
-	_Myt& winx_call replace(
-		iterator first, iterator last, size_type count, _E ch)
+	Myt_& winx_call replace(
+		iterator first, iterator last, size_type count, CharT ch)
 	{
 		std::replace(WINX_BASE, first, last, count, ch);
 		return *this;
 	}
 
-	_Myt& winx_call replace(
-		iterator first, iterator last, const _E* s, size_type cch)
+	Myt_& winx_call replace(
+		iterator first, iterator last, const CharT* s, size_type cch)
 	{
 		std::replace(WINX_BASE, first, last, s, s + cch);
 		return *this;
 	}
 
-	_Myt& winx_call replace(iterator first, iterator last, const _String s)
+	Myt_& winx_call replace(iterator first, iterator last, const String_ s)
 	{
 		std::replace(WINX_BASE, first, last, s.begin(), s.end());
 		return *this;
 	}
 
 public:
-	_Myt& winx_call insert(iterator it, const _Base& s)
+	Myt_& winx_call insert(iterator it, const Base& s)
 	{
-		_Base::insert(it, s.begin(), s.end());
+		Base::insert(it, s.begin(), s.end());
 		return *this;
 	}
 
-	_Myt& winx_call insert(iterator it, const _String s)
+	Myt_& winx_call insert(iterator it, const String_ s)
     {
-		_Base::insert(it, s.begin(), s.end());
+		Base::insert(it, s.begin(), s.end());
 		return *this;
 	}
 
-	_Myt& winx_call insert(iterator it, const _E* s, size_type cch)
+	Myt_& winx_call insert(iterator it, const CharT* s, size_type cch)
 	{
-		_Base::insert(it, s, s + cch);
+		Base::insert(it, s, s + cch);
 		return *this;
 	}
 
 public:
-	// 在字符串中查找子串（正向查找）。
-	_WINX_FIND_ALL(find, std::find, std::search)
+	WINX_FIND_ALL_(find, std::find, std::search)
+	WINX_FIND_ALL_(rfind, std::rfind, std::find_end)
+	WINX_FIND_ALL_(find_first_of, std::find, std::find_first_of)
+	WINX_FIND_ALL_(find_first_not_of, std::find_not, std::find_first_not_of)
 
-	// 在字符串中查找子串（反向查找）。
-	_WINX_FIND_ALL(rfind, std::rfind, std::find_end)
-
-	// 查找某个集合中的字符在字符串中第一次出现的位置（正向查找）。
-	_WINX_FIND_ALL(find_first_of, std::find, std::find_first_of)
-
-	// 查找某个集合中的字符在字符串中第一次出现的位置（反向查找）。
-	//_WINX_RFIND_ALL(find_last_of, std::find, std::find_first_of)
-
-	// 在字符串中查找不在集合中出现的第一个字符的位置（正向查找）。
-	_WINX_FIND_ALL(find_first_not_of, std::find_not, std::find_first_not_of)
-
-	// 在字符串中查找不在集合中出现的第一个字符的位置（反向查找）。
-	//_WINX_RFIND_ALL(find_last_not_of, std::find_not, std::find_first_not_of)
+//	WINX_RFIND_ALL_(find_last_of, std::find, std::find_first_of)
+//	WINX_RFIND_ALL_(find_last_not_of, std::find_not, std::find_first_not_of)
 
 public:
-	// 比较两个字符串。
-	
-	int winx_call compare(const _Base& b) const
+	template <class ContainerT>
+	int winx_call compare(const ContainerT& b) const
 		{return std::compare(begin(), end(), b.begin(), b.end()); }
 
-	int winx_call compare(const _String& b) const
-		{return std::compare(begin(), end(), b.begin(), b.end()); }
-
-	int winx_call compare(const _E* b, size_type blen) const
+	int winx_call compare(const CharT* b, size_type blen) const
 		{return std::compare(begin(), end(), b, b + blen); }
 
-	int winx_call compare(const _E* b) const
+	int winx_call compare(const CharT* b) const
 		{return std::compare(begin(), end(), b); }
 
-	int winx_call compare(size_type from, size_type count, const _String b) const
-		{return cast_substr(from, count).compare(b); }
-
-	int winx_call compare(size_type from, size_type count, const _E* b, size_type blen) const
-		{return cast_substr(from, count).compare(b, blen); }
-
-	int winx_call compare(size_type from, size_type count, const _E* b) const
-		{return cast_substr(from, count).compare(b); }
-
 public:
-	// 比较两个字符串（传入单字符的比较函数）。
-	
-	template <class _Compr>
-	int winx_call compare_by(const _Base& b, _Compr cmp) const
+	template <class ContainerT, class ComprT>
+	int winx_call compare_by(const ContainerT& b, ComprT cmp) const
 		{return std::compare_by(begin(), end(), b.begin(), b.end(), cmp); }
 
-	template <class _Compr>
-	int winx_call compare_by(const _String& b, _Compr cmp) const
-		{return std::compare_by(begin(), end(), b.begin(), b.end(), cmp); }
-
-	template <class _Compr>
-	int winx_call compare_by(const _E* b, size_type blen, _Compr cmp) const
+	template <class ComprT>
+	int winx_call compare_by(const CharT* b, size_type blen, ComprT cmp) const
 		{return std::compare_by(begin(), end(), b, b + blen, cmp); }
 
-	template <class _Compr>
-	int winx_call compare_by(const _E* b, _Compr cmp) const
+	template <class ComprT>
+	int winx_call compare_by(const CharT* b, ComprT cmp) const
 		{return std::compare_by(begin(), end(), b, cmp); }
 
 private:
-	typedef CompareNoCase<_E> _ComareNoCase;
+	typedef CompareNoCase<CharT> ComareNoCase_;
 
 public:
-	// 比较两个字符串（忽略大小写）。
+	template <class ContainerT>
+	int winx_call icompare(const ContainerT& b) const
+		{return compare_by(b, ComareNoCase_()); }
 
-	int winx_call icompare(const _Base& b) const
-		{return compare_by(b, _ComareNoCase()); }
+	int winx_call icompare(const CharT* b, size_type blen) const
+		{return compare_by(b, blen, ComareNoCase_()); }
 
-	int winx_call icompare(const _String b) const
-		{return compare_by(b, _ComareNoCase()); }
-
-	int winx_call icompare(const _E* b, size_type blen) const
-		{return compare_by(b, blen, _ComareNoCase()); }
-
-	int winx_call icompare(const _E* b) const
-		{return compare_by(b, _ComareNoCase()); }
+	int winx_call icompare(const CharT* b) const
+		{return compare_by(b, ComareNoCase_()); }
 
 public:
-	// 判断是否包含指定的串。
-
-	bool winx_call contains(const _String b) const
+	bool winx_call contains(const String_ b) const
 		{return find(b) != end(); }
 
-	bool winx_call contains(const _E* b, size_type blen) const
+	bool winx_call contains(const CharT* b, size_type blen) const
 		{return find(b, blen) != end(); }
 };
 
 // -------------------------------------------------------------------------
 
-template <class _E, class _AllocT, class _T2> __forceinline
-bool winx_call operator==(const TextPool<_E, _AllocT>& a, const _T2& b)
+template <class CharT, class AllocT, class T2> __forceinline
+bool winx_call operator==(const TextPool<CharT, AllocT>& a, const T2& b)
 	{return a.compare(b) == 0; }
 
-template <class _E, class _AllocT> __forceinline
-bool winx_call operator==(const BasicString<_E>& a, const TextPool<_E, _AllocT>& b)
+template <class CharT, class AllocT> __forceinline
+bool winx_call operator==(const BasicString<CharT>& a, const TextPool<CharT, AllocT>& b)
 	{return b.compare(a) == 0; }
 
-template <class _E, class _AllocT> __forceinline
-bool winx_call operator==(const BasicString<_E>& a, TextPool<_E, _AllocT>& b)
+template <class CharT, class AllocT> __forceinline
+bool winx_call operator==(const BasicString<CharT>& a, TextPool<CharT, AllocT>& b)
 	{return b.compare(a) == 0; }
 
-template <class _E, class _AllocT, class _T2> __forceinline
-bool winx_call operator!=(const TextPool<_E, _AllocT>& a, const _T2& b)
+template <class CharT, class AllocT, class T2> __forceinline
+bool winx_call operator!=(const TextPool<CharT, AllocT>& a, const T2& b)
 	{return a.compare(b) != 0; }
 
-template <class _E, class _AllocT, class _T2> __forceinline
-bool winx_call operator<(const TextPool<_E, _AllocT>& a, const _T2& b)
+template <class CharT, class AllocT, class T2> __forceinline
+bool winx_call operator<(const TextPool<CharT, AllocT>& a, const T2& b)
 	{return a.compare(b) < 0; }
 
-template <class _E, class _AllocT, class _T2> __forceinline
-bool winx_call operator>(const TextPool<_E, _AllocT>& a, const _T2& b)
+template <class CharT, class AllocT, class T2> __forceinline
+bool winx_call operator>(const TextPool<CharT, AllocT>& a, const T2& b)
 	{return a.compare(b) > 0; }
 
-template <class _E, class _AllocT, class _T2> __forceinline
-bool winx_call operator<=(const TextPool<_E, _AllocT>& a, const _T2& b)
+template <class CharT, class AllocT, class T2> __forceinline
+bool winx_call operator<=(const TextPool<CharT, AllocT>& a, const T2& b)
 	{return a.compare(b) <= 0; }
 
-template <class _E, class _AllocT, class _T2> __forceinline
-bool winx_call operator>=(const TextPool<_E, _AllocT>& a, const _T2& b)
+template <class CharT, class AllocT, class T2> __forceinline
+bool winx_call operator>=(const TextPool<CharT, AllocT>& a, const T2& b)
 	{return a.compare(b) >= 0; }
 
 NS_STDEXT_END
@@ -509,3 +475,4 @@ public:
 // $Log: TextPool.h,v $
 
 #endif /* STDEXT_TEXT_TEXTPOOL_H */
+

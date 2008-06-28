@@ -23,6 +23,10 @@
 #include "Basic.h"
 #endif
 
+#ifndef STD_ITERATOR_H
+#include "../std/iterator.h"
+#endif
+
 NS_STDEXT_BEGIN
 
 // -------------------------------------------------------------------------
@@ -77,9 +81,9 @@ NS_STDEXT_BEGIN
 	The complexity of the algorithm is linear with at most 2*((last1每first1)每(last2每first2))每1
 	comparisons for nonempty source ranges.
 @*/
-template <class _InputIter1, class _InputIter2, class _Op>
-inline _Op& winx_call set_intersection_do(
-	_InputIter1 first1, _InputIter1 last1, _InputIter2 first2, _InputIter2 last2, _Op& op)
+template <class InputIterT1, class InputIterT2, class OperatorT>
+inline OperatorT& winx_call set_intersection_do(
+	InputIterT1 first1, InputIterT1 last1, InputIterT2 first2, InputIterT2 last2, OperatorT& op)
 {
 	for (; first1 != last1 && first2 != last2; )
 	{
@@ -147,9 +151,9 @@ inline _Op& winx_call set_intersection_do(
 	The complexity of the algorithm is linear with at most 2*((last1每first1)每(last2每first2))每1
 	comparisons for nonempty source ranges.
 @*/
-template<class _InputIter1, class _InputIter2, class _Op, class _Pred>
-inline _Op& winx_call set_intersection_do(
-	_InputIter1 first1, _InputIter1 last1, _InputIter2 first2, _InputIter2 last2, _Op& op, _Pred pred)
+template<class InputIterT1, class InputIterT2, class OperatorT, class PredT>
+inline OperatorT& winx_call set_intersection_do(
+	InputIterT1 first1, InputIterT1 last1, InputIterT2 first2, InputIterT2 last2, OperatorT& op, PredT pred)
 {
 	for (; first1 != last1 && first2 != last2; )
 	{
@@ -179,9 +183,9 @@ inline _Op& winx_call set_intersection_do(
 @return
 	The operation.
 @*/
-template <class _Container1, class _Container2, class _Op>
-inline _Op& winx_call set_intersection_do(
-	const _Container1& cont1, const _Container2& cont2, _Op& op)
+template <class ContainerT1, class ContainerT2, class OperatorT>
+inline OperatorT& winx_call set_intersection_do(
+	const ContainerT1& cont1, const ContainerT2& cont2, OperatorT& op)
 {
 	return set_intersection_do(cont1.begin(), cont1.end(), cont2.begin(), cont2.end(), op);
 }
@@ -207,9 +211,9 @@ inline _Op& winx_call set_intersection_do(
 @return
 	The operation.
 @*/
-template <class _Container1, class _Container2, class _Op, class _Pred>
-inline _Op& winx_call set_intersection_do(
-	const _Container1& cont1, const _Container2& cont2, _Op& op, _Pred pred)
+template <class ContainerT1, class ContainerT2, class OperatorT, class PredT>
+inline OperatorT& winx_call set_intersection_do(
+	const ContainerT1& cont1, const ContainerT2& cont2, OperatorT& op, PredT pred)
 {
 	return set_intersection_do(cont1.begin(), cont1.end(), cont2.begin(), cont2.end(), op, pred);
 }
@@ -217,13 +221,13 @@ inline _Op& winx_call set_intersection_do(
 // -------------------------------------------------------------------------
 // algorithm - set_intersect_count
 
-class _IntersectionCount
+class IntersectionCount_
 {
 private:
 	unsigned m_count;
 
 public:
-	_IntersectionCount() : m_count(0) {}
+	IntersectionCount_() : m_count(0) {}
 	operator unsigned() const {	return m_count; }
 
 	template <class ItemT1, class ItemT2>
@@ -256,11 +260,11 @@ public:
 	The count of unite elements.
 @see std::set_intersection_do
 @*/
-template <class _InputIter1, class _InputIter2>
+template <class InputIterT1, class InputIterT2>
 inline unsigned winx_call set_intersection_count(
-	_InputIter1 first1, _InputIter1 last1, _InputIter2 first2, _InputIter2 last2)
+	InputIterT1 first1, InputIterT1 last1, InputIterT2 first2, InputIterT2 last2)
 {
-	return set_intersection_do(first1, last1, first2, last2, _IntersectionCount());
+	return set_intersection_do(first1, last1, first2, last2, IntersectionCount_());
 }
 
 /*
@@ -292,11 +296,11 @@ inline unsigned winx_call set_intersection_count(
 	The count of unite elements.
 @see std::set_intersection_do
 @*/
-template <class _InputIter1, class _InputIter2, class _Pred>
+template <class InputIterT1, class InputIterT2, class PredT>
 inline unsigned winx_call set_intersection_count(
-	_InputIter1 first1, _InputIter1 last1, _InputIter2 first2, _InputIter2 last2, _Pred pred)
+	InputIterT1 first1, InputIterT1 last1, InputIterT2 first2, InputIterT2 last2, PredT pred)
 {
-	return set_intersection_do(first1, last1, first2, last2, _IntersectionCount(), pred);
+	return set_intersection_do(first1, last1, first2, last2, IntersectionCount_(), pred);
 }
 
 /*
@@ -313,12 +317,12 @@ inline unsigned winx_call set_intersection_count(
 	The count of unite elements.
 @see std::set_intersection_do
 @*/
-template <class _Container1, class _Container2>
+template <class ContainerT1, class ContainerT2>
 inline unsigned winx_call set_intersection_count(
-	const _Container1& cont1, const _Container2& cont2)
+	const ContainerT1& cont1, const ContainerT2& cont2)
 {
 	return set_intersection_do(
-		cont1.begin(), cont1.end(), cont2.begin(), cont2.end(), _IntersectionCount());
+		cont1.begin(), cont1.end(), cont2.begin(), cont2.end(), IntersectionCount_());
 }
 
 /*
@@ -340,40 +344,37 @@ inline unsigned winx_call set_intersection_count(
 	The count of unite elements.
 @see std::set_intersection_do
 @*/
-template <class _Container1, class _Container2, class _Pred>
+template <class ContainerT1, class ContainerT2, class PredT>
 inline unsigned winx_call set_intersection_count(
-	const _Container1& cont1, const _Container2& cont2, _Pred pred)
+	const ContainerT1& cont1, const ContainerT2& cont2, PredT pred)
 {
 	return set_intersection_do(
-		cont1.begin(), cont1.end(), cont2.begin(), cont2.end(), _IntersectionCount(), pred);
+		cont1.begin(), cont1.end(), cont2.begin(), cont2.end(), IntersectionCount_(), pred);
 }
 
 // -------------------------------------------------------------------------
-// algorithm - clear
+// algorithm - purge
 
 /*
-@fn std::clear
+@fn std::purge
 @brief
-	Clear all elements of an container.
+	Clear all elements of an container and free the used memory.
 @arg cont
-	The container to clear. It can be a std::vector, std::string, etc.
+	The container to purge/clear. It can be a std::vector, std::string, etc.
 @remark
-	This method clear all elements of an container "physically", including to free
+	This method purge/clear all elements of an container "physically", including to free
 	the used memory. If you use vector::clear or basic_string::erase, They maybe just
 	destruct elements in the container, doesn't free the used memory.
 @*/
-template <class _Container>
-inline void winx_call clear(_Container& cont)
+template <class ContainerT>
+inline void winx_call purge(ContainerT& cont)
 {
-	_Container contNull;
+	ContainerT contNull;
 	cont.swap(contNull);
 }
 
 // -------------------------------------------------------------------------
 // $Log: Algorithm.h,v $
-// Revision 1.1  2006/11/30 08:45:42  xushiwei
-// set_intersection_do
-//
 
 NS_STDEXT_END
 

@@ -19,8 +19,8 @@
 #ifndef STDEXT_TEXT_ROPE_SEQUENCEBUFFER_H
 #define STDEXT_TEXT_ROPE_SEQUENCEBUFFER_H
 
-#ifndef STDEXT_TEXT_TEMPSTRING_H
-#include "../TempString.h"
+#ifndef STDEXT_TEXT_RANGE_H
+#include "../Range.h"
 #endif
 
 /*

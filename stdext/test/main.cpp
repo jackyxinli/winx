@@ -14,7 +14,7 @@
 
 // String:
 #include <stdext/text/BasicString.h>
-#include <stdext/text/BasicStringBuilder.h>
+#include <stdext/text/StringBuilder.h>
 #include <stdext/text/TextPool.h>
 #include <stdext/text/Rope.h>
 #include <stdext/text/StringAlgo.h>

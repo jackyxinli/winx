@@ -9,15 +9,15 @@
 // of this license. You must not remove this notice, or any other, from
 // this software.
 // 
-// Module: stdext/text/BasicStringBuilder.h
+// Module: stdext/text/StringBuilder.h
 // Creator: xushiwei
 // Email: xushiweizh@gmail.com
 // Date: 2006-8-18 18:56:07
 // 
-// $Id: BasicStringBuilder.h,v 1.1 2006/10/18 12:13:39 xushiwei Exp $
+// $Id: StringBuilder.h,v 1.1 2006/10/18 12:13:39 xushiwei Exp $
 // -----------------------------------------------------------------------*/
-#ifndef STDEXT_TEXT_BASICSTRINGBUILDER_H
-#define STDEXT_TEXT_BASICSTRINGBUILDER_H
+#ifndef STDEXT_TEXT_STRINGBUILDER_H
+#define STDEXT_TEXT_STRINGBUILDER_H
 
 #ifndef STDEXT_TEXT_BASICSTRING_H
 #include "BasicString.h"
@@ -27,99 +27,97 @@
 #include "StringAlgo.h"
 #endif
 
-#ifndef STD_VECTOR_H
-#include "../../std/vector.h"
-#endif
-
 NS_STDEXT_BEGIN
 
 // -------------------------------------------------------------------------
 
-#define _WINX_BSB_USING_VECTOR												\
+#define WINX_BSB_USING_VECTOR_												\
 public:																		\
-	using _Base::insert;													\
-	using _Base::erase;														\
-	using _Base::clear;														\
-	using _Base::begin;														\
-	using _Base::end;														\
-	using _Base::rbegin;													\
-	using _Base::rend;														\
-	using _Base::size
+	using Base::insert;														\
+	using Base::erase;														\
+	using Base::clear;														\
+	using Base::begin;														\
+	using Base::end;														\
+	using Base::rbegin;														\
+	using Base::rend;														\
+	using Base::size
 
 // -------------------------------------------------------------------------
 // class BasicStringBuilder
 
-template <class _E>
-class BasicStringBuilder : public std::vector<_E>
+template <class CharT>
+class BasicStringBuilder : public std::vector<CharT>
 {
 private:
-	typedef std::vector<_E> _Base, BaseClass;
-	typedef TempString<_E> _String;
-	typedef BasicStringBuilder _Myt;
-	_WINX_BSB_USING_VECTOR;
+	typedef std::vector<CharT> Base, BaseClass;
+	WINX_BSB_USING_VECTOR_;
+	
+	typedef TempString<CharT> String_;
+	typedef BasicStringBuilder Myt_;
 
 private:
 	BasicStringBuilder(const BasicStringBuilder&);
 	void operator=(const BasicStringBuilder&);
 	
 public:
-	typedef typename _Base::size_type size_type;
-	typedef typename _Base::difference_type difference_type;
-	typedef typename _Base::iterator iterator;
-	typedef typename _Base::const_iterator const_iterator;
-	typedef typename _Base::reverse_iterator reverse_iterator;
-	typedef typename _Base::const_reverse_iterator const_reverse_iterator;
+	typedef typename Base::size_type size_type;
+	typedef typename Base::difference_type difference_type;
+	typedef typename Base::iterator iterator;
+	typedef typename Base::const_iterator const_iterator;
+	typedef typename Base::reverse_iterator reverse_iterator;
+	typedef typename Base::const_reverse_iterator const_reverse_iterator;
 
 public:
 	BasicStringBuilder() {}
 
-	explicit BasicStringBuilder(const _String s)
-		: _Base(s.begin(), s.end()) {}
+	explicit BasicStringBuilder(const String_ s)
+		: Base(s.begin(), s.end()) {}
 
-	BasicStringBuilder(size_type cch, _E ch)
-		: _Base(cch, ch) {}
+	BasicStringBuilder(size_type cch, CharT ch)
+		: Base(cch, ch) {}
 
-	BasicStringBuilder(const _E* s, size_type count) 
-		: _Base(s, s+count) {} 
+	BasicStringBuilder(const CharT* s, size_type count) 
+		: Base(s, s+count) {} 
 
 	template <class _InputIterator>
 	BasicStringBuilder(_InputIterator first, _InputIterator last)
-		: _Base(first, last) {}
+		: Base(first, last) {}
 
 public:
-	BasicString<_E> winx_call cast_str() const {
-		return BasicString<_E>(_ConvIt(begin()), size());
+	BasicString<CharT> winx_call cast_str() const {
+		return BasicString<CharT>(_ConvIt(begin()), size());
 	}
 
-	BasicString<_E> winx_call cast_substr(
+	BasicString<CharT> winx_call cast_substr(
 		size_type from = 0, size_type cch = (size_type)-1) const
 	{
-		size_type cchMax = size() - from;
+		size_type cchMax = Base::size() - from;
 		if ((difference_type)cchMax < 0)
-			__Xran();
+			throw_out_of_range_();
+		
 		size_type cchLength = (cchMax < cch ? cchMax : cch);
-		return BasicString<_E>(_ConvIt(begin() + from), cchLength);
+		return BasicString<CharT>(_ConvIt(Base::begin() + from), cchLength);
 	}
 
 public:
 	template <class AllocT>
-	BasicString<_E> winx_call str(AllocT& alloc) const {
-		return BasicString<_E>(alloc, _ConvIt(begin()), size());
+	BasicString<CharT> winx_call str(AllocT& alloc) const {
+		return BasicString<CharT>(alloc, _ConvIt(begin()), size());
 	}
 
 	template <class AllocT>
-	BasicString<_E> winx_call substr(
+	BasicString<CharT> winx_call substr(
 		AllocT& alloc, size_type from = 0, size_type cch = (size_type)-1) const
 	{
-		return BasicString<_E>(alloc, cast_substr(from, cch));
+		return BasicString<CharT>(alloc, cast_substr(from, cch));
 	}
 
-	basic_string<_E> winx_call stl_str() const
+	basic_string<CharT> winx_call stl_str() const
 	{
-		return basic_string<_E>(_ConvIt(begin()), size());
+		return basic_string<CharT>(_ConvIt(begin()), size());
 	}
 
-	const _E* winx_call data() const {
+	const CharT* winx_call data() const {
 		return _ConvIt(begin());
 	}
 
@@ -133,76 +131,76 @@ public:
 
 public:
 	template <class _InputerIterator>
-	_Myt& winx_call assign(_InputerIterator first, _InputerIterator last)
+	Myt_& winx_call assign(_InputerIterator first, _InputerIterator last)
 	{
-		_Base::assign(first, last);
+		Base::assign(first, last);
 		return *this;
 	}
 
-	_Myt& winx_call assign(const _String s)
+	Myt_& winx_call assign(const String_ s)
     {
-		_Base::assign(s.begin(), s.end());
+		Base::assign(s.begin(), s.end());
 		return *this;
 	}
 
-	_Myt& winx_call assign(const _E* s, size_type cch)
+	Myt_& winx_call assign(const CharT* s, size_type cch)
 	{
-		_Base::assign(s, s + cch);
+		Base::assign(s, s + cch);
 		return *this;
 	}
 
-	_Myt& winx_call assign(size_type cch, _E ch)
+	Myt_& winx_call assign(size_type cch, CharT ch)
 	{
-		_Base::assign(cch, ch);
+		Base::assign(cch, ch);
 		return *this;
 	}
 
-	_Myt& winx_call operator=(const _String s)
+	Myt_& winx_call operator=(const String_ s)
 	{
-		_Base::assign(s.begin(), s.end());
+		Base::assign(s.begin(), s.end());
 		return *this;
 	}
 	
-	void winx_call copy(const _Base& s)
+	void winx_call copy(const Base& s)
 	{
-		_Base::operator=(s);
+		Base::operator=(s);
 	}
 
 public:
 	template <class _InputerIterator>
-	_Myt& winx_call append(_InputerIterator first, _InputerIterator last)
+	Myt_& winx_call append(_InputerIterator first, _InputerIterator last)
 	{
-		_Base::insert(end(), first, last);
+		Base::insert(end(), first, last);
 		return *this;
 	}
 
-	_Myt& winx_call append(const _String s)
+	Myt_& winx_call append(const String_ s)
     {
-		_Base::insert(end(), s.begin(), s.end());
+		Base::insert(end(), s.begin(), s.end());
 		return *this;
 	}
 
-	_Myt& winx_call append(const _E* s, size_type cch)
+	Myt_& winx_call append(const CharT* s, size_type cch)
 	{
-		_Base::insert(end(), s, s + cch);
+		Base::insert(end(), s, s + cch);
 		return *this;
 	}
 
-	_Myt& winx_call append(size_type cch, _E ch)
+	Myt_& winx_call append(size_type cch, CharT ch)
 	{
-		_Base::insert(end(), cch, ch);
+		Base::insert(end(), cch, ch);
 		return *this;
 	}
 
-	_Myt& winx_call operator+=(const _String s)
+	Myt_& winx_call operator+=(const String_ s)
 	{
-		_Base::insert(end(), s.begin(), s.end());
+		Base::insert(end(), s.begin(), s.end());
 		return *this;
 	}
 
 public:
 	template <class _RandIterator>
-	_Myt& winx_call replace(
+	Myt_& winx_call replace(
 		iterator first, iterator last,
 		_RandIterator bfirst, _RandIterator blast)
 	{
@@ -210,146 +208,120 @@ public:
 		return *this;
 	}
 
-	_Myt& winx_call replace(
-		iterator first, iterator last, size_type count, _E ch)
+	Myt_& winx_call replace(
+		iterator first, iterator last, size_type count, CharT ch)
 	{
 		std::replace(WINX_BASE, first, last, count, ch);
 		return *this;
 	}
 
-	_Myt& winx_call replace(
-		iterator first, iterator last, const _E* s, size_type cch)
+	Myt_& winx_call replace(
+		iterator first, iterator last, const CharT* s, size_type cch)
 	{
 		std::replace(WINX_BASE, first, last, s, s + cch);
 		return *this;
 	}
 
-	_Myt& winx_call replace(iterator first, iterator last, const _String s)
+	Myt_& winx_call replace(iterator first, iterator last, const String_ s)
 	{
 		std::replace(WINX_BASE, first, last, s.begin(), s.end());
 		return *this;
 	}
 
 public:
-	_Myt& winx_call insert(iterator it, const _String s)
+	Myt_& winx_call insert(iterator it, const String_ s)
     {
-		_Base::insert(it, s.begin(), s.end());
+		Base::insert(it, s.begin(), s.end());
 		return *this;
 	}
 
-	_Myt& winx_call insert(iterator it, const _E* s, size_type cch)
+	Myt_& winx_call insert(iterator it, const CharT* s, size_type cch)
 	{
-		_Base::insert(it, s, s + cch);
+		Base::insert(it, s, s + cch);
 		return *this;
 	}
 
 public:
-	// 在字符串中查找子串（正向查找）。
-	_WINX_FIND_ALL(find, std::find, std::search)
-
-	// 在字符串中查找子串（反向查找）。
-	_WINX_FIND_ALL(rfind, std::rfind, std::find_end)
-
-	// 查找某个集合中的字符在字符串中第一次出现的位置（正向查找）。
-	_WINX_FIND_ALL(find_first_of, std::find, std::find_first_of)
-
-	// 查找某个集合中的字符在字符串中第一次出现的位置（反向查找）。
-	_WINX_RFIND_ALL(find_last_of, std::find, std::find_first_of)
-
-	// 在字符串中查找不在集合中出现的第一个字符的位置（正向查找）。
-	_WINX_FIND_ALL(find_first_not_of, std::find_not, std::find_first_not_of)
-
-	// 在字符串中查找不在集合中出现的第一个字符的位置（反向查找）。
-	_WINX_RFIND_ALL(find_last_not_of, std::find_not, std::find_first_not_of)
+	WINX_FIND_ALL_(find, std::find, std::search)
+	WINX_FIND_ALL_(rfind, std::rfind, std::find_end)
+	WINX_FIND_ALL_(find_first_of, std::find, std::find_first_of)
+	WINX_RFIND_ALL_(find_last_of, std::find, std::find_first_of)
+	WINX_FIND_ALL_(find_first_not_of, std::find_not, std::find_first_not_of)
+	WINX_RFIND_ALL_(find_last_not_of, std::find_not, std::find_first_not_of)
 
 public:
-	// 比较两个字符串。
-	
-	int winx_call compare(const _String& b) const
+	template <class ContainerT>
+	int winx_call compare(const ContainerT& b) const
 		{return std::compare(begin(), end(), b.begin(), b.end()); }
 
-	int winx_call compare(const _E* b, size_type blen) const
+	int winx_call compare(const CharT* b, size_type blen) const
 		{return std::compare(begin(), end(), b, b + blen); }
 
-	int winx_call compare(const _E* b) const
+	int winx_call compare(const CharT* b) const
 		{return std::compare(begin(), end(), b); }
 
-	int winx_call compare(size_type from, size_type count, const _String b) const
-		{return cast_substr(from, count).compare(b); }
-
-	int winx_call compare(size_type from, size_type count, const _E* b, size_type blen) const
-		{return cast_substr(from, count).compare(b, blen); }
-
-	int winx_call compare(size_type from, size_type count, const _E* b) const
-		{return cast_substr(from, count).compare(b); }
-
 public:
-	// 比较两个字符串（传入单字符的比较函数）。
-	
-	template <class _Compr>
-	int winx_call compare_by(const _String& b, _Compr cmp) const
+	template <class ContainerT, class ComprT>
+	int winx_call compare_by(const ContainerT& b, ComprT cmp) const
 		{return std::compare_by(begin(), end(), b.begin(), b.end(), cmp); }
 
-	template <class _Compr>
-	int winx_call compare_by(const _E* b, size_type blen, _Compr cmp) const
+	template <class ComprT>
+	int winx_call compare_by(const CharT* b, size_type blen, ComprT cmp) const
 		{return std::compare_by(begin(), end(), b, b + blen, cmp); }
 
-	template <class _Compr>
-	int winx_call compare_by(const _E* b, _Compr cmp) const
+	template <class ComprT>
+	int winx_call compare_by(const CharT* b, ComprT cmp) const
 		{return std::compare_by(begin(), end(), b, cmp); }
 
 private:
-	typedef CompareNoCase<_E> _ComareNoCase;
+	typedef CompareNoCase<CharT> ComareNoCase_;
 
 public:
-	// 比较两个字符串（忽略大小写）。
+	template <class ContainerT>
+	int winx_call icompare(const ContainerT& b) const
+		{return compare_by(b, ComareNoCase_()); }
 
-	int winx_call icompare(const _String b) const
-		{return compare_by(b, _ComareNoCase()); }
+	int winx_call icompare(const CharT* b, size_type blen) const
+		{return compare_by(b, blen, ComareNoCase_()); }
 
-	int winx_call icompare(const _E* b, size_type blen) const
-		{return compare_by(b, blen, _ComareNoCase()); }
-
-	int winx_call icompare(const _E* b) const
-		{return compare_by(b, _ComareNoCase()); }
+	int winx_call icompare(const CharT* b) const
+		{return compare_by(b, ComareNoCase_()); }
 
 public:
-	// 判断是否包含指定的串。
-
-	bool winx_call contains(const _String b) const
+	bool winx_call contains(const String_ b) const
 		{return find(b) != end(); }
 
-	bool winx_call contains(const _E* b, size_type blen) const
+	bool winx_call contains(const CharT* b, size_type blen) const
 		{return find(b, blen) != end(); }
 };
 
 typedef BasicStringBuilder<char> StringBuilder;
-typedef BasicStringBuilder<WCHAR> WStringBuilder;
+typedef BasicStringBuilder<wchar_t> WStringBuilder;
 
 // -------------------------------------------------------------------------
 
-template <class _E, class _T2> __forceinline
-bool winx_call operator==(const BasicStringBuilder<_E>& a, const _T2& b)
+template <class CharT, class _T2> __forceinline
+bool winx_call operator==(const BasicStringBuilder<CharT>& a, const _T2& b)
 	{return a.compare(b) == 0; }
 
-template <class _E, class _T2> __forceinline
-bool winx_call operator!=(const BasicStringBuilder<_E>& a, const _T2& b)
+template <class CharT, class _T2> __forceinline
+bool winx_call operator!=(const BasicStringBuilder<CharT>& a, const _T2& b)
 	{return a.compare(b) != 0; }
 
-template <class _E, class _T2> __forceinline
-bool winx_call operator<(const BasicStringBuilder<_E>& a, const _T2& b)
+template <class CharT, class _T2> __forceinline
+bool winx_call operator<(const BasicStringBuilder<CharT>& a, const _T2& b)
 	{return a.compare(b) < 0; }
 
-template <class _E, class _T2> __forceinline
-bool winx_call operator>(const BasicStringBuilder<_E>& a, const _T2& b)
+template <class CharT, class _T2> __forceinline
+bool winx_call operator>(const BasicStringBuilder<CharT>& a, const _T2& b)
 	{return a.compare(b) > 0; }
 
-template <class _E, class _T2> __forceinline
-bool winx_call operator<=(const BasicStringBuilder<_E>& a, const _T2& b)
+template <class CharT, class _T2> __forceinline
+bool winx_call operator<=(const BasicStringBuilder<CharT>& a, const _T2& b)
 	{return a.compare(b) <= 0; }
 
-template <class _E, class _T2> __forceinline
-bool winx_call operator>=(const BasicStringBuilder<_E>& a, const _T2& b)
+template <class CharT, class _T2> __forceinline
+bool winx_call operator>=(const BasicStringBuilder<CharT>& a, const _T2& b)
 	{return a.compare(b) >= 0; }
 
 NS_STDEXT_END
@@ -484,6 +456,7 @@ public:
 #endif // defined(STD_UNITTEST)
 
 // -------------------------------------------------------------------------
-// $Log: BasicStringBuilder.h,v $
+// $Log: StringBuilder.h,v $
 
-#endif /* STDEXT_TEXT_BASICSTRINGBUILDER_H */
+#endif /* STDEXT_TEXT_STRINGBUILDER_H */
+

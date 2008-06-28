@@ -31,8 +31,8 @@
 #include "text/BasicString.h"
 #endif
 
-#ifndef STDEXT_TEXT_BASICSTRINGBUILDER_H
-#include "text/BasicStringBuilder.h"
+#ifndef STDEXT_TEXT_STRINGBUILDER_H
+#include "text/StringBuilder.h"
 #endif
 
 #ifndef STDEXT_TEXT_STRINGALGO_H

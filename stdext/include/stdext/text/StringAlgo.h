@@ -23,6 +23,10 @@
 #include "BasicString.h"
 #endif
 
+#ifndef STDEXT_TEXT_RANGE_H
+#include "Range.h"
+#endif
+
 #ifndef STDEXT_CHARTYPE_H
 #include "../CharType.h"
 #endif
@@ -55,13 +59,13 @@ inline void winx_call iconv(
 	codepage_t from, const char* str, size_t cch, StringT& dest)
 {
 	int cch2 = MultiByteToWideChar(from, 0, str, cch, NULL, 0);
-	WCHAR* str2 = std::resize(dest, cch2);
+	wchar_t* str2 = std::resize(dest, cch2);
 	MultiByteToWideChar(from, 0, str, cch, str2, cch2);
 }
 
 template <class StringT>
 inline void winx_call iconv(
-	const WCHAR* str, size_t cch, codepage_t to, StringT& dest)
+	const wchar_t* str, size_t cch, codepage_t to, StringT& dest)
 {
 	int cch2 = WideCharToMultiByte(to, 0, str, cch, NULL, 0, NULL, NULL);
 	char* str2 = std::resize(dest, cch2);
@@ -69,18 +73,18 @@ inline void winx_call iconv(
 }
 
 template <class AllocT>
-inline BasicString<WCHAR> winx_call iconv(
+inline BasicString<wchar_t> winx_call iconv(
 	AllocT& alloc, codepage_t from, const char* str, size_t cch)
 {
 	int cch2 = MultiByteToWideChar(from, 0, str, cch, NULL, 0);
-	WCHAR* str2 = STD_ALLOC_ARRAY(alloc, WCHAR, cch2);
+	wchar_t* str2 = STD_ALLOC_ARRAY(alloc, wchar_t, cch2);
 	MultiByteToWideChar(from, 0, str, cch, str2, cch2);
-	return BasicString<WCHAR>(str2, cch2);
+	return BasicString<wchar_t>(str2, cch2);
 }
 
 template <class AllocT>
 inline BasicString<char> winx_call iconv(
-	AllocT& alloc, const WCHAR* str, size_t cch, codepage_t to)
+	AllocT& alloc, const wchar_t* str, size_t cch, codepage_t to)
 {
 	int cch2 = WideCharToMultiByte(to, 0, str, cch, NULL, 0, NULL, NULL);
 	char* str2 = STD_ALLOC_ARRAY(alloc, char, cch2);
@@ -89,7 +93,7 @@ inline BasicString<char> winx_call iconv(
 }
 
 template <class AllocT>
-__forceinline BasicString<WCHAR> winx_call iconv(
+__forceinline BasicString<wchar_t> winx_call iconv(
 	AllocT& alloc, codepage_t from, const TempString<char>& str)
 {
 	return iconv(alloc, from, str.data(), str.size());
@@ -97,7 +101,7 @@ __forceinline BasicString<WCHAR> winx_call iconv(
 
 template <class AllocT>
 __forceinline BasicString<char> winx_call iconv(
-	AllocT& alloc, const TempString<WCHAR>& str, codepage_t to)
+	AllocT& alloc, const TempString<wchar_t>& str, codepage_t to)
 {
 	return iconv(alloc, str.data(), str.size(), to);
 }
@@ -180,10 +184,42 @@ inline BasicString<CharT> winx_call trim(const BasicString<CharT>& s)
 }
 
 // -------------------------------------------------------------------------
+// flatten
+
+template <class AllocT, class Iterator>
+inline
+BasicArray<typename iterator_traits_alter<Iterator>::value_type::value_type>
+winx_call flatten(AllocT& alloc, const Iterator first, const Iterator last)
+{
+	typedef typename iterator_traits_alter<Iterator>::value_type::value_type ValueT;
+
+	Iterator it;
+	size_t len = 0;
+	for (it = first; it != last; ++it)
+		len += (*it).size();
+
+	ValueT* buf = STD_NEW_ARRAY(alloc, ValueT, len);
+	for (it = first; it != last; ++it)
+		buf = std::copy((*it).begin(), (*it).end(), buf);
+
+	return BasicArray<ValueT>(buf-len, buf);
+}
+
+template <class AllocT, class ContainerT>
+inline
+BasicArray<typename ContainerT::value_type::value_type>
+winx_call flatten(AllocT& alloc, const ContainerT& cont)
+{
+	return flatten(alloc, cont.begin(), cont.end());
+}
+
+// -------------------------------------------------------------------------
 // concat
 
 template <class AllocT, class StringT>
-inline StringT winx_call concat(AllocT& alloc, const StringT val[], size_t count)
+inline
+BasicString<typename StringT::value_type>
+winx_call concat(AllocT& alloc, const StringT val[], size_t count)
 {
 	typedef typename StringT::value_type CharT;
 	
@@ -195,7 +231,7 @@ inline StringT winx_call concat(AllocT& alloc, const StringT val[], size_t count
 	for (i = 0; i < count; ++i)
 		buf = std::copy(val[i].begin(), val[i].end(), buf);
 
-	return StringT(buf-len, len);
+	return BasicString<typename StringT::value_type>(buf-len, len);
 }
 
 template <class AllocT, class CharT>
@@ -217,7 +253,7 @@ WINX_VARGS_TFUNC_EP1_REF(
 	BasicString<char>, concat, AllocT, const TempString<char>, __concatString);
 
 WINX_VARGS_TFUNC_EP1_REF(
-	BasicString<WCHAR>, concat, AllocT, const TempString<WCHAR>, __concatString);
+	BasicString<wchar_t>, concat, AllocT, const TempString<wchar_t>, __concatString);
 
 NS_STDEXT_END
 
@@ -267,6 +303,29 @@ public:
 		AssertExp(std::trim(s) == "Hello, world!");
 		AssertExp(std::trimLeft(s) == "Hello, world! \t\n");
 		AssertExp(std::trimRight(s) == " \t Hello, world!");
+	}
+
+	void testFlatten(LogT& log)
+	{
+		std::AutoFreeAlloc alloc;
+		{
+			std::list<std::string> lst;
+			lst.push_back("Hello,");
+			lst.push_back(" ");
+			lst.push_back("world!");
+		
+			std::BasicArray<char> s = std::flatten(alloc, lst);
+			AssertExp(s == "Hello, world!");
+		}
+		{
+			std::vector<std::string> vec;
+			vec.push_back("Hello,");
+			vec.push_back(" ");
+			vec.push_back("world!\n");
+		
+			std::BasicArray<char> s = std::flatten(alloc, vec);
+			AssertExp(s == "Hello, world!");
+		}
 	}
 
 	void testConcat(LogT& log)

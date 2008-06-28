@@ -401,6 +401,9 @@ struct CharTraits<wchar_t>
 	}
 };
 
+// -------------------------------------------------------------------------
+// ToUpper/ToLower/CompareNoCase
+
 template <class CharT>
 struct ToUpper
 {
@@ -420,6 +423,17 @@ struct ToLower
 	
 	int_type winx_call operator()(int_type c) const {
 		return Tr_::lower(c);
+	}
+};
+
+template <class CharT>
+struct CompareNoCase
+{
+	typedef CharTraits<CharT> Tr_;
+	typedef typename Tr_::int_type int_type;
+
+	int_type winx_call operator()(int_type c1, int_type c2) const {
+		return Tr_::upper(c1) - Tr_::upper(c2);
 	}
 };
 
