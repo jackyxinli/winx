@@ -217,21 +217,10 @@ winx_call flatten(AllocT& alloc, const ContainerT& cont)
 // concat
 
 template <class AllocT, class StringT>
-inline
+__forceinline
 BasicString<typename StringT::value_type>
-winx_call concat(AllocT& alloc, const StringT val[], size_t count)
-{
-	typedef typename StringT::value_type CharT;
-	
-	size_t i, len = 0;
-	for (i = 0; i < count; ++i)
-		len += val[i].size();
-	
-	CharT* buf = STD_NEW_ARRAY(alloc, CharT, len);
-	for (i = 0; i < count; ++i)
-		buf = std::copy(val[i].begin(), val[i].end(), buf);
-
-	return BasicString<typename StringT::value_type>(buf-len, len);
+winx_call concat(AllocT& alloc, const StringT val[], size_t count) {
+	return flatten(alloc, val, val + count);
 }
 
 template <class AllocT, class CharT>
@@ -361,3 +350,4 @@ public:
 // $Log: StringAlgo.h,v $
 
 #endif /* STDEXT_TEXT_STRINGALGO_H */
+
