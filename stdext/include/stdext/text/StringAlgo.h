@@ -184,43 +184,125 @@ inline BasicString<CharT> winx_call trim(const BasicString<CharT>& s)
 }
 
 // -------------------------------------------------------------------------
-// flatten
+// implode
+
+template <class AllocT, class GlueIt, class Iterator>
+inline
+BasicString<typename iterator_traits_alter<Iterator>::value_type::value_type>
+winx_call implode(AllocT& alloc, const GlueIt glue, size_t n, const Iterator first, const size_t count)
+{
+	typedef typename iterator_traits_alter<Iterator>::value_type ContainerT;
+	typedef typename ContainerT::value_type ValueT;
+	
+	if (count < 2)
+		return count ? BasicString<ValueT>(alloc, *first) : BasicString<ValueT>();
+	
+	Iterator it = first;
+	size_t i, len = 0;
+	for (i = 0; i < count; ++i)
+		len += (*it++).size();
+
+	len += (count-1)*n;
+	it = first;
+	ValueT* buf = STD_NEW_ARRAY(alloc, ValueT, len);
+	for (i = 1; i < count; ++i) {
+		const ContainerT& cont = *it++; 
+		buf = std::copy(cont.begin(), cont.end(), buf);
+		buf = std::copy(glue, glue+n, buf);
+	}
+	
+	const ContainerT& cont = *it;
+	buf = std::copy(cont.begin(), cont.end(), buf);
+	return BasicString<ValueT>(buf-len, buf);
+}
 
 template <class AllocT, class Iterator>
 inline
-BasicArray<typename iterator_traits_alter<Iterator>::value_type::value_type>
-winx_call flatten(AllocT& alloc, const Iterator first, const Iterator last)
-{
-	typedef typename iterator_traits_alter<Iterator>::value_type::value_type ValueT;
+BasicString<char>
+winx_call implode(AllocT& alloc, const TempString<char>& glue, Iterator first, size_t count) {
+	return implode(alloc, glue.begin(), glue.size(), first, count);
+}
 
-	Iterator it;
-	size_t len = 0;
-	for (it = first; it != last; ++it)
-		len += (*it).size();
+template <class AllocT, class Iterator>
+inline
+BasicString<wchar_t>
+winx_call implode(AllocT& alloc, const TempString<wchar_t>& glue, Iterator first, size_t count) {
+	return implode(alloc, glue.begin(), glue.size(), first, count);
+}
 
-	ValueT* buf = STD_NEW_ARRAY(alloc, ValueT, len);
-	for (it = first; it != last; ++it)
-		buf = std::copy((*it).begin(), (*it).end(), buf);
+template <class AllocT, class Iterator>
+inline
+BasicString<char>
+winx_call implode(AllocT& alloc, const char glue, Iterator first, size_t count) {
+	return implode(alloc, &glue, 1, first, count);
+}
 
-	return BasicArray<ValueT>(buf-len, buf);
+template <class AllocT, class Iterator>
+inline
+BasicString<wchar_t>
+winx_call implode(AllocT& alloc, const wchar_t glue, Iterator first, size_t count) {
+	return implode(alloc, &glue, 1, first, count);
 }
 
 template <class AllocT, class ContainerT>
-inline
-BasicArray<typename ContainerT::value_type::value_type>
-winx_call flatten(AllocT& alloc, const ContainerT& cont)
-{
-	return flatten(alloc, cont.begin(), cont.end());
+__forceinline
+BasicString<char>
+winx_call implode(AllocT& alloc, const TempString<char>& glue, const ContainerT& cont) {
+	return implode(alloc, glue.begin(), glue.size(), cont.begin(), cont.size());
+}
+
+template <class AllocT, class ContainerT>
+__forceinline
+BasicString<wchar_t>
+winx_call implode(AllocT& alloc, const TempString<wchar_t>& glue, const ContainerT& cont) {
+	return implode(alloc, glue.begin(), glue.size(), cont.begin(), cont.size());
+}
+
+template <class AllocT, class ContainerT>
+__forceinline
+BasicString<char>
+winx_call implode(AllocT& alloc, const char glue, const ContainerT& cont) {
+	return implode(alloc, &glue, 1, cont.begin(), cont.size());
+}
+
+template <class AllocT, class ContainerT>
+__forceinline
+BasicString<wchar_t>
+winx_call implode(AllocT& alloc, const wchar_t glue, const ContainerT& cont) {
+	return implode(alloc, &glue, 1, cont.begin(), cont.size());
 }
 
 // -------------------------------------------------------------------------
 // concat
 
-template <class AllocT, class StringT>
+template <class AllocT, class Iterator>
+inline
+BasicString<typename iterator_traits_alter<Iterator>::value_type::value_type>
+winx_call concat(AllocT& alloc, const Iterator first, const size_t count)
+{
+	typedef typename iterator_traits_alter<Iterator>::value_type ContainerT;
+	typedef typename ContainerT::value_type ValueT;
+
+	Iterator it = first;
+	size_t i, len = 0;
+	for (i = 0; i < count; ++i)
+		len += (*it++).size();
+
+	it = first;
+	ValueT* buf = STD_NEW_ARRAY(alloc, ValueT, len);
+	for (i = 0; i < count; ++i) {
+		const ContainerT& cont = *it++; 
+		buf = std::copy(cont.begin(), cont.end(), buf);
+	}
+
+	return BasicString<ValueT>(buf-len, buf);
+}
+
+template <class AllocT, class ContainerT>
 __forceinline
-BasicString<typename StringT::value_type>
-winx_call concat(AllocT& alloc, const StringT val[], size_t count) {
-	return flatten(alloc, val, val + count);
+BasicString<typename ContainerT::value_type::value_type>
+winx_call concat(AllocT& alloc, const ContainerT& cont) {
+	return concat(alloc, cont.begin(), cont.size());
 }
 
 template <class AllocT, class CharT>
@@ -256,8 +338,9 @@ class TestStringAlgo : public TestCase
 {
 	WINX_TEST_SUITE(TestStringAlgo);
 		WINX_TEST(testConcat);
+		WINX_TEST(testConcat2);
+		WINX_TEST(testImplode);
 		WINX_TEST(testConv);
-		WINX_TEST(testFlatten);
 		WINX_TEST(testTrim);
 //		WINX_TEST(testIconv);
 	WINX_TEST_SUITE_END();
@@ -295,7 +378,25 @@ public:
 		AssertExp(std::trimRight(s) == " \t Hello, world!");
 	}
 
-	void testFlatten(LogT& log)
+	void testImplode(LogT& log)
+	{
+		std::AutoFreeAlloc alloc;
+
+		std::list<std::string> lst;
+		lst.push_back("Hello,");
+		lst.push_back("world!");
+		lst.push_back("I");
+		lst.push_back("am");
+		lst.push_back("xushiwei!\n");
+
+		std::String s = std::implode(alloc, ' ', lst);
+		AssertExp(s == "Hello, world! I am xushiwei!\n");
+	
+		s = std::implode(alloc, " -> ", lst);
+		AssertExp(s == "Hello, -> world! -> I -> am -> xushiwei!\n");
+	}
+	
+	void testConcat2(LogT& log)
 	{
 		std::AutoFreeAlloc alloc;
 		{
@@ -304,7 +405,7 @@ public:
 			lst.push_back(" ");
 			lst.push_back("world!");
 		
-			std::String s = std::flatten(alloc, lst);
+			std::String s = std::concat(alloc, lst);
 			AssertExp(s == "Hello, world!");
 		}
 		{
@@ -313,7 +414,7 @@ public:
 			vec.push_back(" ");
 			vec.push_back("world!");
 		
-			std::String s = std::flatten(alloc, vec);
+			std::String s = std::concat(alloc, vec);
 			AssertExp(s == "Hello, world!");
 		}
 	}

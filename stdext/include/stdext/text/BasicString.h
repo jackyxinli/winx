@@ -127,6 +127,9 @@ public:
 	BasicString(const CharT* pszVal, size_type cch)
 		: Base(pszVal, pszVal + cch) {
 	}
+	BasicString(const CharT* first, const CharT* last)
+		: Base(first, last) {
+	}
 	BasicString(const BasicArray<CharT>& s)
 		: Base(s) {
 	}
@@ -212,6 +215,10 @@ public:
 
 	operator const TempString<CharT>&() const {
 		return *(const TempString<CharT>*)this;
+	}
+
+	operator const BasicArray<CharT>&() const {
+		return *(const BasicArray<CharT>*)this;
 	}
 
 	template <class _Tr, class _Alloc2>
