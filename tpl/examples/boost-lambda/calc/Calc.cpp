@@ -19,13 +19,17 @@ int main()
 	TPL_LAMBDA_LOCAL(double, term);
 	TPL_LAMBDA_LOCAL(double, factor);
 	
-	impl::Rule rMul( alloc, '*' + real()/exec[factor *= _1] );
-	impl::Rule rDiv( alloc, '/' + real()/exec[factor /= _1] );
-	impl::Rule rTerm( alloc, real()/assign(factor) + *(rMul | rDiv) );
+	impl::Rule rTerm( alloc,
+		real()/assign(factor) + *(
+			'*' + real()/exec[factor *= _1] |
+			'/' + real()/exec[factor /= _1] )
+		);
 
-	impl::Rule rAdd( alloc, '+' + rTerm/exec[term += factor] );
-	impl::Rule rSub( alloc, '-' + rTerm/exec[term -= factor] );
-	impl::Rule rExpr( alloc, rTerm/exec[term = factor] + *(rAdd | rSub) );
+	impl::Rule rExpr( alloc,
+		rTerm/exec[term = factor] + *(
+			'+' + rTerm/exec[term += factor] |
+			'-' + rTerm/exec[term -= factor] )
+		);
 
 	// ---- do match ----
 	
@@ -34,7 +38,7 @@ int main()
 		std::string strExp;
 		std::cout << "input an expression (q to quit): ";
 		std::getline(std::cin, strExp);
-		
+
 		if (strExp == "q")
 			break;
 
