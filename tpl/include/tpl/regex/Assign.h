@@ -165,11 +165,6 @@ struct SelectAssig<AssigTag, std::Range<Iterator> > {
 template <class CharT, class Tr, class Ax>		\
 struct SelectAssig<AssigTag, std::basic_string<CharT, Tr, Ax> > {	\
 	typedef AssigType assig_type;									\
-};												\
-												\
-template <class Iterator>						\
-struct SelectAssig<AssigTag, std::Range<Iterator> > { \
-	typedef AssigType assig_type;				\
 };
 
 #define TPL_TEXT_ASSIG(AssigTag, AssigType)		\
@@ -251,13 +246,13 @@ Action<Op<ValueT> > TPL_CALL fn(ValueT& result) {				\
 }																\
 																\
 template <class ValueT> __forceinline							\
-Action<Op<ValueT> > TPL_CALL fn(Var<ValueT>& result) {			\
+Action<Op<ValueT> > TPL_CALL fn(tpl::Var<ValueT>& result) {		\
 	return Action<Op<ValueT> >(result.val);						\
 }
 
 #define TPL_SIMPLE_ACTION_UNARY_OP_(Op, fn, op) 				\
 	TPL_SIMPLE_ACTION_UNARY_OP_CLASS_(Op, op)					\
-	TPL_ACTION_OP_FN1_EX_(SimpleAction, Op, fn)
+	TPL_ACTION_OP_FN1_EX_(tpl::SimpleAction, Op, fn)
 
 // =========================================================================
 
@@ -340,46 +335,46 @@ Action<Op<VarT, const ValueT&> > TPL_CALL op(VarT& var_, ValueT& value_) {		\
 }																				\
 																				\
 template <class ValueT, class VarT> __forceinline								\
-Action<Op<VarT, const ValueT&> > TPL_CALL op(VarT& var_, const Var<ValueT>& value_) { \
+Action<Op<VarT, const ValueT&> > TPL_CALL op(VarT& var_, const tpl::Var<ValueT>& value_) { \
 	return Action<Op<VarT, const ValueT&> >(var_, value_.val);					\
 }																				\
 																				\
 template <class ValueT, class VarT> __forceinline								\
-Action<Op<VarT, const ValueT&> > TPL_CALL op(VarT& var_, Var<ValueT>& value_) { \
+Action<Op<VarT, const ValueT&> > TPL_CALL op(VarT& var_, tpl::Var<ValueT>& value_) { \
 	return Action<Op<VarT, const ValueT&> >(var_, value_.val);					\
 }																				\
 																				\
 template <class ValueT, class VarT> __forceinline								\
-Action<Op<VarT, ValueT> > TPL_CALL op(Var<VarT>& var_, const ValueT value_) { 	\
+Action<Op<VarT, ValueT> > TPL_CALL op(tpl::Var<VarT>& var_, const ValueT value_) { \
 	return Action<Op<VarT, ValueT> >(var_.val, value_);							\
 }																				\
 																				\
 template <class ValueT, class VarT> __forceinline								\
-Action<Op<VarT, const ValueT&> > TPL_CALL op(Var<VarT>& var_, ValueT& value_) {	\
+Action<Op<VarT, const ValueT&> > TPL_CALL op(tpl::Var<VarT>& var_, ValueT& value_) { \
 	return Action<Op<VarT, const ValueT&> >(var_.val, value_);					\
 }																				\
 																				\
 template <class ValueT, class VarT> __forceinline								\
-Action<Op<VarT, const ValueT&> > TPL_CALL op(Var<VarT>& var_, const Var<ValueT>& value_) { \
+Action<Op<VarT, const ValueT&> > TPL_CALL op(tpl::Var<VarT>& var_, const tpl::Var<ValueT>& value_) { \
 	return Action<Op<VarT, const ValueT&> >(var_.val, value_.val);				\
 }																				\
 																				\
 template <class ValueT, class VarT> __forceinline								\
-Action<Op<VarT, const ValueT&> > TPL_CALL op(Var<VarT>& var_, Var<ValueT>& value_) { \
+Action<Op<VarT, const ValueT&> > TPL_CALL op(tpl::Var<VarT>& var_, tpl::Var<ValueT>& value_) { \
 	return Action<Op<VarT, const ValueT&> >(var_.val, value_.val);				\
 }
 
 #define TPL_SIMPLE_ACTION_BINARY_OP_(Op, fn, op)								\
 	TPL_SIMPLE_ACTION_BINARY_OP_CLASS_(Op, op)									\
-	TPL_ACTION_OP_FN2_EX_(SimpleAction, Op, fn)
+	TPL_ACTION_OP_FN2_EX_(tpl::SimpleAction, Op, fn)
 	
 #define TPL_SIMPLE_ACTION_METHOD0_(Op, fn)										\
 	TPL_SIMPLE_ACTION_METHOD0_CLASS_(Op, fn)									\
-	TPL_ACTION_OP_FN1_EX_(SimpleAction, Op, fn)
+	TPL_ACTION_OP_FN1_EX_(tpl::SimpleAction, Op, fn)
 
 #define TPL_SIMPLE_ACTION_METHOD1_(Op, fn)										\
 	TPL_SIMPLE_ACTION_METHOD1_CLASS_(Op, fn)									\
-	TPL_ACTION_OP_FN2_EX_(SimpleAction, Op, fn)
+	TPL_ACTION_OP_FN2_EX_(tpl::SimpleAction, Op, fn)
 
 // =========================================================================
 

@@ -31,7 +31,7 @@ NS_TPL_BEGIN
 
 // =========================================================================
 
-#define TPL_ACTION_CONTAINER_METHOD1_(Op, op)								\
+#define TPL_ACTION_CONTAINER_METHOD1_(Op, op, ValueT)						\
 template <class ContainerT>													\
 class Op																	\
 {																			\
@@ -42,14 +42,15 @@ public:																		\
 	Op(ContainerT& result) : m_result(result) {								\
 	}																		\
 																			\
-	typedef typename ContainerT::value_type value_type;						\
+	typedef ValueT value_type;												\
 																			\
-	void TPL_CALL operator()(const value_type& val) const {					\
+	template <class ValueT2>												\
+	void TPL_CALL operator()(const ValueT2& val) const {					\
 		m_result.op(val);													\
 	}																		\
 };
 
-#define TPL_ACTION_CONTAINER_FN1_(Op, op)									\
+#define TPL_ACTION_CONTAINER_FN1_(Action, Op, op)							\
 																			\
 template <class ContainerT> __forceinline									\
 Action<Op<ContainerT> > TPL_CALL op(ContainerT& result) {					\
@@ -57,28 +58,28 @@ Action<Op<ContainerT> > TPL_CALL op(ContainerT& result) {					\
 }																			\
 																			\
 template <class ContainerT> __forceinline									\
-Action<Op<ContainerT> > TPL_CALL op(Var<ContainerT>& result) {				\
+Action<Op<ContainerT> > TPL_CALL op(tpl::Var<ContainerT>& result) {			\
 	return Action<Op<ContainerT> >(result.val);								\
 }
 
 #define TPL_ACTION_METHOD1_(Op, op)											\
-	TPL_ACTION_CONTAINER_METHOD1_(Op, op)									\
-	TPL_ACTION_CONTAINER_FN1_(Op, op)
+	TPL_ACTION_CONTAINER_METHOD1_(Op, op, typename ContainerT::value_type)	\
+	TPL_ACTION_CONTAINER_FN1_(tpl::Action, Op, op)
+
+#define TPL_ACTION_METHOD1_EX_(Op, op, ValueT)								\
+	TPL_ACTION_CONTAINER_METHOD1_(Op, op, ValueT)							\
+	TPL_ACTION_CONTAINER_FN1_(tpl::Action, Op, op)
 
 // =========================================================================
 // public macro
 
 #define TPL_ACTION_METHOD0(fn)												\
-	namespace tpl {															\
-		TPL_SIMPLE_ACTION_METHOD0_(Act_##fn, fn)							\
-	}
+	TPL_SIMPLE_ACTION_METHOD0_(Act_##fn, fn)
 
-#define TPL_ACTION_METHOD1(fn)												\
-	namespace tpl {															\
-		TPL_ACTION_METHOD1_(Act_##fn, fn)									\
-		TPL_SIMPLE_ACTION_METHOD1_(Act_##fn, fn)							\
-	}
-	
+#define TPL_ACTION_METHOD1(fn, ValueT)										\
+	TPL_ACTION_METHOD1_EX_(Act_##fn, fn, ValueT)							\
+	TPL_SIMPLE_ACTION_METHOD1_(SAct_##fn, fn)
+
 // =========================================================================
 // class Append
 

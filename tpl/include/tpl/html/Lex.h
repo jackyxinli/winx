@@ -23,15 +23,72 @@
 #include "../RegExp.h"
 #endif
 
+#if !defined(_GLIBCXX_MAP) && !defined(_MAP_) && !defined(_MAP)
+#include <map>
+#endif
+
 NS_TPL_BEGIN
+
+// =========================================================================
+// class HtmlEntityTable
+
+struct HtmlEntityPair
+{
+	const char* key;
+	const wchar_t val;
+};
+
+struct LessOfString
+{
+	bool TPL_CALL operator()(const char* a, const char* b) const {
+		return strcmp(a, b) < 0;
+	}
+	
+	bool TPL_CALL operator()(const wchar_t* a, const wchar_t* b) const {
+		return wcscmp(a, b) < 0;
+	}
+};
+
+template <class MapT = std::map<const char*, wchar_t, LessOfString> >
+class HtmlEntityTableImp : public MapT
+{
+public:
+	HtmlEntityTableImp() {
+		const HtmlEntityPair e[] = {
+			#include "entity/Latin-1.h"
+			#include "entity/Symbol.h"
+		};
+		for (size_t i = 0; i < countof(e); ++i) {
+			MapT::insert(typename MapT::value_type(e[i].key, e[i].val));
+		}
+	}
+};
+
+typedef HtmlEntityTableImp<> HtmlEntityTable;
 
 // =========================================================================
 // function get_html_entity
 
-template <class TextT, class Iterator>
-inline TextT TPL_CALL get_html_entity(Iterator pos, Iterator pos2)
+#define HTML_ENTITY_LEN_MAX			16
+#define HTML_ENTITY_DEFAULT_CHAR	' '
+
+template <class Iterator>
+inline wchar_t TPL_CALL get_html_entity(Iterator pos, Iterator pos2)
 {
-	return TextT();
+	static const HtmlEntityTable entities = HtmlEntityTable();
+
+	const size_t len = std::distance(pos, pos2);
+	TPL_ASSERT(len < HTML_ENTITY_LEN_MAX);
+	if (len >= HTML_ENTITY_LEN_MAX)
+		return HTML_ENTITY_DEFAULT_CHAR;
+	
+	char key[HTML_ENTITY_LEN_MAX];
+	*std::copy(pos, pos2, key) = '\0';
+	
+	const HtmlEntityTable::const_iterator it = entities.find(key);
+	TPL_ASSERT(it != entities.end());
+	
+	return it != entities.end() ? (*it).second : HTML_ENTITY_DEFAULT_CHAR;
 }
 
 // =========================================================================
@@ -76,6 +133,33 @@ inline Rule<HtmlSymbolG> TPL_CALL html_symbol() {
 }
 
 // =========================================================================
+// function html_value
+
+struct TagAssigHtmlValue {};
+
+template <int delim = '\"'>
+class HtmlValueTraits
+{
+private:
+	typedef Ch<delim> Delim_;
+	typedef FindChSet<true, delim> End_;
+	
+public:
+	typedef UAnd<Delim_, End_> rule_type;
+};
+
+typedef HtmlValueTraits<'\"'>::rule_type HtmlDoubleQuoteValue;
+typedef HtmlValueTraits<'\''>::rule_type HtmlSingleQuoteValue;
+
+typedef Or<HtmlDoubleQuoteValue, HtmlSingleQuoteValue> HtmlValue;
+
+TPL_REGEX_GUARD(HtmlValue, HtmlValueG, TagAssigHtmlValue);
+
+inline Rule<HtmlValueG> TPL_CALL html_value() {
+	return Rule<HtmlValueG>();
+}
+
+// =========================================================================
 // function html_entity
 
 struct TagAssigHtmlEntity {};
@@ -83,11 +167,11 @@ struct AssigHtmlEntity {
 	template <class TextT, class Iterator>
 	static TextT TPL_CALL get(Iterator pos, Iterator pos2, const void*) {
 		++pos; --pos2;
-		return get_html_entity<TextT>(pos, pos2);
+		return get_html_entity(pos, pos2);
 	}
 };
 
-TPL_TEXT_ASSIG_(TagAssigHtmlEntity, AssigHtmlEntity)
+TPL_ASSIG_(TagAssigHtmlEntity, AssigHtmlEntity)
 
 // Usage: html_entity()/assign(a_string_var)
 

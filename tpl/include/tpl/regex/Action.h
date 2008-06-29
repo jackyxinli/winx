@@ -147,12 +147,15 @@ template <class AssigTag>
 struct AssigTraits {
 };
 
-#define TPL_ASSIG(AssigTag, Assig)											\
-namespace tpl {																\
+#define TPL_ASSIG_(AssigTag, Assig)											\
 	template <>																\
 	struct AssigTraits<AssigTag> {											\
 		typedef Assig assig_type;											\
-	};																		\
+	};
+
+#define TPL_ASSIG(AssigTag, Assig)											\
+namespace tpl {																\
+	TPL_ASSIG_(AssigTag, Assig)												\
 }
 
 template <class AssigTag, class ValueT>
