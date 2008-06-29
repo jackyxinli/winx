@@ -64,10 +64,9 @@ __forceinline Rule<Nothing> TPL_CALL nothing() {
 }
 
 // -------------------------------------------------------------------------
-// function done/fail
+// function done
 
 // Usage: done() --- means: seek to end-of-stream and return ok
-// Usage: fail() --- means: seek to end-of-stream and return fail
 
 class Done
 {
@@ -84,32 +83,8 @@ public:
 	}
 };
 
-class Fail
-{
-public:
-	enum { character = 0 };
-
-	typedef AutoConvertible convertible_type;
-	typedef TagAssigNone assig_tag;
-
-	template <class SourceT, class ContextT>
-	bool TPL_CALL match(SourceT& ar, ContextT& context) const {
-		//@@todo
-		return false;
-	}
-};
-
 __forceinline Rule<Done> TPL_CALL done() {
 	return Rule<Done>();
-}
-
-__forceinline Rule<Fail> TPL_CALL fail() {
-	return Rule<Fail>();
-}
-
-template <class CharT>
-__forceinline Rule<Fail> TPL_CALL fail(const CharT* msg, int err = -1) {
-	return Rule<Fail>();
 }
 
 // -------------------------------------------------------------------------
