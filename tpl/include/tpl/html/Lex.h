@@ -91,8 +91,13 @@ typedef HtmlEntityTableImp<> HtmlEntityTable;
 // =========================================================================
 // function get_html_entity
 
-#define HTML_ENTITY_LEN_MAX			16
-#define HTML_ENTITY_DEFAULT_CHAR	' '
+#ifndef TPL_HTML_ENTITY_LEN_MAX
+#define TPL_HTML_ENTITY_LEN_MAX			16
+#endif
+
+#ifndef TPL_HTML_ENTITY_DEFAULT_CHAR
+#define TPL_HTML_ENTITY_DEFAULT_CHAR	' '
+#endif
 
 template <class TableT, class Iterator>
 inline wchar_t TPL_CALL get_html_entity(Iterator pos, Iterator pos2)
@@ -103,16 +108,16 @@ inline wchar_t TPL_CALL get_html_entity(Iterator pos, Iterator pos2)
 	static const TableT entities = TableT();
 	
 	const size_t len = std::distance(pos, pos2);
-	TPL_ASSERT(len < HTML_ENTITY_LEN_MAX);
-	if (len >= HTML_ENTITY_LEN_MAX)
-		return HTML_ENTITY_DEFAULT_CHAR;
+	TPL_ASSERT(len < TPL_HTML_ENTITY_LEN_MAX);
+	if (len >= TPL_HTML_ENTITY_LEN_MAX)
+		return TPL_HTML_ENTITY_DEFAULT_CHAR;
 	
-	char key[HTML_ENTITY_LEN_MAX];
+	char key[TPL_HTML_ENTITY_LEN_MAX];
 	*std::copy(pos, pos2, key) = '\0';
 	
 	const typename TableT::const_iterator it = entities.find(key);
 	TPL_ASSERT(it != entities.end());
-	return it != entities.end() ? (*it).second : HTML_ENTITY_DEFAULT_CHAR;
+	return it != entities.end() ? (*it).second : TPL_HTML_ENTITY_DEFAULT_CHAR;
 }
 
 struct TagAssigHtmlEntity {};
