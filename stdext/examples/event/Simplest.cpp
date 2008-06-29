@@ -44,17 +44,17 @@ public:
 
 class Dialog
 {
-	std::BlockPool m_recycle;
+private:
 	std::ScopeAlloc m_alloc;
-
 	Edit m_edit;
+	
 	std::Connection m_editChanged;
 	std::Connection m_editChanged2;
 	// NOTE: even you don't need to disconnect, you must hold the connection handle.
 
 public:
 	Dialog() 
-		: m_alloc(m_recycle), m_edit(m_alloc)
+		: m_edit(m_alloc)
 	{
 		TextChanged* textChanged = NULL;
 		m_edit.findEvent(EID(TextChanged), (void**)&textChanged);
