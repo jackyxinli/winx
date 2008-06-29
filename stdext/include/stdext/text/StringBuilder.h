@@ -298,6 +298,17 @@ public:
 typedef BasicStringBuilder<char> StringBuilder;
 typedef BasicStringBuilder<wchar_t> WStringBuilder;
 
+#if defined(WINX_HAS_OSTREAM)
+
+template <class CharT, class Tr>
+inline std::basic_ostream<CharT, Tr>& 
+winx_call operator<<(std::basic_ostream<CharT, Tr>& os, const std::vector<CharT>& v) {
+	std::copy(v.begin(), v.end(), std::ostream_iterator<CharT, CharT, Tr>(os));
+	return os;
+}
+
+#endif
+
 // -------------------------------------------------------------------------
 
 template <class CharT, class _T2> __forceinline
