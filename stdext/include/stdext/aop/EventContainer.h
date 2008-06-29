@@ -149,7 +149,7 @@ public:
 
 class DialogV2
 {
-	std::BlockPool m_recycle;
+private:
 	std::ScopeAlloc m_alloc;
 
 	EditV2 m_edit;
@@ -159,7 +159,7 @@ class DialogV2
 
 public:
 	DialogV2() 
-		: m_alloc(m_recycle), m_edit(m_alloc)
+		: m_edit(m_alloc)
 	{
 		TextChanged* textChanged = NULL;
 		m_edit.findEvent(EID(TextChanged), (void**)&textChanged);

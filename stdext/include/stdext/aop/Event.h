@@ -181,7 +181,6 @@ public:
 class Dialog
 {
 protected:
-	std::BlockPool m_recycle;
 	std::ScopeAlloc m_alloc;
 
 	Edit m_edit;
@@ -191,7 +190,7 @@ protected:
 
 public:
 	Dialog() 
-		: m_alloc(m_recycle), m_edit(m_alloc)
+		: m_edit(m_alloc)
 	{
 		m_editChanged = m_edit.textChanged()->addListener(this, &Dialog::onEditChanged);
 		m_editChanged2 = m_edit.textChanged()->addListener(this, &Dialog::onEditChanged2);
@@ -226,7 +225,7 @@ public:
 
 public:
 	Dialog2()
-		: m_edit2(m_alloc)
+		: m_edit2(Dialog::m_alloc)
 	{
 		m_editChanged = m_edit2.textChanged()->addListener(this, &Dialog2::onEditChanged);
 	}
