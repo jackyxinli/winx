@@ -304,20 +304,36 @@ TPL_RESTR_SYMBOL(xml_symbol, XmlSymbolG)
 // Usage: integer()			--- means: matching an Integer. that is: [+-]?d+
 
 typedef Repeat1<Digit> UInteger;
+typedef Repeat1<XDigit> HexInteger;
+typedef Repeat1<OctDigit> OctInteger;
+typedef Repeat1<BinDigit> BinInteger;
 
 typedef Ch<'+', '-'> Sign;
 typedef UAnd<Repeat01<Sign>, UInteger> Integer; // [+-]?d+
 
 TPL_REGEX_GUARD0(UInteger, UIntegerG, TagAssigUInteger)
+TPL_REGEX_GUARD0(HexInteger, HexIntegerG, TagAssigHexInteger)
+TPL_REGEX_GUARD0(OctInteger, OctIntegerG, TagAssigOctInteger)
+TPL_REGEX_GUARD0(BinInteger, BinIntegerG, TagAssigBinInteger)
 TPL_REGEX_GUARD(Integer, IntegerG, TagAssigInteger)
 
-inline Rule<UIntegerG> TPL_CALL u_integer()
-{
+inline Rule<UIntegerG> TPL_CALL u_integer() {
 	return Rule<UIntegerG>();
 }
 
-inline Rule<IntegerG> TPL_CALL integer()
-{
+inline Rule<HexIntegerG> TPL_CALL hex_integer() {
+	return Rule<HexIntegerG>();
+}
+
+inline Rule<OctIntegerG> TPL_CALL oct_integer() {
+	return Rule<OctIntegerG>();
+}
+
+inline Rule<BinIntegerG> TPL_CALL bin_integer() {
+	return Rule<BinIntegerG>();
+}
+
+inline Rule<IntegerG> TPL_CALL integer() {
 	return Rule<IntegerG>();
 }
 

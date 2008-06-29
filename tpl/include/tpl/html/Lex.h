@@ -30,6 +30,28 @@
 NS_TPL_BEGIN
 
 // =========================================================================
+// struct AssigHtmlUInt
+
+struct TagAssigHtmlUInt {};
+struct AssigHtmlUInt
+{
+	template <class UIntT, class Iterator>
+	static UIntT TPL_CALL get(Iterator pos, Iterator pos2, const void* = NULL)
+	{
+		TPL_ASSERT(*pos == '#');
+		++pos;
+		if (isdigit(*pos))
+			return AssigUInt::get<UIntT>(pos, pos2);
+		else {
+			TPL_ASSERT(*pos == 'x' || *pos == 'X');
+			return std::CastToUInt<UIntT>::get(++pos, pos2, 16);
+		}
+	}
+};
+
+TPL_ASSIG_(TagAssigHtmlUInt, AssigHtmlUInt)
+
+// =========================================================================
 // class HtmlEntityTable
 
 struct HtmlEntityPair
@@ -75,8 +97,11 @@ typedef HtmlEntityTableImp<> HtmlEntityTable;
 template <class Iterator>
 inline wchar_t TPL_CALL get_html_entity(Iterator pos, Iterator pos2)
 {
-	static const HtmlEntityTable entities = HtmlEntityTable();
+	if (*pos == '#')
+		return (wchar_t)AssigHtmlUInt::get<unsigned>(pos, pos2);
 
+	static const HtmlEntityTable entities = HtmlEntityTable();
+	
 	const size_t len = std::distance(pos, pos2);
 	TPL_ASSERT(len < HTML_ENTITY_LEN_MAX);
 	if (len >= HTML_ENTITY_LEN_MAX)
@@ -87,9 +112,19 @@ inline wchar_t TPL_CALL get_html_entity(Iterator pos, Iterator pos2)
 	
 	const HtmlEntityTable::const_iterator it = entities.find(key);
 	TPL_ASSERT(it != entities.end());
-	
 	return it != entities.end() ? (*it).second : HTML_ENTITY_DEFAULT_CHAR;
 }
+
+struct TagAssigHtmlEntity {};
+struct AssigHtmlEntity {
+	template <class TextT, class Iterator>
+	static TextT TPL_CALL get(Iterator pos, Iterator pos2, const void* = NULL) {
+		++pos; --pos2;
+		return get_html_entity(pos, pos2);
+	}
+};
+
+TPL_ASSIG_(TagAssigHtmlEntity, AssigHtmlEntity)
 
 // =========================================================================
 // function html_space/html_skipws/html_ws
@@ -160,25 +195,33 @@ inline Rule<HtmlValueG> TPL_CALL html_value() {
 }
 
 // =========================================================================
+// function html_u_integer
+
+// Usage: html_u_integer()/assign(a_uint_var)
+
+typedef Ch<'#'> HtmlUIPrefix_;
+typedef Ch<'x', 'X'> HtmlHexPrefix_;
+typedef UAnd<HtmlHexPrefix_, HexInteger> HtmlHexInteger_;
+
+typedef UAnd<HtmlUIPrefix_, HtmlHexInteger_> HtmlHexInteger;
+typedef UAnd<HtmlUIPrefix_, Or<UInteger, HtmlHexInteger_> > HtmlUInteger;
+
+TPL_REGEX_GUARD(HtmlUInteger, HtmlUIntegerG, TagAssigHtmlUInt)
+
+inline Rule<HtmlUIntegerG> TPL_CALL html_u_integer() {
+	return Rule<HtmlUIntegerG>();
+}
+
+// =========================================================================
 // function html_entity
 
-struct TagAssigHtmlEntity {};
-struct AssigHtmlEntity {
-	template <class TextT, class Iterator>
-	static TextT TPL_CALL get(Iterator pos, Iterator pos2, const void*) {
-		++pos; --pos2;
-		return get_html_entity(pos, pos2);
-	}
-};
-
-TPL_ASSIG_(TagAssigHtmlEntity, AssigHtmlEntity)
-
-// Usage: html_entity()/assign(a_string_var)
+// Usage: html_entity()/assign(a_wchar_var)
 
 typedef Ch<'&'> HtmlEntityStart_;
 typedef Ch<';'> HtmlEntityEnd_;
+typedef Or<HtmlSymbol, HtmlUInteger> HtmlEntityVal_;
 
-typedef UAnd<HtmlEntityStart_, HtmlSymbol, HtmlEntityEnd_> HtmlEntity;
+typedef UAnd<HtmlEntityStart_, HtmlEntityVal_, HtmlEntityEnd_> HtmlEntity;
 
 TPL_REGEX_GUARD(HtmlEntity, HtmlEntityG, TagAssigHtmlEntity)
 

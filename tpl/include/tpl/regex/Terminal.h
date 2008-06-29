@@ -330,13 +330,15 @@ Grammar< Op<T1, Gr<Ch1_> > > TPL_CALL operator op(const Grammar<T1>& x, CharT y)
 // Usage: ...
 
 typedef Ch<' ', '\t'> NonEolSpace;
+typedef Ch<'0', '1'> BinDigit;
 typedef ChRange<'0', '9'> Digit;
+typedef ChRange<'0', '7'> OctDigit;
 typedef ChRange<'a', 'z'> LowerAlpha;
 typedef ChRange<'A', 'Z'> UpperAlpha;
 
 typedef EqCh<std::CharType::IsSpace> Space;
 typedef EqCh<std::CharType::IsAlpha> Alpha;
-typedef EqCh<std::CharType::IsXDigit> XDigit;
+typedef EqCh<std::CharType::IsXDigit> XDigit, HexDigit;
 
 typedef EqCh<std::CharType::IsCSymbolFirstChar> CSymbolFirstChar;
 typedef EqCh<std::CharType::IsCSymbolNextChar> CSymbolNextChar;
@@ -370,6 +372,14 @@ inline Rule<Digit> TPL_CALL digit() {
 
 inline Rule<XDigit> TPL_CALL xdigit() {
 	return Rule<XDigit>();
+}
+
+inline Rule<OctDigit> TPL_CALL oct_digit() {
+	return Rule<OctDigit>();
+}
+
+inline Rule<BinDigit> TPL_CALL bin_digit() {
+	return Rule<BinDigit>();
 }
 
 // -------------------------------------------------------------------------

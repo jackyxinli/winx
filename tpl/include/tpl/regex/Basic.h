@@ -98,11 +98,11 @@ enum RuleCharacter
 struct TagAssigNone {};
 struct TagAssigLst {};
 struct TagAssigChar {};
-struct TagAssigUInteger {};	// dec radix
+struct TagAssigUInteger {};		// dec radix
 struct TagAssigInteger {};		// dec radix
-struct TagAssigHexUInteger {};	// hex radix
-struct TagAssigOctUInteger {};	// oct radix
-struct TagAssigBinUInteger {};	// binary radix
+struct TagAssigHexInteger {};	// hex radix
+struct TagAssigOctInteger {};	// oct radix
+struct TagAssigBinInteger {};	// binary radix
 struct TagAssigUReal {};		// unsigned real
 struct TagAssigReal {};		// real
 struct TagAssigUFraction {};

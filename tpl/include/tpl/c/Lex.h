@@ -225,6 +225,46 @@ inline Rule<CStringOrCharG> TPL_CALL c_string_or_char() {
 }
 
 // =========================================================================
+// function c_hex_integer(), c_oct_integer(), c_integer()
+
+struct TagAssigCHexInteger {};
+struct TagAssigCOctInteger {};
+struct TagAssigCUInteger {};
+struct TagAssigCInteger {};
+
+typedef Ch<'0'> CChar0_;
+typedef Ch<'x', 'X'> CCharX_;
+
+typedef UAnd<CChar0_, CCharX_, HexInteger> CHexInteger;
+typedef UAnd<CChar0_, OctInteger> COctInteger;
+
+typedef UAnd<CChar0_, Or<UAnd<CCharX_, HexInteger>, OctInteger> > CHexOrOctInteger;
+
+typedef Or<CHexOrOctInteger, UInteger> CUInteger;
+typedef Or<CHexOrOctInteger, Integer> CInteger;
+
+TPL_REGEX_GUARD(CHexInteger, CHexIntegerG, TagAssigCHexInteger);
+TPL_REGEX_GUARD(COctInteger, COctIntegerG, TagAssigCOctInteger);
+TPL_REGEX_GUARD(CUInteger, CUIntegerG, TagAssigCUInteger);
+TPL_REGEX_GUARD(CInteger, CIntegerG, TagAssigCInteger);
+
+inline Rule<CHexIntegerG> TPL_CALL c_hex_integer() {
+	return Rule<CHexIntegerG>();
+}
+
+inline Rule<COctIntegerG> TPL_CALL c_oct_integer() {
+	return Rule<COctIntegerG>();
+}
+
+inline Rule<CUIntegerG> TPL_CALL c_u_integer() {
+	return Rule<CUIntegerG>();
+}
+
+inline Rule<CIntegerG> TPL_CALL c_integer() {
+	return Rule<CIntegerG>();
+}
+
+// =========================================================================
 // $Log: $
 
 NS_TPL_END

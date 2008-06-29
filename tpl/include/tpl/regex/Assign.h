@@ -43,7 +43,7 @@ class AssigStr
 {
 public:
 	template <class StringT, class Iterator>
-	static StringT TPL_CALL get(Iterator pos, Iterator pos2, const void* pExtra) {
+	static StringT TPL_CALL get(Iterator pos, Iterator pos2, const void* = NULL) {
 		return StringT(pos, pos2);
 	}
 };
@@ -57,32 +57,50 @@ class AssigCh
 {
 public:
 	template <class CharT, class Iterator>
-	static CharT TPL_CALL get(Iterator pos, Iterator pos2, const void* pExtra) {
+	static CharT TPL_CALL get(Iterator pos, Iterator pos2, const void* = NULL) {
 		TPL_ASSERT(std::distance(pos, pos2) == 1);
 		return *pos;
 	}
 };
 
 // -------------------------------------------------------------------------
-// class AssigUInt
+// class AssigHexInt
 
-// Usage: Rule/assign(a_uint_var)
+// Usage: Rule/assign(u_integer_var)
 
-class AssigUInt
+class AssigHexInt
 {
 public:
 	template <class UIntT, class Iterator>
-	static UIntT TPL_CALL get(Iterator first, Iterator last, const void* pExtra)
+	static UIntT TPL_CALL get(Iterator pos, Iterator pos2, const void* = NULL) {
+		return std::CastToUInt<UIntT>::get(pos, pos2, 16);
+	}
+};
+
+// -------------------------------------------------------------------------
+// class AssigUInt/AssigOctInt
+
+// Usage: Rule/assign(a_uint_var)
+
+template <int radix = 10>
+class AssigUI
+{
+public:
+	template <class UIntT, class Iterator>
+	static UIntT TPL_CALL get(Iterator first, Iterator last, const void* = NULL)
 	{
 		UIntT val = 0;
 		for (; first != last; ++first) {
-			TPL_ASSERT(*first >= '0' && *first <= '9');
-			val = val * 10 + (*first - '0');
+			TPL_ASSERT(*first >= '0' && *first <= radix+'0');
+			val = val * radix + (*first - '0');
 		}
-		TPL_ASSERT(first == last);
 		return val;
 	}
 };
+
+typedef AssigUI<10> AssigUInt;
+typedef AssigUI<8> AssigOctInt;
+typedef AssigUI<2> AssigBinInt;
 
 // -------------------------------------------------------------------------
 // class AssigInt
@@ -93,15 +111,15 @@ class AssigInt
 {
 public:
 	template <class IntT, class Iterator>
-	static IntT TPL_CALL get(Iterator first, Iterator last, const void* pExtra)
+	static IntT TPL_CALL get(Iterator first, Iterator last, const void* = NULL)
 	{
 		if (*first == '-') {
-			return -AssigUInt::get<IntT>(first+1, last, pExtra);
+			return -AssigUInt::get<IntT>(first+1, last);
 		}
 		else if (*first == '+') {
 			++first;
 		}
-		return AssigUInt::get<IntT>(first, last, pExtra);
+		return AssigUInt::get<IntT>(first, last);
 	}
 };
 
@@ -110,28 +128,12 @@ public:
 
 // Usage: Rule/assign(a_real_var)
 
-template <class RealT>
-inline RealT TPL_CALL _getReal(const char* first, const char* last)
-{
-	RealT result = (RealT)strtod(first, (char**)&first);
-	TPL_ASSERT(first == last);
-	return result;
-}
-
-template <class RealT>
-inline RealT TPL_CALL _getReal(const wchar_t* first, const wchar_t* last)
-{
-	RealT result = (RealT)wcstod(first, (wchar_t**)&first);
-	TPL_ASSERT(first == last);
-	return result;
-}
-
 class AssigReal
 {
 public:
 	template <class RealT, class Iterator>
-	static RealT TPL_CALL get(Iterator pos, Iterator pos2, const void* pExtra) {
-		return _getReal<RealT>(pos, pos2);
+	static RealT TPL_CALL get(Iterator pos, Iterator pos2, const void* = NULL) {
+		return std::CastToReal<RealT>::get(pos, pos2);
 	}
 };
 
@@ -180,6 +182,9 @@ TPL_ASSIG(TagAssigNone, AssigStr)
 TPL_ASSIG(TagAssigLst, AssigLst)
 TPL_ASSIG(TagAssigChar, AssigCh)
 TPL_ASSIG(TagAssigUInteger, AssigUInt)
+TPL_ASSIG(TagAssigHexInteger, AssigHexInt)
+TPL_ASSIG(TagAssigOctInteger, AssigOctInt)
+TPL_ASSIG(TagAssigBinInteger, AssigBinInt)
 TPL_ASSIG(TagAssigInteger, AssigInt)
 TPL_ASSIG(TagAssigUReal, AssigReal)
 TPL_ASSIG(TagAssigReal, AssigReal)
