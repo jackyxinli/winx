@@ -176,6 +176,8 @@ inline Rule<HtmlSymbolG> TPL_CALL html_symbol() {
 // function html_value
 
 struct TagAssigHtmlValue {};
+struct TagAssigHtmlValueStrict {};
+struct TagAssigHtmlValueSmart {};
 
 template <int delim = '\"'>
 class HtmlValueTraits
@@ -188,12 +190,41 @@ public:
 	typedef UAnd<Delim_, End_> rule_type;
 };
 
+//
+// ch(delim) + find<true>(delim)
+//
 typedef HtmlValueTraits<'\"'>::rule_type HtmlDoubleQuoteValue;
 typedef HtmlValueTraits<'\''>::rule_type HtmlSingleQuoteValue;
+typedef Or<HtmlDoubleQuoteValue, HtmlSingleQuoteValue> HtmlValueStrict;
 
-typedef Or<HtmlDoubleQuoteValue, HtmlSingleQuoteValue> HtmlValue;
+TPL_REGEX_GUARD(HtmlValueStrict, HtmlValueStrictG, TagAssigHtmlValueStrict);
 
-TPL_REGEX_GUARD(HtmlValue, HtmlValueG, TagAssigHtmlValue);
+inline Rule<HtmlValueStrictG> TPL_CALL html_strict_value() {
+	return Rule<HtmlValueStrictG>();
+}
+
+//
+// skipws() + find(space()|'>'|'/') % ('/' + ~ch('>'))
+//
+typedef Ch<'>'> HtmlChGt_;
+typedef Ch<'/'> HtmlChDiv_;
+typedef And<HtmlChDiv_, Not<HtmlChGt_> > HtmlValueNotEnd_;
+
+typedef Or<Space, Or<HtmlChGt_, HtmlChDiv_> > HtmlValueSmartDelim;
+typedef Lst<FindIf<HtmlValueSmartDelim>, HtmlValueNotEnd_> HtmlValueSmart;
+
+TPL_REGEX_GUARD0(HtmlValueSmart, HtmlValueSmartG, TagAssigHtmlValueSmart);
+
+inline Rule<HtmlValueSmartG> TPL_CALL html_smart_value() {
+	return Rule<HtmlValueSmartG>();
+}
+
+//
+// html_strict_value() | html_smart_value()
+//
+typedef Or<HtmlValueStrictG, HtmlValueSmartG> HtmlValue;
+
+TPL_REGEX_GUARD0(HtmlValue, HtmlValueG, TagAssigHtmlValue);
 
 inline Rule<HtmlValueG> TPL_CALL html_value() {
 	return Rule<HtmlValueG>();
