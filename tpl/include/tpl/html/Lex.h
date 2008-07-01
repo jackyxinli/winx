@@ -34,6 +34,15 @@
 NS_TPL_BEGIN
 
 // =========================================================================
+
+typedef Ch<'>'> HtmlChGt_;
+typedef Ch<'/'> HtmlChDiv_;
+typedef Ch<'='> HtmlChEq_;
+typedef Ch<'<'> HtmlChLt_;
+typedef Ch<'!'> HtmlChExcl_; // exclaim
+typedef Ch<'-'> HtmlChMus_;
+
+// =========================================================================
 // struct AssigHtmlUInt
 
 struct TagAssigHtmlUInt {};
@@ -210,10 +219,7 @@ inline Rule<HtmlStrictValueG> TPL_CALL html_strict_value() {
 //
 // skipws() + find(space()|'>'|'/') % ('/' + ~ch('>'))
 //
-typedef Ch<'>'> HtmlChGt_;
-typedef Ch<'/'> HtmlChDiv_;
 typedef And<HtmlChDiv_, Not<HtmlChGt_> > HtmlValueNotEnd_;
-
 typedef Or<Space, Or<HtmlChGt_, HtmlChDiv_> > HtmlSmartValueDelim;
 typedef Lst<FindIf<HtmlSmartValueDelim>, HtmlValueNotEnd_> HtmlSmartValueG_;
 
@@ -241,7 +247,6 @@ inline Rule<HtmlValueG> TPL_CALL html_value() {
 //
 // html_symbol() + html_skipws() + !('=' + html_skipws() + html_value())
 //
-typedef Ch<'='> HtmlChEq_;
 typedef And<HtmlChEq_, And<HtmlSkipWs, HtmlValueG_> > HtmlPropValG_;
 typedef UAnd<HtmlSymbolU, HtmlSkipWs, Repeat01<HtmlPropValG_> > HtmlPropertyG_;
 
@@ -287,20 +292,47 @@ inline Rule<HtmlEntityG> TPL_CALL html_entity() {
 }
 
 // =========================================================================
-// function html_script_code
+// function html_comment
+
+typedef UAnd<HtmlChLt_, HtmlChExcl_, HtmlChMus_, HtmlChMus_> HtmlCommentStartU;
+typedef UAnd<HtmlChMus_, HtmlChMus_, HtmlChGt_> HtmlCommentEndU;
+
+struct FindHtmlCommentEnd_ : UFindStr<char> {
+	FindHtmlCommentEnd_() : UFindStr<char>("-->") {}
+};
+
+typedef UAnd<HtmlCommentStartU, FindHtmlCommentEnd_> HtmlCommentU;
+
+TPL_REGEX_GUARD(HtmlCommentStartU, HtmlCommentStartG, TagAssigNone)
+TPL_REGEX_GUARD(HtmlCommentEndU, HtmlCommentEndG, TagAssigNone)
+TPL_REGEX_GUARD(HtmlCommentU, HtmlCommentG, TagAssigNone)
+
+inline Rule<HtmlCommentG> TPL_CALL html_comment() {
+	return Rule<HtmlCommentG>();
+}
+ 
+// =========================================================================
+// function html_uncommented_code/html_commented_script_code
 
 /* example:
  *
 	<script>
+	
+	// html_uncommented_script_code:
+	
 		var hello="Hello, <script>!";
 		alert(hello);
+		
 	<!--
-		var hello='Hello, </script>-->!';
-		alert(hello);
+		// html_commented_script_code:
+	
+			var hello='Hello, </script>-->!';
+			alert(hello);
 	-->
 	</script>
 */
 
+template <int endc1 = '<', class Pred2 = Ch<'/', '!'>, int endc3 = -1>
 class HtmlScriptCode
 {
 public:
@@ -309,63 +341,44 @@ public:
 	typedef SelfConvertible convertible_type;
 	typedef TagAssigNone assig_tag;
 
-private:
-	template <class SourceT, class ContextT>
-	static void TPL_CALL skip_commented_script_code(SourceT& ar, ContextT& context)
-	{
-		typedef FindChSet<false, '-', '\"', '\''> FindSpec_;
-		
-		for (;;)
-		{
-			if (!FindSpec_().match(ar, context))
-				return;
-			
-			if (ar.peek() == '-') {
-				ar.get();
-				if (ar.peek() == '-') {
-					ar.get();
-					if (ar.peek() == '>') {
-						ar.get();
-						return;
-					}
-				}
-			}
-			else {
-				TPL_ASSERT(ar.peek() == '\'' || ar.peek() == '\"');
-				CStringOrCharU().match(ar, context);
-			}
-		}
-	}
-	
 public:
 	template <class SourceT, class ContextT>
 	bool TPL_CALL match(SourceT& ar, ContextT& context) const
 	{
-		typedef FindChSet<false, '<', '\"', '\''> FindSpec_;
+		typedef FindChSet<false, endc1, '\"', '\''> FindSpec;
+		
+		const FindSpec find1 = FindSpec();
+		const Pred2 pred2 = Pred2();
+		const CStringOrCharU stringOrChar = CStringOrCharU();
 		
 		for (;;)
 		{
-			if (!FindSpec_().match(ar, context))
+			if (!find1.match(ar, context))
 				return false;
 			
-			if (ar.peek() == '<')
+			if (ar.peek() == endc1)
 			{
 				ar.get();
-				switch (ar.peek())
+				if ( pred2(ar.peek()) )
 				{
-				case '/':
-					ar.unget('<');
-					return true;
-				case '!':
-					ar.get();
-					if (ar.get() == '-' && ar.get() == '-')
-						skip_commented_script_code(ar, context);
+					if (endc3 == -1) {
+						ar.unget(endc1);
+						return true;
+					}
+					else {
+						typename SourceT::int_type c2 = ar.get();
+						if (ar.peek() == endc3) {
+							ar.unget(c2);
+							ar.unget(endc1);
+							return true;
+						}
+					}
 				}
 			}
 			else
 			{
 				TPL_ASSERT(ar.peek() == '\'' || ar.peek() == '\"');
-				CStringOrCharU().match(ar, context);
+				stringOrChar.match(ar, context);
 			}
 		}
 	}
@@ -373,8 +386,36 @@ public:
 	TPL_SIMPLEST_GRAMMAR_();
 };
 
-inline Rule<HtmlScriptCode> TPL_CALL html_script_code() {
-	return Rule<HtmlScriptCode>();
+typedef UAnd<Not<HtmlChLt_>, HtmlScriptCode<> > HtmlUncommentedScriptCodeU;
+typedef HtmlScriptCode<'-', Ch<'-'>, '>'> HtmlCommentedScriptCodeU;
+
+TPL_REGEX_GUARD(HtmlUncommentedScriptCodeU, HtmlUncommentedScriptCodeG, TagAssigNone)
+TPL_REGEX_GUARD(HtmlCommentedScriptCodeU, HtmlCommentedScriptCodeG, TagAssigNone)
+
+inline Rule<HtmlUncommentedScriptCodeG> TPL_CALL html_uncommented_script_code() {
+	return Rule<HtmlUncommentedScriptCodeG>();
+}
+
+inline Rule<HtmlCommentedScriptCodeG> TPL_CALL html_commented_script_code() {
+	return Rule<HtmlCommentedScriptCodeG>();
+}
+
+// =========================================================================
+// function html_script_codes
+
+typedef UAnd<HtmlCommentStartU, HtmlCommentedScriptCodeU, HtmlCommentEndU> HtmlCommentedScriptCodeU2_;
+
+TPL_REGEX_GUARD(HtmlCommentedScriptCodeU2_, HtmlCommentedScriptCodeG2_, TagAssigNone)
+
+typedef Or<HtmlUncommentedScriptCodeG, HtmlCommentedScriptCodeG2_> HtmlScriptCodeG;
+typedef Repeat0<HtmlScriptCodeG> HtmlScriptCodesG;
+
+inline Rule<HtmlScriptCodeG> TPL_CALL html_script_code() {
+	return Rule<HtmlScriptCodeG>();
+}
+
+inline Rule<HtmlScriptCodesG> TPL_CALL html_script_codes() {
+	return Rule<HtmlScriptCodesG>();
 }
 
 // =========================================================================
