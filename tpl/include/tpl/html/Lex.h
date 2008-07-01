@@ -23,6 +23,10 @@
 #include "../RegExp.h"
 #endif
 
+#ifndef TPL_C_LEX_H
+#include "../c/Lex.h"
+#endif
+
 #if !defined(_GLIBCXX_MAP) && !defined(_MAP_) && !defined(_MAP)
 #include <map>
 #endif
@@ -165,7 +169,7 @@ inline Rule<HtmlSymbolNextChar> TPL_CALL html_symbol_next_char() {
 	return Rule<HtmlSymbolNextChar>();
 }
 
-typedef XmlSymbol HtmlSymbol;
+typedef XmlSymbolU HtmlSymbolU;
 typedef XmlSymbolG HtmlSymbolG;
 
 inline Rule<HtmlSymbolG> TPL_CALL html_symbol() {
@@ -193,11 +197,11 @@ public:
 //
 // ch(delim) + find<true>(delim)
 //
-typedef HtmlValueTraits<'\"'>::rule_type HtmlDoubleQuoteValue;
-typedef HtmlValueTraits<'\''>::rule_type HtmlSingleQuoteValue;
-typedef Or<HtmlDoubleQuoteValue, HtmlSingleQuoteValue> HtmlStrictValue;
+typedef HtmlValueTraits<'\"'>::rule_type HtmlDoubleQuoteValueU;
+typedef HtmlValueTraits<'\''>::rule_type HtmlSingleQuoteValueU;
+typedef Or<HtmlDoubleQuoteValueU, HtmlSingleQuoteValueU> HtmlStrictValueU;
 
-TPL_REGEX_GUARD(HtmlStrictValue, HtmlStrictValueG, TagAssigHtmlStrictValue);
+TPL_REGEX_GUARD(HtmlStrictValueU, HtmlStrictValueG, TagAssigHtmlStrictValue);
 
 inline Rule<HtmlStrictValueG> TPL_CALL html_strict_value() {
 	return Rule<HtmlStrictValueG>();
@@ -211,9 +215,9 @@ typedef Ch<'/'> HtmlChDiv_;
 typedef And<HtmlChDiv_, Not<HtmlChGt_> > HtmlValueNotEnd_;
 
 typedef Or<Space, Or<HtmlChGt_, HtmlChDiv_> > HtmlSmartValueDelim;
-typedef Lst<FindIf<HtmlSmartValueDelim>, HtmlValueNotEnd_> HtmlSmartValue;
+typedef Lst<FindIf<HtmlSmartValueDelim>, HtmlValueNotEnd_> HtmlSmartValueG_;
 
-TPL_REGEX_GUARD0(HtmlSmartValue, HtmlSmartValueG, TagAssigHtmlSmartValue);
+TPL_REGEX_GUARD0(HtmlSmartValueG_, HtmlSmartValueG, TagAssigHtmlSmartValue);
 
 inline Rule<HtmlSmartValueG> TPL_CALL html_smart_value() {
 	return Rule<HtmlSmartValueG>();
@@ -222,9 +226,9 @@ inline Rule<HtmlSmartValueG> TPL_CALL html_smart_value() {
 //
 // html_strict_value() | html_smart_value()
 //
-typedef Or<HtmlStrictValueG, HtmlSmartValueG> HtmlValue;
+typedef Or<HtmlStrictValueG, HtmlSmartValueG> HtmlValueG_;
 
-TPL_REGEX_GUARD0(HtmlValue, HtmlValueG, TagAssigHtmlValue);
+TPL_REGEX_GUARD0(HtmlValueG_, HtmlValueG, TagAssigHtmlValue);
 
 inline Rule<HtmlValueG> TPL_CALL html_value() {
 	return Rule<HtmlValueG>();
@@ -237,12 +241,12 @@ inline Rule<HtmlValueG> TPL_CALL html_value() {
 
 typedef Ch<'#'> HtmlUIPrefix_;
 typedef Ch<'x', 'X'> HtmlHexPrefix_;
-typedef UAnd<HtmlHexPrefix_, HexInteger> HtmlHexInteger_;
+typedef UAnd<HtmlHexPrefix_, HexIntegerU> HtmlHexIntegerU_;
 
-typedef UAnd<HtmlUIPrefix_, HtmlHexInteger_> HtmlHexInteger;
-typedef UAnd<HtmlUIPrefix_, Or<UInteger, HtmlHexInteger_> > HtmlUInteger;
+typedef UAnd<HtmlUIPrefix_, HtmlHexIntegerU_> HtmlHexIntegerU;
+typedef UAnd<HtmlUIPrefix_, Or<UIntegerU, HtmlHexIntegerU_> > HtmlUIntegerU;
 
-TPL_REGEX_GUARD(HtmlUInteger, HtmlUIntegerG, TagAssigHtmlUInt)
+TPL_REGEX_GUARD(HtmlUIntegerU, HtmlUIntegerG, TagAssigHtmlUInt)
 
 inline Rule<HtmlUIntegerG> TPL_CALL html_u_integer() {
 	return Rule<HtmlUIntegerG>();
@@ -255,14 +259,105 @@ inline Rule<HtmlUIntegerG> TPL_CALL html_u_integer() {
 
 typedef Ch<'&'> HtmlEntityStart_;
 typedef Ch<';'> HtmlEntityEnd_;
-typedef Or<HtmlSymbol, HtmlUInteger> HtmlEntityVal_;
+typedef Or<HtmlSymbolU, HtmlUIntegerU> HtmlEntityVal_;
 
-typedef UAnd<HtmlEntityStart_, HtmlEntityVal_, HtmlEntityEnd_> HtmlEntity;
+typedef UAnd<HtmlEntityStart_, HtmlEntityVal_, HtmlEntityEnd_> HtmlEntityU;
 
-TPL_REGEX_GUARD(HtmlEntity, HtmlEntityG, TagAssigHtmlEntity)
+TPL_REGEX_GUARD(HtmlEntityU, HtmlEntityG, TagAssigHtmlEntity)
 
 inline Rule<HtmlEntityG> TPL_CALL html_entity() {
 	return Rule<HtmlEntityG>();
+}
+
+// =========================================================================
+// function html_script_code
+
+/* example:
+ *
+	<script>
+		var hello="Hello, <script>!";
+		alert(hello);
+	<!--
+		var hello='Hello, </script>-->!';
+		alert(hello);
+	-->
+	</script>
+*/
+
+class HtmlScriptCode
+{
+public:
+	enum { character = 0 };
+
+	typedef SelfConvertible convertible_type;
+	typedef TagAssigNone assig_tag;
+
+private:
+	template <class SourceT, class ContextT>
+	static void TPL_CALL skip_commented_script_code(SourceT& ar, ContextT& context)
+	{
+		typedef FindChSet<false, '-', '\"', '\''> FindSpec_;
+		
+		for (;;)
+		{
+			if (!FindSpec_().match(ar, context))
+				return;
+			
+			if (ar.peek() == '-') {
+				ar.get();
+				if (ar.peek() == '-') {
+					ar.get();
+					if (ar.peek() == '>') {
+						ar.get();
+						return;
+					}
+				}
+			}
+			else {
+				TPL_ASSERT(ar.peek() == '\'' || ar.peek() == '\"');
+				CStringOrCharU().match(ar, context);
+			}
+		}
+	}
+	
+public:
+	template <class SourceT, class ContextT>
+	bool TPL_CALL match(SourceT& ar, ContextT& context) const
+	{
+		typedef FindChSet<false, '<', '\"', '\''> FindSpec_;
+		
+		for (;;)
+		{
+			if (!FindSpec_().match(ar, context))
+				return false;
+			
+			if (ar.peek() == '<')
+			{
+				ar.get();
+				switch (ar.peek())
+				{
+				case '/':
+					ar.unget('<');
+					return true;
+				case '!':
+					ar.get();
+					if (ar.get() == '-' && ar.get() == '-')
+						skip_commented_script_code(ar, context);
+				}
+			}
+			else
+			{
+				TPL_ASSERT(ar.peek() == '\'' || ar.peek() == '\"');
+				CStringOrCharU().match(ar, context);
+			}
+		}
+	}
+
+	TPL_SIMPLEST_GRAMMAR_();
+};
+
+inline Rule<HtmlScriptCode> TPL_CALL html_script_code() {
+	return Rule<HtmlScriptCode>();
 }
 
 // =========================================================================

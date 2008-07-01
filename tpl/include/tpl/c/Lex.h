@@ -87,11 +87,11 @@ typedef Ch<'/'> ChDiv_;
 typedef UAnd<ChDiv_, CFindContinuableEol<false> > CppSingleLineCommentEnd_;
 typedef UAnd<ChDiv_, CFindContinuableEol<true> > CppSingleLineCommentEnd_EatEol_;
 
-typedef UAnd<ChDiv_, CppSingleLineCommentEnd_> CppSingleLineComment;
-typedef UAnd<ChDiv_, CppSingleLineCommentEnd_EatEol_> CppSingleLineCommentEatEol;
+typedef UAnd<ChDiv_, CppSingleLineCommentEnd_> CppSingleLineCommentU;
+typedef UAnd<ChDiv_, CppSingleLineCommentEnd_EatEol_> CppSingleLineCommentEatEolU;
 
-TPL_REGEX_GUARD(CppSingleLineComment, CppSingleLineCommentG, TagAssigNone);
-TPL_REGEX_GUARD(CppSingleLineCommentEatEol, CppSingleLineCommentEatEolG, TagAssigNone);
+TPL_REGEX_GUARD(CppSingleLineCommentU, CppSingleLineCommentG, TagAssigNone);
+TPL_REGEX_GUARD(CppSingleLineCommentEatEolU, CppSingleLineCommentEatEolG, TagAssigNone);
 
 inline Rule<CppSingleLineCommentG> TPL_CALL cpp_single_line_comment() {
 	return Rule<CppSingleLineCommentG>();
@@ -122,9 +122,9 @@ struct FindCCommentEnd_ : UFindStr<char> {
 };
 
 typedef UAnd<ChMul_, FindCCommentEnd_> CCommentEnd_;
-typedef UAnd<ChDiv_, CCommentEnd_> CComment;
+typedef UAnd<ChDiv_, CCommentEnd_> CCommentU;
 
-TPL_REGEX_GUARD(CComment, CCommentG, TagAssigNone);
+TPL_REGEX_GUARD(CCommentU, CCommentG, TagAssigNone);
 
 inline Rule<CCommentG> TPL_CALL c_comment() {
 	return Rule<CCommentG>();
@@ -136,11 +136,11 @@ inline Rule<CCommentG> TPL_CALL c_comment() {
 typedef Or<CppSingleLineCommentEnd_, CCommentEnd_> CppCommentEnd_;
 typedef Or<CppSingleLineCommentEnd_EatEol_, CCommentEnd_> CppCommentEnd_EatEol_;
 
-typedef UAnd<ChDiv_, CppCommentEnd_> CppComment;
-typedef UAnd<ChDiv_, CppCommentEnd_EatEol_> CppCommentEatEol;
+typedef UAnd<ChDiv_, CppCommentEnd_> CppCommentU;
+typedef UAnd<ChDiv_, CppCommentEnd_EatEol_> CppCommentEatEolU;
 
-TPL_REGEX_GUARD(CppComment, CppCommentG, TagAssigNone);
-TPL_REGEX_GUARD(CppCommentEatEol, CppCommentEatEolG, TagAssigNone);
+TPL_REGEX_GUARD(CppCommentU, CppCommentG, TagAssigNone);
+TPL_REGEX_GUARD(CppCommentEatEolU, CppCommentEatEolG, TagAssigNone);
 
 inline Rule<CppCommentG> TPL_CALL cpp_comment() {
 	return Rule<CppCommentG>();
@@ -207,9 +207,13 @@ public:
 	typedef UAnd<Delim_, Chars_, Delim_> rule_type;
 };
 
-TPL_REGEX_GUARD(CStringTraits<'\"'>::rule_type, CStringG, TagAssigCString);
-TPL_REGEX_GUARD(CStringTraits<'\''>::rule_type, CCharG, TagAssigCChar);
+typedef CStringTraits<'\"'>::rule_type CStringU;
+typedef CStringTraits<'\''>::rule_type CCharU;
 
+TPL_REGEX_GUARD(CStringU, CStringG, TagAssigCString);
+TPL_REGEX_GUARD(CCharU, CCharG, TagAssigCChar);
+
+typedef Or<CStringU, CCharU> CStringOrCharU;
 typedef Or<CStringG, CCharG> CStringOrCharG;
 
 inline Rule<CStringG> TPL_CALL c_string() {
@@ -235,18 +239,18 @@ struct TagAssigCInteger {};
 typedef Ch<'0'> CChar0_;
 typedef Ch<'x', 'X'> CCharX_;
 
-typedef UAnd<CChar0_, CCharX_, HexInteger> CHexInteger;
-typedef UAnd<CChar0_, OctInteger> COctInteger;
+typedef UAnd<CChar0_, CCharX_, HexIntegerU> CHexIntegerU;
+typedef UAnd<CChar0_, OctIntegerU> COctIntegerU;
 
-typedef UAnd<CChar0_, Or<UAnd<CCharX_, HexInteger>, OctInteger> > CHexOrOctInteger;
+typedef UAnd<CChar0_, Or<UAnd<CCharX_, HexIntegerU>, OctIntegerU> > CHexOrOctIntegerU;
 
-typedef Or<CHexOrOctInteger, UInteger> CUInteger;
-typedef Or<CHexOrOctInteger, Integer> CInteger;
+typedef Or<CHexOrOctIntegerU, UIntegerU> CUIntegerU;
+typedef Or<CHexOrOctIntegerU, IntegerU> CIntegerU;
 
-TPL_REGEX_GUARD(CHexInteger, CHexIntegerG, TagAssigCHexInteger);
-TPL_REGEX_GUARD(COctInteger, COctIntegerG, TagAssigCOctInteger);
-TPL_REGEX_GUARD(CUInteger, CUIntegerG, TagAssigCUInteger);
-TPL_REGEX_GUARD(CInteger, CIntegerG, TagAssigCInteger);
+TPL_REGEX_GUARD(CHexIntegerU, CHexIntegerG, TagAssigCHexInteger);
+TPL_REGEX_GUARD(COctIntegerU, COctIntegerG, TagAssigCOctInteger);
+TPL_REGEX_GUARD(CUIntegerU, CUIntegerG, TagAssigCUInteger);
+TPL_REGEX_GUARD(CIntegerU, CIntegerG, TagAssigCInteger);
 
 inline Rule<CHexIntegerG> TPL_CALL c_hex_integer() {
 	return Rule<CHexIntegerG>();

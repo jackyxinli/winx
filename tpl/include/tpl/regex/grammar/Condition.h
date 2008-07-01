@@ -58,7 +58,7 @@ public:
 		if (m_x.match(ar, context)) {
 			const iterator pos2 = ar.position();
 			const value_type val(assig_type::template get<value_type>(pos, pos2, &m_x));
-			if (m_y.match_if(val, ar, context, skipper_))
+			if (m_y.match_if(val, ar, context, skipper_) == matchOk)
 				return true;
 		}
 		trans.rollback(ar);
@@ -97,10 +97,13 @@ public:
 	typedef typename CondT::value_type value_type;
 	
 	template <class ValueT, class SourceT, class ContextT, class SkipperT>
-	bool TPL_CALL match_if(
+	MatchCode TPL_CALL match_if(
 		const ValueT& val, SourceT& ar, ContextT& context, const SkipperT& skipper_) const
 	{
-		return m_cond(val) && m_next.match(ar, context, skipper_);
+		if (m_cond(val))
+			return m_next.match(ar, context, skipper_) ? matchOk : matchStop;
+		else
+			return matchFailed;
 	}
 };
 
@@ -127,11 +130,14 @@ public:
 	typedef typename AndValueType<T1, T2>::value_type value_type;
 
 	template <class ValueT, class SourceT, class ContextT, class SkipperT>
-	bool TPL_CALL match_if(
+	MatchCode TPL_CALL match_if(
 		const ValueT& val, SourceT& ar, ContextT& context, const SkipperT& skipper_) const
 	{
-		return m_x.match_if(val, ar, context, skipper_) ||
-			m_y.match_if(val, ar, context, skipper_);
+		MatchCode result = m_x.match_if(val, ar, context, skipper_);
+		if (result != matchFailed)
+			return result;
+		else
+			return m_y.match_if(val, ar, context, skipper_);
 	}
 };
 

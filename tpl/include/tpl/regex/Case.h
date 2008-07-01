@@ -303,12 +303,12 @@ public:
 	typedef typename CondT::value_type value_type;
 
 	template <class ValueT, class SourceT, class ContextT>
-	bool TPL_CALL match_if(const ValueT& val, SourceT& ar, ContextT& context) const
+	MatchCode TPL_CALL match_if(const ValueT& val, SourceT& ar, ContextT& context) const
 	{
 		if (!m_cond(val))
-			return false;
+			return matchFailed;
 		m_act();
-		return true;
+		return matchOk;
 	}
 };
 

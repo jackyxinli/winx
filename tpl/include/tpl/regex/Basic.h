@@ -330,6 +330,13 @@ public:
 // =========================================================================
 // class Condition
 
+enum MatchCode
+{
+	matchFailed = 0,
+	matchOk = 1,
+	matchStop = 2,
+};
+
 template <class ConditionT>
 class Condition : public ConditionT
 {
@@ -352,7 +359,7 @@ public:
 //	typedef typename ContitionT::value_type value_type;
 //
 //	template <class ValueT, class SourceT, class ContextT>
-//	bool TPL_CALL match_if(const ValueT& val, SourceT& ar, ContextT& context) const;
+//	MatchCode TPL_CALL match_if(const ValueT& val, SourceT& ar, ContextT& context) const;
 };
 
 // =========================================================================
@@ -380,7 +387,7 @@ public:
 //	typedef typename ContitionT::value_type value_type;
 //
 //	template <class ValueT, class SourceT, class ContextT, class SkipperT>
-//	bool TPL_CALL match_if(
+//	MatchCode TPL_CALL match_if(
 //		const ValueT& val, SourceT& ar, ContextT& context, const SkipperT& skipper_) const;
 };
 

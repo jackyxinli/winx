@@ -232,11 +232,11 @@ public:
 typedef Ch<'\r'> Return;
 typedef Ch<'\n'> NewLine;
 
-typedef Or<UAnd<Return, Repeat01<NewLine> >, NewLine> StrictEol;
-typedef Or<StrictEol, Eof> Eol;
+typedef Or<UAnd<Return, Repeat01<NewLine> >, NewLine> StrictEolU;
+typedef Or<StrictEolU, Eof> EolU;
 
-TPL_REGEX_GUARD0(StrictEol, StrictEolG, TagAssigNone)
-TPL_REGEX_GUARD0(Eol, EolG, TagAssigNone)
+TPL_REGEX_GUARD0(StrictEolU, StrictEolG, TagAssigNone)
+TPL_REGEX_GUARD0(EolU, EolG, TagAssigNone)
 
 inline Rule<StrictEolG> TPL_CALL strict_eol() {
 	return Rule<StrictEolG>();
@@ -249,14 +249,14 @@ inline Rule<EolG> TPL_CALL eol() {
 // =========================================================================
 // function c_symbol, xml_symbol, etc.
 
-// Usage: c_symbol()		--- means: matching a CSymbol. that is: [a-zA-Z_][0-9a-zA-Z_]*
-// Usage: xml_symbol()		--- means: matching a XmlSymbol. that is: [a-zA-Z_][0-9a-zA-Z_\-]*
+// Usage: c_symbol()		--- means: matching a C symbol. that is: [a-zA-Z_][0-9a-zA-Z_]*
+// Usage: xml_symbol()		--- means: matching a XML symbol. that is: [a-zA-Z_][0-9a-zA-Z_\-]*
 
-typedef UAnd<CSymbolFirstChar, Repeat0<CSymbolNextChar> > CSymbol;
-typedef UAnd<XmlSymbolFirstChar, Repeat0<XmlSymbolNextChar> > XmlSymbol;
+typedef UAnd<CSymbolFirstChar, Repeat0<CSymbolNextChar> > CSymbolU;
+typedef UAnd<XmlSymbolFirstChar, Repeat0<XmlSymbolNextChar> > XmlSymbolU;
 
-TPL_REGEX_GUARD0(CSymbol, CSymbolG, TagAssigNone)
-TPL_REGEX_GUARD0(XmlSymbol, XmlSymbolG, TagAssigNone)
+TPL_REGEX_GUARD0(CSymbolU, CSymbolG, TagAssigNone)
+TPL_REGEX_GUARD0(XmlSymbolU, XmlSymbolG, TagAssigNone)
 
 inline Rule<CSymbolG> TPL_CALL c_symbol()
 {
@@ -300,22 +300,22 @@ TPL_RESTR_SYMBOL(xml_symbol, XmlSymbolG)
 // -------------------------------------------------------------------------
 // function u_integer, integer, etc.
 
-// Usage: u_integer()		--- means: matching an Unsigned Integer. that is: d+
-// Usage: integer()			--- means: matching an Integer. that is: [+-]?d+
+// Usage: u_integer()		--- means: matching an Unsigned IntegerU. that is: d+
+// Usage: integer()			--- means: matching an IntegerU. that is: [+-]?d+
 
-typedef Repeat1<Digit> UInteger;
-typedef Repeat1<XDigit> HexInteger;
-typedef Repeat1<OctDigit> OctInteger;
-typedef Repeat1<BinDigit> BinInteger;
+typedef Repeat1<Digit> UIntegerU;
+typedef Repeat1<XDigit> HexIntegerU;
+typedef Repeat1<OctDigit> OctIntegerU;
+typedef Repeat1<BinDigit> BinIntegerU;
 
 typedef Ch<'+', '-'> Sign;
-typedef UAnd<Repeat01<Sign>, UInteger> Integer; // [+-]?d+
+typedef UAnd<Repeat01<Sign>, UIntegerU> IntegerU; // [+-]?d+
 
-TPL_REGEX_GUARD0(UInteger, UIntegerG, TagAssigUInteger)
-TPL_REGEX_GUARD0(HexInteger, HexIntegerG, TagAssigHexInteger)
-TPL_REGEX_GUARD0(OctInteger, OctIntegerG, TagAssigOctInteger)
-TPL_REGEX_GUARD0(BinInteger, BinIntegerG, TagAssigBinInteger)
-TPL_REGEX_GUARD(Integer, IntegerG, TagAssigInteger)
+TPL_REGEX_GUARD0(UIntegerU, UIntegerG, TagAssigUInteger)
+TPL_REGEX_GUARD0(HexIntegerU, HexIntegerG, TagAssigHexInteger)
+TPL_REGEX_GUARD0(OctIntegerU, OctIntegerG, TagAssigOctInteger)
+TPL_REGEX_GUARD0(BinIntegerU, BinIntegerG, TagAssigBinInteger)
+TPL_REGEX_GUARD(IntegerU, IntegerG, TagAssigInteger)
 
 inline Rule<UIntegerG> TPL_CALL u_integer() {
 	return Rule<UIntegerG>();
@@ -367,22 +367,22 @@ inline Rule<SecondG> TPL_CALL t_second()	{ return Rule<SecondG>(); }
 
 typedef Ch<'.'> DecimalPointer;
 
-typedef UAnd<DecimalPointer, UInteger> DecimalPointerStarted_; // \.d+
+typedef UAnd<DecimalPointer, UIntegerU> DecimalPointerStarted_; // \.d+
 typedef UAnd<DecimalPointer, Repeat0<Digit> > DecimalPointerStarted0_; // \.d*
 
-typedef UAnd<UInteger, DecimalPointerStarted0_> DigitStartedUStrictFraction_; // d+\.d*
-typedef Or<DecimalPointerStarted_, DigitStartedUStrictFraction_> UStrictFraction; // \.d+ | d+\.d*
+typedef UAnd<UIntegerU, DecimalPointerStarted0_> DigitStartedUStrictFraction_; // d+\.d*
+typedef Or<DecimalPointerStarted_, DigitStartedUStrictFraction_> UStrictFractionU; // \.d+ | d+\.d*
 
-typedef UAnd<UInteger, Repeat01<DecimalPointerStarted0_> > DigitStartedUFraction_; // d+(\.d*)?
-typedef Or<DecimalPointerStarted_, DigitStartedUFraction_> UFraction; // \.d+ | d+(\.d*)?
+typedef UAnd<UIntegerU, Repeat01<DecimalPointerStarted0_> > DigitStartedUFraction_; // d+(\.d*)?
+typedef Or<DecimalPointerStarted_, DigitStartedUFraction_> UFractionU; // \.d+ | d+(\.d*)?
 
-typedef UAnd<Repeat01<Sign>, UStrictFraction> StrictFraction;
-typedef UAnd<Repeat01<Sign>, UFraction> Fraction;
+typedef UAnd<Repeat01<Sign>, UStrictFractionU> StrictFractionU;
+typedef UAnd<Repeat01<Sign>, UFractionU> FractionU;
 
-TPL_REGEX_GUARD(UStrictFraction, UStrictFractionG, TagAssigUFraction)
-TPL_REGEX_GUARD(StrictFraction, StrictFractionG, TagAssigFraction)
-TPL_REGEX_GUARD(UFraction, UFractionG, TagAssigUFraction)
-TPL_REGEX_GUARD(Fraction, FractionG, TagAssigFraction)
+TPL_REGEX_GUARD(UStrictFractionU, UStrictFractionG, TagAssigUFraction)
+TPL_REGEX_GUARD(StrictFractionU, StrictFractionG, TagAssigFraction)
+TPL_REGEX_GUARD(UFractionU, UFractionG, TagAssigUFraction)
+TPL_REGEX_GUARD(FractionU, FractionG, TagAssigFraction)
 
 inline Rule<UStrictFractionG> TPL_CALL u_strict_fraction()
 {
@@ -407,29 +407,29 @@ inline Rule<FractionG> TPL_CALL fraction()
 // -------------------------------------------------------------------------
 // function real, strict_real, etc.
 
-// Usage: real()			--- means: matching a Real Number or an Integer
-// Usage: strict_real()		--- means: matching a Real Number (NOT including an Integer)
+// Usage: real()			--- means: matching a RealU Number or an IntegerU
+// Usage: strict_real()		--- means: matching a RealU Number (NOT including an IntegerU)
 
 typedef Ch<'E', 'e'> ExponentSign;
 
-typedef UAnd<ExponentSign, Integer> Exponent; // [Ee][+-]?d+
+typedef UAnd<ExponentSign, IntegerU> ExponentU; // [Ee][+-]?d+
 
-typedef UAnd<DecimalPointerStarted_, Repeat01<Exponent> > DPS_UStrictReal_;
+typedef UAnd<DecimalPointerStarted_, Repeat01<ExponentU> > DPS_UStrictReal_;
 
-typedef UAnd<DecimalPointerStarted0_, Repeat01<Exponent> > DPS0_UStrictReal_;
-typedef Or<DPS0_UStrictReal_, Exponent> DS_UStrictRealSuffix_;
-typedef UAnd<UInteger, DS_UStrictRealSuffix_> DigitStartUStrictReal_;
+typedef UAnd<DecimalPointerStarted0_, Repeat01<ExponentU> > DPS0_UStrictReal_;
+typedef Or<DPS0_UStrictReal_, ExponentU> DS_UStrictRealSuffix_;
+typedef UAnd<UIntegerU, DS_UStrictRealSuffix_> DigitStartUStrictReal_;
 
-typedef Or<DPS_UStrictReal_, DigitStartUStrictReal_> UStrictReal;
-typedef UAnd<Repeat01<Sign>, UStrictReal> StrictReal;
+typedef Or<DPS_UStrictReal_, DigitStartUStrictReal_> UStrictRealU;
+typedef UAnd<Repeat01<Sign>, UStrictRealU> StrictRealU;
 
-typedef UAnd<UFraction, Repeat01<Exponent> > UReal;
-typedef UAnd<Repeat01<Sign>, UReal> Real;
+typedef UAnd<UFractionU, Repeat01<ExponentU> > URealU;
+typedef UAnd<Repeat01<Sign>, URealU> RealU;
 
-TPL_REGEX_GUARD(UStrictReal, UStrictRealG, TagAssigUReal)
-TPL_REGEX_GUARD(StrictReal, StrictRealG, TagAssigReal)
-TPL_REGEX_GUARD(UReal, URealG, TagAssigUReal)
-TPL_REGEX_GUARD(Real, RealG, TagAssigReal)
+TPL_REGEX_GUARD(UStrictRealU, UStrictRealG, TagAssigUReal)
+TPL_REGEX_GUARD(StrictRealU, StrictRealG, TagAssigReal)
+TPL_REGEX_GUARD(URealU, URealG, TagAssigUReal)
+TPL_REGEX_GUARD(RealU, RealG, TagAssigReal)
 
 inline Rule<UStrictRealG> TPL_CALL u_strict_real()
 {

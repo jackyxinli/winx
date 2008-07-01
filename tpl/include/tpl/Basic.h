@@ -142,7 +142,8 @@ struct RequireClassTraits<ClassT, ClassT> {
 // =========================================================================
 // TPL_CONST
 
-#define TPL_CONST(Type, var)	const Type var
+#define TPL_CONST(Type, var)	const Type var = Type()
+#define TPL_CONST_EX(Type, var)	const Type var
 
 // =========================================================================
 // SelectValueType

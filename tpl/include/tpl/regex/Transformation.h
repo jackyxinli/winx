@@ -34,7 +34,7 @@ class TransfIterator : public IteratorT
 private:
 	typedef typename IteratorT::value_type CharT;
 
-	TransformT m_transf;
+	const TransformT m_transf;
 
 public:
 	TransfIterator(const IteratorT& it, const TransformT& transf)
@@ -56,7 +56,7 @@ private:
 
 private:
 	IteratorT m_it;
-	TransformT m_transf;
+	const TransformT m_transf;
 
 public:
 	typedef typename Base::difference_type difference_type;
@@ -127,17 +127,10 @@ public:
 	}
 };
 
-template <class SourceT, class TransformT>
+template <class SourceT, template <class CharT> class TransformT>
 class TransfSource
 {
-private:
-	SourceT& m_ar;
-	TransformT m_transf;
-
-	typedef typename SourceT::iterator OldIt_;
-
 public:
-	typedef TransfIterator<OldIt_, TransformT> iterator;
 	typedef typename SourceT::char_type char_type;
 	typedef typename SourceT::uchar_type uchar_type;
 	typedef typename SourceT::int_type int_type;
@@ -145,13 +138,17 @@ public:
 	
 	enum { endch = SourceT::endch };
 
-public:
-	TransfSource(SourceT& ar)
-		: m_ar(ar) {
-	}
+private:
+	SourceT& m_ar;
+	const TransformT<char_type> m_transf;
 
-	TransfSource(SourceT& ar, const TransformT& transf)
-		: m_ar(ar), m_transf(transf) {
+	typedef typename SourceT::iterator OldIt_;
+
+public:
+	typedef TransfIterator<OldIt_, TransformT<char_type> > iterator;
+
+	TransfSource(SourceT& ar)
+		: m_ar(ar), m_transf() {
 	}
 
 public:
@@ -183,17 +180,16 @@ public:
 // =========================================================================
 // class Transf
 
-template <class RegExT, class TransformT>
+template <class RegExT, template <class CharT> class TransformT>
 class Transf
 {
 private:
 	RegExT m_x;
-	TransformT m_transf;
 
 public:
 	Transf() {}
-	Transf(const RegExT& x, const TransformT& transf)
-		: m_x(x), m_transf(transf) {}
+	Transf(const RegExT& x)
+		: m_x(x) {}
 
 public:
 	enum { character = RegExT::character };
@@ -204,7 +200,7 @@ public:
 	template <class SourceT, class ContextT>
 	bool TPL_CALL match(SourceT& ar, ContextT& context) const
 	{
-		TransfSource<SourceT, TransformT> arTransf(ar, m_transf);
+		TransfSource<SourceT, TransformT> arTransf(ar);
 		return m_x.match(arTransf, context);
 	}
 };
@@ -212,65 +208,45 @@ public:
 // =========================================================================
 // class Transformation
 
-template <class TransformT>
-class Transformation : public TransformT
+template <template <class CharT> class TransformT>
+class Transformation
 {
 public:
-	Transformation() : TransformT() {}
-
-	template <class T1>
-	Transformation(const T1& x) : TransformT(x) {}
-
 	template <class RegExT>
 	Rule<Transf<RegExT, TransformT> > TPL_CALL operator[](const Rule<RegExT>& x) const {
-		return Rule<Transf<RegExT, TransformT> >(x, *this);
+		return Rule<Transf<RegExT, TransformT> >(x);
 	}
 
-//	concept:
-//
-//	int TPL_CALL operator()(int ch) const;
-};
+	Rule<Transf<EqStr, TransformT> > TPL_CALL operator[](const char* x) const {
+		return Rule<Transf<EqStr, TransformT> >(x);
+	}
 
-// =========================================================================
-// class ICase, UCase
-
-class ICase
-{
-public:
-	int TPL_CALL operator()(int ch) const {
-		return tolower(ch);
+	Rule<Transf<EqWStr, TransformT> > TPL_CALL operator[](const wchar_t* x) const {
+		return Rule<Transf<EqWStr, TransformT> >(x);
 	}
 };
 
-class UCase
-{
-public:
-	int TPL_CALL operator()(int ch) const {
-		return toupper(ch);
-	}
-};
-
-TPL_CONST(Transformation<ICase>, icase);
-TPL_CONST(Transformation<UCase>, ucase);
+TPL_CONST(Transformation<std::ToLower>, icase);
+TPL_CONST(Transformation<std::ToUpper>, ucase);
 
 // =========================================================================
 // class SourceICase, SourceUCase
 
 template <class SourceT>
-class SourceICase : public TransfSource<SourceT, ICase>
+class SourceICase : public TransfSource<SourceT, std::ToLower>
 {
 private:
-	typedef TransfSource<SourceT, ICase> Base;
+	typedef TransfSource<SourceT, std::ToLower> Base;
 
 public:
 	SourceICase(SourceT& ar) : Base(ar) {}
 };
 
 template <class SourceT>
-class SourceUCase : public TransfSource<SourceT, UCase>
+class SourceUCase : public TransfSource<SourceT, std::ToUpper>
 {
 private:
-	typedef TransfSource<SourceT, UCase> Base;
+	typedef TransfSource<SourceT, std::ToUpper> Base;
 
 public:
 	SourceUCase(SourceT& ar) : Base(ar) {}
