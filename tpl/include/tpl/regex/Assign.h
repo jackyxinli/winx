@@ -325,19 +325,19 @@ public:																		\
 #define TPL_ACTION_OP_FN2_EX_(Action, Op, op) 									\
 																				\
 template <class ValueT, class VarT> __forceinline								\
-Action<Op<VarT, ValueT> > TPL_CALL op(VarT& var_, const ValueT value_) {		\
+Action<Op<VarT, ValueT> > TPL_CALL op(VarT& var_, const ValueT& value_) {		\
 	return Action<Op<VarT, ValueT> >(var_, value_);								\
-} 																				\
-																				\
-template <class CharT, class VarT> __forceinline								\
-Action<Op<VarT, const CharT*> > TPL_CALL op(VarT& var_, const CharT value_[]) { \
-	return Action<Op<VarT, const CharT*> >(var_, value_);						\
 } 																				\
 																				\
 template <class ValueT, class VarT> __forceinline								\
 Action<Op<VarT, const ValueT&> > TPL_CALL op(VarT& var_, ValueT& value_) {		\
 	return Action<Op<VarT, const ValueT&> >(var_, value_);						\
 }																				\
+																				\
+template <class CharT, class VarT> __forceinline								\
+Action<Op<VarT, const CharT*> > TPL_CALL op(VarT& var_, const CharT value_[]) { \
+	return Action<Op<VarT, const CharT*> >(var_, value_);						\
+} 																				\
 																				\
 template <class ValueT, class VarT> __forceinline								\
 Action<Op<VarT, const ValueT&> > TPL_CALL op(VarT& var_, const tpl::Var<ValueT>& value_) { \
@@ -350,7 +350,7 @@ Action<Op<VarT, const ValueT&> > TPL_CALL op(VarT& var_, tpl::Var<ValueT>& value
 }																				\
 																				\
 template <class ValueT, class VarT> __forceinline								\
-Action<Op<VarT, ValueT> > TPL_CALL op(tpl::Var<VarT>& var_, const ValueT value_) { \
+Action<Op<VarT, ValueT> > TPL_CALL op(tpl::Var<VarT>& var_, const ValueT& value_) { \
 	return Action<Op<VarT, ValueT> >(var_.val, value_);							\
 }																				\
 																				\

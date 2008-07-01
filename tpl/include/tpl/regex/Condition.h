@@ -38,18 +38,18 @@ struct AndValueType<T1, T1> {
 };
 
 template <class T1>
-struct AndValueType<T1, void> {
-	typedef void value_type;
+struct AndValueType<T1, DefaultType> {
+	typedef T1 value_type;
 };
 
 template <class T2>
-struct AndValueType<void, T2> {
-	typedef void value_type;
+struct AndValueType<DefaultType, T2> {
+	typedef T2 value_type;
 };
 
 template <>
-struct AndValueType<void, void> {
-	typedef void value_type;
+struct AndValueType<DefaultType, DefaultType> {
+	typedef DefaultType value_type;
 };
 
 // =========================================================================

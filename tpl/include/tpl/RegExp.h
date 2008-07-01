@@ -122,3 +122,4 @@ bool TPL_CALL operator>>(const ContainerT& src_, const tpl::Rule<RegExT>& rule_)
 // $Log: $
 
 #endif /* TPL_REGEXP_H */
+

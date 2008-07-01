@@ -64,24 +64,6 @@ struct BindTraits
 };
 
 // =========================================================================
-// class Transformation
-
-template <class TransformT>
-class Transformation : public TransformT
-{
-public:
-	Transformation() : TransformT() {}
-
-	template <class T1>
-	Transformation(const T1& x) : TransformT(x) {}
-
-private:
-	// concept:
-
-	int TPL_CALL operator()(int ch) const;
-};
-
-// =========================================================================
 // class Rule
 
 // enum RuleCharacter
@@ -408,3 +390,4 @@ public:
 NS_TPL_END
 
 #endif /* TPL_REGEX_BASIC_H */
+

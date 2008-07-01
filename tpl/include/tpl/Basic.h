@@ -147,13 +147,15 @@ struct RequireClassTraits<ClassT, ClassT> {
 // =========================================================================
 // SelectValueType
 
+struct DefaultType {};
+
 template <class ValueT, class DefaultValT>
 struct SelectValueType {
 	typedef ValueT value_type;
 };
 
 template <class DefaultValT>
-struct SelectValueType<void, DefaultValT> {
+struct SelectValueType<DefaultType, DefaultValT> {
 	typedef DefaultValT value_type;
 };
 

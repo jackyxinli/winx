@@ -357,8 +357,8 @@ private:
 	reference_type m_ref;
 
 public:
-	OpRef(const value_type& var_) : m_ref(var_) {}
-	OpRef(const RefT& ref_) : m_ref(ref_) {}
+	template <class T1>
+	OpRef(const T1& var_) : m_ref(var_) {}
 
 public:
 	enum { character = op_type::character };
@@ -390,7 +390,7 @@ template <class Type, bool bEat = false>
 class FindRefTraits
 {
 private:
-	typedef typename ReferenceTratis<Type>::reference_type reference_type;
+	typedef typename ReferenceTraits<Type>::reference_type reference_type;
 	typedef typename reference_type::dereference_type dereference_type;
 	typedef typename FindTraits<dereference_type, bEat>::find_type op_type;
 

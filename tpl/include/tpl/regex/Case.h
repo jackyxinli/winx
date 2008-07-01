@@ -146,8 +146,6 @@ struct ConditionValueTypeTraits<ValueT const&> {
 // -------------------------------------------------------------------------
 // class Pred_
 
-#define TPL_DEFAULT_VT	void
-
 #define TPL_CONDITION_PRED(Cmp, op)											\
 struct Cmp {																\
 	template <class T1, class T2>											\
@@ -184,7 +182,7 @@ public:
 class True_
 {
 public:
-	typedef TPL_DEFAULT_VT value_type;
+	typedef DefaultType value_type;
 	
 	template <class ValueT2>
 	bool TPL_CALL operator()(const ValueT2& val) const {
@@ -215,25 +213,30 @@ TPL_CONDITION_VT(unsigned short, unsigned int)
 TPL_CONDITION_VT(unsigned int, unsigned int)
 TPL_CONDITION_VT(unsigned long, unsigned long)
 
-TPL_CONDITION_VT(char*, TPL_DEFAULT_VT)
-TPL_CONDITION_VT(wchar_t*, TPL_DEFAULT_VT)
-TPL_CONDITION_VT(char const*, TPL_DEFAULT_VT)
-TPL_CONDITION_VT(wchar_t const*, TPL_DEFAULT_VT)
+TPL_CONDITION_VT(char*, DefaultType)
+TPL_CONDITION_VT(wchar_t*, DefaultType)
+TPL_CONDITION_VT(char const*, DefaultType)
+TPL_CONDITION_VT(wchar_t const*, DefaultType)
 
 template <class CharT, size_t n>
 struct ConditionValueTypeTraits<const CharT[n]> {
-	typedef TPL_DEFAULT_VT value_type;
+	typedef DefaultType value_type;
 	typedef Pred_<const CharT*> pred_type;
 };
 
 template <class CharT, size_t n>
 struct ConditionValueTypeTraits<CharT[n]> {
-	typedef TPL_DEFAULT_VT value_type;
+	typedef DefaultType value_type;
 	typedef Pred_<const CharT*> pred_type;
 };
 
 // -------------------------------------------------------------------------
 // function case_/default_
+
+template <class PredT>
+inline Case<PredT> TPL_CALL case_() {
+	return Case<PredT>();
+}
 
 template <class PredT, class ValueT>
 inline Case<Pred_<ValueT, PredT> > TPL_CALL case_(const ValueT& val) {

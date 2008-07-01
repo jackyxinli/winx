@@ -193,13 +193,11 @@ public:
 // =========================================================================
 // function ref(a_str_var), ref(leaf)
 
-template <class StringT>
+template <class StringT, class Iterator = typename StringT::const_iterator>
 class RefStr_
 {
 private:
 	const StringT& m_s;
-
-	typedef typename StringT::const_iterator Iterator_;
 
 public:
 	RefStr_(const StringT& s) : m_s(s) {}
@@ -207,11 +205,19 @@ public:
 public:
 	typedef StringT value_type;
 	typedef const StringT& dereference_type;
-	typedef Eq_<Iterator_> rule_type;
+	typedef Eq_<Iterator> rule_type;
 
 	dereference_type TPL_CALL operator()() const {
 		return m_s;
 	}
+};
+
+template <class CharT>
+class RefCStr : public RefStr_<const CharT*, const CharT*>
+{
+public:
+	RefCStr(const CharT* const& s)
+		: RefStr_<const CharT*, const CharT*>(s) {}
 };
 
 template <class CharT>
@@ -234,45 +240,50 @@ public:
 // function ref(var)
 
 template <class Type>
-struct ReferenceTratis {
+struct ReferenceTraits {
 };
 
 template <class CharT>
-struct ReferenceTratis<std::basic_string<CharT> > {
+struct ReferenceTraits<const CharT*> {
+	typedef RefCStr<CharT> reference_type;
+};
+
+template <class CharT>
+struct ReferenceTraits<std::basic_string<CharT> > {
 	typedef RefStr<CharT> reference_type;
 };
 
 template <class Iterator>
-struct ReferenceTratis<std::Range<Iterator> > {
+struct ReferenceTraits<std::Range<Iterator> > {
 	typedef RefLeaf<Iterator> reference_type;
 };
 
 template <>
-struct ReferenceTratis<char> {
+struct ReferenceTraits<char> {
 	typedef RefCh<char> reference_type;
 };
 
 template <>
-struct ReferenceTratis<wchar_t> {
+struct ReferenceTraits<wchar_t> {
 	typedef RefCh<wchar_t> reference_type;
 };
 
 template <class Type> __forceinline
-Rule<Deref<typename ReferenceTratis<Type>::reference_type> > TPL_CALL ref(const Type& var_) {
-	return Rule<Deref<typename ReferenceTratis<Type>::reference_type> >(var_);
+Rule<Deref<typename ReferenceTraits<Type>::reference_type> > TPL_CALL ref(const Type& var_) {
+	return Rule<Deref<typename ReferenceTraits<Type>::reference_type> >(var_);
 }
 
 // =========================================================================
 // class Var
 
 template <class Type>
-class Var : public Rule<Deref<typename ReferenceTratis<Type>::reference_type> >
+class Var : public Rule<Deref<typename ReferenceTraits<Type>::reference_type> >
 {
 public:
 	Type val;
 
 public:
-	Var() : Rule<Deref<typename ReferenceTratis<Type>::reference_type> >(val) {}
+	Var() : Rule<Deref<typename ReferenceTraits<Type>::reference_type> >(val) {}
 };
 
 // =========================================================================

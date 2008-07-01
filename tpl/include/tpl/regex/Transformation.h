@@ -26,33 +26,6 @@
 NS_TPL_BEGIN
 
 // =========================================================================
-// class ICase, UCase
-
-class ICase
-{
-public:
-	int TPL_CALL operator()(int ch) const {
-		return tolower(ch);
-	}
-};
-
-class UCase
-{
-public:
-	int TPL_CALL operator()(int ch) const {
-		return toupper(ch);
-	}
-};
-
-__forceinline Transformation<ICase> TPL_CALL icase() {
-	return Transformation<ICase>();
-}
-
-__forceinline Transformation<UCase> TPL_CALL ucase() {
-	return Transformation<UCase>();
-}
-
-// =========================================================================
 // class TransfSource
 
 template <class IteratorT, class TransformT>
@@ -169,6 +142,8 @@ public:
 	typedef typename SourceT::uchar_type uchar_type;
 	typedef typename SourceT::int_type int_type;
 	typedef typename SourceT::restriction_type restriction_type;
+	
+	enum { endch = SourceT::endch };
 
 public:
 	TransfSource(SourceT& ar)
@@ -205,34 +180,8 @@ public:
 	}
 };
 
-// -------------------------------------------------------------------------
-// class SourceICase, SourceUCase
-
-template <class SourceT>
-class SourceICase : public TransfSource<SourceT, ICase>
-{
-private:
-	typedef TransfSource<SourceT, ICase> Base;
-
-public:
-	SourceICase(SourceT& ar) : Base(ar) {}
-};
-
-template <class SourceT>
-class SourceUCase : public TransfSource<SourceT, UCase>
-{
-private:
-	typedef TransfSource<SourceT, UCase> Base;
-
-public:
-	SourceUCase(SourceT& ar) : Base(ar) {}
-};
-
-// -------------------------------------------------------------------------
+// =========================================================================
 // class Transf
-
-// Usage: Transformation->*Rule		--- eg. icase()->*Rule
-// Usage: Transformation>>Rule		--- same as: Transformation->*Rule
 
 template <class RegExT, class TransformT>
 class Transf
@@ -258,6 +207,73 @@ public:
 		TransfSource<SourceT, TransformT> arTransf(ar, m_transf);
 		return m_x.match(arTransf, context);
 	}
+};
+
+// =========================================================================
+// class Transformation
+
+template <class TransformT>
+class Transformation : public TransformT
+{
+public:
+	Transformation() : TransformT() {}
+
+	template <class T1>
+	Transformation(const T1& x) : TransformT(x) {}
+
+	template <class RegExT>
+	Rule<Transf<RegExT, TransformT> > TPL_CALL operator[](const Rule<RegExT>& x) const {
+		return Rule<Transf<RegExT, TransformT> >(x, *this);
+	}
+
+//	concept:
+//
+//	int TPL_CALL operator()(int ch) const;
+};
+
+// =========================================================================
+// class ICase, UCase
+
+class ICase
+{
+public:
+	int TPL_CALL operator()(int ch) const {
+		return tolower(ch);
+	}
+};
+
+class UCase
+{
+public:
+	int TPL_CALL operator()(int ch) const {
+		return toupper(ch);
+	}
+};
+
+TPL_CONST(Transformation<ICase>, icase);
+TPL_CONST(Transformation<UCase>, ucase);
+
+// =========================================================================
+// class SourceICase, SourceUCase
+
+template <class SourceT>
+class SourceICase : public TransfSource<SourceT, ICase>
+{
+private:
+	typedef TransfSource<SourceT, ICase> Base;
+
+public:
+	SourceICase(SourceT& ar) : Base(ar) {}
+};
+
+template <class SourceT>
+class SourceUCase : public TransfSource<SourceT, UCase>
+{
+private:
+	typedef TransfSource<SourceT, UCase> Base;
+
+public:
+	SourceUCase(SourceT& ar) : Base(ar) {}
 };
 
 // =========================================================================
