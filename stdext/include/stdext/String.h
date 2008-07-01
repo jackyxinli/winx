@@ -102,7 +102,7 @@ inline void winx_call trim(std::basic_string<WCHAR, Tr, AllocT>& str)
 
 template <class CharT, class Tr, class AllocT>
 inline bool winx_call icompare(
-	const std::basic_string<CharT, Tr, AllocT>& a, const CharT* b)
+	const std::basic_string<CharT, Tr, AllocT>& a, const CharT b[])
 {
 	return compare_by(a.begin(), a.end(), b, CompareNoCase<CharT>());
 }
@@ -116,7 +116,7 @@ inline bool winx_call icompare(
 
 template <class CharT, class AllocT>
 inline bool winx_call icompare(
-	const std::vector<CharT, AllocT>& a, const CharT* b)
+	const std::vector<CharT, AllocT>& a, const CharT b[])
 {
 	return compare_by(a.begin(), a.end(), b, CompareNoCase<CharT>());
 }
@@ -128,17 +128,18 @@ inline bool winx_call icompare(
 	return compare_by(a.begin(), a.end(), b.begin(), b.end(), CompareNoCase<CharT>());
 }
 
-template <class CharT>
+template <class Iterator, class CharT>
 inline bool winx_call icompare(
-	const BasicString<CharT>& a, const CharT* b)
+	const Range<Iterator>& a, const CharT b[])
 {
 	return compare_by(a.begin(), a.end(), b, CompareNoCase<CharT>());
 }
 
-template <class CharT, class ContainerT>
+template <class Iterator, class ContainerT>
 inline bool winx_call icompare(
-	const BasicString<CharT>& a, const ContainerT& b)
+	const Range<Iterator>& a, const ContainerT& b)
 {
+	typedef typename Range<Iterator>::char_type CharT;
 	return compare_by(a.begin(), a.end(), b.begin(), b.end(), CompareNoCase<CharT>());
 }
 
