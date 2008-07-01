@@ -13,21 +13,21 @@ int main()
 	int nPre = 0;
 	std::vector<std::string> text;
 	
-	const char html[] = "<html><body> \tHello,\t\t<pre> world!\t\t!</pre></body><b> abc !!</b></html>";
+	const char html[] = "<html><body> \tHello,\t\t<PRE> world!\t\t!</pre></body><b> abc !!</b></html>";
 	
 	html >> *(
 		'<' +
 		(
 			html_symbol() 					// $tag-start$
 			[
-				case_("pre")/inc(nPre),
+				case_if<ICase>("pre")/inc(nPre),
 				true
 			] + find<true>('>') |
 			(
 				'/' + 
 				html_symbol()				// $tag-end$
 				[
-					case_("pre")/dec(nPre),
+					case_if<ICase>("pre")/dec(nPre),
 					true
 				] +
 				'>'

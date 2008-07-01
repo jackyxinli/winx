@@ -59,12 +59,12 @@ public:
 
 	template <class SourceT, class ContextT>
 	bool TPL_CALL match(SourceT& ar, ContextT& context) const {
-		return m_y.match_if(m_x, ar, context);
+		return m_y.match_if(m_x, ar, context) == matchOk;
 	}
 
 	template <class SourceT, class ContextT, class SkipperT>
 	bool TPL_CALL match(SourceT& ar, ContextT& context, const SkipperT& skipper_) const {
-		return m_y.match_if(m_x, ar, context, skipper_);
+		return m_y.match_if(m_x, ar, context, skipper_) == matchOk;
 	}
 };
 
@@ -145,6 +145,14 @@ struct ConditionValueTypeTraits<ValueT const&> {
 
 // -------------------------------------------------------------------------
 // class Pred_
+
+struct ICase
+{
+	template <class T1, class T2>
+	static bool TPL_CALL test(const T1& x, const T2& y) {
+		return std::icompare(x, y) == 0;
+	}
+};
 
 #define TPL_CONDITION_PRED(Cmp, op)											\
 struct Cmp {																\
@@ -234,27 +242,37 @@ struct ConditionValueTypeTraits<CharT[n]> {
 // function case_/default_
 
 template <class PredT>
-inline Case<PredT> TPL_CALL case_() {
+inline Case<PredT> TPL_CALL case_if() {
 	return Case<PredT>();
 }
 
 template <class PredT, class ValueT>
-inline Case<Pred_<ValueT, PredT> > TPL_CALL case_(const ValueT& val) {
+inline Case<Pred_<const ValueT*, PredT> > TPL_CALL case_if(const ValueT val[]) {
+	return Case<Pred_<const ValueT*, PredT> >(val);
+}
+
+template <class PredT, class ValueT>
+inline Case<Pred_<const ValueT*, PredT> > TPL_CALL case_if(ValueT val[]) {
+	return Case<Pred_<const ValueT*, PredT> >(val);
+}
+
+template <class PredT, class ValueT>
+inline Case<Pred_<ValueT, PredT> > TPL_CALL case_if(const ValueT& val) {
 	return Case<Pred_<ValueT, PredT> >(val);
 }
 
 template <class PredT, class ValueT>
-inline Case<Pred_<const ValueT&, PredT> > TPL_CALL case_(ValueT& val) {
+inline Case<Pred_<const ValueT&, PredT> > TPL_CALL case_if(ValueT& val) {
 	return Case<Pred_<const ValueT&, PredT> >(val);
 }
 
 template <class PredT, class ValueT>
-inline Case<Pred_<const ValueT&, PredT> > TPL_CALL case_(const Var<ValueT>& var_) {
+inline Case<Pred_<const ValueT&, PredT> > TPL_CALL case_if(const Var<ValueT>& var_) {
 	return Case<Pred_<const ValueT&, PredT> >(var_.val);
 }
 
 template <class PredT, class ValueT>
-inline Case<Pred_<const ValueT&, PredT> > TPL_CALL case_(Var<ValueT>& var_) {
+inline Case<Pred_<const ValueT&, PredT> > TPL_CALL case_if(Var<ValueT>& var_) {
 	return Case<Pred_<const ValueT&, PredT> >(var_.val);
 }
 
