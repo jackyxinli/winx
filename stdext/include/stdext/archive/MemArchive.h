@@ -206,19 +206,20 @@ private:
 	
 public:
 	MemReadArchive(Iterator first, Iterator last)
-		: m_pos(first), m_first(m_pos), m_last(last)
-	{
+		: m_pos(first), m_first(m_pos), m_last(last) {
 	}
 
 	explicit MemReadArchive(Iterator first)
-		: m_pos(first), m_first(first), m_last(std::end(first))
-	{
+		: m_pos(first), m_first(first), m_last(std::end(first)) {
+	}
+
+	explicit MemReadArchive(char_type* first)
+		: m_pos(first), m_first(first), m_last(std::end((Iterator)first)) {
 	}
 
 	template <class ContainerT>
 	explicit MemReadArchive(const ContainerT& cont)
-		: m_pos(cont.begin()), m_first(m_pos), m_last(cont.end())
-	{
+		: m_pos(cont.begin()), m_first(m_pos), m_last(cont.end()) {
 	}
 
 public:

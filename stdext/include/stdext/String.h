@@ -61,10 +61,10 @@ typedef std::basic_string<char> tstring;
 // -------------------------------------------------------------------------
 // trim
 
-template <class _E, class _Tr, class _Alloc>
-inline void winx_call trim(std::basic_string<_E, _Tr, _Alloc>& str, const _E* blanks)
+template <class _E, class Tr, class AllocT>
+inline void winx_call trim(std::basic_string<_E, Tr, AllocT>& str, const _E* blanks)
 {
-	typedef std::basic_string<_E, _Tr, _Alloc> StringT;
+	typedef std::basic_string<_E, Tr, AllocT> StringT;
 	typedef typename StringT::size_type size_type;
 
 	size_type pos1 = str.find_first_not_of(blanks);
@@ -79,15 +79,15 @@ inline void winx_call trim(std::basic_string<_E, _Tr, _Alloc>& str, const _E* bl
 		str = str.substr(pos1, count);
 }
 
-template <class _Tr, class _Alloc>
-inline void winx_call trim(std::basic_string<char, _Tr, _Alloc>& str)
+template <class Tr, class AllocT>
+inline void winx_call trim(std::basic_string<char, Tr, AllocT>& str)
 {
 	const char blanks[] = { ' ', '\t', '\r', '\n', '\0' };
 	trim(str, blanks);
 }
 
-template <class _Tr, class _Alloc>
-inline void winx_call trim(std::basic_string<WCHAR, _Tr, _Alloc>& str)
+template <class Tr, class AllocT>
+inline void winx_call trim(std::basic_string<WCHAR, Tr, AllocT>& str)
 {
 	const WCHAR blanks[] =
 	{
@@ -95,6 +95,51 @@ inline void winx_call trim(std::basic_string<WCHAR, _Tr, _Alloc>& str)
 		' ', 12288, '\t', '\r', '\n', '\0'
 	};
 	trim(str, blanks);
+}
+
+// -------------------------------------------------------------------------
+// icompare
+
+template <class CharT, class Tr, class AllocT>
+inline bool winx_call icompare(
+	const std::basic_string<CharT, Tr, AllocT>& a, const CharT* b)
+{
+	return compare_by(a.begin(), a.end(), b, CompareNoCase<CharT>());
+}
+
+template <class CharT, class Tr, class AllocT, class ContainerT>
+inline bool winx_call icompare(
+	const std::basic_string<CharT, Tr, AllocT>& a, const ContainerT& b)
+{
+	return compare_by(a.begin(), a.end(), b.begin(), b.end(), CompareNoCase<CharT>());
+}
+
+template <class CharT, class AllocT>
+inline bool winx_call icompare(
+	const std::vector<CharT, AllocT>& a, const CharT* b)
+{
+	return compare_by(a.begin(), a.end(), b, CompareNoCase<CharT>());
+}
+
+template <class CharT, class AllocT, class ContainerT>
+inline bool winx_call icompare(
+	const std::vector<CharT, AllocT>& a, const ContainerT& b)
+{
+	return compare_by(a.begin(), a.end(), b.begin(), b.end(), CompareNoCase<CharT>());
+}
+
+template <class CharT>
+inline bool winx_call icompare(
+	const BasicString<CharT>& a, const CharT* b)
+{
+	return compare_by(a.begin(), a.end(), b, CompareNoCase<CharT>());
+}
+
+template <class CharT, class ContainerT>
+inline bool winx_call icompare(
+	const BasicString<CharT>& a, const ContainerT& b)
+{
+	return compare_by(a.begin(), a.end(), b.begin(), b.end(), CompareNoCase<CharT>());
 }
 
 // -------------------------------------------------------------------------
