@@ -226,12 +226,29 @@ inline Rule<HtmlSmartValueG> TPL_CALL html_smart_value() {
 //
 // html_strict_value() | html_smart_value()
 //
+typedef Or<HtmlStrictValueU, HtmlSmartValueG_> HtmlValueU;
 typedef Or<HtmlStrictValueG, HtmlSmartValueG> HtmlValueG_;
 
 TPL_REGEX_GUARD0(HtmlValueG_, HtmlValueG, TagAssigHtmlValue);
 
 inline Rule<HtmlValueG> TPL_CALL html_value() {
 	return Rule<HtmlValueG>();
+}
+
+// =========================================================================
+// function html_property
+
+//
+// html_symbol() + html_skipws() + !('=' + html_skipws() + html_value())
+//
+typedef Ch<'='> HtmlChEq_;
+typedef And<HtmlChEq_, And<HtmlSkipWs, HtmlValueG_> > HtmlPropValG_;
+typedef UAnd<HtmlSymbolU, HtmlSkipWs, Repeat01<HtmlPropValG_> > HtmlPropertyG_;
+
+TPL_REGEX_GUARD0(HtmlPropertyG_, HtmlPropertyG, TagAssigNone);
+
+inline Rule<HtmlPropertyG> TPL_CALL html_property() {
+	return Rule<HtmlPropertyG>();
 }
 
 // =========================================================================
