@@ -302,18 +302,18 @@ inline Case<True_> TPL_CALL default_() {
 }
 
 // =========================================================================
-// class CondAct
+// class CaseAct
 
 template <class CondT, class ActT>
-class CondAct
+class CaseAct
 {
 public:
 	const CondT m_cond;
 	const ActT m_act;
 
 public:
-	CondAct() : m_cond(), m_act() {}
-	CondAct(const CondT& cond, const ActT& act)
+	CaseAct() : m_cond(), m_act() {}
+	CaseAct(const CondT& cond, const ActT& act)
 		: m_cond(cond), m_act(act) {}
 
 public:
@@ -335,9 +335,9 @@ public:
 
 template <class T1, class T2>
 __forceinline
-Condition<CondAct<T1, T2> >
+Condition<CaseAct<T1, T2> >
 TPL_CALL operator/(const Case<T1>& x, const SimpleAction<T2>& y) {
-	return Condition<CondAct<T1, T2> >(x.m_cond, y);
+	return Condition<CaseAct<T1, T2> >(x.m_cond, y);
 }
 
 // =========================================================================

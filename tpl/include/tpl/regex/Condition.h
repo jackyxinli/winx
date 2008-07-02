@@ -200,6 +200,45 @@ TPL_CALL operator,(const Condition<T1>& x, const bool fTrue) {
 }
 
 // =========================================================================
+// class CondAct
+
+template <class CondT, class ActT>
+class CondAct
+{
+private:
+	const CondT m_cond;
+	const ActT m_act;
+
+public:
+	CondAct() : m_cond(), m_act() {}
+	CondAct(const CondT& cond, const ActT& act)
+		: m_cond(cond), m_act(act) {}
+
+public:
+	enum { character = 0 };
+
+	typedef typename CondT::value_type value_type;
+
+	template <class ValueT, class SourceT, class ContextT>
+	MatchCode TPL_CALL match_if(const ValueT& val, SourceT& ar, ContextT& context) const
+	{
+		MatchCode result = m_cond.match_if(val, ar, context);
+		if (result == matchOk)
+			m_act();
+		return result;
+	}
+};
+
+// Usage: Condition/Action ==> Condition[eps()/Action]
+
+template <class T1, class T2>
+__forceinline
+Condition<CondAct<T1, T2> >
+TPL_CALL operator/(const Condition<T1>& x, const SimpleAction<T2>& y) {
+	return Condition<CondAct<T1, T2> >(x, y);
+}
+
+// =========================================================================
 // $Log: $
 
 NS_TPL_END
