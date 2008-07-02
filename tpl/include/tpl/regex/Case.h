@@ -212,6 +212,7 @@ struct ConditionValueTypeTraits<ValueT const&> {							\
 	typedef Pred_<ValueT const&> pred_type;									\
 };
 
+TPL_CONDITION_VT(bool, bool)
 TPL_CONDITION_VT(char, char)
 TPL_CONDITION_VT(wchar_t, wchar_t)
 TPL_CONDITION_VT(short, int)
