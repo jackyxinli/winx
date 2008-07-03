@@ -382,6 +382,14 @@ inline Rule<BinDigit> TPL_CALL bin_digit() {
 	return Rule<BinDigit>();
 }
 
+inline Rule<CSymbolFirstChar> TPL_CALL c_symbol_first_char() {
+	return Rule<CSymbolFirstChar>();
+}
+
+inline Rule<CSymbolNextChar> TPL_CALL c_symbol_next_char() {
+	return Rule<CSymbolNextChar>();
+}
+
 // -------------------------------------------------------------------------
 // $Log: $
 

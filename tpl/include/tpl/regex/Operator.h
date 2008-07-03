@@ -413,6 +413,60 @@ Rule<Not<T1> > TPL_CALL operator~(const Rule<T1>& x) {
 TPL_RULE_UNARY_OP_(~, Not)
 
 // =========================================================================
+// peek
+
+// Usage: peek(ChRange)
+
+template <class RegExT>
+class Peek // ~Rule
+{
+public:
+	const RegExT m_x;
+
+public:
+	Peek() : m_x() {}
+	Peek(const RegExT& x) : m_x(x) {}
+
+public:
+	enum { character = 0 };
+
+	typedef ExplicitConvertible convertible_type;
+	typedef TagAssigNone assig_tag;
+
+	template <class SourceT, class ContextT>
+	bool TPL_CALL match(SourceT& ar, ContextT& context) const {
+		return m_x(ar.peek());
+	}
+
+private:
+	TPL_REQUIRE_CLASS(typename RegExT::assig_tag, TagAssigChar, ChRuleRequire_);
+};
+
+template <int m_c1, int m_c2 = m_c1, int m_c3 = m_c2>
+class PeekCh : public Peek<C_<m_c1, m_c2, m_c3> > {
+};
+
+template <class T1> __forceinline
+Rule<Peek<T1> > TPL_CALL peek(const Rule<T1>& x) {
+	return Rule<Peek<T1> >(x);
+}
+
+template <int m_c>
+__forceinline Rule<PeekCh<m_c> > TPL_CALL peek() {
+	return Rule<PeekCh<m_c> >();
+}
+
+template <int m_c1, int m_c2>
+__forceinline Rule<PeekCh<m_c1, m_c2> > TPL_CALL peek() {
+	return Rule<PeekCh<m_c1, m_c2> >();
+}
+
+template <int m_c1, int m_c2, int m_c3>
+__forceinline Rule<PeekCh<m_c1, m_c2, m_c3> > TPL_CALL peek() {
+	return Rule<PeekCh<m_c1, m_c2, m_c3> >();
+}
+
+// =========================================================================
 // function repeat
 
 // Usage:

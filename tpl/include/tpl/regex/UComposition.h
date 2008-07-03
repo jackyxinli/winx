@@ -258,13 +258,11 @@ typedef UAnd<XmlSymbolFirstChar, Repeat0<XmlSymbolNextChar> > XmlSymbolU;
 TPL_REGEX_GUARD0(CSymbolU, CSymbolG, TagAssigNone)
 TPL_REGEX_GUARD0(XmlSymbolU, XmlSymbolG, TagAssigNone)
 
-inline Rule<CSymbolG> TPL_CALL c_symbol()
-{
+inline Rule<CSymbolG> TPL_CALL c_symbol() {
 	return Rule<CSymbolG>();
 }
 
-inline Rule<XmlSymbolG> TPL_CALL xml_symbol()
-{
+inline Rule<XmlSymbolG> TPL_CALL xml_symbol() {
 	return Rule<XmlSymbolG>();
 }
 
