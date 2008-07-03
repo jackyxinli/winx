@@ -11,10 +11,17 @@ find boost -type f -name '*.hpp' | xargs --no-run-if-empty rm
 # 	boost::pool
 # 	boost::object_pool
 #	boost random
+#	boost tuple
 #
 # awaiting:
 #	lambda/lambda.hpp
 #	filesystem.hpp
 #
 bcp --boost=$BoostRoot type_traits/is_convertible.hpp pool/object_pool.hpp random.hpp . > /dev/null
+
+#
+# tuple/tuple.hpp
+#
+bcp --boost=$BoostRoot tuple/detail/tuple_basic.hpp ref.hpp . > /dev/null
+cp $BoostRoot/boost/tuple/tuple.hpp ./boost/tuple/
 
