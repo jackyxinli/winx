@@ -1,6 +1,6 @@
 #include <vector>		// std::vector
 #include <iostream> 	// std::cout
-#include <tpl/RegExp.h>
+#include <tpl/regex/Match.h> // minimization of including tpl
 
 using namespace tpl;
 

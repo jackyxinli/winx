@@ -9,51 +9,29 @@
 // of this license. You must not remove this notice, or any other, from
 // this software.
 // 
-// Module: tpl/regex/Context.h
+// Module: tpl/regex/result/Context.h
 // Creator: xushiwei
 // Email: xushiweizh@gmail.com
 // Date: 2006-8-13 9:41:58
 // 
-// $Id$
+// $Id: Context.h 794 2008-07-04 06:27:26Z xushiweizh@gmail.com $
 // -----------------------------------------------------------------------*/
-#ifndef TPL_REGEX_CONTEXT_H
-#define TPL_REGEX_CONTEXT_H
+#ifndef TPL_REGEX_RESULT_CONTEXT_H
+#define TPL_REGEX_RESULT_CONTEXT_H
 
-#ifndef TPL_REGEX_MARK_H
+#ifndef TPL_REGEX_MATCH_H
+#include "../Match.h"
+#endif
+
+#ifndef TPL_REGEX_RESULT_MARK_H
 #include "Mark.h"
 #endif
 
-#ifndef TPL_REGEX_MATCHRESULT_H
-#include "MatchResult.h"
+#ifndef TPL_REGEX_RESULT_DOCUMENT_H
+#include "Document.h"
 #endif
 
 NS_TPL_BEGIN
-
-// -------------------------------------------------------------------------
-// class Context0
-
-template <class Iterator>
-class Context0
-{
-public:
-	template <int category>
-	class trans_type
-	{
-	private:
-		Iterator vPos;
-
-	public:
-		template <class SourceT>
-		trans_type(const SourceT& ar, const Context0&) {
-			vPos = ar.position();
-		}
-
-		template <class SourceT>
-		void TPL_CALL rollback(SourceT& ar) {
-			ar.seek(vPos);
-		}
-	};
-};
 
 // -------------------------------------------------------------------------
 // class ContextTransaction
@@ -101,38 +79,39 @@ public:
 };
 
 // -------------------------------------------------------------------------
-// class BasicContext
+// class Context
 
-template <class Iterator, class AllocT, class TagT = DefaultTag>
-class BasicContext
+template <class Iterator, class LeafT, class AllocT, class TagCharT = char>
+class Context
 {
 private:
-	typedef Node<Iterator, TagT> NodeT;
+	typedef Node<LeafT, TagCharT> NodeT;
 	typedef ConsList<NodeT*, false> StackT;
 
 	AllocT& m_alloc;
 	StackT m_stk;
 
 public:
-	BasicContext(AllocT& alloc, NodeT& doc)
+	Context(AllocT& alloc, NodeT& doc)
 		: m_alloc(alloc)
 	{
 		m_stk.push_front(alloc, &doc);
 	}
 
 private:
-	typedef BasicMark<TagT, LeafAssign> LeafMarkT;
-	typedef BasicMark<TagT, NodeAssign> NodeMarkT;
+	typedef Mark<LeafT, TagCharT> LeafMarkT;
+	typedef Mark<TagNodeType, TagCharT> NodeMarkT;
 
 public:
-	typedef AllocT allocator_type;
+	typedef AllocT alloc_type;
 
-	allocator_type& TPL_CALL getAllocator() const {
+	alloc_type& TPL_CALL get_alloc() const {
 		return m_alloc;
 	}
 
-	void TPL_CALL insertLeaf(const LeafMarkT& mark, Iterator pos, Iterator pos2) {
-		m_stk.front()->insertLeaf(m_alloc, mark, pos, pos2);
+	template <class ValueT2>
+	void TPL_CALL insertLeaf(const Mark<ValueT2, TagCharT>& mark, const LeafT& val) {
+		m_stk.front()->insertLeaf(m_alloc, mark, val);
 	}
 
 public:
@@ -143,7 +122,7 @@ public:
 		NodeT vOld;
 
 	public:
-		ScopeTransaction(const BasicContext& context) {
+		ScopeTransaction(const Context& context) {
 			StackT stk = context.m_stk;
 			vParent = stk.front();
 			vOld = *vParent;
@@ -165,7 +144,7 @@ public:
 		
 	public:
 		template <class SourceT>
-		trans_type(const SourceT& ar, const BasicContext& context)
+		trans_type(const SourceT& ar, const Context& context)
 			: Base(ar, context) {
 		}
 	};
@@ -177,7 +156,7 @@ public:
 		StackT& m_stk;
 	
 	public:
-		Scope(BasicContext& context, const NodeMarkT& mark)
+		Scope(Context& context, const NodeMarkT& mark)
 			: m_stk(context.m_stk)
 		{
 			NodeT* v = m_stk.front()->insertNode(context.m_alloc, mark);
@@ -197,4 +176,4 @@ public:
 
 NS_TPL_END
 
-#endif /* TPL_REGEX_CONTEXT_H */
+#endif /* TPL_REGEX_RESULT_CONTEXT_H */

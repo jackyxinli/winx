@@ -23,6 +23,10 @@
 #include "../Basic.h"
 #endif
 
+#ifndef STDEXT_STRING_H
+#include "../../../../stdext/include/stdext/String.h"
+#endif
+
 NS_TPL_BEGIN
 
 template <class RegExT> class Rule;

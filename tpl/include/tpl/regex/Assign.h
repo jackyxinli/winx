@@ -27,10 +27,6 @@
 #include "Ref.h"
 #endif
 
-#ifndef TPL_REGEX_MATCHRESULT_H
-#include "MatchResult.h"
-#endif
-
 NS_TPL_BEGIN
 
 // =========================================================================

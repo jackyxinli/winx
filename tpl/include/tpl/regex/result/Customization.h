@@ -9,25 +9,17 @@
 // of this license. You must not remove this notice, or any other, from
 // this software.
 // 
-// Module: tpl/regex/Customization.h
+// Module: tpl/regex/result/Customization.h
 // Creator: xushiwei
 // Email: xushiweizh@gmail.com
 // Date: 2006-8-13 9:41:58
 // 
-// $Id$
+// $Id: Customization.h 766 2008-06-28 15:41:08Z xushiweizh@gmail.com $
 // -----------------------------------------------------------------------*/
-#ifndef TPL_REGEX_CUSTOMIZATION_H
-#define TPL_REGEX_CUSTOMIZATION_H
+#ifndef TPL_REGEX_RESULT_CUSTOMIZATION_H
+#define TPL_REGEX_RESULT_CUSTOMIZATION_H
 
-#ifndef STDEXT_ARCHIVE_MEM_H
-#include "../../../../stdext/include/stdext/archive/Mem.h"
-#endif
-
-#ifndef TPL_REGEX_MATCHRESULT_H
-#include "MatchResult.h"
-#endif
-
-#ifndef TPL_REGEX_CONTEXT_H
+#ifndef TPL_REGEX_RESULT_CONTEXT_H
 #include "Context.h"
 #endif
 
@@ -41,7 +33,8 @@ namespace policy
 	class Default
 	{
 	public:
-		typedef DefaultTag Tag;
+		typedef char TagChar;
+		typedef std::Range<const char*> Leaf;
 		typedef std::PointerReadArchive Source;
 		typedef tpl::DefaultAllocator Allocator;
 	};
@@ -50,13 +43,13 @@ namespace policy
 // -------------------------------------------------------------------------
 // class Customization
 
-template <bool bHas, class Iterator, class Allocator, class Tag>
+template <bool bHas, class Iterator, class LeafT, class Allocator, class TagCharT>
 struct CustomizationContextTraits_ {
-	typedef BasicContext<Iterator, Allocator, Tag> Context;
+	typedef Context<Iterator, LeafT, Allocator, TagCharT> Context;
 };
 
-template <class Iterator, class Allocator, class Tag>
-struct CustomizationContextTraits_<false, Iterator, Allocator, Tag> {
+template <class Iterator, class LeafT, class Allocator, class TagCharT>
+struct CustomizationContextTraits_<false, Iterator, LeafT, Allocator, TagCharT> {
 	typedef Context0<Iterator> Context;
 };
 
@@ -76,9 +69,10 @@ class Customization
 public:
 	// Tag, Source, Allocator
 
-	typedef typename Policy::Tag Tag;
+	typedef typename Policy::TagChar TagChar;
 	typedef typename Policy::Source Source;
 	typedef typename Policy::Allocator Allocator;
+	typedef typename Policy::Leaf Leaf;
 
 public:
 	// Iterator
@@ -87,7 +81,8 @@ public:
 
 private:
 	template <bool bHas>
-	struct ContextTraits_ : public CustomizationContextTraits_<bHas, Iterator, Allocator, Tag> {
+	struct ContextTraits_ : public 
+		CustomizationContextTraits_<bHas, Iterator, Leaf, Allocator, TagChar> {
 	};
 
 public:
@@ -98,16 +93,8 @@ public:
 public:
 	// Leaf, Node, Document
 
-	typedef std::Range<Iterator> Leaf;
-	typedef tpl::Node<Iterator, Tag> Node;
-	typedef Node Document;
-
-public:
-	// Mark, LeafMark, NodeMark
-
-	typedef tpl::Mark<Tag> Mark;
-	typedef BasicMark<Tag, NodeAssign> NodeMark;
-	typedef BasicMark<Tag, LeafAssign> LeafMark;
+	typedef tpl::Node<Leaf, TagChar> Node;
+	typedef tpl::Document<Leaf, Allocator, TagChar> Document;
 
 private:
 	typedef CustomizationCharacterTraits_<bHasDocument> CharacterTraits_;
@@ -230,8 +217,49 @@ typedef Customization<> DefaultImplementation;
 typedef DefaultImplementation impl;
 
 // -------------------------------------------------------------------------
+// operator/
+
+template <class RegExT, class LeafT, class AllocT, class TagCharT>
+class DocumentedRule
+{	
+public:
+	typedef Document<LeafT, AllocT, TagCharT> DocumentT;
+	
+	const RegExT& m_rule;
+	DocumentT& m_doc;
+	
+public:
+	DocumentedRule(const RegExT& rule_, DocumentT& doc_)
+		: m_rule(rule_), m_doc(doc_) {}
+};
+
+template <class RegExT, class LeafT, class AllocT, class TagCharT>
+inline const DocumentedRule<RegExT, LeafT, AllocT, TagCharT>
+TPL_CALL operator/(const Rule<RegExT>& rule_, Document<LeafT, AllocT, TagCharT>& doc_) {
+	return DocumentedRule<RegExT, LeafT, AllocT, TagCharT>(rule_, doc_);
+}
+
+// -------------------------------------------------------------------------
+// operator>>
+
+template <class ContainerT, class RegExT, class LeafT, class AllocT, class TagCharT>
+inline bool TPL_CALL operator>>(
+	const ContainerT& src_, const DocumentedRule<RegExT, LeafT, AllocT, TagCharT>& dr_)
+{
+	typedef typename ArchiveRefTraits<const ContainerT&>::type SourceT;
+	typedef Document<LeafT, AllocT, TagCharT> DocumentT;
+	typedef Context<typename SourceT::iterator, LeafT, AllocT, TagCharT> ContextT;
+	
+	SourceT source(src_);
+	DocumentT& doc(dr_.m_doc);
+	ContextT context(doc.get_alloc(), doc);
+	return dr_.m_rule.match(source, context);
+}
+
+// -------------------------------------------------------------------------
 // $Log: $
 
 NS_TPL_END
 
-#endif /* TPL_REGEX_CUSTOMIZATION_H */
+#endif /* TPL_REGEX_RESULT_CUSTOMIZATION_H */
+

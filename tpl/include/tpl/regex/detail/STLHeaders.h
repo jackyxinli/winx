@@ -21,42 +21,42 @@
 
 // -------------------------------------------------------------------------
 
-#if defined(_STACK_) || defined(_STACK) || defined(_GLIBCXX_STACK)
+#if defined(_GLIBCXX_STACK) || defined(_STACK_) || defined(_STACK)
 #define TPL_HAS_STACK
 #endif
 
 // -------------------------------------------------------------------------
 // std::queue
 
-#if defined(_QUEUE_) || defined(_QUEUE) || defined(_GLIBCXX_QUEUE)
+#if defined(_GLIBCXX_QUEUE) || defined(_QUEUE_) || defined(_QUEUE)
 #define TPL_HAS_QUEUE
 #endif
 
 // -------------------------------------------------------------------------
 // std::deque
 
-#if defined(_DEQUE_) || defined(_DEQUE) || defined(_GLIBCXX_DEQUE)
+#if defined(_GLIBCXX_DEQUE) || defined(_DEQUE_) || defined(_DEQUE)
 #define TPL_HAS_DEQUE
 #endif
 
 // -------------------------------------------------------------------------
 // std::vector
 
-#if defined(_VECTOR_) || defined(_VECTOR) || defined(_GLIBCXX_VECTOR)
+#if defined(_GLIBCXX_VECTOR) || defined(_VECTOR_) || defined(_VECTOR)
 #define TPL_HAS_VECTOR
 #endif
 
 // -------------------------------------------------------------------------
 // std::list
 
-#if defined(_LIST_) || defined(_LIST) || defined(_GLIBCXX_LIST)
+#if defined(_GLIBCXX_LIST) || defined(_LIST_) || defined(_LIST)
 #define TPL_HAS_LIST
 #endif
 
 // -------------------------------------------------------------------------
 // std::set, std::multiset
 
-#if defined(_SET_) || defined(_SET) || defined(_GLIBCXX_SET)
+#if defined(_GLIBCXX_SET) || defined(_SET_) || defined(_SET)
 #define TPL_HAS_SET
 #define TPL_HAS_MULTI_SET
 #endif
@@ -64,7 +64,7 @@
 // -------------------------------------------------------------------------
 // std::map, std::multimap
 
-#if defined(_MAP_) || defined(_MAP) || defined(_GLIBCXX_MAP)
+#if defined(_GLIBCXX_MAP) || defined(_MAP_) || defined(_MAP)
 #define TPL_HAS_MAP
 #define TPL_HAS_MULTI_MAP
 #endif
@@ -72,7 +72,7 @@
 // -------------------------------------------------------------------------
 // std::basic_ostream
 
-#if defined(_OSTREAM_) || defined(_OSTREAM) || defined(_GLIBCXX_OSTREAM)
+#if defined(_GLIBCXX_OSTREAM) || defined(_OSTREAM_) || defined(_OSTREAM)
 #define TPL_HAS_OSTREAM
 #endif
 

@@ -19,24 +19,10 @@
 #ifndef TPL_REGEXP_H
 #define TPL_REGEXP_H
 
+// -------------------------------------------------------------------------
+
 #ifndef TPL_REGEX_BASIC_H
 #include "regex/Basic.h"
-#endif
-
-#ifndef TPL_REGEX_MARK_H
-#include "regex/Mark.h"
-#endif
-
-#ifndef TPL_REGEX_MATCHRESULT_H
-#include "regex/MatchResult.h"
-#endif
-
-#ifndef TPL_REGEX_CONTEXT_H
-#include "regex/Context.h"
-#endif
-
-#ifndef TPL_REGEX_CONCRETION_H
-#include "regex/Concretion.h"
 #endif
 
 #ifndef TPL_REGEX_TERMINAL_H
@@ -87,6 +73,12 @@
 #include "regex/Transformation.h"
 #endif
 
+#ifndef TPL_REGEX_MATCH_H
+#include "regex/Match.h"
+#endif
+
+// -------------------------------------------------------------------------
+
 #ifndef TPL_REGEX_GRAMMAR_OPERATOR_H
 #include "regex/grammar/Operator.h"
 #endif
@@ -95,28 +87,37 @@
 #include "regex/grammar/Action.h"
 #endif
 
-#ifndef TPL_REGEX_GRAMMAR_CONCRETION_H
-#include "regex/grammar/Concretion.h"
-#endif
-
 #ifndef TPL_REGEX_GRAMMAR_CONDITION_H
 #include "regex/grammar/Condition.h"
 #endif
 
-#ifndef TPL_REGEX_CUSTOMIZATION_H
-#include "regex/Customization.h"
+// -------------------------------------------------------------------------
+
+#ifndef TPL_REGEX_CONCRETION_H
+#include "regex/Concretion.h"
+#endif
+
+#ifndef TPL_REGEX_GRAMMAR_CONCRETION_H
+#include "regex/grammar/Concretion.h"
 #endif
 
 // -------------------------------------------------------------------------
-// operator>>
 
-template <class ContainerT, class RegExT> inline 
-bool TPL_CALL operator>>(const ContainerT& src_, const tpl::Rule<RegExT>& rule_)
-{
-	tpl::simple::Source source(src_);
-	tpl::simple::Context context;
-	return rule_.match(source, context);
-}
+#ifndef TPL_REGEX_RESULT_MARK_H
+#include "regex/result/Mark.h"
+#endif
+
+#ifndef TPL_REGEX_RESULT_DOCUMENT_H
+#include "regex/result/Document.h"
+#endif
+
+#ifndef TPL_REGEX_RESULT_CONTEXT_H
+#include "regex/result/Context.h"
+#endif
+
+#ifndef TPL_REGEX_RESULT_CUSTOMIZATION_H
+#include "regex/result/Customization.h"
+#endif
 
 // -------------------------------------------------------------------------
 // $Log: $

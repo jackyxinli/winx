@@ -19,7 +19,7 @@
 #ifndef TPL_REGEX_GRAMMAR_CONCRETION_H
 #define TPL_REGEX_GRAMMAR_CONCRETION_H
 
-#ifndef TPL_REGEX_REF_H
+#ifndef TPL_REGEX_CONCRETION_H
 #include "../Concretion.h"
 #endif
 
