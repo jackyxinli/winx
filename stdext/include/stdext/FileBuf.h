@@ -28,12 +28,16 @@ NS_STDEXT_BEGIN
 // -------------------------------------------------------------------------
 // class AutoBufferT
 
-template <class _Alloc>
+template <class AllocT>
 class AutoBufferT
 {
 protected:
 	char* m_data;
 	size_t m_bytes;
+
+public:
+	typedef char* iterator;
+	typedef const char* const_iterator;
 
 public:
 	AutoBufferT() : m_data(NULL), m_bytes(0) {}
@@ -42,19 +46,19 @@ public:
 	}
 	~AutoBufferT() {
 		if (m_data)
-			_Alloc::deallocate(m_data);
+			AllocT::deallocate(m_data);
 	}
 
 	char* winx_call allocate(size_t bytes) {
 		WINX_ASSERT(m_data == NULL);
 		m_bytes = bytes;
-		m_data = (char*)_Alloc::allocate(bytes);
+		m_data = (char*)AllocT::allocate(bytes);
 		return m_data;
 	}
 
 	void winx_call clear() {
 		if (m_data) {
-			_Alloc::deallocate(m_data, m_bytes);
+			AllocT::deallocate(m_data, m_bytes);
 			m_data = NULL;
 		}
 	}
@@ -92,13 +96,13 @@ public:
 // -------------------------------------------------------------------------
 // class WinFileBuf
 
-template <class _Alloc>
-class WinFileBufT : public AutoBufferT<_Alloc>
+template <class AllocT>
+class WinFileBufT : public AutoBufferT<AllocT>
 {
 private:
-	typedef AutoBufferT<_Alloc> Base;
+	typedef AutoBufferT<AllocT> Base;
 	
-	HRESULT winx_call __read(HANDLE hFile)
+	HRESULT winx_call _read(HANDLE hFile)
 	{
 		WINX_ASSERT(!Base::good());
 		
@@ -115,7 +119,7 @@ public:
 	WinFileBufT() {}
 
 	template <class InputFileT>
-	explicit WinFileBufT(InputFileT file) {
+	explicit WinFileBufT(const InputFileT& file) {
 		read(file);
 	}
 
@@ -128,7 +132,7 @@ public:
 		if (hFile == INVALID_HANDLE_VALUE)
 			return HRESULT_FROM_WIN32(::GetLastError());
 	
-		HRESULT hr = __read(hFile);
+		HRESULT hr = _read(hFile);
 		::CloseHandle(hFile);
 		return hr;
 	}
@@ -142,7 +146,7 @@ public:
 		if (hFile == INVALID_HANDLE_VALUE)
 			return HRESULT_FROM_WIN32(::GetLastError());
 		
-		HRESULT hr = __read(hFile);
+		HRESULT hr = _read(hFile);
 		::CloseHandle(hFile);
 		return hr;
 	}
@@ -157,13 +161,13 @@ typedef WinFileBufT<DefaultStaticAlloc> WinFileBuf;
 #pragma warning(disable:4996) // XXX  was declared deprecated
 #endif
 
-template <class _Alloc>
-class FILEFileBufT : public AutoBufferT<_Alloc>
+template <class AllocT>
+class FILEFileBufT : public AutoBufferT<AllocT>
 {
 private:
-	typedef AutoBufferT<_Alloc> Base;
+	typedef AutoBufferT<AllocT> Base;
 
-	HRESULT winx_call __read(FILE* fp)
+	HRESULT winx_call _read(FILE* fp)
 	{
 		WINX_ASSERT(!Base::good());
 		
@@ -183,7 +187,7 @@ public:
 	FILEFileBufT() {}
 	
 	template <class InputFileT>
-	explicit FILEFileBufT(InputFileT file) {
+	explicit FILEFileBufT(const InputFileT& file) {
 		read(file);
 	}
 	
@@ -193,7 +197,7 @@ public:
 		if (fp == NULL)
 			return STG_E_ACCESSDENIED;
 		
-		HRESULT hr = __read(fp);
+		HRESULT hr = _read(fp);
 		::fclose(fp);
 		return hr;
 	}
