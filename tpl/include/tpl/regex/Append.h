@@ -23,8 +23,8 @@
 #include "Assign.h"
 #endif
 
-#ifndef TPL_REGEX_STLHEADERS_H
-#include "STLHeaders.h"
+#ifndef TPL_REGEX_DETAIL_STLHEADERS_H
+#include "detail/STLHeaders.h"
 #endif
 
 NS_TPL_BEGIN

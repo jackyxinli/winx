@@ -51,16 +51,26 @@ public:
 };
 
 // =========================================================================
-// struct BindTraits
+// struct IndexOpTraits/EvalOpTraits
 
 template <class T1, class T2>
-struct BindTraits
+struct IndexOpTraits
 {
 //	concept:
 //
-//	typename bind_type;
+//	typename result_type;
 //
-//	static bind_type TPL_CALL bind(const T1& o1, const T2& o2);
+//	static result_type TPL_CALL call(const T1& o1, const T2& o2);
+};
+
+template <class T1, class T2 = void, class T3 = void, class T4 = void>
+struct EvalOpTraits
+{
+//	concept:
+//
+//	typename result_type;
+//
+//	static result_type TPL_CALL call(const T1& o1, const T2& o2, const T3& o3, const T4& o4);
 };
 
 // =========================================================================
@@ -189,11 +199,30 @@ public:
 		return *(const Grammar<Gr<RegExT> >*)this;
 	}
 
-	template <class T2>
-	typename BindTraits<Rule<RegExT>, T2>::bind_type TPL_CALL operator[](const T2& obj) const {
-		return BindTraits<Rule<RegExT>, T2>::bind(*this, obj);
+	template <class T1>
+	typename IndexOpTraits<Rule<RegExT>, T1>::result_type
+	TPL_CALL operator[](const T1& obj) const {
+		return IndexOpTraits<Rule<RegExT>, T1>::call(*this, obj);
 	}
-	
+
+	template <class T1>
+	typename EvalOpTraits<Rule<RegExT>, const T1&>::result_type
+	TPL_CALL operator()(const T1& a1) const {
+		return EvalOpTraits<Rule<RegExT>, const T1&>::call(*this, a1);
+	}
+
+	template <class T1, class T2>
+	typename EvalOpTraits<Rule<RegExT>, const T1&, const T2&>::result_type
+	TPL_CALL operator()(const T1& a1, const T2& a2) const {
+		return EvalOpTraits<Rule<RegExT>, const T1&, const T2&>::call(*this, a1, a2);
+	}
+
+	template <class T1, class T2, class T3>
+	typename EvalOpTraits<Rule<RegExT>, const T1&, const T2&, const T3&>::result_type
+	TPL_CALL operator()(const T1& a1, const T2& a2, const T3& a3) const {
+		return EvalOpTraits<Rule<RegExT>, const T1&, const T2&, const T3&>::call(*this, a1, a2, a3);
+	}
+
 //	concept:
 //
 //	enum { character = RegExT::character };

@@ -1,6 +1,7 @@
 [Include]
 ../../../tpl/include
 ../../../stdext/include
+../../../boostmm
 
 [Config Release]
 Product		Exe Release/includefiles

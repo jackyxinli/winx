@@ -27,12 +27,12 @@
 #include "Mark.h"
 #endif
 
-#ifndef TPL_REGEX_CONS_H
-#include "Cons.h"
+#ifndef TPL_REGEX_DETAIL_CONS_H
+#include "detail/Cons.h"
 #endif
 
-#ifndef TPL_REGEX_STLHEADERS_H
-#include "STLHeaders.h"
+#ifndef TPL_REGEX_DETAIL_STLHEADERS_H
+#include "detail/STLHeaders.h"
 #endif
 
 #if !defined(_STRING_) && !defined(_STRING)

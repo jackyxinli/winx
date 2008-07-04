@@ -27,10 +27,6 @@
 #include "MatchResult.h"
 #endif
 
-#ifndef TPL_REGEX_CONS_H
-#include "Cons.h"
-#endif
-
 NS_TPL_BEGIN
 
 // -------------------------------------------------------------------------

@@ -19,8 +19,8 @@
 #ifndef TPL_REGEX_CONDITION_H
 #define TPL_REGEX_CONDITION_H
 
-#ifndef TPL_REGEX_BASIC_H
-#include "Basic.h"
+#ifndef TPL_REGEX_ACTION_H
+#include "Action.h"
 #endif
 
 NS_TPL_BEGIN
@@ -75,16 +75,13 @@ public:
 	template <class SourceT, class ContextT>
 	bool TPL_CALL match(SourceT& ar, ContextT& context) const
 	{
-		typedef typename SourceT::iterator iterator;
-		typedef SelectValueType<typename ConditionT::value_type, std::Range<iterator> > SelectT;
-		typedef typename SelectT::value_type value_type;
-		typedef typename SelectAssig<typename RegExT::assig_tag, value_type>::assig_type assig_type;
+		TPL_ASSIG_PREPARE(typename RegExT::assig_tag, typename ConditionT::value_type)
 		
 		typename ContextT::template trans_type<RegExT::character> trans(ar, context);
 		const iterator pos = ar.position();
 		if (m_x.match(ar, context)) {
 			const iterator pos2 = ar.position();
-			const value_type val(assig_type::template get<value_type>(pos, pos2, &m_x));
+			const value_type val(TPL_ASSIG_GET(pos, pos2, &m_x));
 			if (m_y.match_if(val, ar, context) == matchOk)
 				return true;
 		}
@@ -94,12 +91,12 @@ public:
 };
 
 template <class RegExT, class ConditionT>
-struct BindTraits<Rule<RegExT>, Condition<ConditionT> >
+struct IndexOpTraits<Rule<RegExT>, Condition<ConditionT> >
 {
-	typedef Rule<Cond<RegExT, ConditionT> > bind_type;
+	typedef Rule<Cond<RegExT, ConditionT> > result_type;
 
-	static bind_type TPL_CALL bind(const Rule<RegExT>& rule_, const Condition<ConditionT>& cond_) {
-		return bind_type(rule_, cond_);
+	static result_type TPL_CALL call(const Rule<RegExT>& rule_, const Condition<ConditionT>& cond_) {
+		return result_type(rule_, cond_);
 	}
 };
 

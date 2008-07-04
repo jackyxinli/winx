@@ -91,15 +91,12 @@ public:
 	template <class SourceT, class ContextT, class SkipperT>
 	bool TPL_CALL match(SourceT& ar, ContextT& context, const SkipperT& skipper_) const
 	{
-		typedef typename SourceT::iterator iterator;
-		typedef SelectValueType<typename ActionT::value_type, std::Range<iterator> > SelectT;
-		typedef typename SelectT::value_type value_type;
-		typedef typename SelectAssig<assig_tag, value_type>::assig_type assig_type;
+		TPL_ASSIG_PREPARE(assig_tag, typename ActionT::value_type)
 
 		const iterator pos = ar.position();
 		if (m_x.match(ar, context, skipper_)) {
 			const iterator pos2 = ar.position();
-			const value_type val(assig_type::template get<value_type>(pos, pos2, &m_x));
+			const value_type val(TPL_ASSIG_GET(pos, pos2, &m_x));
 			m_action(val);
 			return true;
 		}

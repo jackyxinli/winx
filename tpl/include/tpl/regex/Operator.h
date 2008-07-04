@@ -142,68 +142,6 @@ Rule<Or<T1, T2> > TPL_CALL operator|(const Rule<T1>& x, const Rule<T2>& y) {
 
 TPL_REGEX_BINARY_OP_(|, Or)
 
-// -------------------------------------------------------------------------
-// function eq
-
-// Usage: Rule/eq("abc", "defg")	--- same as: Rule/(eq("abc") | eq("defg"))
-// Usage: Rule/eq("s1", "s2", "s3")	--- same as: Rule/(eq("s1") | eq("s2") | eq("s3"))
-
-template <class CharT>
-__forceinline
-Rule<Or<Eq<CharT>, Eq<CharT> > >
-TPL_CALL eq(const CharT* s1, const CharT* s2) {
-	return eq(s1) | eq(s2);
-}
-
-template <class CharT>
-__forceinline
-Rule<Or<Or<Eq<CharT>, Eq<CharT> >, Eq<CharT> > >
-TPL_CALL eq(const CharT* s1, const CharT* s2, const CharT* s3) {
-	return eq(s1) | eq(s2) | eq(s3);
-}
-
-template <class CharT>
-__forceinline
-Rule<Or<Or<Or<Eq<CharT>, Eq<CharT> >, Eq<CharT> >, Eq<CharT> > >
-TPL_CALL eq(const CharT* s1, const CharT* s2, const CharT* s3, const CharT* s4) {
-	return eq(s1) | eq(s2) | eq(s3) | eq(s4);
-}
-
-// -------------------------------------------------------------------------
-// function eq_s = eq + eos
-
-// Usage: Rule/eq_s("abc")
-// Usage: Rule/eq_s("abc", "defg")
-// Usage: Rule/eq_s("s1", "s2", "s3")
-
-template <class CharT>
-__forceinline
-Rule<And<Eq<CharT>, Eos> >
-TPL_CALL eq_s(const CharT* s) {
-	return eq(s) + eos();
-}
-
-template <class CharT>
-__forceinline
-Rule<And<Or<Eq<CharT>, Eq<CharT> >, Eos> >
-TPL_CALL eq_s(const CharT* s1, const CharT* s2) {
-	return (eq(s1) | eq(s2)) + eos();
-}
-
-template <class CharT>
-__forceinline
-Rule<And<Or<Or<Eq<CharT>, Eq<CharT> >, Eq<CharT> >, Eos> >
-TPL_CALL eq_s(const CharT* s1, const CharT* s2, const CharT* s3) {
-	return (eq(s1) | eq(s2) | eq(s3)) + eos();
-}
-
-template <class CharT>
-__forceinline
-Rule<And<Or<Or<Or<Eq<CharT>, Eq<CharT> >, Eq<CharT> >, Eq<CharT> >, Eos> >
-TPL_CALL eq_s(const CharT* s1, const CharT* s2, const CharT* s3, const CharT* s4) {
-	return (eq(s1) | eq(s2) | eq(s3) | eq(s4)) + eos();
-}
-
 // =========================================================================
 // operator/
 

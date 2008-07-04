@@ -205,7 +205,7 @@ public:
 public:
 	typedef StringT value_type;
 	typedef const StringT& dereference_type;
-	typedef Eq_<Iterator> rule_type;
+	typedef EqRange_<Iterator> rule_type;
 
 	dereference_type TPL_CALL operator()() const {
 		return m_s;

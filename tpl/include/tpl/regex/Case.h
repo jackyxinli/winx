@@ -27,6 +27,10 @@
 #include "Action.h"
 #endif
 
+#ifndef TPL_REGEX_PREDICATE_H
+#include "Predicate.h"
+#endif
+
 #ifndef TPL_REGEX_CONDITION_H
 #include "Condition.h"
 #endif
@@ -129,63 +133,7 @@ public:
 };
 
 // -------------------------------------------------------------------------
-// ConditionValueTypeTraits
-
-template <class ValueT>
-struct ConditionValueTypeTraits {
-	typedef typename ValueT::value_type value_type;
-	typedef ValueT pred_type;
-};
-
-template <class ValueT>
-struct ConditionValueTypeTraits<ValueT const&> {
-	typedef typename ConditionValueTypeTraits<ValueT>::value_type value_type;
-	typedef typename ConditionValueTypeTraits<ValueT>::pred_type pred_type;
-};
-
-// -------------------------------------------------------------------------
-// class Pred_
-
-struct ICase
-{
-	template <class T1, class T2>
-	static bool TPL_CALL test(const T1& x, const T2& y) {
-		return std::icompare(x, y) == 0;
-	}
-};
-
-#define TPL_CONDITION_PRED(Cmp, op)											\
-struct Cmp {																\
-	template <class T1, class T2>											\
-	static bool TPL_CALL test(const T1& x, const T2& y) {					\
-		return x op y;														\
-	}																		\
-};
-
-TPL_CONDITION_PRED(EQ, ==)
-TPL_CONDITION_PRED(NE, !=)
-TPL_CONDITION_PRED(GT, >)
-TPL_CONDITION_PRED(LT, <)
-TPL_CONDITION_PRED(GE, >=)
-TPL_CONDITION_PRED(LE, <=)
-
-template <class ValueT, class PredT = EQ>
-class Pred_
-{
-private:
-	const ValueT m_val2;
-	
-public:
-	template <class T1>
-	explicit Pred_(const T1& val) : m_val2(val) {}
-	
-	typedef typename ConditionValueTypeTraits<ValueT>::value_type value_type;
-	
-	template <class ValueT2>
-	bool TPL_CALL operator()(const ValueT2& val) const {
-		return PredT::test(val, m_val2);
-	}
-};
+// function default_
 
 class True_
 {
@@ -198,108 +146,48 @@ public:
 	}
 };
 
-// -------------------------------------------------------------------------
-
-#define TPL_CONDITION_VT(ValueT, CondValT)									\
-template <>																	\
-struct ConditionValueTypeTraits<ValueT> {									\
-	typedef CondValT value_type;											\
-	typedef Pred_<ValueT> pred_type;										\
-};																			\
-template <>																	\
-struct ConditionValueTypeTraits<ValueT const&> {							\
-	typedef CondValT value_type;											\
-	typedef Pred_<ValueT const&> pred_type;									\
-};
-
-TPL_CONDITION_VT(bool, bool)
-TPL_CONDITION_VT(char, char)
-TPL_CONDITION_VT(wchar_t, wchar_t)
-TPL_CONDITION_VT(short, int)
-TPL_CONDITION_VT(int, int)
-TPL_CONDITION_VT(long, long)
-TPL_CONDITION_VT(unsigned short, unsigned int)
-TPL_CONDITION_VT(unsigned int, unsigned int)
-TPL_CONDITION_VT(unsigned long, unsigned long)
-
-TPL_CONDITION_VT(char*, DefaultType)
-TPL_CONDITION_VT(wchar_t*, DefaultType)
-TPL_CONDITION_VT(char const*, DefaultType)
-TPL_CONDITION_VT(wchar_t const*, DefaultType)
-
-template <class CharT, size_t n>
-struct ConditionValueTypeTraits<const CharT[n]> {
-	typedef DefaultType value_type;
-	typedef Pred_<const CharT*> pred_type;
-};
-
-template <class CharT, size_t n>
-struct ConditionValueTypeTraits<CharT[n]> {
-	typedef DefaultType value_type;
-	typedef Pred_<const CharT*> pred_type;
-};
-
-// -------------------------------------------------------------------------
-// function case_/default_
-
-template <class PredT>
-inline Case<PredT> TPL_CALL case_if() {
-	return Case<PredT>();
-}
-
-template <class PredT, class ValueT>
-inline Case<Pred_<const ValueT*, PredT> > TPL_CALL case_if(const ValueT val[]) {
-	return Case<Pred_<const ValueT*, PredT> >(val);
-}
-
-template <class PredT, class ValueT>
-inline Case<Pred_<const ValueT*, PredT> > TPL_CALL case_if(ValueT val[]) {
-	return Case<Pred_<const ValueT*, PredT> >(val);
-}
-
-template <class PredT, class ValueT>
-inline Case<Pred_<ValueT, PredT> > TPL_CALL case_if(const ValueT& val) {
-	return Case<Pred_<ValueT, PredT> >(val);
-}
-
-template <class PredT, class ValueT>
-inline Case<Pred_<const ValueT&, PredT> > TPL_CALL case_if(ValueT& val) {
-	return Case<Pred_<const ValueT&, PredT> >(val);
-}
-
-template <class PredT, class ValueT>
-inline Case<Pred_<const ValueT&, PredT> > TPL_CALL case_if(const Var<ValueT>& var_) {
-	return Case<Pred_<const ValueT&, PredT> >(var_.val);
-}
-
-template <class PredT, class ValueT>
-inline Case<Pred_<const ValueT&, PredT> > TPL_CALL case_if(Var<ValueT>& var_) {
-	return Case<Pred_<const ValueT&, PredT> >(var_.val);
-}
-
-template <class ValueT>
-inline Case<typename ConditionValueTypeTraits<ValueT>::pred_type> TPL_CALL case_(const ValueT& val) {
-	return Case<typename ConditionValueTypeTraits<ValueT>::pred_type>(val);
-}
-
-template <class ValueT>
-inline Case<typename ConditionValueTypeTraits<const ValueT&>::pred_type> TPL_CALL case_(ValueT& val) {
-	return Case<typename ConditionValueTypeTraits<const ValueT&>::pred_type>(val);
-}
-
-template <class ValueT>
-inline Case<Pred_<const ValueT&> > TPL_CALL case_(const Var<ValueT>& var_) {
-	return Case<Pred_<const ValueT&> >(var_.val);
-}
-
-template <class ValueT>
-inline Case<Pred_<const ValueT&> > TPL_CALL case_(Var<ValueT>& var_) {
-	return Case<Pred_<const ValueT&> >(var_.val);
-}
-
 inline Case<True_> TPL_CALL default_() {
 	return Case<True_>();
 }
+
+// -------------------------------------------------------------------------
+// function case_
+
+template <class PredT>
+inline Case<PredT> TPL_CALL case_() {
+	return Case<PredT>();
+}
+
+template <class ValueT>
+inline Case<typename PredRefTraits<const ValueT&>::pred_type>
+TPL_CALL case_(const ValueT& val) {
+	return Case<typename PredRefTraits<const ValueT&>::pred_type>(val);
+}
+
+template <class ValueT>
+inline Case<typename PredRefTraits<ValueT&>::pred_type>
+TPL_CALL case_(ValueT& val) {
+	return Case<typename PredRefTraits<ValueT&>::pred_type>(val);
+}
+
+// -------------------------------------------------------------------------
+// function case_if
+
+#if defined(TPL_REGEX_BACKWARD)
+
+template <class PredT, class ValueT>
+inline Case<Pred_<typename SmartRefTraits<const ValueT&>::const_type, PredT> >
+TPL_CALL case_if(const ValueT& val) {
+	return Case<Pred_<typename SmartRefTraits<const ValueT&>::const_type, PredT> >(val);
+}
+
+template <class PredT, class ValueT>
+inline Case<Pred_<typename SmartRefTraits<ValueT&>::const_type, PredT> >
+TPL_CALL case_if(ValueT& val) {
+	return Case<Pred_<typename SmartRefTraits<ValueT&>::const_type, PredT> >(val);
+}
+
+#endif
 
 // =========================================================================
 // class CaseAct

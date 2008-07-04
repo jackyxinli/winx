@@ -53,12 +53,12 @@ public:
 };
 
 template <class SkipperT, class GrammarT>
-struct BindTraits<Rule<SkipperT>, Grammar<GrammarT> >
+struct IndexOpTraits<Rule<SkipperT>, Grammar<GrammarT> >
 {
-	typedef Rule<GrBind<GrammarT, SkipperT> > bind_type;
+	typedef Rule<GrBind<GrammarT, SkipperT> > result_type;
 
-	static bind_type TPL_CALL bind(const Rule<SkipperT>& y, const Grammar<GrammarT>& x) {
-		return bind_type(x, y);
+	static result_type TPL_CALL call(const Rule<SkipperT>& y, const Grammar<GrammarT>& x) {
+		return result_type(x, y);
 	}
 };
 

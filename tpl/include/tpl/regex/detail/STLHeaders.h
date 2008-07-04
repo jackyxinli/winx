@@ -9,15 +9,15 @@
 // of this license. You must not remove this notice, or any other, from
 // this software.
 // 
-// Module: tpl/regex/STLHeaders.h
+// Module: tpl/regex/detail/STLHeaders.h
 // Creator: xushiwei
 // Email: xushiweizh@gmail.com
 // Date: 2006-8-13 9:41:58
 // 
 // $Id$
 // -----------------------------------------------------------------------*/
-#ifndef TPL_REGEX_STLHEADERS_H
-#define TPL_REGEX_STLHEADERS_H
+#ifndef TPL_REGEX_DETAIL_STLHEADERS_H
+#define TPL_REGEX_DETAIL_STLHEADERS_H
 
 // -------------------------------------------------------------------------
 
@@ -79,5 +79,5 @@
 // -------------------------------------------------------------------------
 // $Log: $
 
-#endif /* TPL_REGEX_STLHEADERS_H */
+#endif /* TPL_REGEX_DETAIL_STLHEADERS_H */
 

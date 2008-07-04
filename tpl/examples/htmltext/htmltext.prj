@@ -1,5 +1,6 @@
 [Include]
 ../../../tpl/include
+../../../boostmm
 
 [Config Release]
 Product		Exe Release/htmltext

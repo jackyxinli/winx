@@ -158,6 +158,15 @@ namespace tpl {																\
 	TPL_ASSIG_(AssigTag, Assig)												\
 }
 
+#define TPL_ASSIG_PREPARE(AssigTag, ValueT)									\
+	typedef typename SourceT::iterator iterator;							\
+	typedef SelectValueType<ValueT, std::Range<iterator> > SelectT_;		\
+	typedef typename SelectT_::value_type value_type;						\
+	typedef typename SelectAssig<AssigTag, value_type>::assig_type assig_type;
+	
+#define TPL_ASSIG_GET(pos, pos2, pParam)									\
+	assig_type::template get<value_type>(pos, pos2, pParam)
+
 template <class AssigTag, class ValueT>
 struct SelectAssig {
 	typedef typename AssigTraits<AssigTag>::assig_type assig_type;
@@ -186,15 +195,12 @@ public:
 	template <class SourceT, class ContextT>
 	bool TPL_CALL match(SourceT& ar, ContextT& context) const
 	{
-		typedef typename SourceT::iterator iterator;
-		typedef SelectValueType<typename ActionT::value_type, std::Range<iterator> > SelectT;
-		typedef typename SelectT::value_type value_type;
-		typedef typename SelectAssig<assig_tag, value_type>::assig_type assig_type;
-
+		TPL_ASSIG_PREPARE(assig_tag, typename ActionT::value_type)
+		
 		const iterator pos = ar.position();
 		if (m_x.match(ar, context)) {
 			const iterator pos2 = ar.position();
-			const value_type val(assig_type::template get<value_type>(pos, pos2, &m_x));
+			const value_type val(TPL_ASSIG_GET(pos, pos2, &m_x));
 			m_action(val);
 			return true;
 		}

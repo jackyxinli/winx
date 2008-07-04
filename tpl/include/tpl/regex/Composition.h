@@ -211,10 +211,10 @@ class WStr : public BasicStr<wchar_t, m_s> {
 };
 
 // =========================================================================
-// class Eq
+// class EqStr_
 
 template <class Iterator>
-class Eq_
+class EqRange_
 {
 private:
 	Iterator m_s;
@@ -222,12 +222,12 @@ private:
 
 public:
 	template <class StringT>
-	Eq_(const StringT& s) {
+	EqRange_(const StringT& s) {
 		m_s = s.begin();
 		m_len = s.size();
 	}
 
-	Eq_(Iterator s, size_t n) {
+	EqRange_(Iterator s, size_t n) {
 		m_s = s;
 		m_len = n;
 	}
@@ -252,48 +252,38 @@ public:
 };
 
 template <class CharT>
-class Eq : public Eq_<const CharT*>
+class EqStr_ : public EqRange_<const CharT*>
 {
 private:
-	typedef Eq_<const CharT*> Base;
+	typedef EqRange_<const CharT*> Base;
 
 public:
-	Eq(const CharT* s, size_t n)
+	EqStr_(const CharT* s, size_t n)
 		: Base(s, n) {
 	}
 
-	Eq(const CharT* s)
+	EqStr_(const CharT* s)
 		: Base(s,std::char_traits<CharT>::length(s)) {
 	}
 };
 
-typedef Eq<char> EqStr;
-typedef Eq<wchar_t> EqWStr;
+typedef EqStr_<char> EqStr;
+typedef EqStr_<wchar_t> EqWStr;
 
 // -------------------------------------------------------------------------
-// function eq/str
+// function str
 
-// Usage: eq("abcd")			--- Work as a rule. Same as: str("abcd")
-// Usage: eq("abcd", 3)			--- Work as a rule. Same as: str("abcd")
+// Usage: str("abcd")			--- Work as a rule. Same as: str("abcd")
+// Usage: str("abcd", 3)			--- Work as a rule. Same as: str("abcd")
 
 template <class CharT>
-__forceinline Rule<Eq<CharT> > TPL_CALL eq(const CharT* s) {
-	return Rule<Eq<CharT> >(s);
+__forceinline Rule<EqStr_<CharT> > TPL_CALL str(const CharT* s) {
+	return Rule<EqStr_<CharT> >(s);
 }
 
 template <class CharT>
-__forceinline Rule<Eq<CharT> > TPL_CALL eq(const CharT* s, size_t n) {
-	return Rule<Eq<CharT> >(s, n);
-}
-
-template <class CharT>
-__forceinline Rule<Eq<CharT> > TPL_CALL str(const CharT* s) {
-	return Rule<Eq<CharT> >(s);
-}
-
-template <class CharT>
-__forceinline Rule<Eq<CharT> > TPL_CALL str(const CharT* s, size_t n) {
-	return Rule<Eq<CharT> >(s, n);
+__forceinline Rule<EqStr_<CharT> > TPL_CALL str(const CharT* s, size_t n) {
+	return Rule<EqStr_<CharT> >(s, n);
 }
 
 __forceinline Grammar<Gr<EqStr> > TPL_CALL gr(const char* s) {
@@ -306,18 +296,18 @@ __forceinline Grammar<Gr<EqWStr> > TPL_CALL gr(const wchar_t* s) {
 
 #define TPL_RULE_STR_BINARY_OP1_(op, Op, CharT)										\
 template <class T2> __forceinline													\
-Rule< Op<Eq<CharT>, T2> > TPL_CALL operator op(const CharT* x, const Rule<T2>& y)	\
+Rule< Op<EqStr_<CharT>, T2> > TPL_CALL operator op(const CharT* x, const Rule<T2>& y)	\
 	{ return str(x) op y; }															\
 template <class T1> __forceinline													\
-Rule< Op<T1, Eq<CharT> > > TPL_CALL operator op(const Rule<T1>& x, const CharT* y)	\
+Rule< Op<T1, EqStr_<CharT> > > TPL_CALL operator op(const Rule<T1>& x, const CharT* y)	\
 	{ return x op str(y); }
 
 #define TPL_GRAMMAR_STR_BINARY_OP1_(op, Op, CharT)									\
 template <class T2> __forceinline													\
-Grammar< Op<Gr<Eq<CharT> >, T2> > TPL_CALL operator op(const CharT* x, const Grammar<T2>& y) \
+Grammar< Op<Gr<EqStr_<CharT> >, T2> > TPL_CALL operator op(const CharT* x, const Grammar<T2>& y) \
 	{ return str(x) op y; }															\
 template <class T1> __forceinline													\
-Grammar< Op<T1, Gr<Eq<CharT> > > > TPL_CALL operator op(const Grammar<T1>& x, const CharT* y) \
+Grammar< Op<T1, Gr<EqStr_<CharT> > > > TPL_CALL operator op(const Grammar<T1>& x, const CharT* y) \
 	{ return x op str(y); }
 
 #define TPL_RULE_STR_BINARY_OP_(op, Op)												\

@@ -9,18 +9,18 @@
 // of this license. You must not remove this notice, or any other, from
 // this software.
 // 
-// Module: tpl/regex/Cons.h
+// Module: tpl/regex/detail/Cons.h
 // Creator: xushiwei
 // Email: xushiweizh@gmail.com
 // Date: 2006-8-13 9:41:58
 // 
 // $Id$
 // -----------------------------------------------------------------------*/
-#ifndef TPL_REGEX_CONS_H
-#define TPL_REGEX_CONS_H
+#ifndef TPL_REGEX_DETAIL_CONS_H
+#define TPL_REGEX_DETAIL_CONS_H
 
 #ifndef TPL_REGEX_BASIC_H
-#include "Basic.h"
+#include "../Basic.h"
 #endif
 
 NS_TPL_BEGIN
@@ -201,4 +201,5 @@ __forceinline size_t TPL_CALL count_if(const ConsList<Type, bManaged>& hd_, Cond
 
 NS_TPL_END
 
-#endif /* TPL_REGEX_CONS_H */
+#endif /* TPL_REGEX_DETAIL_CONS_H */
+
