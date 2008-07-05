@@ -119,13 +119,22 @@ __forceinline Rule<ChRange<m_c1, m_c2> > TPL_CALL ch_range() {
 }
 
 // -------------------------------------------------------------------------
-// function not_ch
+// function ch_not
 
-// Usage: not_ch<'a'>()			--- means: ~ch('a')
-// Usage: not_ch<'a', 'b'>()	--- means: ~ch('a', 'b')
+// Usage: ch_not<'a'>()			--- means: ~ch('a')
+// Usage: ch_not<'a', 'b'>()	--- means: ~ch('a', 'b')
 
-template <int m_c1, int m_c2 = m_c1, int m_c3 = m_c2>
+template <int m_c1, int m_c2 = m_c1, int m_c3 = m_c2, int m_c4 = m_c3>
 class N_
+{
+public:
+	__forceinline bool TPL_CALL operator()(int c) const {
+		return m_c1 != c && m_c2 != c && m_c3 != c && m_c4 != c;
+	}
+};
+
+template <int m_c1, int m_c2, int m_c3>
+class N_<m_c1, m_c2, m_c3>
 {
 public:
 	__forceinline bool TPL_CALL operator()(int c) const {
@@ -134,7 +143,7 @@ public:
 };
 
 template <int m_c1, int m_c2>
-class N_<m_c1, m_c2, m_c2>
+class N_<m_c1, m_c2>
 {
 public:
 	__forceinline bool TPL_CALL operator()(int c) const {
@@ -143,7 +152,7 @@ public:
 };
 
 template <int m_c>
-class N_<m_c, m_c, m_c>
+class N_<m_c>
 {
 public:
 	__forceinline bool TPL_CALL operator()(int c) const {
@@ -151,23 +160,28 @@ public:
 	}
 };
 
-template <int m_c1, int m_c2 = m_c1, int m_c3 = m_c2>
-class NotCh : public EqCh<N_<m_c1, m_c2, m_c3> > {
+template <int m_c1, int m_c2 = m_c1, int m_c3 = m_c2, int m_c4 = m_c3>
+class ChNot : public EqCh<N_<m_c1, m_c2, m_c3, m_c4> > {
 };
 
 template <int m_c>
-__forceinline Rule<NotCh<m_c> > TPL_CALL not_ch() {
-	return Rule<NotCh<m_c> >();
+__forceinline Rule<ChNot<m_c> > TPL_CALL ch_not() {
+	return Rule<ChNot<m_c> >();
 }
 
 template <int m_c1, int m_c2>
-__forceinline Rule<NotCh<m_c1, m_c2> > TPL_CALL not_ch() {
-	return Rule<NotCh<m_c1, m_c2> >();
+__forceinline Rule<ChNot<m_c1, m_c2> > TPL_CALL ch_not() {
+	return Rule<ChNot<m_c1, m_c2> >();
 }
 
 template <int m_c1, int m_c2, int m_c3>
-__forceinline Rule<NotCh<m_c1, m_c2, m_c3> > TPL_CALL not_ch() {
-	return Rule<NotCh<m_c1, m_c2, m_c3> >();
+__forceinline Rule<ChNot<m_c1, m_c2, m_c3> > TPL_CALL ch_not() {
+	return Rule<ChNot<m_c1, m_c2, m_c3> >();
+}
+
+template <int m_c1, int m_c2, int m_c3, int m_c4>
+__forceinline Rule<ChNot<m_c1, m_c2, m_c3, m_c4> > TPL_CALL ch_not() {
+	return Rule<ChNot<m_c1, m_c2, m_c3, m_c4> >();
 }
 
 // -------------------------------------------------------------------------
@@ -176,8 +190,17 @@ __forceinline Rule<NotCh<m_c1, m_c2, m_c3> > TPL_CALL not_ch() {
 // Usage: ch<'a'>()			--- means: ch('a')
 // Usage: ch<'a', 'b'>()	--- means: ch('a') | ch('b')
 
-template <int m_c1, int m_c2 = m_c1, int m_c3 = m_c2>
+template <int m_c1, int m_c2 = m_c1, int m_c3 = m_c2, int m_c4 = m_c3>
 class C_
+{
+public:
+	__forceinline bool TPL_CALL operator()(int c) const {
+		return m_c1 == c || m_c2 == c || m_c3 == c || m_c4 == c;
+	}
+};
+
+template <int m_c1, int m_c2, int m_c3>
+class C_<m_c1, m_c2, m_c3>
 {
 public:
 	__forceinline bool TPL_CALL operator()(int c) const {
@@ -186,7 +209,7 @@ public:
 };
 
 template <int m_c1, int m_c2>
-class C_<m_c1, m_c2, m_c2>
+class C_<m_c1, m_c2>
 {
 public:
 	__forceinline bool TPL_CALL operator()(int c) const {
@@ -195,7 +218,7 @@ public:
 };
 
 template <int m_c>
-class C_<m_c, m_c, m_c>
+class C_<m_c>
 {
 public:
 	__forceinline bool TPL_CALL operator()(int c) const {
@@ -203,8 +226,8 @@ public:
 	}
 };
 
-template <int m_c1, int m_c2 = m_c1, int m_c3 = m_c2>
-class Ch : public EqCh<C_<m_c1, m_c2, m_c3> > {
+template <int m_c1, int m_c2 = m_c1, int m_c3 = m_c2, int m_c4 = m_c3>
+class Ch : public EqCh<C_<m_c1, m_c2, m_c3, m_c4> > {
 };
 
 template <int m_c>
@@ -220,6 +243,11 @@ __forceinline Rule<Ch<m_c1, m_c2> > TPL_CALL ch() {
 template <int m_c1, int m_c2, int m_c3>
 __forceinline Rule<Ch<m_c1, m_c2, m_c3> > TPL_CALL ch() {
 	return Rule<Ch<m_c1, m_c2, m_c3> >();
+}
+
+template <int m_c1, int m_c2, int m_c3, int m_c4>
+__forceinline Rule<Ch<m_c1, m_c2, m_c3, m_c4> > TPL_CALL ch() {
+	return Rule<Ch<m_c1, m_c2, m_c3, m_c4> >();
 }
 
 // -------------------------------------------------------------------------

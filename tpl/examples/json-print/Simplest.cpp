@@ -1,5 +1,6 @@
 #define TPL_USE_AUTO_ALLOC
 #include <tpl/c/Lex.h>
+#include <tpl/regex/DOM.h>
 
 using namespace tpl;
 
@@ -10,18 +11,20 @@ using namespace tpl;
 
 int main()
 {
+	typedef DOM<> dom;
+
 	const char source[] = "\
 		class Foo // Foo comment\n\
 		  : public Base1, Base2\n\
 		{};\
 	";
+		
+	dom::Mark tagName("name");	
+	dom::Mark tagAccess("access");
+	dom::NodeMark tagBase("base");
 	
-	Mark<> tagName("name");	
-	Mark<> tagAccess("access");
-	NodeMark<> tagBase("base");
-	
-	impl::Allocator alloc;
-	impl::Document doc(alloc);
+	dom::Allocator alloc;
+	dom::Document doc(alloc);
 
 	source >> cpp_skip_
 		[

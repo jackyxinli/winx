@@ -103,6 +103,12 @@
 
 // -------------------------------------------------------------------------
 
+#ifndef TPL_REGEXP_DOM_H
+#include "regex/DOM.h"
+#endif
+
+// -------------------------------------------------------------------------
+
 #ifndef TPL_REGEX_RESULT_MARK_H
 #include "regex/result/Mark.h"
 #endif

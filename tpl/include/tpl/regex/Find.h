@@ -40,7 +40,7 @@ NS_TPL_BEGIN
 // =========================================================================
 // function find_if, find_eol, find_strict_eol
 
-template <bool bEat, class SourceT, class PredT>
+template <bool bEat, bool bNotZero, class SourceT, class PredT>
 inline bool TPL_CALL do_find_if(SourceT& ar, PredT pred)
 {
 	typename SourceT::iterator pos = ar.position();
@@ -48,8 +48,11 @@ inline bool TPL_CALL do_find_if(SourceT& ar, PredT pred)
 	{
 		typename SourceT::int_type c = ar.get();
 		if (pred(c)) {
-			if (!bEat)
+			if (!bEat) {
 				ar.unget(c);
+				if (bNotZero)
+					return pos != ar.position();
+			}
 			return true;
 		}
 		else if (c == SourceT::endch) {
@@ -109,7 +112,7 @@ inline bool TPL_CALL do_find_strict_eol(SourceT& ar)
 	}
 }
 
-template <class PredT, bool bEat = false>
+template <class PredT, bool bEat = false, bool bNotZero = false>
 class FindIf
 {
 private:
@@ -129,7 +132,7 @@ public:
 
 	template <class SourceT, class ContextT>
 	bool TPL_CALL match(SourceT& ar, ContextT& context) const {
-		return do_find_if<bEat>(ar, m_pred);
+		return do_find_if<bEat, bNotZero>(ar, m_pred);
 	}
 
 	TPL_SIMPLEST_GRAMMAR_();
@@ -208,6 +211,33 @@ __forceinline Rule<FindChSet<false, m_c1, m_c2> > TPL_CALL find_set() {
 template <int m_c1, int m_c2, int m_c3>
 __forceinline Rule<FindChSet<false, m_c1, m_c2, m_c3> > TPL_CALL find_set() {
 	return Rule<FindChSet<false, m_c1, m_c2, m_c3> >();
+}
+
+// -------------------------------------------------------------------------
+// class StrToken
+
+template <int m_c1, int m_c2 = m_c1, int m_c3 = m_c2, int m_c4 = m_c3>
+class StrToken : public FindIf<C_<m_c1, m_c2, m_c3, m_c4>, false, true> {
+};
+
+template <int m_c1>
+__forceinline Rule<StrToken<m_c1> > TPL_CALL str_token() {
+	return Rule<StrToken<m_c1> >();
+}
+
+template <int m_c1, int m_c2>
+__forceinline Rule<StrToken<m_c1, m_c2> > TPL_CALL str_token() {
+	return Rule<StrToken<m_c1, m_c2> >();
+}
+
+template <int m_c1, int m_c2, int m_c3>
+__forceinline Rule<StrToken<m_c1, m_c2, m_c3> > TPL_CALL str_token() {
+	return Rule<StrToken<m_c1, m_c2, m_c3> >();
+}
+
+template <int m_c1, int m_c2, int m_c3, int m_c4>
+__forceinline Rule<StrToken<m_c1, m_c2, m_c3, m_c4> > TPL_CALL str_token() {
+	return Rule<StrToken<m_c1, m_c2, m_c3, m_c4> >();
 }
 
 // -------------------------------------------------------------------------

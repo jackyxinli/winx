@@ -19,8 +19,8 @@
 #ifndef TPL_HTML_LEX_H
 #define TPL_HTML_LEX_H
 
-#ifndef TPL_REGEXP_H
-#include "../RegExp.h"
+#ifndef TPL_REGEX_MATCH_H
+#include "../regex/Match.h"
 #endif
 
 #ifndef TPL_C_LEX_H

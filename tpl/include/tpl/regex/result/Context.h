@@ -109,8 +109,7 @@ public:
 		return m_alloc;
 	}
 
-	template <class ValueT2>
-	void TPL_CALL insertLeaf(const Mark<ValueT2, TagCharT>& mark, const LeafT& val) {
+	void TPL_CALL insertLeaf(const LeafMarkT& mark, const LeafT& val) {
 		m_stk.front()->insertLeaf(m_alloc, mark, val);
 	}
 

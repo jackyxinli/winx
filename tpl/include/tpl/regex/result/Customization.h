@@ -217,46 +217,6 @@ typedef Customization<> DefaultImplementation;
 typedef DefaultImplementation impl;
 
 // -------------------------------------------------------------------------
-// operator/
-
-template <class RegExT, class LeafT, class AllocT, class TagCharT>
-class DocumentedRule
-{	
-public:
-	typedef Document<LeafT, AllocT, TagCharT> DocumentT;
-	
-	const RegExT& m_rule;
-	DocumentT& m_doc;
-	
-public:
-	DocumentedRule(const RegExT& rule_, DocumentT& doc_)
-		: m_rule(rule_), m_doc(doc_) {}
-};
-
-template <class RegExT, class LeafT, class AllocT, class TagCharT>
-inline const DocumentedRule<RegExT, LeafT, AllocT, TagCharT>
-TPL_CALL operator/(const Rule<RegExT>& rule_, Document<LeafT, AllocT, TagCharT>& doc_) {
-	return DocumentedRule<RegExT, LeafT, AllocT, TagCharT>(rule_, doc_);
-}
-
-// -------------------------------------------------------------------------
-// operator>>
-
-template <class ContainerT, class RegExT, class LeafT, class AllocT, class TagCharT>
-inline bool TPL_CALL operator>>(
-	const ContainerT& src_, const DocumentedRule<RegExT, LeafT, AllocT, TagCharT>& dr_)
-{
-	typedef typename ArchiveRefTraits<const ContainerT&>::type SourceT;
-	typedef Document<LeafT, AllocT, TagCharT> DocumentT;
-	typedef Context<typename SourceT::iterator, LeafT, AllocT, TagCharT> ContextT;
-	
-	SourceT source(src_);
-	DocumentT& doc(dr_.m_doc);
-	ContextT context(doc.get_alloc(), doc);
-	return dr_.m_rule.match(source, context);
-}
-
-// -------------------------------------------------------------------------
 // $Log: $
 
 NS_TPL_END

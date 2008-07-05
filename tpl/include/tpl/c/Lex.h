@@ -19,8 +19,8 @@
 #ifndef TPL_C_LEX_H
 #define TPL_C_LEX_H
 
-#ifndef TPL_REGEXP_H
-#include "../RegExp.h"
+#ifndef TPL_REGEX_MATCH_H
+#include "../regex/Match.h"
 #endif
 
 NS_TPL_BEGIN
@@ -199,7 +199,7 @@ private:
 	typedef Ch<'\\'> Esc_;
 	typedef UAnd<Esc_, ChAny> EscChar_;
 	
-	typedef NotCh<delim, '\r', '\n'> NotStopChar_;
+	typedef ChNot<delim, '\r', '\n'> NotStopChar_;
 	typedef Or<EscChar_, NotStopChar_> Char_;
 	typedef Repeat0<Char_> Chars_;
 	

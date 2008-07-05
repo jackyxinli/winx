@@ -49,8 +49,8 @@ private:
 	ContainerT m_data;
 
 public:
-	template <class AllocT, class ValueT2>
-	void TPL_CALL insertLeaf(AllocT& alloc, const Mark<ValueT2, TagCharT>& mark, const LeafT& val) {
+	template <class AllocT>
+	void TPL_CALL insertLeaf(AllocT& alloc, const LeafMarkT& mark, const LeafT& val) {
 		const LeafT* v = TPL_UNMANAGED_NEW(alloc, LeafT)(val);
 		m_data.push_front(alloc, ValueT(&mark, v));
 	}
@@ -318,7 +318,7 @@ private:
 	
 	static void TPL_CALL _insert(CharT c, CharT alt) {
 		TPL_ASSERT(c >= 0 && c < ESCAPE_MAX);
-		m_escape[c] = alt;
+		m_escape[(size_t)c] = alt;
 	}
 	
 public:

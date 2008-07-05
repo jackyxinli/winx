@@ -52,7 +52,7 @@ struct MarkTraits<TagNodeType, TagCharT>
 // -------------------------------------------------------------------------
 // class Mark
 
-template <class ValueT = DefaultType, class TagCharT = char>
+template <class ValueT, class TagCharT = char>
 class Mark
 {
 private:
@@ -88,20 +88,6 @@ public:
 	bool TPL_CALL isLeaf() const {
 		return !isNode();
 	}
-};
-
-// -------------------------------------------------------------------------
-// class NodeMark
-
-template <class TagCharT = char>
-class NodeMark : public Mark<TagNodeType, TagCharT>
-{
-private:
-	typedef Mark<TagNodeType, TagCharT> Base;
-	
-public:
-	NodeMark(const TagCharT* tag_ = NULL)
-		: Base(tag_) {}
 };
 
 // -------------------------------------------------------------------------
