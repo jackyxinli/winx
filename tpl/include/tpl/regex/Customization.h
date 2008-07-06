@@ -62,12 +62,12 @@ class CustomizationTraits_<SourceT, NullResult>
 {
 public:
 	typedef DefaultAllocator Allocator;
+	typedef DefaultLeaf Leaf;
 	
 	typedef void Mark;
 	typedef void LeafMark;
 	typedef void NodeMark;
 	
-	typedef void Leaf;
 	typedef void Node;
 	typedef void Document;
 
