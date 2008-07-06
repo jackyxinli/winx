@@ -9,12 +9,12 @@
 // of this license. You must not remove this notice, or any other, from
 // this software.
 // 
-// Module: stdext/Node.h
+// Module: stdext/Cons.h
 // Creator: xushiwei
 // Email: xushiweizh@gmail.com
 // Date: 2008-6-14 9:41:58
 // 
-// $Id: Node.h 642 2008-06-12 03:25:29Z xushiweizh@gmail.com $
+// $Id: Cons.h 642 2008-06-12 03:25:29Z xushiweizh@gmail.com $
 // -----------------------------------------------------------------------*/
 #ifndef STDEXT_CONS_H
 #define STDEXT_CONS_H
