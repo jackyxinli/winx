@@ -1,0 +1,18 @@
+AppPath0=`dirname $0`
+AppPath=`cd $AppPath0; pwd`
+
+if [ -z $1 ]; then
+	TargetDir=~/bin
+else
+	TargetDir=`cd $1; pwd`
+fi
+
+cd $AppPath
+for File in svn-*; do
+	echo "$AppPath/$File \$*" > $TargetDir/$File
+	chmod +x $TargetDir/$File
+done
+
+echo "$AppPath/boost-propset \$*" > $TargetDir/boost-propset
+chmod +x $TargetDir/boost-propset
+
