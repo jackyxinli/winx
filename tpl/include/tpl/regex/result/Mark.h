@@ -27,25 +27,30 @@ NS_TPL_BEGIN
 
 // -------------------------------------------------------------------------
 
-#ifndef TPL_REGEX_NODE_MARK	
-#define TPL_REGEX_NODE_MARK	((size_t)(1) << (sizeof(size_t)*8 - 1))
-#endif
+#define TPL_REGEX_PTR_BITS		(sizeof(size_t) * 8)
+#define TPL_REGEX_ARRAY_MARK	((size_t)(1) << (TPL_REGEX_PTR_BITS - 2))
+#define TPL_REGEX_NODE_MARK		((size_t)(2) << (TPL_REGEX_PTR_BITS - 2))
+#define TPL_REGEX_FALGS_MASK	((size_t)(3) << (TPL_REGEX_PTR_BITS - 2))
 
 struct TagNodeType {};
 
-template <class ValueT, class TagCharT>
-struct MarkTraits
-{
-	static const TagCharT* TPL_CALL mark(const TagCharT* tag) {
-		return tag;
+template <class ValueT>
+struct MarkTraits_ {
+	static size_t TPL_CALL mark(size_t tag, bool bArray) {
+		if (bArray)
+			return tag | TPL_REGEX_ARRAY_MARK;
+		else
+			return tag;
 	}
 };
 
-template <class TagCharT>
-struct MarkTraits<TagNodeType, TagCharT>
-{
-	static const TagCharT* TPL_CALL mark(const TagCharT* tag) {
-		return (const TagCharT*)((size_t)tag | TPL_REGEX_NODE_MARK);
+template <>
+struct MarkTraits_<TagNodeType> {
+	static size_t TPL_CALL mark(size_t tag, bool bArray) {
+		if (bArray)
+			return tag | (TPL_REGEX_NODE_MARK | TPL_REGEX_ARRAY_MARK);
+		else
+			return tag | TPL_REGEX_NODE_MARK;
 	}
 };
 
@@ -65,8 +70,8 @@ private:
 public:
 	typedef ValueT value_type;
 	
-	Mark(const TagCharT* tag_ = NULL)
-		: m_tag(MarkTraits<ValueT, TagCharT>::mark(tag_)) {
+	Mark(const TagCharT* tag_ = NULL, bool bArray_ = false)
+		: m_tag((const TagCharT*)MarkTraits_<ValueT>::mark((size_t)tag_, bArray_)) {
 	}
 
 	bool TPL_CALL operator==(const Mark& b) const {
@@ -78,7 +83,11 @@ public:
 	}
 
 	const TagCharT* TPL_CALL tag() const {
-		return (const TagCharT*)((size_t)m_tag & ~TPL_REGEX_NODE_MARK);
+		return (const TagCharT*)((size_t)m_tag & ~TPL_REGEX_FALGS_MASK);
+	}
+	
+	size_t TPL_CALL isArray() const {
+		return (size_t)m_tag & TPL_REGEX_ARRAY_MARK;
 	}
 
 	size_t TPL_CALL isNode() const {

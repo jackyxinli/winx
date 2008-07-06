@@ -23,8 +23,8 @@
 #include "../Basic.h"
 #endif
 
-#ifndef TPL_REGEX_DETAIL_CONS_H
-#include "../detail/Cons.h"
+#ifndef STDEXT_CONS_H
+#include "../../../../../stdext/include/stdext/Cons.h"
 #endif
 
 #ifndef TPL_REGEX_RESULT_MARK_H
@@ -44,7 +44,8 @@ private:
 	typedef Mark<TagNodeType, TagCharT> NodeMarkT;
 
 	typedef std::pair<const void*, const void*> ValueT;
-	typedef ConsList<ValueT, false> ContainerT;
+	typedef NS_STDEXT::ConsList<ValueT, false> ContainerT;
+	typedef NS_STDEXT::Cons<ValueT, false> Cons;
 
 	ContainerT m_data;
 
@@ -99,7 +100,7 @@ public:
 	class Position
 	{
 	private:
-		ContainerT::cons m_pos;
+		typename ContainerT::cons m_pos;
 
 	public:
 		typedef Value<DataT> value_type;
@@ -107,21 +108,26 @@ public:
 		typedef typename value_type::key_type key_type;
 		typedef Node container_type;
 
-		Position(ContainerT::cons pos) : m_pos(pos) {}
+		Position(typename ContainerT::cons pos) : m_pos(pos) {}
 
 		Position TPL_CALL tl() const {
-			return m_pos->tl();
+			return m_pos->tail;
 		}
 
 		value_type TPL_CALL hd() const {
 			return m_pos->value;
+		}
+		
+		template <class AllocT>
+		Position TPL_CALL reverse(AllocT& alloc) const {
+			return Cons::reverse(alloc, m_pos);
 		}
 
 		data_type TPL_CALL operator*() const {
 			return hd().data();
 		}
 
-		const Position* TPL_CALL operator->() const {
+		typename ContainerT::cons TPL_CALL operator->() const {
 			return m_pos;
 		}
 
@@ -137,14 +143,6 @@ public:
 			return m_pos != NULL;
 		}
 	};
-
-	template <class ConsT>
-	static size_t TPL_CALL length(ConsT hd_) {
-		size_t len = 0;
-		for (; hd_; hd_ = hd_.tl())
-			++len;
-		return len;
-	}
 
 public:
 	struct Null {};
@@ -219,10 +217,8 @@ private:
 	static void TPL_CALL _travel(cons it, OperaT& op) {
 		if (it) {
 			cons it2 = it.tl();
-			const bool bPrev = (it2 != 0);
-			if (bPrev)
-				_travel(it2, op);
-			op(it, bPrev);
+			_travel(it2, op);
+			op(it);
 		}
 	}
 
@@ -270,7 +266,7 @@ public:
 
 public:
 	template <class ConsT>
-	void TPL_CALL operator()(ConsT it, bool bPrev)
+	void TPL_CALL operator()(ConsT it)
 	{
 		typename ConsT::value_type val = it.hd();
 		typename ConsT::key_type key_ = val.key(); 
@@ -386,36 +382,80 @@ public:
 		: log_(log), indent_(indent) {}
 
 public:
-	template <class ConsT>
-	void TPL_CALL operator()(ConsT it, bool bPrev)
+	template <class AllocT, class ValueT>
+	void TPL_CALL print_val(AllocT& alloc_, const ValueT& val_)
 	{
-		typename ConsT::value_type val = it.hd();
-		typename ConsT::key_type key_ = val.key();
-		if (bPrev)
-			log_.print(',');
+		if (val_.key().isNode())
+		{
+			print(alloc_, val_.node());
+		}
+		else
+		{
+			log_.print('\"');
+			json_print_string(log_, val_.leaf());
+			log_.print('\"');
+		}
+	}
+
+	template <class AllocT, class ConsT>
+	ConsT TPL_CALL print_one(AllocT& alloc_, ConsT it_)
+	{
+		typename ConsT::value_type val_ = it_.hd();
+		typename ConsT::key_type key_ = val_.key();
+		
 		log_.newline()
 			.put(indent_, ' ')
 			.print('\"')
 			.print(key_.tag())
 			.print("\": ");
-		if (key_.isNode())
+		if (key_.isArray())
 		{
-			print(val.node());
+			log_.newline()
+				.put(indent_, ' ')
+				.print("[\n");
+			indent_ += delta;
+			{
+				log_.put(indent_, ' ');
+				print_val(alloc_, val_);
+				while ((it_ = it_->tail), it_)
+				{
+					if (it_.hd().key() != key_)
+						break;
+					log_.print(',')
+						.newline()
+						.put(indent_, ' ');
+					print_val(alloc_, it_.hd());
+				}
+			}
+			indent_ -= delta;
+			log_.newline()
+				.put(indent_, ' ')
+				.print(']');
+			return it_;
 		}
 		else
 		{
-			log_.print('\"');
-			json_print_string(log_, val.leaf());
-			log_.print('\"');
-		}
+			print_val(alloc_, val_);
+			return it_->tail;
+		}		
 	}
 	
-	template <class LeafT, class TagCharT>
-	void TPL_CALL print(const Node<LeafT, TagCharT>& node_)
+	template <class AllocT, class NodeT>
+	void TPL_CALL print(AllocT& alloc_, const NodeT& node_)
 	{
 		log_.print('{');
 		indent_ += delta;
-		node_.travel(*this);
+		{
+			bool prev_ = false;
+			typename NodeT::cons it_ = node_.all().reverse(alloc_);
+			while (it_) {
+				if (prev_)
+					log_.print(',');
+				else
+					prev_ = true;
+				it_ = print_one(alloc_, it_);
+			}
+		}
 		indent_ -= delta;
 		log_.newline()
 			.put(indent_, ' ')
@@ -423,11 +463,12 @@ public:
 	}
 };
 
-template <class LogT, class LeafT, class TagCharT>
-inline void TPL_CALL json_print(LogT& log_, const Node<LeafT, TagCharT>& node_, int indent_ = 0)
+template <class AllocT, class LogT, class LeafT, class TagCharT>
+inline void TPL_CALL json_print(
+	AllocT& alloc_, LogT& log_, const Node<LeafT, TagCharT>& node_, int indent_ = 0)
 {
 	NodeJsonPrint_<LogT> op(log_, indent_);
-	op.print(node_);
+	op.print(alloc_, node_);
 	log_.newline();
 }
 

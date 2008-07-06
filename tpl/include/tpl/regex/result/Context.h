@@ -86,7 +86,7 @@ class Context
 {
 private:
 	typedef Node<LeafT, TagCharT> NodeT;
-	typedef ConsList<NodeT*, false> StackT;
+	typedef NS_STDEXT::ConsList<NodeT*, false> StackT;
 
 	AllocT& m_alloc;
 	StackT m_stk;
