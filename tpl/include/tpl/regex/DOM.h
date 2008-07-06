@@ -56,6 +56,11 @@ public:
 	typedef AllocT Allocator;
 
 public:
+	// TagChar
+	
+	typedef TagCharT TagChar;
+
+public:
 	// Mark, LeafMark, NodeMark
 	
 	typedef tpl::Mark<LeafT, TagCharT> Mark, LeafMark;

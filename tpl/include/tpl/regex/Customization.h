@@ -9,95 +9,110 @@
 // of this license. You must not remove this notice, or any other, from
 // this software.
 // 
-// Module: tpl/regex/result/Customization.h
+// Module: tpl/regex/Customization.h
 // Creator: xushiwei
 // Email: xushiweizh@gmail.com
 // Date: 2006-8-13 9:41:58
 // 
 // $Id: Customization.h 766 2008-06-28 15:41:08Z xushiweizh@gmail.com $
 // -----------------------------------------------------------------------*/
-#ifndef TPL_REGEX_RESULT_CUSTOMIZATION_H
-#define TPL_REGEX_RESULT_CUSTOMIZATION_H
+#ifndef TPL_REGEX_CUSTOMIZATION_H
+#define TPL_REGEX_CUSTOMIZATION_H
 
-#ifndef TPL_REGEX_RESULT_CONTEXT_H
-#include "Context.h"
+#ifndef TPL_REGEX_DOM_H
+#include "DOM.h"
 #endif
 
 NS_TPL_BEGIN
 
 // -------------------------------------------------------------------------
-// class policy::Default
+// DefaultSource, DefaultResult
 
-namespace policy
+typedef std::PointerReadArchive DefaultSource;
+typedef tpl::DOM<> DefaultResult;
+typedef void NullResult;
+
+// -------------------------------------------------------------------------
+// CustomizationTraits_
+
+template <class SourceT, class ResultT>
+class CustomizationTraits_
 {
-	class Default
-	{
-	public:
-		typedef char TagChar;
-		typedef std::Range<const char*> Leaf;
-		typedef std::PointerReadArchive Source;
-		typedef tpl::DefaultAllocator Allocator;
-	};
-}
+private:
+	typedef typename ResultT::TagChar TagCharT;
+
+public:
+	typedef typename ResultT::Allocator Allocator;
+	
+	typedef typename ResultT::Mark Mark;
+	typedef typename ResultT::LeafMark LeafMark;
+	typedef typename ResultT::NodeMark NodeMark;
+	
+	typedef typename ResultT::Leaf Leaf;
+	typedef typename ResultT::Node Node;
+	typedef typename ResultT::Document Document;
+
+	typedef tpl::Context<typename SourceT::iterator, Leaf, Allocator, TagCharT> Context;
+
+	enum { characterMarked	= CHARACTER_MARKED };
+};
+
+template <class SourceT>
+class CustomizationTraits_<SourceT, NullResult>
+{
+public:
+	typedef DefaultAllocator Allocator;
+	
+	typedef void Mark;
+	typedef void LeafMark;
+	typedef void NodeMark;
+	
+	typedef void Leaf;
+	typedef void Node;
+	typedef void Document;
+
+	typedef Context0<typename SourceT::iterator> Context;
+
+	enum { characterMarked	= 0 };
+};
 
 // -------------------------------------------------------------------------
 // class Customization
 
-template <bool bHas, class Iterator, class LeafT, class Allocator, class TagCharT>
-struct CustomizationContextTraits_ {
-	typedef Context<Iterator, LeafT, Allocator, TagCharT> Context;
-};
-
-template <class Iterator, class LeafT, class Allocator, class TagCharT>
-struct CustomizationContextTraits_<false, Iterator, LeafT, Allocator, TagCharT> {
-	typedef Context0<Iterator> Context;
-};
-
-template <bool bHas>
-struct CustomizationCharacterTraits_ {
-	enum { characterMarked	= CHARACTER_MARKED };
-};
-
-template <>
-struct CustomizationCharacterTraits_<false> {
-	enum { characterMarked	= 0 };
-};
-
-template <class Policy = policy::Default, bool bHasDocument = true>
+template <class SourceT = DefaultSource, class ResultT = DefaultResult>
 class Customization
 {
-public:
-	// Tag, Source, Allocator
+private:
+	typedef CustomizationTraits_<SourceT, ResultT> Tr_;
 
-	typedef typename Policy::TagChar TagChar;
-	typedef typename Policy::Source Source;
-	typedef typename Policy::Allocator Allocator;
-	typedef typename Policy::Leaf Leaf;
+public:
+	// Source, Result
+
+	typedef SourceT Source;
+	typedef ResultT Result;
+
+public:
+	// Result: Allocator, Mark, LeafMark, NodeMark, Leaf, Node, Document
+	
+	typedef typename Tr_::Allocator Allocator;
+	
+	typedef typename Tr_::Mark Mark;
+	typedef typename Tr_::LeafMark LeafMark;
+	typedef typename Tr_::NodeMark NodeMark;
+	
+	typedef typename Tr_::Leaf Leaf;
+	typedef typename Tr_::Node Node;
+	typedef typename Tr_::Document Document;
 
 public:
 	// Iterator
 
 	typedef typename Source::iterator Iterator;
 
-private:
-	template <bool bHas>
-	struct ContextTraits_ : public 
-		CustomizationContextTraits_<bHas, Iterator, Leaf, Allocator, TagChar> {
-	};
-
 public:
 	// Context
 
-	typedef typename ContextTraits_<bHasDocument>::Context Context;
-
-public:
-	// Leaf, Node, Document
-
-	typedef tpl::Node<Leaf, TagChar> Node;
-	typedef tpl::Document<Leaf, Allocator, TagChar> Document;
-
-private:
-	typedef CustomizationCharacterTraits_<bHasDocument> CharacterTraits_;
+	typedef typename Tr_::Context Context;
 
 public:
 	// Rule
@@ -117,7 +132,7 @@ public:
 	};
 
 	typedef RuleT<0> Rule;
-	typedef RuleT<CharacterTraits_::characterMarked> MarkedRule;
+	typedef RuleT<Tr_::characterMarked> MarkedRule;
 
 public:
 	// ManagedRule
@@ -137,7 +152,7 @@ public:
 	};
 
 	typedef ManagedRuleT<0> ManagedRule;
-	typedef ManagedRuleT<CharacterTraits_::characterMarked> ManagedMarkedRule;
+	typedef ManagedRuleT<Tr_::characterMarked> ManagedMarkedRule;
 
 public:
 	// Rule helper functions:
@@ -176,7 +191,7 @@ public:
 	};
 
 	typedef GrammarT<0> Grammar;
-	typedef GrammarT<CharacterTraits_::characterMarked> MarkedGrammar;
+	typedef GrammarT<Tr_::characterMarked> MarkedGrammar;
 
 public:
 	// Grammar helper functions:
@@ -205,7 +220,7 @@ public:
 // -------------------------------------------------------------------------
 // SimpleImplementation
 
-typedef Customization<policy::Default, false> SimpleImplementation;
+typedef Customization<DefaultSource, NullResult> SimpleImplementation;
 
 typedef SimpleImplementation simple;
 
@@ -221,5 +236,5 @@ typedef DefaultImplementation impl;
 
 NS_TPL_END
 
-#endif /* TPL_REGEX_RESULT_CUSTOMIZATION_H */
+#endif /* TPL_REGEX_CUSTOMIZATION_H */
 

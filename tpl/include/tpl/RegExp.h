@@ -103,12 +103,6 @@
 
 // -------------------------------------------------------------------------
 
-#ifndef TPL_REGEXP_DOM_H
-#include "regex/DOM.h"
-#endif
-
-// -------------------------------------------------------------------------
-
 #ifndef TPL_REGEX_RESULT_MARK_H
 #include "regex/result/Mark.h"
 #endif
@@ -121,8 +115,14 @@
 #include "regex/result/Context.h"
 #endif
 
-#ifndef TPL_REGEX_RESULT_CUSTOMIZATION_H
-#include "regex/result/Customization.h"
+#ifndef TPL_REGEXP_DOM_H
+#include "regex/DOM.h"
+#endif
+
+// -------------------------------------------------------------------------
+
+#ifndef TPL_REGEX_CUSTOMIZATION_H
+#include "regex/Customization.h"
 #endif
 
 // -------------------------------------------------------------------------
