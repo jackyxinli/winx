@@ -114,9 +114,9 @@ public:
 	static cons winx_call make(AllocT& alloc, const Type& val, cons tail)
 	{
 		if (bManaged)
-			return TPL_NEW(alloc, Node)(val, tail);
+			return STD_NEW(alloc, Node)(val, tail);
 		else
-			return TPL_UNMANAGED_NEW(alloc, Node)(val, tail);
+			return STD_UNMANAGED_NEW(alloc, Node)(val, tail);
 	}
 
 	template <class AllocT>

@@ -19,8 +19,8 @@
 #ifndef STDEXT_MEMORY_RECYCLEBUFFER_H
 #define STDEXT_MEMORY_RECYCLEBUFFER_H
 
-#ifndef STDEXT_MEMORY_BASIC_H
-#include "Basic.h"
+#ifndef STDEXT_BASIC_H
+#include "../Basic.h"
 #endif
 
 NS_STDEXT_BEGIN

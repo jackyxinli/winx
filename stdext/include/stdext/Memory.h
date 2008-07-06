@@ -21,29 +21,6 @@
 
 // -------------------------------------------------------------------------
 
-#if (0)
-
-#ifndef STDEXT_MEMORY_BASIC_H
-#include "memory/Basic.h"
-#endif
-
-#ifndef STDEXT_MEMORY_AUTOFREEALLOC_H
-#include "memory/AutoFreeAlloc.h"
-#endif
-
-#ifndef STDEXT_MEMORY_RECYCLEBUFFER_H
-#include "memory/RecycleBuffer.h"
-#endif
-
-#ifndef STDEXT_MEMORY_SCOPEALLOC_H
-#include "memory/ScopeAlloc.h"
-#endif
-
-class GcAlloc;
-class StlAlloc;
-
-#else
-
 #ifndef STDEXT_BASIC_H
 #include "Basic.h"
 #endif
@@ -79,10 +56,10 @@ NS_STDEXT_END
 #define STD_NEW(alloc, Type)					BOOST_MEMORY_NEW(alloc, Type)
 #define STD_NEW_ARRAY(alloc, Type, count)		BOOST_MEMORY_NEW_ARRAY(alloc, Type, count)
 
+#define STD_UNMANAGED_NEW(alloc, Type)			new((alloc).allocate(sizeof(Type))) Type
+
 #define STD_ALLOC(alloc, Type)					BOOST_MEMORY_ALLOC(alloc, Type)
 #define STD_ALLOC_ARRAY(alloc, Type, count)		BOOST_MEMORY_ALLOC_ARRAY(alloc, Type, count)
-
-#endif
 
 // -------------------------------------------------------------------------
 // --> Memory leak checker - count-checker
