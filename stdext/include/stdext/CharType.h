@@ -119,6 +119,8 @@ typedef DigitTableT<void> DigitTable;
 #define STD_CTYPE_MAX_CHAR			128
 
 #define STD_CTYPE_ALPHA				(STD_CTYPE_UPPER|STD_CTYPE_LOWER)
+#define STD_SYMBOL_FIRST_CHAR		(STD_CTYPE_ALPHA)
+#define STD_SYMBOL_NEXT_CHAR		(STD_SYMBOL_FIRST_CHAR|STD_CTYPE_DIGIT)
 #define STD_CSYMBOL_FIRST_CHAR		(STD_CTYPE_ALPHA|STD_CTYPE_UNDERLINE)
 #define STD_CSYMBOL_NEXT_CHAR		(STD_CSYMBOL_FIRST_CHAR|STD_CTYPE_DIGIT)
 #define STD_XMLSYMBOL_FIRST_CHAR	(STD_CSYMBOL_FIRST_CHAR)
@@ -179,6 +181,14 @@ struct CharTypeT
 		return STD_CTYPE_IS_(STD_CTYPE_SPACE, c);
 	}
 
+	static int isSymbolFirstChar(int c) {
+		return STD_CTYPE_IS_(STD_SYMBOL_FIRST_CHAR, c);
+	}
+
+	static int isSymbolNextChar(int c) {
+		return STD_CTYPE_IS_(STD_SYMBOL_NEXT_CHAR, c);
+	}
+
 	static int isCSymbolFirstChar(int c) {
 		return STD_CTYPE_IS_(STD_CSYMBOL_FIRST_CHAR, c);
 	}
@@ -228,6 +238,8 @@ struct CharTypeT
 	STD_CTYPE_OP_AND_NOT_(IsXDigit, isXDigit);
 	STD_CTYPE_OP_AND_NOT_(IsUnderline, isUnderline);
 	STD_CTYPE_OP_AND_NOT_(IsPathSeparator, isPathSeparator);
+	STD_CTYPE_OP_AND_NOT_(IsSymbolFirstChar, isSymbolFirstChar);
+	STD_CTYPE_OP_AND_NOT_(IsSymbolNextChar, isSymbolNextChar);
 	STD_CTYPE_OP_AND_NOT_(IsCSymbolFirstChar, isCSymbolFirstChar);
 	STD_CTYPE_OP_AND_NOT_(IsCSymbolNextChar, isCSymbolNextChar);
 	STD_CTYPE_OP_AND_NOT_(IsXmlSymbolFirstChar, isXmlSymbolFirstChar);
