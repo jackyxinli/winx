@@ -19,9 +19,10 @@ int main()
 		{};\
 	";
 		
-	dom::Mark tagName("name");	
-	dom::Mark tagAccess("access");
-	dom::NodeMark tagBase("base");
+	dom::Mark tagName("name");
+	dom::NodeMark tagBase("base", true);
+		dom::Mark tagAccess("access");
+		//dom::Mark tagName("name");
 	
 	dom::Allocator alloc;
 	dom::Document doc(alloc);
@@ -39,7 +40,7 @@ int main()
 		]/doc;
 
 	std::OutputLog log;
-	json_print(log, doc);
+	json_print(alloc, log, doc);
 	return 0;
 }
 
