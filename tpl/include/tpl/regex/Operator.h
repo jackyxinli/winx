@@ -23,16 +23,8 @@
 #include "Basic.h"
 #endif
 
-#ifndef TPL_REGEX_TERMINAL_H
-#include "Terminal.h" // TPL_RULE_CH_BINARY_OP_
-#endif
-
-#ifndef TPL_REGEX_COMPOSITION_H
-#include "Composition.h" // TPL_RULE_STR_BINARY_OP_
-#endif
-
-#ifndef TPL_REGEX_REF_H
-#include "Ref.h"
+#ifndef TPL_REGEX_RULETRAITS_H
+#include "RuleTraits.h"
 #endif
 
 #if !defined(_LIMITS_) && !defined(_LIMITS)
@@ -40,20 +32,6 @@
 #endif
 
 NS_TPL_BEGIN
-
-// =========================================================================
-// TPL_RULE_UNARY_OP_, TPL_REGEX_BINARY_OP_
-
-#define TPL_RULE_REF_UNARY_OP_(op, Op)
-#define TPL_RULE_REF_BINARY_OP_(op, Op)
-
-#define TPL_RULE_UNARY_OP_(op, Op)											\
-	TPL_RULE_REF_UNARY_OP_(op, Op)
-
-#define TPL_REGEX_BINARY_OP_(op, Op)										\
-	TPL_RULE_CH_BINARY_OP_(op, Op)											\
-	TPL_RULE_STR_BINARY_OP_(op, Op)											\
-	TPL_RULE_REF_BINARY_OP_(op, Op)
 
 // =========================================================================
 // operator+

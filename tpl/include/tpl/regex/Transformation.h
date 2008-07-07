@@ -23,6 +23,10 @@
 #include "Basic.h"
 #endif
 
+#ifndef TPL_REGEX_RULETRAITS_H
+#include "RuleTraits.h"
+#endif
+
 NS_TPL_BEGIN
 
 // =========================================================================
@@ -212,17 +216,10 @@ template <template <class CharT> class TransformT>
 class Transformation
 {
 public:
-	template <class RegExT>
-	Rule<Transf<RegExT, TransformT> > TPL_CALL operator[](const Rule<RegExT>& x) const {
-		return Rule<Transf<RegExT, TransformT> >(x);
-	}
-
-	Rule<Transf<EqStr, TransformT> > TPL_CALL operator[](const char* x) const {
-		return Rule<Transf<EqStr, TransformT> >(x);
-	}
-
-	Rule<Transf<EqWStr, TransformT> > TPL_CALL operator[](const wchar_t* x) const {
-		return Rule<Transf<EqWStr, TransformT> >(x);
+	template <class RuleT>
+	typename RuleTemplateCompose2<RuleT, TransformT, Transf>::rule_type
+	TPL_CALL operator[](const RuleT& x) const {
+		return typename RuleTemplateCompose2<RuleT, TransformT, Transf>::rule_type(x);
 	}
 };
 

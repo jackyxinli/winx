@@ -262,6 +262,10 @@ private:
 	int m_c;
 
 public:
+	C1(char c) : m_c((unsigned char)c) {}
+	C1(unsigned char c) : m_c(c) {}
+	C1(short c) : m_c((unsigned short)c) {}
+	C1(wchar_t c) : m_c(c) {}
 	C1(int c) : m_c(c) {}
 
 	bool TPL_CALL operator()(int c) const {
@@ -298,57 +302,22 @@ public:
 	}
 };
 
-typedef EqCh<C1> Ch1_;
-typedef EqCh<C2> Ch2_;
-typedef EqCh<C3> Ch3_;
+typedef EqCh<C1> Ch1;
+typedef EqCh<C2> Ch2;
+typedef EqCh<C3> Ch3;
 
-__forceinline Rule<Ch1_> TPL_CALL ch(const int x) {
-	return Rule<Ch1_>(x);
+template <class CharT>
+__forceinline Rule<Ch1> TPL_CALL ch(const CharT& x) {
+	return Rule<Ch1>(x);
 }
 
-__forceinline Rule<Ch2_> TPL_CALL ch(const int c1, const int c2) {
-	return Rule<Ch2_>(c1, c2);
+__forceinline Rule<Ch2> TPL_CALL ch(const int c1, const int c2) {
+	return Rule<Ch2>(c1, c2);
 }
 
-__forceinline Rule<Ch3_> TPL_CALL ch(const int c1, const int c2, const int c3) {
-	return Rule<Ch3_>(c1, c2, c3);
+__forceinline Rule<Ch3> TPL_CALL ch(const int c1, const int c2, const int c3) {
+	return Rule<Ch3>(c1, c2, c3);
 }
-
-__forceinline Grammar<Gr<Ch1_> > TPL_CALL gr(char x) {
-	return Grammar<Gr<Ch1_> >((unsigned char)x);
-}
-
-__forceinline Grammar<Gr<Ch1_> > TPL_CALL gr(wchar_t x) {
-	return Grammar<Gr<Ch1_> >(x);
-}
-
-__forceinline Grammar<Gr<Ch1_> > TPL_CALL gr(int x) {
-	return Grammar<Gr<Ch1_> >(x);
-}
-
-#define TPL_RULE_CH_BINARY_OP1_(op, Op, CharT, UCharT)								\
-template <class T2> __forceinline													\
-Rule< Op<Ch1_, T2> > TPL_CALL operator op(CharT x, const Rule<T2>& y)				\
-	{ return ch((UCharT)x) op y; }													\
-template <class T1> __forceinline													\
-Rule< Op<T1, Ch1_> > TPL_CALL operator op(const Rule<T1>& x, CharT y)				\
-	{ return x op ch((UCharT)y); }
-
-#define TPL_GRAMMAR_CH_BINARY_OP1_(op, Op, CharT, UCharT)							\
-template <class T2> __forceinline													\
-Grammar< Op<Gr<Ch1_>, T2> > TPL_CALL operator op(CharT x, const Grammar<T2>& y)		\
-	{ return ch((UCharT)x) op y; }													\
-template <class T1> __forceinline													\
-Grammar< Op<T1, Gr<Ch1_> > > TPL_CALL operator op(const Grammar<T1>& x, CharT y)	\
-	{ return x op ch((UCharT)y); }
-
-#define TPL_RULE_CH_BINARY_OP_(op, Op)												\
-	TPL_RULE_CH_BINARY_OP1_(op, Op, char, unsigned char)							\
-	TPL_RULE_CH_BINARY_OP1_(op, Op, wchar_t, wchar_t)
-
-#define TPL_GRAMMAR_CH_BINARY_OP_(op, Op)											\
-	TPL_GRAMMAR_CH_BINARY_OP1_(op, Op, char, unsigned char)							\
-	TPL_GRAMMAR_CH_BINARY_OP1_(op, Op, wchar_t, wchar_t)
 
 // -------------------------------------------------------------------------
 // function space, alpha, ...
@@ -367,6 +336,9 @@ typedef ChRange<'A', 'Z'> UpperAlpha;
 typedef EqCh<std::CharType::IsSpace> Space;
 typedef EqCh<std::CharType::IsAlpha> Alpha;
 typedef EqCh<std::CharType::IsXDigit> XDigit, HexDigit;
+
+typedef EqCh<std::CharType::IsSymbolFirstChar> SymbolFirstChar;
+typedef EqCh<std::CharType::IsSymbolNextChar> SymbolNextChar;
 
 typedef EqCh<std::CharType::IsCSymbolFirstChar> CSymbolFirstChar;
 typedef EqCh<std::CharType::IsCSymbolNextChar> CSymbolNextChar;
@@ -410,6 +382,14 @@ inline Rule<BinDigit> TPL_CALL bin_digit() {
 	return Rule<BinDigit>();
 }
 
+inline Rule<SymbolFirstChar> TPL_CALL symbol_first_char() {
+	return Rule<SymbolFirstChar>();
+}
+
+inline Rule<SymbolNextChar> TPL_CALL symbol_next_char() {
+	return Rule<SymbolNextChar>();
+}
+
 inline Rule<CSymbolFirstChar> TPL_CALL c_symbol_first_char() {
 	return Rule<CSymbolFirstChar>();
 }
@@ -418,9 +398,18 @@ inline Rule<CSymbolNextChar> TPL_CALL c_symbol_next_char() {
 	return Rule<CSymbolNextChar>();
 }
 
+inline Rule<XmlSymbolFirstChar> TPL_CALL xml_symbol_first_char() {
+	return Rule<XmlSymbolFirstChar>();
+}
+
+inline Rule<XmlSymbolNextChar> TPL_CALL xml_symbol_next_char() {
+	return Rule<XmlSymbolNextChar>();
+}
+
 // -------------------------------------------------------------------------
 // $Log: $
 
 NS_TPL_END
 
 #endif /* TPL_REGEX_TERMINAL_H */
+

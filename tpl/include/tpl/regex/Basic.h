@@ -162,6 +162,9 @@ template <class RegExT>
 class Rule : public RegExT
 {
 public:
+	typedef RegExT rule_type; // needed by RuleTraits.h
+	
+public:
 	Rule() : RegExT() {}
 
 	template <class T1>
@@ -259,6 +262,9 @@ template <class GrammarT>
 class Grammar : public GrammarT
 {
 public:
+	typedef GrammarT grammar_type; // needed by RuleTraits.h
+	
+public:
 	Grammar() : GrammarT() {}
 
 	template <class T1>
@@ -285,11 +291,6 @@ public:
 //	template <class SourceT, class ContextT, class SkipperT>
 //	bool TPL_CALL match(SourceT& ar, ContextT& context, const SkipperT& skipper_) const;
 };
-
-template <class RegExT>
-__forceinline const Grammar<Gr<RegExT> >& TPL_CALL gr(const Rule<RegExT>& rule_) {
-	return *(const Grammar<Gr<RegExT> >*)(&rule_);
-}
 
 // =========================================================================
 // class SimpleAction

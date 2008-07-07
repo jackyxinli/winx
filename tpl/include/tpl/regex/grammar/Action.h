@@ -27,6 +27,10 @@
 #include "../Action.h"
 #endif
 
+#ifndef TPL_REGEX_CASE_H
+#include "../Case.h"
+#endif
+
 NS_TPL_BEGIN
 
 // =========================================================================
@@ -61,11 +65,23 @@ public:
 // -------------------------------------------------------------------------
 // operator/
 
-// Usage: Grammar/SimpleAction
+// Usage: Rule/SimpleAction, Grammar/SimpleAction
+// Usage: Case/Action ==> Case[eps()/Action]
 
-template <class T1, class T2> __forceinline
-Grammar<GAct0<T1, T2> > TPL_CALL operator/(const Grammar<T1>& x, const SimpleAction<T2>& y) {
-	return Grammar<GAct0<T1, T2> >(x, y);
+template <class T1, class T2>
+struct SimpleActionTraits_ {
+	typedef typename RuleOrGrCompose2<T1, T2, Act0, GAct0>::type type;
+};
+
+template <class T1, class T2>
+struct SimpleActionTraits_<Case<T1>, T2> {
+	typedef Condition<CaseAct<T1, T2> > type;
+};
+
+template <class T1, class T2>
+inline typename SimpleActionTraits_<T1, T2>::type const
+TPL_CALL operator/(const T1& x, const SimpleAction<T2>& y) {
+	return typename SimpleActionTraits_<T1, T2>::type(x, y);
 }
 
 // =========================================================================
@@ -104,11 +120,15 @@ public:
 	}
 };
 
-// Usage: Grammar/Action	--- eg. Grammar/assign(a_variable)
+// -------------------------------------------------------------------------
+// operator/
 
-template <class T1, class T2> __forceinline
-Grammar<GAct<T1, T2> > TPL_CALL operator/(const Grammar<T1>& x, const Action<T2>& y) {
-	return Grammar<GAct<T1, T2> >(x, y);
+// Usage: Rule/Action, Grammar/Action
+
+template <class T1, class T2>
+inline typename RuleOrGrCompose2<T1, T2, Act, GAct>::type const
+TPL_CALL operator/(const T1& x, const Action<T2>& y) {
+	return typename RuleOrGrCompose2<T1, T2, Act, GAct>::type(x, y);
 }
 
 // =========================================================================
@@ -117,3 +137,4 @@ Grammar<GAct<T1, T2> > TPL_CALL operator/(const Grammar<T1>& x, const Action<T2>
 NS_TPL_END
 
 #endif /* TPL_REGEX_GRAMMAR_ACTION_H */
+

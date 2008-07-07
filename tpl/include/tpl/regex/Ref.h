@@ -179,7 +179,7 @@ public:
 public:
 	typedef CharT value_type;
 	typedef int dereference_type;
-	typedef Ch1_ rule_type;
+	typedef Ch1 rule_type;
 
 	dereference_type TPL_CALL operator()() const {
 		return (UCharT)m_c;

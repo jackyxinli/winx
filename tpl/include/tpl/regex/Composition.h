@@ -286,38 +286,6 @@ __forceinline Rule<EqStr_<CharT> > TPL_CALL str(const CharT* s, size_t n) {
 	return Rule<EqStr_<CharT> >(s, n);
 }
 
-__forceinline Grammar<Gr<EqStr> > TPL_CALL gr(const char* s) {
-	return Grammar<Gr<EqStr> >(s);
-}
-
-__forceinline Grammar<Gr<EqWStr> > TPL_CALL gr(const wchar_t* s) {
-	return Grammar<Gr<EqWStr> >(s);
-}
-
-#define TPL_RULE_STR_BINARY_OP1_(op, Op, CharT)										\
-template <class T2> __forceinline													\
-Rule< Op<EqStr_<CharT>, T2> > TPL_CALL operator op(const CharT* x, const Rule<T2>& y)	\
-	{ return str(x) op y; }															\
-template <class T1> __forceinline													\
-Rule< Op<T1, EqStr_<CharT> > > TPL_CALL operator op(const Rule<T1>& x, const CharT* y)	\
-	{ return x op str(y); }
-
-#define TPL_GRAMMAR_STR_BINARY_OP1_(op, Op, CharT)									\
-template <class T2> __forceinline													\
-Grammar< Op<Gr<EqStr_<CharT> >, T2> > TPL_CALL operator op(const CharT* x, const Grammar<T2>& y) \
-	{ return str(x) op y; }															\
-template <class T1> __forceinline													\
-Grammar< Op<T1, Gr<EqStr_<CharT> > > > TPL_CALL operator op(const Grammar<T1>& x, const CharT* y) \
-	{ return x op str(y); }
-
-#define TPL_RULE_STR_BINARY_OP_(op, Op)												\
-	TPL_RULE_STR_BINARY_OP1_(op, Op, char)											\
-	TPL_RULE_STR_BINARY_OP1_(op, Op, wchar_t)
-
-#define TPL_GRAMMAR_STR_BINARY_OP_(op, Op)											\
-	TPL_GRAMMAR_STR_BINARY_OP1_(op, Op, char)										\
-	TPL_GRAMMAR_STR_BINARY_OP1_(op, Op, wchar_t)
-
 // =========================================================================
 // $Log: $
 

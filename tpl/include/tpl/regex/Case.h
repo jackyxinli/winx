@@ -85,23 +85,23 @@ public:
 	Switch(const ValueT& val) : m_val(val) {}
 	
 	template <class ConditionT>
-	Rule<CondSel<ValueT, ConditionT> > TPL_CALL operator[](const Condition<ConditionT>& cond_) const {
+	Rule<CondSel<ValueT, ConditionT> > const TPL_CALL operator[](const Condition<ConditionT>& cond_) const {
 		return Rule<CondSel<ValueT, ConditionT> >(m_val, cond_);
 	}
 
 	template <class ConditionT>
-	Grammar<CondSel<ValueT, ConditionT> > TPL_CALL operator[](const GCondition<ConditionT>& cond_) const {
+	Grammar<CondSel<ValueT, ConditionT> > const TPL_CALL operator[](const GCondition<ConditionT>& cond_) const {
 		return Grammar<CondSel<ValueT, ConditionT> >(m_val, cond_);
 	}
 };
 
 template <class ValueT>
-inline Switch<ValueT> TPL_CALL switch_(const ValueT& val) {
+inline Switch<ValueT> const TPL_CALL switch_(const ValueT& val) {
 	return Switch<ValueT>(val);
 }
 
 template <class ValueT>
-inline Switch<ValueT> TPL_CALL switch_(const Var<ValueT>& var_) {
+inline Switch<ValueT> const TPL_CALL switch_(const Var<ValueT>& var_) {
 	return Switch<ValueT>(var_.val);
 }
 
@@ -109,26 +109,23 @@ inline Switch<ValueT> TPL_CALL switch_(const Var<ValueT>& var_) {
 // class Case
 
 template <class CondT>
-class Case
+class Case : public CondT
 {
 public:
-	const CondT m_cond;
-	
-public:
-	Case() : m_cond() {}
+	Case() : CondT() {}
 	
 	template <class T1>
-	Case(const T1& x) : m_cond(x) {}
+	Case(const T1& x) : CondT(x) {}
 
 public:
 	template <class NextT>
-	Condition<CondBind<CondT, NextT> > TPL_CALL operator[](const Rule<NextT>& next_) const {
-		return Condition<CondBind<CondT, NextT> >(m_cond, next_);
+	Condition<CondBind<CondT, NextT> > const TPL_CALL operator[](const Rule<NextT>& next_) const {
+		return Condition<CondBind<CondT, NextT> >(*(const CondT*)this, next_);
 	}
 
 	template <class NextT>
-	GCondition<GCondBind<CondT, NextT> > TPL_CALL operator[](const Grammar<NextT>& next_) const {
-		return GCondition<GCondBind<CondT, NextT> >(m_cond, next_);
+	GCondition<GCondBind<CondT, NextT> > const TPL_CALL operator[](const Grammar<NextT>& next_) const {
+		return GCondition<GCondBind<CondT, NextT> >(*(const CondT*)this, next_);
 	}
 };
 
@@ -146,7 +143,7 @@ public:
 	}
 };
 
-inline Case<True_> TPL_CALL default_() {
+inline Case<True_> const TPL_CALL default_() {
 	return Case<True_>();
 }
 
@@ -154,18 +151,18 @@ inline Case<True_> TPL_CALL default_() {
 // function case_
 
 template <class PredT>
-inline Case<PredT> TPL_CALL case_() {
+inline Case<PredT> const TPL_CALL case_() {
 	return Case<PredT>();
 }
 
 template <class ValueT>
-inline Case<typename PredRefTraits<const ValueT&>::pred_type>
+inline Case<typename PredRefTraits<const ValueT&>::pred_type> const
 TPL_CALL case_(const ValueT& val) {
 	return Case<typename PredRefTraits<const ValueT&>::pred_type>(val);
 }
 
 template <class ValueT>
-inline Case<typename PredRefTraits<ValueT&>::pred_type>
+inline Case<typename PredRefTraits<ValueT&>::pred_type> const
 TPL_CALL case_(ValueT& val) {
 	return Case<typename PredRefTraits<ValueT&>::pred_type>(val);
 }
@@ -176,13 +173,13 @@ TPL_CALL case_(ValueT& val) {
 #if defined(TPL_REGEX_BACKWARD)
 
 template <class PredT, class ValueT>
-inline Case<Pred_<typename SmartRefTraits<const ValueT&>::const_type, PredT> >
+inline Case<Pred_<typename SmartRefTraits<const ValueT&>::const_type, PredT> > const
 TPL_CALL case_if(const ValueT& val) {
 	return Case<Pred_<typename SmartRefTraits<const ValueT&>::const_type, PredT> >(val);
 }
 
 template <class PredT, class ValueT>
-inline Case<Pred_<typename SmartRefTraits<ValueT&>::const_type, PredT> >
+inline Case<Pred_<typename SmartRefTraits<ValueT&>::const_type, PredT> > const
 TPL_CALL case_if(ValueT& val) {
 	return Case<Pred_<typename SmartRefTraits<ValueT&>::const_type, PredT> >(val);
 }
@@ -220,13 +217,7 @@ public:
 };
 
 // Usage: Case/Action ==> Case[eps()/Action]
-
-template <class T1, class T2>
-__forceinline
-Condition<CaseAct<T1, T2> >
-TPL_CALL operator/(const Case<T1>& x, const SimpleAction<T2>& y) {
-	return Condition<CaseAct<T1, T2> >(x.m_cond, y);
-}
+// Implementation: move to <tpl/regex/grammar/Action.h>
 
 // =========================================================================
 // $Log: $

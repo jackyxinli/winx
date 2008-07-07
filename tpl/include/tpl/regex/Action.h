@@ -23,53 +23,11 @@
 #include "Basic.h"
 #endif
 
-#ifndef TPL_REGEX_REF_H
-#include "Ref.h"
-#endif
-
-#ifndef TPL_REGEX_BASIC_H
-#include "Terminal.h"
-#endif
-
-#ifndef TPL_REGEX_COMPOSITION_H
-#include "Composition.h"
-#endif
-
-#if !defined(_STRING_) && !defined(_STRING)
-#include <string>
+#ifndef TPL_REGEX_RULETRAITS_H
+#include "RuleTraits.h"
 #endif
 
 NS_TPL_BEGIN
-
-// =========================================================================
-// TPL_ACTION_DO_
-
-#define TPL_ACTION_DO_(Rule, Act, Action)										\
-																				\
-template <class T1, class T2> __forceinline										\
-Rule<Act<T1, T2> > TPL_CALL operator/(const Rule<T1>& x, const Action<T2>& y) {	\
-	return Rule<Act<T1, T2> >(x, y);											\
-}																				\
-																				\
-template <class T2> __forceinline												\
-Rule<Act<Ch1_, T2> > TPL_CALL operator/(char x, const Action<T2>& y) {			\
-	return ch((unsigned char)x) / y;											\
-}																				\
-																				\
-template <class T2> __forceinline												\
-Rule<Act<Ch1_, T2> > TPL_CALL operator/(wchar_t x, const Action<T2>& y) {		\
-	return ch(x) / y;															\
-}																				\
-																				\
-template <class T2> __forceinline												\
-Rule<Act<EqStr, T2> > TPL_CALL operator/(const char* x, const Action<T2>& y) {	\
-	return str(x) / y;															\
-}																				\
-																				\
-template <class T2> __forceinline												\
-Rule<Act<EqWStr, T2> > TPL_CALL operator/(const wchar_t* x, const Action<T2>& y) { \
-	return str(x) / y;															\
-}
 
 // =========================================================================
 // class Act0
@@ -104,13 +62,6 @@ public:
 };
 
 // -------------------------------------------------------------------------
-// operator/
-
-// Usage: Rule/SimpleAction
-
-TPL_ACTION_DO_(Rule, Act0, SimpleAction)
-
-// -------------------------------------------------------------------------
 // operator+
 
 // Usage: SimpleAction1 + SimpleAction2
@@ -133,8 +84,9 @@ public:
 	}
 };
 
-template <class T1, class T2> __forceinline
-SimpleAction<AndSAct<T1, T2> > TPL_CALL operator+(const SimpleAction<T1>& x, const SimpleAction<T2>& y) {
+template <class T1, class T2>
+inline SimpleAction<AndSAct<T1, T2> > const
+TPL_CALL operator+(const SimpleAction<T1>& x, const SimpleAction<T2>& y) {
 	return SimpleAction<AndSAct<T1, T2> >(x, y);
 }
 
@@ -163,7 +115,7 @@ namespace tpl {																\
 	typedef SelectValueType<ValueT, std::Range<iterator> > SelectT_;		\
 	typedef typename SelectT_::value_type value_type;						\
 	typedef typename SelectAssig<AssigTag, value_type>::assig_type assig_type;
-	
+
 #define TPL_ASSIG_GET(pos, pos2, pParam)									\
 	assig_type::template get<value_type>(pos, pos2, pParam)
 
@@ -208,13 +160,6 @@ public:
 	}
 };
 
-// -------------------------------------------------------------------------
-// operator/
-
-// Usage: Rule/Action	--- eg. Rule/assign(a_variable)
-
-TPL_ACTION_DO_(Rule, Act, Action)
-
 // =========================================================================
 // function info
 
@@ -247,7 +192,7 @@ public:
 };
 
 template <class CharT>
-inline Action<Info<CharT> > TPL_CALL info(const CharT* prompt_) {
+inline Action<Info<CharT> > const TPL_CALL info(const CharT* prompt_) {
 	return Action<Info<CharT> >(prompt_);
 }
 
@@ -257,3 +202,4 @@ inline Action<Info<CharT> > TPL_CALL info(const CharT* prompt_) {
 NS_TPL_END
 
 #endif /* TPL_REGEX_ACTION_H */
+

@@ -13,6 +13,8 @@ removecomments/removecomments
 removecomments2/removecomments2
 includefiles/includefiles
 htmltext/htmltext
+json-print/json-print
+json-print2/json-print2
 emulator/emulator
 variant/variant
 lang/lang

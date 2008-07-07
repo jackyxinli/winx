@@ -34,21 +34,6 @@
 NS_TPL_BEGIN
 
 // =========================================================================
-// TPL_GRAMMAR_UNARY_OP_, TPL_GRAMMAR_BINARY_OP_
-
-#define TPL_GRAMMAR_REF_UNARY_OP_(op, Op)
-#define TPL_GRAMMAR_REF_BINARY_OP_(op, Op)
-
-#define TPL_GRAMMAR_UNARY_OP_(op, Op)										\
-	TPL_GRAMMAR_REF_UNARY_OP_(op, Op)
-
-#define TPL_GRAMMAR_BINARY_OP_(op, Op)										\
-	TPL_GRAMMAR_CH_BINARY_OP_(op, Op)										\
-	TPL_GRAMMAR_STR_BINARY_OP_(op, Op)										\
-	TPL_GRAMMAR_REF_BINARY_OP_(op, Op)										\
-	TPL_GRAMMAR_RULE_BINARY_OP_(op, Op)
-
-// =========================================================================
 // operator+
 
 // Usage: Grammar1 >> Grammar2

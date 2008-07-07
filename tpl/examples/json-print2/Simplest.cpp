@@ -13,8 +13,12 @@ int main()
 {
 	typedef DOM<> dom;
 
-	const char source[] = "class Foo : public Base1, Base2 {};";
-	
+	const char source[] = "\
+		class Foo // Foo comment\n\
+		  : public Base1, Base2\n\
+		{};\
+	";
+
 	dom::Mark tagName("name");
 	dom::NodeMark tagBase("base", true);
 		dom::Mark tagAccess("access");
@@ -23,16 +27,20 @@ int main()
 	dom::Allocator alloc;
 	dom::Document doc(alloc);
 
-	if (source >>
-		(
-			"class" + ws() + c_symbol()/tagName + skipws() + ':' +
-			(skipws() + !("public"/tagAccess + ws()) + c_symbol()/tagName)/tagBase % (skipws() + ',') +
-			skipws() + "{};"
-		)/doc)
-	{
-		std::OutputLog log;
-		json_print(alloc, log, doc);
-	}
+	source >> cpp_skip_
+		[
+			gr(c_symbol_("class")) + c_symbol()/tagName +
+			!(':' +
+				(
+					!gr(c_symbol_("public")/tagAccess) +
+					c_symbol()/tagName
+				)/tagBase % ','
+			) +
+			'{' + '}' + ';'
+		]/doc;
+
+	std::OutputLog log;
+	json_print(alloc, log, doc);
 	return 0;
 }
 

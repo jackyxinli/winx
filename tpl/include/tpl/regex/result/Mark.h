@@ -23,6 +23,10 @@
 #include "../Basic.h"
 #endif
 
+#ifndef TPL_REGEX_RULETRAITS_H
+#include "../RuleTraits.h"
+#endif
+
 NS_TPL_BEGIN
 
 // -------------------------------------------------------------------------
@@ -196,30 +200,24 @@ public:
 };
 
 // -------------------------------------------------------------------------
+// function operator/
+
+// Usage: Rule/Mark, Rule/NodeMark, Grammar/NodeMark
 
 template <class T1, class ValueT, class TagCharT>
-struct MarkAssignTraits {
-	typedef Rule<LeafAssign<T1, Mark<ValueT, TagCharT> > > rule_type;
+struct MarkOpTraits_ {
+	typedef typename RuleCompose2<T1, Mark<ValueT, TagCharT>, LeafAssign>::rule_type type;
 };
 
 template <class T1, class TagCharT>
-struct MarkAssignTraits<T1, TagNodeType, TagCharT> {
-	typedef Rule<NodeAssign<T1, Mark<TagNodeType, TagCharT> > > rule_type;
-	typedef Grammar<GNodeAssign<T1, Mark<TagNodeType, TagCharT> > > grammar_type;
+struct MarkOpTraits_<T1, TagNodeType, TagCharT> {
+	typedef typename RuleOrGrCompose2<T1, Mark<TagNodeType, TagCharT>, NodeAssign, GNodeAssign>::type type;
 };
 
 template <class T1, class ValueT, class TagCharT>
-inline typename MarkAssignTraits<T1, ValueT, TagCharT>::rule_type
-TPL_CALL operator/(const Rule<T1>& x, const Mark<ValueT, TagCharT>& y)
-{
-	return typename MarkAssignTraits<T1, ValueT, TagCharT>::rule_type(y, x);
-}
-
-template <class T1, class ValueT, class TagCharT>
-inline typename MarkAssignTraits<T1, ValueT, TagCharT>::grammar_type
-TPL_CALL operator/(const Grammar<T1>& x, const Mark<ValueT, TagCharT>& y)
-{
-	return typename MarkAssignTraits<T1, ValueT, TagCharT>::grammar_type(y, x);
+inline typename MarkOpTraits_<T1, ValueT, TagCharT>::type const
+TPL_CALL operator/(const T1& x, const Mark<ValueT, TagCharT>& y) {
+	return typename MarkOpTraits_<T1, ValueT, TagCharT>::type(y, x);
 }
 
 // -------------------------------------------------------------------------
