@@ -1,0 +1,37 @@
+AppPath=`dirname $0`
+
+if [ -z $1 ]; then
+	echo "Usage: prjconv <target-format> [<input>.prj]"
+	echo "Here <target-format> can be:"
+	cd $AppPath/json2prj
+	for File in *.php ; do
+		echo $File | sed -e 's|\(.*\)\.php|  \1|' 
+	done
+	exit -1
+fi
+
+if [ -z $2 ]; then
+	PrjFile=`pwd | sed -e 's|\(.*/\)*\(.*\)|\2|'`.prj
+else
+	PrjFile=$2
+fi
+
+if [ -f $PrjFile ]; then
+	PhpFile=$AppPath/json2prj/$1.php
+	if [ -f $PhpFile ]; then
+		if [ -z $PRJCONV_OUTFILE ]; then
+			$AppPath/prj-json $PrjFile | $AppPath/jspt $PhpFile
+		else
+			$AppPath/prj-json $PrjFile | $AppPath/jspt $PhpFile > $PRJCONV_OUTFILE
+		fi
+	else
+		echo "ERROR: $PhpFile doesn't exists!"
+		echo
+		exit -2
+	fi
+else
+	echo "ERROR: $PrjFile doesn't exists!"
+	echo
+	exit -3
+fi
+
