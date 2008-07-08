@@ -181,15 +181,13 @@ public:
 };
 
 template <class T1, class T2>
-__forceinline
-Condition<CondOr<T1, T2> >
+inline Condition<CondOr<T1, T2> > const
 TPL_CALL operator,(const Condition<T1>& x, const Condition<T2>& y) {
 	return Condition<CondOr<T1, T2> >(x, y);
 }
 
 template <class T1>
-__forceinline
-Condition<CondOr<T1, CondTrue<typename T1::value_type> > >
+inline Condition<CondOr<T1, CondTrue<typename T1::value_type> > > const
 TPL_CALL operator,(const Condition<T1>& x, const bool fTrue) {
 	TPL_ASSERT(fTrue == true);
 	typedef CondTrue<typename T1::value_type> T2;
@@ -227,13 +225,7 @@ public:
 };
 
 // Usage: Condition/Action ==> Condition[eps()/Action]
-
-template <class T1, class T2>
-__forceinline
-Condition<CondAct<T1, T2> >
-TPL_CALL operator/(const Condition<T1>& x, const SimpleAction<T2>& y) {
-	return Condition<CondAct<T1, T2> >(x, y);
-}
+// Implementation: move to <tpl/regex/grammar/Action.h>
 
 // =========================================================================
 // $Log: $

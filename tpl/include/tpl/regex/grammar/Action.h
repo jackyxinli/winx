@@ -79,6 +79,11 @@ struct SimpleActionTraits_<Case<T1>, T2> {
 };
 
 template <class T1, class T2>
+struct SimpleActionTraits_<Condition<T1>, T2> {
+	typedef Condition<CondAct<T1, T2> > type;
+};
+
+template <class T1, class T2>
 inline typename SimpleActionTraits_<T1, T2>::type const
 TPL_CALL operator/(const T1& x, const SimpleAction<T2>& y) {
 	return typename SimpleActionTraits_<T1, T2>::type(x, y);
