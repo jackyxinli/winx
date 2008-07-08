@@ -48,7 +48,6 @@ int main(int argc, const char* argv[])
 		dom::Mark tagByteSwap("byteswap");
 		dom::Mark tagBits("bits");
 		dom::Mark tagOS("os");
-		dom::Mark tagCompiler("compiler");
 
 	dom::Node* plat = doc.insertNode(alloc, tagPlatform);
 	
