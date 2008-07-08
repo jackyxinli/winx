@@ -23,8 +23,8 @@
 #include "Action.h"
 #endif
 
-#ifndef TPL_REGEX_REF_H
-#include "Ref.h"
+#ifndef TPL_REGEX_DETAIL_TYPETRAITS_H
+#include "detail/TypeTraits.h"
 #endif
 
 NS_TPL_BEGIN
@@ -210,14 +210,10 @@ public:
 
 // Usage: Rule/assign(var)
 
-template <class ValueT> __forceinline
-Action<Assign<ValueT> > TPL_CALL assign(ValueT& result) {
-	return Action<Assign<ValueT> >(result);
-}
-
-template <class ValueT> __forceinline
-Action<Assign<ValueT> > TPL_CALL assign(Var<ValueT>& result) {
-	return Action<Assign<ValueT> >(result.val);
+template <class ValueT>
+inline Action<Assign<typename LValueTraits<ValueT>::type> > const
+TPL_CALL assign(ValueT& result) {
+	return Action<Assign<typename LValueTraits<ValueT>::type> >(result);
 }
 
 NS_TPL_END
@@ -241,14 +237,10 @@ public:															\
 
 #define TPL_ACTION_OP_FN1_EX_(Action, Op, fn) 					\
 																\
-template <class ValueT> __forceinline							\
-Action<Op<ValueT> > TPL_CALL fn(ValueT& result) {				\
-	return Action<Op<ValueT> >(result);							\
-}																\
-																\
-template <class ValueT> __forceinline							\
-Action<Op<ValueT> > TPL_CALL fn(tpl::Var<ValueT>& result) {		\
-	return Action<Op<ValueT> >(result.val);						\
+template <class ValueT>											\
+inline Action<Op<typename LValueTraits<ValueT>::type> > const	\
+TPL_CALL fn(ValueT& result) {									\
+	return Action<Op<typename LValueTraits<ValueT>::type> >(result); \
 }
 
 #define TPL_SIMPLE_ACTION_UNARY_OP_(Op, fn, op) 				\
@@ -318,51 +310,62 @@ public:																		\
 	}																		\
 };
 
+#define TPL_SIMPLE_ACTION_METHOD2_CLASS_(Op, op)							\
+template <class VarT, class T1, class T2>									\
+class Op																	\
+{																			\
+private:																	\
+	VarT& m_var;															\
+	const T1 m_val1;														\
+	const T2 m_val2;														\
+																			\
+public:																		\
+	Op(VarT& var_, const T1 val1_, const T2 val2_)							\
+		: m_var(var_), m_val1(val1_), m_val2(val2_) {}						\
+																			\
+	void TPL_CALL operator()() const {										\
+		m_var.op(m_val1, m_val2);											\
+	}																		\
+};
+
 #define TPL_ACTION_OP_FN2_EX_(Action, Op, op) 									\
 																				\
-template <class ValueT, class VarT> __forceinline								\
-Action<Op<VarT, ValueT> > TPL_CALL op(VarT& var_, const ValueT& value_) {		\
-	return Action<Op<VarT, ValueT> >(var_, value_);								\
+template <class ValueT, class VarT>												\
+inline Action<Op<typename tpl::LValueTraits<VarT>::type,						\
+	   			 typename tpl::SmartRefTraits<const ValueT&>::const_type> > const \
+TPL_CALL op(VarT& var_, const ValueT& value_) {									\
+	return Action<Op<typename tpl::LValueTraits<VarT>::type,					\
+					 typename tpl::SmartRefTraits<const ValueT&>::const_type> >(var_, value_); \
 } 																				\
 																				\
-template <class ValueT, class VarT> __forceinline								\
-Action<Op<VarT, const ValueT&> > TPL_CALL op(VarT& var_, ValueT& value_) {		\
-	return Action<Op<VarT, const ValueT&> >(var_, value_);						\
-}																				\
+template <class ValueT, class VarT>												\
+inline Action<Op<typename tpl::LValueTraits<VarT>::type,						\
+	   			 typename tpl::SmartRefTraits<ValueT&>::const_type> > const		\
+TPL_CALL op(VarT& var_, ValueT& value_) {										\
+	return Action<Op<typename tpl::LValueTraits<VarT>::type,					\
+					 typename tpl::SmartRefTraits<ValueT&>::const_type> >(var_, value_); \
+}
+
+#define TPL_ACTION_OP_FN3_EX_(Action, Op, op) 									\
 																				\
-template <class CharT, class VarT> __forceinline								\
-Action<Op<VarT, const CharT*> > TPL_CALL op(VarT& var_, const CharT value_[]) { \
-	return Action<Op<VarT, const CharT*> >(var_, value_);						\
+template <class T1, class T2, class VarT>										\
+inline Action<Op<typename tpl::LValueTraits<VarT>::type,						\
+	   			 typename tpl::SmartRefTraits<const T1&>::const_type,			\
+	   			 typename tpl::SmartRefTraits<const T2&>::const_type> > const	\
+TPL_CALL op(VarT& var_, const T1& val1_, const T2& val2_) {						\
+	return Action<Op<typename tpl::LValueTraits<VarT>::type,					\
+					 typename tpl::SmartRefTraits<const T1&>::const_type,		\
+					 typename tpl::SmartRefTraits<const T2&>::const_type> >(var_, val1_, val2_); \
 } 																				\
 																				\
-template <class ValueT, class VarT> __forceinline								\
-Action<Op<VarT, const ValueT&> > TPL_CALL op(VarT& var_, const tpl::Var<ValueT>& value_) { \
-	return Action<Op<VarT, const ValueT&> >(var_, value_.val);					\
-}																				\
-																				\
-template <class ValueT, class VarT> __forceinline								\
-Action<Op<VarT, const ValueT&> > TPL_CALL op(VarT& var_, tpl::Var<ValueT>& value_) { \
-	return Action<Op<VarT, const ValueT&> >(var_, value_.val);					\
-}																				\
-																				\
-template <class ValueT, class VarT> __forceinline								\
-Action<Op<VarT, ValueT> > TPL_CALL op(tpl::Var<VarT>& var_, const ValueT& value_) { \
-	return Action<Op<VarT, ValueT> >(var_.val, value_);							\
-}																				\
-																				\
-template <class ValueT, class VarT> __forceinline								\
-Action<Op<VarT, const ValueT&> > TPL_CALL op(tpl::Var<VarT>& var_, ValueT& value_) { \
-	return Action<Op<VarT, const ValueT&> >(var_.val, value_);					\
-}																				\
-																				\
-template <class ValueT, class VarT> __forceinline								\
-Action<Op<VarT, const ValueT&> > TPL_CALL op(tpl::Var<VarT>& var_, const tpl::Var<ValueT>& value_) { \
-	return Action<Op<VarT, const ValueT&> >(var_.val, value_.val);				\
-}																				\
-																				\
-template <class ValueT, class VarT> __forceinline								\
-Action<Op<VarT, const ValueT&> > TPL_CALL op(tpl::Var<VarT>& var_, tpl::Var<ValueT>& value_) { \
-	return Action<Op<VarT, const ValueT&> >(var_.val, value_.val);				\
+template <class T1, class T2, class VarT>										\
+inline Action<Op<typename tpl::LValueTraits<VarT>::type,						\
+	   			 typename tpl::SmartRefTraits<T1&>::const_type,					\
+	   			 typename tpl::SmartRefTraits<T2&>::const_type> > const			\
+TPL_CALL op(VarT& var_, T1& val1_, T2& val2_) {									\
+	return Action<Op<typename tpl::LValueTraits<VarT>::type,					\
+					 typename tpl::SmartRefTraits<T1&>::const_type,				\
+					 typename tpl::SmartRefTraits<T2&>::const_type> >(var_, val1_, val2_); \
 }
 
 #define TPL_SIMPLE_ACTION_BINARY_OP_(Op, fn, op)								\
@@ -376,6 +379,10 @@ Action<Op<VarT, const ValueT&> > TPL_CALL op(tpl::Var<VarT>& var_, tpl::Var<Valu
 #define TPL_SIMPLE_ACTION_METHOD1_(Op, fn)										\
 	TPL_SIMPLE_ACTION_METHOD1_CLASS_(Op, fn)									\
 	TPL_ACTION_OP_FN2_EX_(tpl::SimpleAction, Op, fn)
+
+#define TPL_SIMPLE_ACTION_METHOD2_(Op, fn)										\
+	TPL_SIMPLE_ACTION_METHOD2_CLASS_(Op, fn)									\
+	TPL_ACTION_OP_FN3_EX_(tpl::SimpleAction, Op, fn)
 
 // =========================================================================
 

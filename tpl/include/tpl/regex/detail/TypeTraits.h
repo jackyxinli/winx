@@ -56,10 +56,25 @@ struct ArrayTypeTraits<const ValueT[n]> // it seems that this is impossible (tes
 };
 
 // -------------------------------------------------------------------------
-// class SmartRefTraits
+// class LValueTraits
 
 template <class ValueT>
 class Var;
+
+template <class ValueT>
+struct LValueTraits {
+	typedef ValueT type;
+	typedef ValueT& reference;
+};
+
+template <class ValueT>
+struct LValueTraits<Var<ValueT> > {
+	typedef ValueT type;
+	typedef ValueT& reference;
+};
+
+// -------------------------------------------------------------------------
+// class SmartRefTraits
 
 template <class ValueT>
 struct SmartRefTraits

@@ -74,11 +74,14 @@ Action<Op<ContainerT> > TPL_CALL op(tpl::Var<ContainerT>& result) {			\
 // public macro
 
 #define TPL_ACTION_METHOD0(fn)												\
-	TPL_SIMPLE_ACTION_METHOD0_(Act_##fn, fn)
+	TPL_SIMPLE_ACTION_METHOD0_(SAct0_##fn, fn)
 
 #define TPL_ACTION_METHOD1(fn, ValueT)										\
-	TPL_ACTION_METHOD1_EX_(Act_##fn, fn, ValueT)							\
-	TPL_SIMPLE_ACTION_METHOD1_(SAct_##fn, fn)
+	TPL_ACTION_METHOD1_EX_(Act1_##fn, fn, ValueT)							\
+	TPL_SIMPLE_ACTION_METHOD1_(SAct1_##fn, fn)
+
+#define TPL_SIMPLE_ACTION_METHOD2(fn)										\
+	TPL_SIMPLE_ACTION_METHOD2_(SAct2_##fn, fn)
 
 // =========================================================================
 // class Append
