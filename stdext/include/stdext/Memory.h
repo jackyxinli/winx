@@ -62,6 +62,21 @@ NS_STDEXT_END
 #define STD_ALLOC_ARRAY(alloc, Type, count)		BOOST_MEMORY_ALLOC_ARRAY(alloc, Type, count)
 
 // -------------------------------------------------------------------------
+// function swap
+
+NS_STDEXT_BEGIN
+
+inline void winx_call swap(void* a, void* b, size_t cb)
+{
+	void* t = _alloca(cb);
+	memcpy(t, a, cb);
+	memcpy(a, b, cb);
+	memcpy(b, t, cb);
+}
+
+NS_STDEXT_END
+
+// -------------------------------------------------------------------------
 // --> Memory leak checker - count-checker
 
 #ifndef STDEXT_WINAPI_WINBASE_H

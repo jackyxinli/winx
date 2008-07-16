@@ -74,6 +74,9 @@ template <class FirstT, class SecondT>
 struct TupleTraits<std::pair<FirstT, SecondT> >
 {
 	enum { Fields = 2 };
+	enum { HasDestructor = 
+		DestructorTraits<FirstT>::HasDestructor |
+		DestructorTraits<SecondT>::HasDestructor };
 };
 
 // -------------------------------------------------------------------------

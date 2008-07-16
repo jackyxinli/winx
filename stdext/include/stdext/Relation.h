@@ -47,7 +47,7 @@ NS_STDEXT_BEGIN
 template <int Index, class KeyT, class AllocT>
 struct MapIndexing
 {
-	typedef MultiMap<KeyT, const void*, std::less<KeyT>, AllocT> type;
+	typedef MultiMap<KeyT, void*, std::less<KeyT>, AllocT> type;
 };
 
 // -------------------------------------------------------------------------
@@ -56,7 +56,7 @@ struct MapIndexing
 template <int Index, class KeyT, class AllocT>
 struct HashMapIndexing
 {
-	typedef HashMultiMap<KeyT, const void*, HashCompare<KeyT>, AllocT> type;
+	typedef HashMultiMap<KeyT, void*, HashCompare<KeyT>, AllocT> type;
 };
 
 // -------------------------------------------------------------------------
@@ -79,32 +79,21 @@ struct IndexingAct
 		NextAct::init(dest);
 	}
 	
-	static void winx_call copy(void* dest[], void* src[])
-	{
-		if (src[CurrIndex])
-		{
-			const CurrIndexingT& idxSrc = *(const CurrIndexingT*)src[CurrIndex];
-			CurrIndexingT& idxDest = *(CurrIndexingT*)dest[CurrIndex];
-			idxDest.copy(idxSrc);
-		}
-		NextAct::copy(dest, src);
-	}
-
-	static void winx_call indexing(void* dest[], const TupleT& t)
+	static void winx_call indexing(void* dest[], const TupleT* const& t)
 	{
 		if (dest[CurrIndex])
 		{
 			CurrIndexingT& idxDest = *(CurrIndexingT*)dest[CurrIndex];
-			const CurrKeyT& key = TupleItemTraits<CurrIndex, TupleT>::get(t);
+			const CurrKeyT& key = TupleItemTraits<CurrIndex, TupleT>::get(*t);
 			idxDest.insert(
-				typename CurrIndexingT::value_type(key, &t)
+				typename CurrIndexingT::value_type(key, (void*)&t)
 				);
 		}
 		NextAct::indexing(dest, t);
 	}
 
 	template <int IndexExcluded>
-	static void winx_call eraseIndexing(void* dest[], const TupleT& t)
+	static void winx_call eraseIndexing(void* dest[], const TupleT* const& t)
 	{
 		if (CurrIndex != IndexExcluded && dest[CurrIndex])
 		{
@@ -113,10 +102,10 @@ struct IndexingAct
 
 			It it;
 			CurrIndexingT& idxDest = *(CurrIndexingT*)dest[CurrIndex];
-			const CurrKeyT& key = TupleItemTraits<CurrIndex, TupleT>::get(t);
+			const CurrKeyT& key = TupleItemTraits<CurrIndex, TupleT>::get(*t);
 			const RangeT rg = idxDest.equal_range(key);
 			for (it = rg.first; it != rg.second; ++it) {
-				if ((*it).second == &t) {
+				if ((*it).second == (void*)&t) {
 					idxDest.erase(it);
 					break;
 				}
@@ -124,6 +113,17 @@ struct IndexingAct
 			WINX_ASSERT(it != rg.second);
 		}
 		NextAct::template eraseIndexing<IndexExcluded>(dest, t);
+	}
+
+	template <class DataT>
+	static size_t winx_call size(void* const dest[], const DataT& data)
+	{
+		if (dest[CurrIndex])
+		{
+			const CurrIndexingT& idxDest = *(const CurrIndexingT*)dest[CurrIndex];
+			return idxDest.size();
+		}
+		return NextAct::size(dest, data);
 	}
 };
 
@@ -137,18 +137,19 @@ struct IndexingAct<TupleT, AllocT, IndexingT, -1>
 		//noting to do
 	}
 	
-	static void winx_call copy(void* dest[], void* src[]) {
-		//noting to do
-	}
-
-	static void winx_call indexing(void* dest[], const TupleT& t) {
+	static void winx_call indexing(void* dest[], const TupleT* const& t) {
 		//noting to do
 	}
 
 	template <int IndexExcluded>
-	static void winx_call eraseIndexing(void* dest[], const TupleT& t) {
+	static void winx_call eraseIndexing(void* dest[], const TupleT* const& t) {
 		//noting to do
 	}
+
+	template <class DataT>
+	static size_t winx_call size(void* const dest[], const DataT& data) {
+		return data.size();
+	}	
 };
 
 // -------------------------------------------------------------------------
@@ -161,7 +162,7 @@ template <
 class Relation
 {
 public:
-	enum { Fileds = TupleTraits<TupleT>::Fields };
+	enum { Fields = TupleTraits<TupleT>::Fields };
 
 	template <int Index>
 	class Indexing
@@ -176,7 +177,7 @@ public:
 		enum { HasDestructor = DestructorTraits<key_type>::HasDestructor };
 
 		static const TupleT& winx_call item(const const_iterator& it) {
-			return *(const TupleT*)(*it).second;
+			return **(const TupleT* const*)(*it).second;
 		}
 	};
 
@@ -184,12 +185,14 @@ private:
 	Relation(const Relation&);
 	void operator=(const Relation&);
 
-	typedef Deque<TupleT, AllocT> DataT;
+	typedef Deque<void*, AllocT> DataT;
 	typedef IndexingAct<TupleT, AllocT, IndexingT> IndexingActT;
+
+	enum { HasDestructor = TupleTraits<TupleT>::HasDestructor };
 	
 private:
 	DataT m_data;
-	void* m_indexs[Fileds];
+	void* m_indexs[Fields];
 
 	template <int Index, class MapT>
 	static void doIndexing_(MapT* inst, const DataT& data)
@@ -198,9 +201,11 @@ private:
 		typedef typename DataT::const_iterator It;
 		for (It it = data.begin(); it != data.end(); ++it)
 		{
-			const TupleT& t = *it;
-			const KeyT& key = TupleItemTraits<Index, TupleT>::get(t);
-			inst->insert(typename MapT::value_type(key, &t));
+			const TupleT* const t = (const TupleT* const)*it;
+			if (t) {
+				const KeyT& key = TupleItemTraits<Index, TupleT>::get(*t);
+				inst->insert(typename MapT::value_type(key, (void*)&t));
+			}
 		}
 	}
 
@@ -218,7 +223,20 @@ public:
 	}
 	
 	size_type winx_call size() const {
-		return m_data.size();
+		return IndexingActT::size(m_indexs, m_data);
+	}
+	
+	void winx_call swap(Relation& o) {
+		m_data.swap(o.m_data);
+		swap(m_indexs, o.m_indexs, Fields);
+	}
+	
+	void winx_call clear()
+	{
+		if (m_data.size()) {
+			m_data.clear();
+			IndexingActT::init(m_indexs);
+		}
 	}
 	
 	template <int Index>
@@ -260,7 +278,9 @@ public:
 		const RangeT rg = ((MapT*)m_indexs[Index])->equal_range(key);
 		size_type n = 0;
 		for (It it = rg.first; it != rg.second; ++it) {
-			IndexingActT::template eraseIndexing<Index>(m_indexs, *(const TupleT*)(*it).second);
+			const TupleT** pt = (const TupleT**)(*it).second;
+			IndexingActT::template eraseIndexing<Index>(m_indexs, *pt);
+			*pt = NULL;
 			++n;
 		}
 		((MapT*)m_indexs[Index])->erase(rg.first, rg.second);
@@ -281,14 +301,21 @@ public:
 		return ((const MapT*)m_indexs[Index])->equal_range(key);
 	}
 	
-	void winx_call insert(const TupleT& t) {
+	void winx_call insert(const TupleT& val) {
+		AllocT& alloc = m_data.get_alloc();
+		TupleT* t = HasDestructor ? STD_NEW(alloc, TupleT)(val) : STD_UNMANAGED_NEW(alloc, TupleT)(val);
 		m_data.push_back(t);
-		IndexingActT::indexing(m_indexs, m_data.back()); 
+		IndexingActT::indexing(m_indexs, *(const TupleT* const*)&m_data.back()); 
 	}
 	
 	void winx_call copy(const Relation& from) {
-		m_data.copy(from.m_data);
-		IndexingActT::copy(m_indexs, from.m_indexs);
+		clear();
+		typedef typename Relation::DataT::const_iterator It;
+		for (It it = from.m_data.begin(); it != from.m_data.end(); ++it) {
+			const TupleT* const t = (const TupleT* const)*it;
+			if (t)
+				insert(*t);
+		}
 	}
 };
 
@@ -345,6 +372,7 @@ public:
 		AssertExp(rel.count<1>(1) == 2);
 		AssertExp(rel.erase<1>(1) == 2);
 		AssertExp(rel.count<1>(1) == 0);
+		AssertExp(rel.size() == 3);
 		
 		Indexing0::range rg3 = rel.select<0>("Mon");
 		AssertExp(std::distance(rg3.first, rg3.second) == 0);
@@ -358,3 +386,4 @@ public:
 // $Log: Relation.h,v $
 
 #endif /* STDEXT_RELATION_H */
+
