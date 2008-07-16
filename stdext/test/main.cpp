@@ -8,9 +8,10 @@
 #define WINX_USE_DEFINE_IID
 #include <stdext/AOP.h>
 
-// Hash:
+// Containers:
 #include <stdext/HashMap.h>
 #include <stdext/HashSet.h>
+#include <stdext/Relation.h>
 
 // String:
 #include <stdext/text/BasicString.h>
@@ -35,9 +36,10 @@ int main()
 	WINX_TEST_CLASS(TestEvent);
 	WINX_TEST_CLASS(TestEventContainer);
 
-	// Hash:
+	// Containers:
 	WINX_TEST_CLASS(TestHashMap);
 	WINX_TEST_CLASS(TestHashSet);
+	WINX_TEST_CLASS(TestRelation);
 
 	// String:
 	WINX_TEST_CLASS(TestBasicString);

@@ -23,6 +23,10 @@
 #include "Basic.h"
 #endif
 
+#ifndef STDEXT_STRING_H
+#include "String.h"
+#endif
+
 #ifndef STD_HASH_H
 #include "../std/hash.h"
 #endif
@@ -30,6 +34,18 @@
 #ifndef _WINX_NO_HASH
 
 NS_STDEXT_BEGIN
+
+// -------------------------------------------------------------------------
+// hashOfString
+
+template <class Iterator>
+inline size_t winx_call hashOfString(Iterator it, Iterator itEnd)
+{
+	unsigned long h = 0;
+	for (; it != itEnd; ++it)
+		h = 5 * h + *it;
+	return (size_t)h;
+}
 
 // -------------------------------------------------------------------------
 // class Hash
@@ -40,8 +56,7 @@ template <class KeyT>
 class Hash
 {
 public:
-	size_t winx_call operator()(const KeyT& v) const
-	{
+	size_t winx_call operator()(const KeyT& v) const {
 		return stdext::hash_value(v);
 	}
 };
@@ -53,7 +68,67 @@ class Hash : public stdext::hash<KeyT>
 {
 };
 
-#endif
+#if defined(X_CC_VC6)
+
+template <>
+class Hash<std::string>
+{
+public:
+	size_t winx_call operator()(const std::string& o) const {
+		return hashOfString(o.begin(), o.end());
+	}
+};
+
+template <>
+class Hash<std::basic_string<wchar_t> >
+{
+public:
+	size_t winx_call operator()(const std::basic_string<wchar_t>& o) const {
+		return hashOfString(o.begin(), o.end());
+	}
+};
+
+template <class CharT>
+class Hash<String>
+{
+public:
+	size_t winx_call operator()(const String& o) const {
+		return hashOfString(o.begin(), o.end());
+	}
+};
+
+template <class CharT>
+class Hash<WString>
+{
+public:
+	size_t winx_call operator()(const WString& o) const {
+		return hashOfString(o.begin(), o.end());
+	}
+};
+
+#else
+
+template <class CharT, class Tr, class Ax>
+class Hash<std::basic_string<CharT, Tr, Ax> >
+{
+public:
+	size_t winx_call operator()(const std::basic_string<CharT, Tr, Ax>& o) const {
+		return hashOfString(o.begin(), o.end());
+	}
+};
+
+template <class CharT>
+class Hash<BasicString<CharT> >
+{
+public:
+	size_t winx_call operator()(const std::BasicString<CharT>& o) const {
+		return hashOfString(o.begin(), o.end());
+	}
+};
+
+#endif // !defined(X_CC_VC6)
+
+#endif // !defined(X_STL_NET)
 
 // -------------------------------------------------------------------------
 // class HashCompare
