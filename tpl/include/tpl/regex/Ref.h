@@ -280,6 +280,10 @@ public:
 
 public:
 	Var() : Rule<Deref<typename ReferenceTraits<Type>::reference_type> >(val) {}
+
+	operator Type&() {
+		return val;
+	}
 };
 
 // =========================================================================
