@@ -1,6 +1,7 @@
 #include <iostream>
+#include <boost/tuple/tuple.hpp>
+#include <boost/tuple/tuple_io.hpp>
 #include <stdext/Relation.h>
-#include <stdext/boost/Tuple.h>
 
 // -------------------------------------------------------------------------
 
@@ -139,19 +140,13 @@ void testTupleRelation()
 	std::cout << "select<1>(3) count = " << n << "\n";
 	
 	for (Indexing1::iterator it = rg.first; it != rg.second; ++it) {
-		const TupleT& i = Indexing1::item(it);
-		std::cout << "\t" << boost::tuples::get<0>(i)
-			<< "\t" << boost::tuples::get<1>(i)
-			<< "\t" << boost::tuples::get<2>(i) << "\n";
+		std::cout << "\t" << Indexing1::item(it) << "\n";
 	}
 
 	Indexing0::range rg2 = rel.select<0>("Mon");
 	Indexing0::iterator it2 = rg2.first;
 	std::cout << "select<0>(Mon) count = " << std::distance(rg2.first, rg2.second) << "\n";
-	const TupleT& i2 = Indexing0::item(it2);
-	std::cout << "\t" << boost::tuples::get<0>(i2)
-		<< "\t" << boost::tuples::get<1>(i2)
-		<< "\t" << boost::tuples::get<2>(i2) << "\n";
+	std::cout << "\t" << Indexing0::item(it2) << "\n";
 
 	std::cout << "count<1>(1) = " << rel.count<1>(1) << "\n";
 	std::cout << "erase<1>(1) = " << rel.erase<1>(1) << "\n";

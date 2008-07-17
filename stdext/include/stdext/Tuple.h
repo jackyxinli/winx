@@ -84,4 +84,9 @@ struct TupleTraits<std::pair<FirstT, SecondT> >
 
 NS_STDEXT_END
 
+#ifdef BOOST_TUPLE_HPP
+#include "boost/Tuple.h"
+#endif
+
 #endif /* STDEXT_TUPLE_H */
+
