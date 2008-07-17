@@ -64,14 +64,14 @@ struct HashMapIndexing
 
 template <
 	class TupleT,
-	class AllocT,
 	template <int Index, class KeyT, class AllocT> class IndexingT,
+	class AllocT,
 	int CurrIndex = TupleTraits<TupleT>::Fields - 1>
 struct IndexingAct
 {
 	typedef typename TupleItemTraits<CurrIndex, TupleT>::value_type CurrKeyT;
 	typedef typename IndexingT<CurrIndex, CurrKeyT, AllocT>::type CurrIndexingT;
-	typedef IndexingAct<TupleT, AllocT, IndexingT, CurrIndex - 1> NextAct;
+	typedef IndexingAct<TupleT, IndexingT, AllocT, CurrIndex - 1> NextAct;
 	
 	static void winx_call init(void* dest[])
 	{
@@ -131,7 +131,7 @@ template <
 	class TupleT,
 	class AllocT,
 	template <int Index, class KeyT, class AllocT> class IndexingT>
-struct IndexingAct<TupleT, AllocT, IndexingT, -1>
+struct IndexingAct<TupleT, IndexingT, AllocT, -1>
 {
 	static void winx_call init(void* dest[]) {
 		//noting to do
@@ -157,8 +157,8 @@ struct IndexingAct<TupleT, AllocT, IndexingT, -1>
 
 template <
 	class TupleT,
-	class AllocT = ScopedAlloc,
-	template <int Index, class KeyT, class AllocT> class IndexingT = MapIndexing>
+	template <int Index, class KeyT, class AllocT> class IndexingT = HashMapIndexing,
+	class AllocT = ScopedAlloc>
 class Relation
 {
 public:
@@ -186,7 +186,7 @@ private:
 	void operator=(const Relation&);
 
 	typedef Deque<void*, AllocT> DataT;
-	typedef IndexingAct<TupleT, AllocT, IndexingT> IndexingActT;
+	typedef IndexingAct<TupleT, IndexingT, AllocT> IndexingActT;
 
 	enum { HasDestructor = TupleTraits<TupleT>::HasDestructor };
 	
@@ -338,7 +338,7 @@ public:
 	{
 		typedef std::AutoFreeAlloc AllocT;
 		typedef std::pair<std::string, int> TupleT;
-		typedef std::Relation<TupleT, AllocT, std::HashMapIndexing> RelationT;
+		typedef std::Relation<TupleT, std::HashMapIndexing, AllocT> RelationT;
 		typedef RelationT::Indexing<0> Indexing0;
 		typedef RelationT::Indexing<1> Indexing1;
 		
