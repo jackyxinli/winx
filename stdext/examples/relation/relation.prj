@@ -1,6 +1,8 @@
 [Include]
 ../../../tpl/include
 ../../../stdext/include
+../../../boost
+../../../boostmm
 
 [Config Release]
 Product		Exe Release/test
