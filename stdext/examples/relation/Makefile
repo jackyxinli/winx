@@ -5,7 +5,7 @@ ifeq ($(CFG),)
 	CFG = Debug
 endif
 
-IncludeDir = -I../../../tpl/include -I../../../stdext/include 
+IncludeDir = -I../../../tpl/include -I../../../stdext/include -I../../../boost -I../../../boostmm
 
 #
 # Configuration Release
@@ -13,17 +13,13 @@ IncludeDir = -I../../../tpl/include -I../../../stdext/include
 ifeq ($(CFG), Release)
 	ProductDir   = Release
 	ObjectDir    = Release
-	MocFile      = $(ObjectDir)/temp.moc.cpp
 	Product      = Release/test
-	CFlags       = $(Defines) -fPIC -D__INTEL__ -D__32BIT__ -D__LINUX__ -DLINUX -DNDEBUG -O2 -D_MT -fexceptions 
-	CXXFlags     = $(CFlags) -fno-rtti -Wall
-	CXX          = g++ -c $(IncludeDir) $(CXXFlags) -o $@
+	CFlags       = $(Defines) -fPIC -D__32BIT__ -D__INTEL__ -D__LINUX__ -DLINUX  -DNDEBUG -O2 -D_MT -fexceptions -Wall
+	CXXFlags     = $(CFlags) -fno-rtti
 	CompileC     = @gcc -c $(IncludeDir) $(CFlags) -o $@ $<
-	CompileCXX   = @$(CXX) $<
-	CompileMoc   = @moc $< -o $(MocFile) && $(CXX) $(MocFile) && rm -f $(MocFile)
+	CompileCXX   = @g++ -c $(IncludeDir) $(CXXFlags) -o $@ $<
 	Link         = @g++ $(LibDir) -o $(Product)
 	CheckLink    = @ldd -u -r $(Product); echo
-
 	LD_LIBRARY_PATH += :$(ProductDir)
 endif
 
@@ -33,17 +29,13 @@ endif
 ifeq ($(CFG), Debug)
 	ProductDir   = Debug
 	ObjectDir    = Debug
-	MocFile      = $(ObjectDir)/temp.moc.cpp
 	Product      = Debug/test
-	CFlags       = $(Defines) -fPIC -D__INTEL__ -D__32BIT__ -D__LINUX__ -DLINUX -D_DEBUG -g3 -D_MT -fexceptions 
-	CXXFlags     = $(CFlags) -fno-rtti -Wall
-	CXX          = g++ -c $(IncludeDir) $(CXXFlags) -o $@
+	CFlags       = $(Defines) -fPIC -D__32BIT__ -D__INTEL__ -D__LINUX__ -DLINUX  -D_DEBUG -g3 -D_MT -fexceptions -Wall
+	CXXFlags     = $(CFlags) -fno-rtti
 	CompileC     = @gcc -c $(IncludeDir) $(CFlags) -o $@ $<
-	CompileCXX   = @$(CXX) $<
-	CompileMoc   = @moc $< -o $(MocFile) && $(CXX) $(MocFile) && rm -f $(MocFile)
+	CompileCXX   = @g++ -c $(IncludeDir) $(CXXFlags) -o $@ $<
 	Link         = @g++ $(LibDir) -o $(Product)
 	CheckLink    = @ldd -u -r $(Product); echo
-
 	LD_LIBRARY_PATH += :$(ProductDir)
 endif
 
@@ -77,15 +69,13 @@ EndMake :
 # Source Files, Objects & Product
 #
 $(ObjectDir)/Simplest.o :	\
-	./Simplest.cpp
+	Simplest.cpp
 	@echo "---> Compiling" $< "..."
 	$(CompileCXX)
 
+Objects = $(ObjectDir)/Simplest.o 
 
-Objects =	\
-	$(ObjectDir)/Simplest.o
-
-$(Product) : $(Objects) $(Libs)
+$(Product) : $(Objects)
 	@echo "---> Creating" $@ "..."
 	@rm -f $@
 	$(Link) $(Objects) $(Libraries)
