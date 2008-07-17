@@ -40,26 +40,26 @@ template <
 class Map : public std::map< KeyT, DataT, PredT, StlAlloc<DataT, AllocT> >
 {
 private:
-	typedef StlAlloc<DataT, AllocT> _Alloc;
-	typedef std::map<KeyT, DataT, PredT, _Alloc> _Base;
+	typedef StlAlloc<DataT, AllocT> StlAllocT;
+	typedef std::map<KeyT, DataT, PredT, StlAllocT> Base;
 
 	Map(const Map&);
 	void operator=(const Map&);
 
 public:
 	explicit Map(AllocT& alloc, const PredT& pred = PredT())
-		: _Base(pred, alloc)
+		: Base(pred, alloc)
 	{
 	}
 
 	template <class Iterator>
 	Map(AllocT& alloc, Iterator first, Iterator last, const PredT& pred = PredT())
-		: _Base(first, last, pred, alloc)
+		: Base(first, last, pred, alloc)
 	{
 	}
 
-	void winx_call copy(const _Base& from) {
-		_Base::operator=(from);
+	void winx_call copy(const Base& from) {
+		Base::operator=(from);
 	}
 };
 
@@ -74,26 +74,26 @@ template <
 class MultiMap : public std::multimap< KeyT, DataT, PredT, StlAlloc<DataT, AllocT> >
 {
 private:
-	typedef StlAlloc<DataT, AllocT> _Alloc;
-	typedef std::multimap<KeyT, DataT, PredT, _Alloc> _Base;
+	typedef StlAlloc<DataT, AllocT> StlAllocT;
+	typedef std::multimap<KeyT, DataT, PredT, StlAllocT> Base;
 
 	MultiMap(const MultiMap&);
 	void operator=(const MultiMap&);
 
 public:
 	explicit MultiMap(AllocT& alloc, const PredT& pred = PredT())
-		: _Base(pred, alloc)
+		: Base(pred, alloc)
 	{
 	}
 
 	template <class Iterator>
 	MultiMap(AllocT& alloc, Iterator first, Iterator last, const PredT& pred = PredT())
-		: _Base(first, last, pred, alloc)
+		: Base(first, last, pred, alloc)
 	{
 	}
 
-	void winx_call copy(const _Base& from) {
-		_Base::operator=(from);
+	void winx_call copy(const Base& from) {
+		Base::operator=(from);
 	}
 };
 
@@ -240,3 +240,4 @@ public:
 NS_STDEXT_END
 
 #endif /* STDEXT_MAP_H */
+
