@@ -112,6 +112,7 @@ public:
 						break;
 				}
 				WINX_ASSERT(k != rg->len);
+				g_tuples_destroy(rg);
 			}
 			m_acc.accumulate(counter.trace(log));
 
