@@ -9,12 +9,12 @@
 // of this license. You must not remove this notice, or any other, from
 // this software.
 // 
-// Module: STLContainersPerformance.cpp
+// Module: Performance.cpp
 // Creator: xushiwei
 // Email: xushiweizh@gmail.com
 // Date: 2006-8-18 13:57:28
 // 
-// $Id: STLContainersPerformance.cpp,v 1.8 2006/12/03 07:52:55 xushiwei Exp $
+// $Id: Performance.cpp,v 1.8 2006/12/03 07:52:55 xushiwei Exp $
 // -----------------------------------------------------------------------*/
 
 #include <stdext/Relation.h>
@@ -200,5 +200,5 @@ int main()
 }
 
 // -------------------------------------------------------------------------
-// $Log: STLContainersPerformance.cpp,v $
+// $Log: Performance.cpp,v $
 //
