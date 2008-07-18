@@ -85,6 +85,41 @@ public:
 		m_acc.trace_avg(log);
 	}
 
+	void GRelation_select(LogT& log)
+	{
+		log.print("\n===== GRelation (select) =====\n");
+		m_acc.start();
+		for (int j = 0; j < TestN; ++j)
+		{
+			GRelation* rel = g_relation_new(2);
+			g_relation_index(rel, 0, g_str_hash, g_str_equal);
+			g_relation_index(rel, 1, g_direct_hash, g_direct_equal);
+		
+			for (int i = 0; i < Count; ++i)
+			{
+				g_relation_insert(rel, m_keys[i], (gpointer)m_vals[i]);
+			}
+
+			std::PerformanceCounter counter;
+			for (int i = 0; i < Count; ++i)
+			{
+				guint k;
+				GTuples* rg = g_relation_select(rel, m_keys[i], 0);
+				for (k = 0; k < rg->len; ++k)
+				{
+					int val = (int)g_tuples_index(rg, k, 1);
+					if (val == m_vals[i])
+						break;
+				}
+				WINX_ASSERT(k != rg->len);
+			}
+			m_acc.accumulate(counter.trace(log));
+
+			g_relation_destroy(rel);
+		}
+		m_acc.trace_avg(log);
+	}
+
 	void Relation_insert(LogT& log)
 	{
 		log.print("\n===== Relation (insert) =====\n");
@@ -108,11 +143,51 @@ public:
 		m_acc.trace_avg(log);
 	}
 
+	void Relation_select(LogT& log)
+	{
+		log.print("\n===== Relation (select) =====\n");
+		m_acc.start();
+		for (int j = 0; j < TestN; ++j)
+		{
+			typedef std::pair<const char*, int> TupleT;
+			typedef std::Relation<TupleT, std::HashMapIndexing, std::AutoFreeAlloc> RelationT;
+			typedef RelationT::Indexing<0> Indexing0;
+			
+			RelationT rel(m_alloc);
+			rel.index<0>();
+			rel.index<1>();
+			for (int i = 0; i < Count; ++i)
+			{
+				rel.insert(TupleT(m_keys[i], m_vals[i]));
+			}
+		
+			std::PerformanceCounter counter;
+			for (int i = 0; i < Count; ++i)
+			{
+				Indexing0::iterator it;
+				Indexing0::range rg = rel.select<0>(m_keys[i]);
+				for (it = rg.first; it != rg.second; ++it)
+				{
+					const TupleT& v = Indexing0::item(it);
+					if (v.second == m_vals[i])
+						break;
+				}
+				WINX_ASSERT(it != rg.second);
+			}
+			m_acc.accumulate(counter.trace(log));
+		}
+		m_acc.trace_avg(log);
+	}
+
 	void testComparison(LogT& log)
 	{
 		init();
+
 		GRelation_insert(log);
 		Relation_insert(log);
+
+		GRelation_select(log);
+		Relation_select(log);
 	}
 };
 
