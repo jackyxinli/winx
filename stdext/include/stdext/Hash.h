@@ -24,7 +24,7 @@
 #endif
 
 #ifndef STDEXT_STRING_H
-#include "String.h"
+#include "String.h" // class String, StringEqualTo, StringLess
 #endif
 
 #ifndef STD_HASH_H
@@ -32,10 +32,6 @@
 #endif
 
 #ifndef _WINX_NO_HASH
-
-#ifndef STDEXT_TEXT_BASICALGO_H
-#include "text/BasicAlgo.h" // class StringEqualTo, StringLess
-#endif
 
 NS_STDEXT_BEGIN
 
