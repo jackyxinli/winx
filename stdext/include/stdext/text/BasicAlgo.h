@@ -381,8 +381,30 @@ inline xchar* winx_call strecpy(xchar* pszDest, const xchar* pszSrc)
 namespace tchar { using std::strecpy; }
 
 // -------------------------------------------------------------------------
+// class StringEqualTo, StringLess
+
+template <class CharT>
+class StringEqualTo
+{
+public:
+	bool winx_call operator()(const CharT* a, const CharT* b) const {
+		return compare(a, b) == 0;
+	}
+};
+
+template <class CharT>
+class StringLess
+{
+public:
+	bool winx_call operator()(const CharT* a, const CharT* b) const {
+		return compare(a, b) < 0;
+	}
+};
+
+// -------------------------------------------------------------------------
 // $Log: BasicAlgo.h,v $
 
 NS_STDEXT_END
 
 #endif /* STDEXT_TEXT_BASICALGO_H */
+
