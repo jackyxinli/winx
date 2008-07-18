@@ -15,8 +15,8 @@ void testBasic()
 
 	AllocT alloc;
 	RelationT rel(alloc);
-	rel.indexing<0>();
-	rel.indexing<1>();
+	rel.index<0>();
+	rel.index<1>();
 	
 	rel.insert(TupleT("Mon", 1));
 	rel.insert(TupleT("Monday", 1));
@@ -53,8 +53,8 @@ void testBasic()
 // -------------------------------------------------------------------------
 // testCustomIndexing
 
-// Field 0: 		rb-tree indexing
-// Field 1..(N-1):  hash-table indexing
+// Field 0: 		rb-tree index
+// Field 1..(N-1):  hash-table index
 
 template <int Field, class KeyT, class AllocT>
 struct CustomIndexing : public std::HashMapIndexing<Field, KeyT, AllocT> {
@@ -74,8 +74,8 @@ void testCustomIndexing()
 
 	AllocT alloc;
 	RelationT rel(alloc);
-	rel.indexing<0>();
-	rel.indexing<1>();
+	rel.index<0>();
+	rel.index<1>();
 	
 	rel.insert(TupleT("Mon", 1));
 	rel.insert(TupleT("Monday", 1));
@@ -123,9 +123,9 @@ void testTupleRelation()
 
 	AllocT alloc;
 	RelationT rel(alloc);
-	rel.indexing<0>();
-	rel.indexing<1>();
-	rel.indexing<2>();
+	rel.index<0>();
+	rel.index<1>();
+	rel.index<2>();
 	
 	rel.insert(TupleT("Mon", 1, 'M'));
 	rel.insert(TupleT("Monday", 1, 'M'));

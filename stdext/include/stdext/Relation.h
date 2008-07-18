@@ -44,7 +44,7 @@ NS_STDEXT_BEGIN
 // -------------------------------------------------------------------------
 // MapIndexing
 
-template <int Index, class KeyT, class AllocT>
+template <int Field, class KeyT, class AllocT>
 struct MapIndexing
 {
 	typedef MultiMap<KeyT, void*, std::less<KeyT>, AllocT> type;
@@ -53,7 +53,7 @@ struct MapIndexing
 // -------------------------------------------------------------------------
 // HashMapIndexing
 
-template <int Index, class KeyT, class AllocT>
+template <int Field, class KeyT, class AllocT>
 struct HashMapIndexing
 {
 	typedef HashMultiMap<KeyT, void*, HashCompare<KeyT>, AllocT> type;
@@ -64,7 +64,7 @@ struct HashMapIndexing
 
 template <
 	class TupleT,
-	template <int Index, class KeyT, class AllocT> class IndexingT,
+	template <int Field, class KeyT, class AllocT> class IndexingT,
 	class AllocT,
 	int CurrIndex = TupleTraits<TupleT>::Fields - 1>
 struct IndexingAct
@@ -79,7 +79,7 @@ struct IndexingAct
 		NextAct::init(dest);
 	}
 	
-	static void winx_call indexing(void* dest[], const TupleT* const& t)
+	static void winx_call index(void* dest[], const TupleT* const& t)
 	{
 		if (dest[CurrIndex])
 		{
@@ -89,7 +89,7 @@ struct IndexingAct
 				typename CurrIndexingT::value_type(key, (void*)&t)
 				);
 		}
-		NextAct::indexing(dest, t);
+		NextAct::index(dest, t);
 	}
 
 	template <int IndexExcluded>
@@ -130,14 +130,14 @@ struct IndexingAct
 template <
 	class TupleT,
 	class AllocT,
-	template <int Index, class KeyT, class AllocT> class IndexingT>
+	template <int Field, class KeyT, class AllocT> class IndexingT>
 struct IndexingAct<TupleT, IndexingT, AllocT, -1>
 {
 	static void winx_call init(void* dest[]) {
 		//noting to do
 	}
 	
-	static void winx_call indexing(void* dest[], const TupleT* const& t) {
+	static void winx_call index(void* dest[], const TupleT* const& t) {
 		//noting to do
 	}
 
@@ -157,19 +157,19 @@ struct IndexingAct<TupleT, IndexingT, AllocT, -1>
 
 template <
 	class TupleT,
-	template <int Index, class KeyT, class AllocT> class IndexingT = HashMapIndexing,
+	template <int Field, class KeyT, class AllocT> class IndexingT = HashMapIndexing,
 	class AllocT = ScopedAlloc>
 class Relation
 {
 public:
 	enum { Fields = TupleTraits<TupleT>::Fields };
 
-	template <int Index>
+	template <int Field>
 	class Indexing
 	{
 	public:
-		typedef typename TupleItemTraits<Index, TupleT>::value_type key_type;
-		typedef typename IndexingT<Index, key_type, AllocT>::type type;
+		typedef typename TupleItemTraits<Field, TupleT>::value_type key_type;
+		typedef typename IndexingT<Field, key_type, AllocT>::type type;
 		typedef typename type::iterator iterator;
 		typedef typename type::const_iterator const_iterator;
 		typedef std::pair<iterator, iterator> range;
@@ -196,16 +196,16 @@ private:
 	DataT m_data;
 	void* m_indexs[Fields];
 
-	template <int Index, class MapT>
-	static void doIndexing_(MapT* inst, const DataT& data)
+	template <int Field, class MapT>
+	static void doIndex_(MapT* inst, const DataT& data)
 	{
-		typedef typename Indexing<Index>::key_type KeyT;
+		typedef typename Indexing<Field>::key_type KeyT;
 		typedef typename DataT::const_iterator It;
 		for (It it = data.begin(); it != data.end(); ++it)
 		{
 			const TupleT* const t = (const TupleT* const)*it;
 			if (t) {
-				const KeyT& key = TupleItemTraits<Index, TupleT>::get(*t);
+				const KeyT& key = TupleItemTraits<Field, TupleT>::get(*t);
 				inst->insert(typename MapT::value_type(key, (void*)&t));
 			}
 		}
@@ -241,110 +241,110 @@ public:
 		}
 	}
 	
-	template <int Index>
-	void winx_call indexing()
+	template <int Field>
+	void winx_call index()
 	{
-		typedef typename Indexing<Index>::type MapT;
-		if (!m_indexs[Index])
+		typedef typename Indexing<Field>::type MapT;
+		if (!m_indexs[Field])
 		{
 			MapT* inst;
 			AllocT& alloc = m_data.get_alloc();
-			if (Indexing<Index>::HasDestructor)
+			if (Indexing<Field>::HasDestructor)
 				inst = STD_NEW(alloc, MapT)(alloc);
 			else
 				inst = STD_UNMANAGED_NEW(alloc, MapT)(alloc);
-			doIndexing_<Index>(inst, m_data);
-			m_indexs[Index] = inst;
+			doIndex_<Field>(inst, m_data);
+			m_indexs[Field] = inst;
 		}
 	}
 
-	template <int Index>
-	bool winx_call indexinged() const {
-		return m_indexs[Index] != NULL;
+	template <int Field>
+	bool winx_call indexed() const {
+		return m_indexs[Field] != NULL;
 	}
 	
-	template <int Index>
+	template <int Field>
 	void winx_call eraseIndexing() {
-		m_indexs[Index] = NULL;
+		m_indexs[Field] = NULL;
 	}
 
-	template <int Index>
+	template <int Field>
 	void winx_call erase(
-		typename Indexing<Index>::iterator const it)
+		typename Indexing<Field>::iterator const it)
 	{
-		WINX_ASSERT(m_indexs[Index] != NULL);
-		typedef typename Indexing<Index>::type MapT;
+		WINX_ASSERT(m_indexs[Field] != NULL);
+		typedef typename Indexing<Field>::type MapT;
 
 		const TupleT** pt = (const TupleT**)(*it).second;
-		IndexingActT::template eraseIndexing<Index>(m_indexs, *pt);
+		IndexingActT::template eraseIndexing<Field>(m_indexs, *pt);
 		*pt = NULL;
-		((MapT*)m_indexs[Index])->erase(it);
+		((MapT*)m_indexs[Field])->erase(it);
 	}
 
-	template <int Index>
+	template <int Field>
 	size_type winx_call erase(
-		typename Indexing<Index>::iterator const first,
-		typename Indexing<Index>::iterator const last)
+		typename Indexing<Field>::iterator const first,
+		typename Indexing<Field>::iterator const last)
 	{
-		WINX_ASSERT(m_indexs[Index] != NULL);
-		typedef typename Indexing<Index>::type MapT;
+		WINX_ASSERT(m_indexs[Field] != NULL);
+		typedef typename Indexing<Field>::type MapT;
 
 		size_type n = 0;
-		for (typename Indexing<Index>::iterator it = first; it != last; ++it) {
+		for (typename Indexing<Field>::iterator it = first; it != last; ++it) {
 			const TupleT** pt = (const TupleT**)(*it).second;
-			IndexingActT::template eraseIndexing<Index>(m_indexs, *pt);
+			IndexingActT::template eraseIndexing<Field>(m_indexs, *pt);
 			*pt = NULL;
 			++n;
 		}
-		((MapT*)m_indexs[Index])->erase(first, last);
+		((MapT*)m_indexs[Field])->erase(first, last);
 		return n;
 	}
 
-	template <int Index>
-	size_type winx_call erase(const typename Indexing<Index>::key_type& key)
+	template <int Field>
+	size_type winx_call erase(const typename Indexing<Field>::key_type& key)
 	{
-		WINX_ASSERT(m_indexs[Index] != NULL);
-		typedef typename Indexing<Index>::type MapT;
-		typedef typename Indexing<Index>::range RangeT;
+		WINX_ASSERT(m_indexs[Field] != NULL);
+		typedef typename Indexing<Field>::type MapT;
+		typedef typename Indexing<Field>::range RangeT;
 
-		const RangeT rg = ((MapT*)m_indexs[Index])->equal_range(key);
-		return erase<Index>(rg.first, rg.second);
+		const RangeT rg = ((MapT*)m_indexs[Field])->equal_range(key);
+		return erase<Field>(rg.first, rg.second);
 	}
 
-	template <int Index>
-	size_type winx_call count(const typename Indexing<Index>::key_type& key) const
+	template <int Field>
+	size_type winx_call count(const typename Indexing<Field>::key_type& key) const
 	{
-		WINX_ASSERT(m_indexs[Index] != NULL);
-		typedef typename Indexing<Index>::type MapT;
+		WINX_ASSERT(m_indexs[Field] != NULL);
+		typedef typename Indexing<Field>::type MapT;
 
-		return ((const MapT*)m_indexs[Index])->count(key);
+		return ((const MapT*)m_indexs[Field])->count(key);
 	}
 	
-	template <int Index>
-	typename Indexing<Index>::const_range winx_call
-		select(const typename Indexing<Index>::key_type& key) const
+	template <int Field>
+	typename Indexing<Field>::const_range winx_call
+		select(const typename Indexing<Field>::key_type& key) const
 	{
-		WINX_ASSERT(m_indexs[Index] != NULL);
-		typedef typename Indexing<Index>::type MapT;
+		WINX_ASSERT(m_indexs[Field] != NULL);
+		typedef typename Indexing<Field>::type MapT;
 
-		return ((const MapT*)m_indexs[Index])->equal_range(key);
+		return ((const MapT*)m_indexs[Field])->equal_range(key);
 	}
 
-	template <int Index>
-	typename Indexing<Index>::range winx_call
-		select(const typename Indexing<Index>::key_type& key)
+	template <int Field>
+	typename Indexing<Field>::range winx_call
+		select(const typename Indexing<Field>::key_type& key)
 	{
-		WINX_ASSERT(m_indexs[Index] != NULL);
-		typedef typename Indexing<Index>::type MapT;
+		WINX_ASSERT(m_indexs[Field] != NULL);
+		typedef typename Indexing<Field>::type MapT;
 
-		return ((MapT*)m_indexs[Index])->equal_range(key);
+		return ((MapT*)m_indexs[Field])->equal_range(key);
 	}
 
 	void winx_call insert(const TupleT& val) {
 		AllocT& alloc = m_data.get_alloc();
 		TupleT* t = HasDestructor ? STD_NEW(alloc, TupleT)(val) : STD_UNMANAGED_NEW(alloc, TupleT)(val);
 		m_data.push_back(t);
-		IndexingActT::indexing(m_indexs, *(const TupleT* const*)&m_data.back()); 
+		IndexingActT::index(m_indexs, *(const TupleT* const*)&m_data.back()); 
 	}
 	
 	void winx_call copy(const Relation& from) {
@@ -383,8 +383,8 @@ public:
 		
 		AllocT alloc;
 		RelationT rel(alloc);
-		rel.indexing<0>();
-		rel.indexing<1>();
+		rel.index<0>();
+		rel.index<1>();
 		
 		rel.insert(TupleT("Mon", 1));
 		rel.insert(TupleT("Monday", 1));
