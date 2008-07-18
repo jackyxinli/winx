@@ -88,7 +88,7 @@ public:
 	}
 };
 
-template <class CharT>
+template <>
 class Hash<String>
 {
 public:
@@ -97,7 +97,7 @@ public:
 	}
 };
 
-template <class CharT>
+template <>
 class Hash<WString>
 {
 public:
