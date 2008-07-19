@@ -63,16 +63,16 @@ void testRelationDefragment()
 	typedef std::AutoFreeAlloc AllocT;
 	typedef std::pair<std::string, int> TupleT;
 	typedef std::Relation<TupleT, std::HashMapIndexing, AllocT> RelationT;
-	typedef std::Defragement<RelationT> RelationT2;
-	typedef RelationT2::Indexing<0> Indexing0;
-	typedef RelationT2::Indexing<1> Indexing1;
+	typedef std::Defragment<RelationT> RelationT2;
+	typedef RelationT::Indexing<0> Indexing0;
+	typedef RelationT::Indexing<1> Indexing1;
 
 	RelationT2 rel;
 	rel.index<0>();
 	rel.index<1>();
 	
 	enum { Count = 20000 };
-	enum { TestN = 1000 };
+	enum { TestN = 10000 };
 
 	int i, j;
 	char s1[32];

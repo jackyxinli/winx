@@ -47,7 +47,7 @@ typedef tls_gc_alloc TlsGcAlloc;
 #define RegionAllocT region_alloc
 #define DestructorTraits destructor_traits
 #define StlAlloc stl_allocator
-#define Defragement defragment
+#define Defragment defragment
 
 NS_STDEXT_END
 

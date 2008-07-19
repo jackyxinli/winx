@@ -369,9 +369,9 @@ public:
 		typename Relation::DataT::const_iterator it = from.m_data.begin();
 		while (n)
 		{
-			for (;; ++it)
+			for (;;)
 			{
-				const TupleT* const t = (const TupleT* const)*it;
+				const TupleT* const t = (const TupleT* const)*it++;
 				if (t) {
 					insert(*t);
 					--n;
