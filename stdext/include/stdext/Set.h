@@ -35,7 +35,7 @@ NS_STDEXT_BEGIN
 template <
 	class KeyT,
 	class PredT = std::less<KeyT>,
-	class AllocT = ScopeAlloc
+	class AllocT = ScopedAlloc
 	>
 class Set : public std::set< KeyT, PredT, StlAlloc<KeyT, AllocT> >
 {
@@ -69,7 +69,7 @@ public:
 template <
 	class KeyT,
 	class PredT = std::less<KeyT>,
-	class AllocT = ScopeAlloc
+	class AllocT = ScopedAlloc
 	>
 class MultiSet : public std::multiset< KeyT, PredT, StlAlloc<KeyT, AllocT> >
 {
@@ -137,7 +137,7 @@ public:
 	void testSet(LogT& log)
 	{
 		std::BlockPool recycle;
-		std::ScopeAlloc alloc(recycle);
+		std::ScopedAlloc alloc(recycle);
 		std::Set<Obj> coll(alloc);
 		coll.insert(1);
 		coll.insert(1);
@@ -149,7 +149,7 @@ public:
 	void testMultiSet(LogT& log)
 	{
 		std::BlockPool recycle;
-		std::ScopeAlloc alloc(recycle);
+		std::ScopedAlloc alloc(recycle);
 		std::MultiSet<Obj> coll(alloc);
 		coll.insert(1);
 		coll.insert(1);
@@ -191,11 +191,11 @@ public:
 	void doSet2(LogT& log)
 	{
 		typedef std::Set<int> SetT;
-		log.print("===== std::Set (ScopeAlloc) =====\n");
+		log.print("===== std::Set (ScopedAlloc) =====\n");
 		std::PerformanceCounter counter;
 		{
 			std::BlockPool recycle;
-			std::ScopeAlloc alloc(recycle);
+			std::ScopedAlloc alloc(recycle);
 			SetT coll(alloc);
 			for (int i = 0; i < N; ++i)
 				coll.insert(i);
@@ -213,7 +213,7 @@ public:
 			log.print("===== doShareAllocSet =====\n");
 			std::PerformanceCounter counter;
 			{
-				std::ScopeAlloc alloc(recycle);
+				std::ScopedAlloc alloc(recycle);
 				SetT coll(alloc);
 				for (int i = 0; i < N; ++i)
 					coll.insert(i);

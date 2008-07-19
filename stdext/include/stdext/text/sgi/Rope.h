@@ -84,7 +84,7 @@ public:
 // -------------------------------------------------------------------------
 // class Rope
 
-template <class _CharT, class AllocT = ScopeAlloc>
+template <class _CharT, class AllocT = ScopedAlloc>
 class Rope : public stdext::rope<_CharT, StlAlloc<_CharT, AllocT> >
 {
 private:

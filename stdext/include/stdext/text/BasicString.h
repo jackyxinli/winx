@@ -369,7 +369,7 @@ public:
 	void testConstructor(LogT& log)
 	{
 		std::BlockPool recycle;
-		std::ScopeAlloc alloc(recycle);
+		std::ScopedAlloc alloc(recycle);
 
 		const std::String a1("Hello", 4);
 		AssertExp(a1.compare("Hell") == 0);

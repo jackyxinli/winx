@@ -236,7 +236,7 @@ public:
 		const char stg[] = "__teststdio__.txt";
 
 		std::BlockPool recycle;
-		std::ScopeAlloc alloc(recycle);
+		std::ScopedAlloc alloc(recycle);
 
 		WINX_USES_CONVERSION;
 		{

@@ -240,7 +240,7 @@ public:
 		const char stg[] = "__testposix__.txt";
 
 		std::BlockPool recycle;
-		std::ScopeAlloc alloc(recycle);
+		std::ScopedAlloc alloc(recycle);
 
 		WINX_USES_CONVERSION;
 		{

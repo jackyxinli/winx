@@ -26,10 +26,10 @@ void testAutoFreeAlloc()
     e = STD_NEW(*suballoc, int);
 }
 
-void testScopeAlloc()
+void testScopedAlloc()
 {
     std::BlockPool recycle;
-    std::ScopeAlloc alloc(recycle);
+    std::ScopedAlloc alloc(recycle);
     
     int* a;
     a = STD_NEW(alloc, int);
@@ -39,7 +39,7 @@ void testScopeAlloc()
 int main()
 {
     testAutoFreeAlloc();
-    testScopeAlloc();	
+    testScopedAlloc();	
 	return 0;
 }
 

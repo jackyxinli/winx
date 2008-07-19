@@ -131,7 +131,7 @@ public:																		\
 }
 
 #define EVENT_TYPE(Event, ParametersList, arguments_list)					\
-	EX_EVENT_TYPE(std::ScopeAlloc, Event, ParametersList, arguments_list)
+	EX_EVENT_TYPE(std::ScopedAlloc, Event, ParametersList, arguments_list)
 
 // -------------------------------------------------------------------------
 // class TestEvent
@@ -161,7 +161,7 @@ private:
 	TextChangedEvent m_changed;
 
 public:
-	Edit(std::ScopeAlloc& alloc) : m_changed(alloc) {
+	Edit(std::ScopedAlloc& alloc) : m_changed(alloc) {
 	}
 
 	TextChanged* textChanged() {
@@ -181,7 +181,7 @@ public:
 class Dialog
 {
 protected:
-	std::ScopeAlloc m_alloc;
+	std::ScopedAlloc m_alloc;
 
 	Edit m_edit;
 	std::Connection m_editChanged;

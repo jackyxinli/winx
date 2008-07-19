@@ -109,7 +109,7 @@ class TestMemArchive : public TestCase
 	void testDeque(LogT& log)
 	{
 		std::BlockPool recycle;
-		std::ScopeAlloc alloc(recycle);
+		std::ScopedAlloc alloc(recycle);
 		std::CharDeque stg(alloc);
 		std::DequeWriter* w = NULL;
 		std::DequeReader* r = NULL;
@@ -137,7 +137,7 @@ class TestMemArchive : public TestCase
 	void test(LogT& log, WriterT*, ReaderT*, StorageT& stg)
 	{
 		std::BlockPool recycle;
-		std::ScopeAlloc alloc(recycle);
+		std::ScopedAlloc alloc(recycle);
 
 		{
 			WriterT ar(stg);

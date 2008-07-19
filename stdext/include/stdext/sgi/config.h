@@ -135,7 +135,7 @@ namespace __STD
 	{
 		enum { _S_instanceless = 0 };
 		typedef _Tp value_type;
-		typedef NS_BOOST_MEMORY::stl_allocator<value_type, std::ScopeAlloc> allocator_type;
+		typedef NS_BOOST_MEMORY::stl_allocator<value_type, std::ScopedAlloc> allocator_type;
 	};
 #else
 	template <class _Tp, class _Alloc>

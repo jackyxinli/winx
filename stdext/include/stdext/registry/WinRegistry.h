@@ -638,7 +638,7 @@ public:
 		AssertExp(str == WINX_TEXT("abc"));
 
 		std::BlockPool recycle;
-		std::ScopeAlloc alloc(recycle);
+		std::ScopedAlloc alloc(recycle);
 
 		std::BasicString<TCHAR> s2;
 		key.getString(WINX_TEXT("string2"), alloc, s2);

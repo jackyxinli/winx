@@ -131,7 +131,7 @@ private:
 	TextChangedEvent m_changed;
 
 public:
-	EditV2(std::ScopeAlloc& alloc) : m_changed(alloc)
+	EditV2(std::ScopedAlloc& alloc) : m_changed(alloc)
 	{
 		addEvent(EID(TextChanged), m_changed);
 	}
@@ -150,7 +150,7 @@ public:
 class DialogV2
 {
 private:
-	std::ScopeAlloc m_alloc;
+	std::ScopedAlloc m_alloc;
 
 	EditV2 m_edit;
 	std::Connection m_editChanged;

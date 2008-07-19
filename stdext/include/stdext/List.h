@@ -36,37 +36,37 @@ NS_STDEXT_BEGIN
 // -------------------------------------------------------------------------
 // class List
 
-template <class ValT, class AllocT = ScopeAlloc>
+template <class ValT, class AllocT = ScopedAlloc>
 class List : public std::list< ValT, StlAlloc<ValT, AllocT> >
 {
 private:
-	typedef StlAlloc<ValT, AllocT> _Alloc;
-	typedef std::list<ValT, _Alloc> _Base;
+	typedef StlAlloc<ValT, AllocT> StlAllocT;
+	typedef std::list<ValT, StlAllocT> Base;
 
 	List(const List&);
 	void operator=(const List&);
 
 public:
-    typedef typename _Base::size_type size_type;
+    typedef typename Base::size_type size_type;
     
 	explicit List(AllocT& alloc)
-		: _Base(alloc)
+		: Base(alloc)
 	{
 	}
 
 	List(AllocT& alloc, size_type count, const ValT& val = ValT())
-		: _Base(count, val, alloc)
+		: Base(count, val, alloc)
 	{
 	}
 
 	template <class Iterator>
 	List(AllocT& alloc, Iterator aFirst, Iterator aLast)
-		: _Base(aFirst, aLast, alloc)
+		: Base(aFirst, aLast, alloc)
 	{
 	}
 
-	void winx_call copy(const _Base& from) {
-		_Base::operator=(from);
+	void winx_call copy(const Base& from) {
+		Base::operator=(from);
 	}
 };
 
@@ -75,37 +75,37 @@ public:
 
 #ifndef _WINX_NO_SLIST
 
-template <class ValT, class AllocT = ScopeAlloc>
+template <class ValT, class AllocT = ScopedAlloc>
 class Slist : public stdext::slist< ValT, StlAlloc<ValT, AllocT> >
 {
 private:
-	typedef StlAlloc<ValT, AllocT> _Alloc;
-	typedef stdext::slist<ValT, _Alloc> _Base;
+	typedef StlAlloc<ValT, AllocT> StlAllocT;
+	typedef stdext::slist<ValT, StlAllocT> Base;
 
 	Slist(const Slist&);
 	void operator=(const Slist&);
 
 public:
-    typedef typename _Base::size_type size_type;
+    typedef typename Base::size_type size_type;
     
 	explicit Slist(AllocT& alloc)
-		: _Base(alloc)
+		: Base(alloc)
 	{
 	}
 
 	Slist(AllocT& alloc, size_type count, const ValT& val = ValT())
-		: _Base(count, val, alloc)
+		: Base(count, val, alloc)
 	{
 	}
 
 	template <class Iterator>
 	Slist(AllocT& alloc, Iterator aFirst, Iterator aLast)
-		: _Base(aFirst, aLast, alloc)
+		: Base(aFirst, aLast, alloc)
 	{
 	}
 
-	void winx_call copy(const _Base& from) {
-		_Base::operator=(from);
+	void winx_call copy(const Base& from) {
+		Base::operator=(from);
 	}
 };
 
@@ -114,31 +114,31 @@ public:
 // -------------------------------------------------------------------------
 // class DclList: Doubly-circularly-linked list
 
-class _DclListNodeBase
+class DclListNodeBase_
 {
 protected:
-	_DclListNodeBase* m_prev;
-	_DclListNodeBase* m_next;
+	DclListNodeBase_* m_prev;
+	DclListNodeBase_* m_next;
 
 private:
-	_DclListNodeBase(const _DclListNodeBase&);
-	void operator=(const _DclListNodeBase&);
+	DclListNodeBase_(const DclListNodeBase_&);
+	void operator=(const DclListNodeBase_&);
 
 public:
 	enum InsertFront { insertAtFront = 0 };
 	enum InsertBack { insertAtBack = 1 };
 
 public:
-	_DclListNodeBase() {
+	DclListNodeBase_() {
 		m_prev = m_next = this;
 	}
-	_DclListNodeBase(_DclListNodeBase& head, InsertFront)
+	DclListNodeBase_(DclListNodeBase_& head, InsertFront)
 		: m_prev(&head), m_next(head.m_next)
 	{
 		head.m_next->m_prev = this;
 		head.m_next = this;
 	}
-	_DclListNodeBase(_DclListNodeBase& head, InsertBack)
+	DclListNodeBase_(DclListNodeBase_& head, InsertBack)
 		: m_prev(head.m_prev), m_next(&head)
 	{
 		head.m_prev->m_next = this;
@@ -146,7 +146,7 @@ public:
 	}
 
 public:
-	void winx_call __insertMeFront(_DclListNodeBase& head)
+	void winx_call _insertMeFront(DclListNodeBase_& head)
 	{
 		WINX_ASSERT(empty());
 		m_prev = &head;
@@ -155,7 +155,7 @@ public:
 		head.m_next = this;
 	}
 
-	void winx_call __insertMeBack(_DclListNodeBase& head)
+	void winx_call _insertMeBack(DclListNodeBase_& head)
 	{
 		WINX_ASSERT(empty());
 		m_next = &head;
@@ -176,7 +176,7 @@ public:
 	{
 		WINX_ASSERT(!empty());
 
-		_DclListNodeBase* node = m_next;
+		DclListNodeBase_* node = m_next;
 		node->erase();
 	}
 
@@ -184,7 +184,7 @@ public:
 	{
 		WINX_ASSERT(!empty());
 
-		_DclListNodeBase* node = m_prev;
+		DclListNodeBase_* node = m_prev;
 		node->erase();
 	}
 
@@ -196,19 +196,19 @@ public:
 };
 
 template <class ValT>
-class DclListNode : public _DclListNodeBase
+class DclListNode : public DclListNodeBase_
 {
 public:
 	typedef ValT value_type;
 
 public:
 	DclListNode() {}
-	DclListNode(_DclListNodeBase& head, InsertFront)
-		: _DclListNodeBase(head, insertAtFront)
+	DclListNode(DclListNodeBase_& head, InsertFront)
+		: DclListNodeBase_(head, insertAtFront)
 	{
 	}
-	DclListNode(_DclListNodeBase& head, InsertBack)
-		: _DclListNodeBase(head, insertAtBack)
+	DclListNode(DclListNodeBase_& head, InsertBack)
+		: DclListNodeBase_(head, insertAtBack)
 	{
 	}
 
@@ -224,45 +224,45 @@ public:
 };
 
 template <class ValT, class ReferenceT, class NodePtrT>
-class _DclIter : public std::iterator<std::bidirectional_iterator_tag, ValT>
+class DclIter_ : public std::iterator<std::bidirectional_iterator_tag, ValT>
 {
 private:
-	typedef _DclIter _Myt;
+	typedef DclIter_ Myt_;
 
 	NodePtrT m_node;
 
 public:
-	_DclIter(NodePtrT node) : m_node(node) {}
+	DclIter_(NodePtrT node) : m_node(node) {}
 
 	template <class RefT2, class NPtrT2>
-	_DclIter(const _DclIter<ValT, RefT2, NPtrT2>& it) : m_node(it.__data()) {}
+	DclIter_(const DclIter_<ValT, RefT2, NPtrT2>& it) : m_node(it.__data()) {}
 
 	NodePtrT winx_call __data() const { return m_node; }
 	ReferenceT winx_call operator*() const { return m_node->data(); }
 	
-	bool winx_call operator==(const _Myt& it) const { return m_node == it.__data(); }
-	bool winx_call operator!=(const _Myt& it) const { return m_node != it.__data(); }
+	bool winx_call operator==(const Myt_& it) const { return m_node == it.__data(); }
+	bool winx_call operator!=(const Myt_& it) const { return m_node != it.__data(); }
 
-	_Myt& winx_call operator++() { m_node = m_node->next(); return *this; }
-	_Myt& winx_call operator--() { m_node = m_node->prev(); return *this; }
+	Myt_& winx_call operator++() { m_node = m_node->next(); return *this; }
+	Myt_& winx_call operator--() { m_node = m_node->prev(); return *this; }
 
-	_Myt winx_call operator++(int)
+	Myt_ winx_call operator++(int)
 	{ 
-		_Myt it = *this;
+		Myt_ it = *this;
 		operator++();
 		return it;
 	}
 
-	_Myt winx_call operator--(int)
+	Myt_ winx_call operator--(int)
 	{ 
-		_Myt it = *this;
+		Myt_ it = *this;
 		operator--();
 		return it;
 	}
 };
 
 template <class ValT>
-class DclList : public _DclListNodeBase
+class DclList : public DclListNodeBase_
 {
 public:
 	typedef ValT value_type;
@@ -272,12 +272,12 @@ public:
 public:
 	void winx_call push_front(DclListNode<ValT>* node)
 	{
-		node->__insertMeFront(*this);
+		node->_insertMeFront(*this);
 	}
 	
 	void winx_call push_back(DclListNode<ValT>* node)
 	{
-		node->__insertMeBack(*this);
+		node->_insertMeBack(*this);
 	}
 
 public:
@@ -309,15 +309,15 @@ public:
 
 	bool winx_call done(const ValT* node) const
 	{
-		return static_cast<const _DclListNodeBase*>(node) == this;
+		return static_cast<const DclListNodeBase_*>(node) == this;
 	}
 
 private:
 	typedef DclListNode<ValT> NodeT;
 	
 public:
-	typedef _DclIter<ValT, ValT&, NodeT*> iterator;
-	typedef _DclIter<ValT, const ValT&, const NodeT*> const_iterator;
+	typedef DclIter_<ValT, ValT&, NodeT*> iterator;
+	typedef DclIter_<ValT, const ValT&, const NodeT*> const_iterator;
 
 	iterator winx_call begin() { return iterator(first()); }
 	const_iterator winx_call begin() const { return const_iterator(first()); }
@@ -352,7 +352,7 @@ public:
 	void testBasic(LogT& log)
 	{
 		std::BlockPool recycle;
-		std::ScopeAlloc alloc(recycle);
+		std::ScopedAlloc alloc(recycle);
 		std::List<Obj> coll(alloc);
 		coll.push_back(1);
 		coll.push_back(2);
@@ -380,7 +380,7 @@ public:
 	void testBasic(LogT& log)
 	{
 		std::BlockPool recycle;
-		std::ScopeAlloc alloc(recycle);
+		std::ScopedAlloc alloc(recycle);
 		std::Slist<int> coll(alloc);
 		coll.push_front(1);
 		coll.push_front(2);
@@ -453,7 +453,7 @@ public:
 	void testBasic(LogT& log)
 	{
 		std::BlockPool recycle;
-		std::ScopeAlloc alloc(recycle);
+		std::ScopedAlloc alloc(recycle);
 		
 		std::DclList<Obj> coll;
 
@@ -468,7 +468,7 @@ public:
 	void testInsertFront(LogT& log)
 	{
 		std::BlockPool recycle;
-		std::ScopeAlloc alloc(recycle);
+		std::ScopedAlloc alloc(recycle);
 		
 		std::DclList<Obj> coll;
 

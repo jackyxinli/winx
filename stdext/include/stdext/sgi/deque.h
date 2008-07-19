@@ -75,7 +75,7 @@ class TestSgiDeque : public TestCase
 	WINX_TEST_SUITE_END();	
 
 public:
-	typedef std::StlAlloc<char, std::ScopeAlloc> _DequeAlloc;
+	typedef std::StlAlloc<char, std::ScopedAlloc> _DequeAlloc;
 	typedef stdext::deque<char, _DequeAlloc> _SgiDeque;
 	typedef std::_Deque<char, _DequeAlloc> _StdDeque;
 	typedef std::_Deque<char> _StdDeque0;
@@ -88,7 +88,7 @@ public:
 		const char szHello[] = "Hello, world!";
 
 		std::BlockPool recycle;
-		std::ScopeAlloc alloc(recycle);
+		std::ScopedAlloc alloc(recycle);
 
 		log.print("===== SgiDeque =====\n");
 	
@@ -107,7 +107,7 @@ public:
 		const char szHello[] = "Hello, world!";
 
 		std::BlockPool recycle;
-		std::ScopeAlloc alloc(recycle);
+		std::ScopedAlloc alloc(recycle);
 
 		log.print("===== StdDeque =====\n");
 	

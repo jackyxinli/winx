@@ -357,7 +357,7 @@ public:
 	void testConstruct(LogT& log)
 	{
 		std::BlockPool recycle;
-		std::ScopeAlloc alloc(recycle);
+		std::ScopedAlloc alloc(recycle);
 
 		std::StringBuilder a1('a');
 		AssertExp(a1.size() == 1 && a1[0] == 'a');
@@ -379,7 +379,7 @@ public:
 	void testSubstr(LogT& log)
 	{
 		std::BlockPool recycle;
-		std::ScopeAlloc alloc(recycle);
+		std::ScopedAlloc alloc(recycle);
 
 		std::StringBuilder a("Hello");
 		AssertExp(a.cast_substr(1, 3) == "ell");

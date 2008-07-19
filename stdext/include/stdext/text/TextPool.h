@@ -49,7 +49,7 @@ public:																		\
 // -------------------------------------------------------------------------
 // class TextPool
 
-template <class CharT, class AllocT = ScopeAlloc>
+template <class CharT, class AllocT = ScopedAlloc>
 class TextPool : public Deque<CharT, AllocT>
 {
 private:
@@ -354,7 +354,7 @@ public:
 	void testConstruct(LogT& log)
 	{
 		std::BlockPool recycle;
-		std::ScopeAlloc alloc(recycle);
+		std::ScopedAlloc alloc(recycle);
 
 		std::TextPool<char> a1(alloc, 'a');
 		AssertExp(a1.size() == 1 && a1[0] == 'a');
@@ -376,7 +376,7 @@ public:
 	void testSubstr(LogT& log)
 	{
 		std::BlockPool recycle;
-		std::ScopeAlloc alloc(recycle);
+		std::ScopedAlloc alloc(recycle);
 
 		std::TextPool<char> a(alloc, "Hello");
 		AssertExp(a.substr(alloc, 1, 3) == "ell");
@@ -387,7 +387,7 @@ public:
 	void testAssign(LogT& log)
 	{
 		std::BlockPool recycle;
-		std::ScopeAlloc alloc(recycle);
+		std::ScopedAlloc alloc(recycle);
 
 		std::TextPool<char> a(alloc);
 		
@@ -418,7 +418,7 @@ public:
 	void testAppend(LogT& log)
 	{
 		std::BlockPool recycle;
-		std::ScopeAlloc alloc(recycle);
+		std::ScopedAlloc alloc(recycle);
 
 		std::TextPool<char> a(alloc, "Hello");
 		a.append(3, '!');
@@ -444,7 +444,7 @@ public:
 	void testReplace(LogT& log)
 	{
 		std::BlockPool recycle;
-		std::ScopeAlloc alloc(recycle);
+		std::ScopedAlloc alloc(recycle);
 
 		std::TextPool<char> a(alloc, "Hello!!!! world! Good!");
 		std::TextPool<char>::iterator it = a.find("!!!!");

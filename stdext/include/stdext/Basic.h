@@ -105,6 +105,14 @@
 #	define WINX_GCC
 #endif
 
+#if defined(BOOST_NO_PARTIAL_SPECIAILIZATION)
+	#define WINX_NO_PARTIAL_SPECIAILIZATION
+#elif defined(_MSC_VER)
+	#if (_MSC_VER <= 1200)
+	#define WINX_NO_PARTIAL_SPECIAILIZATION
+	#endif
+#endif
+
 // -------------------------------------------------------------------------
 // winx_call
 

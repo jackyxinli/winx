@@ -27,7 +27,7 @@
 #include "../std/hash_map.h"
 #endif
 
-#ifndef _WINX_NO_HASH_MAP
+#ifndef WINX_NO_HASH_MAP_
 
 #ifndef STDEXT_HASH_H
 #include "Hash.h"
@@ -45,9 +45,9 @@ NS_STDEXT_BEGIN
 template <
 	class KeyT, class DataT,
 	class HashCompT = HashCompare<KeyT>,
-	class AllocT = ScopeAlloc
+	class AllocT = ScopedAlloc
 	>
-class HashMap : public _WINX_BASE_HASHMAP(KeyT, DataT, HashCompT, AllocT)
+class HashMap : public WINX_BASE_HASHMAP_(KeyT, DataT, HashCompT, AllocT)
 {
 public:
 	typedef KeyT key_type;
@@ -57,19 +57,19 @@ public:
 	typedef AllocT allocator_type;
 
 private:
-	typedef StlAlloc<DataT, AllocT> _Alloc;
-	typedef _WINX_BASE_HASHMAP(KeyT, DataT, HashCompT, AllocT) _Base;
+	typedef StlAlloc<DataT, AllocT> StlAllocT;
+	typedef WINX_BASE_HASHMAP_(KeyT, DataT, HashCompT, AllocT) Base;
 	
 	HashMap(const HashMap&);
 	void operator=(const HashMap&);
 
 public:
-	typedef typename _Base::size_type size_type;
+	typedef typename Base::size_type size_type;
 
 #if defined(X_STL_NET)
 	explicit HashMap(
 		allocator_type& alloc,
-		size_type n = 100) : _Base(_HashComp<KeyT, HashCompT>(), alloc)
+		size_type n = 100) : Base(HashComp_<KeyT, HashCompT>(), alloc)
 	{
 	}
 
@@ -77,13 +77,13 @@ public:
 	HashMap(
 		allocator_type& alloc,
 		Iterator first, Iterator last,
-		size_type n = 100) : _Base(first, last, _HashComp<KeyT, HashCompT>(), alloc)
+		size_type n = 100) : Base(first, last, HashComp_<KeyT, HashCompT>(), alloc)
 	{
 	}
 #else
 	explicit HashMap(
 		allocator_type& alloc,
-		size_type n = 100) : _Base(n, hasher(), key_equal(), alloc)
+		size_type n = 100) : Base(n, hasher(), key_equal(), alloc)
 	{
 	}
 
@@ -91,13 +91,13 @@ public:
 	HashMap(
 		allocator_type& alloc,
 		Iterator first, Iterator last,
-		size_type n = 100) : _Base(first, last, n, hasher(), key_equal(), alloc)
+		size_type n = 100) : Base(first, last, n, hasher(), key_equal(), alloc)
 	{
 	}
 #endif
 
-	void winx_call copy(const _Base& from) {
-		_Base::operator=(from);
+	void winx_call copy(const Base& from) {
+		Base::operator=(from);
 	}
 };
 
@@ -107,9 +107,9 @@ public:
 template <
 	class KeyT, class DataT,
 	class HashCompT = HashCompare<KeyT>,
-	class AllocT = ScopeAlloc
+	class AllocT = ScopedAlloc
 >
-class HashMultiMap : public _WINX_BASE_HASHMULTIMAP(KeyT, DataT, HashCompT, AllocT)
+class HashMultiMap : public WINX_BASE_HASHMULTIMAP_(KeyT, DataT, HashCompT, AllocT)
 {
 public:
 	typedef KeyT key_type;
@@ -119,19 +119,19 @@ public:
 	typedef AllocT allocator_type;
 
 private:
-	typedef StlAlloc<DataT, AllocT> _Alloc;
-	typedef _WINX_BASE_HASHMULTIMAP(KeyT, DataT, HashCompT, AllocT) _Base;
+	typedef StlAlloc<DataT, AllocT> StlAllocT;
+	typedef WINX_BASE_HASHMULTIMAP_(KeyT, DataT, HashCompT, AllocT) Base;
 
 	HashMultiMap(const HashMultiMap&);
 	void operator=(const HashMultiMap&);
 
 public:
-	typedef typename _Base::size_type size_type;
+	typedef typename Base::size_type size_type;
 
 #if defined(X_STL_NET)
 	explicit HashMultiMap(
 		allocator_type& alloc,
-		size_type n = 100) : _Base(_HashComp<KeyT, HashCompT>(), alloc)
+		size_type n = 100) : Base(HashComp_<KeyT, HashCompT>(), alloc)
 	{
 	}
 
@@ -139,13 +139,13 @@ public:
 	HashMultiMap(
 		allocator_type& alloc,
 		Iterator first, Iterator last,
-		size_type n = 100) : _Base(first, last, _HashComp<KeyT, HashCompT>(), alloc)
+		size_type n = 100) : Base(first, last, HashComp_<KeyT, HashCompT>(), alloc)
 	{
 	}
 #else
 	explicit HashMultiMap(
 		allocator_type& alloc,
-		size_type n = 100) : _Base(n, hasher(), key_equal(), alloc)
+		size_type n = 100) : Base(n, hasher(), key_equal(), alloc)
 	{
 	}
 
@@ -153,7 +153,7 @@ public:
 	HashMultiMap(
 		allocator_type& alloc,
 		Iterator first, Iterator last,
-		size_type n = 100) : _Base(first, last, n, hasher(), key_equal(), alloc)
+		size_type n = 100) : Base(first, last, n, hasher(), key_equal(), alloc)
 	{
 	}
 #endif
@@ -180,7 +180,7 @@ public:
 		typedef std::HashMap<int, int> MapType;
 
 		std::BlockPool recycle;
-		std::ScopeAlloc alloc(recycle);
+		std::ScopedAlloc alloc(recycle);
 		
 		MapType simp(alloc);
 
@@ -202,7 +202,7 @@ public:
 		typedef std::HashMultiMap<int, int> MapType;
 
 		std::BlockPool recycle;
-		std::ScopeAlloc alloc(recycle);
+		std::ScopedAlloc alloc(recycle);
 		
 		MapType simp(alloc);
 
@@ -225,6 +225,6 @@ public:
 // -------------------------------------------------------------------------
 // $Log: HashMap.h,v $
 
-#endif // _WINX_NO_HASH_MAP
+#endif // WINX_NO_HASH_MAP_
 
 #endif /* STDEXT_HASHMAP_H */

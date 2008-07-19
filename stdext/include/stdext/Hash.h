@@ -31,7 +31,7 @@
 #include "../std/hash.h"
 #endif
 
-#ifndef _WINX_NO_HASH
+#ifndef WINX_NO_HASH_
 
 NS_STDEXT_BEGIN
 
@@ -68,7 +68,7 @@ class Hash : public stdext::hash<KeyT>
 {
 };
 
-#if defined(X_CC_VC6)
+#if defined(WINX_NO_PARTIAL_SPECIAILIZATION)
 
 template <>
 class Hash<std::string>
@@ -126,7 +126,7 @@ public:
 	}
 };
 
-#endif // !defined(X_CC_VC6)
+#endif // !defined(WINX_NO_PARTIAL_SPECIAILIZATION)
 
 #endif // !defined(X_STL_NET)
 
@@ -197,66 +197,66 @@ struct HashComp_ : public stdext::hash_compare<KeyT, typename HashCompT::key_pre
 	}
 };
 
-#define _WINX_BASE_HASHMAP(KeyT, DataT, HashCompT, AllocT)					\
+#define WINX_BASE_HASHMAP_(KeyT, DataT, HashCompT, AllocT)					\
 	stdext::hash_map<														\
 		KeyT, DataT,														\
-		std::HashComp_<KeyT, HashCompT>,									\
-		std::StlAlloc<DataT, AllocT>										\
+		NS_STDEXT::HashComp_<KeyT, HashCompT>,								\
+		NS_STDEXT::StlAlloc<DataT, AllocT>									\
 	>
 
-#define _WINX_BASE_HASHMULTIMAP(KeyT, DataT, HashCompT, AllocT)				\
+#define WINX_BASE_HASHMULTIMAP_(KeyT, DataT, HashCompT, AllocT)				\
 	stdext::hash_multimap<													\
 		KeyT, DataT,														\
-		std::HashComp_<KeyT, HashCompT>,									\
-		std::StlAlloc<DataT, AllocT>										\
+		NS_STDEXT::HashComp_<KeyT, HashCompT>,								\
+		NS_STDEXT::StlAlloc<DataT, AllocT>									\
 	>
 
-#define _WINX_BASE_HASHSET(ValT, HashCompT, AllocT)							\
+#define WINX_BASE_HASHSET_(ValT, HashCompT, AllocT)							\
 	stdext::hash_set<														\
 		ValT,																\
-		std::HashComp_<ValT, HashCompT>,									\
-		std::StlAlloc<ValT, AllocT>											\
+		NS_STDEXT::HashComp_<ValT, HashCompT>,								\
+		NS_STDEXT::StlAlloc<ValT, AllocT>									\
 	>
 
-#define _WINX_BASE_HASHMULTISET(ValT, HashCompT, AllocT)					\
+#define WINX_BASE_HASHMULTISET_(ValT, HashCompT, AllocT)					\
 	stdext::hash_multiset<													\
 		ValT,																\
-		std::HashComp_<ValT, HashCompT>,									\
-		std::StlAlloc<ValT, AllocT>											\
+		NS_STDEXT::HashComp_<ValT, HashCompT>,								\
+		NS_STDEXT::StlAlloc<ValT, AllocT>									\
 	>
 
 #else
 
-#define _WINX_BASE_HASHMAP(KeyT, DataT, HashCompT, AllocT)					\
+#define WINX_BASE_HASHMAP_(KeyT, DataT, HashCompT, AllocT)					\
 	stdext::hash_map<														\
 		KeyT, DataT,														\
 		typename HashCompT::hasher,											\
 		typename HashCompT::key_equal,										\
-		std::StlAlloc<DataT, AllocT>										\
+		NS_STDEXT::StlAlloc<DataT, AllocT>									\
 		>
 
-#define _WINX_BASE_HASHMULTIMAP(KeyT, DataT, HashCompT, AllocT)				\
+#define WINX_BASE_HASHMULTIMAP_(KeyT, DataT, HashCompT, AllocT)				\
 	stdext::hash_multimap<													\
 		KeyT, DataT,														\
 		typename HashCompT::hasher,											\
 		typename HashCompT::key_equal,										\
-		std::StlAlloc<DataT, AllocT>										\
+		NS_STDEXT::StlAlloc<DataT, AllocT>									\
 	>
 
-#define _WINX_BASE_HASHSET(ValT, HashCompT, AllocT)							\
+#define WINX_BASE_HASHSET_(ValT, HashCompT, AllocT)							\
 	stdext::hash_set<														\
 		ValT,																\
 		typename HashCompT::hasher,											\
 		typename HashCompT::key_equal,										\
-		std::StlAlloc<ValT, AllocT>											\
+		NS_STDEXT::StlAlloc<ValT, AllocT>									\
 		>
 
-#define _WINX_BASE_HASHMULTISET(ValT, HashCompT, AllocT)					\
+#define WINX_BASE_HASHMULTISET_(ValT, HashCompT, AllocT)					\
 	stdext::hash_multiset<													\
 		ValT,																\
 		typename HashCompT::hasher,											\
 		typename HashCompT::key_equal,										\
-		std::StlAlloc<ValT, AllocT>											\
+		NS_STDEXT::StlAlloc<ValT, AllocT>									\
 	>
 
 #endif
@@ -267,6 +267,7 @@ struct HashComp_ : public stdext::hash_compare<KeyT, typename HashCompT::key_pre
 
 NS_STDEXT_END
 
-#endif // _WINX_NO_HASH
+#endif // WINX_NO_HASH_
 
 #endif /* STDEXT_HASH_H */
+

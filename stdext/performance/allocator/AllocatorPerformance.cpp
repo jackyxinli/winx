@@ -204,13 +204,13 @@ public:
 	}
 
 	template <class LogT2>
-	void doTlsScopeAlloc(LogT2& log, int NAlloc, int PerAlloc)
+	void doTlsScopedAlloc(LogT2& log, int NAlloc, int PerAlloc)
 	{
 		std::PerformanceCounter counter;
 		{
 			for (int j = 0; j < NAlloc; ++j)
 			{
-				std::ScopeAlloc alloc;
+				std::ScopedAlloc alloc;
 				for (int i = 0; i < PerAlloc; ++i)
 				{
 					int* p;
@@ -222,13 +222,13 @@ public:
 	}
 
 	template <class LogT2>
-	void doScopeAlloc(LogT2& log, int NAlloc, int PerAlloc)
+	void doScopedAlloc(LogT2& log, int NAlloc, int PerAlloc)
 	{
 		std::PerformanceCounter counter;
 		{
 			for (int j = 0; j < NAlloc; ++j)
 			{
-				std::ScopeAlloc alloc(m_recycle);
+				std::ScopedAlloc alloc(m_recycle);
 				for (int i = 0; i < PerAlloc; ++i)
 				{
 					int* p;
@@ -258,15 +258,15 @@ public:
 		m_acc.trace_avg(log);
 
 		m_acc.start();
-		log.print(PerAlloc, "\n===== TlsScopeAlloc(%d) =====\n");
+		log.print(PerAlloc, "\n===== TlsScopedAlloc(%d) =====\n");
 		for (i = 0; i < Count; ++i)
-			doTlsScopeAlloc(log, NAlloc, PerAlloc);
+			doTlsScopedAlloc(log, NAlloc, PerAlloc);
 		m_acc.trace_avg(log);
 
 		m_acc.start();
-		log.print(PerAlloc, "\n===== ScopeAlloc(%d) =====\n");
+		log.print(PerAlloc, "\n===== ScopedAlloc(%d) =====\n");
 		for (i = 0; i < Count; ++i)
-			doScopeAlloc(log, NAlloc, PerAlloc);
+			doScopedAlloc(log, NAlloc, PerAlloc);
 		m_acc.trace_avg(log);
 
 #if !defined(X_OS_WINDOWS)
@@ -310,8 +310,8 @@ public:
 		const int Total = 1000000;
 		__setUp();
 		doAutoFreeAlloc(nullLog, Total, 1);
-		doTlsScopeAlloc(nullLog, Total, 1);
-		doScopeAlloc(nullLog, Total, 1);
+		doTlsScopedAlloc(nullLog, Total, 1);
+		doScopedAlloc(nullLog, Total, 1);
 		doAprPools(nullLog, Total, 1);
 		doComparison(log, Total, Total);
 		doComparison(log, Total, 1000);

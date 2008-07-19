@@ -42,13 +42,13 @@ public:
 	{
 		std::BlockPool recycle;
 
-		log.print("\n===== Deque (ScopeAlloc) =====\n");
+		log.print("\n===== Deque (ScopedAlloc) =====\n");
 		m_acc.start();
 		for (int j = 0; j < TestN; ++j)
 		{
 			std::PerformanceCounter counter;
 			{
-				std::ScopeAlloc alloc(recycle);
+				std::ScopedAlloc alloc(recycle);
 				std::Deque<int> s(alloc);
 				for (int i = 0; i < Count; ++i)
 					s.push_back(i);
@@ -79,13 +79,13 @@ public:
 	{
 		std::BlockPool recycle;
 
-		log.print("\n===== List (ScopeAlloc) =====\n");
+		log.print("\n===== List (ScopedAlloc) =====\n");
 		m_acc.start();
 		for (int j = 0; j < TestN; ++j)
 		{
 			std::PerformanceCounter counter;
 			{
-				std::ScopeAlloc alloc(recycle);
+				std::ScopedAlloc alloc(recycle);
 				std::List<int> s(alloc);
 				for (int i = 0; i < Count; ++i)
 					s.push_back(i);
@@ -116,13 +116,13 @@ public:
 	{
 		std::BlockPool recycle;
 
-		log.print("\n===== Set (ScopeAlloc) =====\n");
+		log.print("\n===== Set (ScopedAlloc) =====\n");
 		m_acc.start();
 		for (int j = 0; j < TestN; ++j)
 		{
 			std::PerformanceCounter counter;
 			{
-				std::ScopeAlloc alloc(recycle);
+				std::ScopedAlloc alloc(recycle);
 				std::Set<int> s(alloc);
 				for (int i = 0; i < Count; ++i)
 					s.insert(i);
@@ -153,13 +153,13 @@ public:
 	{
 		std::BlockPool recycle;
 
-		log.print("\n===== Map (ScopeAlloc) =====\n");
+		log.print("\n===== Map (ScopedAlloc) =====\n");
 		m_acc.start();
 		for (int j = 0; j < TestN; ++j)
 		{
 			std::PerformanceCounter counter;
 			{
-				std::ScopeAlloc alloc(recycle);
+				std::ScopedAlloc alloc(recycle);
 				std::Map<int, int> s(alloc);
 				for (int i = 0; i < Count; ++i)
 					s.insert(std::Map<int, int>::value_type(i, i));
@@ -190,13 +190,13 @@ public:
 	{
 		std::BlockPool recycle;
 
-		log.print("\n===== HashSet (ScopeAlloc) =====\n");
+		log.print("\n===== HashSet (ScopedAlloc) =====\n");
 		m_acc.start();
 		for (int j = 0; j < TestN; ++j)
 		{
 			std::PerformanceCounter counter;
 			{
-				std::ScopeAlloc alloc(recycle);
+				std::ScopedAlloc alloc(recycle);
 				std::HashSet<int> s(alloc);
 				for (int i = 0; i < Count; ++i)
 					s.insert(i);
@@ -229,13 +229,13 @@ public:
 	{
 		std::BlockPool recycle;
 
-		log.print("\n===== HashMap (ScopeAlloc) =====\n");
+		log.print("\n===== HashMap (ScopedAlloc) =====\n");
 		m_acc.start();
 		for (int j = 0; j < TestN; ++j)
 		{
 			std::PerformanceCounter counter;
 			{
-				std::ScopeAlloc alloc(recycle);
+				std::ScopedAlloc alloc(recycle);
 				std::HashMap<int, int> s(alloc);
 				for (int i = 0; i < Count; ++i)
 					s.insert(std::HashMap<int, int>::value_type(i, i));

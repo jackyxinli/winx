@@ -27,7 +27,7 @@
 #include "../std/hash_set.h"
 #endif
 
-#ifndef _WINX_NO_HASH_SET
+#ifndef WINX_BASE_HASHSET_
 
 #ifndef STDEXT_HASH_H
 #include "Hash.h"
@@ -45,9 +45,9 @@ NS_STDEXT_BEGIN
 template <
 	class ValT,
 	class HashCompT = HashCompare<ValT>,
-	class AllocT = ScopeAlloc
+	class AllocT = ScopedAlloc
 	>
-class HashSet : public _WINX_BASE_HASHSET(ValT, HashCompT, AllocT)
+class HashSet : public WINX_BASE_HASHSET_(ValT, HashCompT, AllocT)
 {
 public:
 	typedef ValT key_type;
@@ -58,19 +58,19 @@ public:
 	typedef AllocT allocator_type;
 
 private:
-	typedef StlAlloc<ValT, AllocT> _Alloc;
-	typedef _WINX_BASE_HASHSET(ValT, HashCompT, AllocT) _Base;
+	typedef StlAlloc<ValT, AllocT> StlAllocT;
+	typedef WINX_BASE_HASHSET_(ValT, HashCompT, AllocT) Base;
 
 	HashSet(const HashSet&);
 	void operator=(const HashSet&);
 
 public:
-	typedef typename _Base::size_type size_type;
+	typedef typename Base::size_type size_type;
 
 #if defined(X_STL_NET)
 	explicit HashSet(
 		allocator_type& alloc,
-		size_type n = 100) : _Base(_HashComp<ValT, HashCompT>(), alloc)
+		size_type n = 100) : Base(HashComp_<ValT, HashCompT>(), alloc)
 	{
 	}
 
@@ -78,13 +78,13 @@ public:
 	HashSet(
 		allocator_type& alloc,
 		Iterator first, Iterator last,
-		size_type n = 100) : _Base(first, last, _HashComp<ValT, HashCompT>(), alloc)
+		size_type n = 100) : Base(first, last, HashComp_<ValT, HashCompT>(), alloc)
 	{
 	}
 #else
 	explicit HashSet(
 		allocator_type& alloc,
-		size_type n = 100) : _Base(n, hasher(), key_equal(), alloc)
+		size_type n = 100) : Base(n, hasher(), key_equal(), alloc)
 	{
 	}
 
@@ -92,13 +92,13 @@ public:
 	HashSet(
 		allocator_type& alloc,
 		Iterator first, Iterator last,
-		size_type n = 100) : _Base(first, last, n, hasher(), key_equal(), alloc)
+		size_type n = 100) : Base(first, last, n, hasher(), key_equal(), alloc)
 	{
 	}
 #endif
 
-	void winx_call copy(const _Base& from) {
-		_Base::operator=(from);
+	void winx_call copy(const Base& from) {
+		Base::operator=(from);
 	}
 };
 
@@ -108,9 +108,9 @@ public:
 template <
 	class ValT,
 	class HashCompT = HashCompare<ValT>,
-	class AllocT = ScopeAlloc
+	class AllocT = ScopedAlloc
 	>
-class HashMultiSet : public _WINX_BASE_HASHMULTISET(ValT, HashCompT, AllocT)
+class HashMultiSet : public WINX_BASE_HASHMULTISET_(ValT, HashCompT, AllocT)
 {
 public:
 	typedef ValT key_type;
@@ -121,19 +121,19 @@ public:
 	typedef AllocT allocator_type;
 
 private:
-	typedef StlAlloc<ValT, AllocT> _Alloc;
-	typedef _WINX_BASE_HASHMULTISET(ValT, HashCompT, AllocT) _Base;
+	typedef StlAlloc<ValT, AllocT> StlAllocT;
+	typedef WINX_BASE_HASHMULTISET_(ValT, HashCompT, AllocT) Base;
 
 	HashMultiSet(const HashMultiSet&);
 	void operator=(const HashMultiSet&);
 
 public:
-	typedef typename _Base::size_type size_type;
+	typedef typename Base::size_type size_type;
 
 #if defined(X_STL_NET)
 	explicit HashMultiSet(
 		allocator_type& alloc,
-		size_type n = 100) : _Base(_HashComp<ValT, HashCompT>(), alloc)
+		size_type n = 100) : Base(HashComp_<ValT, HashCompT>(), alloc)
 	{
 	}
 
@@ -141,13 +141,13 @@ public:
 	HashMultiSet(
 		allocator_type& alloc,
 		Iterator first, Iterator last,
-		size_type n = 100) : _Base(first, last, _HashComp<ValT, HashCompT>(), alloc)
+		size_type n = 100) : Base(first, last, HashComp_<ValT, HashCompT>(), alloc)
 	{
 	}
 #else
 	explicit HashMultiSet(
 		allocator_type& alloc,
-		size_type n = 100) : _Base(n, hasher(), key_equal(), alloc)
+		size_type n = 100) : Base(n, hasher(), key_equal(), alloc)
 	{
 	}
 
@@ -155,7 +155,7 @@ public:
 	HashMultiSet(
 		allocator_type& alloc,
 		Iterator first, Iterator last,
-		size_type n = 100) : _Base(first, last, n, hasher(), key_equal(), alloc)
+		size_type n = 100) : Base(first, last, n, hasher(), key_equal(), alloc)
 	{
 	}
 #endif
@@ -182,7 +182,7 @@ public:
 		typedef std::HashSet<int> SetType;
 
 		std::BlockPool recycle;
-		std::ScopeAlloc alloc(recycle);
+		std::ScopedAlloc alloc(recycle);
 		
 		SetType simp(alloc);
 
@@ -201,7 +201,7 @@ public:
 		typedef std::HashMultiSet<int> SetType;
 
 		std::BlockPool recycle;
-		std::ScopeAlloc alloc(recycle);
+		std::ScopedAlloc alloc(recycle);
 		
 		SetType simp(alloc);
 
@@ -221,6 +221,7 @@ public:
 // -------------------------------------------------------------------------
 // $Log: HashSet.h,v $
 
-#endif // _WINX_NO_HASH_SET
+#endif // WINX_BASE_HASHSET_
 
 #endif /* STDEXT_HASHSET_H */
+

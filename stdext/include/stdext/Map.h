@@ -35,7 +35,7 @@ NS_STDEXT_BEGIN
 template <
 	class KeyT, class DataT,
 	class PredT = std::less<KeyT>,
-	class AllocT = ScopeAlloc
+	class AllocT = ScopedAlloc
 	>
 class Map : public std::map< KeyT, DataT, PredT, StlAlloc<DataT, AllocT> >
 {
@@ -69,7 +69,7 @@ public:
 template <
 	class KeyT, class DataT,
 	class PredT = std::less<KeyT>,
-	class AllocT = ScopeAlloc
+	class AllocT = ScopedAlloc
 	>
 class MultiMap : public std::multimap< KeyT, DataT, PredT, StlAlloc<DataT, AllocT> >
 {
@@ -134,7 +134,7 @@ public:
 	void testMap(LogT& log)
 	{
 		std::BlockPool recycle;
-		std::ScopeAlloc alloc(recycle);
+		std::ScopedAlloc alloc(recycle);
 		std::Map<int, Obj> coll(alloc);
 		coll.insert(std::Map<int, Obj>::value_type(1, 2));
 		coll.insert(std::Map<int, Obj>::value_type(1, 4));
@@ -146,7 +146,7 @@ public:
 	void testMultiMap(LogT& log)
 	{
 		std::BlockPool recycle;
-		std::ScopeAlloc alloc(recycle);
+		std::ScopedAlloc alloc(recycle);
 		std::MultiMap<int, Obj> coll(alloc);
 		coll.insert(std::MultiMap<int, Obj>::value_type(1, 2));
 		coll.insert(std::MultiMap<int, Obj>::value_type(1, 4));
@@ -188,11 +188,11 @@ public:
 	void doMap2(LogT& log)
 	{
 		typedef std::Map<int, int> MapT;
-		log.print("===== std::Map (ScopeAlloc) =====\n");
+		log.print("===== std::Map (ScopedAlloc) =====\n");
 		std::PerformanceCounter counter;
 		{
 			std::BlockPool recycle;
-			std::ScopeAlloc alloc(recycle);
+			std::ScopedAlloc alloc(recycle);
 			MapT coll(alloc);
 			for (int i = 0; i < N; ++i)
 				coll.insert(MapT::value_type(i, i));
@@ -210,7 +210,7 @@ public:
 			log.print("===== doShareAllocMap =====\n");
 			std::PerformanceCounter counter;
 			{
-				std::ScopeAlloc alloc(recycle);
+				std::ScopedAlloc alloc(recycle);
 				MapT coll(alloc);
 				for (int i = 0; i < N; ++i)
 					coll.insert(MapT::value_type(i, i));

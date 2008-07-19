@@ -115,7 +115,7 @@ public:
 		typedef std::RecordReader<std::VectorReadArchive> RecordReaderT;
 
 		std::BlockPool recycle;
-		std::ScopeAlloc alloc(recycle);
+		std::ScopedAlloc alloc(recycle);
 	
 		std::CharVector stg;
 		{

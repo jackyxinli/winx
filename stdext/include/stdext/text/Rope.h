@@ -171,7 +171,7 @@ public:
 	void testFind(LogT& log)
 	{
 		std::BlockPool recycle;
-		std::ScopeAlloc alloc(recycle);
+		std::ScopedAlloc alloc(recycle);
 
 		std::Rope<char> a(alloc);
 		a.push_back('b');
@@ -183,7 +183,7 @@ public:
 	void testIterator(LogT& log) // slowly (not recommended)
 	{
 		std::BlockPool recycle;
-		std::ScopeAlloc alloc(recycle);
+		std::ScopedAlloc alloc(recycle);
 
 		std::Rope<char> a(alloc, "Hello");
 		std::Rope<char> b(alloc, "abc");
@@ -216,7 +216,7 @@ public:
 		typedef std::Rope<char> KeyT;
 
 		std::BlockPool recycle;
-		std::ScopeAlloc alloc(recycle);
+		std::ScopedAlloc alloc(recycle);
 
 		std::HashMap<KeyT, int> cont(alloc);
 		
@@ -231,7 +231,7 @@ public:
 	void testSequenceBuffer(LogT& log)
 	{
 		std::BlockPool recycle;
-		std::ScopeAlloc alloc(recycle);
+		std::ScopedAlloc alloc(recycle);
 		char buffer[256];
 
 		std::Rope<char> a(alloc);
@@ -259,7 +259,7 @@ public:
 	void testBasic(LogT& log)
 	{
 		std::BlockPool recycle;
-		std::ScopeAlloc alloc(recycle);
+		std::ScopedAlloc alloc(recycle);
 
 		std::Rope<char> a(alloc);
 		a.append(20, 'a');

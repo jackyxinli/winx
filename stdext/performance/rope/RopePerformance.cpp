@@ -40,13 +40,13 @@ public:
 	{
 		std::BlockPool recycle;
 
-		log.print("\n===== Rope (ScopeAlloc) =====\n");
+		log.print("\n===== Rope (ScopedAlloc) =====\n");
 		m_acc.start();
 		for (int j = 0; j < TestN; ++j)
 		{
 			std::PerformanceCounter counter;
 			{
-				std::ScopeAlloc alloc(recycle);
+				std::ScopedAlloc alloc(recycle);
 				std::Rope<char> s(alloc);
 				for (int i = 0; i < Count; ++i)
 					s.push_back('a' + (i % 26));

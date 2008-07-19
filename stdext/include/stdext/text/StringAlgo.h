@@ -420,7 +420,7 @@ class TestStringAlgo : public TestCase
 public:
 	void testIconv(LogT& log)
 	{
-		std::ScopeAlloc alloc;
+		std::ScopedAlloc alloc;
 
 		std::WString s1 = std::iconv(alloc, std::cp_auto, "Hello, world!");
 		AssertExp(s1 == L"Hello, world!");
@@ -431,7 +431,7 @@ public:
 	
 	void testConv(LogT& log)
 	{
-		std::ScopeAlloc alloc;
+		std::ScopedAlloc alloc;
 
 		std::string s1 = "ABC";
 		AssertExp(std::lower(alloc, s1) == "abc");
@@ -442,7 +442,7 @@ public:
 	
 	void testTrim(LogT& log)
 	{
-		std::ScopeAlloc alloc;
+		std::ScopedAlloc alloc;
 		std::String s(alloc, " \t Hello, world! \t\n");
 		
 		AssertExp(std::trim(s) == "Hello, world!");
@@ -519,7 +519,7 @@ public:
 
 	void testConcat(LogT& log)
 	{
-		std::ScopeAlloc alloc;
+		std::ScopedAlloc alloc;
 
 		std::String s[4];
 		s[0].attach("Hello");

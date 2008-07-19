@@ -34,7 +34,7 @@
 	#include <ext/hash_fun.h>
 	#endif
 #elif defined(NO_SGISTL)
-	#define _WINX_NO_HASH
+	#define WINX_NO_HASH_
 #else
 	#ifndef __SGI_HASH_MAP_H__
 	#include "../stdext/sgi/hash_map.h"

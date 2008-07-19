@@ -212,7 +212,7 @@ public:
 	void testBasic(LogT& log)
 	{
 		std::BlockPool recycle;
-		std::ScopeAlloc alloc(recycle);
+		std::ScopedAlloc alloc(recycle);
 		{
 			std::WinRegWriter ar(HKEY_CURRENT_USER, _WINX_TEST_WINREG_KEY);
 			ar.wputs(L"Hello");

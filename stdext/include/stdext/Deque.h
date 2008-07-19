@@ -28,20 +28,20 @@
 		#ifndef STD_DEQUE_H
 		#include "../std/deque.h"
 		#endif
-		#define _WINX_DEQUE_BASE(DataT, AllocT) \
+		#define WINX_DEQUE_BASE_(DataT, AllocT) \
 			std::_Deque<DataT, std::StlAlloc<DataT, AllocT> >
 	#else
 		#ifndef __SGI_DEQUE_H__
 		#include "sgi/deque.h"
 		#endif
-		#define _WINX_DEQUE_BASE(DataT, AllocT) \
+		#define WINX_DEQUE_BASE_(DataT, AllocT) \
 			stdext::deque<DataT, std::StlAlloc<DataT, AllocT> >
 	#endif
 #else
 	#if !defined(_DEQUE) && !defined(_GLIBCXX_DEQUE) && !defined(_DEQUE_)
 	#include <deque>
 	#endif
-	#define _WINX_DEQUE_BASE(DataT, AllocT) \
+	#define WINX_DEQUE_BASE_(DataT, AllocT) \
 		std::deque<DataT, std::StlAlloc<DataT, AllocT> >
 #endif
 
@@ -56,39 +56,39 @@ NS_STDEXT_BEGIN
 // -------------------------------------------------------------------------
 // class Deque
 
-template <class DataT, class AllocT = ScopeAlloc>
-class Deque : public _WINX_DEQUE_BASE(DataT, AllocT)
+template <class DataT, class AllocT = ScopedAlloc>
+class Deque : public WINX_DEQUE_BASE_(DataT, AllocT)
 {
 private:
-	typedef _WINX_DEQUE_BASE(DataT, AllocT) _Base;
+	typedef WINX_DEQUE_BASE_(DataT, AllocT) Base;
 
 	Deque(const Deque&);
 	void operator=(const Deque&);
 
 public:
-	typedef typename _Base::size_type size_type;
+	typedef typename Base::size_type size_type;
 
 public:
-	explicit Deque(AllocT& _Al)
-		: _Base(_Al) {}
+	explicit Deque(AllocT& a)
+		: Base(a) {}
 	
-	Deque(AllocT& _Al, size_type _N, const DataT& _V = DataT())
-		: _Base(_N, _V, _Al) {}
+	Deque(AllocT& a, size_type n, const DataT& v = DataT())
+		: Base(n, v, a) {}
 
-	template <class _Iterator>
-	Deque(AllocT& _Al, _Iterator _F, _Iterator _L)
-		: _Base(_F, _L, _Al) {}
+	template <class Iterator>
+	Deque(AllocT& a, Iterator first, Iterator last)
+		: Base(first, last, a) {}
 
 public:
-	void winx_call copy(const _Base& from) {
-		_Base::operator=(from);
+	void winx_call copy(const Base& from) {
+		Base::operator=(from);
 	}
 
 public:
 	typedef AllocT alloc_type;
 	
 	AllocT& get_alloc() const {
-		return _Base::get_allocator().get_alloc();
+		return Base::get_allocator().get_alloc();
 	}
 };
 
@@ -109,7 +109,7 @@ public:
 	void testDeque(LogT& log)
 	{
 		std::BlockPool recycle;
-		std::ScopeAlloc alloc(recycle);
+		std::ScopedAlloc alloc(recycle);
 		std::Deque<int> coll(alloc);
 		coll.push_back(1);
 		coll.push_back(2);
@@ -136,11 +136,11 @@ public:
 	void doDeque(LogT& log)
 	{
 		typedef std::Deque<int> DequeT;
-		log.print("===== std::Deque (ScopeAlloc) =====\n");
+		log.print("===== std::Deque (ScopedAlloc) =====\n");
 		std::PerformanceCounter counter;
 		{
 			std::BlockPool recycle;
-			std::ScopeAlloc alloc(recycle);
+			std::ScopedAlloc alloc(recycle);
 			DequeT coll(alloc);
 			for (int i = 0; i < N; ++i)
 				coll.push_back(i);
@@ -158,7 +158,7 @@ public:
 			log.print("===== doShareAllocDeque =====\n");
 			std::PerformanceCounter counter;
 			{
-				std::ScopeAlloc alloc(recycle);
+				std::ScopedAlloc alloc(recycle);
 				DequeT coll(alloc);
 				for (int i = 0; i < N; ++i)
 					coll.push_back(i);
@@ -187,3 +187,4 @@ public:
 NS_STDEXT_END
 
 #endif /* STDEXT_DEQUE_H */
+

@@ -50,7 +50,7 @@ public:
 	void testSearchInArchive(LogT& log)
 	{
 		std::BlockPool recycle;
-		std::ScopeAlloc alloc(recycle);
+		std::ScopedAlloc alloc(recycle);
 
 		std::string line;
 		std::StdioReader ar(__FILE__);
