@@ -9,14 +9,14 @@ Product		Exe Release/test
 Options		Release; MultiThread; AnsiChar; NoRtti; Exception; WarningAll
 ObjDir		Release
 LibDir		
-Libraries	
+Libraries	rt
 
 [Config Debug]
 Product		Exe Debug/test
 Options		Debug; MultiThread; AnsiChar; NoRtti; Exception; WarningAll
 ObjDir		Debug
 LibDir		
-Libraries	
+Libraries	rt
 
 [Source]
 *.cpp

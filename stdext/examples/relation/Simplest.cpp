@@ -2,6 +2,7 @@
 #include <boost/tuple/tuple.hpp>
 #include <boost/tuple/tuple_io.hpp>
 #include <stdext/Relation.h>
+#include <stdext/Rand.h>
 
 // -------------------------------------------------------------------------
 
@@ -48,6 +49,51 @@ void testBasic()
 	Indexing0::range rg3 = rel.select<0>("Mon");
 	std::cout << "select<0>(Mon) count = " << std::distance(rg3.first, rg3.second) << "\n";
 	std::cout << "count<0>(Monday) = " << rel.count<0>("Monday") << "\n";
+}
+
+// -------------------------------------------------------------------------
+// testRelationDefragment
+
+void testRelationDefragment()
+{
+	typedef std::AutoFreeAlloc AllocT;
+	typedef std::pair<std::string, int> TupleT;
+	typedef std::Relation<TupleT, std::HashMapIndexing, AllocT> RelationT;
+	typedef std::Defragement<RelationT> RelationT2;
+	typedef RelationT2::Indexing<0> Indexing0;
+	typedef RelationT2::Indexing<1> Indexing1;
+
+	RelationT2 rel;
+	rel.index<0>();
+	rel.index<1>();
+	
+	enum { Count = 20000 };
+	enum { TestN = 1000 };
+
+	int i, j;
+	char s1[32];
+	std::Rand rnd;
+
+	for (i = 0; i < TestN; ++i)
+	{
+		for (j = 0; j < Count; ++j)
+		{
+			rnd.srand(s1, 6, countof(s1), 'A', 'z');
+			rel.insert(TupleT(s1, j));
+		}
+		std::cout << i << ": Insert done!" << std::endl;
+		for (j = 0; j < Count; ++j)
+		{
+			rel.erase<1>(j);
+		}
+		if (rel.size() != 0) {
+			std::cerr << "Unexcepted Error: why?\n";
+			break;
+		}
+		std::cout << i << ": Delete done!" << std::endl;
+		rel.defrag();
+		std::cout << i << ": Defrag done!" << std::endl;
+	}
 }
 
 // -------------------------------------------------------------------------
@@ -174,6 +220,8 @@ int main()
 	testCustomIndexing();
 	std::cout << "----------------------------------\n";
 	testTupleRelation();
+	std::cout << "----------------------------------\n";
+	testRelationDefragment();
 	std::cout << "----------------------------------\n";
 	return 0;
 }

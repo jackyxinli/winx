@@ -47,6 +47,7 @@ typedef tls_gc_alloc TlsGcAlloc;
 #define RegionAllocT region_alloc
 #define DestructorTraits destructor_traits
 #define StlAlloc stl_allocator
+#define Defragement defragment
 
 NS_STDEXT_END
 
@@ -62,21 +63,6 @@ NS_STDEXT_END
 #define STD_ALLOC_ARRAY(alloc, Type, count)		BOOST_MEMORY_ALLOC_ARRAY(alloc, Type, count)
 
 // -------------------------------------------------------------------------
-// function swap
-
-NS_STDEXT_BEGIN
-
-inline void winx_call swap(void* a, void* b, size_t cb)
-{
-	void* t = _alloca(cb);
-	memcpy(t, a, cb);
-	memcpy(a, b, cb);
-	memcpy(b, t, cb);
-}
-
-NS_STDEXT_END
-
-// -------------------------------------------------------------------------
 // --> Memory leak checker - count-checker
 
 #ifndef STDEXT_WINAPI_WINBASE_H
@@ -89,7 +75,7 @@ NS_STDEXT_BEGIN
 #pragma warning(disable:4996) // XXX  was declared deprecated
 #endif
 
-inline void _ReportCountLeak(unsigned nRef, const char* szClass, const char* szFile, int nLine)
+inline void _reportCountLeak(unsigned nRef, const char* szClass, const char* szFile, int nLine)
 {
 	char szBuf[1024];
 	size_t cch = 0;
@@ -110,14 +96,14 @@ inline void _ReportCountLeak(unsigned nRef, const char* szClass, const char* szF
 #pragma warning(default:4996) // XXX  was declared deprecated
 #endif
 
-class _CountChecker
+class CountChecker_
 {
 public:
-	_CountChecker(const char* szClass, const char* szFile, int nLine)
+	CountChecker_(const char* szClass, const char* szFile, int nLine)
 		: m_nRef(0), m_szClass(szClass), m_szFile(szFile), m_nLine(nLine) {}
-	~_CountChecker()
+	~CountChecker_()
 		{ if (m_nRef > 0)
-			_ReportCountLeak(m_nRef, m_szClass, m_szFile, m_nLine); }
+			_reportCountLeak(m_nRef, m_szClass, m_szFile, m_nLine); }
 	void __stdcall operator++()	{ ++m_nRef; }
 	void __stdcall operator--()	{ --m_nRef; }
  
@@ -132,17 +118,17 @@ private:
 #	define WINX_DECLARE_COUNT(Class)
 #else
 #	define WINX_DECLARE_COUNT(Class)										\
-	class _XCountChecker													\
+	class XCountChecker_													\
 	{																		\
 	public:																	\
-		_XCountChecker()							{ ++counter(); }		\
-		_XCountChecker(const _XCountChecker& rhs)	{ ++counter(); }		\
-		~_XCountChecker()							{ --counter(); }		\
+		XCountChecker_()							{ ++counter(); }		\
+		XCountChecker_(const XCountChecker_& rhs)	{ ++counter(); }		\
+		~XCountChecker_()							{ --counter(); }		\
 	private:																\
-		_CountChecker& __stdcall counter()									\
-			{ static std::_CountChecker r(#Class, __FILE__, __LINE__);		\
+		CountChecker_& __stdcall counter()									\
+			{ static std::CountChecker_ r(#Class, __FILE__, __LINE__);		\
 			  return r; }													\
-	} __cntchecker;
+	} _winx_cntchecker;
 #endif
 
 NS_STDEXT_END
@@ -151,3 +137,4 @@ NS_STDEXT_END
 // $Log: Memory.h,v $
 
 #endif /* STDEXT_MEMORY_H */
+

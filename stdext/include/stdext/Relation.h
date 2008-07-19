@@ -60,18 +60,18 @@ struct HashMapIndexing
 };
 
 // -------------------------------------------------------------------------
-// IndexingAct
+// IndexingAct_
 
 template <
 	class TupleT,
 	template <int Field, class KeyT, class AllocT> class IndexingT,
 	class AllocT,
 	int CurrIndex = TupleTraits<TupleT>::Fields - 1>
-struct IndexingAct
+struct IndexingAct_
 {
 	typedef typename TupleItemTraits<CurrIndex, TupleT>::value_type CurrKeyT;
 	typedef typename IndexingT<CurrIndex, CurrKeyT, AllocT>::type CurrIndexingT;
-	typedef IndexingAct<TupleT, IndexingT, AllocT, CurrIndex - 1> NextAct;
+	typedef IndexingAct_<TupleT, IndexingT, AllocT, CurrIndex - 1> NextAct;
 	
 	static void winx_call init(void* dest[])
 	{
@@ -79,7 +79,15 @@ struct IndexingAct
 		NextAct::init(dest);
 	}
 	
-	static void winx_call index(void* dest[], const TupleT* const& t)
+	template <class RelationT>
+	static void winx_call index(RelationT& rel, void* const src[])
+	{
+		if (src[CurrIndex])
+			rel.template index<CurrIndex>();
+		NextAct::index(rel, src);
+	}
+
+	static void winx_call makeIndexing(void* dest[], const TupleT* const& t)
 	{
 		if (dest[CurrIndex])
 		{
@@ -89,7 +97,7 @@ struct IndexingAct
 				typename CurrIndexingT::value_type(key, (void*)&t)
 				);
 		}
-		NextAct::index(dest, t);
+		NextAct::makeIndexing(dest, t);
 	}
 
 	template <int IndexExcluded>
@@ -131,13 +139,13 @@ template <
 	class TupleT,
 	class AllocT,
 	template <int Field, class KeyT, class AllocT> class IndexingT>
-struct IndexingAct<TupleT, IndexingT, AllocT, -1>
+struct IndexingAct_<TupleT, IndexingT, AllocT, -1>
 {
 	static void winx_call init(void* dest[]) {
 		//noting to do
 	}
 	
-	static void winx_call index(void* dest[], const TupleT* const& t) {
+	static void winx_call makeIndexing(void* dest[], const TupleT* const& t) {
 		//noting to do
 	}
 
@@ -150,6 +158,10 @@ struct IndexingAct<TupleT, IndexingT, AllocT, -1>
 	static size_t winx_call size(void* const dest[], const DataT& data) {
 		return data.size();
 	}	
+
+	template <class RelationT>
+	static void winx_call index(RelationT& rel, void* const src[]) {
+	}
 };
 
 // -------------------------------------------------------------------------
@@ -188,7 +200,7 @@ private:
 	void operator=(const Relation&);
 
 	typedef Deque<void*, AllocT> DataT;
-	typedef IndexingAct<TupleT, IndexingT, AllocT> IndexingActT;
+	typedef IndexingAct_<TupleT, IndexingT, AllocT> IndexingActT;
 
 	enum { HasDestructor = TupleTraits<TupleT>::HasDestructor };
 	
@@ -225,8 +237,7 @@ public:
 	}
 	
 	void winx_call swap(Relation& o) {
-		m_data.swap(o.m_data);
-		swap(m_indexs, o.m_indexs, Fields);
+		NS_STDEXT::swap(this, &o, sizeof(o));
 	}
 	
 	size_type winx_call size() const {
@@ -253,7 +264,8 @@ public:
 				inst = STD_NEW(alloc, MapT)(alloc);
 			else
 				inst = STD_UNMANAGED_NEW(alloc, MapT)(alloc);
-			doIndex_<Field>(inst, m_data);
+			if (m_data.size())
+				doIndex_<Field>(inst, m_data);
 			m_indexs[Field] = inst;
 		}
 	}
@@ -344,17 +356,34 @@ public:
 		AllocT& alloc = m_data.get_alloc();
 		TupleT* t = HasDestructor ? STD_NEW(alloc, TupleT)(val) : STD_UNMANAGED_NEW(alloc, TupleT)(val);
 		m_data.push_back(t);
-		IndexingActT::index(m_indexs, *(const TupleT* const*)&m_data.back()); 
+		IndexingActT::makeIndexing(m_indexs, *(const TupleT* const*)&m_data.back()); 
 	}
 	
-	void winx_call copy(const Relation& from) {
+	void winx_call copy(const Relation& from)
+	{
 		clear();
-		typedef typename Relation::DataT::const_iterator It;
-		for (It it = from.m_data.begin(); it != from.m_data.end(); ++it) {
-			const TupleT* const t = (const TupleT* const)*it;
-			if (t)
-				insert(*t);
+		IndexingActT::index(*this, from.m_indexs);
+		size_t n = from.size();
+		typename Relation::DataT::const_iterator it = from.m_data.begin();
+		while (n)
+		{
+			for (;; ++it)
+			{
+				const TupleT* const t = (const TupleT* const)*it;
+				if (t) {
+					insert(*t);
+					--n;
+					break;
+				}
+			}
 		}
+#if defined(_DEBUG)
+		for (; it != from.m_data.end(); ++it)
+		{
+			const TupleT* const t = (const TupleT* const)*it;
+			WINX_ASSERT(t == NULL);
+		}
+#endif
 	}
 };
 

@@ -541,12 +541,12 @@ class Rope {
             //  but it's harder to make guarantees.
         }
 
-#     if defined(__STL_CLASS_PARTIAL_SPECIALIZATION) || !defined(X_CC_VC6)
+#     if !defined(WINX_NO_PARTIAL_SPECIAILIZATION)
         typedef reverse_iterator<const_iterator> const_reverse_iterator;
-#     else /* __STL_CLASS_PARTIAL_SPECIALIZATION */
+#     else
         typedef reverse_iterator<const_iterator, value_type, const_reference,
                                  difference_type>  const_reverse_iterator;
-#     endif /* __STL_CLASS_PARTIAL_SPECIALIZATION */ 
+#     endif
 
         const_reverse_iterator winx_call rbegin() const {
             return const_reverse_iterator(end());
@@ -907,12 +907,12 @@ class Rope {
             return(iterator(this, size()));
         }
 
-#     if defined(__STL_CLASS_PARTIAL_SPECIALIZATION) || !defined(X_CC_VC6)
+#     if !defined(WINX_NO_PARTIAL_SPECIAILIZATION)
         typedef reverse_iterator<iterator> reverse_iterator;
-#     else /* __STL_CLASS_PARTIAL_SPECIALIZATION */
+#     else
         typedef reverse_iterator<iterator, value_type, reference,
                                  difference_type>  reverse_iterator;
-#     endif /* __STL_CLASS_PARTIAL_SPECIALIZATION */ 
+#     endif
 
         reverse_iterator winx_call mutable_rbegin() {
             return reverse_iterator(mutable_end());
