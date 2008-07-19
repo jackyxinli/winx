@@ -1,6 +1,2 @@
-if [ -z $1 ]; then
-	make CFG=Release
-else
-	mk calculator Exp
-fi
+make CFG=Release
 

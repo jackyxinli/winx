@@ -3,23 +3,15 @@
 ../../../boost
 ../../../boostmm
 
-[Config Exp]
-Product		Exe ExpRelease/exp
-Defines		TPL_EXP
-Options		Release; MultiThread; AnsiChar; NoRtti; Exception
-ObjDir		ExpRelease
-LibDir		
-Libraries	
-
 [Config Release]
-Product		Exe Release/calc
+Product		Exe Release/exp
 Options		Release; MultiThread; AnsiChar; NoRtti; Exception
 ObjDir		Release
 LibDir		
 Libraries	
 
 [Config Debug]
-Product		Exe Debug/calc
+Product		Exe Debug/exp
 Options		Debug; MultiThread; AnsiChar; NoRtti; Exception
 ObjDir		Debug
 LibDir		

@@ -51,12 +51,7 @@ int main(int argc, const char* argv[])
 
 	// ---- do match ----
 
-#if defined(TPL_EXP)
-	if (argc < 2) {
-		std::cout << "Usage: exp <expression>\n";
-		return 1;
-	}
-	else {
+	if (argc == 2) {
 		try {
 			if ( argv[1] != skipws_[rExpr] )
 				std::cerr << ">>> ERROR: invalid expression!\n";
@@ -68,27 +63,27 @@ int main(int argc, const char* argv[])
 		}
 		return 0;
 	}
-#else
-	for (;;)
-	{
-		std::string strExp;
-		std::cout << "input an expression (q to quit): ";
-		if (!std::getline(std::cin, strExp) || strExp == "q") {
-			std::cout << '\n';
-			return 0;
-		}
+	else {
+		for (;;)
+		{
+			std::string strExp;
+			std::cout << "input an expression (q to quit): ";
+			if (!std::getline(std::cin, strExp) || strExp == "q") {
+				std::cout << '\n';
+				return 0;
+			}
 
-		try {
-			stk.clear();
-			if ( strExp.c_str() != skipws_[rExpr] )
-				std::cerr << ">>> ERROR: invalid expression!\n";
-			else
-				std::cout << stk.back() << '\n';
-		}
-		catch (const std::logic_error& e) {
-			std::cerr << ">>> ERROR: " << e.what() << '\n';
+			try {
+				stk.clear();
+				if ( strExp.c_str() != skipws_[rExpr] )
+					std::cerr << ">>> ERROR: invalid expression!\n";
+				else
+					std::cout << stk.back() << '\n';
+			}
+			catch (const std::logic_error& e) {
+				std::cerr << ">>> ERROR: " << e.what() << '\n';
+			}
 		}
 	}
-#endif
 }
 
