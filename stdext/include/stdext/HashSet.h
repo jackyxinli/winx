@@ -27,7 +27,7 @@
 #include "../std/hash_set.h"
 #endif
 
-#ifndef WINX_BASE_HASHSET_
+#ifndef WINX_NO_HASH_SET_
 
 #ifndef STDEXT_HASH_H
 #include "Hash.h"
@@ -221,7 +221,7 @@ public:
 // -------------------------------------------------------------------------
 // $Log: HashSet.h,v $
 
-#endif // WINX_BASE_HASHSET_
+#endif // WINX_NO_HASH_SET_
 
 #endif /* STDEXT_HASHSET_H */
 
