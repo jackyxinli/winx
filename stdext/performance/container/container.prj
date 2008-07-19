@@ -8,14 +8,14 @@ Product		Exe Release/test
 Options		Release; MultiThread; AnsiChar; NoRtti; Exception; WarningAll
 ObjDir		Release
 LibDir		Release
-Libraries	rt; apr-1; boost-memory
+Libraries	rt; boost-memory
 
 [Config Debug]
 Product		Exe Debug/test
 Options		Debug; MultiThread; AnsiChar; NoRtti; Exception; WarningAll
 ObjDir		Debug
 LibDir		Debug
-Libraries	rt; apr-1; boost-memory
+Libraries	rt; boost-memory
 
 [Source]
 *.cpp
