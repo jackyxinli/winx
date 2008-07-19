@@ -391,11 +391,11 @@ struct CharTraits<char>
 	typedef int int_type;
 
 	static int_type winx_call upper(int_type c) {
-		return toupper(c);
+		return ::toupper(c);
 	}
 
 	static int_type winx_call lower(int_type c) {
-		return tolower(c);
+		return ::tolower(c);
 	}
 };
 

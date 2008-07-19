@@ -112,13 +112,15 @@ struct IndexingAct_
 			CurrIndexingT& idxDest = *(CurrIndexingT*)dest[CurrIndex];
 			const CurrKeyT& key = TupleItemTraits<CurrIndex, TupleT>::get(*t);
 			const RangeT rg = idxDest.equal_range(key);
-			for (it = rg.first; it != rg.second; ++it) {
-				if ((*it).second == (void*)&t) {
+			for (it = rg.first; ; ++it)
+			{
+				WINX_ASSERT(it != rg.second);
+				if ((*it).second == (void*)&t)
+				{
 					idxDest.erase(it);
 					break;
 				}
 			}
-			WINX_ASSERT(it != rg.second);
 		}
 		NextAct::template eraseIndexing<IndexExcluded>(dest, t);
 	}
@@ -237,7 +239,7 @@ public:
 	}
 	
 	void winx_call swap(Relation& o) {
-		NS_STDEXT::swap(this, &o, sizeof(o));
+		swap_object(this, &o);
 	}
 	
 	size_type winx_call size() const {

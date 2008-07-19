@@ -92,6 +92,12 @@ __forceinline E* winx_call to_str(E buf[], const __uint64& i64, int radix = 10) 
 WINX_STRBUF_TRAITS(float, 64)
 WINX_STRBUF_TRAITS(double, 64)
 
+// -------------------------------------------------------------------------
+
+#if defined(_MSC_VER)
+#pragma warning(disable:4996) // XXX  was declared deprecated
+#endif
+
 __forceinline char* winx_call to_str(char buf[], double val, int ndigit = 12) {
 	return _gcvt(val, ndigit, buf);
 }
@@ -103,6 +109,10 @@ inline wchar_t* winx_call to_str(wchar_t buf[], double val, int ndigit = 12) {
 	for (size_t i = 0; (buf[i] = cbuf[i]) != 0; ++i);
 	return buf;
 }
+
+#if defined(_MSC_VER)
+#pragma warning(default:4996) // XXX  was declared deprecated
+#endif
 
 // -------------------------------------------------------------------------
 // function str/wstr
