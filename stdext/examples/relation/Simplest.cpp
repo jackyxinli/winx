@@ -1,3 +1,7 @@
+#if defined(_MSC_VER)
+#pragma warning(disable: 4819)
+#endif
+
 #include <iostream>
 #include <boost/tuple/tuple.hpp>
 #include <boost/tuple/tuple_io.hpp>
