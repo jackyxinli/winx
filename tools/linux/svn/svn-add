@@ -1,7 +1,7 @@
 while :
 do
 	FileList=`svn status | grep -e '^?.*' | sed -e 's|. *\(.*\)|\1|'`
-	if [ -z $FileList ]; then
+	if [ -z "$FileList" ]; then
 		break
 	else
 		echo $FileList | xargs svn add
