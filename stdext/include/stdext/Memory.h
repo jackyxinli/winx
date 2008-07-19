@@ -39,7 +39,7 @@ typedef tls_block_pool TlsBlockPool;
 typedef tls_block_pool TlsBlockPoolInit;
 
 typedef auto_alloc AutoFreeAlloc;
-typedef scoped_alloc ScopedAlloc;
+typedef scoped_alloc ScopeAlloc;
 typedef scoped_alloc ScopedAlloc;
 typedef gc_alloc GcAlloc;
 typedef tls_gc_alloc TlsGcAlloc;
