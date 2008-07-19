@@ -62,6 +62,15 @@ struct IndexOpTraits<Rule<SkipperT>, Grammar<GrammarT> >
 	}
 };
 
+#define TPL_SKIPPER_BIND_(GrammarT)		\
+template <class SkipperT>				\
+struct IndexOpTraits<Rule<SkipperT>, GrammarT> {			\
+	typedef Rule<GrBind<GrammarT, SkipperT> > result_type;	\
+	static result_type TPL_CALL call(const Rule<SkipperT>& y, const GrammarT& x) {	\
+		return result_type(x, y);		\
+	}									\
+};
+
 // =========================================================================
 // class SkipperTraits
 

@@ -13,7 +13,7 @@ double max_value(const double x[], int count)
 	return *std::max_element(x, x+count);
 }
 
-int main()
+int main(int argc, const char* argv[])
 {
 	typedef SimpleImplementation impl;
 
@@ -50,7 +50,25 @@ int main()
 		'+' + rFactor );
 
 	// ---- do match ----
-	
+
+#if defined(TPL_EXP)
+	if (argc < 2) {
+		std::cout << "Usage: exp <expression>\n";
+		return 1;
+	}
+	else {
+		try {
+			if ( argv[1] != skipws_[rExpr] )
+				std::cerr << ">>> ERROR: invalid expression!\n";
+			else
+				std::cout << stk.back() << '\n';
+		}
+		catch (const std::logic_error& e) {
+			std::cerr << ">>> ERROR: " << e.what() << '\n';
+		}
+		return 0;
+	}
+#else
 	for (;;)
 	{
 		std::string strExp;
@@ -62,14 +80,15 @@ int main()
 
 		try {
 			stk.clear();
-			if ( !impl::match(strExp.c_str(), rExpr + eos(), skipws()) )
-				std::cout << ">>> ERROR: invalid expression!\n";
+			if ( strExp.c_str() != skipws_[rExpr] )
+				std::cerr << ">>> ERROR: invalid expression!\n";
 			else
 				std::cout << stk.back() << '\n';
 		}
 		catch (const std::logic_error& e) {
-			std::cout << ">>> ERROR: " << e.what() << '\n';
+			std::cerr << ">>> ERROR: " << e.what() << '\n';
 		}
 	}
+#endif
 }
 

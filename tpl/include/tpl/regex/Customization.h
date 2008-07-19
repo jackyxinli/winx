@@ -232,6 +232,14 @@ typedef Customization<> DefaultImplementation;
 typedef DefaultImplementation impl;
 
 // -------------------------------------------------------------------------
+// Skipper Bind
+
+TPL_SKIPPER_BIND_(simple::Grammar)
+
+TPL_SKIPPER_BIND_(impl::Grammar)
+TPL_SKIPPER_BIND_(impl::MarkedGrammar)
+
+// -------------------------------------------------------------------------
 // $Log: $
 
 NS_TPL_END

@@ -104,7 +104,7 @@ template <class ContainerT, class RegExT, class LeafT, class AllocT, class TagCh
 inline bool TPL_CALL operator>>(
 	const ContainerT& src_, const DocumentedRule<RegExT, LeafT, AllocT, TagCharT>& dr_)
 {
-	typedef typename ArchiveRefTraits<const ContainerT&>::type SourceT;
+	typedef typename ArchiveTraits<ContainerT>::type SourceT;
 	typedef Document<LeafT, AllocT, TagCharT> DocumentT;
 	typedef Context<typename SourceT::iterator, LeafT, AllocT, TagCharT> ContextT;
 	

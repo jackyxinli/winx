@@ -97,22 +97,22 @@ NS_TPL_BEGIN
 // ArchiveTraits
 
 template <class ContainerT>
-struct ArchiveTraits {
+struct ArchiveTraits_ {
 	typedef typename ContainerT::const_iterator iterator;
 	typedef std::MemReadArchive<iterator> type;
 };
 
 template <class CharT>
-struct ArchiveTraits<const CharT*> {
+struct ArchiveTraits_<const CharT*> {
 	typedef const CharT* iterator;
 	typedef std::MemReadArchive<iterator> type;
 };
 
-template <class RefT>
-struct ArchiveRefTraits
+template <class ContainerT>
+struct ArchiveTraits
 {
-	typedef SmartRefTraits<RefT> Tr_;
-	typedef ArchiveTraits<typename Tr_::const_type> Tr2_;
+	typedef ArrayTypeTraits<ContainerT> Tr_;
+	typedef ArchiveTraits_<typename Tr_::const_type> Tr2_;
 	typedef typename Tr2_::type type;
 };
 
@@ -148,7 +148,7 @@ public:
 template <class ContainerT, class RegExT> inline 
 bool TPL_CALL operator>>(const ContainerT& src_, const Rule<RegExT>& rule_)
 {
-	typedef typename ArchiveRefTraits<const ContainerT&>::type SourceT;
+	typedef typename ArchiveTraits<ContainerT>::type SourceT;
 	typedef Context0<typename SourceT::iterator> ContextT;
 	
 	SourceT source(src_);
@@ -162,7 +162,7 @@ bool TPL_CALL operator>>(const ContainerT& src_, const Rule<RegExT>& rule_)
 template <class ContainerT, class RegExT> inline 
 bool TPL_CALL operator==(const ContainerT& src_, const Rule<RegExT>& rule_)
 {
-	typedef typename ArchiveRefTraits<const ContainerT&>::type SourceT;
+	typedef typename ArchiveTraits<ContainerT>::type SourceT;
 	typedef Context0<typename SourceT::iterator> ContextT;
 	
 	SourceT source(src_);
