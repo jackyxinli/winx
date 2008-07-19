@@ -1,0 +1,3 @@
+find . -type f -name '*.h' | xargs -l1 sed -i -e 's|ScopeAlloc|ScopedAlloc|'
+find . -type f -name '*.cpp' | xargs -l1 sed -i -e 's|ScopeAlloc|ScopedAlloc|'
+
