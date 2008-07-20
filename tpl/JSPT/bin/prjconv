@@ -30,7 +30,7 @@
 		return -3;
 	}
 	
-	$Cmd = $AppPath . "/prj2json.exe " . $PrjFile . " | " . $AppPath . "/jspt " . $PhpFile;
+	$Cmd = $AppPath . "/prj2json.exe " . $PrjFile . " | " . $AppPath . "/jspt.bat " . $PhpFile;
 	$PRJCONV_OUTFILE = getenv("PRJCONV_OUTFILE");
 	if ($PRJCONV_OUTFILE) {
 		$Cmd .= " > " . $PRJCONV_OUTFILE;
