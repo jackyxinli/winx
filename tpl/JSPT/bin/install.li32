@@ -16,6 +16,8 @@ chmod +x $TargetDir/prjconv
 
 rm -f $AppPath/prj2json.exe
 
+sed -i -e "s|PLATFORM=.*|PLATFORM=$PLATFORM|" $AppPath/prj2make
+
 for File in $AppPath/prj2* ; do
 	cp $File $TargetDir/
 done

@@ -1,13 +1,20 @@
 <?php
 {
+	$PRJCONV_BITS = getenv("PRJCONV_BITS");
+	$PRJCONV_OS = getenv("PRJCONV_OS");
+
 	$plat = $doc->platform;
+	if (!$PRJCONV_BITS)
+		$PRJCONV_BITS = $plat->bits;
+	if (!$PRJCONV_OS)
+		$PRJCONV_OS = $plat->os;
 
 	if ($plat->byteswap == "true")
 		$platflags .= " -D__BYTESWAP__ -DBYTESWAP";
 
-	if ($plat->bits == "32")
+	if ($PRJCONV_BITS == "32")
 		$platflags .= " -D__32BIT__";
-	else if ($plat->bits == "64")
+	else if ($PRJCONV_BITS == "64")
 		$platflags .= " -D__64BIT__";
 
 	if ($plat->cpu == "intel")
@@ -15,7 +22,7 @@
 	else if ($plat->cpu == "sparc")
 		$platflags .= " -D__SPARC__";
 
-	if ($plat->os == "linux") {
+	if ($PRJCONV_OS == "linux") {
 		$platflags .= " -D__LINUX__ -DLINUX";
 		$lib_prefix = "lib";
 		$lib_suffix = ".a";
@@ -26,7 +33,7 @@
 		$check_link = "@ldd -u -r $(Product); echo";
 		$os_abbr	= "li";
 	}
-	else if ($plat->os == "windows") {
+	else if ($PRJCONV_OS == "windows") {
 		$platflags .= " -D__WINDOWS__";
 		$exe_suffix = ".exe";
 		$lib_suffix = ".lib";
@@ -34,7 +41,7 @@
 		$os_abbr	= "win";
 		die("Unsupported OS: windows");
 	}
-	else if ($plat->os == "solaris") {
+	else if ($PRJCONV_OS == "solaris") {
 		$platflags .= " -D__SOLARIS__ -D__SOLS__ -DSOLARIS";
 		$lib_prefix = "lib";
 		$lib_suffix = ".a";
@@ -50,8 +57,8 @@
 }
 ?>
 OSAbbr	 = <?php echo "$os_abbr\n" ?>
-Bits	 = <?php echo "$plat->bits\n" ?>
-Platform = <?php echo "$os_abbr$plat->bits\n" ?>
+Bits	 = <?php echo "$PRJCONV_BITS\n" ?>
+Platform = <?php echo "$os_abbr$PRJCONV_BITS\n" ?>
 
 #
 # Configuration Default
