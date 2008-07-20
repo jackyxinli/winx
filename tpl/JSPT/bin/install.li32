@@ -1,3 +1,7 @@
+if [ -z $PLATFORM ]; then
+	PLATFORM=li32
+fi
+
 AppPath0=`dirname $0`
 AppPath=`cd $AppPath0; pwd`
 
@@ -10,7 +14,12 @@ fi
 echo "$AppPath/prjconv \$*" > $TargetDir/prjconv
 chmod +x $TargetDir/prjconv
 
+rm -f $AppPath/prj2json.exe
+
 for File in $AppPath/prj2* ; do
 	cp $File $TargetDir/
 done
+
+cd $AppPath
+ln -s -f $PLATFORM/prj2json prj2json.exe
 

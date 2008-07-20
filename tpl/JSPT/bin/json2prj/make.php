@@ -1,12 +1,3 @@
-#
-# Configuration Default
-#
-ifeq ($(CFG),)
-	CFG = Debug
-endif
-
-IncludeDir =<?php foreach ($doc->include as $inc) echo " -I$inc"; ?>
-
 <?php
 {
 	$plat = $doc->platform;
@@ -33,12 +24,14 @@ IncludeDir =<?php foreach ($doc->include as $inc) echo " -I$inc"; ?>
 		$dll_linker = "@g++ $(LibDir) -W1 -shared -o $(Product) -Wl,--version-script,_export_.def";
 		$exe_linker = "@g++ $(LibDir) -o $(Product)";
 		$check_link = "@ldd -u -r $(Product); echo";
+		$os_abbr	= "li";
 	}
 	else if ($plat->os == "windows") {
 		$platflags .= " -D__WINDOWS__";
 		$exe_suffix = ".exe";
 		$lib_suffix = ".lib";
 		$dll_suffix = ".dll";
+		$os_abbr	= "win";
 		die("Unsupported OS: windows");
 	}
 	else if ($plat->os == "solaris") {
@@ -55,23 +48,42 @@ IncludeDir =<?php foreach ($doc->include as $inc) echo " -I$inc"; ?>
 		die("Unsupported OS: " . $plat->os);
 	}
 }
+?>
+OSAbbr	 = <?php echo "$os_abbr\n" ?>
+Bits	 = <?php echo "$plat->bits\n" ?>
+Platform = <?php echo "$os_abbr$plat->bits\n" ?>
+
+#
+# Configuration Default
+#
+ifeq ($(CFG),)
+	CFG = Debug
+endif
+
+IncludeDir =<?php foreach ($doc->include as $inc) echo " -I$inc"; ?>
+
+<?php
 foreach ($doc->config as $cfg)
 {
 	$type = $cfg->product->type;
 	$product = $cfg->product->path;
 	$product_dir = dirname($product);
-	$product_fname = pathinfo($product, PATHINFO_FILENAME);
+	$product_name = pathinfo($product, PATHINFO_BASENAME);
+	$product_name_ext = strstr($product_name, ".");
 
 	if (strcasecmp($type, "exe") == 0) {
-		$product = $product_dir . "/" . $product_fname . $exe_suffix;
+		if (!$product_name_ext)
+			$product = $product_dir . "/" . $product_name . $exe_suffix;
 		$linker = $exe_linker;
 	}
 	else if (strcasecmp($type, "dll") == 0) {
-		$product = $product_dir . "/" . $lib_prefix . $product_fname . $dll_suffix;
+		if (!$product_name_ext)
+			$product = $product_dir . "/" . $lib_prefix . $product_name . $dll_suffix;
 		$linker = $dll_linker;
 	}
 	else if (strcasecmp($type, "lib") == 0) {
-		$product = $product_dir . "/" . $lib_prefix . $product_fname . $lib_suffix;
+		if (!$product_name_ext)
+			$product = $product_dir . "/" . $lib_prefix . $product_name . $lib_suffix;
 		$linker = $lib_linker;
 	}
 	else {

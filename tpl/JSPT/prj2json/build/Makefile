@@ -1,3 +1,7 @@
+OSAbbr	 = li
+Bits	 = 32
+Platform = li32
+
 #
 # Configuration Default
 #
@@ -11,9 +15,9 @@ IncludeDir = -I../../../../tpl/include -I../../../../stdext/include
 # Configuration Release
 #
 ifeq ($(CFG), Release)
-	ProductDir   = ../../bin
+	ProductDir   = ../../bin/$(Platform)
 	ObjectDir    = Release
-	Product      = ../../bin/prj-json
+	Product      = ../../bin/$(Platform)/prj2json
 	CFlags       = $(Defines) -fPIC -D__32BIT__ -D__INTEL__ -D__LINUX__ -DLINUX  -DNDEBUG -O2 -D_MT -fexceptions -Wall
 	CXXFlags     = $(CFlags) -fno-rtti
 	CompileC     = @gcc -c $(IncludeDir) $(CFlags) -o $@ $<
@@ -29,7 +33,7 @@ endif
 ifeq ($(CFG), Debug)
 	ProductDir   = Debug
 	ObjectDir    = Debug
-	Product      = Debug/prj-json
+	Product      = Debug/prj2json
 	CFlags       = $(Defines) -fPIC -D__32BIT__ -D__INTEL__ -D__LINUX__ -DLINUX  -D_DEBUG -g3 -D_MT -fexceptions -Wall
 	CXXFlags     = $(CFlags) -fno-rtti
 	CompileC     = @gcc -c $(IncludeDir) $(CFlags) -o $@ $<

@@ -3,14 +3,14 @@
 ../../../../stdext/include
 
 [Config Release]
-Product		Exe ../../bin/prj-json
+Product		Exe ../../bin/$(Platform)/prj2json
 Options		Release; MultiThread; AnsiChar; NoRtti; Exception; WarningAll
 ObjDir		Release
 LibDir		
 Libraries	
 
 [Config Debug]
-Product		Exe Debug/prj-json
+Product		Exe Debug/prj2json
 Options		Debug; MultiThread; AnsiChar; NoRtti; Exception; WarningAll
 ObjDir		Debug
 LibDir		
