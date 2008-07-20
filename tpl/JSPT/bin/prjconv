@@ -1,8 +1,5 @@
 #!/usr/bin/php
 <?php
-	echo sizeof(int);
-	return;
-	
 	$argv = $_SERVER["argv"];
 	$argc = $_SERVER["argc"];
 	$AppPath = dirname($argv[0]);
