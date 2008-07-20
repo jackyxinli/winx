@@ -5,15 +5,15 @@ ifeq ($(CFG),)
 	CFG = Debug
 endif
 
-IncludeDir = -I../../../tpl/include -I../../../stdext/include
+IncludeDir = -I../../../../tpl/include -I../../../../stdext/include
 
 #
 # Configuration Release
 #
 ifeq ($(CFG), Release)
-	ProductDir   = ../bin
+	ProductDir   = ../../bin
 	ObjectDir    = Release
-	Product      = ../bin/prj-json
+	Product      = ../../bin/prj-json
 	CFlags       = $(Defines) -fPIC -D__32BIT__ -D__INTEL__ -D__LINUX__ -DLINUX  -DNDEBUG -O2 -D_MT -fexceptions -Wall
 	CXXFlags     = $(CFlags) -fno-rtti
 	CompileC     = @gcc -c $(IncludeDir) $(CFlags) -o $@ $<
@@ -22,6 +22,7 @@ ifeq ($(CFG), Release)
 	CheckLink    = @ldd -u -r $(Product); echo
 	LD_LIBRARY_PATH += :$(ProductDir)
 endif
+
 #
 # Configuration Debug
 #
@@ -68,7 +69,7 @@ EndMake :
 # Source Files, Objects & Product
 #
 $(ObjectDir)/ProjectJson.o :	\
-	ProjectJson.cpp
+	../ProjectJson.cpp
 	@echo "---> Compiling" $< "..."
 	$(CompileCXX)
 

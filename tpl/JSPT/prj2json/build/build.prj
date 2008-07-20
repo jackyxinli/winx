@@ -1,9 +1,9 @@
 [Include]
-../../../tpl/include
-../../../stdext/include
+../../../../tpl/include
+../../../../stdext/include
 
 [Config Release]
-Product		Exe ../bin/prj-json
+Product		Exe ../../bin/prj-json
 Options		Release; MultiThread; AnsiChar; NoRtti; Exception; WarningAll
 ObjDir		Release
 LibDir		
@@ -17,5 +17,5 @@ LibDir
 Libraries	
 
 [Source]
-*.cpp
+../*.cpp
 
