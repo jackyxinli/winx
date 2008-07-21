@@ -122,6 +122,8 @@ foreach ($doc->config as $cfg)
 			$cxxflags .= " -fno-rtti";
 		else if ($opt == "Rtti")
 			$cxxflags .= " -frtti";
+		else if ($opt == "MiniDepency")
+			;
 		else if ($opt{0} == "-")
 			$cxxflags .= " " . $opt;
 		else

@@ -12,10 +12,6 @@
 	if (!$VCPROJ_VERSION)
 		$VCPROJ_VERSION = "8.00";
 
-	$VCPROJ_CRT = getenv("VCPROJ_CRT");
-	if (!$VCPROJ_CRT)
-		$VCPROJ_CRT = "MD"; // MD(Multi-threaded DLL) or MT(Multi-threaded)
-
 	if ($plat->byteswap == "true")
 		$platdefine .= ";__BYTESWAP__;BYTESWAP";
 
@@ -92,6 +88,7 @@ foreach ($doc->config as $cfg)
 	$optimization = 2;
 	$inline = 1;
 	$debug = 0;
+	$minidep = 0;
 	
 	if ($cfg->define)
 		foreach ($cfg->define as $def)
@@ -124,16 +121,17 @@ foreach ($doc->config as $cfg)
 			;
 		else if ($opt == "Rtti")
 			;
+		else if ($opt == "MiniDepency")
+			$minidep = 1;
 		else if ($opt{0} == "-")
 			;
 		else
 			die("Unknown option: " . $opt);
 	}
-	
-	if ($VCPROJ_CRT == "MD")
-		$crt_type = $debug ? "3" : "2";
-	else
+	if ($minidep)
 		$crt_type = $debug ? "1" : "0";
+	else
+		$crt_type = $debug ? "3" : "2";
 ?>
 		<Configuration
 			Name="<?php echo $cfg->name . '|' . $platform ?>"

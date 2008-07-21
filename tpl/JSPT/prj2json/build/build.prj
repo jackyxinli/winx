@@ -4,7 +4,7 @@
 
 [Config Release]
 Product		Exe ../../bin/$(Platform)/prj2json
-Options		Release; MultiThread; AnsiChar; NoRtti; Exception; WarningAll
+Options		Release; MultiThread; AnsiChar; NoRtti; Exception; WarningAll; MiniDepency
 ObjDir		Release
 LibDir		
 Libraries	

@@ -3,7 +3,7 @@
 	ProjectType="Visual C++"
 	Version="8.00"
 	Name="prj2json"
-	ProjectGUID="{83527460-600F-BF6B-82E0-C39A52EB9156}"
+	ProjectGUID="{40FEB27F-DAD8-6441-662F-F9156FCF0002}"
 	>
 	<Platforms>
 		<Platform
@@ -46,7 +46,7 @@
 				AdditionalIncludeDirectories="../../../../tpl/include,../../../../stdext/include"
 				PreprocessorDefinitions="WIN64;__64BIT__;_CONSOLE;NDEBUG;_MT"
 				StringPooling="true"
-				RuntimeLibrary="2"
+				RuntimeLibrary="0"
 				EnableFunctionLevelLinking="true"
 				PrecompiledHeaderFile=""
 				AssemblerListingLocation="Release"
@@ -137,7 +137,7 @@
 				AdditionalIncludeDirectories="../../../../tpl/include,../../../../stdext/include"
 				PreprocessorDefinitions="WIN64;__64BIT__;_CONSOLE;_DEBUG;_MT"
 				StringPooling="true"
-				RuntimeLibrary="3"
+				RuntimeLibrary="2"
 				EnableFunctionLevelLinking="true"
 				PrecompiledHeaderFile=""
 				AssemblerListingLocation="Debug"
