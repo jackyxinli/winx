@@ -23,6 +23,6 @@ for File in $AppPath/prj2* ; do
 done
 
 cd $AppPath
-cp -f $PLATFORM/prj2json prj2json.exe
+ln -s -f $PLATFORM/prj2json prj2json.exe
 cp -f jspt jspt.bat
 
