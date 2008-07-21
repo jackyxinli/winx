@@ -26,6 +26,9 @@
 
 	$platform = "Win" . $PRJCONV_BITS;
 	$prjname = pathinfo($doc->config[0]->product->path, PATHINFO_FILENAME);
+	$exe_suffix = ".exe";
+	$dll_suffix = ".dll";
+	$lib_suffix = ".lib";
 }
 echo '<?xml version="1.0" encoding="gb2312"?>';
 ?>
@@ -235,6 +238,9 @@ foreach ($doc->config as $cfg)
 <?php } } ?>
 	</Files>
 	<Globals>
+		<Global Name="OSAbbr" Value="win"/>
+		<Global Name="Bits" Value="<?php echo $PRJCONV_BITS ?>"/>
+		<Global Name="Platform" Value="<?php echo 'win'.$PRJCONV_BITS ?>"/>
 	</Globals>
 </VisualStudioProject>
 
