@@ -3,7 +3,7 @@
 	ProjectType="Visual C++"
 	Version="8.00"
 	Name="prj2json"
-	ProjectGUID="{9C618363-E53A-6A2A-857D-D51B369B658D}"
+	ProjectGUID="{FB1B41DE-6756-BF9B-D309-2A31A2973D54}"
 	>
 	<Platforms>
 		<Platform
@@ -104,7 +104,6 @@
 				Name="VCPostBuildEventTool"
 			/>
 		</Configuration>
-	<Configurations>
 		<Configuration
 			Name="Debug|Win64"
 			OutputDirectory="Debug"

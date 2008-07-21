@@ -43,6 +43,7 @@ echo '<?xml version="1.0" encoding="gb2312"?>';
 	</Platforms>
 	<ToolFiles>
 	</ToolFiles>
+	<Configurations>
 <?php
 foreach ($doc->config as $cfg)
 {
@@ -124,7 +125,6 @@ foreach ($doc->config as $cfg)
 	else
 		$crt_type = $debug ? "1" : "0";
 ?>
-	<Configurations>
 		<Configuration
 			Name="<?php echo $cfg->name . '|' . $platform ?>"
 			OutputDirectory="<?php echo $product_dir ?>"
