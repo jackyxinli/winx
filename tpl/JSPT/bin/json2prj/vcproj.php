@@ -50,8 +50,10 @@ echo '<?xml version="1.0" encoding="gb2312"?>';
 <?php
 foreach ($doc->config as $cfg)
 {
+	$search = array('/\$\(OSAbbr\)/', '/\$\(Bits\)/', '/\$\(Platform\)/');
+	$replace = array('win', $PRJCONV_BITS, 'win'.$PRJCONV_BITS);
 	$type = $cfg->product->type;
-	$product = $cfg->product->path;
+	$product = preg_replace($search, $replace, $cfg->product->path);
 	$product_dir = dirname($product);
 	$product_name = pathinfo($product, PATHINFO_BASENAME);
 	$product_fname = pathinfo($product, PATHINFO_FILENAME);
@@ -63,16 +65,21 @@ foreach ($doc->config as $cfg)
 			$product = $product_dir . "/" . $product_name . $exe_suffix;
 		$linker = $exe_linker;
 		$define .= ";_CONSOLE";
+		$type_enum = "1";
 	}
 	else if (strcasecmp($type, "dll") == 0) {
 		if (!$product_name_ext)
 			$product = $product_dir . "/" . $lib_prefix . $product_name . $dll_suffix;
 		$linker = $dll_linker;
+		$define .= ";_DLL";
+		$type_enum = "2";
 	}
 	else if (strcasecmp($type, "lib") == 0) {
 		if (!$product_name_ext)
 			$product = $product_dir . "/" . $lib_prefix . $product_name . $lib_suffix;
 		$linker = $lib_linker;
+		$define .= ";_LIB";
+		$type_enum = "3";
 	}
 	else {
 		die("Unknown product type: " . $type);
@@ -132,7 +139,7 @@ foreach ($doc->config as $cfg)
 			Name="<?php echo $cfg->name . '|' . $platform ?>"
 			OutputDirectory="<?php echo $product_dir ?>"
 			IntermediateDirectory="<?php echo $objdir ?>"
-			ConfigurationType="1"
+			ConfigurationType="<?php echo $type_enum ?>"
 			UseOfMFC="0"
 			ATLMinimizesCRunTimeLibraryUsage="false"
 			CharacterSet="2"
@@ -238,9 +245,6 @@ foreach ($doc->config as $cfg)
 <?php } } ?>
 	</Files>
 	<Globals>
-		<Global Name="OSAbbr" Value="win"/>
-		<Global Name="Bits" Value="<?php echo $PRJCONV_BITS ?>"/>
-		<Global Name="Platform" Value="<?php echo 'win'.$PRJCONV_BITS ?>"/>
 	</Globals>
 </VisualStudioProject>
 

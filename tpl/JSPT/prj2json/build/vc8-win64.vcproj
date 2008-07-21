@@ -3,7 +3,7 @@
 	ProjectType="Visual C++"
 	Version="8.00"
 	Name="prj2json"
-	ProjectGUID="{193898A7-754C-27DD-CD0F-AD6BD27E3F11}"
+	ProjectGUID="{83527460-600F-BF6B-82E0-C39A52EB9156}"
 	>
 	<Platforms>
 		<Platform
@@ -15,7 +15,7 @@
 	<Configurations>
 		<Configuration
 			Name="Release|Win64"
-			OutputDirectory="../../bin/$(Platform)"
+			OutputDirectory="../../bin/win64"
 			IntermediateDirectory="Release"
 			ConfigurationType="1"
 			UseOfMFC="0"
@@ -70,7 +70,7 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				OutputFile="../../bin/$(Platform)/prj2json.exe"
+				OutputFile="../../bin/win64/prj2json.exe"
 				LinkIncremental="1"
 				SuppressStartupBanner="true"
 				AdditionalLibraryDirectories=""
@@ -205,9 +205,6 @@
 		</File>
 	</Files>
 	<Globals>
-		<Global Name="OSAbbr" Value="win"/>
-		<Global Name="Bits" Value="64"/>
-		<Global Name="Platform" Value="win64"/>
 	</Globals>
 </VisualStudioProject>
 
