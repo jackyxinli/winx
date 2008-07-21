@@ -128,11 +128,9 @@ public:
 		for (int j = 0; j < TestN; ++j)
 		{
 			typedef std::pair<const char*, int> TupleT;
-			typedef std::Relation<TupleT, std::HashMapIndexing, std::AutoFreeAlloc> RelationT;
+			typedef std::Relation<TupleT, 3, std::HashMapIndexing, std::AutoFreeAlloc> RelationT;
 			
 			RelationT rel(m_alloc);
-			rel.index<0>();
-			rel.index<1>();
 		
 			std::PerformanceCounter counter;
 			for (int i = 0; i < Count; ++i)
@@ -151,12 +149,10 @@ public:
 		for (int j = 0; j < TestN; ++j)
 		{
 			typedef std::pair<const char*, int> TupleT;
-			typedef std::Relation<TupleT, std::HashMapIndexing, std::AutoFreeAlloc> RelationT;
+			typedef std::Relation<TupleT, 3, std::HashMapIndexing, std::AutoFreeAlloc> RelationT;
 			typedef RelationT::Indexing<0> Indexing0;
 			
 			RelationT rel(m_alloc);
-			rel.index<0>();
-			rel.index<1>();
 			for (int i = 0; i < Count; ++i)
 			{
 				rel.insert(TupleT(m_keys[i], m_vals[i]));

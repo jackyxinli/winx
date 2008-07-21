@@ -157,6 +157,10 @@ public:
 	{
 	}
 #endif
+
+	void winx_call copy(const Base& from) {
+		Base::operator=(from);
+	}
 };
 
 NS_STDEXT_END

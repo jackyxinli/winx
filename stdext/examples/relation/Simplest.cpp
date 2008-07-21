@@ -14,14 +14,12 @@ void testBasic()
 {
 	typedef std::AutoFreeAlloc AllocT;
 	typedef std::pair<std::string, int> TupleT;
-	typedef std::Relation<TupleT, std::HashMapIndexing, AllocT> RelationT;
+	typedef std::Relation<TupleT, 3, std::HashMapIndexing, AllocT> RelationT;
 	typedef RelationT::Indexing<0> Indexing0;
 	typedef RelationT::Indexing<1> Indexing1;
 
 	AllocT alloc;
 	RelationT rel(alloc);
-	rel.index<0>();
-	rel.index<1>();
 	
 	rel.insert(TupleT("Mon", 1));
 	rel.insert(TupleT("Monday", 1));
@@ -62,14 +60,12 @@ void testRelationDefragment()
 {
 	typedef std::AutoFreeAlloc AllocT;
 	typedef std::pair<std::string, int> TupleT;
-	typedef std::Relation<TupleT, std::HashMapIndexing, AllocT> RelationT;
+	typedef std::Relation<TupleT, 3, std::HashMapIndexing, AllocT> RelationT;
 	typedef std::Defragment<RelationT> RelationT2;
 	typedef RelationT::Indexing<0> Indexing0;
 	typedef RelationT::Indexing<1> Indexing1;
 
 	RelationT2 rel;
-	rel.index<0>();
-	rel.index<1>();
 	
 	enum { Count = 20000 };
 	enum { TestN = 10000 };
@@ -118,14 +114,12 @@ void testCustomIndexing()
 {
 	typedef std::AutoFreeAlloc AllocT;
 	typedef std::pair<std::string, int> TupleT;
-	typedef std::Relation<TupleT, CustomIndexing, AllocT> RelationT;
+	typedef std::Relation<TupleT, 3, CustomIndexing, AllocT> RelationT;
 	typedef RelationT::Indexing<0> Indexing0;
 	typedef RelationT::Indexing<1> Indexing1;
 
 	AllocT alloc;
 	RelationT rel(alloc);
-	rel.index<0>();
-	rel.index<1>();
 	
 	rel.insert(TupleT("Mon", 1));
 	rel.insert(TupleT("Monday", 1));
@@ -166,16 +160,13 @@ void testTupleRelation()
 {
 	typedef std::AutoFreeAlloc AllocT;
 	typedef boost::tuple<std::string, int, char> TupleT;
-	typedef std::Relation<TupleT, CustomIndexing, AllocT> RelationT;
+	typedef std::Relation<TupleT, 7, CustomIndexing, AllocT> RelationT;
 	typedef RelationT::Indexing<0> Indexing0;
 	typedef RelationT::Indexing<1> Indexing1;
 	typedef RelationT::Indexing<2> Indexing2;
 
 	AllocT alloc;
 	RelationT rel(alloc);
-	rel.index<0>();
-	rel.index<1>();
-	rel.index<2>();
 	
 	rel.insert(TupleT("Mon", 1, 'M'));
 	rel.insert(TupleT("Monday", 1, 'M'));

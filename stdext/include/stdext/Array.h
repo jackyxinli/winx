@@ -154,7 +154,7 @@ public:
 // -------------------------------------------------------------------------
 // priority_push_back
 
-template <class VectorT, class PredT>
+template <class VectorT>
 inline void winx_call priority_push_back(
 	VectorT& cont, const typename VectorT::value_type& val, const UINT countLim)
 {

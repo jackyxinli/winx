@@ -9,6 +9,7 @@
 #include <stdext/AOP.h>
 
 // Containers:
+#include <stdext/StaticAlgo.h>
 #include <stdext/HashMap.h>
 #include <stdext/HashSet.h>
 #include <stdext/Relation.h>
@@ -37,6 +38,7 @@ int main()
 	WINX_TEST_CLASS(TestEventContainer);
 
 	// Containers:
+	WINX_TEST_CLASS(TestStaticAlgo);
 	WINX_TEST_CLASS(TestHashMap);
 	WINX_TEST_CLASS(TestHashSet);
 	WINX_TEST_CLASS(TestRelation);
