@@ -95,6 +95,10 @@
 #define __forceinline inline
 #endif
 
+#if defined(_MSC_VER)
+#pragma warning(disable: 4503)
+#endif
+
 NS_TPL_BEGIN
 
 // =========================================================================

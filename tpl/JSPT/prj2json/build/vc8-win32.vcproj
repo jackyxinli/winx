@@ -3,7 +3,7 @@
 	ProjectType="Visual C++"
 	Version="8.00"
 	Name="prj2json"
-	ProjectGUID="{A90BA016-E1EA-511F-5FC9-A3DD1DF8E550}"
+	ProjectGUID="{EE4C99E9-EC3C-D26F-EE7F-A387A0E0425E}"
 	>
 	<Platforms>
 		<Platform
@@ -207,4 +207,3 @@
 	<Globals>
 	</Globals>
 </VisualStudioProject>
-
