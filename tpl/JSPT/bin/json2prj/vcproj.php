@@ -169,9 +169,9 @@ foreach ($doc->config as $cfg)
 				RuntimeLibrary="<?php echo $crt_type ?>"
 				EnableFunctionLevelLinking="true"
 				PrecompiledHeaderFile=""
-				AssemblerListingLocation="<?php echo $objdir ?>"
-				ObjectFile="<?php echo $objdir ?>"
-				ProgramDataBaseFileName="<?php echo $objdir ?>"
+				AssemblerListingLocation="<?php echo $objdir . '/' ?>"
+				ObjectFile="<?php echo $objdir . '/' ?>"
+				ProgramDataBaseFileName="<?php echo $objdir . '/' ?>"
 				WarningLevel="3"
 				SuppressStartupBanner="true"
 				DebugInformationFormat="<?php echo $debug ? '4' : '3' ?>"
@@ -237,7 +237,7 @@ foreach ($doc->config as $cfg)
 	foreach ($srclist as $src) {
 ?>
 		<File
-			RelativePath="<?php echo $src ?>"
+			RelativePath="<?php echo str_replace('/', '\\', $src) ?>"
 			>
 		</File>
 <?php } } ?>

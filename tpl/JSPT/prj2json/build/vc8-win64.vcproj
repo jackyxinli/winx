@@ -3,7 +3,7 @@
 	ProjectType="Visual C++"
 	Version="8.00"
 	Name="prj2json"
-	ProjectGUID="{40FEB27F-DAD8-6441-662F-F9156FCF0002}"
+	ProjectGUID="{31A87823-FCC8-E139-7B7D-EA3DE425E8D2}"
 	>
 	<Platforms>
 		<Platform
@@ -49,9 +49,9 @@
 				RuntimeLibrary="0"
 				EnableFunctionLevelLinking="true"
 				PrecompiledHeaderFile=""
-				AssemblerListingLocation="Release"
-				ObjectFile="Release"
-				ProgramDataBaseFileName="Release"
+				AssemblerListingLocation="Release/"
+				ObjectFile="Release/"
+				ProgramDataBaseFileName="Release/"
 				WarningLevel="3"
 				SuppressStartupBanner="true"
 				DebugInformationFormat="3"
@@ -137,12 +137,12 @@
 				AdditionalIncludeDirectories="../../../../tpl/include,../../../../stdext/include"
 				PreprocessorDefinitions="WIN64;__64BIT__;_CONSOLE;_DEBUG;_MT"
 				StringPooling="true"
-				RuntimeLibrary="2"
+				RuntimeLibrary="3"
 				EnableFunctionLevelLinking="true"
 				PrecompiledHeaderFile=""
-				AssemblerListingLocation="Debug"
-				ObjectFile="Debug"
-				ProgramDataBaseFileName="Debug"
+				AssemblerListingLocation="Debug/"
+				ObjectFile="Debug/"
+				ProgramDataBaseFileName="Debug/"
 				WarningLevel="3"
 				SuppressStartupBanner="true"
 				DebugInformationFormat="4"
@@ -200,7 +200,7 @@
 	</References>
 	<Files>
 		<File
-			RelativePath="../ProjectJson.cpp"
+			RelativePath="..\ProjectJson.cpp"
 			>
 		</File>
 	</Files>
