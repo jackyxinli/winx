@@ -1,0 +1,19 @@
+[Include]
+
+[Config Release]
+Product		Exe ../../linux/regular
+Options		Release; MultiThread; AnsiChar; NoRtti; Exception; WarningAll; MiniDepency
+ObjDir		Release
+LibDir		
+Libraries	
+
+[Config Debug]
+Product		Exe Debug/regular
+Options		Debug; MultiThread; AnsiChar; NoRtti; Exception; WarningAll
+ObjDir		Debug
+LibDir		
+Libraries	
+
+[Source]
+regular.cpp
+
