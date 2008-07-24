@@ -107,6 +107,15 @@ namespace std {
 	};
 
 	template <>
+	struct iterator_traits_alter<const unsigned int*> {
+		typedef random_access_iterator_tag	iterator_category;
+		typedef unsigned int				value_type;
+		typedef ptrdiff_t					difference_type;
+		typedef const unsigned int*			pointer;
+		typedef const unsigned int&			reference;
+	};
+
+	template <>
 	struct iterator_traits_alter<short*> {
 		typedef random_access_iterator_tag	iterator_category;
 		typedef short						value_type;
@@ -140,6 +149,15 @@ namespace std {
 		typedef ptrdiff_t					difference_type;
 		typedef const long*				pointer;
 		typedef const long&				reference;
+	};
+
+	template <>
+	struct iterator_traits_alter<const unsigned long*> {
+		typedef random_access_iterator_tag	iterator_category;
+		typedef unsigned long				value_type;
+		typedef ptrdiff_t					difference_type;
+		typedef const unsigned long*		pointer;
+		typedef const unsigned long&		reference;
 	};
 };
 

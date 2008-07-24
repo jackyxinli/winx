@@ -55,6 +55,17 @@ private:
 	typedef std::iterator_traits_alter<Iterator> Tr_;
 
 public:
+	typedef ptrdiff_t difference_type;
+	typedef size_t size_type;
+
+	typedef typename Tr_::value_type value_type;
+	
+	typedef const value_type* pointer;
+	typedef const value_type* const_pointer;
+	
+	typedef const value_type& reference;
+	typedef const value_type& const_reference;
+
 	typedef Iterator iterator;
 	typedef Iterator const_iterator;
 
@@ -71,17 +82,6 @@ public:
 	typedef std::reverse_iterator<iterator>
 			reverse_iterator;
 #endif
-
-	typedef ptrdiff_t difference_type;
-	typedef size_t size_type;
-
-	typedef typename Tr_::value_type value_type;
-	
-	typedef const value_type* pointer;
-	typedef const value_type* const_pointer;
-	
-	typedef const value_type& reference;
-	typedef const value_type& const_reference;
 
 private:
 	typedef std::basic_string<value_type> StlString_;
