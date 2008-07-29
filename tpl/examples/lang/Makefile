@@ -14,7 +14,7 @@ ifeq ($(CFG), Release)
 	ProductDir   = Release
 	ObjectDir    = Release
 	Product      = Release/lang
-	CFlags       = $(Defines) -fPIC -D__INTEL__ -D__LINUX__ -DLINUX  -DNDEBUG -O2 -D_MT -fexceptions
+	CFlags       = $(Defines) -fPIC -D__INTEL__ -D__LINUX__ -DLINUX -DNDEBUG -O2 -D_MT -fexceptions
 	CXXFlags     = $(CFlags) -fno-rtti
 	CompileC     = @gcc -c $(IncludeDir) $(CFlags) -o $@ $<
 	CompileCXX   = @g++ -c $(IncludeDir) $(CXXFlags) -o $@ $<
@@ -30,7 +30,7 @@ ifeq ($(CFG), Debug)
 	ProductDir   = Debug
 	ObjectDir    = Debug
 	Product      = Debug/lang
-	CFlags       = $(Defines) -fPIC -D__INTEL__ -D__LINUX__ -DLINUX  -D_DEBUG -g3 -D_MT -fexceptions
+	CFlags       = $(Defines) -fPIC -D__INTEL__ -D__LINUX__ -DLINUX -D_DEBUG -g3 -D_MT -fexceptions
 	CXXFlags     = $(CFlags) -fno-rtti
 	CompileC     = @gcc -c $(IncludeDir) $(CFlags) -o $@ $<
 	CompileCXX   = @g++ -c $(IncludeDir) $(CXXFlags) -o $@ $<

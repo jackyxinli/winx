@@ -151,7 +151,7 @@ ifeq ($(CFG), <?php echo $cfg->name; ?>)
 	ProductDir   = <?php echo "$product_dir\n" ?>
 	ObjectDir    = <?php echo "$objdir\n" ?>
 	Product      = <?php echo "$product\n" ?>
-	CFlags       = $(Defines) -fPIC<?php echo "$platflags $cflags\n" ?>
+	CFlags       = $(Defines) -fPIC<?php echo "$platflags$cflags\n" ?>
 	CXXFlags     = $(CFlags)<?php echo "$cxxflags\n" ?>
 	CompileC     = @gcc -c $(IncludeDir) $(CFlags) -o $@ $<
 	CompileCXX   = @g++ -c $(IncludeDir) $(CXXFlags) -o $@ $<
