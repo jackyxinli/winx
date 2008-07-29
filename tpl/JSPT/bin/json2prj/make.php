@@ -56,10 +56,12 @@
 	}
 }
 ?>
+<?php if ($PRJCONV_BITS != "independent") { ?>
 OSAbbr	 = <?php echo "$os_abbr\n" ?>
 Bits	 = <?php echo "$PRJCONV_BITS\n" ?>
 Platform = <?php echo "$os_abbr$PRJCONV_BITS\n" ?>
 
+<?php } ?>
 #
 # Configuration Default
 #

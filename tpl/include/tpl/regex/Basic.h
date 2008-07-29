@@ -40,7 +40,7 @@ class Gr : public RegExT
 {
 public:
 	Gr() : RegExT() {}
-	Gr(const RegExT& x) : RegExT(x) {}
+	explicit Gr(const RegExT& x) : RegExT(x) {}
 
 public:
 	const Rule<RegExT>& TPL_CALL rule() const {
@@ -55,7 +55,7 @@ public:
 };
 
 // =========================================================================
-// struct IndexOpTraits/EvalOpTraits
+// struct IndexOpTraits
 
 template <class T1, class T2>
 struct IndexOpTraits
@@ -65,16 +65,6 @@ struct IndexOpTraits
 //	typename result_type;
 //
 //	static result_type TPL_CALL call(const T1& o1, const T2& o2);
-};
-
-template <class T1, class T2 = void, class T3 = void, class T4 = void>
-struct EvalOpTraits
-{
-//	concept:
-//
-//	typename result_type;
-//
-//	static result_type TPL_CALL call(const T1& o1, const T2& o2, const T3& o3, const T4& o4);
 };
 
 // =========================================================================
@@ -145,6 +135,18 @@ struct AndConvertable<CT, CT> {
 	typedef CT convertible_type;
 };
 
+template <class RegExT, class CT>
+struct Rule2Grammar {
+	typedef Gr<RegExT> grammar_type;
+	typedef Grammar<Gr<RegExT> > return_type;
+};
+
+template <class RegExT>
+struct Rule2Grammar<RegExT, SelfConvertible> {
+	typedef RegExT grammar_type;
+	typedef Grammar<RegExT> return_type;
+};
+
 // class RuleBase
 
 class RuleBase
@@ -168,16 +170,10 @@ public:
 	Rule() : RegExT() {}
 
 	template <class T1>
-	Rule(T1& x) : RegExT(x) {}
-
-	template <class T1>
-	Rule(const T1& x) : RegExT(x) {}
+	explicit Rule(const T1& x) : RegExT(x) {}
 
 	template <class T1, class T2>
 	Rule(const T1& x, const T2& y) : RegExT(x, y) {}
-
-	template <class T1, class T2>
-	Rule(const T1& x, T2& y) : RegExT(x, y) {}
 
 	template <class T1, class T2>
 	Rule(T1& x, const T2& y) : RegExT(x, y) {}
@@ -186,48 +182,30 @@ public:
 	Rule(const T1& x, const T2& y, const T3& z) : RegExT(x, y, z) {}
 
 	template <class T1, class T2, class T3>
-	Rule(const T1& x, const T2& y, T3& z) : RegExT(x, y, z) {}
+	Rule(T1& x, const T2& y, const T3& z) : RegExT(x, y, z) {}
 
 private:
-	const Grammar<Gr<RegExT> >& TPL_CALL cast_grammar_(AutoConvertible) const {
-		return *(const Grammar<Gr<RegExT> >*)this;
+	typename Rule2Grammar<RegExT, AutoConvertible>::return_type const&
+	TPL_CALL cast_grammar_(AutoConvertible) const {
+		return *(typename Rule2Grammar<RegExT, AutoConvertible>::return_type const*)this;
 	}
 
-	const Grammar<RegExT>& TPL_CALL cast_grammar_(SelfConvertible) const {
-		return *(const Grammar<RegExT>*)this;
+	typename Rule2Grammar<RegExT, SelfConvertible>::return_type const&
+	TPL_CALL cast_grammar_(SelfConvertible) const {
+		return *(typename Rule2Grammar<RegExT, SelfConvertible>::return_type const*)this;
 	}
 
 public:
-	Grammar<Gr<RegExT> > TPL_CALL cast_grammar() const {
+	typedef typename Rule2Grammar<RegExT, typename RegExT::convertible_type>::grammar_type CastGrammarType;
+	
+	Grammar<CastGrammarType> const TPL_CALL cast_grammar() const {
 		return cast_grammar_(typename RegExT::convertible_type());
-	}
-
-	Grammar<Gr<RegExT> > TPL_CALL grammar() const {
-		return *(const Grammar<Gr<RegExT> >*)this;
 	}
 
 	template <class T1>
 	typename IndexOpTraits<Rule<RegExT>, T1>::result_type
 	TPL_CALL operator[](const T1& obj) const {
 		return IndexOpTraits<Rule<RegExT>, T1>::call(*this, obj);
-	}
-
-	template <class T1>
-	typename EvalOpTraits<Rule<RegExT>, const T1&>::result_type
-	TPL_CALL operator()(const T1& a1) const {
-		return EvalOpTraits<Rule<RegExT>, const T1&>::call(*this, a1);
-	}
-
-	template <class T1, class T2>
-	typename EvalOpTraits<Rule<RegExT>, const T1&, const T2&>::result_type
-	TPL_CALL operator()(const T1& a1, const T2& a2) const {
-		return EvalOpTraits<Rule<RegExT>, const T1&, const T2&>::call(*this, a1, a2);
-	}
-
-	template <class T1, class T2, class T3>
-	typename EvalOpTraits<Rule<RegExT>, const T1&, const T2&, const T3&>::result_type
-	TPL_CALL operator()(const T1& a1, const T2& a2, const T3& a3) const {
-		return EvalOpTraits<Rule<RegExT>, const T1&, const T2&, const T3&>::call(*this, a1, a2, a3);
 	}
 
 //	concept:
@@ -243,10 +221,12 @@ public:
 
 #define TPL_GRAMMAR_RULE_BINARY_OP_(op, Op)									\
 template <class T1, class T2>												\
-__forceinline Grammar<Op<Gr<T1>, T2> > TPL_CALL operator op(const Rule<T1>& x, const Grammar<T2>& y) \
+inline Grammar<Op<typename Rule<T1>::CastGrammarType, T2> > const			\
+TPL_CALL operator op(const Rule<T1>& x, const Grammar<T2>& y) 				\
 	{ return x.cast_grammar() op y; }										\
 template <class T1, class T2>												\
-__forceinline Grammar<Op<T1, Gr<T2> > > TPL_CALL operator op(const Grammar<T1>& x, const Rule<T2>& y) \
+inline Grammar<Op<T1, typename Rule<T2>::CastGrammarType> > const			\
+TPL_CALL operator op(const Grammar<T1>& x, const Rule<T2>& y) 				\
 	{ return x op y.cast_grammar(); }
 
 #define TPL_SIMPLEST_GRAMMAR_()												\
@@ -268,10 +248,7 @@ public:
 	Grammar() : GrammarT() {}
 
 	template <class T1>
-	Grammar(T1& x) : GrammarT(x) {}
-
-	template <class T1>
-	Grammar(const T1& x) : GrammarT(x) {}
+	explicit Grammar(const T1& x) : GrammarT(x) {}
 
 	template <class T1, class T2>
 	Grammar(const T1& x, const T2& y) : GrammarT(x, y) {}
@@ -279,7 +256,7 @@ public:
 	template <class T1, class T2>
 	Grammar(T1& x, const T2& y) : GrammarT(x, y) {}
 
-	template <class T1, class T2, class T3>
+        template <class T1, class T2, class T3>
 	Grammar(const T1& x, const T2& y, const T3& z) : GrammarT(x, y, z) {}
 
 //	concept:
@@ -302,10 +279,10 @@ public:
 	SimpleAction() : ActionT() {}
 
 	template <class T1>
-	SimpleAction(const T1& x) : ActionT(x) {}
+	explicit SimpleAction(const T1& x) : ActionT(x) {}
 
 	template <class T1>
-	SimpleAction(T1& x) : ActionT(x) {}
+	explicit SimpleAction(T1& x) : ActionT(x) {}
 
 	template <class T1, class T2>
 	SimpleAction(const T1& x, const T2& y) : ActionT(x, y) {}
@@ -337,10 +314,10 @@ public:
 	Action() : ActionT() {}
 
 	template <class T1>
-	Action(const T1& x) : ActionT(x) {}
+	explicit Action(const T1& x) : ActionT(x) {}
 
 	template <class T1>
-	Action(T1& x) : ActionT(x) {}
+	explicit Action(T1& x) : ActionT(x) {}
 
 	template <class T1, class T2>
 	Action(const T1& x, const T2& y) : ActionT(x, y) {}
@@ -365,6 +342,27 @@ public:
 };
 
 // =========================================================================
+// class Predicate
+
+template <class PredT>
+class Predicate : public PredT
+{
+public:
+	Predicate() : PredT() {}
+
+	template <class T1>
+	explicit Predicate(const T1& x) : PredT(x) {}
+
+	template <class T1, class T2>
+	Predicate(const T1& x, const T2& y) : PredT(x, y) {}
+
+//	concept:
+//
+//	template <class ValueT>
+//	bool TPL_CALL operator()(const ValueT& val) const;
+};
+
+// =========================================================================
 // class Condition
 
 enum MatchCode
@@ -378,13 +376,10 @@ template <class ConditionT>
 class Condition : public ConditionT
 {
 public:
-	Condition() {}
+	Condition() : ConditionT() {}
 
 	template <class T1>
-	Condition(T1& x) : ConditionT(x) {}
-
-	template <class T1>
-	Condition(const T1& x) : ConditionT(x) {}
+	explicit Condition(const T1& x) : ConditionT(x) {}
 
 	template <class T1, class T2>
 	Condition(const T1& x, const T2& y) : ConditionT(x, y) {}
@@ -392,8 +387,6 @@ public:
 //	concept:
 //
 //	enum { character = ConditionT::character };
-//
-//	typedef typename ContitionT::value_type value_type;
 //
 //	template <class ValueT, class SourceT, class ContextT>
 //	MatchCode TPL_CALL match_if(const ValueT& val, SourceT& ar, ContextT& context) const;
@@ -406,13 +399,10 @@ template <class ConditionT>
 class GCondition : public ConditionT
 {
 public:
-	GCondition() {}
+	GCondition() : ConditionT() {}
 
 	template <class T1>
-	GCondition(T1& x) : ConditionT(x) {}
-
-	template <class T1>
-	GCondition(const T1& x) : ConditionT(x) {}
+	explicit GCondition(const T1& x) : ConditionT(x) {}
 
 	template <class T1, class T2>
 	GCondition(const T1& x, const T2& y) : ConditionT(x, y) {}
@@ -420,8 +410,6 @@ public:
 //	concept:
 //
 //	enum { character = ConditionT::character };
-//
-//	typedef typename ContitionT::value_type value_type;
 //
 //	template <class ValueT, class SourceT, class ContextT, class SkipperT>
 //	MatchCode TPL_CALL match_if(

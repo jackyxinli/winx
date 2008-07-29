@@ -38,7 +38,7 @@
 NS_TPL_BEGIN
 
 typedef char DefaultTagChar;
-typedef std::Range<const char*> DefaultLeaf;
+typedef NS_STDEXT::Range<const char*> DefaultLeaf;
 
 // -------------------------------------------------------------------------
 // class DOM

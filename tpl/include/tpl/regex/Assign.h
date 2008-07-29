@@ -42,6 +42,11 @@ public:
 	static StringT TPL_CALL get(Iterator pos, Iterator pos2, const void* = NULL) {
 		return StringT(pos, pos2);
 	}
+	
+	template <class Iterator>
+	struct Default {
+		typedef NS_STDEXT::Range<Iterator> value_type;
+	};
 };
 
 // -------------------------------------------------------------------------
@@ -57,6 +62,11 @@ public:
 		TPL_ASSERT(std::distance(pos, pos2) == 1);
 		return *pos;
 	}
+
+	template <class Iterator>
+	struct Default {
+		typedef typename std::iterator_traits<Iterator>::value_type value_type;
+	};
 };
 
 // -------------------------------------------------------------------------
@@ -69,8 +79,10 @@ class AssigHexInt
 public:
 	template <class UIntT, class Iterator>
 	static UIntT TPL_CALL get(Iterator pos, Iterator pos2, const void* = NULL) {
-		return std::CastToUInt<UIntT>::get(pos, pos2, 16);
+		return NS_STDEXT::CastToUInt<UIntT>::get(pos, pos2, 16);
 	}
+	
+	TPL_ASSIG_DEFVALTYPE(unsigned int)
 };
 
 // -------------------------------------------------------------------------
@@ -92,6 +104,8 @@ public:
 		}
 		return val;
 	}
+	
+	TPL_ASSIG_DEFVALTYPE(unsigned int)
 };
 
 typedef AssigUI<10> AssigUInt;
@@ -117,6 +131,8 @@ public:
 		}
 		return AssigUInt::get<IntT>(first, last);
 	}
+	
+	TPL_ASSIG_DEFVALTYPE(int)
 };
 
 // -------------------------------------------------------------------------
@@ -129,8 +145,10 @@ class AssigReal
 public:
 	template <class RealT, class Iterator>
 	static RealT TPL_CALL get(Iterator pos, Iterator pos2, const void* = NULL) {
-		return std::CastToReal<RealT>::get(pos, pos2);
+		return NS_STDEXT::CastToReal<RealT>::get(pos, pos2);
 	}
+	
+	TPL_ASSIG_DEFVALTYPE(double)
 };
 
 // -------------------------------------------------------------------------
@@ -143,6 +161,8 @@ public:
 	static IntT TPL_CALL get(Iterator pos, Iterator pos2, const LstOpT* lst) {
 		return lst->size();
 	}
+
+	TPL_ASSIG_DEFVALTYPE(size_t)
 };
 
 // -------------------------------------------------------------------------
@@ -154,7 +174,7 @@ struct SelectAssig<AssigTag, std::basic_string<CharT, Tr, Ax> > {
 };
 
 template <class AssigTag, class Iterator>
-struct SelectAssig<AssigTag, std::Range<Iterator> > {
+struct SelectAssig<AssigTag, NS_STDEXT::Range<Iterator> > {
 	typedef AssigStr assig_type;
 };
 

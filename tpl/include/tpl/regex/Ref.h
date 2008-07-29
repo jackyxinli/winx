@@ -62,7 +62,7 @@ public:
 };
 
 template <class T1>
-__forceinline Rule<Ref<T1> > TPL_CALL ref(const Rule<T1>& x) {
+__forceinline Rule<Ref<T1> > const TPL_CALL ref(const Rule<T1>& x) {
 	return Rule<Ref<T1> >(x);
 }
 
@@ -94,7 +94,7 @@ public:
 };
 
 template <class T1>
-__forceinline Grammar<GRef<T1> > TPL_CALL ref(const Grammar<T1>& x) {
+__forceinline Grammar<GRef<T1> > const TPL_CALL ref(const Grammar<T1>& x) {
 	return Grammar<GRef<T1> >(x);
 }
 
@@ -127,14 +127,14 @@ public:
 
 	template <class SourceT, class ContextT>
 	bool TPL_CALL match(SourceT& ar, ContextT& context) const {
-		dereference_type der(RefT::operator()());
-		rule_type x(der);
+		const dereference_type der(RefT::operator()());
+		const rule_type x(der);
 		return x.match(ar, context);
 	}
 
 	bool TPL_CALL operator()(int c) const {
-		dereference_type der(RefT::operator()());
-		rule_type x(der);
+		const dereference_type der(RefT::operator()());
+		const rule_type x(der);
 		return x(c);
 	}
 };
@@ -225,11 +225,11 @@ public:
 };
 
 template <class Iterator>
-class RefLeaf : public RefStr_<std::Range<Iterator> >
+class RefLeaf : public RefStr_<NS_STDEXT::Range<Iterator> >
 {
 public:
-	RefLeaf(const std::Range<Iterator>& leaf)
-		: RefStr_<std::Range<Iterator> >(leaf) {}
+	RefLeaf(const NS_STDEXT::Range<Iterator>& leaf)
+		: RefStr_<NS_STDEXT::Range<Iterator> >(leaf) {}
 };
 
 // =========================================================================
@@ -250,7 +250,7 @@ struct ReferenceTraits<std::basic_string<CharT> > {
 };
 
 template <class Iterator>
-struct ReferenceTraits<std::Range<Iterator> > {
+struct ReferenceTraits<NS_STDEXT::Range<Iterator> > {
 	typedef RefLeaf<Iterator> reference_type;
 };
 
@@ -265,7 +265,7 @@ struct ReferenceTraits<wchar_t> {
 };
 
 template <class Type> __forceinline
-Rule<Deref<typename ReferenceTraits<Type>::reference_type> > TPL_CALL ref(const Type& var_) {
+Rule<Deref<typename ReferenceTraits<Type>::reference_type> > const TPL_CALL ref(const Type& var_) {
 	return Rule<Deref<typename ReferenceTraits<Type>::reference_type> >(var_);
 }
 
@@ -292,3 +292,4 @@ public:
 NS_TPL_END
 
 #endif /* TPL_REGEX_REF_H */
+

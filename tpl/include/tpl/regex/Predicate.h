@@ -30,71 +30,58 @@
 NS_TPL_BEGIN
 
 // =========================================================================
-// PredVTTraits
-
-template <class ValueT>
-struct PredVTTraits {
-	typedef typename ValueT::value_type value_type;
-	typedef ValueT pred_type;
-};
-
-template <class ValueT>
-struct PredVTTraits<ValueT const&> {
-	typedef typename PredVTTraits<ValueT>::value_type value_type;
-	typedef typename PredVTTraits<ValueT>::pred_type pred_type;
-};
-
-// -------------------------------------------------------------------------
 // TPL_PRED_TEST
 
-struct ICaseEQ
-{
-	template <class T1, class T2>
-	static bool TPL_CALL test(const T1& x, const T2& y) {
-		return std::icompare(x, y) == 0;
-	}
-};
-
-#define TPL_PRED_TEST(Cmp, op)												\
-struct Cmp {																\
-	template <class T1, class T2>											\
-	static bool TPL_CALL test(const T1& x, const T2& y) {					\
-		return x op y;														\
-	}																		\
-};
-
-TPL_PRED_TEST(EQ, ==)
-TPL_PRED_TEST(NE, !=)
-TPL_PRED_TEST(GT, >)
-TPL_PRED_TEST(LT, <)
-TPL_PRED_TEST(GE, >=)
-TPL_PRED_TEST(LE, <=)
-
-template <class ValueT, class PredT = EQ>
-class Pred_
+template <class ValueT>
+class EQICase
 {
 private:
-	const ValueT m_val2;
+	const ValueT m_val;
 	
 public:
 	template <class T1>
-	explicit Pred_(const T1& val) : m_val2(val) {}
-	
-	typedef typename PredVTTraits<ValueT>::value_type value_type;
-	
+	explicit EQICase(const T1& val) : m_val(val) {
+	}
+
 	template <class ValueT2>
 	bool TPL_CALL operator()(const ValueT2& val) const {
-		return PredT::test(val, m_val2);
+		return std::icompare(val, m_val) == 0;
 	}
 };
+
+#define TPL_PRED_IMPL_(PredT, op)							\
+template <class ValueT>										\
+class PredT													\
+{															\
+private:													\
+	const ValueT m_val;										\
+															\
+public:														\
+	template <class T1>										\
+	explicit PredT(const T1& val) : m_val(val) {			\
+	}														\
+															\
+	template <class ValueT2>								\
+	bool TPL_CALL operator()(const ValueT2& val) const {	\
+		return m_val op val;								\
+	}														\
+};
+
+TPL_PRED_IMPL_(EQ, ==)
+TPL_PRED_IMPL_(NE, !=)
+TPL_PRED_IMPL_(GT, >)
+TPL_PRED_IMPL_(LT, <)
+TPL_PRED_IMPL_(GE, >=)
+TPL_PRED_IMPL_(LE, <=)
 
 // -------------------------------------------------------------------------
 // TPL_PRED
 
-template <class RefT, class PredT>
+template <class RefT, template <class ValueT> class PredT>
 struct PredOpTraits {
 	typedef SmartRefTraits<RefT> Tr_;
-	typedef Pred_<typename Tr_::const_type, PredT> pred_type;
+	typedef PredT<typename Tr_::const_type> Pred_;
+	typedef Predicate<Pred_> pred_type;
 };
 
 #define TPL_PRED(op, PredT)													\
@@ -118,36 +105,7 @@ TPL_PRED(le, LE)
 TPL_PRED(ge, GE)
 
 TPL_PRED(notEq, NE)
-TPL_PRED(eqICase, ICaseEQ)
-
-// -------------------------------------------------------------------------
-
-#define TPL_PRED_VT(ValueT, CondValT)										\
-template <>																	\
-struct PredVTTraits<ValueT> {												\
-	typedef CondValT value_type;											\
-	typedef Pred_<ValueT> pred_type;										\
-};																			\
-template <>																	\
-struct PredVTTraits<ValueT const&> {										\
-	typedef CondValT value_type;											\
-	typedef Pred_<ValueT const&> pred_type;									\
-};
-
-TPL_PRED_VT(bool, bool)
-TPL_PRED_VT(char, char)
-TPL_PRED_VT(wchar_t, wchar_t)
-TPL_PRED_VT(short, int)
-TPL_PRED_VT(int, int)
-TPL_PRED_VT(long, long)
-TPL_PRED_VT(unsigned short, unsigned int)
-TPL_PRED_VT(unsigned int, unsigned int)
-TPL_PRED_VT(unsigned long, unsigned long)
-
-TPL_PRED_VT(char*, DefaultType)
-TPL_PRED_VT(wchar_t*, DefaultType)
-TPL_PRED_VT(char const*, DefaultType)
-TPL_PRED_VT(wchar_t const*, DefaultType)
+TPL_PRED(eqICase, EQICase)
 
 // =========================================================================
 // class PredRule
@@ -161,14 +119,13 @@ private:
 public:
 	PredRule() : RegExT(), m_pred() {}
 
-	template <class T1>
-	PredRule(const RegExT& rule_, const T1& ref_)
+	PredRule(const RegExT& rule_, const PredT& ref_)
 		: RegExT(rule_), m_pred(ref_) {}
 	
 	template <class SourceT, class ContextT>
 	bool TPL_CALL match(SourceT& ar, ContextT& context) const
 	{
-		TPL_ASSIG_PREPARE(typename RegExT::assig_tag, typename PredT::value_type)
+		TPL_ASSIG_PREPARE1(typename RegExT::assig_tag)
 		
 		typename ContextT::template trans_type<RegExT::character> trans(ar, context);
 		const iterator pos = ar.position();
@@ -183,22 +140,11 @@ public:
 	}
 };
 
-template <class RefT>
-struct PredRefTraits {
-	typedef SmartRefTraits<RefT> Tr_;
-	typedef PredVTTraits<typename Tr_::const_type> Tr2_;
-	typedef typename Tr2_::pred_type pred_type;
-};
-
-template <class RegExT, class T1Ref>
-struct EvalOpTraits<Rule<RegExT>, T1Ref>
-{
-	typedef Rule<PredRule<RegExT, typename PredRefTraits<T1Ref>::pred_type> > result_type;
-
-	static result_type TPL_CALL call(const Rule<RegExT>& rule_, T1Ref ref_) {
-		return result_type(rule_, ref_);
-	}
-};
+template <class T1, class T2>
+inline Rule<PredRule<T1, T2> > const
+TPL_CALL operator/(const Rule<T1>& x, const Predicate<T2>& y) {
+	return Rule<PredRule<T1, T2> >(x, y);
+}
 
 // =========================================================================
 // $Log: $

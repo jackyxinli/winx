@@ -108,24 +108,24 @@ inline Switch<ValueT> const TPL_CALL switch_(const Var<ValueT>& var_) {
 // =========================================================================
 // class Case
 
-template <class CondT>
-class Case : public CondT
+template <class PredT>
+class Case : public PredT
 {
 public:
-	Case() : CondT() {}
+	Case() : PredT() {}
 	
 	template <class T1>
-	Case(const T1& x) : CondT(x) {}
+	explicit Case(const T1& x) : PredT(x) {}
 
 public:
 	template <class NextT>
-	Condition<CondBind<CondT, NextT> > const TPL_CALL operator[](const Rule<NextT>& next_) const {
-		return Condition<CondBind<CondT, NextT> >(*(const CondT*)this, next_);
+	Condition<CondBind<PredT, NextT> > const TPL_CALL operator[](const Rule<NextT>& next_) const {
+		return Condition<CondBind<PredT, NextT> >(*(const PredT*)this, next_);
 	}
 
 	template <class NextT>
-	GCondition<GCondBind<CondT, NextT> > const TPL_CALL operator[](const Grammar<NextT>& next_) const {
-		return GCondition<GCondBind<CondT, NextT> >(*(const CondT*)this, next_);
+	GCondition<GCondBind<PredT, NextT> > const TPL_CALL operator[](const Grammar<NextT>& next_) const {
+		return GCondition<GCondBind<PredT, NextT> >(*(const PredT*)this, next_);
 	}
 };
 
@@ -135,8 +135,6 @@ public:
 class True_
 {
 public:
-	typedef DefaultType value_type;
-	
 	template <class ValueT2>
 	bool TPL_CALL operator()(const ValueT2& val) const {
 		return true;
@@ -150,66 +148,112 @@ inline Case<True_> const TPL_CALL default_() {
 // -------------------------------------------------------------------------
 // function case_
 
+template <class ValueT>
+struct PredTraits_ {
+	typedef ValueT pred_type;
+};
+
+template <class ValueT>
+struct PredTraits_<const ValueT&> {
+	typedef ValueT pred_type;
+};
+
+/*
+template <class PredT>
+struct PredTraits_<Predicate<PredT> > {
+	typedef PredT pred_type;
+};
+
+template <class PredT>
+struct PredTraits_<const Predicate<PredT>& > {
+	typedef PredT pred_type;
+};
+*/
+
+#define TPL_PRED_EQ_(Type)						\
+template <>										\
+struct PredTraits_<Type> {						\
+	typedef EQ<Type> pred_type;					\
+};												\
+												\
+template <>										\
+struct PredTraits_<Type const&> {				\
+	typedef EQ<Type const&> pred_type;			\
+};
+
+TPL_PRED_EQ_(bool)
+TPL_PRED_EQ_(char)
+TPL_PRED_EQ_(wchar_t)
+TPL_PRED_EQ_(short)
+TPL_PRED_EQ_(int)
+TPL_PRED_EQ_(long)
+TPL_PRED_EQ_(unsigned short)
+TPL_PRED_EQ_(unsigned int)
+TPL_PRED_EQ_(unsigned long)
+
+TPL_PRED_EQ_(char*)
+TPL_PRED_EQ_(wchar_t*)
+TPL_PRED_EQ_(char const*)
+TPL_PRED_EQ_(wchar_t const*)
+
+template <class RefT>
+struct PredRefTraits_ {
+	typedef SmartRefTraits<RefT> Tr_;
+	typedef PredTraits_<typename Tr_::const_type> Tr2_;
+	typedef typename Tr2_::pred_type pred_type;
+};
+
 template <class PredT>
 inline Case<PredT> const TPL_CALL case_() {
 	return Case<PredT>();
 }
 
 template <class ValueT>
-inline Case<typename PredRefTraits<const ValueT&>::pred_type> const
+inline Case<typename PredRefTraits_<const ValueT&>::pred_type> const
 TPL_CALL case_(const ValueT& val) {
-	return Case<typename PredRefTraits<const ValueT&>::pred_type>(val);
+	return Case<typename PredRefTraits_<const ValueT&>::pred_type>(val);
 }
 
 template <class ValueT>
-inline Case<typename PredRefTraits<ValueT&>::pred_type> const
+inline Case<typename PredRefTraits_<ValueT&>::pred_type> const
 TPL_CALL case_(ValueT& val) {
-	return Case<typename PredRefTraits<ValueT&>::pred_type>(val);
+	return Case<typename PredRefTraits_<ValueT&>::pred_type>(val);
 }
 
-// -------------------------------------------------------------------------
-// function case_if
-
-#if defined(TPL_REGEX_BACKWARD)
-
-template <class PredT, class ValueT>
-inline Case<Pred_<typename SmartRefTraits<const ValueT&>::const_type, PredT> > const
-TPL_CALL case_if(const ValueT& val) {
-	return Case<Pred_<typename SmartRefTraits<const ValueT&>::const_type, PredT> >(val);
+template <class PredT>
+inline Case<PredT> const
+TPL_CALL case_(const Predicate<PredT>& val) {
+	return Case<PredT>(*static_cast<const PredT*>(&val));
 }
 
-template <class PredT, class ValueT>
-inline Case<Pred_<typename SmartRefTraits<ValueT&>::const_type, PredT> > const
-TPL_CALL case_if(ValueT& val) {
-	return Case<Pred_<typename SmartRefTraits<ValueT&>::const_type, PredT> >(val);
+template <class PredT>
+inline Case<PredT> const
+TPL_CALL case_(Predicate<PredT>& val) {
+	return Case<PredT>(*static_cast<const PredT*>(&val));
 }
-
-#endif
 
 // =========================================================================
 // class CaseAct
 
-template <class CondT, class ActT>
+template <class PredT, class ActT>
 class CaseAct
 {
 public:
-	const CondT m_cond;
+	const PredT m_pred;
 	const ActT m_act;
 
 public:
-	CaseAct() : m_cond(), m_act() {}
-	CaseAct(const CondT& cond, const ActT& act)
-		: m_cond(cond), m_act(act) {}
+	CaseAct() : m_pred(), m_act() {}
+	CaseAct(const PredT& pred, const ActT& act)
+		: m_pred(pred), m_act(act) {}
 
 public:
 	enum { character = 0 };
 
-	typedef typename CondT::value_type value_type;
-
 	template <class ValueT, class SourceT, class ContextT>
 	MatchCode TPL_CALL match_if(const ValueT& val, SourceT& ar, ContextT& context) const
 	{
-		if (!m_cond(val))
+		if (!m_pred(val))
 			return matchFailed;
 		m_act();
 		return matchOk;

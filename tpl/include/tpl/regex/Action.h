@@ -110,11 +110,23 @@ namespace tpl {																\
 	TPL_ASSIG_(AssigTag, Assig)												\
 }
 
+#define TPL_ASSIG_DEFVALTYPE(ValueType)										\
+	template <class Iterator>												\
+	struct Default {														\
+		typedef ValueType value_type;										\
+	};
+
 #define TPL_ASSIG_PREPARE(AssigTag, ValueT)									\
 	typedef typename SourceT::iterator iterator;							\
-	typedef SelectValueType<ValueT, std::Range<iterator> > SelectT_;		\
+	typedef SelectValueType<ValueT, NS_STDEXT::Range<iterator> > SelectT_;	\
 	typedef typename SelectT_::value_type value_type;						\
 	typedef typename SelectAssig<AssigTag, value_type>::assig_type assig_type;
+	
+#define TPL_ASSIG_PREPARE1(AssigTag)										\
+	typedef typename SourceT::iterator iterator;							\
+	typedef typename AssigTraits<AssigTag>::assig_type assig_type;			\
+	typedef typename assig_type::template Default<iterator> DefaultT_;		\
+	typedef typename DefaultT_::value_type value_type;
 
 #define TPL_ASSIG_GET(pos, pos2, pParam)									\
 	assig_type::template get<value_type>(pos, pos2, pParam)

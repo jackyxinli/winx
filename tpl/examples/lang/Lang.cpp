@@ -132,7 +132,7 @@ int main(int argc, const char* argv[])
 			[
 				'(' + rExpr + ')' + rAssignment +
 				*(gr("elif") + '(' + rExpr + ')' + rAssignment) +
-				c_symbol_("else") + rAssignment
+				c_symbol()/eq("else") + rAssignment
 			],
 			case_("case")
 			[

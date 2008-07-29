@@ -29,10 +29,10 @@ int main()
 
 	source >> cpp_skip_
 		[
-			gr(c_symbol_("class")) + c_symbol()/tagName +
+			gr(c_symbol()/eq("class")) + c_symbol()/tagName +
 			!(':' +
 				(
-					!gr(c_symbol_("public")/tagAccess) +
+					!gr(c_symbol()/eq("public")/tagAccess) +
 					c_symbol()/tagName
 				)/tagBase % ','
 			) +

@@ -67,7 +67,7 @@ public:
 };
 
 template <class T1, class T2> __forceinline
-Grammar<GAnd<T1, T2> > TPL_CALL operator+(const Grammar<T1>& x, const Grammar<T2>& y) {
+Grammar<GAnd<T1, T2> > const TPL_CALL operator+(const Grammar<T1>& x, const Grammar<T2>& y) {
 	return Grammar<GAnd<T1, T2> >(x, y);
 }
 
@@ -102,7 +102,7 @@ public:
 };
 
 template <class T1, class T2> __forceinline
-Grammar<GOr<T1, T2> > TPL_CALL operator|(const Grammar<T1>& x, const Grammar<T2>& y) {
+Grammar<GOr<T1, T2> > const TPL_CALL operator|(const Grammar<T1>& x, const Grammar<T2>& y) {
 	return Grammar<GOr<T1, T2> >(x, y);
 }
 
@@ -147,7 +147,7 @@ public:
 };
 
 template <class T1, class T2> __forceinline
-Grammar<GRestr<T1, T2> > TPL_CALL operator/(const Grammar<T1>& x, const Grammar<T2>& y) {
+Grammar<GRestr<T1, T2> > const TPL_CALL operator/(const Grammar<T1>& x, const Grammar<T2>& y) {
 	return Grammar<GRestr<T1, T2> >(x, y);
 }
 
@@ -183,7 +183,7 @@ public:
 };
 
 template <class T1> __forceinline
-Grammar<GRepeat0<T1> > TPL_CALL operator*(const Grammar<T1>& x) {
+Grammar<GRepeat0<T1> > const TPL_CALL operator*(const Grammar<T1>& x) {
 	return Grammar<GRepeat0<T1> >(x);
 }
 
@@ -220,7 +220,7 @@ public:
 };
 
 template <class T1> __forceinline
-Grammar<GRepeat1<T1> > TPL_CALL operator+(const Grammar<T1>& x) {
+Grammar<GRepeat1<T1> > const TPL_CALL operator+(const Grammar<T1>& x) {
 	return Grammar<GRepeat1<T1> >(x);
 }
 
@@ -256,7 +256,7 @@ public:
 };
 
 template <class T1> __forceinline
-Grammar<GRepeat01<T1> > TPL_CALL operator!(const Grammar<T1>& x) {
+Grammar<GRepeat01<T1> > const TPL_CALL operator!(const Grammar<T1>& x) {
 	return Grammar<GRepeat01<T1> >(x);
 }
 
@@ -312,17 +312,17 @@ public:
 };
 
 template <unsigned nMin, class T1> __forceinline
-Grammar<GRepeat<T1, nMin> > TPL_CALL repeat_ge(const Grammar<T1>& x) {
+Grammar<GRepeat<T1, nMin> > TPL_CALL const repeat_ge(const Grammar<T1>& x) {
 	return Grammar<GRepeat<T1, nMin> >(x);
 }
 
 template <unsigned nMin, class T1> __forceinline
-Grammar<GRepeat<T1, nMin, nMin> > TPL_CALL repeat(const Grammar<T1>& x) {
+Grammar<GRepeat<T1, nMin, nMin> > const TPL_CALL repeat(const Grammar<T1>& x) {
 	return Grammar<GRepeat<T1, nMin, nMin> >(x);
 }
 
 template <unsigned nMin, unsigned nMax, class T1> __forceinline
-Grammar<GRepeat<T1, nMin, nMax> > TPL_CALL repeat(const Grammar<T1>& x) {
+Grammar<GRepeat<T1, nMin, nMax> > const TPL_CALL repeat(const Grammar<T1>& x) {
 	return Grammar<GRepeat<T1, nMin, nMax> >(x);
 }
 
@@ -387,7 +387,7 @@ public:
 #endif
 
 template <class T1, class T2> __forceinline
-Grammar<GLst<T1, T2> > TPL_CALL operator%(const Grammar<T1>& x, const Grammar<T2>& y) {
+Grammar<GLst<T1, T2> > const TPL_CALL operator%(const Grammar<T1>& x, const Grammar<T2>& y) {
 	return Grammar<GLst<T1, T2> >(x, y);
 }
 

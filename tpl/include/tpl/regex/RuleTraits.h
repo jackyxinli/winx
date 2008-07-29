@@ -232,10 +232,10 @@ Rule< Op<T1, EqStr_<CharT> > > TPL_CALL operator op(const Rule<T1>& x, const Cha
 
 #define TPL_GRAMMAR_CH_BINARY_OP1_(op, Op, CharT)									\
 template <class T2> __forceinline													\
-Grammar< Op<Gr<Ch1>, T2> > TPL_CALL operator op(CharT x, const Grammar<T2>& y)		\
+Grammar< Op<Gr<Ch1>, T2> > const TPL_CALL operator op(CharT x, const Grammar<T2>& y) \
 	{ return gr(x) op y; }															\
 template <class T1> __forceinline													\
-Grammar< Op<T1, Gr<Ch1> > > TPL_CALL operator op(const Grammar<T1>& x, CharT y)		\
+Grammar< Op<T1, Gr<Ch1> > > const TPL_CALL operator op(const Grammar<T1>& x, CharT y) \
 	{ return x op gr(y); }
 
 #define TPL_GRAMMAR_CH_BINARY_OP_(op, Op)											\
@@ -247,10 +247,10 @@ Grammar< Op<T1, Gr<Ch1> > > TPL_CALL operator op(const Grammar<T1>& x, CharT y)	
 
 #define TPL_GRAMMAR_STR_BINARY_OP1_(op, Op, CharT)									\
 template <class T2> __forceinline													\
-Grammar< Op<Gr<EqStr_<CharT> >, T2> > TPL_CALL operator op(const CharT* x, const Grammar<T2>& y) \
+Grammar< Op<Gr<EqStr_<CharT> >, T2> > const TPL_CALL operator op(const CharT* x, const Grammar<T2>& y) \
 	{ return gr(x) op y; }															\
 template <class T1> __forceinline													\
-Grammar< Op<T1, Gr<EqStr_<CharT> > > > TPL_CALL operator op(const Grammar<T1>& x, const CharT* y) \
+Grammar< Op<T1, Gr<EqStr_<CharT> > > > const TPL_CALL operator op(const Grammar<T1>& x, const CharT* y) \
 	{ return x op gr(y); }
 
 #define TPL_GRAMMAR_STR_BINARY_OP_(op, Op)											\

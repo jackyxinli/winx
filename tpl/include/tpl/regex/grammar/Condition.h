@@ -47,7 +47,7 @@ public:
 	template <class SourceT, class ContextT, class SkipperT>
 	bool TPL_CALL match(SourceT& ar, ContextT& context, const SkipperT& skipper_) const
 	{
-		TPL_ASSIG_PREPARE(typename RegExT::assig_tag, typename ConditionT::value_type)
+		TPL_ASSIG_PREPARE1(typename RegExT::assig_tag)
 
 		skipper_.match(ar, context);
 		typename ContextT::template trans_type<RegExT::character> trans(ar, context);
@@ -66,7 +66,7 @@ public:
 template <class RegExT, class ConditionT>
 struct IndexOpTraits<Rule<RegExT>, GCondition<ConditionT> >
 {
-	typedef Grammar<GCond<RegExT, ConditionT> > result_type;
+	typedef Grammar<GCond<RegExT, ConditionT> > const result_type;
 
 	static result_type TPL_CALL call(const Rule<RegExT>& rule_, const GCondition<ConditionT>& cond_) {
 		return result_type(rule_, cond_);
@@ -76,28 +76,26 @@ struct IndexOpTraits<Rule<RegExT>, GCondition<ConditionT> >
 // =========================================================================
 // class GCondBind
 
-template <class CondT, class NextT>
+template <class PredT, class NextT>
 class GCondBind
 {
 public:
-	const CondT m_cond;
+	const PredT m_pred;
 	const NextT m_next;
 
 public:
-	GCondBind() : m_cond(), m_next() {}
-	GCondBind(const CondT& cond, const NextT& next_)
-		: m_cond(cond), m_next(next_) {}
+	GCondBind() : m_pred(), m_next() {}
+	GCondBind(const PredT& pred_, const NextT& next_)
+		: m_pred(pred_), m_next(next_) {}
 	
 public:
 	enum { character = NextT::character };
-	
-	typedef typename CondT::value_type value_type;
 	
 	template <class ValueT, class SourceT, class ContextT, class SkipperT>
 	MatchCode TPL_CALL match_if(
 		const ValueT& val, SourceT& ar, ContextT& context, const SkipperT& skipper_) const
 	{
-		if (m_cond(val))
+		if (m_pred(val))
 			return m_next.match(ar, context, skipper_) ? matchOk : matchStop;
 		else
 			return matchFailed;
@@ -114,9 +112,6 @@ private:
 	const CondT1 m_x;
 	const CondT2 m_y;
 	
-	typedef typename CondT1::value_type T1;
-	typedef typename CondT2::value_type T2;
-
 public:
 	GCondOr(const CondT1& x, const CondT2& y)
 		: m_x(x), m_y(y) {}
@@ -124,8 +119,6 @@ public:
 public:
 	enum { character = CondT1::character | CondT2::character };
 	
-	typedef typename AndValueType<T1, T2>::value_type value_type;
-
 	template <class ValueT, class SourceT, class ContextT, class SkipperT>
 	MatchCode TPL_CALL match_if(
 		const ValueT& val, SourceT& ar, ContextT& context, const SkipperT& skipper_) const
@@ -140,7 +133,7 @@ public:
 
 template <class T1, class T2>
 __forceinline
-GCondition<GCondOr<T1, T2> >
+GCondition<GCondOr<T1, T2> > const
 TPL_CALL operator,(const GCondition<T1>& x, const GCondition<T2>& y) {
 	return GCondition<GCondOr<T1, T2> >(x, y);
 }

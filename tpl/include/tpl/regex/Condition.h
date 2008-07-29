@@ -26,33 +26,6 @@
 NS_TPL_BEGIN
 
 // =========================================================================
-// AndValueType
-
-template <class T1, class T2>
-struct AndValueType {
-};
-
-template <class T1>
-struct AndValueType<T1, T1> {
-	typedef T1 value_type;
-};
-
-template <class T1>
-struct AndValueType<T1, DefaultType> {
-	typedef T1 value_type;
-};
-
-template <class T2>
-struct AndValueType<DefaultType, T2> {
-	typedef T2 value_type;
-};
-
-template <>
-struct AndValueType<DefaultType, DefaultType> {
-	typedef DefaultType value_type;
-};
-
-// =========================================================================
 // class Cond
 
 template <class RegExT, class ConditionT>
@@ -75,7 +48,7 @@ public:
 	template <class SourceT, class ContextT>
 	bool TPL_CALL match(SourceT& ar, ContextT& context) const
 	{
-		TPL_ASSIG_PREPARE(typename RegExT::assig_tag, typename ConditionT::value_type)
+		TPL_ASSIG_PREPARE1(typename RegExT::assig_tag)
 		
 		typename ContextT::template trans_type<RegExT::character> trans(ar, context);
 		const iterator pos = ar.position();
@@ -93,7 +66,7 @@ public:
 template <class RegExT, class ConditionT>
 struct IndexOpTraits<Rule<RegExT>, Condition<ConditionT> >
 {
-	typedef Rule<Cond<RegExT, ConditionT> > result_type;
+	typedef Rule<Cond<RegExT, ConditionT> > const result_type;
 
 	static result_type TPL_CALL call(const Rule<RegExT>& rule_, const Condition<ConditionT>& cond_) {
 		return result_type(rule_, cond_);
@@ -103,27 +76,25 @@ struct IndexOpTraits<Rule<RegExT>, Condition<ConditionT> >
 // =========================================================================
 // class CondBind
 
-template <class CondT, class NextT>
+template <class PredT, class NextT>
 class CondBind
 {
 public:
-	const CondT m_cond;
+	const PredT m_pred;
 	const NextT m_next;
 
 public:
-	CondBind() : m_cond(), m_next() {}
-	CondBind(const CondT& cond, const NextT& next_)
-		: m_cond(cond), m_next(next_) {}
+	CondBind() : m_pred(), m_next() {}
+	CondBind(const PredT& pred_, const NextT& next_)
+		: m_pred(pred_), m_next(next_) {}
 
 public:
 	enum { character = NextT::character };
 
-	typedef typename CondT::value_type value_type;
-
 	template <class ValueT, class SourceT, class ContextT>
 	MatchCode TPL_CALL match_if(const ValueT& val, SourceT& ar, ContextT& context) const
 	{
-		if (m_cond(val))
+		if (m_pred(val))
 			return m_next.match(ar, context) ? matchOk : matchStop;
 		else
 			return matchFailed;
@@ -133,13 +104,10 @@ public:
 // =========================================================================
 // class CondTrue
 
-template <class ValT>
 class CondTrue
 {
 public:
 	enum { character = 0 };
-
-	typedef ValT value_type;
 
 	template <class ValueT, class SourceT, class ContextT>
 	MatchCode TPL_CALL match_if(const ValueT& val, SourceT& ar, ContextT& context) const {
@@ -157,17 +125,12 @@ private:
 	const CondT1 m_x;
 	const CondT2 m_y;
 
-	typedef typename CondT1::value_type T1;
-	typedef typename CondT2::value_type T2;
-
 public:
 	CondOr(const CondT1& x, const CondT2& y)
 		: m_x(x), m_y(y) {}
 
 public:
 	enum { character = CondT1::character | CondT2::character };
-	
-	typedef typename AndValueType<T1, T2>::value_type value_type;
 	
 	template <class ValueT, class SourceT, class ContextT>
 	MatchCode TPL_CALL match_if(const ValueT& val, SourceT& ar, ContextT& context) const
@@ -187,10 +150,10 @@ TPL_CALL operator,(const Condition<T1>& x, const Condition<T2>& y) {
 }
 
 template <class T1>
-inline Condition<CondOr<T1, CondTrue<typename T1::value_type> > > const
+inline Condition<CondOr<T1, CondTrue> > const
 TPL_CALL operator,(const Condition<T1>& x, const bool fTrue) {
 	TPL_ASSERT(fTrue == true);
-	typedef CondTrue<typename T1::value_type> T2;
+	typedef CondTrue T2;
 	return Condition<CondOr<T1, T2> >(x, T2());
 }
 
@@ -211,8 +174,6 @@ public:
 
 public:
 	enum { character = 0 };
-
-	typedef typename CondT::value_type value_type;
 
 	template <class ValueT, class SourceT, class ContextT>
 	MatchCode TPL_CALL match_if(const ValueT& val, SourceT& ar, ContextT& context) const

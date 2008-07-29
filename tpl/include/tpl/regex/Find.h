@@ -177,30 +177,30 @@ public:
 };
 
 template <bool bEat, class PredT>
-__forceinline Rule<FindIf<PredT, bEat> > TPL_CALL find_if(PredT pred) {
+__forceinline Rule<FindIf<PredT, bEat> > const TPL_CALL find_if(PredT pred) {
 	return Rule<FindIf<PredT, bEat> >(pred);
 }
 
 template <class PredT>
-__forceinline Rule<FindIf<PredT, false> > TPL_CALL find_if(PredT pred) {
+__forceinline Rule<FindIf<PredT, false> > const TPL_CALL find_if(PredT pred) {
 	return Rule<FindIf<PredT, false> >(pred);
 }
 
 template <bool bEat>
-__forceinline Rule<FindEol<bEat, false> > TPL_CALL find_eol() {
+__forceinline Rule<FindEol<bEat, false> > const TPL_CALL find_eol() {
 	return Rule<FindEol<bEat, false> >();
 }
 
-__forceinline Rule<FindEol<false, false> > TPL_CALL find_eol() {
+__forceinline Rule<FindEol<false, false> > const TPL_CALL find_eol() {
 	return Rule<FindEol<false, false> >();
 }
 
 template <bool bEat>
-__forceinline Rule<FindEol<bEat, true> > TPL_CALL find_strict_eol() {
+__forceinline Rule<FindEol<bEat, true> > const TPL_CALL find_strict_eol() {
 	return Rule<FindEol<bEat, true> >();
 }
 
-__forceinline Rule<FindEol<false, true> > TPL_CALL find_strict_eol() {
+__forceinline Rule<FindEol<false, true> > const TPL_CALL find_strict_eol() {
 	return Rule<FindEol<false, true> >();
 }
 
@@ -222,17 +222,17 @@ class FindChSet : public FindIf<C_<m_c1, m_c2, m_c3, m_c4>, bEat> {
 };
 
 template <int m_c1, int m_c2>
-__forceinline Rule<FindChSet<false, m_c1, m_c2> > TPL_CALL find_set() {
+__forceinline Rule<FindChSet<false, m_c1, m_c2> > const TPL_CALL find_set() {
 	return Rule<FindChSet<false, m_c1, m_c2> >();
 }
 
 template <int m_c1, int m_c2, int m_c3>
-__forceinline Rule<FindChSet<false, m_c1, m_c2, m_c3> > TPL_CALL find_set() {
+__forceinline Rule<FindChSet<false, m_c1, m_c2, m_c3> > const TPL_CALL find_set() {
 	return Rule<FindChSet<false, m_c1, m_c2, m_c3> >();
 }
 
 template <int m_c1, int m_c2, int m_c3, int m_c4>
-__forceinline Rule<FindChSet<false, m_c1, m_c2, m_c3, m_c4> > TPL_CALL find_set() {
+__forceinline Rule<FindChSet<false, m_c1, m_c2, m_c3, m_c4> > const TPL_CALL find_set() {
 	return Rule<FindChSet<false, m_c1, m_c2, m_c3, m_c4> >();
 }
 
@@ -244,22 +244,22 @@ class StrToken : public FindIf<C_<m_c1, m_c2, m_c3, m_c4>, false, true> {
 };
 
 template <int m_c1>
-__forceinline Rule<StrToken<m_c1> > TPL_CALL str_token() {
+__forceinline Rule<StrToken<m_c1> > const TPL_CALL str_token() {
 	return Rule<StrToken<m_c1> >();
 }
 
 template <int m_c1, int m_c2>
-__forceinline Rule<StrToken<m_c1, m_c2> > TPL_CALL str_token() {
+__forceinline Rule<StrToken<m_c1, m_c2> > const TPL_CALL str_token() {
 	return Rule<StrToken<m_c1, m_c2> >();
 }
 
 template <int m_c1, int m_c2, int m_c3>
-__forceinline Rule<StrToken<m_c1, m_c2, m_c3> > TPL_CALL str_token() {
+__forceinline Rule<StrToken<m_c1, m_c2, m_c3> > const TPL_CALL str_token() {
 	return Rule<StrToken<m_c1, m_c2, m_c3> >();
 }
 
 template <int m_c1, int m_c2, int m_c3, int m_c4>
-__forceinline Rule<StrToken<m_c1, m_c2, m_c3, m_c4> > TPL_CALL str_token() {
+__forceinline Rule<StrToken<m_c1, m_c2, m_c3, m_c4> > const TPL_CALL str_token() {
 	return Rule<StrToken<m_c1, m_c2, m_c3, m_c4> >();
 }
 
@@ -327,7 +327,7 @@ template <class Iterator, bool bEat = false>
 class FindLeaf : public FindStr_<Iterator, bEat>
 {
 public:
-	FindLeaf(const std::Range<Iterator>& s_)
+	FindLeaf(const NS_STDEXT::Range<Iterator>& s_)
 		: FindStr_<Iterator, bEat>(s_.begin(), s_.end()) {};
 };
 
@@ -380,7 +380,7 @@ struct FindTraits<CharT[sz], bEat> {
 };
 
 template <class Iterator, bool bEat>
-struct FindTraits<std::Range<Iterator>, bEat> {
+struct FindTraits<NS_STDEXT::Range<Iterator>, bEat> {
 	typedef FindLeaf<Iterator, bEat> find_type;
 };
 
@@ -452,22 +452,22 @@ public:
 };
 
 template <bool bEat, class Type> __forceinline
-Rule<typename FindTraits<Type, bEat>::find_type> TPL_CALL find(const Type& val) {
+Rule<typename FindTraits<Type, bEat>::find_type> const TPL_CALL find(const Type& val) {
 	return Rule<typename FindTraits<Type, bEat>::find_type>(val);
 }
 
 template <class Type> __forceinline
-Rule<typename FindTraits<Type, false>::find_type> TPL_CALL find(const Type& val) {
+Rule<typename FindTraits<Type, false>::find_type> const TPL_CALL find(const Type& val) {
 	return Rule<typename FindTraits<Type, false>::find_type>(val);
 }
 
 template <bool bEat, class Type> __forceinline
-Rule<typename FindRefTraits<Type, bEat>::find_type> TPL_CALL find_ref(const Type& var_) {
+Rule<typename FindRefTraits<Type, bEat>::find_type> const TPL_CALL find_ref(const Type& var_) {
 	return Rule<typename FindRefTraits<Type, bEat>::find_type>(var_);
 }
 
 template <class Type> __forceinline
-Rule<typename FindRefTraits<Type, false>::find_type> TPL_CALL find_ref(const Type& var_) {
+Rule<typename FindRefTraits<Type, false>::find_type> const TPL_CALL find_ref(const Type& var_) {
 	return Rule<typename FindRefTraits<Type, false>::find_type>(var_);
 }
 
