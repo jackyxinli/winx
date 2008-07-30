@@ -2,7 +2,11 @@
 	{ "amp",	38 },
 	{ "lt",	60 },
 	{ "gt",	62 },
+#if defined(TPL_HTML_NBSP)
 	{ "nbsp",	160 },
+#else
+	{ "nbsp",	' ' },
+#endif
 	{ "iexcl",	161 },
 	{ "cent",	162 },
 	{ "pound",	163 },
