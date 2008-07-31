@@ -128,7 +128,7 @@ public:
 		for (int j = 0; j < TestN; ++j)
 		{
 			typedef std::pair<const char*, int> TupleT;
-			typedef std::Relation<TupleT, 3, std::HashMapIndexing, std::AutoFreeAlloc> RelationT;
+			typedef std::Relation<TupleT, 3, 0, std::HashMapIndexing, std::AutoFreeAlloc> RelationT;
 			
 			RelationT rel(m_alloc);
 		
@@ -149,7 +149,7 @@ public:
 		for (int j = 0; j < TestN; ++j)
 		{
 			typedef std::pair<const char*, int> TupleT;
-			typedef std::Relation<TupleT, 3, std::HashMapIndexing, std::AutoFreeAlloc> RelationT;
+			typedef std::Relation<TupleT, 3, 0, std::HashMapIndexing, std::AutoFreeAlloc> RelationT;
 			typedef RelationT::Indexing<0> Indexing0;
 			
 			RelationT rel(m_alloc);

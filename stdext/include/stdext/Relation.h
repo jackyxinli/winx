@@ -35,8 +35,16 @@
 #include "Map.h"
 #endif
 
+#ifndef STDEXT_SET_H
+#include "Set.h"
+#endif
+
 #ifndef STDEXT_HASHMAP_H
 #include "HashMap.h"
+#endif
+
+#ifndef STDEXT_HASHSET_H
+#include "HashSet.h"
 #endif
 
 #ifndef STDEXT_STATICALGO_H
@@ -52,6 +60,7 @@ template <int Field, class KeyT, class AllocT>
 struct MapIndexing
 {
 	typedef MultiMap<KeyT, void*, std::less<KeyT>, AllocT> type;
+	typedef Set<KeyT, std::less<KeyT>, AllocT> prime_type;
 };
 
 // -------------------------------------------------------------------------
@@ -61,6 +70,7 @@ template <int Field, class KeyT, class AllocT>
 struct HashMapIndexing
 {
 	typedef HashMultiMap<KeyT, void*, HashCompare<KeyT>, AllocT> type;
+	typedef HashSet<KeyT, HashCompare<KeyT>, AllocT> prime_type;
 };
 
 // -------------------------------------------------------------------------
@@ -180,11 +190,91 @@ struct IndexingAct_<0, TupleT, IndexingT, AllocT>
 };
 
 // -------------------------------------------------------------------------
+// PrimaryKeyUnionFieldsAct_
+
+template <
+	int PrimaryKeyUnionFieldMasks,
+	class TupleT,
+	template <int Field, class KeyT, class AllocT> class IndexingT,
+	class AllocT
+	>
+class PrimaryKeyUnionFieldsAct_
+{
+private:
+	typedef TupleSelectKey<TupleT, PrimaryKeyUnionFieldMasks> PrimaryKeyT;
+	typedef IndexingT<0, PrimaryKeyT, AllocT> PrimaryIndexingT;
+	typedef typename PrimaryIndexingT::prime_type PrimarySetT;
+	
+public:
+	typedef PrimarySetT primary_set;
+
+	template <class RelationT>
+	static const TupleT* winx_call insert(RelationT* rel, const TupleT& val)
+	{
+		typedef typename RelationT::IndexingActT IndexingActT;
+		const std::pair<typename primary_set::iterator, bool> ret = rel->m_data.insert(val);
+		if (ret.second)
+		{
+			const TupleT& t = *ret.first;
+			IndexingActT::makeIndexing(rel->m_indexs, t);
+			return &t;
+		}
+		return NULL;
+	}
+};
+
+template <
+	class TupleT,
+	template <int Field, class KeyT, class AllocT> class IndexingT,
+	class AllocT
+	>
+class PrimaryKeyUnionFieldsAct_<0, TupleT, IndexingT, AllocT>
+{
+private:
+	class PrimarySetT
+	{
+	public:
+		typedef bool iterator;
+		typedef bool const_iterator;
+
+		PrimarySetT(AllocT&) {}
+		
+		size_t winx_call size() const;
+
+		void winx_call copy(const PrimarySetT&) {}
+		void winx_call erase(const TupleT& t) {}
+		void winx_call clear() {}
+	};
+	
+public:
+	typedef PrimarySetT primary_set;
+
+	template <class RelationT>
+	static const TupleT* winx_call insert(RelationT* rel, const TupleT& val)
+	{
+		typedef typename RelationT::IndexingActT IndexingActT;
+
+		enum { HasDestructor = TupleTraits<TupleT>::HasDestructor };
+	
+		AllocT& alloc = rel->get_alloc();
+		
+		const TupleT* t = HasDestructor ?
+			STD_NEW(alloc, TupleT)(val) :
+			STD_UNMANAGED_NEW(alloc, TupleT)(val);
+		
+		IndexingActT::makeIndexing(rel->m_indexs, *t);
+		
+		return t;
+	}
+};
+
+// -------------------------------------------------------------------------
 // class Relation
 
 template <
 	class TupleT,
 	int IndexedFieldMasks,
+	int PrimaryKeyUnionFieldMasks = 0,
 	template <int Field, class KeyT, class AllocT> class IndexingT = HashMapIndexing,
 	class AllocT = ScopedAlloc>
 class Relation
@@ -221,19 +311,25 @@ private:
 	void operator=(const Relation&);
 
 	typedef IndexingAct_<IndexedFieldMasks, TupleT, IndexingT, AllocT> IndexingActT;
-
-	enum { HasDestructor = TupleTraits<TupleT>::HasDestructor };
+	typedef PrimaryKeyUnionFieldsAct_<PrimaryKeyUnionFieldMasks, TupleT, IndexingT, AllocT> PrimaryKeyActT;
+	typedef typename PrimaryKeyActT::primary_set PrimarySetT;
+	
+	friend class PrimaryKeyUnionFieldsAct_<PrimaryKeyUnionFieldMasks, TupleT, IndexingT, AllocT>;
 	
 private:
 	void* m_indexs[IndexedFields];
 	AllocT& m_alloc;
-
+	PrimarySetT m_data;
+	
 public:
 	typedef size_t size_type;
 	typedef AllocT alloc_type;
+
+	typedef PrimarySetT primary_set;
+	typedef typename PrimarySetT::iterator primary_set_iterator;
 	
 	explicit Relation(AllocT& alloc)
-		: m_alloc(alloc)
+		: m_alloc(alloc), m_data(alloc)
 	{
 		IndexingActT::init(alloc, m_indexs);
 	}
@@ -243,18 +339,30 @@ public:
 		return m_alloc;
 	}
 	
-	size_type winx_call size() const {
-		typedef Indexing<0> Indexing0;
-		return ((const typename Indexing0::type*)m_indexs[0])->size();
+	const primary_set& winx_call data() const {
+		return m_data;
+	}
+
+	size_type winx_call size() const
+	{
+		if (PrimaryKeyUnionFieldMasks)
+			return m_data.size();
+		else {
+			typedef Indexing<0> Indexing0;
+			return ((const typename Indexing0::type*)m_indexs[0])->size();
+		}
 	}
 	
 	void winx_call clear() {
-		if (size())
+		if (size()) {
 			IndexingActT::clear(m_indexs);
+			m_data.clear();
+		}
 	}
 
 	void winx_call copy(const Relation& from) {
 		IndexingActT::copy(m_indexs, from.m_indexs);
+		m_data.copy(from.m_data);
 	}
 	
 	void winx_call swap(Relation& o) {
@@ -268,7 +376,9 @@ public:
 		enum { FieldIdx = MasksIndexOfBit<Field, IndexedFieldMasks>::value };
 
 		typedef Indexing<Field> IndexingN;
-		IndexingActT::template eraseIndexing<Field>(m_indexs, IndexingN::item(it));
+		const TupleT& t = IndexingN::item(it);
+		IndexingActT::template eraseIndexing<Field>(m_indexs, t);
+		m_data.erase(t);
 		((typename IndexingN::type*)m_indexs[FieldIdx])->erase(it);
 	}
 
@@ -282,7 +392,9 @@ public:
 		size_type n = 0;
 		typedef Indexing<Field> IndexingN;
 		for (typename Indexing<Field>::iterator it = first; it != last; ++it) {
-			IndexingActT::template eraseIndexing<Field>(m_indexs, IndexingN::item(it));
+			const TupleT& t = IndexingN::item(it);
+			IndexingActT::template eraseIndexing<Field>(m_indexs, t);
+			m_data.erase(t);
 			++n;
 		}
 		((typename IndexingN::type*)m_indexs[FieldIdx])->erase(first, last);
@@ -334,13 +446,9 @@ public:
 		return ((MapT*)m_indexs[FieldIdx])->equal_range(key);
 	}
 
-	void winx_call insert(const TupleT& val)
+	const TupleT* winx_call insert(const TupleT& val)
 	{
-		const TupleT* t = HasDestructor ?
-			STD_NEW(m_alloc, TupleT)(val) :
-			STD_UNMANAGED_NEW(m_alloc, TupleT)(val);
-		
-		IndexingActT::makeIndexing(m_indexs, *t);
+		return PrimaryKeyActT::insert(this, val);
 	}
 };
 
@@ -363,7 +471,7 @@ public:
 	{
 		typedef std::AutoFreeAlloc AllocT;
 		typedef std::pair<std::string, int> TupleT;
-		typedef std::Relation<TupleT, 3, std::HashMapIndexing, AllocT> RelationT;
+		typedef std::Relation<TupleT, 3, 0, std::HashMapIndexing, AllocT> RelationT;
 		typedef RelationT::Indexing<0> Indexing0;
 		typedef RelationT::Indexing<1> Indexing1;
 		

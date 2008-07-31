@@ -19,13 +19,22 @@
 #ifndef STDEXT_TUPLE_H
 #define STDEXT_TUPLE_H
 
+#ifndef STDEXT_STATICALGO_H
+#include "StaticAlgo.h"
+#endif
+
+#ifndef STDEXT_HASH_H
+#include "Hash.h"
+#endif
+
 NS_STDEXT_BEGIN
 
 // -------------------------------------------------------------------------
 // TupleItemTraits
 
 template <int Index, class TupleT>
-struct TupleItemTraits{
+struct TupleItemTraits
+{
 };
 
 template <class FirstT, class SecondT>
@@ -77,6 +86,96 @@ struct TupleTraits<std::pair<FirstT, SecondT> >
 	enum { HasDestructor = 
 		DestructorTraits<FirstT>::HasDestructor |
 		DestructorTraits<SecondT>::HasDestructor };
+};
+
+// -------------------------------------------------------------------------
+// class TupleSelectKey
+
+template <class TupleT, int FieldMasks>
+class TupleSelectKey : public TupleT
+{
+private:
+	typedef MasksTraits<FieldMasks> Tr_;
+	typedef TupleItemTraits<StaticLog2<Tr_::Head>::value, TupleT> ItemTr_;
+	typedef TupleSelectKey<TupleT, Tr_::Tail> NextT;
+
+public:
+	TupleSelectKey() : TupleT() {}
+	TupleSelectKey(const TupleT& t) : TupleT(t) {
+	}
+	
+	size_t winx_call hash_value() const
+	{
+		Hash<typename ItemTr_::value_type> hashf;
+		return hashf(ItemTr_::get(*this)) * 5 + ((const NextT*)this)->hash_value();
+	}
+	
+	bool winx_call operator<(const TupleSelectKey& b) const
+	{
+		typename ItemTr_::const_reference ia = ItemTr_::get(*this);
+		typename ItemTr_::const_reference ib = ItemTr_::get(b);
+		if (ia < ib)
+			return true;
+		else if (ib < ia)
+			return false;
+		else
+			return *(const NextT*)this < *(const NextT*)&b;
+	}
+
+	bool winx_call operator>(const TupleSelectKey& b) const
+	{
+		typename ItemTr_::const_reference ia = ItemTr_::get(*this);
+		typename ItemTr_::const_reference ib = ItemTr_::get(b);
+		if (ia > ib)
+			return true;
+		else if (ib > ia)
+			return false;
+		else
+			return *(const NextT*)this > *(const NextT*)&b;
+	}
+
+	bool winx_call operator==(const TupleSelectKey& b) const
+	{
+		typename ItemTr_::const_reference ia = ItemTr_::get(*this);
+		typename ItemTr_::const_reference ib = ItemTr_::get(b);
+		if (ia == ib)
+			return *(const NextT*)this == *(const NextT*)&b;
+		else
+			return false;
+	}
+};
+
+template <class TupleT>
+class TupleSelectKey<TupleT, 0>
+{
+public:
+	size_t winx_call hash_value() const {
+		return 0;
+	}
+	
+	bool winx_call operator<(const TupleSelectKey& b) const {
+		return false;
+	}
+
+	bool winx_call operator>(const TupleSelectKey& b) const {
+		return false;
+	}
+
+	bool winx_call operator==(const TupleSelectKey& b) const {
+		return true;
+	}
+};
+
+template <class TupleT, int FieldMasks>
+class Hash<TupleSelectKey<TupleT, FieldMasks> >
+{
+private:
+	typedef TupleSelectKey<TupleT, FieldMasks> KeyT;
+	
+public:
+	size_t winx_call operator()(const KeyT& v) const {
+		return v.hash_value();
+	}
 };
 
 // -------------------------------------------------------------------------

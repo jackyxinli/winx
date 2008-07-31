@@ -11,10 +11,11 @@ IncludeDir = -I../../../tpl/include -I../../../stdext/include -I../../../boost -
 # Configuration Release
 #
 ifeq ($(CFG), Release)
+	Libraries   += -lrt
 	ProductDir   = Release
 	ObjectDir    = Release
 	Product      = Release/test
-	CFlags       = $(Defines) -fPIC -D__32BIT__ -D__INTEL__ -D__LINUX__ -DLINUX  -DNDEBUG -O2 -D_MT -fexceptions -Wall
+	CFlags       = $(Defines) -fPIC -D__INTEL__ -D__LINUX__ -DLINUX -DNDEBUG -O2 -D_MT -fexceptions -Wall
 	CXXFlags     = $(CFlags) -fno-rtti
 	CompileC     = @gcc -c $(IncludeDir) $(CFlags) -o $@ $<
 	CompileCXX   = @g++ -c $(IncludeDir) $(CXXFlags) -o $@ $<
@@ -27,10 +28,11 @@ endif
 # Configuration Debug
 #
 ifeq ($(CFG), Debug)
+	Libraries   += -lrt
 	ProductDir   = Debug
 	ObjectDir    = Debug
 	Product      = Debug/test
-	CFlags       = $(Defines) -fPIC -D__32BIT__ -D__INTEL__ -D__LINUX__ -DLINUX  -D_DEBUG -g3 -D_MT -fexceptions -Wall
+	CFlags       = $(Defines) -fPIC -D__INTEL__ -D__LINUX__ -DLINUX -D_DEBUG -g3 -D_MT -fexceptions -Wall
 	CXXFlags     = $(CFlags) -fno-rtti
 	CompileC     = @gcc -c $(IncludeDir) $(CFlags) -o $@ $<
 	CompileCXX   = @g++ -c $(IncludeDir) $(CXXFlags) -o $@ $<
