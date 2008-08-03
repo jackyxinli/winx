@@ -23,6 +23,10 @@
 #include "Memory.h"
 #endif
 
+#ifndef STDEXT_STRING_H
+#include "String.h"
+#endif
+
 NS_STDEXT_BEGIN
 
 // -------------------------------------------------------------------------
@@ -161,13 +165,55 @@ typedef WinFileBufT<DefaultStaticAlloc> WinFileBuf;
 #pragma warning(disable:4996) // XXX  was declared deprecated
 #endif
 
+#define WINX_FILEBUF_SEGMENT_BYTES	4096
+
+template <class AllocT, class ContainerT>
+inline void winx_call readFile(
+	AllocT& alloc, ContainerT& file, FILE* fp, size_t cbSeg = WINX_FILEBUF_SEGMENT_BYTES)
+{
+	size_t cb;
+	char* buf;	
+	do
+	{
+		buf = (char*)alloc.allocate(cbSeg);
+		cb = ::fread(buf, 1, cbSeg, fp);
+		file.push_back(String(buf, buf+cb));
+	}
+	while (cb == cbSeg);
+}
+
 template <class AllocT>
 class FILEFileBufT : public AutoBufferT<AllocT>
 {
 private:
 	typedef AutoBufferT<AllocT> Base;
+	
+public:
+	FILEFileBufT() {}
+	
+	template <class InputFileT>
+	explicit FILEFileBufT(const InputFileT& file) {
+		read(file);
+	}
 
-	HRESULT winx_call _read(FILE* fp)
+	HRESULT winx_call readSeq(FILE* fp, size_t cbSeg = WINX_FILEBUF_SEGMENT_BYTES)
+	{
+		typedef std::vector<String> ContainerT;
+		
+		AutoFreeAlloc alloc;
+		ContainerT file;
+		readFile(alloc, file, fp, cbSeg);
+		
+		const size_t lFileSize = (file.size() - 1) * cbSeg + file.back().size();
+		char* buf = Base::allocate(lFileSize);
+		for(ContainerT::iterator it = file.begin(); it != file.end(); ++it) {
+			const String& i = *it;
+			buf = std::copy(i.begin(), i.end(), buf);
+		}
+		return S_OK;
+	}
+	
+	HRESULT winx_call readRand(FILE* fp)
 	{
 		WINX_ASSERT(!Base::good());
 		
@@ -182,22 +228,14 @@ private:
 
 		return S_OK;
 	}
-	
-public:
-	FILEFileBufT() {}
-	
-	template <class InputFileT>
-	explicit FILEFileBufT(const InputFileT& file) {
-		read(file);
-	}
-	
+
 	HRESULT winx_call read(LPCSTR file)
 	{
 		FILE* fp = ::fopen(file, "rb");
 		if (fp == NULL)
 			return STG_E_ACCESSDENIED;
 		
-		HRESULT hr = _read(fp);
+		HRESULT hr = readRand(fp);
 		::fclose(fp);
 		return hr;
 	}
