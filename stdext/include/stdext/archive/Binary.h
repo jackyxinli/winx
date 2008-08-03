@@ -39,119 +39,106 @@ NS_STDEXT_IO_BINARY_BEGIN
 // ==== BinaryWriter ====
 
 template <class WriteArchiveT>
-inline WriteArchiveT& winx_call put16i(
+inline void winx_call put16i(
 	IN WriteArchiveT& ar, IN UINT16 val) throw(IoException)
 {
 	_WinxByteSwap16(val);
 	ar.put( (const char*)&val, sizeof(val) );
-	return ar;
 }
 
 template <class WriteArchiveT>
-inline WriteArchiveT& winx_call put32i(
+inline void winx_call put32i(
 	IN WriteArchiveT& ar, IN UINT32 val) throw(IoException)
 {
 	_WinxByteSwap32(val);
 	ar.put( (const char*)&val, sizeof(val) );
-	return ar;
 }
 
 template <class WriteArchiveT, class StrucType>
-inline WriteArchiveT& winx_call put_struct(
+inline void winx_call put_struct(
 	IN WriteArchiveT& ar, IN const StrucType& struc) throw(IoException)
 {
 	_WinxByteSwapStruct(struc);
 	ar.put( (const char*)&struc, sizeof(struc) );
-	return ar;
 }
 
 #if defined(WINX_BYTESWAP)
 
 template <class WriteArchiveT>
-inline WriteArchiveT& put16i(
+inline void put16i(
 	IN WriteArchiveT& ar, IN const UINT16 warray[], IN UINT count) throw(IoException)
 {
 	for (UINT i = 0; i < count; ++i)
 		put16i(ar, warray[i]);
-	return ar;
 }
 
 template <class WriteArchiveT>
-inline WriteArchiveT& put16i(
+inline void put16i(
 	IN WriteArchiveT& ar, IN const INT16 warray[], IN UINT count) throw(IoException)
 {
 	for (UINT i = 0; i < count; ++i)
 		put16i(ar, warray[i]);
-	return ar;
 }
 
 template <class WriteArchiveT>
-inline WriteArchiveT& put32i(
+inline void WriteArchiveT& put32i(
 	IN WriteArchiveT& ar, IN const UINT32 dwarray[], IN UINT count) throw(IoException)
 {
 	for (UINT i = 0; i < count; ++i)
 		put32i(ar, dwarray[i]);
-	return ar;
 }
 
 template <class WriteArchiveT>
-inline WriteArchiveT& put32i(
+inline void put32i(
 	IN WriteArchiveT& ar, IN const INT32 dwarray[], IN UINT count) throw(IoException)
 {
 	for (UINT i = 0; i < count; ++i)
 		put32i(ar, dwarray[i]);
-	return ar;
 }
 
 template <class WriteArchiveT, class StrucType>
-inline WriteArchiveT& put_struct(
+inline void put_struct(
 	WriteArchiveT& ar, const StrucType* array, UINT count) throw(IoException)
 {
 	for (UINT i = 0; i < count; ++i)
 		put_struct(ar, array[i]);
-	return ar;
 }
 
 #else
 
 template <class WriteArchiveT>
-inline WriteArchiveT& put16i(
+inline void put16i(
 	WriteArchiveT& ar, IN const UINT16 warray[], IN UINT count) throw(IoException)
 {
 	ar.put( (const char*)warray, sizeof(UINT16)*count );
-	return ar;
 }
 
 template <class WriteArchiveT>
-inline WriteArchiveT& put16i(
+inline void put16i(
 	IN WriteArchiveT& ar, IN const INT16 warray[], IN UINT count) throw(IoException)
 {
 	ar.put( (const char*)warray, sizeof(INT16)*count );
-	return ar;
 }
 
 template <class WriteArchiveT>
-inline WriteArchiveT& put32i(
+inline void put32i(
 	IN WriteArchiveT& ar, IN const UINT32 dwarray[], IN UINT count) throw(IoException)
 {
 	ar.put( (const char*)dwarray, sizeof(UINT32)*count );
-	return ar;
 }
 
 template <class WriteArchiveT>
-inline WriteArchiveT& put32i(
+inline void put32i(
 	IN WriteArchiveT& ar, IN const INT32 dwarray[], IN UINT count) throw(IoException)
 {
 	ar.put( (const char*)dwarray, sizeof(INT32)*count );
-	return ar;
 }
 
 template <class WriteArchiveT, class StrucType>
-inline WriteArchiveT& put_struct(
+inline void put_struct(
 	WriteArchiveT& ar, const StrucType* array, UINT count) throw(IoException)
 {
 	ar.put( (const char*)array, sizeof(StrucType)*count );
-	return ar;
 }
 
 #endif // !defined(WINX_BYTESWAP)
