@@ -23,6 +23,10 @@
 #include "Basic.h"
 #endif
 
+#ifndef STDEXT_ARCHIVE_TEXTR_H
+#include "Text.h"
+#endif
+
 NS_STDEXT_BEGIN
 
 // -------------------------------------------------------------------------
@@ -364,24 +368,39 @@ public:
 	}
 
 public:
-	pos_type winx_call size() const
-	{
+	pos_type winx_call size() const {
 		return m_handle.size();
 	}
 
-	int winx_call operator!() const
-	{
+	int winx_call operator!() const {
 		return m_handle.bad();
 	}
 
-	int winx_call good() const
-	{
+	int winx_call good() const {
 		return m_handle.good();
 	}
 
-	int winx_call bad() const
-	{
+	int winx_call bad() const {
 		return m_handle.bad();
+	}
+	
+public:
+	void winx_call skipws() {
+		NS_STDEXT_IO_TEXT::skipws(*this);
+	}
+
+	int_type winx_call getnws() {
+		return NS_STDEXT_IO_TEXT::getnws(*this);
+	}
+
+	template <class StringT>
+	size_type winx_call getline(StringT& s) {
+		return NS_STDEXT_IO_TEXT::getline(*this, s);
+	}
+
+	template <class AllocT2>
+	size_type winx_call getline(AllocT2& alloc, BasicString<char_type>& s) {
+		return NS_STDEXT_IO_TEXT::getline(*this, alloc, s);
 	}
 };
 

@@ -19,14 +19,6 @@
 #ifndef STDEXT_ARCHIVE_STREAM_H
 #define STDEXT_ARCHIVE_STREAM_H
 
-#ifndef STDEXT_ARCHIVE_WRITER_H
-#include "Writer.h"
-#endif
-
-#ifndef STDEXT_ARCHIVE_READER_H
-#include "Reader.h"
-#endif
-
 #ifndef STDEXT_ARCHIVE_WRITEARCHIVE_H
 #include "WriteArchive.h"
 #endif
@@ -333,10 +325,10 @@ public:
 // -------------------------------------------------------------------------
 
 typedef WriteArchive<IStream*, IStreamAdapter> StreamWriteArchive;
-typedef Writer<StreamWriteArchive> StreamWriter;
+typedef StreamWriteArchive StreamWriter;
 
 typedef ReadArchive<IStream*, IStreamAdapter> StreamReadArchive;
-typedef Reader<StreamReadArchive> StreamReader;
+typedef StreamReadArchive StreamReader;
 
 // -------------------------------------------------------------------------
 // class MemStreamWriter
@@ -529,3 +521,4 @@ public:
 NS_STDEXT_END
 
 #endif /* STDEXT_ARCHIVE_STREAM_H */
+

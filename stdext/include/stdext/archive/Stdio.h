@@ -19,14 +19,6 @@
 #ifndef STDEXT_ARCHIVE_STDIO_H
 #define STDEXT_ARCHIVE_STDIO_H
 
-#ifndef STDEXT_ARCHIVE_WRITER_H
-#include "Writer.h"
-#endif
-
-#ifndef STDEXT_ARCHIVE_READER_H
-#include "Reader.h"
-#endif
-
 #ifndef STDEXT_ARCHIVE_WRITEARCHIVE_H
 #include "WriteArchive.h"
 #endif
@@ -204,10 +196,10 @@ public:
 // -------------------------------------------------------------------------
 
 typedef WriteArchive<FILE*, StdioAdapter> StdioWriteArchive;
-typedef Writer<StdioWriteArchive> StdioWriter;
+typedef StdioWriteArchive StdioWriter;
 
 typedef ReadArchive<FILE*, StdioAdapter> StdioReadArchive;
-typedef Reader<StdioReadArchive> StdioReader;
+typedef StdioReadArchive StdioReader;
 
 NS_STDEXT_END
 
@@ -230,13 +222,13 @@ class TestStdioArchive : public TestCase
 public:
 	void testBasic(LogT& log)
 	{
-		typedef std::StdioReader ReaderT;
-		typedef std::StdioWriter WriterT;
+		typedef NS_STDEXT::StdioReader ReaderT;
+		typedef NS_STDEXT::StdioWriter WriterT;
 
 		const char stg[] = "__teststdio__.txt";
 
-		std::BlockPool recycle;
-		std::ScopedAlloc alloc(recycle);
+		NS_STDEXT::BlockPool recycle;
+		NS_STDEXT::ScopedAlloc alloc(recycle);
 
 		WINX_USES_CONVERSION;
 		{
@@ -269,13 +261,13 @@ public:
 		}
 		{
 			ReaderT ar(stg);
-			std::String sym;
-			AssertExp(ar.get_csymbol(alloc, sym) == sym.size());
+			NS_STDEXT::String sym;
+			AssertExp(NS_STDEXT::io::get_csymbol(ar, alloc, sym) == sym.size());
 			AssertExp(sym == "you");
 			AssertExp(ar.get() == '\'');
-			AssertExp(ar.get_csymbol(alloc, sym) == sym.size());
+			AssertExp(NS_STDEXT::io::get_csymbol(ar, alloc, sym) == sym.size());
 			AssertExp(sym == "re");
-			AssertExp(ar.scan_csymbol(alloc, sym) == S_OK);
+			AssertExp(NS_STDEXT::io::scan_csymbol(ar, alloc, sym) == S_OK);
 			AssertExp(sym == "welcome");
 		}
 		// ------------------------------------
@@ -289,35 +281,35 @@ public:
 		{
 			ReaderT ar(stg);
 			unsigned val;
-			ar.scan_uint(val);
+			NS_STDEXT::io::scan_uint(ar, val);
 			AssertExp(val == 13242);
-			ar.scan_uint(val, 2);
+			NS_STDEXT::io::scan_uint(ar, val, 2);
 			AssertExp(val == 15);
 		}
 		// ------------------------------------
 		{
 			WriterT ar(stg);
-			ar.puts("Hello");
-			ar.puts(std::string("World"));
-			ar.puts(std::vector<char>(255, '!'));
-			ar.puts(std::vector<char>(65538, '?'));
+			NS_STDEXT::io::puts(ar, "Hello");
+			NS_STDEXT::io::puts(ar, std::string("World"));
+			NS_STDEXT::io::puts(ar, std::vector<char>(255, '!'));
+			NS_STDEXT::io::puts(ar, std::vector<char>(65538, '?'));
 		}
 		{
 			ReaderT ar(stg);
 			std::string s1;
-			AssertExp(ar.gets(s1) == S_OK);
+			AssertExp(NS_STDEXT::io::gets(ar, s1) == S_OK);
 			AssertExp(s1 == "Hello");
 			std::vector<char> s2;
-			AssertExp(ar.gets(s2) == S_OK);
-			AssertExp(std::compare(s2.begin(), s2.end(), "World") == 0);
-			std::String s3;
-			AssertExp(ar.gets(alloc, s3) == S_OK);
-			AssertExp(s3 == std::String(alloc, 255, '!'));
-			std::String s4;
-			AssertExp(ar.gets(alloc, s4) == S_OK);
+			AssertExp(NS_STDEXT::io::gets(ar, s2) == S_OK);
+			AssertExp(NS_STDEXT::compare(s2.begin(), s2.end(), "World") == 0);
+			NS_STDEXT::String s3;
+			AssertExp(NS_STDEXT::io::gets(ar, alloc, s3) == S_OK);
+			AssertExp(s3 == NS_STDEXT::String(alloc, 255, '!'));
+			NS_STDEXT::String s4;
+			AssertExp(NS_STDEXT::io::gets(ar, alloc, s4) == S_OK);
 			AssertExp(s4 == std::String(alloc, 65538, '?'));
-			std::String s5;
-			AssertExp(ar.gets(alloc, s5) != S_OK);
+			NS_STDEXT::String s5;
+			AssertExp(NS_STDEXT::io::gets(ar, alloc, s5) != S_OK);
 		}
 
 		remove(stg);
@@ -334,3 +326,4 @@ public:
 // $Log: Stdio.h,v $
 
 #endif /* STDEXT_ARCHIVE_STDIO_H */
+

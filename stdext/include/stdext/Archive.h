@@ -20,25 +20,21 @@
 #define STDEXT_ARCHIVE_H
 
 #if (0)
-#define STD_STREAM_ARCHIVE
+#define WINX_STREAM_ARCHIVE
 #endif
 
 // -------------------------------------------------------------------------
-
-#ifndef STDEXT_BASIC_H
-#include "Basic.h"
-#endif
 
 #ifndef STDEXT_ARCHIVE_BASIC_H
 #include "archive/Basic.h"
 #endif
 
-#ifndef STDEXT_ARCHIVE_WRITER_H
-#include "archive/Writer.h"
+#ifndef STDEXT_ARCHIVE_BINARY_H
+#include "archive/Binary.h"
 #endif
 
-#ifndef STDEXT_ARCHIVE_READER_H
-#include "archive/Reader.h"
+#ifndef STDEXT_ARCHIVE_TEXT_H
+#include "archive/Text.h"
 #endif
 
 #ifndef STDEXT_ARCHIVE_WRITEARCHIVE_H
@@ -61,21 +57,21 @@
 #include "archive/MemArchive.h"
 #endif
 
-#ifndef STDEXT_ARCHIVE_RECORD_H
-#include "archive/Record.h"
-#endif
-
 #ifndef STDEXT_ARCHIVE_MEM_H
 #include "archive/Mem.h"
 #endif
 
+#ifndef STDEXT_ARCHIVE_RECORD_H
+#include "archive/Record.h"
+#endif
+
 #if defined(X_OS_WINDOWS)
 
-#if defined(STD_STREAM_ARCHIVE)
+#if defined(WINX_STREAM_ARCHIVE)
 	#ifndef STDEXT_ARCHIVE_STREAM_H
 	#include "archive/Stream.h"
 	#endif
-#endif // defined(STD_STREAM_ARCHIVE)
+#endif // defined(WINX_STREAM_ARCHIVE)
 
 #ifndef STDEXT_ARCHIVE_WINREG_H
 #include "archive/WinReg.h"
@@ -88,11 +84,13 @@
 
 NS_STDEXT_BEGIN
 
+typedef PosixAdapter FileDirectReader;
 typedef PosixReadArchive FileReadArchive;
-typedef Reader<FileReadArchive> FileReader;
+typedef FileReadArchive FileReader;
 
+typedef PosixAdapter FileDirectWriter;
 typedef PosixWriteArchive FileWriteArchive;
-typedef Writer<FileWriteArchive> FileWriter;
+typedef FileWriteArchive FileWriter;
 
 NS_STDEXT_END
 
@@ -111,23 +109,23 @@ class TestRecord : public TestCase
 public:
 	void testBasic(LogT& log)
 	{
-		typedef std::RecordWriter<std::VectorWriter> RecordWriterT;
-		typedef std::RecordReader<std::VectorReadArchive> RecordReaderT;
+		typedef NS_STDEXT::RecordWriter<std::VectorWriter> RecordWriterT;
+		typedef NS_STDEXT::RecordReader<std::VectorReadArchive> RecordReaderT;
 
-		std::BlockPool recycle;
-		std::ScopedAlloc alloc(recycle);
+		NS_STDEXT::BlockPool recycle;
+		NS_STDEXT::ScopedAlloc alloc(recycle);
 	
-		std::CharVector stg;
+		NS_STDEXT::CharVector stg;
 		{
 			RecordWriterT ar(stg);
 			
 			ar.beginRecord(23);
-			ar.puts("Hello, world!");
+			NS_STDEXT::io::puts(ar, "Hello, world!");
 			ar.put("You're welcome!\n");
 			ar.endRecord();
 
 			ar.beginRecord(99);
-			ar.put16i(32);
+			NS_STDEXT::io::put16i(ar, 32);
 			ar.put("123");
 			ar.endRecord();
 		}
@@ -137,9 +135,9 @@ public:
 
 			AssertExp(reader.next(info));
 			AssertExp(info.recId == 23);
-			std::MemReader ar1(info);
-			std::String s;
-			AssertExp(ar1.gets(alloc, s) == S_OK);
+			NS_STDEXT::MemReader ar1(info);
+			NS_STDEXT::String s;
+			AssertExp(NS_STDEXT::io::gets(ar1, alloc, s) == S_OK);
 			AssertExp(s == "Hello, world!");
 			ar1.getline(alloc, s);
 			AssertExp(s == "You're welcome!");
@@ -147,11 +145,11 @@ public:
 
 			AssertExp(reader.next(info));
 			AssertExp(info.recId == 99);
-			std::MemReader ar2(info);
+			NS_STDEXT::MemReader ar2(info);
 			UINT16 w;
-			AssertExp(ar2.get16i(w) == S_OK);
+			AssertExp(NS_STDEXT::io::get16i(ar2, w) == S_OK);
 			AssertExp(w == 32);
-			AssertExp(ar2.get_uint() == 123);
+			AssertExp(NS_STDEXT::io::get_uint(ar2) == 123);
 			AssertExp(ar2.get() == std::MemReader::endch);
 
 			AssertExp(!reader.next(info));

@@ -214,6 +214,11 @@ public:
 		return 1;
 	}
 
+	size_type winx_call put(const TempString<char_type> s) throw(IoException)
+	{
+		return put(s.data(), s.size());
+	}
+
 public:
 	HRESULT winx_call open(LPCWSTR szFile)
 	{

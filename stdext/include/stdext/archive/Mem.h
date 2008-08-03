@@ -19,14 +19,6 @@
 #ifndef STDEXT_ARCHIVE_MEM_H
 #define STDEXT_ARCHIVE_MEM_H
 
-#ifndef STDEXT_ARCHIVE_WRITER_H
-#include "Writer.h"
-#endif
-
-#ifndef STDEXT_ARCHIVE_READER_H
-#include "Reader.h"
-#endif
-
 #ifndef STDEXT_ARCHIVE_MEMARCHIVE_H
 #include "MemArchive.h"
 #endif
@@ -37,7 +29,7 @@ NS_STDEXT_BEGIN
 // class MemReader
 
 typedef MemReadArchive<const char*> PointerReadArchive;
-typedef Reader<PointerReadArchive> MemReader;
+typedef PointerReadArchive MemReader;
 
 // -------------------------------------------------------------------------
 // class VectorReader/VectorWriter
@@ -45,10 +37,10 @@ typedef Reader<PointerReadArchive> MemReader;
 typedef std::vector<char> CharVector;
 
 typedef MemWriteArchive<CharVector> VectorWriteArchive;
-typedef Writer<VectorWriteArchive> VectorWriter;
+typedef VectorWriteArchive VectorWriter;
 
 typedef MemReadArchive<CharVector::const_iterator> VectorReadArchive;
-typedef Reader<VectorReadArchive> VectorReader;
+typedef VectorReadArchive VectorReader;
 
 // -------------------------------------------------------------------------
 // class StringBuilderReader/StringBuilderWriter
@@ -60,10 +52,10 @@ typedef VectorReader StringBuilderReader;
 // class StlStringReader/StlStringWriter
 
 typedef MemWriteArchive<std::string> StlStringWriteArchive;
-typedef Writer<StlStringWriteArchive> StlStringWriter;
+typedef StlStringWriteArchive StlStringWriter;
 
 typedef MemReadArchive<std::string::const_iterator> StlStringReadArchive;
-typedef Reader<StlStringReadArchive> StlStringReader;
+typedef StlStringReadArchive StlStringReader;
 
 // -------------------------------------------------------------------------
 // class DequeReader/DequeWriter, TextPoolReader/TextPoolWriter
@@ -73,10 +65,10 @@ typedef Reader<StlStringReadArchive> StlStringReader;
 typedef std::Deque<char> CharDeque;
 
 typedef MemWriteArchive<CharDeque> DequeWriteArchive;
-typedef Writer<DequeWriteArchive> DequeWriter;
+typedef DequeWriteArchive DequeWriter;
 
 typedef MemReadArchive<CharDeque::const_iterator> DequeReadArchive;
-typedef Reader<DequeReadArchive> DequeReader;
+typedef DequeReadArchive DequeReader;
 
 typedef DequeWriter TextPoolWriter;
 typedef DequeReader TextPoolReader;
@@ -108,36 +100,36 @@ class TestMemArchive : public TestCase
 #ifdef STDEXT_DEQUE_H
 	void testDeque(LogT& log)
 	{
-		std::BlockPool recycle;
-		std::ScopedAlloc alloc(recycle);
-		std::CharDeque stg(alloc);
-		std::DequeWriter* w = NULL;
-		std::DequeReader* r = NULL;
+		NS_STDEXT::BlockPool recycle;
+		NS_STDEXT::ScopedAlloc alloc(recycle);
+		NS_STDEXT::CharDeque stg(alloc);
+		NS_STDEXT::DequeWriter* w = NULL;
+		NS_STDEXT::DequeReader* r = NULL;
 		test(log, w, r, stg);
 	}
 #endif
 
 	void testVector(LogT& log)
 	{
-		std::CharVector stg;
-		std::VectorWriter* w = NULL;
-		std::VectorReader* r = NULL;
+		NS_STDEXT::CharVector stg;
+		NS_STDEXT::VectorWriter* w = NULL;
+		NS_STDEXT::VectorReader* r = NULL;
 		test(log, w, r, stg);
 	}
 
 	void testStlString(LogT& log)
 	{
 		std::string stg;
-		std::StlStringWriter* w = NULL;
-		std::StlStringReader* r = NULL;
+		NS_STDEXT::StlStringWriter* w = NULL;
+		NS_STDEXT::StlStringReader* r = NULL;
 		test(log, w, r, stg);
 	}
 
 	template <class WriterT, class ReaderT, class StorageT>
 	void test(LogT& log, WriterT*, ReaderT*, StorageT& stg)
 	{
-		std::BlockPool recycle;
-		std::ScopedAlloc alloc(recycle);
+		NS_STDEXT::BlockPool recycle;
+		NS_STDEXT::ScopedAlloc alloc(recycle);
 
 		{
 			WriterT ar(stg);
@@ -176,35 +168,35 @@ class TestMemArchive : public TestCase
 		{
 			ReaderT ar(stg);
 			unsigned val;
-			ar.scan_uint(val);
+			NS_STDEXT::io::scan_uint(ar, val);
 			AssertExp(val == 13242);
-			ar.scan_uint(val, 2);
+			NS_STDEXT::io::scan_uint(ar, val, 2);
 			AssertExp(val == 15);
 		}
 		stg.erase(stg.begin(), stg.end());
 		{
 			WriterT ar(stg);
-			ar.puts("Hello");
-			ar.puts(std::string("World!"));
-			ar.puts(std::vector<char>(256, '!'));
-			ar.puts(std::vector<char>(65537, '?'));
+			NS_STDEXT::io::puts(ar, "Hello");
+			NS_STDEXT::io::puts(ar, std::string("World!"));
+			NS_STDEXT::io::puts(ar, std::vector<char>(256, '!'));
+			NS_STDEXT::io::puts(ar, std::vector<char>(65537, '?'));
 		}
 		{
 			ReaderT ar(stg);
 			std::string s1;
-			AssertExp(ar.gets(s1) == S_OK);
+			AssertExp(NS_STDEXT::io::gets(ar, s1) == S_OK);
 			AssertExp(s1 == "Hello");
 			std::vector<char> s2;
-			AssertExp(ar.gets(s2) == S_OK);
-			AssertExp(std::compare(s2.begin(), s2.end(), "World!") == 0);
-			std::String s3;
-			AssertExp(ar.gets(alloc, s3) == S_OK);
+			AssertExp(NS_STDEXT::io::gets(ar, s2) == S_OK);
+			AssertExp(NS_STDEXT::compare(s2.begin(), s2.end(), "World!") == 0);
+			NS_STDEXT::String s3;
+			AssertExp(NS_STDEXT::io::gets(ar, alloc, s3) == S_OK);
 			AssertExp(s3 == std::String(alloc, 256, '!'));
-			std::String s4;
-			AssertExp(ar.gets(alloc, s4) == S_OK);
+			NS_STDEXT::String s4;
+			AssertExp(NS_STDEXT::io::gets(ar, alloc, s4) == S_OK);
 			AssertExp(s4 == std::String(alloc, 65537, '?'));
-			std::String s5;
-			AssertExp(ar.gets(alloc, s5) != S_OK);
+			NS_STDEXT::String s5;
+			AssertExp(NS_STDEXT::io::gets(ar, alloc, s5) != S_OK);
 		}
 	}
 };
@@ -219,3 +211,4 @@ class TestMemArchive : public TestCase
 // $Log: Mem.h,v $
 
 #endif /* STDEXT_ARCHIVE_MEM_H */
+
