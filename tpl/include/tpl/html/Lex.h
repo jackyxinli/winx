@@ -332,7 +332,7 @@ inline Rule<HtmlCommentG> TPL_CALL html_comment() {
 	</script>
 */
 
-template <int endc1 = '<', class Pred2 = Ch<'/', '!'>, int endc3 = -1>
+template <int endc1 = '<', class Pred2 = Ch<'/', '!'>, class Pred3 = Ch<'s', 'S', '-'> >
 class HtmlScriptCode
 {
 public:
@@ -349,6 +349,7 @@ public:
 		
 		const FindSpec find1 = FindSpec();
 		const Pred2 pred2 = Pred2();
+		const Pred3 pred3 = Pred3();
 		const CStringOrCharU stringOrChar = CStringOrCharU();
 		
 		for (;;)
@@ -361,17 +362,11 @@ public:
 				ar.get();
 				if ( pred2(ar.peek()) )
 				{
-					if (endc3 == -1) {
+					typename SourceT::int_type c2 = ar.get();
+					if ( pred3(ar.peek()) ) {
+						ar.unget(c2);
 						ar.unget(endc1);
 						return true;
-					}
-					else {
-						typename SourceT::int_type c2 = ar.get();
-						if (ar.peek() == endc3) {
-							ar.unget(c2);
-							ar.unget(endc1);
-							return true;
-						}
 					}
 				}
 			}
@@ -387,7 +382,7 @@ public:
 };
 
 typedef UAnd<Not<HtmlChLt_>, HtmlScriptCode<> > HtmlUncommentedScriptCodeU;
-typedef HtmlScriptCode<'-', Ch<'-'>, '>'> HtmlCommentedScriptCodeU;
+typedef HtmlScriptCode<'-', Ch<'-'>, Ch<'>'> > HtmlCommentedScriptCodeU;
 
 TPL_REGEX_GUARD(HtmlUncommentedScriptCodeU, HtmlUncommentedScriptCodeG, TagAssigNone)
 TPL_REGEX_GUARD(HtmlCommentedScriptCodeU, HtmlCommentedScriptCodeG, TagAssigNone)
