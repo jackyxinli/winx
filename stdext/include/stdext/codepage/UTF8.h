@@ -113,9 +113,9 @@ lzRet:	return outBuf;
 	{
 		WINX_ASSERT(sizeof(WCHAR) == WINX_UCS_BYTES);
 		#if (WINX_UCS_BYTES == 2)
-			return fromUCS2(in, in, outBuf);
+			return fromUCS2(in, outBuf);
 		#elif (WINX_UCS_BYTES == 4)
-			return fromUCS4(in, in, outBuf);
+			return fromUCS4(in, outBuf);
 		#endif
 	}
 };
