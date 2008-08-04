@@ -135,7 +135,7 @@ public:
 	}
 
 	bool winx_call empty() const {
-		return first != second;
+		return first == second;
 	}
 
 	size_type winx_call length() const {
