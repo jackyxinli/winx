@@ -63,7 +63,7 @@ public:														\
 															\
 	template <class ValueT2>								\
 	bool TPL_CALL operator()(const ValueT2& val) const {	\
-		return m_val op val;								\
+		return val op m_val;								\
 	}														\
 };
 
