@@ -39,7 +39,7 @@
 #include "../../std/string.h"
 #endif
 
-#define NS_KMP			std::kmp::
+#define NS_KMP			std::kmp
 #define NS_KMP_BEGIN	namespace std { namespace kmp {
 #define NS_KMP_END		} }
 
@@ -297,7 +297,7 @@ public:
 		for (size_type j = 1; j != cchLen; ++j)
 		{
 			k = m_next[j-1];
-			while (k != npos && m_str_find[k] != m_str_find[j-1])
+			while (k != (size_type)npos && m_str_find[k] != m_str_find[j-1])
 				k = m_next[k];
 			m_next[j] = k + 1;
 		}
