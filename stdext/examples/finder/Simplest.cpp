@@ -1,7 +1,7 @@
 #include <iostream>
 #include <fstream>
 #include <deque>
-#include <stdext/kmp/Finder.h>
+#include <stdext/Search.h>
 #include <stdext/Archive.h>
 
 // -------------------------------------------------------------------------
@@ -84,6 +84,12 @@ int main()
 	std::cout << "----------------------------------\n";
 	typedef NS_KMP::Finder<char> KmpFinder;
 	Examples<KmpFinder>::all();
+	std::cout << "----------------------------------\n";
+	typedef NS_SHIFTOR::Finder<char> ShiftOrFinder;
+	Examples<ShiftOrFinder>::all();
+	std::cout << "----------------------------------\n";
+	typedef NS_SHIFTOR::Finder<char, NS_STDEXT::MatchCase<char>, NS_SHIFTOR::VariantBitmap> ExShiftOrFinder;
+	Examples<ExShiftOrFinder>::all();
 	std::cout << "----------------------------------\n";
 	return 0;
 }
