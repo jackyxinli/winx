@@ -24,4 +24,5 @@ bcp --boost=$BoostRoot type_traits/is_convertible.hpp pool/object_pool.hpp rando
 #
 bcp --boost=$BoostRoot tuple/detail/tuple_basic.hpp ref.hpp . > /dev/null
 cp $BoostRoot/boost/tuple/tuple.hpp ./boost/tuple/
+cp $BoostRoot/boost/tuple/tuple_io.hpp ./boost/tuple/
 
