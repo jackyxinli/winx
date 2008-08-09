@@ -67,12 +67,13 @@ struct BitmapTraits
 	}
 };
 
-typedef std::vector<char> VariantBitmap;
+typedef std::vector<char> SimpleVariantBitmap;
+typedef SimpleVariantBitmap VariantBitmap;
 
 template <>
-struct BitmapTraits<VariantBitmap>
+struct BitmapTraits<SimpleVariantBitmap>
 {
-	typedef VariantBitmap BitmapT;
+	typedef SimpleVariantBitmap BitmapT;
 	
 	enum { MaxSize = -1 };
 	
