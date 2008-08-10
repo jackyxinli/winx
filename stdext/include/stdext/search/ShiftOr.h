@@ -119,7 +119,6 @@ public:
 	typedef size_t size_type;
 
 	enum { npos = -1 };
-	enum { nolimit = -1 };
 
 private:
 	typedef BitmapTraits<BitmapT> Tr;
