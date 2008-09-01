@@ -1,6 +1,0 @@
-if [ -z $1 ]; then
-	exit 1
-fi
-
-svn status | grep -e "^$1.*" | sed -e 's|. *\(.*\)|\1|'
-
