@@ -272,7 +272,7 @@ class FindStr_
 private:
 	typedef std::iterator_traits<Iterator> IteratorTr_;
 	typedef typename IteratorTr_::value_type CharT_;
-	typedef NS_KMP Finder<CharT_> Finder_;
+	typedef NS_KMP::Finder<CharT_> Finder_;
 
 	Iterator m_begin;
 	Iterator m_end;
