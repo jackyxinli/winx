@@ -112,55 +112,6 @@ struct SmartRefTraits<ValueT&>
 };
 
 // -------------------------------------------------------------------------
-// IsConvertible
-
-template <class From, class To>
-struct IsConvertible
-{
-	struct AnyConversion_
-	{
-		template <typename T1>
-		AnyConversion_(const T1&);
-	};
-	
-	struct No_ { char b[0x100]; };
-	struct Yes_ { char b[0x200]; };
-
-	static No_ check_(AnyConversion_, ...);
-	static Yes_ check_(To*, int);
-	static From* inst_;
-
-	enum {
-		value = (sizeof(check_(inst_, 0)) == sizeof(Yes_))
-	};
-};
-
-template <class From, template <class ArgT> class To>
-struct IsTemplateConvertible
-{
-	struct AnyConversion_
-	{
-		template <typename T1>
-		AnyConversion_(const T1&);
-	};
-	
-	struct No_ { char b[0x100]; };
-	struct Yes_ { char b[0x200]; };
-
-	template <class ArgT>
-	static Yes_ check_(To<ArgT>*, int);
-	static No_ check_(AnyConversion_, ...);
-	static From* inst_;
-
-	enum {
-		value = (sizeof(check_(inst_, 0)) == sizeof(Yes_))
-	};
-};
-
-#define TPL_CONVERTIBLE(From, To)			tpl::IsConvertible<From, To>::value
-#define TPL_TEMPLATE_CONVERTIBLE(From, To)	tpl::IsTemplateConvertible<From, To>::value
-
-// -------------------------------------------------------------------------
 // $Log: $
 
 NS_TPL_END

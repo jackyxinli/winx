@@ -23,12 +23,6 @@
 #include "../Basic.h"
 #endif
 
-#pragma warning(disable:4819)
-
-#ifndef BOOST_TT_IS_CONVERTIBLE_HPP_INCLUDED
-#include <boost/type_traits/is_convertible.hpp>
-#endif
-
 #ifndef NS_TPL_EMU_BEGIN
 #define NS_TPL_EMU_BEGIN	namespace tpl { namespace emu {
 #define NS_TPL_EMU_END		} }
@@ -215,9 +209,13 @@ class ArityTraits
 private:
 	typedef Ty_ Ty;
 	typedef Op_<Ty_> Op;
-	enum { is_unary = boost::is_convertible<Op, std::unary_function<Ty, Ty> >::value };
-	enum { is_binary1 = boost::is_convertible<Op, std::binary_function<Ty, Ty, Ty> >::value };
-	enum { is_binary2 = boost::is_convertible<Op, std::binary_function<Ty, Ty, bool> >::value };
+	typedef std::unary_function<Ty, Ty> UnaryFn_;
+	typedef std::binary_function<Ty, Ty, Ty> BinaryFn1_;
+	typedef std::binary_function<Ty, Ty, bool> BinaryFn2_;
+
+	enum { is_unary = TPL_CONVERTIBLE(Op, UnaryFn_) };
+	enum { is_binary1 = TPL_CONVERTIBLE(Op, BinaryFn1_) };
+	enum { is_binary2 = TPL_CONVERTIBLE(Op, BinaryFn2_) };
 	enum { is_binary = is_binary1 | is_binary2 };
 
 public:
