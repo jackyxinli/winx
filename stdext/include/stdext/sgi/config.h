@@ -32,8 +32,12 @@
 
 // -------------------------------------------------------------------------
 
-#ifndef __STL_CONFIG_H
-#include "../../../../stl/stl_config.h"
+#if defined(X_STL_GCC)
+	#include <algorithm>
+#else
+	#ifndef __STL_CONFIG_H
+	#include "../../../../stl/stl_config.h"
+	#endif
 #endif
 
 // -------------------------------------------------------------------------
