@@ -116,6 +116,79 @@ inline const Predicate<PredT> TPL_CALL meet(const PredT& pred_) {
 }
 
 // =========================================================================
+
+template <class PredT1, class PredT2>
+class PredOr // Pred1 || Pred2
+{
+private:
+	const PredT1 m_x;
+	const PredT2 m_y;
+
+public:
+	PredOr() : m_x(), m_y() {}
+	PredOr(const PredT1& x, const PredT2& y) : m_x(x), m_y(y) {}
+
+public:
+	template <class ValueT2>
+	bool TPL_CALL operator()(const ValueT2& val) const {
+		return m_x(val) || m_y(val);
+	}
+};
+
+template <class PredT1, class PredT2>
+class PredAnd // Pred1 && Pred2
+{
+private:
+	const PredT1 m_x;
+	const PredT2 m_y;
+
+public:
+	PredAnd() : m_x(), m_y() {}
+	PredAnd(const PredT1& x, const PredT2& y) : m_x(x), m_y(y) {}
+
+public:
+	template <class ValueT2>
+	bool TPL_CALL operator()(const ValueT2& val) const {
+		return m_x(val) && m_y(val);
+	}
+};
+
+template <class PredT>
+class PredNot // !Pred
+{
+private:
+	const PredT m_x;
+
+public:
+	PredNot() : m_x() {}
+	PredNot(const PredT& x) : m_x(x) {}
+
+public:
+	template <class ValueT2>
+	bool TPL_CALL operator()(const ValueT2& val) const {
+		return !m_x(val);
+	}
+};
+
+template <class T1, class T2>
+inline Predicate<PredOr<T1, T2> > const
+TPL_CALL operator||(const Predicate<T1>& x, const Predicate<T2>& y) {
+	return Predicate<PredOr<T1, T2> >(x, y);
+}
+
+template <class T1, class T2>
+inline Predicate<PredAnd<T1, T2> > const
+TPL_CALL operator&&(const Predicate<T1>& x, const Predicate<T2>& y) {
+	return Predicate<PredAnd<T1, T2> >(x, y);
+}
+
+template <class T1>
+inline Predicate<PredNot<T1> > const
+TPL_CALL operator!(const Predicate<T1>& x) {
+	return Predicate<PredNot<T1> >(x);
+}
+
+// =========================================================================
 // class PredRule
 
 template <class RegExT, class PredT>
