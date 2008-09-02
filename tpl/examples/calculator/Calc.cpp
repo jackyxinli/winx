@@ -13,7 +13,7 @@ double max_value(const double x[], int count)
 	return *std::max_element(x, x+count);
 }
 
-int main(int argc, const char* argv[])
+void calculator(const char* szExpr)
 {
 	typedef SimpleImplementation impl;
 
@@ -51,16 +51,21 @@ int main(int argc, const char* argv[])
 
 	// ---- do match ----
 
+	try {
+		if ( szExpr != skipws_[rExpr] )
+			std::cerr << ">>> ERROR: invalid expression!\n";
+		else
+			std::cout << stk.back() << '\n';
+	}
+	catch (const std::logic_error& e) {
+		std::cerr << ">>> ERROR: " << e.what() << '\n';
+	}
+}
+
+int main(int argc, const char* argv[])
+{
 	if (argc == 2) {
-		try {
-			if ( argv[1] != skipws_[rExpr] )
-				std::cerr << ">>> ERROR: invalid expression!\n";
-			else
-				std::cout << stk.back() << '\n';
-		}
-		catch (const std::logic_error& e) {
-			std::cerr << ">>> ERROR: " << e.what() << '\n';
-		}
+		calculator(argv[1]);
 		return 0;
 	}
 	else {
@@ -72,17 +77,7 @@ int main(int argc, const char* argv[])
 				std::cout << '\n';
 				return 0;
 			}
-
-			try {
-				stk.clear();
-				if ( strExp.c_str() != skipws_[rExpr] )
-					std::cerr << ">>> ERROR: invalid expression!\n";
-				else
-					std::cout << stk.back() << '\n';
-			}
-			catch (const std::logic_error& e) {
-				std::cerr << ">>> ERROR: " << e.what() << '\n';
-			}
+			calculator(strExp.c_str());
 		}
 	}
 }

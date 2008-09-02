@@ -23,12 +23,16 @@ int main()
 	dom::Allocator alloc;
 	dom::Document doc(alloc);
 
-	if (source >>
-		(
-			"class" + ws() + c_symbol()/tagName + skipws() + ':' +
-			(skipws() + !("public"/tagAccess + ws()) + c_symbol()/tagName)/tagBase % (skipws() + ',') +
-			skipws() + "{};"
-		)/doc)
+	if (
+		source >> cpp_skip_
+			[
+				gr(c_symbol()/eq("class")) + c_symbol()/tagName + ':' +
+				(
+					!gr(c_symbol()/eq("public")/tagAccess) + c_symbol()/tagName
+				)/tagBase % ',' +
+				'{' + '}' + ';'
+			]/doc
+		)
 	{
 		std::OutputLog log;
 		json_print(alloc, log, doc);

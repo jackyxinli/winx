@@ -108,6 +108,14 @@ TPL_PRED(notEq, NE)
 TPL_PRED(eqICase, EQICase)
 
 // =========================================================================
+// function meet
+
+template <class PredT>
+inline const Predicate<PredT> TPL_CALL meet(const PredT& pred_) {
+	return Predicate<PredT>(pred_);
+}
+
+// =========================================================================
 // class PredRule
 
 template <class RegExT, class PredT>
