@@ -19,33 +19,33 @@
 #ifndef STDEXT_FILEBUF_H
 #define STDEXT_FILEBUF_H
 
+#if defined(WINX_FILEBUF_USE_WINFILE)
+#include "filebuf/WinFile.h"
+#endif
+
+#ifndef STDEXT_FILEBUF_STDIO_H
+#include "filebuf/Stdio.h"
+#endif
+
+NS_STDEXT_BEGIN
+
 // -------------------------------------------------------------------------
 // class FileBuf
 
-#if defined(WINX_FILEBUF_USE_WINFILE)
-
-#include "filebuf/WinFile.h"
-
-NS_STDEXT_BEGIN
+#if defined(X_OS_WINDOWS) && defined(WINX_FILEBUF_USE_WINFILE)
 
 typedef WinFileBuf FileBuf;
 
-NS_STDEXT_END
-
 #else
 
-#include "filebuf/Stdio.h"
-
-NS_STDEXT_BEGIN
-
 typedef FILEFileBuf FileBuf;
-
-NS_STDEXT_END
 
 #endif
 
 // -------------------------------------------------------------------------
 // $Log: FileBuf.h,v $
+
+NS_STDEXT_END
 
 #endif /* STDEXT_FILEBUF_H */
 
