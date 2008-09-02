@@ -28,7 +28,7 @@ int main()
 			[
 				gr(c_symbol()/eq("class")) + c_symbol()/tagName + ':' +
 				(
-					!gr(c_symbol()/eq("public")/tagAccess) + c_symbol()/tagName
+					!gr(c_symbol()/(eq("public")||eq("private"))/tagAccess) + c_symbol()/tagName
 				)/tagBase % ',' +
 				'{' + '}' + ';'
 			]/doc
