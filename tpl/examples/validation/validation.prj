@@ -1,5 +1,6 @@
 [Include]
 ../../../tpl/include
+../../../boost
 
 [Config Release]
 Product		Exe Release/simplest
