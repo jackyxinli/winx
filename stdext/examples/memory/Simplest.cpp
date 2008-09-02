@@ -6,7 +6,7 @@
 
 void testAutoFreeAlloc()
 {
-    std::AutoFreeAlloc alloc;
+    NS_STDEXT::AutoFreeAlloc alloc;
     
     int* a;
     a = STD_NEW(alloc, int);
@@ -20,7 +20,7 @@ void testAutoFreeAlloc()
     int* d;
     d = STD_ALLOC_ARRAY(alloc, int, 100);
     
-    std::AutoFreeAlloc* suballoc = STD_NEW(alloc, std::AutoFreeAlloc);
+    NS_STDEXT::AutoFreeAlloc* suballoc = STD_NEW(alloc, NS_STDEXT::AutoFreeAlloc);
     
     int* e;
     e = STD_NEW(*suballoc, int);
@@ -28,12 +28,12 @@ void testAutoFreeAlloc()
 
 void testScopedAlloc()
 {
-    std::BlockPool recycle;
-    std::ScopedAlloc alloc(recycle);
+    NS_STDEXT::BlockPool recycle;
+    NS_STDEXT::ScopedAlloc alloc(recycle);
     
     int* a;
     a = STD_NEW(alloc, int);
-    // ... --> same as std::AutoFreeAlloc
+    // ... --> same as NS_STDEXT::AutoFreeAlloc
 }
 
 int main()

@@ -7,14 +7,14 @@
 
 void testConcat()
 {
-	std::AutoFreeAlloc alloc;
+	NS_STDEXT::AutoFreeAlloc alloc;
 
 	std::list<std::string> lst;
 	lst.push_back("Hello,");
 	lst.push_back(" ");
 	lst.push_back("world!\n");
 
-	std::String s = std::concat(alloc, lst);
+	NS_STDEXT::String s = NS_STDEXT::concat(alloc, lst);
 	std::cout << s;
 
 	std::vector<std::string> vec;
@@ -22,16 +22,16 @@ void testConcat()
 	vec.push_back(" am");
 	vec.push_back(" xushiwei!\n");
 
-	s = std::concat(alloc, vec);
+	s = NS_STDEXT::concat(alloc, vec);
 	std::cout << s;
 	
-	s = std::concat(alloc, "Hello", " ", "world!", " I", " am", " xushiwei!\n");
+	s = NS_STDEXT::concat(alloc, "Hello", " ", "world!", " I", " am", " xushiwei!\n");
 	std::cout << s;
 }
 
 void testImplode()
 {
-	std::AutoFreeAlloc alloc;
+	NS_STDEXT::AutoFreeAlloc alloc;
 
 	std::list<std::string> lst;
 	lst.push_back("Hello,");
@@ -40,7 +40,7 @@ void testImplode()
 	lst.push_back("am");
 	lst.push_back("xushiwei!\n");
 
-	std::String s = std::implode(alloc, ' ', lst);
+	NS_STDEXT::String s = NS_STDEXT::implode(alloc, ' ', lst);
 	std::cout << s;
 
 	std::vector<std::string> vec;
@@ -50,28 +50,28 @@ void testImplode()
 	vec.push_back("am");
 	vec.push_back("xushiwei!\n");
 
-	s = std::implode(alloc, " -> ", vec);
+	s = NS_STDEXT::implode(alloc, " -> ", vec);
 	std::cout << s;
 }
 
 void testExplode()
 {
-	std::AutoFreeAlloc alloc;
+	NS_STDEXT::AutoFreeAlloc alloc;
 
-	std::String s(alloc, "Hello, world!  I am xushiwei!");
+	NS_STDEXT::String s(alloc, "Hello, world!  I am xushiwei!");
 
-	std::BasicArray<std::String> arr = std::explode(alloc, ' ', s);
+	std::BasicArray<NS_STDEXT::String> arr = NS_STDEXT::explode(alloc, ' ', s);
 	for (size_t i = 0; i < arr.size(); ++i)
 		std::cout << arr[i] << '\n';
 	
 	std::cout << "+++++++++++++++++++++\n";
 
-	std::String s2 = std::implode(alloc, " -> ", arr);
+	NS_STDEXT::String s2 = NS_STDEXT::implode(alloc, " -> ", arr);
 	std::cout << s2 << '\n';
 
 	std::cout << "+++++++++++++++++++++\n";
 
-	arr = std::explode<false>(alloc, ' ', s);
+	arr = NS_STDEXT::explode<false>(alloc, ' ', s);
 	for (size_t i = 0; i < arr.size(); ++i)
 		std::cout << arr[i] << '\n';
 }

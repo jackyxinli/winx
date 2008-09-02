@@ -23,7 +23,7 @@ public:
 
 int main()
 {
-	WINX_TEST_APP(std::ErrorLog, "", "");
+	WINX_TEST_APP(NS_STDEXT::ErrorLog, "", "");
 	WINX_TEST_CLASS(DoTest);
 	return 0;
 }

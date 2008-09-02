@@ -6,32 +6,32 @@
 
 int main()
 {
-	int ival = std::cast<int>("12");
+	int ival = NS_STDEXT::cast<int>("12");
 	std::cout << ival << '\n';
 	
-	unsigned uval = std::cast<unsigned>("12", 8);
+	unsigned uval = NS_STDEXT::cast<unsigned>("12", 8);
 	std::cout << uval << '\n';
 	
-	uval = std::cast<unsigned>("12", 16);
+	uval = NS_STDEXT::cast<unsigned>("12", 16);
 	std::cout << uval << '\n';
 
-	__int64 ival64 = std::cast<__int64>("-12");
+	__int64 ival64 = NS_STDEXT::cast<__int64>("-12");
 	std::cout << ival64 << '\n';
 
-	double dblval = std::cast<double>("1.2e10");
+	double dblval = NS_STDEXT::cast<double>("1.2e10");
 	std::cout << dblval << '\n';
 		
-	float fval = std::cast<float>("1.2e10");
+	float fval = NS_STDEXT::cast<float>("1.2e10");
 	std::cout << fval << '\n';
 
-	std::TempString<wchar_t> s(L"123.4");
-	std::cout << std::cast<double>(s) << '\n';
+	NS_STDEXT::TempString<wchar_t> s(L"123.4");
+	std::cout << NS_STDEXT::cast<double>(s) << '\n';
 
-	std::String s2("123.4", 3);
-	std::cout << std::cast<float>(s2) << '\n';
+	NS_STDEXT::String s2("123.4", 3);
+	std::cout << NS_STDEXT::cast<float>(s2) << '\n';
 	
 	std::string s3 = "123.4";
-	std::cout << std::cast<double>(s3) << '\n';
+	std::cout << NS_STDEXT::cast<double>(s3) << '\n';
 	return 0;
 }
 

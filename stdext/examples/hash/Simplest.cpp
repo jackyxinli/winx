@@ -5,8 +5,8 @@
 
 void testHashMapCStr()
 {
-	typedef std::AutoFreeAlloc AllocT;
-	typedef std::HashMap<const char*, int, std::HashCompare<const char*>, AllocT> MapT;
+	typedef NS_STDEXT::AutoFreeAlloc AllocT;
+	typedef NS_STDEXT::HashMap<const char*, int, NS_STDEXT::HashCompare<const char*>, AllocT> MapT;
 
 	AllocT alloc;
 	MapT cont(alloc);
@@ -24,14 +24,14 @@ void testHashMapCStr()
 
 void testHashMapString()
 {
-	typedef std::AutoFreeAlloc AllocT;
-	typedef std::HashMap<std::String, int, std::HashCompare<std::String>, AllocT> MapT;
+	typedef NS_STDEXT::AutoFreeAlloc AllocT;
+	typedef NS_STDEXT::HashMap<NS_STDEXT::String, int, NS_STDEXT::HashCompare<NS_STDEXT::String>, AllocT> MapT;
 
 	AllocT alloc;
 	MapT cont(alloc);
 
-	std::String s1(alloc, "Mon");
-	std::String s2(alloc, "Tue");
+	NS_STDEXT::String s1(alloc, "Mon");
+	NS_STDEXT::String s2(alloc, "Tue");
 	
 	cont.insert(MapT::value_type(s1, 1));
 	cont.insert(MapT::value_type(s2, 2));

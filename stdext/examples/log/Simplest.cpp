@@ -5,7 +5,7 @@
 
 int main()
 {
-	std::OutputLog log;
+	NS_STDEXT::OutputLog log;
 
 	log.print('a')
 		.print(1)

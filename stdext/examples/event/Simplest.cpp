@@ -26,7 +26,7 @@ private:
 	TextChangedEvent m_changed;
 
 public:
-	Edit(std::ScopedAlloc& alloc) : m_changed(alloc)
+	Edit(NS_STDEXT::ScopedAlloc& alloc) : m_changed(alloc)
 	{
 		addEvent(EID(TextChanged), m_changed);
 	}
@@ -45,11 +45,11 @@ public:
 class Dialog
 {
 private:
-	std::ScopedAlloc m_alloc;
+	NS_STDEXT::ScopedAlloc m_alloc;
 	Edit m_edit;
 	
-	std::Connection m_editChanged;
-	std::Connection m_editChanged2;
+	NS_STDEXT::Connection m_editChanged;
+	NS_STDEXT::Connection m_editChanged2;
 	// NOTE: even you don't need to disconnect, you must hold the connection handle.
 
 public:

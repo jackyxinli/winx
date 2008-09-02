@@ -12,9 +12,9 @@
 
 void testBasic()
 {
-	typedef std::AutoFreeAlloc AllocT;
+	typedef NS_STDEXT::AutoFreeAlloc AllocT;
 	typedef std::pair<std::string, int> TupleT;
-	typedef std::Relation<TupleT, 3, 0, std::HashMapIndexing, AllocT> RelationT;
+	typedef NS_STDEXT::Relation<TupleT, 3, 0, NS_STDEXT::HashMapIndexing, AllocT> RelationT;
 	typedef RelationT::Indexing<0> Indexing0;
 	typedef RelationT::Indexing<1> Indexing1;
 
@@ -58,9 +58,9 @@ void testBasic()
 
 void testPrimaryKey()
 {
-	typedef std::AutoFreeAlloc AllocT;
+	typedef NS_STDEXT::AutoFreeAlloc AllocT;
 	typedef std::pair<std::string, int> TupleT;
-	typedef std::Relation<TupleT, 3, 3, std::HashMapIndexing, AllocT> RelationT;
+	typedef NS_STDEXT::Relation<TupleT, 3, 3, NS_STDEXT::HashMapIndexing, AllocT> RelationT;
 	typedef RelationT::Indexing<0> Indexing0;
 	typedef RelationT::Indexing<1> Indexing1;
 
@@ -105,10 +105,10 @@ void testPrimaryKey()
 
 void testRelationDefragment()
 {
-	typedef std::AutoFreeAlloc AllocT;
+	typedef NS_STDEXT::AutoFreeAlloc AllocT;
 	typedef std::pair<std::string, int> TupleT;
-	typedef std::Relation<TupleT, 3, 0, std::HashMapIndexing, AllocT> RelationT;
-	typedef std::Defragment<RelationT> RelationT2;
+	typedef NS_STDEXT::Relation<TupleT, 3, 0, NS_STDEXT::HashMapIndexing, AllocT> RelationT;
+	typedef NS_STDEXT::Defragment<RelationT> RelationT2;
 	typedef RelationT::Indexing<0> Indexing0;
 	typedef RelationT::Indexing<1> Indexing1;
 
@@ -150,18 +150,18 @@ void testRelationDefragment()
 // Field 1..(N-1):  hash-table index
 
 template <int Field, class KeyT, class AllocT>
-struct CustomIndexing : public std::HashMapIndexing<Field, KeyT, AllocT> {
+struct CustomIndexing : public NS_STDEXT::HashMapIndexing<Field, KeyT, AllocT> {
 };
 
 template <class KeyT, class AllocT>
-struct CustomIndexing<0, KeyT, AllocT> : public std::MapIndexing<0, KeyT, AllocT> {
+struct CustomIndexing<0, KeyT, AllocT> : public NS_STDEXT::MapIndexing<0, KeyT, AllocT> {
 };
 
 void testCustomIndexing()
 {
-	typedef std::AutoFreeAlloc AllocT;
+	typedef NS_STDEXT::AutoFreeAlloc AllocT;
 	typedef std::pair<std::string, int> TupleT;
-	typedef std::Relation<TupleT, 3, 0, CustomIndexing, AllocT> RelationT;
+	typedef NS_STDEXT::Relation<TupleT, 3, 0, CustomIndexing, AllocT> RelationT;
 	typedef RelationT::Indexing<0> Indexing0;
 	typedef RelationT::Indexing<1> Indexing1;
 
@@ -205,9 +205,9 @@ void testCustomIndexing()
 
 void testTupleRelation()
 {
-	typedef std::AutoFreeAlloc AllocT;
+	typedef NS_STDEXT::AutoFreeAlloc AllocT;
 	typedef boost::tuple<std::string, int, char> TupleT;
-	typedef std::Relation<TupleT, 7, 0, CustomIndexing, AllocT> RelationT;
+	typedef NS_STDEXT::Relation<TupleT, 7, 0, CustomIndexing, AllocT> RelationT;
 	typedef RelationT::Indexing<0> Indexing0;
 	typedef RelationT::Indexing<1> Indexing1;
 	typedef RelationT::Indexing<2> Indexing2;
