@@ -9,27 +9,34 @@
 // of this license. You must not remove this notice, or any other, from
 // this software.
 // 
-// Module: stdext/FileMapping.h
+// Module: stdext/MMap.h
 // Creator: xushiwei
 // Email: xushiweizh@gmail.com
 // Date: 2007-1-31 10:57:34
 // 
 // $Id: $
 // -----------------------------------------------------------------------*/
-#ifndef STDEXT_FILEMAPPING_H
-#define STDEXT_FILEMAPPING_H
+#ifndef STDEXT_MMAP_H
+#define STDEXT_MMAP_H
+
+#if defined(X_OS_WINDOWS)
+#define WINX_MMAP_USE_WINFILEMAPPING
+#else
+#define WINX_MMAP_USE_MMAP
+#endif
 
 // -------------------------------------------------------------------------
 
-#ifndef STDEXT_FILEMAPPING_SIMPLEFILEMAPPING_H
-#include "filemapping/SimpleFileMapping.h"
+#ifndef STDEXT_MMAP_WINFILEMAPPING_H
+#include "mmap/WinFileMapping.h"
 #endif
 
-#ifndef STDEXT_FILEMAPPING_FILEMAPPINGIMPL_H
-#include "filemapping/FileMappingImpl.h"
+#ifndef STDEXT_MMAP_MMAP_H
+#include "mmap/MMap.h"
 #endif
 
 // -------------------------------------------------------------------------
 // $Log: $
 
-#endif /* STDEXT_FILEMAPPING_H */
+#endif /* STDEXT_MMAP_H */
+

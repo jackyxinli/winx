@@ -19,12 +19,13 @@
 #ifndef STDEXT_FILEBUF_H
 #define STDEXT_FILEBUF_H
 
-#if (1)
+#if (0)
 #define WINX_FILEBUF_USE_WINFILE
-#define WINX_FILEBUF_USE_WINFILEMAPPING
 #endif
 
-#if !defined(X_OS_WINDOWS)
+#if defined(X_OS_WINDOWS)
+#define WINX_FILEBUF_USE_WINFILEMAPPING
+#else
 #define WINX_FILEBUF_USE_MMAP
 #endif
 

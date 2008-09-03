@@ -146,7 +146,7 @@ public:
 		LPSECURITY_ATTRIBUTES lpFileMappingAttributes = NULL,
 		PVOID pvBaseAddress = NULL)
 	{
-		int fd = open(
+		int fd = ::open(
 			szFile,
 			Config::FileDesiredAccess | Config::FileShareMode | Config::FileCreationDisposition,
 			Config::FileFlagsAndAttributes);
