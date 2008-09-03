@@ -121,7 +121,7 @@ public:
 		return Base::resize(cbSize);
 	}
 
-	HRESULT winx_call open(LPCTSTR szFile, pos_type* offset = NULL)
+	HRESULT winx_call open(LPCSTR szFile, pos_type* offset = NULL)
 	{
 		if (Config::GetSizeOnOpen) {
 			pos_type cbSize;

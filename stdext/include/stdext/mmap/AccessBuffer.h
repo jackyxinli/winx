@@ -209,6 +209,14 @@ public:
 		if (m_pView)
 			Utils::unmap(m_pView, SegmentSize);
 	}
+	
+	char* winx_call getCurrentView() const {
+		return m_pView;
+	}
+	
+	DWORD winx_call getCurrentSeg() const {
+		return m_iSeg;
+	}
 
 	void winx_call close()
 	{

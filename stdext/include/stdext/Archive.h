@@ -57,6 +57,10 @@
 #include "archive/MemArchive.h"
 #endif
 
+#ifndef STDEXT_ARCHIVE_MMAPARCHIVE_H
+#include "archive/MMapArchive.h"
+#endif
+
 #ifndef STDEXT_ARCHIVE_MEM_H
 #include "archive/Mem.h"
 #endif
