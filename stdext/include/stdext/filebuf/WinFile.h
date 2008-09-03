@@ -23,10 +23,6 @@
 #include "../Memory.h"
 #endif
 
-#ifndef STDEXT_STRING_H
-#include "../String.h"
-#endif
-
 #ifndef STDEXT_FILEBUF_AUTOBUFFER_H
 #include "AutoBuffer.h"
 #endif

@@ -84,7 +84,7 @@ public:
 		return m_data + m_bytes;
 	}
 
-	int good() const {
+	int winx_call good() const {
 		return m_data != NULL;
 	}
 

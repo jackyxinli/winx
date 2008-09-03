@@ -23,7 +23,7 @@
 #include "Basic.h"
 #endif
 
-#ifndef STDEXT_ARCHIVE_TEXTR_H
+#ifndef STDEXT_ARCHIVE_TEXT_H
 #include "Text.h"
 #endif
 
@@ -441,3 +441,4 @@ public:
 NS_STDEXT_END
 
 #endif /* STDEXT_ARCHIVE_MEMARCHIVE_H */
+

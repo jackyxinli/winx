@@ -6,9 +6,14 @@
 int main()
 {
 	NS_STDEXT::OutputLog log;
-	NS_STDEXT::FileBuf file(__FILE__);
-	
+
+	NS_STDEXT::FileBuf file(__FILE__);	
 	log.printString(file.begin(), file.end());
+	
+	log.newline();
+	
+	NS_STDEXT::FileMapBuf file2(__FILE__);
+	log.printString(file2.begin(), file2.end());
 	return 0;
 }
 
