@@ -79,7 +79,7 @@ public:
 		}
 	}
 	
-	HRESULT winx_call open(LPCSTR szFile)
+	HRESULT winx_call open(LPCSTR szFile, offset_type* offset = NULL)
 	{
 		if (good())
 			return E_ACCESSDENIED;
@@ -105,6 +105,8 @@ public:
 				dwFileSizeHigh,
 				dwFileSize,
 				NULL);
+			if (offset)
+				*offset = ((UINT64)dwFileSizeHigh << 32) | dwFileSize;
 		}
 		else {
 			m_hFileMapping = NULL;

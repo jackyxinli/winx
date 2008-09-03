@@ -9,69 +9,71 @@
 // of this license. You must not remove this notice, or any other, from
 // this software.
 // 
-// Module: stdext/filebuf/MMap.h
+// Module: stdext/filebuf/MapFileBuf.h
 // Creator: xushiwei
 // Email: xushiweizh@gmail.com
 // Date: 2007-1-31 10:11:31
 // 
 // $Id: $
 // -----------------------------------------------------------------------*/
-#ifndef STDEXT_FILEBUF_MMAP_H
-#define STDEXT_FILEBUF_MMAP_H
+#ifndef STDEXT_FILEBUF_MAPFILEBUF_H
+#define STDEXT_FILEBUF_MAPFILEBUF_H
 
-#ifndef STDEXT_MMAP_MMAPBUF_H
-#include "../mmap/MMapBuf.h"
+#ifndef STDEXT_MMAP_H
+#include "../MMap.h"
 #endif
 
 NS_STDEXT_BEGIN
 
 // -------------------------------------------------------------------------
-// class MMapFileBuf
+// class MapFileBuf
 
-class MMapFileBuf
+class MapFileBuf
 {
 private:
-	typedef MMapReadOnly Config;
-	typedef MMapBufRO MMap;
-	typedef MMap::file_descriptor file_descriptor;
-	
-	MMap m_mmap;
+	const char* m_data;
+	size_t m_fileSize;
+	MapFileRO m_mapfile;
 	
 public:
-	MMapFileBuf() {}
+	MapFileBuf() : m_data(NULL) {}
 
-	MMapFileBuf(LPCSTR file) {
+	MapFileBuf(LPCSTR file) : m_data(NULL) {
 		read(file);
 	}
 
-	MMapFileBuf(LPCWSTR file) {
+	MapFileBuf(LPCWSTR file) : m_data(NULL) {
 		read(file);
+	}
+	
+	~MapFileBuf() {
+		if (m_data) {
+			MapFileRO::unmap((void*)m_data, m_fileSize);
+			m_mapfile.close();
+		}
 	}
 
 public:
-	HRESULT winx_call attach(file_descriptor fd)
-	{
-		struct stat fi;
-		if (fstat(fd, &fi) < 0)
-			return E_FAIL;
-		else
-			return m_mmap.attach(fd, fi.st_size);
-	}
-
 	HRESULT winx_call read(LPCSTR file)
 	{
-		file_descriptor fd = open(
-			file,
-			Config::FileDesiredAccess | Config::FileShareMode | Config::FileCreationDisposition,
-			Config::FileFlagsAndAttributes);
-
-		if (fd < 0)
-			return E_FAIL;
-
-		HRESULT hr = attach(fd);
+		if (good())
+			return E_ACCESSDENIED;
+		
+		MapFileRO::offset_type fileSize;
+		HRESULT hr = m_mapfile.open(file, &fileSize);
 		if (hr != S_OK)
-			close(fd);
-		return hr;
+			return hr;
+
+		if (fileSize > 0xFFFFFFFF)
+			return E_OUTOFMEMORY;
+		
+		m_fileSize = (DWORD)fileSize;
+		m_data = (const char*)m_mapfile.map(0, m_fileSize);
+		if (m_data)
+			return S_OK;
+		
+		m_mapfile.close();
+		return E_FAIL;
 	}
 
 	HRESULT winx_call read(LPCWSTR file)
@@ -82,27 +84,31 @@ public:
 
 public:
 	void winx_call clear() {
-		m_mmap.close();
+		if (m_data) {
+			MapFileRO::unmap((void*)m_data, m_fileSize);
+			m_data = NULL;
+			m_mapfile.close();
+		}
 	}
 
 	const char* winx_call data() const {
-		return m_mmap.view();
+		return m_data;
 	}
 
 	const char* winx_call begin() const {
-		return m_mmap.view();
+		return m_data;
 	}
 
 	const char* winx_call end() const {
-		return m_mmap.view() + m_mmap.size();
+		return m_data + m_fileSize;
 	}
 
-	int winx_call good() const {
-		return m_mmap.good();
+	bool winx_call good() const {
+		return m_data != NULL;
 	}
 
 	const size_t winx_call size() const {
-		return m_mmap.size();
+		return m_fileSize;
 	}
 };
 
@@ -111,4 +117,4 @@ public:
 
 NS_STDEXT_END
 
-#endif /* STDEXT_FILEBUF_MMAP_H */
+#endif /* STDEXT_FILEBUF_MAPFILEBUF_H */

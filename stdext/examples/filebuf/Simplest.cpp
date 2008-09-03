@@ -12,7 +12,7 @@ int main()
 	
 	log.newline();
 	
-	NS_STDEXT::FileMapBuf file2(__FILE__);
+	NS_STDEXT::MapFileBuf file2(__FILE__);
 	log.printString(file2.begin(), file2.end());
 	return 0;
 }

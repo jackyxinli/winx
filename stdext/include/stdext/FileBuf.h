@@ -19,26 +19,12 @@
 #ifndef STDEXT_FILEBUF_H
 #define STDEXT_FILEBUF_H
 
-#if (0)
-#define WINX_FILEBUF_USE_WINFILE
-#endif
-
-#if defined(X_OS_WINDOWS)
-#define WINX_FILEBUF_USE_WINFILEMAPPING
-#else
-#define WINX_FILEBUF_USE_MMAP
-#endif
-
 #if defined(WINX_FILEBUF_USE_WINFILE)
 #include "filebuf/WinFile.h"
 #endif
 
-#if defined(WINX_FILEBUF_USE_WINFILEMAPPING)
-#include "filebuf/WinFileMapping.h"
-#endif
-
-#if defined(WINX_FILEBUF_USE_MMAP)
-#include "filebuf/MMap.h"
+#ifndef STDEXT_FILEBUF_MAPFILEBUF_H
+#include "filebuf/MapFileBuf.h"
 #endif
 
 #ifndef STDEXT_FILEBUF_STDIO_H
@@ -57,19 +43,6 @@ typedef WinFileBuf FileBuf;
 #else
 
 typedef FILEFileBuf FileBuf;
-
-#endif
-
-// -------------------------------------------------------------------------
-// class FileMapBuf
-
-#if defined(X_OS_WINDOWS)
-
-typedef WinFileMappingFileBuf FileMapBuf;
-
-#else
-
-typedef MMapFileBuf FileMapBuf;
 
 #endif
 

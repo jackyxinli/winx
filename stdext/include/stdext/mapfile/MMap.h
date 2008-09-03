@@ -88,14 +88,23 @@ public:
 			::close(m_fd);
 	}
 	
-	HRESULT winx_call open(LPCSTR szFile) {
+	HRESULT winx_call open(LPCSTR szFile, offset_type* offset = NULL)
+	{
 		if (good())
 			return E_ACCESSDENIED;
+			
 		m_fd = ::open(
 			szFile,
 			Config::FileDesiredAccess | Config::FileShareMode | Config::FileCreationDisposition,
 			Config::FileFlagsAndAttributes);
-		return m_fd < 0 ? E_ACCESSDENIED : S_OK;
+		if (m_fd < 0)
+			return E_ACCESSDENIED;
+			
+		if (Config::FileCreationDisposition == 0) {
+			if (offset)
+				*offset = size();
+		}
+		return S_OK;
 	}
 	
 	void winx_call close() {
