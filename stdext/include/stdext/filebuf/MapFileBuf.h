@@ -19,8 +19,8 @@
 #ifndef STDEXT_FILEBUF_MAPFILEBUF_H
 #define STDEXT_FILEBUF_MAPFILEBUF_H
 
-#ifndef STDEXT_MMAP_BASIC_H
-#include "../mmap/Basic.h"
+#ifndef STDEXT_MMAP_MAPFILE_H
+#include "../mmap/MapFile.h"
 #endif
 
 NS_STDEXT_BEGIN
@@ -59,7 +59,7 @@ public:
 		if (good())
 			return E_ACCESSDENIED;
 		
-		MapFileRO::offset_type fileSize;
+		MapFileRO::pos_type fileSize;
 		HRESULT hr = m_mapfile.open(file, &fileSize);
 		if (hr != S_OK)
 			return hr;

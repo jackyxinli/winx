@@ -9,15 +9,15 @@
 // of this license. You must not remove this notice, or any other, from
 // this software.
 // 
-// Module: stdext/mmap/Basic.h
+// Module: stdext/mmap/MapFile.h
 // Creator: xushiwei
 // Email: xushiweizh@gmail.com
 // Date: 2006-8-13 9:41:58
 // 
 // $Id: $
 // -----------------------------------------------------------------------*/
-#ifndef STDEXT_MMAP_BASIC_H
-#define STDEXT_MMAP_BASIC_H
+#ifndef STDEXT_MMAP_MAPFILE_H
+#define STDEXT_MMAP_MAPFILE_H
 
 #ifndef STDEXT_BASIC_H
 #include "../Basic.h"
@@ -50,4 +50,4 @@ NS_STDEXT_END
 // -------------------------------------------------------------------------
 // $Log: $
 
-#endif /* STDEXT_MMAP_BASIC_H */
+#endif /* STDEXT_MMAP_MAPFILE_H */

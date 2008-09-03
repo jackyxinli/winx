@@ -22,50 +22,11 @@
 NS_STDEXT_BEGIN
 
 // -------------------------------------------------------------------------
-// class HandleProxy
-
-template <class Owner>
-class HandleProxy
-{
-private:
-	Owner* m_owner;
-
-public:
-	enum { AllocationGranularityBits = Owner::AllocationGranularityBits };
-	enum { AllocationGranularity = Owner::AllocationGranularity };
-	enum { AllocationGranularityMask = Owner::AllocationGranularityMask };
-
-public:
-	typedef typename Owner::size_type size_type;
-	typedef typename Owner::pos_type pos_type;
-	typedef typename Owner::pos_argtype pos_argtype;
-	typedef typename Owner::Utils Utils;
-
-public:
-	HandleProxy(Owner& owner) : m_owner(&owner) {
-	}
-
-	void winx_call close() {
-	}
-
-	char* winx_call viewSegment(DWORD iBasePage, DWORD nPageCount) {
-		return m_owner->viewSegment(iBasePage, nPageCount);
-	}
-
-	char* winx_call accessSegment(DWORD iBasePage, DWORD nPageCount) {
-		return m_owner->accessSegment(iBasePage, nPageCount);
-	}
-
-	char* winx_call allocSegment(DWORD nPageCount, DWORD& iBasePage) {
-		return m_owner->allocSegment(nPageCount, iBasePage);
-	}
-};
-
-// -------------------------------------------------------------------------
 // class SegmentAllocBuffer - as a simplest allocator
 
 //
-// ***NOTE*** SegmentSize = (1 << SegBits) is maximum bytes that user can allocate.
+// ***NOTE***
+// 	SegmentSize = (1 << SegBits) is maximum bytes that user can allocate.
 //
 
 #pragma pack(1)
@@ -90,7 +51,6 @@ private:
 public:
 	typedef typename Base::size_type size_type;
 	typedef typename Base::pos_type pos_type;
-	typedef typename Base::pos_argtype pos_argtype;
 
 public:
 	enum { AllocationGranularityBits = Base::AllocationGranularityBits };
@@ -221,7 +181,6 @@ private:
 public:
 	typedef typename Base::size_type size_type;
 	typedef typename Base::pos_type pos_type;
-	typedef typename Base::pos_argtype pos_argtype;
 
 public:
 	enum { AllocationGranularityBits = Base::AllocationGranularityBits };
@@ -268,7 +227,7 @@ public:
 			WINX_VERIFY(Utils::flush(m_pView, SegmentSize));
 	}
 
-	char* winx_call view(pos_argtype fc)
+	char* winx_call view(pos_type fc)
 	{
 		DWORD iSeg = (DWORD)(fc >> SegmentBits);
 		if (iSeg == m_iSeg)
@@ -336,7 +295,6 @@ private:
 public:
 	typedef typename Base::size_type size_type;
 	typedef typename Base::pos_type pos_type;
-	typedef typename Base::pos_argtype pos_argtype;
 
 public:
 	enum { AllocationGranularity = Base::AllocationGranularity };
@@ -393,7 +351,7 @@ public:
 		}
 	}
 
-	char* winx_call view(pos_argtype offset, size_type count)
+	char* winx_call view(pos_type offset, size_type count)
 	{
 		DWORD nBasePage = (DWORD)(
 			offset >> AllocationGranularityBits);

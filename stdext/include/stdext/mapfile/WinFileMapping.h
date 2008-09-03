@@ -33,6 +33,8 @@ struct MappingReadWrite
 	enum { FileShareMode = FILE_SHARE_READ };
 	enum { FileCreationDisposition = OPEN_ALWAYS };
 	enum { FileFlagsAndAttributes = FILE_FLAG_WRITE_THROUGH|FILE_ATTRIBUTE_ARCHIVE };
+
+	enum { GetSizeOnOpen = FALSE };
 };
 
 // -------------------------------------------------------------------------
@@ -47,6 +49,8 @@ struct MappingReadOnly
 	enum { FileShareMode = FILE_SHARE_READ|FILE_SHARE_WRITE };
 	enum { FileCreationDisposition = OPEN_EXISTING };
 	enum { FileFlagsAndAttributes = FILE_FLAG_SEQUENTIAL_SCAN };
+
+	enum { GetSizeOnOpen = TRUE };
 };
 
 // -------------------------------------------------------------------------
@@ -61,14 +65,14 @@ private:
 	
 public:
 	typedef size_t size_type;
-	typedef UINT64 offset_type;
+	typedef UINT64 pos_type;
 	
 public:
 	MapFile() : m_hFile(INVALID_HANDLE_VALUE) {
 	}
 	
-	MapFile(LPCSTR szFile) : m_hFile(INVALID_HANDLE_VALUE) {
-		open(szFile);
+	MapFile(LPCSTR szFile, pos_type* offset = NULL) : m_hFile(INVALID_HANDLE_VALUE) {
+		open(szFile, offset);
 	}
 	
 	~MapFile() {
@@ -79,7 +83,7 @@ public:
 		}
 	}
 	
-	HRESULT winx_call open(LPCSTR szFile, offset_type* offset = NULL)
+	HRESULT winx_call open(LPCSTR szFile, pos_type* offset = NULL)
 	{
 		if (good())
 			return E_ACCESSDENIED;
@@ -96,7 +100,7 @@ public:
 		if (m_hFile == INVALID_HANDLE_VALUE)
 			return HRESULT_FROM_WIN32(GetLastError());
 		
-		if (Config::FileCreationDisposition == OPEN_EXISTING)
+		if (Config::GetSizeOnOpen)
 		{
 			DWORD dwFileSizeHigh = 0;
 			DWORD dwFileSize = ::GetFileSize(m_hFile, &dwFileSizeHigh);
@@ -131,7 +135,7 @@ public:
 		return m_hFile != INVALID_HANDLE_VALUE;
 	}
 	
-	HRESULT winx_call resize(offset_type newSize)
+	HRESULT winx_call resize(pos_type newSize)
 	{
 		if (m_hFileMapping)
 			WINX_VERIFY(CloseHandle(m_hFileMapping));
@@ -144,13 +148,13 @@ public:
 		return m_hFileMapping ? S_OK : E_FAIL;
 	}
 	
-	offset_type winx_call size() const {
+	pos_type winx_call size() const {
 		DWORD dwFileSizeHigh = 0;
 		DWORD dwFileSize = ::GetFileSize(m_hFile, &dwFileSizeHigh);
 		return ((UINT64)dwFileSizeHigh << 32) | dwFileSize;
 	}
 	
-	void* winx_call map(offset_type offset, size_type cbSize, void* pvBaseAddress = NULL)
+	void* winx_call map(pos_type offset, size_type cbSize, void* pvBaseAddress = NULL)
 	{
 		return ::MapViewOfFileEx(
 			m_hFileMapping, Config::PageAccess,

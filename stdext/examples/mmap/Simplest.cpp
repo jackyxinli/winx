@@ -5,30 +5,21 @@ using namespace NS_STDEXT;
 // -------------------------------------------------------------------------
 
 template <class LogT>
-void testViewBuffer(LogT& log)
-{
-	char* buf;
-	SegmentViewBuffer<MMapRO> ab(__FILE__);
-	buf = ab.view(0);
-	log.print(buf);
-}
-
-template <class LogT>
 void testAccessBuffer(LogT& log)
 {
 	char* buf;
-	AccessBuffer<MMapRW> ab;
+	AccessBuffer<FileMappingRW> ab;
 
 	ab.open(WINX_TEXT("__AccessBuffer__.txt"));
 
 	buf = ab.view(0, 32);
 	strcpy(buf, "hello, xushiwei!");
 
-	buf = ab.view(MMapRW::AllocationGranularity-5, 32);
+	buf = ab.view(FileMappingRW::AllocationGranularity-5, 32);
 	strcpy(buf, "hello, xushiwei!");
 
-	ViewBuffer<MMapRW::Handle> vb(ab);
-	char* buf2 = vb.view(MMapRW::AllocationGranularity-5, 32);
+	ViewBuffer<FileMappingRW::Handle> vb(ab);
+	char* buf2 = vb.view(FileMappingRW::AllocationGranularity-5, 32);
 
 	log.print(buf2).newline();
 	AssertExp(strcmp(buf2, "hello, xushiwei!") == 0);
@@ -37,16 +28,16 @@ void testAccessBuffer(LogT& log)
 template <class LogT>
 void testAccessBuffer2(LogT& log)
 {
-	MMapRW fm(WINX_TEXT("__AccessBuffer2__.txt"));
+	FileMappingRW fm(WINX_TEXT("__AccessBuffer2__.txt"));
 
-	AccessBuffer<MMapRW::Handle> ab(fm);
+	AccessBuffer<FileMappingRW::Handle> ab(fm);
 	char* buf = ab.view(0, 32);
 	strcpy(buf, "hello, xushiwei!");
 
-	ViewBuffer<MMapRW::Handle> vb(fm);
+	ViewBuffer<FileMappingRW::Handle> vb(fm);
 	char* buf2 = vb.view(0, 32);
 
-	buf = ab.view(MMapRW::AllocationGranularity-5, 32);
+	buf = ab.view(FileMappingRW::AllocationGranularity-5, 32);
 	strcpy(buf, "hello, abcdefg!");
 
 	log.print(buf2).newline();
@@ -57,7 +48,7 @@ template <class LogT>
 void testSegmentAccessBuffer(LogT& log)
 {
 	char* buf;
-	SegmentAccessBuffer<MMapRW> sab;
+	SegmentAccessBuffer<FileMappingRW> sab;
 
 	sab.open(WINX_TEXT("__SegmentAccessBuffer1__.txt"));
 
@@ -70,7 +61,7 @@ void testSegmentAccessBuffer(LogT& log)
 	buf = sab.view(64);
 	strcpy(buf, "hello, xushiwei!");
 
-	buf = sab.view(MMapRW::AllocationGranularity);
+	buf = sab.view(FileMappingRW::AllocationGranularity);
 	strcpy(buf, "hello, xushiwei!");
 }
 
@@ -78,8 +69,8 @@ template <class LogT>
 void testSegmentAccessBuffer2(LogT& log)
 {
 	char* buf;
-	MMapRW fm(WINX_TEXT("__SegmentAccessBuffer2__.txt"));;
-	SegmentAccessBuffer<MMapRW::Handle> sab(fm);
+	FileMappingRW fm(WINX_TEXT("__SegmentAccessBuffer2__.txt"));;
+	SegmentAccessBuffer<FileMappingRW::Handle> sab(fm);
 
 	buf = sab.view(0);
 	strcpy(buf, "hello, xushiwei!");
@@ -90,7 +81,7 @@ void testSegmentAccessBuffer2(LogT& log)
 	buf = sab.view(64);
 	strcpy(buf, "hello, xushiwei!");
 
-	buf = sab.view(MMapRW::AllocationGranularity);
+	buf = sab.view(FileMappingRW::AllocationGranularity);
 	strcpy(buf, "hello, xushiwei!");
 }
 
@@ -98,8 +89,8 @@ template <class LogT>
 void testSegmentAllocBuffer(LogT& log)
 {
 	char* buf;
-	SegmentAllocBuffer<MMapRW> sab;
-	SegmentAllocBuffer<MMapRW>::pos_type fc;
+	SegmentAllocBuffer<FileMappingRW> sab;
+	SegmentAllocBuffer<FileMappingRW>::pos_type fc;
 
 	sab.open(WINX_TEXT("__AllocBuffer1__.txt"));
 
@@ -112,7 +103,7 @@ void testSegmentAllocBuffer(LogT& log)
 	buf = sab.allocData(32, fc);
 	strcpy(buf, "hello, xushiwei!");
 
-	buf = sab.allocData(MMapRW::AllocationGranularity, fc);
+	buf = sab.allocData(FileMappingRW::AllocationGranularity, fc);
 	strcpy(buf, "hello, xushiwei!");
 }
 
@@ -120,9 +111,9 @@ template <class LogT>
 void testSegmentAllocBuffer2(LogT& log)
 {
 	char* buf;
-	MMapRW fm(WINX_TEXT("__AllocBuffer2__.txt"));
-	SegmentAllocBuffer<MMapRW::Handle> sab(fm);
-	MMapRW::pos_type fc;
+	FileMappingRW fm(WINX_TEXT("__AllocBuffer2__.txt"));
+	SegmentAllocBuffer<FileMappingRW::Handle> sab(fm);
+	FileMappingRW::pos_type fc;
 
 	buf = sab.allocData(32, fc);
 	strcpy(buf, "hello, xushiwei!");
@@ -133,7 +124,7 @@ void testSegmentAllocBuffer2(LogT& log)
 	buf = sab.allocData(32, fc);
 	strcpy(buf, "hello, xushiwei!");
 
-	buf = sab.allocData(MMapRW::AllocationGranularity, fc);
+	buf = sab.allocData(FileMappingRW::AllocationGranularity, fc);
 	strcpy(buf, "hello, xushiwei!");
 }
 
@@ -143,9 +134,9 @@ void testAccessAndAlloc(LogT& log)
 	::remove("__AccessAndAlloc__.txt");
 
 	char* buf;
-	MMapRW fm(WINX_TEXT("__AccessAndAlloc__.txt"));
-	SegmentAccessBuffer<MMapRW::Handle> sab(fm);
-	SegmentAllocBuffer<MMapRW::Handle> sa(fm);
+	FileMappingRW fm(WINX_TEXT("__AccessAndAlloc__.txt"));
+	SegmentAccessBuffer<FileMappingRW::Handle> sab(fm);
+	SegmentAllocBuffer<FileMappingRW::Handle> sa(fm);
 
 	buf = sab.view(0);
 	log.trace(buf);
@@ -158,13 +149,13 @@ void testAccessAndAlloc(LogT& log)
 	buf = sab.view(64);
 	strcpy(buf, "hello, xushiwei!");
 
-	buf = sab.view(MMapRW::AllocationGranularity);
+	buf = sab.view(FileMappingRW::AllocationGranularity);
 	strcpy(buf, "hello, xushiwei!");
 
-	SegmentAllocInfo info = { 0, MMapRW::AllocationGranularity };
+	SegmentAllocInfo info = { 0, FileMappingRW::AllocationGranularity };
 	sa.initBuffer(info);
 
-	MMapRW::pos_type fc;
+	FileMappingRW::pos_type fc;
 	buf = sa.allocData(32, fc);
 	strcpy(buf, "1234\n");
 	
@@ -183,7 +174,6 @@ int main()
 	testSegmentAccessBuffer(log);
 	testSegmentAccessBuffer2(log);
 	testAccessAndAlloc(log);
-	testViewBuffer(log);
 	return 0;
 }
 

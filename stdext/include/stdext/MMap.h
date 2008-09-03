@@ -21,21 +21,15 @@
 
 // -------------------------------------------------------------------------
 
-#ifndef STDEXT_MMAP_BASIC_H
-#include "mmap/Basic.h"
+#ifndef STDEXT_MMAP_MAPFILE_H
+#include "mmap/MapFile.h"
 #endif
 
 // -------------------------------------------------------------------------
 
-/*
-#ifndef STDEXT_MMAP_WINFILEMAPPING_H
-#include "mmap/WinFileMapping.h"
+#ifndef STDEXT_MMAP_FILEMAPPING_H
+#include "mmap/FileMapping.h"
 #endif
-
-#ifndef STDEXT_MMAP_MMAP_H
-#include "mmap/MMap.h"
-#endif
-*/
 
 // -------------------------------------------------------------------------
 // $Log: $

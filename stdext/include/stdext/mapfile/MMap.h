@@ -43,6 +43,7 @@ struct MappingReadWrite
 	enum { FileFlagsAndAttributes = S_IRUSR|S_IWUSR | S_IRGRP | S_IROTH };
 	
 	enum { FlushMode = MS_ASYNC };
+	enum { GetSizeOnOpen = FALSE };
 };
 
 // -------------------------------------------------------------------------
@@ -57,6 +58,8 @@ struct MappingReadOnly
 	enum { FileShareMode = 0 };
 	enum { FileCreationDisposition = 0 };
 	enum { FileFlagsAndAttributes = 0 };
+
+	enum { GetSizeOnOpen = TRUE };
 };
 
 // -------------------------------------------------------------------------
@@ -70,17 +73,14 @@ private:
 	
 public:
 	typedef size_t size_type;
-	typedef off_t offset_type;
+	typedef off_t pos_type;
 	
 public:
 	MapFile() : m_fd(-1) {
 	}
 	
-	MapFile(LPCSTR szFile) {
-		m_fd = ::open(
-			szFile,
-			Config::FileDesiredAccess | Config::FileShareMode | Config::FileCreationDisposition,
-			Config::FileFlagsAndAttributes);
+	MapFile(LPCSTR szFile, pos_type* offset = NULL) : m_fd(-1) {
+		open(szFile, offset);
 	}
 	
 	~MapFile() {
@@ -88,7 +88,7 @@ public:
 			::close(m_fd);
 	}
 	
-	HRESULT winx_call open(LPCSTR szFile, offset_type* offset = NULL)
+	HRESULT winx_call open(LPCSTR szFile, pos_type* offset = NULL)
 	{
 		if (good())
 			return E_ACCESSDENIED;
@@ -100,7 +100,7 @@ public:
 		if (m_fd < 0)
 			return E_ACCESSDENIED;
 			
-		if (Config::FileCreationDisposition == 0) {
+		if (Config::GetSizeOnOpen) {
 			if (offset)
 				*offset = size();
 		}
@@ -118,17 +118,17 @@ public:
 		return m_fd >= 0;
 	}
 	
-	HRESULT winx_call resize(offset_type newSize) {
+	HRESULT winx_call resize(pos_type newSize) {
 		return ::ftruncate(m_fd, newSize);
 	}
 	
-	offset_type winx_call size() const {
+	pos_type winx_call size() const {
 		struct stat fi;
 		::fstat(m_fd, &fi);
 		return fi.st_size;
 	}
 	
-	void* winx_call map(offset_type offset, size_type cbSize, void* pvBaseAddress = NULL)
+	void* winx_call map(pos_type offset, size_type cbSize, void* pvBaseAddress = NULL)
 	{
 		return mmap(
 			pvBaseAddress, cbSize,
