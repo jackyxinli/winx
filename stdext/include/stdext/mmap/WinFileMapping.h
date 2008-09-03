@@ -149,7 +149,15 @@ public:
 		if (m_hFile == INVALID_HANDLE_VALUE)
 			return E_ACCESSDENIED;
 
-		m_nTotalPage = 0;
+		if (Config::FileCreationDisposition) {
+			m_nTotalPage = 0;
+		}
+		else {
+			DWORD dwFileSizeHigh = 0;
+			DWORD dwFileSize = ::GetFileSize(m_hFile, &dwFileSizeHigh);
+			UINT64 cbSize = ((UINT64)dwFileSizeHigh << 32) | dwFileSize;
+			m_nTotalPage = (DWORD)((cbSize + AllocationGranularityMask) >> AllocationGranularityBits);
+		}
 		m_hFileMapping = NULL;
 		return S_OK;
 	}

@@ -19,14 +19,39 @@
 #ifndef STDEXT_MMAP_H
 #define STDEXT_MMAP_H
 
-#if defined(X_OS_WINDOWS)
-#define WINX_MMAP_USE_WINFILEMAPPING
-#else
-#define WINX_MMAP_USE_MMAP
+// -------------------------------------------------------------------------
+
+#ifndef STDEXT_BASIC_H
+#include "Basic.h"
 #endif
 
 // -------------------------------------------------------------------------
+// class MapFile
 
+#if defined(X_OS_WINDOWS)
+
+#ifndef STDEXT_MAPFILE_WINFILEMAPPING_H
+#include "mapfile/WinFileMapping.h"
+#endif
+
+#else
+
+#ifndef STDEXT_MAPFILE_MMAP_H
+#include "mapfile/MMap.h"
+#endif
+
+#endif
+
+NS_STDEXT_BEGIN
+
+typedef MapFile<MappingReadWrite> MapFileRW;
+typedef MapFile<MappingReadOnly> MapFileRO;
+
+NS_STDEXT_END
+
+// -------------------------------------------------------------------------
+
+/*
 #ifndef STDEXT_MMAP_WINFILEMAPPING_H
 #include "mmap/WinFileMapping.h"
 #endif
@@ -34,6 +59,7 @@
 #ifndef STDEXT_MMAP_MMAP_H
 #include "mmap/MMap.h"
 #endif
+*/
 
 // -------------------------------------------------------------------------
 // $Log: $

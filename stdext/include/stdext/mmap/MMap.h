@@ -106,7 +106,8 @@ public:
 	{
 		m_nTotalPage = nInitialTotalPage;
 
-		ftruncate(m_fd, (off_t)m_nTotalPage << AllocationGranularityBits);
+		if (Config::FileCreationDisposition)
+			ftruncate(m_fd, (off_t)m_nTotalPage << AllocationGranularityBits);
 
 		return S_OK;
 	}
@@ -126,7 +127,14 @@ public:
 		if (m_fd < 0)
 			return E_ACCESSDENIED;
 
-		m_nTotalPage = 0;
+		if (Config::FileCreationDisposition) {
+			m_nTotalPage = 0;
+		}
+		else {
+			struct stat fi;
+			fstat(m_fd, &fi);
+			m_nTotalPage = (DWORD)((fi.st_size + AllocationGranularityMask) >> AllocationGranularityBits);
+		}
 		return S_OK;
 	}
 

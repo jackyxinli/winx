@@ -5,6 +5,15 @@ using namespace NS_STDEXT;
 // -------------------------------------------------------------------------
 
 template <class LogT>
+void testViewBuffer(LogT& log)
+{
+	char* buf;
+	SegmentViewBuffer<MMapRO> ab(__FILE__);
+	buf = ab.view(0);
+	log.print(buf);
+}
+
+template <class LogT>
 void testAccessBuffer(LogT& log)
 {
 	char* buf;
@@ -174,6 +183,7 @@ int main()
 	testSegmentAccessBuffer(log);
 	testSegmentAccessBuffer2(log);
 	testAccessAndAlloc(log);
+	testViewBuffer(log);
 	return 0;
 }
 
