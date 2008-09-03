@@ -19,8 +19,8 @@
 #ifndef STDEXT_FILEBUF_MAPFILEBUF_H
 #define STDEXT_FILEBUF_MAPFILEBUF_H
 
-#ifndef STDEXT_MMAP_H
-#include "../MMap.h"
+#ifndef STDEXT_MMAP_BASIC_H
+#include "../mmap/Basic.h"
 #endif
 
 NS_STDEXT_BEGIN

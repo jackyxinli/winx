@@ -21,33 +21,9 @@
 
 // -------------------------------------------------------------------------
 
-#ifndef STDEXT_BASIC_H
-#include "Basic.h"
+#ifndef STDEXT_MMAP_BASIC_H
+#include "mmap/Basic.h"
 #endif
-
-// -------------------------------------------------------------------------
-// class MapFile
-
-#if defined(X_OS_WINDOWS)
-
-#ifndef STDEXT_MAPFILE_WINFILEMAPPING_H
-#include "mapfile/WinFileMapping.h"
-#endif
-
-#else
-
-#ifndef STDEXT_MAPFILE_MMAP_H
-#include "mapfile/MMap.h"
-#endif
-
-#endif
-
-NS_STDEXT_BEGIN
-
-typedef MapFile<MappingReadWrite> MapFileRW;
-typedef MapFile<MappingReadOnly> MapFileRO;
-
-NS_STDEXT_END
 
 // -------------------------------------------------------------------------
 
