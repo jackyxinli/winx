@@ -113,18 +113,27 @@ typedef DigitTableT<void> DigitTable;
 #define STD_CTYPE_DIGIT				0x04	/* digit[0-9] */
 #define STD_CTYPE_UNDERLINE			0x08	/* underline[_] */
 #define STD_CTYPE_XDIGIT			0x10	/* xdigit[0-9a-fA-F] */
-#define STD_CTYPE_PATH_SEP			0x20	/* [/\\] */
-#define STD_CTYPE_SPACE				0x40	/* [ \t\r\n] */
-#define STD_CTYPE_SUBTRACTION_SIGN	0x80	/* [-], dash(ÆÆÕÛºÅ)/hyphen(Á¬×Ö·û) */
+#define STD_CTYPE_SPACE				0x20	/* [ \t\r\n] */
+#define STD_CTYPE_ADD				0x40	/* [+] */
+#define STD_CTYPE_SUB				0x80	/* [-], dash(ÆÆÕÛºÅ)/hyphen(Á¬×Ö·û) */
+#define STD_CTYPE_MUL				0x100	/* [*] */
+#define STD_CTYPE_DIV				0x200	/* [/] */
+#define STD_CTYPE_LT				0x400	/* [<] */
+#define STD_CTYPE_GT				0x800	/* [>] */
+#define STD_CTYPE_EQ				0x1000	/* [=] */
+#define STD_CTYPE_RDIV				0x2000	/* [\], right-division, anti-slash */
+#define STD_CTYPE_DOT				0x4000	/* [.] */
+#define STD_CTYPE_COLON				0x8000	/* [:], colon */
 #define STD_CTYPE_MAX_CHAR			128
 
+#define STD_CTYPE_PATH_SEP			(STD_CTYPE_DIV|STD_CTYPE_RDIV)
 #define STD_CTYPE_ALPHA				(STD_CTYPE_UPPER|STD_CTYPE_LOWER)
 #define STD_SYMBOL_FIRST_CHAR		(STD_CTYPE_ALPHA)
 #define STD_SYMBOL_NEXT_CHAR		(STD_SYMBOL_FIRST_CHAR|STD_CTYPE_DIGIT)
 #define STD_CSYMBOL_FIRST_CHAR		(STD_CTYPE_ALPHA|STD_CTYPE_UNDERLINE)
 #define STD_CSYMBOL_NEXT_CHAR		(STD_CSYMBOL_FIRST_CHAR|STD_CTYPE_DIGIT)
 #define STD_XMLSYMBOL_FIRST_CHAR	(STD_CSYMBOL_FIRST_CHAR)
-#define STD_XMLSYMBOL_NEXT_CHAR		(STD_CSYMBOL_NEXT_CHAR|STD_CTYPE_SUBTRACTION_SIGN)
+#define STD_XMLSYMBOL_NEXT_CHAR		(STD_CSYMBOL_NEXT_CHAR|STD_CTYPE_SUB)
 
 // -------------------------------------------------------------------------
 
@@ -136,7 +145,7 @@ typedef DigitTableT<void> DigitTable;
 
 #define STD_CTYPE_OP_(op, is)												\
 	struct op {																\
-		int operator()(int c) const { return is(c); }						\
+		int winx_call operator()(int c) const { return is(c); }				\
 	}
 
 #define STD_CTYPE_OP_AND_NOT_(op, is)										\
@@ -151,69 +160,69 @@ struct CharTypeT
 {
 	typedef int mask_type;
 
-	static BYTE data[STD_CTYPE_MAX_CHAR];
+	static WORD data[STD_CTYPE_MAX_CHAR];
 
-	static int is(int typeMask, int c) {
+	static int winx_call is(int typeMask, int c) {
 		return STD_CTYPE_IS_(typeMask, c);
 	}
 
-	static int isDigit(int c) {
+	static int winx_call isDigit(int c) {
 		return STD_CTYPE_IS_(STD_CTYPE_DIGIT, c);
 	}
 
-	static int isLower(int c) {
+	static int winx_call isLower(int c) {
 		return STD_CTYPE_IS_(STD_CTYPE_LOWER, c);
 	}
 
-	static int isUpper(int c) {
+	static int winx_call isUpper(int c) {
 		return STD_CTYPE_IS_(STD_CTYPE_UPPER, c);
 	}
 
-	static int isAlpha(int c) {
+	static int winx_call isAlpha(int c) {
 		return STD_CTYPE_IS_(STD_CTYPE_ALPHA, c);
 	}
 	
-	static int isXDigit(int c) {
+	static int winx_call isXDigit(int c) {
 		return STD_CTYPE_IS_(STD_CTYPE_XDIGIT, c);
 	}
 
-	static int isSpace(int c) {
+	static int winx_call isSpace(int c) {
 		return STD_CTYPE_IS_(STD_CTYPE_SPACE, c);
 	}
 
-	static int isSymbolFirstChar(int c) {
+	static int winx_call isSymbolFirstChar(int c) {
 		return STD_CTYPE_IS_(STD_SYMBOL_FIRST_CHAR, c);
 	}
 
-	static int isSymbolNextChar(int c) {
+	static int winx_call isSymbolNextChar(int c) {
 		return STD_CTYPE_IS_(STD_SYMBOL_NEXT_CHAR, c);
 	}
 
-	static int isCSymbolFirstChar(int c) {
+	static int winx_call isCSymbolFirstChar(int c) {
 		return STD_CTYPE_IS_(STD_CSYMBOL_FIRST_CHAR, c);
 	}
 
-	static int isCSymbolNextChar(int c) {
+	static int winx_call isCSymbolNextChar(int c) {
 		return STD_CTYPE_IS_(STD_CSYMBOL_NEXT_CHAR, c);
 	}
 
-	static int isXmlSymbolFirstChar(int c) {
+	static int winx_call isXmlSymbolFirstChar(int c) {
 		return STD_CTYPE_IS_(STD_XMLSYMBOL_FIRST_CHAR, c);
 	}
 
-	static int isXmlSymbolNextChar(int c) {
+	static int winx_call isXmlSymbolNextChar(int c) {
 		return STD_CTYPE_IS_(STD_XMLSYMBOL_NEXT_CHAR, c);
 	}
 
-	static int isPathSeparator(int c) {
+	static int winx_call isPathSeparator(int c) {
 		return c == '/' || c == '\\';
 	}
 
-	static int isUnderline(int c) {
+	static int winx_call isUnderline(int c) {
 		return c == '_';
 	}
 
-	static int isEOL(int c) {
+	static int winx_call isEOL(int c) {
 		return c == 0x0a || c == 0x0c || c == -1;
 	}
 
@@ -249,7 +258,7 @@ struct CharTypeT
 };
 
 template <class Unused>
-BYTE CharTypeT<Unused>::data[STD_CTYPE_MAX_CHAR] =
+WORD CharTypeT<Unused>::data[STD_CTYPE_MAX_CHAR] =
 {
 	0,	//   [0]
 	0,	//   [1]
@@ -283,7 +292,7 @@ BYTE CharTypeT<Unused>::data[STD_CTYPE_MAX_CHAR] =
 	0,	//   [29]
 	0,	//   [30]
 	0,	//   [31]
-	STD_CTYPE_SPACE,	//   [32]
+	STD_CTYPE_SPACE, //   [32]
 	0,	// ! [33]
 	0,	// " [34]
 	0,	// # [35]
@@ -293,12 +302,12 @@ BYTE CharTypeT<Unused>::data[STD_CTYPE_MAX_CHAR] =
 	0,	// ' [39]
 	0,	// ( [40]
 	0,	// ) [41]
-	0,	// * [42]
-	0,	// + [43]
+	STD_CTYPE_MUL,						// * [42]
+	STD_CTYPE_ADD,						// + [43]
 	0,	// , [44]
-	STD_CTYPE_SUBTRACTION_SIGN,			// - [45]
-	0,	// . [46]
-	STD_CTYPE_PATH_SEP,	// / [47]
+	STD_CTYPE_SUB,						// - [45]
+	STD_CTYPE_DOT,						// . [46]
+	STD_CTYPE_DIV,						// / [47]
 	STD_CTYPE_DIGIT|STD_CTYPE_XDIGIT,	// 0 [48]
 	STD_CTYPE_DIGIT|STD_CTYPE_XDIGIT,	// 1 [49]
 	STD_CTYPE_DIGIT|STD_CTYPE_XDIGIT,	// 2 [50]
@@ -309,11 +318,11 @@ BYTE CharTypeT<Unused>::data[STD_CTYPE_MAX_CHAR] =
 	STD_CTYPE_DIGIT|STD_CTYPE_XDIGIT,	// 7 [55]
 	STD_CTYPE_DIGIT|STD_CTYPE_XDIGIT,	// 8 [56]
 	STD_CTYPE_DIGIT|STD_CTYPE_XDIGIT,	// 9 [57]
-	0,	// : [58]
+	STD_CTYPE_COLON,					// : [58]
 	0,	// ; [59]
-	0,	// < [60]
-	0,	// = [61]
-	0,	// > [62]
+	STD_CTYPE_LT,						// < [60]
+	STD_CTYPE_EQ,						// = [61]
+	STD_CTYPE_GT,						// > [62]
 	0,	// ? [63]
 	0,	// @ [64]
 	STD_CTYPE_UPPER|STD_CTYPE_XDIGIT,	// A [65]
@@ -343,7 +352,7 @@ BYTE CharTypeT<Unused>::data[STD_CTYPE_MAX_CHAR] =
 	STD_CTYPE_UPPER,	// Y [89]
 	STD_CTYPE_UPPER,	// Z [90]
 	0,	// [ [91]
-	STD_CTYPE_PATH_SEP,	// \ [92]
+	STD_CTYPE_RDIV,		// \ [92]
 	0,	// ] [93]
 	0,	// ^ [94]
 	STD_CTYPE_UNDERLINE,	// _ [95]
@@ -377,6 +386,16 @@ BYTE CharTypeT<Unused>::data[STD_CTYPE_MAX_CHAR] =
 };
 
 typedef CharTypeT<void> CharType;
+
+// -------------------------------------------------------------------------
+// class IsCharType
+
+template <int typeMask>
+struct IsCharType {
+	int winx_call operator()(int c) const {
+		return CharType::is(typeMask, c);
+	}
+};
 
 // -------------------------------------------------------------------------
 // CharTraits
@@ -448,88 +467,6 @@ struct CompareNoCase
 		return Tr_::upper(c1) - Tr_::upper(c2);
 	}
 };
-
-// -------------------------------------------------------------------------
-// class TestCharType
-
-#if defined(STD_UNITTEST)
-
-template <class LogT>
-class TestCharType
-{
-#define __STD_CTYPE_GEN(from, to, ctype)									\
-	{																		\
-		for (int i = from; i <= to; ++i)									\
-			data[i] |= ctype;												\
-	}
-
-#define __STD_CTYPE_TEST(from, to, ctype)									\
-	{																		\
-		for (int i = from; i <= to; ++i)									\
-			AssertExp(std::CharType::data[i] & ctype);						\
-	}
-
-public:
-	static void doTest(LogT& log)
-	{
-		__STD_CTYPE_TEST('a', 'f', STD_CTYPE_XDIGIT);
-		__STD_CTYPE_TEST('a', 'z', STD_CTYPE_LOWER);
-		__STD_CTYPE_TEST('A', 'F', STD_CTYPE_XDIGIT);
-		__STD_CTYPE_TEST('A', 'Z', STD_CTYPE_UPPER);
-		__STD_CTYPE_TEST('0', '9', STD_CTYPE_DIGIT);
-		__STD_CTYPE_TEST('0', '9', STD_CTYPE_XDIGIT);
-		__STD_CTYPE_TEST('_', '_', STD_CTYPE_UNDERLINE);
-		__STD_CTYPE_TEST('/', '/', STD_CTYPE_PATH_SEP);
-		__STD_CTYPE_TEST('\\', '\\', STD_CTYPE_PATH_SEP);
-	}
-
-	static void doGen()
-	{
-		FileLog log("/__ctype__.h");
-
-		BYTE data[128] = { 0 };
-		const char* ctypes[] = { STD_CTYPE_STRING_ };
-
-		__STD_CTYPE_GEN('a', 'f', STD_CTYPE_XDIGIT);
-		__STD_CTYPE_GEN('a', 'z', STD_CTYPE_LOWER);
-		__STD_CTYPE_GEN('A', 'F', STD_CTYPE_XDIGIT);
-		__STD_CTYPE_GEN('A', 'Z', STD_CTYPE_UPPER);
-		__STD_CTYPE_GEN('0', '9', STD_CTYPE_DIGIT|STD_CTYPE_XDIGIT);
-		__STD_CTYPE_GEN('_', '_', STD_CTYPE_UNDERLINE);
-		__STD_CTYPE_GEN('/', '/', STD_CTYPE_PATH_SEP);
-		__STD_CTYPE_GEN('\\', '\\', STD_CTYPE_PATH_SEP);
-
-		int maxChar = -1;
-		for (int i = 0; i < countof(data); ++i)
-		{
-			if (data[i])
-			{
-				for (int j = maxChar; ++j < i; )
-				{
-					log.trace("\t0,\t// %c [%d]\n", (j <= ' ' ? ' ' : j), j);
-				}
-				int first = TRUE;
-				for (int k = 0; k < countof(ctypes); ++k)
-				{
-					if (data[i] & (1 << k))
-					{
-						log.trace("%sSTD_CTYPE_%s", first ? "\t":"|", ctypes[k]);
-						first = FALSE;
-					}
-				}
-				log.trace(",\t// %c [%d]\n", i, i);
-				maxChar = i;
-			}
-		}
-
-		if (0)
-		log.trace(
-			"#define STD_CTYPE_MAX_CHAR			('%c'+1) /* %d */\n",
-			maxChar, maxChar+1);
-	}
-};
-
-#endif // defined(STD_UNITTEST)
 
 // -------------------------------------------------------------------------
 // $Log: CharType.h,v $
