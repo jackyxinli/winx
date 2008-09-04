@@ -178,11 +178,11 @@ public:
 // Usage: Rule/info("...")
 
 inline void TPL_CALL _trace_info(const char* prompt_, const std::string& val) {
-	TPL_TRACE("%s: %s\n", prompt_, val.c_str());
+	printf("%s: %s\n", prompt_, val.c_str());
 }
 
 inline void TPL_CALL _trace_info(const wchar_t* prompt_, const std::wstring& val) {
-	TPL_TRACEW(L"%s: %s\n", prompt_, val.c_str());
+	wprintf(L"%s: %s\n", prompt_, val.c_str());
 }
 
 template <class CharT>
@@ -207,6 +207,22 @@ template <class CharT>
 inline Action<Info<CharT> > const TPL_CALL info(const CharT* prompt_) {
 	return Action<Info<CharT> >(prompt_);
 }
+
+// =========================================================================
+// debug: TPL_INFO
+
+enum NullAction { null_action = 0 };
+
+template <class T1> __forceinline
+const T1& TPL_CALL operator/(const T1& sth, NullAction na) {
+	return sth;
+};
+
+#if defined(_DEBUG)
+#define TPL_INFO(prompt_)	tpl::info(prompt_)
+#else
+#define TPL_INFO(prompt_)	tpl::null_action
+#endif
 
 // =========================================================================
 // $Log: $
