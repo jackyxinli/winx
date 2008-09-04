@@ -40,8 +40,8 @@ template <class LogT>
 class TestRelationPerformance
 {
 private:
-	std::Accumulator m_acc;
-	std::AutoFreeAlloc m_alloc;
+	NS_STDEXT::Accumulator m_acc;
+	NS_STDEXT::AutoFreeAlloc m_alloc;
 	const char** m_keys;
 	int* m_vals;
 
@@ -51,7 +51,7 @@ public:
 	
 	void init()
 	{
-		std::Rand rnd;
+		NS_STDEXT::Rand rnd;
 		char s1[32];
 		m_keys = STD_ALLOC_ARRAY(m_alloc, const char*, Count);
 		m_vals = STD_ALLOC_ARRAY(m_alloc, int, Count);
@@ -73,7 +73,7 @@ public:
 			g_relation_index(rel, 0, g_str_hash, g_str_equal);
 			g_relation_index(rel, 1, g_direct_hash, g_direct_equal);
 		
-			std::PerformanceCounter counter;
+			NS_STDEXT::PerformanceCounter counter;
 			for (int i = 0; i < Count; ++i)
 			{
 				g_relation_insert(rel, m_keys[i], (gpointer)m_vals[i]);
@@ -100,7 +100,7 @@ public:
 				g_relation_insert(rel, m_keys[i], (gpointer)m_vals[i]);
 			}
 
-			std::PerformanceCounter counter;
+			NS_STDEXT::PerformanceCounter counter;
 			for (int i = 0; i < Count; ++i)
 			{
 				guint k;
@@ -128,11 +128,11 @@ public:
 		for (int j = 0; j < TestN; ++j)
 		{
 			typedef std::pair<const char*, int> TupleT;
-			typedef std::Relation<TupleT, 3, 0, std::HashMapIndexing, std::AutoFreeAlloc> RelationT;
+			typedef NS_STDEXT::Relation<TupleT, 3, 0, NS_STDEXT::HashMapIndexing, NS_STDEXT::AutoFreeAlloc> RelationT;
 			
 			RelationT rel(m_alloc);
 		
-			std::PerformanceCounter counter;
+			NS_STDEXT::PerformanceCounter counter;
 			for (int i = 0; i < Count; ++i)
 			{
 				rel.insert(TupleT(m_keys[i], m_vals[i]));
@@ -149,7 +149,7 @@ public:
 		for (int j = 0; j < TestN; ++j)
 		{
 			typedef std::pair<const char*, int> TupleT;
-			typedef std::Relation<TupleT, 3, 0, std::HashMapIndexing, std::AutoFreeAlloc> RelationT;
+			typedef NS_STDEXT::Relation<TupleT, 3, 0, NS_STDEXT::HashMapIndexing, NS_STDEXT::AutoFreeAlloc> RelationT;
 			typedef RelationT::Indexing<0> Indexing0;
 			
 			RelationT rel(m_alloc);
@@ -158,7 +158,7 @@ public:
 				rel.insert(TupleT(m_keys[i], m_vals[i]));
 			}
 		
-			std::PerformanceCounter counter;
+			NS_STDEXT::PerformanceCounter counter;
 			for (int i = 0; i < Count; ++i)
 			{
 				Indexing0::iterator it;
@@ -190,8 +190,8 @@ public:
 
 int main()
 {
-	std::ErrorLog log;
-	TestRelationPerformance<std::ErrorLog> test;
+	NS_STDEXT::ErrorLog log;
+	TestRelationPerformance<NS_STDEXT::ErrorLog> test;
 	test.testComparison(log);
 	return 0;
 }
