@@ -322,7 +322,7 @@ inline Rule<HtmlUIntegerG> TPL_CALL html_u_integer() {
 // Usage: html_entity()/assign(a_wchar_var)
 
 typedef Ch<'&'> HtmlEntityStart_;
-typedef Ch<';'> HtmlEntityEnd_;
+typedef Repeat01<Ch<';'> > HtmlEntityEnd_;
 typedef Or<HtmlSymbolU, HtmlUIntegerU> HtmlEntityVal_;
 
 typedef UAnd<HtmlEntityStart_, HtmlEntityVal_, HtmlEntityEnd_> HtmlEntityU;
