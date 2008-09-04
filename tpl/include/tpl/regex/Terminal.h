@@ -56,7 +56,7 @@ public:
 	}
 };
 
-__forceinline Rule<ChAny> TPL_CALL ch_any() {
+__forceinline Rule<ChAny> const TPL_CALL ch_any() {
 	return Rule<ChAny>();
 }
 
@@ -114,7 +114,7 @@ class ChRange : public EqCh<ChRg_<m_c1, m_c2> > {
 };
 
 template <int m_c1, int m_c2> 
-__forceinline Rule<ChRange<m_c1, m_c2> > TPL_CALL ch_range() {
+__forceinline Rule<ChRange<m_c1, m_c2> > const TPL_CALL ch_range() {
 	return Rule<ChRange<m_c1, m_c2> >();
 }
 
@@ -165,23 +165,35 @@ class ChNot : public EqCh<N_<m_c1, m_c2, m_c3, m_c4> > {
 };
 
 template <int m_c>
-__forceinline Rule<ChNot<m_c> > TPL_CALL ch_not() {
+__forceinline Rule<ChNot<m_c> > const TPL_CALL ch_not() {
 	return Rule<ChNot<m_c> >();
 }
 
 template <int m_c1, int m_c2>
-__forceinline Rule<ChNot<m_c1, m_c2> > TPL_CALL ch_not() {
+__forceinline Rule<ChNot<m_c1, m_c2> > const TPL_CALL ch_not() {
 	return Rule<ChNot<m_c1, m_c2> >();
 }
 
 template <int m_c1, int m_c2, int m_c3>
-__forceinline Rule<ChNot<m_c1, m_c2, m_c3> > TPL_CALL ch_not() {
+__forceinline Rule<ChNot<m_c1, m_c2, m_c3> > const TPL_CALL ch_not() {
 	return Rule<ChNot<m_c1, m_c2, m_c3> >();
 }
 
 template <int m_c1, int m_c2, int m_c3, int m_c4>
-__forceinline Rule<ChNot<m_c1, m_c2, m_c3, m_c4> > TPL_CALL ch_not() {
+__forceinline Rule<ChNot<m_c1, m_c2, m_c3, m_c4> > const TPL_CALL ch_not() {
 	return Rule<ChNot<m_c1, m_c2, m_c3, m_c4> >();
+}
+
+// -------------------------------------------------------------------------
+// function ch_mask
+
+template <int mask>
+class ChMask : public EqCh<NS_STDEXT::IsCharType<mask> >{
+};
+
+template <int mask>
+__forceinline Rule<ChMask<mask> > const TPL_CALL ch_mask() {
+	return Rule<ChMask<mask> >();
 }
 
 // -------------------------------------------------------------------------
@@ -231,22 +243,22 @@ class Ch : public EqCh<C_<m_c1, m_c2, m_c3, m_c4> > {
 };
 
 template <int m_c>
-__forceinline Rule<Ch<m_c> > TPL_CALL ch() {
+__forceinline Rule<Ch<m_c> > const TPL_CALL ch() {
 	return Rule<Ch<m_c> >();
 }
 
 template <int m_c1, int m_c2>
-__forceinline Rule<Ch<m_c1, m_c2> > TPL_CALL ch() {
+__forceinline Rule<Ch<m_c1, m_c2> > const TPL_CALL ch() {
 	return Rule<Ch<m_c1, m_c2> >();
 }
 
 template <int m_c1, int m_c2, int m_c3>
-__forceinline Rule<Ch<m_c1, m_c2, m_c3> > TPL_CALL ch() {
+__forceinline Rule<Ch<m_c1, m_c2, m_c3> > const TPL_CALL ch() {
 	return Rule<Ch<m_c1, m_c2, m_c3> >();
 }
 
 template <int m_c1, int m_c2, int m_c3, int m_c4>
-__forceinline Rule<Ch<m_c1, m_c2, m_c3, m_c4> > TPL_CALL ch() {
+__forceinline Rule<Ch<m_c1, m_c2, m_c3, m_c4> > const TPL_CALL ch() {
 	return Rule<Ch<m_c1, m_c2, m_c3, m_c4> >();
 }
 
@@ -307,15 +319,15 @@ typedef EqCh<C2> Ch2;
 typedef EqCh<C3> Ch3;
 
 template <class CharT>
-__forceinline Rule<Ch1> TPL_CALL ch(const CharT& x) {
+__forceinline Rule<Ch1> const TPL_CALL ch(const CharT& x) {
 	return Rule<Ch1>(x);
 }
 
-__forceinline Rule<Ch2> TPL_CALL ch(const int c1, const int c2) {
+__forceinline Rule<Ch2> const TPL_CALL ch(const int c1, const int c2) {
 	return Rule<Ch2>(c1, c2);
 }
 
-__forceinline Rule<Ch3> TPL_CALL ch(const int c1, const int c2, const int c3) {
+__forceinline Rule<Ch3> const TPL_CALL ch(const int c1, const int c2, const int c3) {
 	return Rule<Ch3>(c1, c2, c3);
 }
 
@@ -326,6 +338,8 @@ __forceinline Rule<Ch3> TPL_CALL ch(const int c1, const int c2, const int c3) {
 // Usage: alpha()		--- means: matching ONE Alpha Character
 // Usage: ...
 
+typedef NS_STDEXT::CharType CharType;
+
 typedef Ch<' ', '\t'> NonEolSpace;
 typedef Ch<'0', '1'> BinDigit;
 typedef ChRange<'0', '9'> Digit;
@@ -333,76 +347,76 @@ typedef ChRange<'0', '7'> OctDigit;
 typedef ChRange<'a', 'z'> LowerAlpha;
 typedef ChRange<'A', 'Z'> UpperAlpha;
 
-typedef EqCh<std::CharType::IsSpace> Space;
-typedef EqCh<std::CharType::IsAlpha> Alpha;
-typedef EqCh<std::CharType::IsXDigit> XDigit, HexDigit;
+typedef EqCh<CharType::IsSpace> Space;
+typedef EqCh<CharType::IsAlpha> Alpha;
+typedef EqCh<CharType::IsXDigit> XDigit, HexDigit;
 
-typedef EqCh<std::CharType::IsSymbolFirstChar> SymbolFirstChar;
-typedef EqCh<std::CharType::IsSymbolNextChar> SymbolNextChar;
+typedef EqCh<CharType::IsSymbolFirstChar> SymbolFirstChar;
+typedef EqCh<CharType::IsSymbolNextChar> SymbolNextChar;
 
-typedef EqCh<std::CharType::IsCSymbolFirstChar> CSymbolFirstChar;
-typedef EqCh<std::CharType::IsCSymbolNextChar> CSymbolNextChar;
+typedef EqCh<CharType::IsCSymbolFirstChar> CSymbolFirstChar;
+typedef EqCh<CharType::IsCSymbolNextChar> CSymbolNextChar;
 
-typedef EqCh<std::CharType::IsXmlSymbolFirstChar> XmlSymbolFirstChar;
-typedef EqCh<std::CharType::IsXmlSymbolNextChar> XmlSymbolNextChar;
+typedef EqCh<CharType::IsXmlSymbolFirstChar> XmlSymbolFirstChar;
+typedef EqCh<CharType::IsXmlSymbolNextChar> XmlSymbolNextChar;
 
-inline Rule<NonEolSpace> TPL_CALL non_eol_space() {
+inline Rule<NonEolSpace> const TPL_CALL non_eol_space() {
 	return Rule<NonEolSpace>();
 }
 
-inline Rule<Space> TPL_CALL space() {
+inline Rule<Space> const TPL_CALL space() {
 	return Rule<Space>();
 }
 
-inline Rule<Alpha> TPL_CALL alpha() {
+inline Rule<Alpha> const TPL_CALL alpha() {
 	return Rule<Alpha>();
 }
 
-inline Rule<LowerAlpha> TPL_CALL lower() {
+inline Rule<LowerAlpha> const TPL_CALL lower() {
 	return Rule<LowerAlpha>();
 }
 
-inline Rule<UpperAlpha> TPL_CALL upper() {
+inline Rule<UpperAlpha> const TPL_CALL upper() {
 	return Rule<UpperAlpha>();
 }
 
-inline Rule<Digit> TPL_CALL digit() {
+inline Rule<Digit> const TPL_CALL digit() {
 	return Rule<Digit>();
 }
 
-inline Rule<XDigit> TPL_CALL xdigit() {
+inline Rule<XDigit> const TPL_CALL xdigit() {
 	return Rule<XDigit>();
 }
 
-inline Rule<OctDigit> TPL_CALL oct_digit() {
+inline Rule<OctDigit> const TPL_CALL oct_digit() {
 	return Rule<OctDigit>();
 }
 
-inline Rule<BinDigit> TPL_CALL bin_digit() {
+inline Rule<BinDigit> const TPL_CALL bin_digit() {
 	return Rule<BinDigit>();
 }
 
-inline Rule<SymbolFirstChar> TPL_CALL symbol_first_char() {
+inline Rule<SymbolFirstChar> const TPL_CALL symbol_first_char() {
 	return Rule<SymbolFirstChar>();
 }
 
-inline Rule<SymbolNextChar> TPL_CALL symbol_next_char() {
+inline Rule<SymbolNextChar> const TPL_CALL symbol_next_char() {
 	return Rule<SymbolNextChar>();
 }
 
-inline Rule<CSymbolFirstChar> TPL_CALL c_symbol_first_char() {
+inline Rule<CSymbolFirstChar> const TPL_CALL c_symbol_first_char() {
 	return Rule<CSymbolFirstChar>();
 }
 
-inline Rule<CSymbolNextChar> TPL_CALL c_symbol_next_char() {
+inline Rule<CSymbolNextChar> const TPL_CALL c_symbol_next_char() {
 	return Rule<CSymbolNextChar>();
 }
 
-inline Rule<XmlSymbolFirstChar> TPL_CALL xml_symbol_first_char() {
+inline Rule<XmlSymbolFirstChar> const TPL_CALL xml_symbol_first_char() {
 	return Rule<XmlSymbolFirstChar>();
 }
 
-inline Rule<XmlSymbolNextChar> TPL_CALL xml_symbol_next_char() {
+inline Rule<XmlSymbolNextChar> const TPL_CALL xml_symbol_next_char() {
 	return Rule<XmlSymbolNextChar>();
 }
 

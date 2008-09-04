@@ -167,6 +167,8 @@ inline Rule<HtmlWs> TPL_CALL html_ws() {
 // =========================================================================
 // function html_symbol
 
+#define TPL_HTMLSYMBOL_FIRST_CHAR	STD_XMLSYMBOL_FIRST_CHAR
+
 typedef XmlSymbolFirstChar HtmlSymbolFirstChar;
 typedef XmlSymbolNextChar HtmlSymbolNextChar;
 
@@ -216,14 +218,54 @@ inline Rule<HtmlStrictValueG> TPL_CALL html_strict_value() {
 	return Rule<HtmlStrictValueG>();
 }
 
-//
-// skipws() + find(space()|'>'|'/') % ('/' + ~ch('>'))
-//
-typedef And<HtmlChDiv_, Not<HtmlChGt_> > HtmlValueNotEnd_;
-typedef Or<Space, Or<HtmlChGt_, HtmlChDiv_> > HtmlSmartValueDelim;
-typedef Lst<FindIf<HtmlSmartValueDelim>, HtmlValueNotEnd_> HtmlSmartValueG_;
+class HtmlSmartValueG
+{
+public:
+	enum { character = 0 };
 
-TPL_REGEX_GUARD0(HtmlSmartValueG_, HtmlSmartValueG, TagAssigHtmlSmartValue);
+	typedef SelfConvertible convertible_type;
+	typedef TagAssigHtmlSmartValue assig_tag;
+
+public:
+	template <class SourceT, class ContextT>
+	bool TPL_CALL match(SourceT& ar, ContextT& context) const
+	{
+		typedef ChMask<STD_CTYPE_SPACE|STD_CTYPE_GT|STD_CTYPE_DIV> HtmlSmartValueDelim;
+		typedef UAnd<FindIf<HtmlSmartValueDelim>, HtmlSkipWs> HtmlSmartValue1_; // find(space|'/'|'>') + skipws()
+
+		typedef ChMask<TPL_HTMLSYMBOL_FIRST_CHAR|STD_CTYPE_GT|STD_CTYPE_DIV> HtmlSmartValueNext;
+		typedef UAnd<HtmlSymbolU, UAnd<HtmlSkipWs, HtmlChEq_> > HtmlSmartValueNextPropU;
+		
+		const HtmlSmartValue1_ sval = HtmlSmartValue1_();
+		const HtmlSmartValueNext next = HtmlSmartValueNext();
+		const HtmlSmartValueNextPropU nextProp = HtmlSmartValueNextPropU();
+		
+Retry:	sval.match(ar, context);
+
+		typename SourceT::int_type c = ar.peek();
+		if (next(c)) {
+			if (c == '/') {
+				ar.get();
+				if (ar.peek() != '>')
+					goto Retry;
+				ar.unget('/');
+			}
+			else if (c != '>') {
+				typename SourceT::iterator pos = ar.position();
+				if (!nextProp.match(ar, context))
+					goto Retry;
+				ar.seek(pos);
+			}
+			return true;
+		}
+		ar.get();
+		goto Retry;
+	}
+
+	TPL_SIMPLEST_GRAMMAR_();
+};
+
+typedef HtmlSmartValueG HtmlSmartValueG_;
 
 inline Rule<HtmlSmartValueG> TPL_CALL html_smart_value() {
 	return Rule<HtmlSmartValueG>();
