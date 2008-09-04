@@ -332,3 +332,4 @@ public:
 // $Log: Posix.h,v $
 
 #endif /* STDEXT_ARCHIVE_POSIX_H */
+

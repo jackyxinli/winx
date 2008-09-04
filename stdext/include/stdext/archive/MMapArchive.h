@@ -40,7 +40,6 @@ private:
 	typedef SegmentT::pos_type PosT;
 	
 private:
-	const void* m_segEnd;
 	SegmentT m_seg;
 	PosT m_fileSize;
 	
@@ -48,12 +47,10 @@ public:
 	MMapReadCache() {}
 	
 	MMapReadCache(LPCSTR szFile) {
-		m_segEnd = NULL;
 		m_seg.open(szFile, &m_fileSize);
 	}
 	
 	HRESULT winx_call open(LPCSTR szFile) {
-		m_segEnd = NULL;
 		return m_seg.open(szFile, &m_fileSize);
 	}
 	
@@ -74,25 +71,14 @@ private:
 		enum { SegmentSizeMask = SegmentSize-1 };
 	
 	private:
-		const char* m_pos;
-		const char* m_segEnd;
+		DWORD m_pos;
+		DWORD m_iSeg;
 		MMapReadCache* m_cache;
-		PosT m_fcSeg;
 	
 	private:
-		const CharT& winx_call _fetch() {
-			PosT const pos = m_fcSeg + (SegmentSize - (m_segEnd - m_pos));
-			SegmentT& seg = m_cache->m_seg;
-			m_pos = seg.view(m_fcSeg);
-			m_cache->m_segEnd = m_segEnd = seg.getCurrentView() + SegmentSize;
-			m_fcSeg = (PosT)seg.getCurrentSeg() << SegmentBits;
-			return *(const CharT*)m_pos;
-		}
-		
 		void winx_call _init(PosT fc) {
-			m_fcSeg = fc & ~SegmentSizeMask;
-			m_pos = (const char*)(fc & SegmentSizeMask);
-			m_segEnd = (const char*)SegmentSize;
+			m_iSeg = (DWORD)(fc >> SegmentBits);
+			m_pos = (DWORD)(fc & SegmentSizeMask);
 		}
 		
 	public:
@@ -101,36 +87,41 @@ private:
 			_init(fc);
 		}
 		
+		PosT winx_call tell() const {
+			return ((PosT)m_iSeg << SegmentBits) | m_pos;
+		}
+		
 		const CharT& winx_call operator*() {
-			return m_segEnd == m_cache->m_segEnd ? *(const CharT*)m_pos : _fetch();
+			return *(const CharT*)(m_cache->m_seg.viewSegment(m_iSeg) + m_pos);
 		}
 		
 		Iterator& winx_call operator++() {
 			m_pos += sizeof(CharT);
-			if (m_pos == m_segEnd) {
-				m_fcSeg += SegmentSize;
-				m_pos = NULL;
-				m_segEnd = (const char*)SegmentSize;
+			if (m_pos == SegmentSize) {
+				++m_iSeg;
+				m_pos = 0;
 			}
 			return *this;
 		}
 		
 		Iterator& winx_call operator--() {
-			if (m_pos == m_segEnd - SegmentSize) {
-				m_fcSeg -= SegmentSize;
-				m_pos = m_segEnd = (const char*)SegmentSize;
+			if (m_pos == 0) {
+				--m_iSeg;
+				m_pos = SegmentSize - sizeof(CharT);
 			}
-			m_pos -= sizeof(CharT);
+			else {
+				m_pos -= sizeof(CharT);
+			}
 			return *this;
 		}
 		
 		Iterator& winx_call operator+=(ptrdiff_t delta) {
-			_init(m_fcSeg + (SegmentSize - (m_segEnd - m_pos)) + delta);
+			_init(tell() + delta * sizeof(CharT));
 			return *this;
 		}
 		
 		Iterator& winx_call operator-=(ptrdiff_t delta) {
-			_init(m_fcSeg + (SegmentSize - (m_segEnd - m_pos)) - delta);
+			_init(tell() - delta * sizeof(CharT));
 			return *this;
 		}
 
@@ -159,15 +150,15 @@ private:
 		}
 		
 		friend ptrdiff_t winx_call operator-(const Iterator& a, const Iterator& b) {
-			return (ptrdiff_t)((a.m_fcSeg - (a.m_segEnd - a.m_pos)) - (b.m_fcSeg - (b.m_segEnd - b.m_pos)));
+			return (a.tell() - b.tell()) / sizeof(CharT);
 		}
 
 		bool winx_call operator==(const Iterator& b) const {
-			return (m_fcSeg - (m_segEnd - m_pos)) == (b.m_fcSeg - (b.m_segEnd - b.m_pos));
+			return m_pos == b.m_pos && m_iSeg == b.m_iSeg;
 		}
 		
 		bool winx_call operator!=(const Iterator& b) const {
-			return (m_fcSeg - (m_segEnd - m_pos)) != (b.m_fcSeg - (b.m_segEnd - b.m_pos));
+			return m_pos != b.m_pos || m_iSeg != b.m_iSeg;
 		}
 	};
 	

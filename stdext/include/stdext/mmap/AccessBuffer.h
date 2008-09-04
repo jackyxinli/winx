@@ -234,35 +234,62 @@ public:
 		if (m_pView)
 			WINX_VERIFY(Utils::flush(m_pView, SegmentSize));
 	}
+	
+private:
+	char* winx_call _viewSegment(DWORD iSeg)
+	{
+		if (m_pView)
+			Utils::unmap(m_pView, SegmentSize);
+
+		if (ReadOnly)
+			m_pView = Base::viewSegment(iSeg << AlignBits_, AlignSize_);
+		else
+			m_pView = Base::accessSegment(iSeg << AlignBits_, AlignSize_);
+
+		WINX_ASSERT(m_pView);
+
+		if (m_pView != NULL) {
+			m_iSeg = iSeg;
+			return m_pView;
+		}
+		else {
+			m_iSeg = (DWORD)-1;
+			return NULL;
+		}
+	}
+
+	char* winx_call _view(DWORD iSeg, pos_type fc)
+	{
+		if (m_pView)
+			Utils::unmap(m_pView, SegmentSize);
+
+		if (ReadOnly)
+			m_pView = Base::viewSegment(iSeg << AlignBits_, AlignSize_);
+		else
+			m_pView = Base::accessSegment(iSeg << AlignBits_, AlignSize_);
+
+		WINX_ASSERT(m_pView);
+
+		if (m_pView != NULL) {
+			m_iSeg = iSeg;
+			return m_pView + (SegmentSizeMask & (size_type)fc);
+		}
+		else {
+			m_iSeg = (DWORD)-1;
+			return NULL;
+		}
+	}
+	
+public:	
+	char* winx_call viewSegment(DWORD iSeg)
+	{
+		return iSeg == m_iSeg ? m_pView : _viewSegment(iSeg);
+	}
 
 	char* winx_call view(pos_type fc)
 	{
 		DWORD iSeg = (DWORD)(fc >> SegmentBits);
-		if (iSeg == m_iSeg)
-		{
-			return m_pView + (SegmentSizeMask & (size_type)fc);
-		}
-		else
-		{
-			if (m_pView)
-				Utils::unmap(m_pView, SegmentSize);
-
-			if (ReadOnly)
-				m_pView = Base::viewSegment(iSeg << AlignBits_, AlignSize_);
-			else
-				m_pView = Base::accessSegment(iSeg << AlignBits_, AlignSize_);
-
-			WINX_ASSERT(m_pView);
-
-			if (m_pView != NULL) {
-				m_iSeg = iSeg;
-				return m_pView + (SegmentSizeMask & (size_type)fc);
-			}
-			else {
-				m_iSeg = (DWORD)-1;
-				return NULL;
-			}
-		}
+		return iSeg == m_iSeg ? m_pView + (SegmentSizeMask & (size_type)fc) : _view(iSeg, fc);
 	}
 };
 
