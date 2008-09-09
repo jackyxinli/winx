@@ -49,6 +49,23 @@ public:
 	}
 };
 
+template <class ValueT>
+class NEICase
+{
+private:
+	const ValueT m_val;
+	
+public:
+	template <class T1>
+	explicit NEICase(const T1& val) : m_val(val) {
+	}
+
+	template <class ValueT2>
+	bool TPL_CALL operator()(const ValueT2& val) const {
+		return std::icompare(val, m_val) != 0;
+	}
+};
+
 #define TPL_PRED_IMPL_(PredT, op)							\
 template <class ValueT>										\
 class PredT													\
@@ -106,6 +123,7 @@ TPL_PRED(ge, GE)
 
 TPL_PRED(notEq, NE)
 TPL_PRED(eqICase, EQICase)
+TPL_PRED(neICase, NEICase)
 
 // =========================================================================
 // function meet

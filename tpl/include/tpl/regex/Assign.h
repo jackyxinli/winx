@@ -178,10 +178,20 @@ struct SelectAssig<AssigTag, NS_STDEXT::Range<Iterator> > {
 	typedef AssigStr assig_type;
 };
 
+template <class AssigTag, class CharT>
+struct SelectAssig<AssigTag, NS_STDEXT::BasicString<CharT> > {
+	typedef AssigStr assig_type;
+};
+
 #define TPL_TEXT_ASSIG_(AssigTag, AssigType)	\
 												\
 template <class CharT, class Tr, class Ax>		\
 struct SelectAssig<AssigTag, std::basic_string<CharT, Tr, Ax> > {	\
+	typedef AssigType assig_type;									\
+};												\
+												\
+template <class CharT>							\
+struct SelectAssig<AssigTag, NS_STDEXT::BasicString<CharT> > {		\
 	typedef AssigType assig_type;									\
 };
 

@@ -145,6 +145,46 @@ struct AssigHtmlEntity {
 TPL_ASSIG_(TagAssigHtmlEntity, AssigHtmlEntity)
 
 // =========================================================================
+
+struct TagAssigHtmlValue {};
+struct TagAssigHtmlStrictValue {};
+
+/*
+struct TagAssigHtmlSmartValue {};
+struct AssigHtmlSmartValue {
+	template <class TextT, class Iterator>
+	static TextT TPL_CALL get(Iterator pos, Iterator pos2, const void* = NULL) {
+		return TextT(pos, pos2);
+	}
+};
+
+TPL_TEXT_ASSIG_(TagAssigHtmlSmartValue, AssigHtmlSmartValue)
+*/
+
+typedef TagAssigNone TagAssigHtmlSmartValue;
+
+struct AssigHtmlStrictValue {
+	template <class TextT, class Iterator>
+	static TextT TPL_CALL get(Iterator pos, Iterator pos2, const void* = NULL) {
+		++pos; --pos2;
+		return TextT(pos, pos2);
+	}
+};
+
+struct AssigHtmlValue {
+	template <class TextT, class Iterator>
+	static TextT TPL_CALL get(Iterator pos, Iterator pos2, const void* = NULL)
+	{
+		if (*pos == '\"' || *pos == '\'')
+			++pos; --pos2;
+		return TextT(pos, pos2);
+	}
+};
+
+TPL_TEXT_ASSIG_(TagAssigHtmlStrictValue, AssigHtmlStrictValue)
+TPL_TEXT_ASSIG_(TagAssigHtmlValue, AssigHtmlValue)
+
+// =========================================================================
 // function html_space/html_skipws/html_ws
 
 typedef Space HtmlSpace;
@@ -152,15 +192,15 @@ typedef Space HtmlSpace;
 typedef SkipWhiteSpaces HtmlSkipWs;
 typedef WhiteSpaces HtmlWs;
 
-inline Rule<HtmlSpace> TPL_CALL html_space() {
+inline Rule<HtmlSpace> const TPL_CALL html_space() {
 	return Rule<HtmlSpace>();
 }
 
-inline Rule<HtmlSkipWs> TPL_CALL html_skipws() {
+inline Rule<HtmlSkipWs> const TPL_CALL html_skipws() {
 	return Rule<HtmlSkipWs>();
 }
 
-inline Rule<HtmlWs> TPL_CALL html_ws() {
+inline Rule<HtmlWs> const TPL_CALL html_ws() {
 	return Rule<HtmlWs>();
 }
 
@@ -172,27 +212,23 @@ inline Rule<HtmlWs> TPL_CALL html_ws() {
 typedef XmlSymbolFirstChar HtmlSymbolFirstChar;
 typedef XmlSymbolNextChar HtmlSymbolNextChar;
 
-inline Rule<HtmlSymbolFirstChar> TPL_CALL html_symbol_first_char() {
+inline Rule<HtmlSymbolFirstChar> const TPL_CALL html_symbol_first_char() {
 	return Rule<HtmlSymbolFirstChar>();
 }
 
-inline Rule<HtmlSymbolNextChar> TPL_CALL html_symbol_next_char() {
+inline Rule<HtmlSymbolNextChar> const TPL_CALL html_symbol_next_char() {
 	return Rule<HtmlSymbolNextChar>();
 }
 
 typedef XmlSymbolU HtmlSymbolU;
 typedef XmlSymbolG HtmlSymbolG;
 
-inline Rule<HtmlSymbolG> TPL_CALL html_symbol() {
+inline Rule<HtmlSymbolG> const TPL_CALL html_symbol() {
 	return Rule<HtmlSymbolG>();
 }
 
 // =========================================================================
 // function html_value
-
-struct TagAssigHtmlValue {};
-struct TagAssigHtmlStrictValue {};
-struct TagAssigHtmlSmartValue {};
 
 template <int delim = '\"'>
 class HtmlValueTraits
@@ -214,7 +250,7 @@ typedef Or<HtmlDoubleQuoteValueU, HtmlSingleQuoteValueU> HtmlStrictValueU;
 
 TPL_REGEX_GUARD(HtmlStrictValueU, HtmlStrictValueG, TagAssigHtmlStrictValue);
 
-inline Rule<HtmlStrictValueG> TPL_CALL html_strict_value() {
+inline Rule<HtmlStrictValueG> const TPL_CALL html_strict_value() {
 	return Rule<HtmlStrictValueG>();
 }
 
@@ -267,7 +303,7 @@ Retry:	sval.match(ar, context);
 
 typedef HtmlSmartValueG HtmlSmartValueG_;
 
-inline Rule<HtmlSmartValueG> TPL_CALL html_smart_value() {
+inline Rule<HtmlSmartValueG> const TPL_CALL html_smart_value() {
 	return Rule<HtmlSmartValueG>();
 }
 
@@ -279,23 +315,79 @@ typedef Or<HtmlStrictValueG, HtmlSmartValueG> HtmlValueG_;
 
 TPL_REGEX_GUARD0(HtmlValueG_, HtmlValueG, TagAssigHtmlValue);
 
-inline Rule<HtmlValueG> TPL_CALL html_value() {
+inline Rule<HtmlValueG> const TPL_CALL html_value() {
 	return Rule<HtmlValueG>();
+}
+
+// -------------------------------------------------------------------------
+// function html_eq_value()
+
+//
+// '=' + html_skipws() + html_value()
+//
+typedef And<HtmlChEq_, And<HtmlSkipWs, HtmlValueG_> > HtmlEqValueG;
+
+inline Rule<HtmlEqValueG> const TPL_CALL html_eq_value() {
+	return Rule<HtmlEqValueG>();
+}
+
+// -------------------------------------------------------------------------
+// function html_skip_eq_value()
+
+// html_skipws() + !html_eq_value()
+
+typedef UAnd<HtmlSkipWs, Repeat01<HtmlEqValueG> > HtmlSkipEqValueG;
+
+inline Rule<HtmlSkipEqValueG> const TPL_CALL html_skip_eq_value() {
+	return Rule<HtmlSkipEqValueG>();
+}
+
+// -------------------------------------------------------------------------
+// function html_prop()
+
+typedef HtmlSymbolU HtmlPropU;
+typedef HtmlSymbolG HtmlPropG;
+
+inline Rule<HtmlPropG> const TPL_CALL html_prop() {
+	return Rule<HtmlPropG>();
 }
 
 // =========================================================================
 // function html_property
 
 //
-// html_symbol() + html_skipws() + !('=' + html_skipws() + html_value())
+// html_prop() + html_skip_eq_value()
 //
-typedef And<HtmlChEq_, And<HtmlSkipWs, HtmlValueG_> > HtmlPropValG_;
-typedef UAnd<HtmlSymbolU, HtmlSkipWs, Repeat01<HtmlPropValG_> > HtmlPropertyG_;
+typedef UAnd<HtmlPropG, HtmlSkipEqValueG> HtmlPropertyG_;
 
 TPL_REGEX_GUARD0(HtmlPropertyG_, HtmlPropertyG, TagAssigNone);
 
-inline Rule<HtmlPropertyG> TPL_CALL html_property() {
+inline Rule<HtmlPropertyG> const TPL_CALL html_property() {
 	return Rule<HtmlPropertyG>();
+}
+
+// -------------------------------------------------------------------------
+// function html_properties() - need optimize
+
+typedef Repeat0<And<HtmlSkipWs, HtmlPropertyG> > HtmlPropertiesG;
+
+inline Rule<HtmlPropertiesG> const TPL_CALL html_properties() {
+	return Rule<HtmlPropertiesG>();
+}
+
+// -------------------------------------------------------------------------
+// function html_skip_properties(pred)
+
+#define html_skip_properties(pred)	\
+	*(html_skipws() + html_prop()/(pred) + html_skip_eq_value())
+
+// =========================================================================
+// function html_text
+
+typedef StrToken<'<'> HtmlTextG;
+
+inline Rule<HtmlTextG> const TPL_CALL html_text() {
+	return Rule<HtmlTextG>();
 }
 
 // =========================================================================
@@ -312,7 +404,7 @@ typedef UAnd<HtmlUIPrefix_, Or<UIntegerU, HtmlHexIntegerU_> > HtmlUIntegerU;
 
 TPL_REGEX_GUARD(HtmlUIntegerU, HtmlUIntegerG, TagAssigHtmlUInt)
 
-inline Rule<HtmlUIntegerG> TPL_CALL html_u_integer() {
+inline Rule<HtmlUIntegerG> const TPL_CALL html_u_integer() {
 	return Rule<HtmlUIntegerG>();
 }
 
@@ -329,7 +421,7 @@ typedef UAnd<HtmlEntityStart_, HtmlEntityVal_, HtmlEntityEnd_> HtmlEntityU;
 
 TPL_REGEX_GUARD(HtmlEntityU, HtmlEntityG, TagAssigHtmlEntity)
 
-inline Rule<HtmlEntityG> TPL_CALL html_entity() {
+inline Rule<HtmlEntityG> const TPL_CALL html_entity() {
 	return Rule<HtmlEntityG>();
 }
 
@@ -349,7 +441,7 @@ TPL_REGEX_GUARD(HtmlCommentStartU, HtmlCommentStartG, TagAssigNone)
 TPL_REGEX_GUARD(HtmlCommentEndU, HtmlCommentEndG, TagAssigNone)
 TPL_REGEX_GUARD(HtmlCommentU, HtmlCommentG, TagAssigNone)
 
-inline Rule<HtmlCommentG> TPL_CALL html_comment() {
+inline Rule<HtmlCommentG> const TPL_CALL html_comment() {
 	return Rule<HtmlCommentG>();
 }
  
@@ -429,11 +521,11 @@ typedef HtmlScriptCode<'-', Ch<'-'>, Ch<'>'> > HtmlCommentedScriptCodeU;
 TPL_REGEX_GUARD(HtmlUncommentedScriptCodeU, HtmlUncommentedScriptCodeG, TagAssigNone)
 TPL_REGEX_GUARD(HtmlCommentedScriptCodeU, HtmlCommentedScriptCodeG, TagAssigNone)
 
-inline Rule<HtmlUncommentedScriptCodeG> TPL_CALL html_uncommented_script_code() {
+inline Rule<HtmlUncommentedScriptCodeG> const TPL_CALL html_uncommented_script_code() {
 	return Rule<HtmlUncommentedScriptCodeG>();
 }
 
-inline Rule<HtmlCommentedScriptCodeG> TPL_CALL html_commented_script_code() {
+inline Rule<HtmlCommentedScriptCodeG> const TPL_CALL html_commented_script_code() {
 	return Rule<HtmlCommentedScriptCodeG>();
 }
 
@@ -447,11 +539,11 @@ TPL_REGEX_GUARD(HtmlCommentedScriptCodeU2_, HtmlCommentedScriptCodeG2_, TagAssig
 typedef Or<HtmlUncommentedScriptCodeG, HtmlCommentedScriptCodeG2_> HtmlScriptCodeG;
 typedef Repeat0<HtmlScriptCodeG> HtmlScriptCodesG;
 
-inline Rule<HtmlScriptCodeG> TPL_CALL html_script_code() {
+inline Rule<HtmlScriptCodeG> const TPL_CALL html_script_code() {
 	return Rule<HtmlScriptCodeG>();
 }
 
-inline Rule<HtmlScriptCodesG> TPL_CALL html_script_codes() {
+inline Rule<HtmlScriptCodesG> const TPL_CALL html_script_codes() {
 	return Rule<HtmlScriptCodesG>();
 }
 
