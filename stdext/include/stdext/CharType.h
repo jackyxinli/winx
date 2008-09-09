@@ -115,7 +115,7 @@ typedef DigitTableT<void> DigitTable;
 #define STD_CTYPE_XDIGIT			0x10	/* xdigit[0-9a-fA-F] */
 #define STD_CTYPE_SPACE				0x20	/* [ \t\r\n] */
 #define STD_CTYPE_ADD				0x40	/* [+] */
-#define STD_CTYPE_SUB				0x80	/* [-], dash(ÆÆÕÛºÅ)/hyphen(Á¬×Ö·û) */
+#define STD_CTYPE_SUB				0x80	/* [-], dash(ï¿½ï¿½ï¿½Ûºï¿½)/hyphen(lï¿½Ö·ï¿½) */
 #define STD_CTYPE_MUL				0x100	/* [*] */
 #define STD_CTYPE_DIV				0x200	/* [/] */
 #define STD_CTYPE_LT				0x400	/* [<] */
@@ -124,6 +124,8 @@ typedef DigitTableT<void> DigitTable;
 #define STD_CTYPE_RDIV				0x2000	/* [\], right-division, anti-slash */
 #define STD_CTYPE_DOT				0x4000	/* [.] */
 #define STD_CTYPE_COLON				0x8000	/* [:], colon */
+#define STD_CTYPE_PERCENT			0x10000	/* [%] */
+#define STD_CTYPE_AND				0x20000	/* [&] */
 #define STD_CTYPE_MAX_CHAR			128
 
 #define STD_CTYPE_PATH_SEP			(STD_CTYPE_DIV|STD_CTYPE_RDIV)
@@ -160,7 +162,7 @@ struct CharTypeT
 {
 	typedef int mask_type;
 
-	static WORD data[STD_CTYPE_MAX_CHAR];
+	static int data[STD_CTYPE_MAX_CHAR];
 
 	static int winx_call is(int typeMask, int c) {
 		return STD_CTYPE_IS_(typeMask, c);
@@ -258,7 +260,7 @@ struct CharTypeT
 };
 
 template <class Unused>
-WORD CharTypeT<Unused>::data[STD_CTYPE_MAX_CHAR] =
+int CharTypeT<Unused>::data[STD_CTYPE_MAX_CHAR] =
 {
 	0,	//   [0]
 	0,	//   [1]
@@ -292,13 +294,13 @@ WORD CharTypeT<Unused>::data[STD_CTYPE_MAX_CHAR] =
 	0,	//   [29]
 	0,	//   [30]
 	0,	//   [31]
-	STD_CTYPE_SPACE, //   [32]
+	STD_CTYPE_SPACE,					//   [32]
 	0,	// ! [33]
 	0,	// " [34]
 	0,	// # [35]
 	0,	// $ [36]
-	0,	// % [37]
-	0,	// & [38]
+	STD_CTYPE_PERCENT,					// % [37]
+	STD_CTYPE_AND,						// & [38]
 	0,	// ' [39]
 	0,	// ( [40]
 	0,	// ) [41]

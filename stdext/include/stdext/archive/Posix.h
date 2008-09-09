@@ -92,14 +92,14 @@ public:
 	void winx_call open_handle(_Handle fd)
 	{
 		WINX_ASSERT(m_fd == nullfd);
-		WINX_ASSERT(tell() == 0);
+		WINX_ASSERT(fd == STDIN_FILENO || tell() == 0);
 		m_fd = fd;
 	}
 
 	void winx_call open_handle(_Handle fd, const pos_type& pos)
 	{
 		WINX_ASSERT(m_fd == nullfd);
-		WINX_ASSERT(tell() == pos);
+		WINX_ASSERT(fd == STDIN_FILENO || tell() == pos);
 		m_fd = fd;
 	}
 
@@ -149,8 +149,21 @@ public:
 	}
 	
 	size_type winx_call get(_E* buf, size_type cch)
-	{	
-		return ::read(m_fd, buf, cch);
+	{
+#if (0) // for stream device
+		size_type total = 0;
+		ssize_t n;
+		while (cch && (n = ::read(m_fd, buf, cch)) > 0)
+		{
+			buf += n;
+			total += n;
+			cch -= n;
+		}
+		return total;
+#else
+		ssize_t n = ::read(m_fd, buf, cch);
+		return (n > 0 ? n : 0);
+#endif
 	}
 
 	size_type winx_call put(const _E* s, size_type cch)

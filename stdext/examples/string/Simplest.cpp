@@ -60,7 +60,7 @@ void testExplode()
 
 	NS_STDEXT::String s(alloc, "Hello, world!  I am xushiwei!");
 
-	std::BasicArray<NS_STDEXT::String> arr = NS_STDEXT::explode(alloc, ' ', s);
+	NS_STDEXT::BasicArray<NS_STDEXT::String> arr = NS_STDEXT::explode(alloc, ' ', s);
 	for (size_t i = 0; i < arr.size(); ++i)
 		std::cout << arr[i] << '\n';
 	

@@ -315,15 +315,26 @@ public:
 	}
 };
 
+// -------------------------------------------------------------------------
+// function g_str
+
+template <class CharT>
+inline BasicString<CharT> winx_call g_str(const CharT* s)
+{
+	return BasicString<CharT>(s, end(s));
+}
+
+// -------------------------------------------------------------------------
+
 NS_STDEXT_END
 
-STD_NO_DESTRUCTOR(std::BasicString<char>);
-STD_NO_DESTRUCTOR(std::BasicString<wchar_t>);
-STD_NO_DESTRUCTOR(std::BasicString<int>);
-STD_NO_DESTRUCTOR(std::BasicString<long>);
-STD_NO_DESTRUCTOR(std::BasicString<short>);
-STD_NO_DESTRUCTOR(std::BasicString<unsigned int>);
-STD_NO_DESTRUCTOR(std::BasicString<unsigned long>);
+STD_NO_DESTRUCTOR(NS_STDEXT::BasicString<char>);
+STD_NO_DESTRUCTOR(NS_STDEXT::BasicString<wchar_t>);
+STD_NO_DESTRUCTOR(NS_STDEXT::BasicString<int>);
+STD_NO_DESTRUCTOR(NS_STDEXT::BasicString<long>);
+STD_NO_DESTRUCTOR(NS_STDEXT::BasicString<short>);
+STD_NO_DESTRUCTOR(NS_STDEXT::BasicString<unsigned int>);
+STD_NO_DESTRUCTOR(NS_STDEXT::BasicString<unsigned long>);
 
 // -------------------------------------------------------------------------
 // class TestBasicString

@@ -29,9 +29,22 @@ void testMMapArchive(const char* path)
 
 // -------------------------------------------------------------------------
 
+void testStdin()
+{
+	std::cout << "Input string (^D to quit): " << std::flush;
+
+	NS_STDEXT::PosixReadArchive ar(STDIN_FILENO);
+	std::string str;
+	while (ar.getline(str))
+		std::cout << str << "\n";
+}
+
+// -------------------------------------------------------------------------
+
 int main(int argc, const char* argv[])
 {
 	testMMapArchive(argc == 2 ? argv[1] : __FILE__);
+	testStdin();
 	return 0;
 }
 
