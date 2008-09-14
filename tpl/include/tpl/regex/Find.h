@@ -131,10 +131,10 @@ template <class PredT, bool bEat = false, bool bStrToken = false>
 class FindIf
 {
 private:
-	PredT m_pred;
+	const PredT m_pred;
 
 public:
-	FindIf() {}
+	FindIf() : m_pred() {}
 
 	template <class T1>
 	FindIf(const T1& pred) : m_pred(pred) {}
@@ -244,22 +244,22 @@ class StrToken : public FindIf<C_<m_c1, m_c2, m_c3, m_c4>, false, true> {
 };
 
 template <int m_c1>
-__forceinline Rule<StrToken<m_c1> > const TPL_CALL str_token() {
+__forceinline Rule<StrToken<m_c1> > const TPL_CALL token() {
 	return Rule<StrToken<m_c1> >();
 }
 
 template <int m_c1, int m_c2>
-__forceinline Rule<StrToken<m_c1, m_c2> > const TPL_CALL str_token() {
+__forceinline Rule<StrToken<m_c1, m_c2> > const TPL_CALL token() {
 	return Rule<StrToken<m_c1, m_c2> >();
 }
 
 template <int m_c1, int m_c2, int m_c3>
-__forceinline Rule<StrToken<m_c1, m_c2, m_c3> > const TPL_CALL str_token() {
+__forceinline Rule<StrToken<m_c1, m_c2, m_c3> > const TPL_CALL token() {
 	return Rule<StrToken<m_c1, m_c2, m_c3> >();
 }
 
 template <int m_c1, int m_c2, int m_c3, int m_c4>
-__forceinline Rule<StrToken<m_c1, m_c2, m_c3, m_c4> > const TPL_CALL str_token() {
+__forceinline Rule<StrToken<m_c1, m_c2, m_c3, m_c4> > const TPL_CALL token() {
 	return Rule<StrToken<m_c1, m_c2, m_c3, m_c4> >();
 }
 

@@ -6,8 +6,8 @@ using namespace tpl;
 
 // -------------------------------------------------------------------------
 
-#define PRJ_PATH	str_token<'\r', '\n', '['>()
-#define PRJ_ITEM	str_token<';', '\r', '\n'>()
+#define PRJ_PATH	token<'\r', '\n', '['>()
+#define PRJ_ITEM	token<';', '\r', '\n'>()
 
 int main(int argc, const char* argv[])
 {	
@@ -93,7 +93,7 @@ int main(int argc, const char* argv[])
 							[
 								skip_non_eol_ws_
 								[
-									gr(c_symbol()/tagType) + PRJ_PATH/tagPath
+									gr(c_symbol()/tagType) + gr(PRJ_PATH/tagPath)
 								]/tagProduct
 							],
 							case_(eqICase("options"))
