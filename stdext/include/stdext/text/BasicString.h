@@ -235,7 +235,7 @@ public:
 	{
 		const size_type cch = Base::size() - from;
 		if ((difference_type)cch < 0)
-			throw_out_of_range_();
+			return Myt_(); // throw_out_of_range_();
 		return Myt_(Base::first + from, cch);
 	}
 
@@ -243,7 +243,7 @@ public:
 	{
 		const size_type cchMax = Base::size() - from;
 		if ((difference_type)cchMax < 0)
-			throw_out_of_range_();
+			return Myt_(); // throw_out_of_range_();
 		return Myt_(Base::first + from, cchMax < cch ? cchMax : cch);
 	}
 
@@ -264,6 +264,22 @@ public:
 
 	bool winx_call contains(const CharT* b, size_type blen) const {
 		return find(b, blen) != end();
+	}
+	
+	bool winx_call startWith(const String_& b) const {
+		return substr(0, b.size()) == b;
+	}
+	
+	bool winx_call startWithI(const String_& b) const { // startWithIgnoreCase
+		return substr(0, b.size()).icompare(b) == 0;
+	}
+
+	bool winx_call endWith(const String_& b) const {
+		return substr(Base::size() - b.size()) == b;
+	}
+
+	bool winx_call endWithI(const String_& b) const { // endWithIgnoreCase
+		return substr(Base::size() - b.size()).icompare(b) == 0;
 	}
 };
 
