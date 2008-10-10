@@ -225,6 +225,40 @@ const T1& TPL_CALL operator/(const T1& sth, NullAction na) {
 #endif
 
 // =========================================================================
+// function println
+
+template <class PredT>
+inline void _print_ln(const NS_STDEXT::Range<const char*>& s, const PredT& pred_) {
+	if (pred_(s)) {
+		fwrite(s.begin(), s.size(), 1, stdout);
+		putc('\n', stdout);
+	}
+}
+
+template <class PredT>
+class PrintLn
+{
+private:
+	const PredT m_pred;
+	
+public:
+	PrintLn(const PredT& pred_) : m_pred(pred_) {}
+
+public:
+	typedef DefaultType value_type;
+
+	template <class ValueT>
+	void TPL_CALL operator()(const ValueT& s) const {
+		_print_ln(s, m_pred);
+	}
+};
+
+template <class PredT>
+inline Action<PrintLn<PredT> > const TPL_CALL println(const PredT& pred_) {
+	return Action<PrintLn<PredT> >(pred_);
+}
+
+// =========================================================================
 // $Log: $
 
 NS_TPL_END
