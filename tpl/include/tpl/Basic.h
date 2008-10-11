@@ -56,8 +56,8 @@
 #endif
 
 #ifndef TPL_ASSERT
-#if defined(BOOST_MEMORY_ASSERT)
-#define TPL_ASSERT(e)	BOOST_MEMORY_ASSERT(e)
+#if defined(WINX_ASSERT)
+#define TPL_ASSERT(e)	WINX_ASSERT(e)
 #elif defined(_ASSERTE)
 #define TPL_ASSERT(e)	_ASSERTE(e)
 #else
