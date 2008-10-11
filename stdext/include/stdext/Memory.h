@@ -41,8 +41,6 @@ typedef tls_block_pool TlsBlockPoolInit;
 typedef auto_alloc AutoFreeAlloc;
 typedef scoped_alloc ScopeAlloc;
 typedef scoped_alloc ScopedAlloc;
-typedef gc_alloc GcAlloc;
-typedef tls_gc_alloc TlsGcAlloc;
 
 #define RegionAllocT region_alloc
 #define DestructorTraits destructor_traits

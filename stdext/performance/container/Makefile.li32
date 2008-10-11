@@ -1,3 +1,7 @@
+OSAbbr	 = li
+Bits	 = 32
+Platform = li32
+
 #
 # Configuration Default
 #
@@ -5,7 +9,7 @@ ifeq ($(CFG),)
 	CFG = Debug
 endif
 
-IncludeDir = -I../../../stdext/include -I../../../boost -I../../../boostmm 
+IncludeDir = -I../../../stdext/include -I../../../boost -I../../../boostmm
 
 #
 # Configuration Release
@@ -13,21 +17,16 @@ IncludeDir = -I../../../stdext/include -I../../../boost -I../../../boostmm
 ifeq ($(CFG), Release)
 	LibDir	    += -LRelease
 	Libraries   += -lrt
-	Libraries   += -lapr-1
 	Libraries   += -lboost-memory
 	ProductDir   = Release
 	ObjectDir    = Release
-	MocFile      = $(ObjectDir)/temp.moc.cpp
 	Product      = Release/test
-	CFlags       = $(Defines) -fPIC -D__INTEL__ -D__32BIT__ -D__LINUX__ -DLINUX -DNDEBUG -O2 -D_MT -fexceptions 
-	CXXFlags     = $(CFlags) -fno-rtti 
-	CXX          = g++ -c $(IncludeDir) $(CXXFlags) -o $@
+	CFlags       = $(Defines) -fPIC -D__32BIT__ -D__INTEL__ -D__LINUX__ -DLINUX -DNDEBUG -O2 -D_MT -fexceptions -Wall
+	CXXFlags     = $(CFlags) -fno-rtti
 	CompileC     = @gcc -c $(IncludeDir) $(CFlags) -o $@ $<
-	CompileCXX   = @$(CXX) $<
-	CompileMoc   = @moc $< -o $(MocFile) && $(CXX) $(MocFile) && rm -f $(MocFile)
+	CompileCXX   = @g++ -c $(IncludeDir) $(CXXFlags) -o $@ $<
 	Link         = @g++ $(LibDir) -o $(Product)
 	CheckLink    = @ldd -u -r $(Product); echo
-
 	LD_LIBRARY_PATH += :$(ProductDir)
 endif
 
@@ -37,21 +36,16 @@ endif
 ifeq ($(CFG), Debug)
 	LibDir	    += -LDebug
 	Libraries   += -lrt
-	Libraries   += -lapr-1
 	Libraries   += -lboost-memory
 	ProductDir   = Debug
 	ObjectDir    = Debug
-	MocFile      = $(ObjectDir)/temp.moc.cpp
 	Product      = Debug/test
-	CFlags       = $(Defines) -fPIC -D__INTEL__ -D__32BIT__ -D__LINUX__ -DLINUX -D_DEBUG -g3 -D_MT -fexceptions -Wall 
-	CXXFlags     = $(CFlags) -fno-rtti 
-	CXX          = g++ -c $(IncludeDir) $(CXXFlags) -o $@
+	CFlags       = $(Defines) -fPIC -D__32BIT__ -D__INTEL__ -D__LINUX__ -DLINUX -D_DEBUG -g3 -D_MT -fexceptions -Wall
+	CXXFlags     = $(CFlags) -fno-rtti
 	CompileC     = @gcc -c $(IncludeDir) $(CFlags) -o $@ $<
-	CompileCXX   = @$(CXX) $<
-	CompileMoc   = @moc $< -o $(MocFile) && $(CXX) $(MocFile) && rm -f $(MocFile)
+	CompileCXX   = @g++ -c $(IncludeDir) $(CXXFlags) -o $@ $<
 	Link         = @g++ $(LibDir) -o $(Product)
 	CheckLink    = @ldd -u -r $(Product); echo
-
 	LD_LIBRARY_PATH += :$(ProductDir)
 endif
 
@@ -85,15 +79,13 @@ EndMake :
 # Source Files, Objects & Product
 #
 $(ObjectDir)/STLContainersPerformance.o :	\
-	./STLContainersPerformance.cpp
+	STLContainersPerformance.cpp
 	@echo "---> Compiling" $< "..."
 	$(CompileCXX)
 
+Objects = $(ObjectDir)/STLContainersPerformance.o 
 
-Objects =	\
-	$(ObjectDir)/STLContainersPerformance.o
-
-$(Product) : $(Objects) $(Libs)
+$(Product) : $(Objects)
 	@echo "---> Creating" $@ "..."
 	@rm -f $@
 	$(Link) $(Objects) $(Libraries)
