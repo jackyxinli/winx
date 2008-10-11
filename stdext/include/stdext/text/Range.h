@@ -69,7 +69,7 @@ public:
 	typedef Iterator iterator;
 	typedef Iterator const_iterator;
 
-#if defined(WINX_NO_PARTIAL_SPECIAILIZATION)
+#if defined(WINX_NO_PARTIAL_SPECIALIZATION)
 	typedef std::reverse_iterator<const_iterator, value_type,
 		const_reference, const_pointer, difference_type>
 			const_reverse_iterator;

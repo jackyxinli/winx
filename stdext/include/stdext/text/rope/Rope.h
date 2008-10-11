@@ -541,7 +541,7 @@ class Rope {
             //  but it's harder to make guarantees.
         }
 
-#     if !defined(WINX_NO_PARTIAL_SPECIAILIZATION)
+#     if !defined(WINX_NO_PARTIAL_SPECIALIZATION)
         typedef reverse_iterator<const_iterator> const_reverse_iterator;
 #     else
         typedef reverse_iterator<const_iterator, value_type, const_reference,
@@ -907,7 +907,7 @@ class Rope {
             return(iterator(this, size()));
         }
 
-#     if !defined(WINX_NO_PARTIAL_SPECIAILIZATION)
+#     if !defined(WINX_NO_PARTIAL_SPECIALIZATION)
         typedef reverse_iterator<iterator> reverse_iterator;
 #     else
         typedef reverse_iterator<iterator, value_type, reference,

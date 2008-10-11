@@ -372,15 +372,15 @@ public:
 		return m_handle.size();
 	}
 
-	int winx_call operator!() const {
+	bool winx_call operator!() const {
 		return m_handle.bad();
 	}
 
-	int winx_call good() const {
+	bool winx_call good() const {
 		return m_handle.good();
 	}
 
-	int winx_call bad() const {
+	bool winx_call bad() const {
 		return m_handle.bad();
 	}
 	

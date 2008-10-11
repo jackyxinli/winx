@@ -176,7 +176,7 @@ public:
 };
 
 // -------------------------------------------------------------------------
-// $Log: MMapReadArchive.h,v $
+// $Log: MMapArchive.h,v $
 
 NS_STDEXT_END
 

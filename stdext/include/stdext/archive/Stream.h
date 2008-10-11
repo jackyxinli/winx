@@ -198,17 +198,17 @@ public:
 		return m_pStrm;
 	}
 	
-	int winx_call operator!() const
+	bool winx_call operator!() const
 	{
 		return m_pStrm == NULL;
 	}
 
-	int winx_call bad() const
+	bool winx_call bad() const
 	{
 		return m_pStrm == NULL;
 	}
 
-	int winx_call good() const
+	bool winx_call good() const
 	{
 		return m_pStrm != NULL;
 	}

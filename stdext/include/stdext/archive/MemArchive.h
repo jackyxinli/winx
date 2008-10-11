@@ -162,17 +162,17 @@ public:
 		return m_stg->size();
 	}
 
-	int winx_call operator!() const
+	bool winx_call operator!() const
 	{
 		return m_stg == NULL;
 	}
 
-	int winx_call good() const
+	bool winx_call good() const
 	{
 		return m_stg != NULL;
 	}
 
-	int winx_call bad() const
+	bool winx_call bad() const
 	{
 		return m_stg == NULL;
 	}
@@ -403,16 +403,16 @@ public:
 		return m_last - m_first;
 	}
 
-	int winx_call operator!() const {
-		return FALSE;
+	bool winx_call operator!() const {
+		return false;
 	}
 
-	int winx_call good() const {
-		return TRUE;
+	bool winx_call good() const {
+		return true;
 	}
 
-	int winx_call bad() const {
-		return FALSE;
+	bool winx_call bad() const {
+		return false;
 	}
 
 public:

@@ -68,7 +68,7 @@ class Hash : public stdext::hash<KeyT>
 {
 };
 
-#if defined(WINX_NO_PARTIAL_SPECIAILIZATION)
+#if defined(WINX_NO_PARTIAL_SPECIALIZATION)
 
 template <>
 class Hash<std::string>
@@ -126,7 +126,7 @@ public:
 	}
 };
 
-#endif // !defined(WINX_NO_PARTIAL_SPECIAILIZATION)
+#endif // !defined(WINX_NO_PARTIAL_SPECIALIZATION)
 
 #endif // !defined(X_STL_NET)
 
