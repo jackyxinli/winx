@@ -1,0 +1,1 @@
+cvs st 2> /dev/null | grep -e "Modified\|?"
