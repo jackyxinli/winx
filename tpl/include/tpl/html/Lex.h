@@ -279,6 +279,8 @@ public:
 Retry:	sval.match(ar, context);
 
 		typename SourceT::int_type c = ar.peek();
+		if (c == SourceT::endch)
+			return true;
 		if (next(c)) {
 			if (c == '/') {
 				ar.get();
