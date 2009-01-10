@@ -163,7 +163,7 @@ public:
 			);
 	}
 
-	static void winx_call unmap(void* p) {
+	static void winx_call unmap(void* p, size_t cb) {
 		UnmapViewOfFile(p);
 	}
 
