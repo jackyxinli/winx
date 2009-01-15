@@ -603,26 +603,26 @@ public:
 public:
 	void testWrite(LogT& log)
 	{
-		std::WinRegWriteKey(HKEY_CURRENT_USER, _WINX_TEST_KEY)
+		NS_STDEXT::WinRegWriteKey(HKEY_CURRENT_USER, _WINX_TEST_KEY)
 			.putDWord(WINX_TEXT("dword"), 123);
 
-		std::WinRegWriteKey(HKEY_CURRENT_USER, _WINX_TEST_KEY)
+		NS_STDEXT::WinRegWriteKey(HKEY_CURRENT_USER, _WINX_TEST_KEY)
 			.putGuid(WINX_TEXT("guid"), IID_IClassFactory);
 
-		std::WinRegWriteKey(HKEY_CURRENT_USER, _WINX_TEST_KEY)
+		NS_STDEXT::WinRegWriteKey(HKEY_CURRENT_USER, _WINX_TEST_KEY)
 			.putString(WINX_TEXT("string"), WINX_TEXT("abc"));
 	
-		std::WinRegWriteKey(HKEY_CURRENT_USER, _WINX_TEST_KEY)
+		NS_STDEXT::WinRegWriteKey(HKEY_CURRENT_USER, _WINX_TEST_KEY)
 			.putString(WINX_TEXT("string2"), std::vector<TCHAR>(257, '!'));
 
 		std::basic_string<TCHAR> s3(WINX_TEXT("string3"));
-		std::WinRegWriteKey(HKEY_CURRENT_USER, _WINX_TEST_KEY)
+		NS_STDEXT::WinRegWriteKey(HKEY_CURRENT_USER, _WINX_TEST_KEY)
 			.putString(WINX_TEXT("string3"), s3);
 	}
 
 	void testRead(LogT& log)
 	{
-		std::WinRegReadKey key(HKEY_CURRENT_USER, _WINX_TEST_KEY);
+		NS_STDEXT::WinRegReadKey key(HKEY_CURRENT_USER, _WINX_TEST_KEY);
 		
 		DWORD dword = 0;
 		key.getDWord(WINX_TEXT("dword"), dword);
@@ -637,10 +637,10 @@ public:
 		AssertExp(str.size() == 3);
 		AssertExp(str == WINX_TEXT("abc"));
 
-		std::BlockPool recycle;
-		std::ScopedAlloc alloc(recycle);
+		NS_STDEXT::BlockPool recycle;
+		NS_STDEXT::ScopedAlloc alloc(recycle);
 
-		std::BasicString<TCHAR> s2;
+		NS_STDEXT::BasicString<TCHAR> s2;
 		key.getString(WINX_TEXT("string2"), alloc, s2);
 		AssertExp(s2 == std::String(alloc, 257, '!'));
 	
