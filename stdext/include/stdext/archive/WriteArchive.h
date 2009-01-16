@@ -23,6 +23,10 @@
 #include "Basic.h"
 #endif
 
+#ifndef STDEXT_TEXT_RANGE_H
+#include "../text/Range.h"
+#endif
+
 NS_STDEXT_BEGIN
 
 // -------------------------------------------------------------------------

@@ -21,17 +21,17 @@
 
 // -------------------------------------------------------------------------
 
-#define NS_BOOST_MEMORY_BEGIN	namespace std {
+#define NS_BOOST_MEMORY_BEGIN	namespace NS_STDEXT {
 #define NS_BOOST_MEMORY_END		}
-#define NS_BOOST_MEMORY			std
+#define NS_BOOST_MEMORY			NS_STDEXT
 #define NS_BOOST_MEMORY_POLICY_BEGIN
 #define NS_BOOST_MEMORY_POLICY_END
 #define NS_BOOST_MEMORY_POLICY	std
 
 #ifndef NS_BOOST_DETAIL_BEGIN
-#define NS_BOOST_DETAIL_BEGIN	namespace std {
+#define NS_BOOST_DETAIL_BEGIN	namespace NS_STDEXT {
 #define NS_BOOST_DETAIL_END		}
-#define NS_BOOST_DETAIL			std
+#define NS_BOOST_DETAIL			NS_STDEXT
 #endif
 
 #ifndef BOOST_DETAIL_DEBUG_HPP
