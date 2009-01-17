@@ -289,13 +289,13 @@ class HandleT : public HandleClass
 
 public:
 	BOOL winx_call GetWindowText(BSTR* pbstrText) const {
-		return HandleClass::GetWindowText(*pbstrText);
+		return ((HandleClass*)this)->GetWindowText(*pbstrText);
 	}
 	BOOL winx_call GetWindowText(BSTR& bstrText) const {
-		return HandleClass::GetWindowText(bstrText);
+		return ((HandleClass*)this)->GetWindowText(bstrText);
 	}
 	int winx_call GetWindowText(LPTSTR lpszStringBuf, int nMaxCount) const {
-		return HandleClass::GetWindowText(lpszStringBuf, nMaxCount);
+		return ((HandleClass*)this)->GetWindowText(lpszStringBuf, nMaxCount);
 	}
 	int winx_call GetWindowText(AnsiString& rString) const {
 		return winx::GetWindowText(m_hWnd, rString);
