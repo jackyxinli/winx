@@ -182,15 +182,15 @@ public:
 	template <class IntT>
 	void doTestIntToStr(const IntT& val, LogT& log)
 	{
-		std::AutoFreeAlloc alloc;
+		NS_STDEXT::AutoFreeAlloc alloc;
 		std::ostringstream os;
 		os << val;
-		AssertExp(os.str() == std::str(alloc, val));
+		AssertExp(os.str() == NS_STDEXT::str(alloc, val));
 	}
 
 	void testIntToStr(LogT& log)
 	{
-		std::Rand rnd;
+		NS_STDEXT::Rand rnd;
 		size_t i;
 		for (i = 0; i < 1000; ++i) {
 			const int val = rnd.rand();
@@ -223,8 +223,8 @@ public:
 	template <class RealT>
 	void doTestRealToStr(const RealT& val, LogT& log)
 	{
-		std::AutoFreeAlloc alloc;
-		std::String s = std::str(alloc, val);
+		NS_STDEXT::AutoFreeAlloc alloc;
+		NS_STDEXT::String s = NS_STDEXT::str(alloc, val);
 		std::string s1 = s.stl_str();
 		std::istringstream is(s1);
 		RealT val2;
@@ -234,7 +234,7 @@ public:
 	
 	void testRealToStr(LogT& log)
 	{
-		std::Rand rnd;
+		NS_STDEXT::Rand rnd;
 		size_t i;
 		for (i = 0; i < 1000; ++i) {
 			const float val = (float)rnd.frand();
@@ -248,20 +248,20 @@ public:
 	
 	void testBasic(LogT& log)
 	{
-		std::AutoFreeAlloc alloc;
-		std::String s;
+		NS_STDEXT::AutoFreeAlloc alloc;
+		NS_STDEXT::String s;
 		std::WString ws;
 		
-		s = std::str(alloc, 123);
+		s = NS_STDEXT::str(alloc, 123);
 		AssertExp(s == "123");
 		
-		ws = std::wstr(alloc, 123, 16);
+		ws = NS_STDEXT::wstr(alloc, 123, 16);
 		AssertExp(std::upper(alloc, ws) == L"7B");
 		
-		s = std::str(alloc, 12.3);
+		s = NS_STDEXT::str(alloc, 12.3);
 		AssertExp(s == "12.3");
 		
-		ws = std::wstr(alloc, 12.3);
+		ws = NS_STDEXT::wstr(alloc, 12.3);
 		AssertExp(ws == L"12.3");
 	}
 };

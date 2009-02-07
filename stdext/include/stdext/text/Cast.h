@@ -43,7 +43,13 @@ template <class UIntT>
 struct CastToUInt
 {
 	template <class Iterator>
-	static UIntT winx_call get(Iterator first, Iterator last, unsigned radix = 10)
+	static UIntT winx_call get(Iterator first, Iterator last)
+	{
+		return get(10, first, last);
+	}
+
+	template <class Iterator>
+	static UIntT winx_call get(unsigned radix, Iterator first, Iterator last)
 	{
 		unsigned dig;
 		UIntT preval = 0;
@@ -59,7 +65,34 @@ struct CastToUInt
 	}
 
 	template <class Iterator>
-	static UIntT winx_call get(Iterator first, unsigned radix = 10)
+	static UIntT winx_call get(Iterator first, Iterator last, UIntT failVal)
+	{
+		return get(10, first, last, failVal);
+	}
+
+	template <class Iterator>
+	static UIntT winx_call get(unsigned radix, Iterator first, Iterator last, UIntT failVal)
+	{
+		unsigned dig;
+		UIntT preval = 0;
+		while (first != last) {
+			dig = DigitTable::toDigit(*first++);
+			if (dig < radix)
+				preval = preval * radix + dig;
+			else
+				return failVal;
+		}
+		return preval;
+	}
+
+	template <class Iterator>
+	static UIntT winx_call get(Iterator first)
+	{
+		return get(10, first);
+	}
+
+	template <class Iterator>
+	static UIntT winx_call get(unsigned radix, Iterator first)
 	{
 		unsigned dig;
 		UIntT preval = 0;
@@ -70,6 +103,27 @@ struct CastToUInt
 				preval = preval * radix + dig;
 			else
 				throw_cast_error_();
+		}
+		return preval;
+	}
+
+	template <class Iterator>
+	static UIntT winx_call get(Iterator first, UIntT failVal)
+	{
+		return get(10, first, failVal);
+	}
+
+	template <class Iterator>
+	static UIntT winx_call get(unsigned radix, Iterator first, UIntT failVal)
+	{
+		unsigned dig;
+		UIntT preval = 0;
+		while (*first) {
+			dig = DigitTable::toDigit(*first++);
+			if (dig < radix)
+				preval = preval * radix + dig;
+			else
+				return failVal;
 		}
 		return preval;
 	}
@@ -91,6 +145,18 @@ struct CastToInt
 	}
 
 	template <class Iterator>
+	static IntT winx_call get(Iterator first, Iterator last, IntT failVal)
+	{
+		if (*first == '-') {
+			return -CastToUInt<IntT>::get(++first, last, failVal);
+		}
+		else if (*first == '+') {
+			++first;
+		}
+		return CastToUInt<IntT>::get(first, last, failVal);
+	}
+
+	template <class Iterator>
 	static IntT winx_call get(Iterator first)
 	{
 		if (*first == '-') {
@@ -100,6 +166,18 @@ struct CastToInt
 			++first;
 		}
 		return CastToUInt<IntT>::get(first);
+	}
+
+	template <class Iterator>
+	static IntT winx_call get(Iterator first, IntT failVal)
+	{
+		if (*first == '-') {
+			return -CastToUInt<IntT>::get(++first, failVal);
+		}
+		else if (*first == '+') {
+			++first;
+		}
+		return CastToUInt<IntT>::get(first, failVal);
 	}
 };
 
@@ -114,11 +192,25 @@ struct CastToReal
 		return result;
 	}
 
+	static RealT winx_call get(const char* first, RealT failVal) {
+		RealT result = (RealT)strtod(first, (char**)&first);
+		if (*first)
+			return failVal;
+		return result;
+	}
+
 	static RealT winx_call get(const wchar_t* first) {
 		RealT result = (RealT)wcstod(first, (wchar_t**)&first);
 		WINX_ASSERT(*first == '\0');
 		if (*first)
 			throw_cast_error_();
+		return result;
+	}
+
+	static RealT winx_call get(const wchar_t* first, RealT failVal) {
+		RealT result = (RealT)wcstod(first, (wchar_t**)&first);
+		if (*first)
+			return failVal;
 		return result;
 	}
 
@@ -132,6 +224,18 @@ struct CastToReal
 		std::copy(first, last, s);
 		s[n] = 0;
 		return get(s);
+	}
+
+	template <class Iterator>
+	static RealT winx_call get(Iterator first, Iterator last, RealT failVal)
+	{
+		typedef std::iterator_traits_alter<Iterator> Tr_;
+		typedef typename Tr_::value_type CharT;
+		size_t n = std::distance(first, last);
+		CharT* s = (CharT*)_alloca(sizeof(CharT) * (n+1));
+		std::copy(first, last, s);
+		s[n] = 0;
+		return get(s, failVal);
 	}
 };
 
@@ -180,8 +284,8 @@ struct Cast<double> : CastToReal<double> {
 };
 
 template <class Type, class Iterator>
-__forceinline Type winx_call cast(Iterator first, Iterator last, unsigned radix) {
-	return Cast<Type>::get(first, last, radix);
+__forceinline Type winx_call cast(unsigned radix, Iterator first, Iterator last) {
+	return Cast<Type>::get(radix, first, last);
 }
 
 template <class Type, class Iterator>
@@ -189,9 +293,34 @@ __forceinline Type winx_call cast(Iterator first, Iterator last) {
 	return Cast<Type>::get(first, last);
 }
 
-template <class Type, class CharT>
-__forceinline Type winx_call cast(const CharT* s, unsigned radix) {
-	return Cast<Type>::get(s, radix);
+template <class Type, class Iterator>
+__forceinline Type winx_call cast(unsigned radix, Iterator first, Iterator last, Type failVal) {
+	return Cast<Type>::get(radix, first, last, failVal);
+}
+
+template <class Type, class Iterator>
+__forceinline Type winx_call cast(Iterator first, Iterator last, Type failVal) {
+	return Cast<Type>::get(first, last, failVal);
+}
+
+template <class Type>
+__forceinline Type winx_call cast(unsigned radix, const char* s) {
+	return Cast<Type>::get(radix, s);
+}
+
+template <class Type>
+__forceinline Type winx_call cast(unsigned radix, const wchar_t* s) {
+	return Cast<Type>::get(radix, s);
+}
+
+template <class Type>
+__forceinline Type winx_call cast(unsigned radix, const char* s, Type failVal) {
+	return Cast<Type>::get(radix, s, failVal);
+}
+
+template <class Type>
+__forceinline Type winx_call cast(unsigned radix, const wchar_t* s, Type failVal) {
+	return Cast<Type>::get(radix, s, failVal);
 }
 
 template <class Type>
@@ -205,6 +334,16 @@ __forceinline Type winx_call cast(const wchar_t* s) {
 }
 
 template <class Type>
+__forceinline Type winx_call cast(const wchar_t* s, Type failVal) {
+	return Cast<Type>::get(s, failVal);
+}
+
+template <class Type>
+__forceinline Type winx_call cast(const char* s, Type failVal) {
+	return Cast<Type>::get(s, failVal);
+}
+
+template <class Type>
 __forceinline Type winx_call cast(const TempString<char>& s) {
 	return Cast<Type>::get(s.begin(), s.end());
 }
@@ -215,13 +354,33 @@ __forceinline Type winx_call cast(const TempString<wchar_t>& s) {
 }
 
 template <class Type>
-__forceinline Type winx_call cast(const TempString<char>& s, unsigned radix) {
-	return Cast<Type>::get(s.begin(), s.end(), radix);
+__forceinline Type winx_call cast(const TempString<char>& s, Type failVal) {
+	return Cast<Type>::get(s.begin(), s.end(), failVal);
 }
 
 template <class Type>
-__forceinline Type winx_call cast(const TempString<wchar_t>& s, unsigned radix) {
-	return Cast<Type>::get(s.begin(), s.end(), radix);
+__forceinline Type winx_call cast(const TempString<wchar_t>& s, Type failVal) {
+	return Cast<Type>::get(s.begin(), s.end(), failVal);
+}
+
+template <class Type>
+__forceinline Type winx_call cast(unsigned radix, const TempString<char>& s) {
+	return Cast<Type>::get(radix, s.begin(), s.end());
+}
+
+template <class Type>
+__forceinline Type winx_call cast(unsigned radix, const TempString<wchar_t>& s) {
+	return Cast<Type>::get(radix, s.begin(), s.end());
+}
+
+template <class Type>
+__forceinline Type winx_call cast(unsigned radix, const TempString<char>& s, Type failVal) {
+	return Cast<Type>::get(radix, s.begin(), s.end(), failVal);
+}
+
+template <class Type>
+__forceinline Type winx_call cast(unsigned radix, const TempString<wchar_t>& s, Type failVal) {
+	return Cast<Type>::get(radix, s.begin(), s.end(), failVal);
 }
 
 NS_STDEXT_END
@@ -241,22 +400,22 @@ class TestCast : public TestCase
 public:
 	void testBasic(LogT& log)
 	{
-		AssertExp(std::cast<int>("12") == 12);
-		AssertExp(std::cast<unsigned>("12", 8) == 10);
-		AssertExp(std::cast<unsigned>("12", 16) == 18);
-		AssertExp(std::cast<__int64>("-12") == -12);
+		AssertExp(NS_STDEXT::cast<int>("12") == 12);
+		AssertExp(NS_STDEXT::cast<unsigned>(8, "12") == 10);
+		AssertExp(NS_STDEXT::cast<unsigned>(16, "12") == 18);
+		AssertExp(NS_STDEXT::cast<__int64>("-12") == -12);
 		
-		AssertExp(std::cast<double>("1.2e10") == 1.2e10);
-		AssertExp(std::cast<float>("1.2e10") == 1.2e10);
+		AssertExp(NS_STDEXT::cast<double>("1.2e10") == 1.2e10);
+		AssertExp(NS_STDEXT::cast<float>("1.2e10") == 1.2e10);
 		
-		std::TempString<wchar_t> s(L"123.4");
-		AssertExp(std::cast<double>(s) == 123.4);
+		NS_STDEXT::TempString<wchar_t> s(L"123.4");
+		AssertExp(NS_STDEXT::cast<double>(s) == 123.4);
 
-		std::String s2("123.4", 3);
-		AssertExp(std::cast<float>(s2) == 123.);
+		NS_STDEXT::String s2("123.4", 3);
+		AssertExp(NS_STDEXT::cast<float>(s2) == 123.);
 
 		std::string s3("123.4");
-		double val = std::cast<double>(s3);
+		double val = NS_STDEXT::cast<double>(s3);
 		AssertExp(val == 123.4);
 	}
 };

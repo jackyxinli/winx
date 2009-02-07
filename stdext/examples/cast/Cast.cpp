@@ -4,15 +4,15 @@
 // -------------------------------------------------------------------------
 // format
 
-int main()
+int main1()
 {
 	int ival = NS_STDEXT::cast<int>("12");
 	std::cout << ival << '\n';
 	
-	unsigned uval = NS_STDEXT::cast<unsigned>("12", 8);
+	unsigned uval = NS_STDEXT::cast<unsigned>(8, "12");
 	std::cout << uval << '\n';
 	
-	uval = NS_STDEXT::cast<unsigned>("12", 16);
+	uval = NS_STDEXT::cast<unsigned>(16, "12");
 	std::cout << uval << '\n';
 
 	__int64 ival64 = NS_STDEXT::cast<__int64>("-12");
