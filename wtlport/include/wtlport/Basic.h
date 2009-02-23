@@ -16,10 +16,10 @@
 // 
 // $Id: Basic.h,v 1.11 2006/12/11 05:19:17 xushiwei Exp $
 // -----------------------------------------------------------------------*/
-#ifndef __WTLPORT_BASIC_H__
-#define __WTLPORT_BASIC_H__
+#ifndef WTLPORT_BASIC_H
+#define WTLPORT_BASIC_H
 
-#ifndef __STDEXT_BASIC_H__
+#ifndef STDEXT_BASIC_H
 #include "../../../stdext/include/stdext/Basic.h"
 #endif
 
@@ -78,10 +78,10 @@ inline HMODULE winx_call GetThisModule() { return WinxThisModule::_g_hInst; }
 
 // -------------------------------------------------------------------------
 
-#ifndef __WTLPORT
-#define __WTLPORT				wtlport::
-#define __WTLPORT_BEGIN			namespace wtlport {
-#define __WTLPORT_END			}
+#ifndef NS_WTLPORT
+#define NS_WTLPORT				wtlport::
+#define NS_WTLPORT_BEGIN		namespace wtlport {
+#define NS_WTLPORT_END			}
 #endif
 
 namespace wtlport {};
@@ -89,7 +89,7 @@ namespace wtlport {};
 // -------------------------------------------------------------------------
 // class CWindow
 
-__WTLPORT_BEGIN
+NS_WTLPORT_BEGIN
 
 class CWindow
 {
@@ -1281,12 +1281,15 @@ public:
 	}
 };
 
+#if !defined(WTLPORT_DEFINED_RCDEFAULT)
+#define WTLPORT_DEFINED_RCDEFAULT
 const RECT CWindow::rcDefault = { CW_USEDEFAULT, CW_USEDEFAULT, 0, 0 };
+#endif
 
-__WTLPORT_END
+NS_WTLPORT_END
 
 // -------------------------------------------------------------------------
 // $Log: Basic.h,v $
 //
 
-#endif /* __WTLPORT_BASIC_H__ */
+#endif /* WTLPORT_BASIC_H */
