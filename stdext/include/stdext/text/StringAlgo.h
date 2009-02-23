@@ -148,7 +148,7 @@ inline BasicString<CharT> winx_call trimLeft(const BasicString<CharT>& s)
 	typedef typename BasicString<CharT>::const_iterator iterator;
 	const iterator last = s.end();
 	const iterator first = std::find_if(s.begin(), last, CharType::NotIsSpace());
-	return BasicString<CharT>(first, last-first);
+	return BasicString<CharT>(first, last);
 }
 
 template <class CharT>
@@ -164,7 +164,7 @@ inline BasicString<CharT> winx_call trimRight(const BasicString<CharT>& s)
 			break;
 		}
 	}
-	return BasicString<CharT>(first, last-first);
+	return BasicString<CharT>(first, last);
 }
 
 template <class CharT>
@@ -180,7 +180,7 @@ inline BasicString<CharT> winx_call trim(const BasicString<CharT>& s)
 			break;
 		}
 	}
-	return BasicString<CharT>(first, last-first);
+	return BasicString<CharT>(first, last);
 }
 
 // -------------------------------------------------------------------------
