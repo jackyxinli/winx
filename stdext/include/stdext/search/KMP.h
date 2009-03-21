@@ -330,10 +330,9 @@ public:
 	@see next
 	@*/
 	template <class iterator_type>
-	HRESULT winx_call iteratorNext(iterator_type it, size_type limit, iterator_type* pitFind) const
+	HRESULT winx_call iteratorNext(iterator_type it, iterator_type itEnd, iterator_type* pitFind) const
 	{
-		WINX_ASSERT(limit >= 0);
-		iterator2archive<iterator_type> is( it, limit );
+		iterator2archive<iterator_type> is( it, itEnd );
 		const HRESULT hr = next( is );
 		*pitFind = is.tell();
 		return hr;

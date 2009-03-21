@@ -97,7 +97,7 @@ public:
 		std::copy(destBuf, destBuf+sizeof(destBuf), dest.begin());
 
 		std::kmp::Finder<char> finder("abc");
-		HRESULT hr = finder.iteratorNext(dest.begin(), dest.size(), &itFind);
+		HRESULT hr = finder.iteratorNext(dest.begin(), dest.end(), &itFind);
 		AssertExp(hr == S_OK);
 		AssertExp(dest.end() - itFind == 3);
 	}

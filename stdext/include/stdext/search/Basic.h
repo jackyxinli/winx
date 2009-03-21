@@ -95,16 +95,16 @@ public:
 	
 private:
 	iterator m_it;
-	size_t m_rest;
+	iterator m_itEnd;
 	
 public:
-	iterator2archive(iterator it, size_t limit)
-		: m_it(it), m_rest(limit) {
+	iterator2archive(iterator it, iterator itEnd)
+		: m_it(it), m_itEnd(itEnd) {
 	}
 
 	__forceinline int_type winx_call get()
 	{
-		return m_rest ? (uchar_type)*m_it++ : (int_type)endch;
+		return m_it != m_itEnd ? (uchar_type)*m_it++ : (int_type)endch;
 	}
 
 	__forceinline iterator winx_call tell() const
@@ -137,7 +137,12 @@ public:
 
 	__forceinline int_type winx_call get()
 	{
-		return m_rest ? m_ar.get() : (int_type)endch;
+		if (m_rest)
+		{
+			--m_rest;
+			return m_ar.get();
+		}
+		return (int_type)endch;
 	}
 };
 

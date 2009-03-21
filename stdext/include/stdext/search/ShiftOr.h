@@ -45,8 +45,11 @@ struct BitmapTraits
 	
 	typedef UIntT TestParamType;
 
-	static TestParamType winx_call initTrue(UIntT& bitmap, size_t n) {
+	static void winx_call initTrue(UIntT& bitmap, size_t n) {
 		bitmap = ((UIntT)1 << n) - 1;
+	}
+
+	static TestParamType winx_call getTestParam(size_t n) {
 		return (UIntT)1 << (n - 1);
 	}
 	
@@ -79,11 +82,14 @@ struct BitmapTraits<SimpleVariantBitmap>
 	
 	typedef size_t TestParamType;
 	
-	static TestParamType winx_call initTrue(BitmapT& bitmap, size_t n) {
+	static void winx_call initTrue(BitmapT& bitmap, size_t n) {
 		bitmap.assign(n, 1);
-		return n - 1;
 	}
 	
+	static TestParamType winx_call getTestParam(size_t n) {
+		return n - 1;
+	}
+
 	static void winx_call clear(BitmapT& bitmap, size_t i) {
 		bitmap[i] = 0;
 	}
@@ -110,7 +116,7 @@ struct BitmapTraits<SimpleVariantBitmap>
 // -------------------------------------------------------------------------
 // class Finder
 
-template <class CharT, class Strategy = MatchCase<CharT>, class BitmapT = size_t>
+template <class CharT, class BitmapT = VariantBitmap, class Strategy = MatchCase<CharT> >
 class Finder
 {
 public:
@@ -217,7 +223,8 @@ public:
 			return E_ACCESSDENIED;
 
 		BitmapT d;
-		typename Tr::TestParamType para = Tr::initTrue(d, m_size);
+		typename Tr::TestParamType para = Tr::getTestParam(m_size);
+		Tr::initTrue(d, m_size);
 		do
 		{
 			const typename ArchiveT::int_type ch_ = Strategy::get(ar);
@@ -252,10 +259,9 @@ public:
 	}
 
 	template <class iterator_type>
-	HRESULT winx_call iteratorNext(iterator_type it, size_type limit, iterator_type* pitFind) const
+	HRESULT winx_call iteratorNext(iterator_type it, iterator_type itEnd, iterator_type* pitFind) const
 	{
-		WINX_ASSERT(limit >= 0);
-		iterator2archive<iterator_type> is( it, limit );
+		iterator2archive<iterator_type> is( it, itEnd );
 		const HRESULT hr = next( is );
 		*pitFind = is.tell();
 		return hr;
@@ -270,11 +276,11 @@ public:
 	}
 };
 
-template <class CharT, class BitmapT = size_t>
-class NoCaseFinder : public Finder<CharT, MatchNoCase<CharT>, BitmapT>
+template <class CharT, class BitmapT = VariantBitmap>
+class NoCaseFinder : public Finder<CharT, BitmapT, MatchNoCase<CharT> >
 {
 private:
-	typedef Finder<CharT, MatchNoCase<CharT>, BitmapT> Base;
+	typedef Finder<CharT, BitmapT, MatchNoCase<CharT> > Base;
 
 public:
     typedef typename Base::size_type size_type;

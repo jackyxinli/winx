@@ -60,7 +60,7 @@ struct Examples
 		std::copy(destBuf, destBuf+sizeof(destBuf), dest.begin());
 
 		FinderT finder("abc");
-		HRESULT hr = finder.iteratorNext(dest.begin(), dest.size(), &itFind);
+		HRESULT hr = finder.iteratorNext(dest.begin(), dest.end(), &itFind);
 		if (hr == S_OK) {
 			char buf[16];
 			*std::copy(itFind, dest.end(), buf) = '\0';
@@ -85,11 +85,11 @@ int main()
 	typedef NS_KMP::Finder<char> KmpFinder;
 	Examples<KmpFinder>::all();
 	std::cout << "----------------------------------\n";
+	typedef NS_SHIFTOR::Finder<char, size_t> FastShiftOrFinder;
+	Examples<FastShiftOrFinder>::all();
+	std::cout << "----------------------------------\n";
 	typedef NS_SHIFTOR::Finder<char> ShiftOrFinder;
 	Examples<ShiftOrFinder>::all();
-	std::cout << "----------------------------------\n";
-	typedef NS_SHIFTOR::Finder<char, NS_STDEXT::MatchCase<char>, NS_SHIFTOR::VariantBitmap> ExShiftOrFinder;
-	Examples<ExShiftOrFinder>::all();
 	std::cout << "----------------------------------\n";
 	return 0;
 }

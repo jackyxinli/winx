@@ -105,11 +105,9 @@ public:
 	}
 
 	template <class iterator_type>
-	HRESULT winx_call iteratorNext(iterator_type it, size_type limit, iterator_type* pitFind) const
+	HRESULT winx_call iteratorNext(
+		iterator_type it, iterator_type itEnd, iterator_type* pitFind) const
 	{
-		iterator_type itEnd = it;
-		std::advance(itEnd, limit);
-		
 		iterator_type itFind = std::search(it, itEnd, m_str_find, m_str_find + m_size);
 		if (itFind == itEnd)
 		{
