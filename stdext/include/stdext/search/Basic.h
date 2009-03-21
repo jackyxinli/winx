@@ -197,7 +197,8 @@ struct MatchNoCase
 {
 	typedef CharT char_type;
 	typedef ToLower<CharT> TransformT;
-	typedef typename ArchiveCharTraits<char_type>::int_type int_type;
+	typedef typename ArchiveCharTraits<char_type> Tr;
+	typedef Tr::int_type int_type;
 
 	template <class Iterator>
 	static void winx_call copy(char_type* dest, Iterator src, size_t n)
@@ -211,13 +212,14 @@ struct MatchNoCase
 	static typename ArchiveT::int_type winx_call get(ArchiveT& ar)
 	{
 		const TransformT up = TransformT();
-		return up( ar.get() );
+		const int_type ch = ar.get();
+		return ch != Tr::endch ? up(ch) : Tr::endch;
 	}
 
-	static int_type winx_call transform(int_type c)
+	static int_type winx_call transform(int_type ch)
 	{
 		const TransformT up = TransformT();
-		return up(c);
+		return ch != Tr::endch ? up(ch) : Tr::endch;
 	}
 };
 
