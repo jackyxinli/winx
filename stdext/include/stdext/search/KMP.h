@@ -176,7 +176,7 @@ public:
 	template <class Tr, class AllocT2>
 	HRESULT winx_call initPattern(const std::basic_string<CharT, Tr, AllocT2>& strPattern)
 	{
-		return initPattern(strPattern.c_str(), strPattern.size());
+		return initPattern(strPattern.begin(), strPattern.end());
 	}
 
 	/*
