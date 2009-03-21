@@ -76,7 +76,7 @@ template <class Config>
 class FileMapping : public MapFile<Config>
 {
 private:
-	typedef MapFile<Config> Base;
+	typedef MapFile<Config> BaseClass;
 	
 	DWORD m_nTotalPage;
 
@@ -93,11 +93,11 @@ public:
 	enum { AllocationGranularityMask = (AllocationGranularity - 1) };
 
 public:
-	typedef typename Base::size_type size_type;
-	typedef typename Base::pos_type pos_type;
+	typedef typename BaseClass::size_type size_type;
+	typedef typename BaseClass::pos_type pos_type;
 
 	typedef HandleProxy<FileMapping> Handle;
-	typedef Base Utils;
+	typedef BaseClass Utils;
 
 public:
 	FileMapping() {}
@@ -112,20 +112,20 @@ public:
 	}
 
 	void winx_call close() {
-		Base::close();
+		BaseClass::close();
 		m_nTotalPage = 0;
 	}
 
 	HRESULT winx_call resize(pos_type cbSize) {
 		m_nTotalPage = (DWORD)((cbSize + AllocationGranularityMask) >> AllocationGranularityBits);
-		return Base::resize(cbSize);
+		return BaseClass::resize(cbSize);
 	}
 
 	HRESULT winx_call open(LPCSTR szFile, pos_type* offset = NULL)
 	{
 		if (Config::GetSizeOnOpen) {
 			pos_type cbSize;
-			HRESULT hr = Base::open(szFile, &cbSize);
+			HRESULT hr = BaseClass::open(szFile, &cbSize);
 			m_nTotalPage = (DWORD)((cbSize + AllocationGranularityMask) >> AllocationGranularityBits);
 			if (offset)
 				*offset = cbSize;
@@ -133,13 +133,13 @@ public:
 		}
 		else {
 			m_nTotalPage = 0;
-			return Base::open(szFile, NULL);
+			return BaseClass::open(szFile, NULL);
 		}
 	}
 
 	char* winx_call viewSegment(DWORD iBasePage, DWORD nPageCount)
 	{
-		WINX_ASSERT(Base::good());
+		WINX_ASSERT(BaseClass::good());
 
 		if (iBasePage + nPageCount > m_nTotalPage)
 		{
@@ -149,36 +149,36 @@ public:
 				nPageCount = m_nTotalPage - iBasePage;
 		}
 		
-		return (char*)Base::map(
+		return (char*)BaseClass::map(
 			(off_t)iBasePage << AllocationGranularityBits,
 			nPageCount << AllocationGranularityBits);
 	}
 
 	char* winx_call accessSegment(DWORD iBasePage, DWORD nPageCount)
 	{
-		WINX_ASSERT(Base::good());
+		WINX_ASSERT(BaseClass::good());
 
 		if (iBasePage + nPageCount > m_nTotalPage)
 		{
 			m_nTotalPage = iBasePage + nPageCount;
-			Base::resize((off_t)m_nTotalPage << AllocationGranularityBits);
+			BaseClass::resize((off_t)m_nTotalPage << AllocationGranularityBits);
 		}
 		
-		return (char*)Base::map(
+		return (char*)BaseClass::map(
 			(off_t)iBasePage << AllocationGranularityBits,
 			nPageCount << AllocationGranularityBits);
 	}
 
 	char* winx_call allocSegment(DWORD nPageCount, DWORD& iBasePage)
 	{
-		WINX_ASSERT(Base::good());
+		WINX_ASSERT(BaseClass::good());
 
 		iBasePage = m_nTotalPage;
 		
 		m_nTotalPage += nPageCount;
-		Base::resize((off_t)m_nTotalPage << AllocationGranularityBits);
+		BaseClass::resize((off_t)m_nTotalPage << AllocationGranularityBits);
 
-		return (char*)Base::map(
+		return (char*)BaseClass::map(
 			(off_t)iBasePage << AllocationGranularityBits,
 			nPageCount << AllocationGranularityBits);
 	}

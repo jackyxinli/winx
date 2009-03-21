@@ -40,6 +40,13 @@ NS_STDEXT_BEGIN
 #pragma warning(disable:4996) // XXX  was declared deprecated
 #endif
 
+#if defined(_MSC_VER)
+	typedef ptrdiff_t ssize_t;
+	#ifndef STDIN_FILENO
+		#define STDIN_FILENO	0
+	#endif
+#endif
+
 class PosixAdapter
 {
 public:

@@ -225,7 +225,7 @@ struct CharTypeT
 	}
 
 	static int winx_call isEOL(int c) {
-		return c == 0x0a || c == 0x0c || c == -1;
+		return c == 0x0a || c == 0x0d || c == -1;
 	}
 
 	struct IsDigit;				struct NotIsDigit;
