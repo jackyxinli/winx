@@ -62,12 +62,48 @@ namespace std {
 	};
 
 	template <>
+	struct iterator_traits_alter<char**> {
+		typedef random_access_iterator_tag	iterator_category;
+		typedef char*						value_type;
+		typedef ptrdiff_t					difference_type;
+		typedef char**						pointer;
+		typedef char*&						reference;
+	};
+
+	template <>
+	struct iterator_traits_alter<char* const*> {
+		typedef random_access_iterator_tag	iterator_category;
+		typedef char*						value_type;
+		typedef ptrdiff_t					difference_type;
+		typedef char* const*				pointer;
+		typedef char* const&				reference;
+	};
+
+	template <>
 	struct iterator_traits_alter<const char*> {
 		typedef random_access_iterator_tag	iterator_category;
 		typedef char						value_type;
 		typedef ptrdiff_t					difference_type;
 		typedef const char*					pointer;
 		typedef const char&					reference;
+	};
+
+	template <>
+	struct iterator_traits_alter<const char**> {
+		typedef random_access_iterator_tag	iterator_category;
+		typedef char						value_type;
+		typedef ptrdiff_t					difference_type;
+		typedef const char**				pointer;
+		typedef const char*&				reference;
+	};
+
+	template <>
+	struct iterator_traits_alter<const char* const*> {
+		typedef random_access_iterator_tag	iterator_category;
+		typedef const char*					value_type;
+		typedef ptrdiff_t					difference_type;
+		typedef const char* const*			pointer;
+		typedef const char* const&			reference;
 	};
 
 	template <>
