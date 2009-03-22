@@ -29,28 +29,7 @@
 #define NS_FILEPATH_END		}
 #endif
 
-NS_FILEPATH_BEGIN
-
 // -------------------------------------------------------------------------
-// IsFileExist
-
-inline bool IsFileExist(LPCSTR szFile)
-{
-	DWORD dw = GetFileAttributesA(szFile);
-	if (dw == (DWORD)-1)
-		return false;
-	
-	return !(dw & FILE_ATTRIBUTE_DIRECTORY);
-}
-
-inline bool IsFileExist(LPCWSTR szFile)
-{
-	DWORD dw = GetFileAttributesW(szFile);
-	if (dw == (DWORD)-1)
-		return false;
-	
-	return !(dw & FILE_ATTRIBUTE_DIRECTORY);
-}
 
 // -------------------------------------------------------------------------
 // $Log: Basic.h,v $

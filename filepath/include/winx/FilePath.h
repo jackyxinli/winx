@@ -25,6 +25,10 @@
 #include "filepath/Basic.h"
 #endif
 
+#ifndef WINX_FILEPATH_SHELL_H
+#include "filepath/Shell.h"
+#endif
+
 #ifndef WINX_FILEPATH_DIRECTORY_H
 #include "filepath/Directory.h"
 #endif
