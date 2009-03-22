@@ -435,6 +435,17 @@ public:
 };
 
 // =========================================================================
+// rangeof
+
+template <class Type>
+inline Range<const Type*> winx_call rangeof_(const Type v[], size_t n)
+{
+	return Range<const Type*>(v, v+n);
+}
+
+#define rangeof(array)		NS_STDEXT::rangeof_(array, countof(array))
+
+// =========================================================================
 // $Log: $
 
 NS_STDEXT_END
