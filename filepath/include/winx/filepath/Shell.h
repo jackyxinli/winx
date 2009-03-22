@@ -148,7 +148,7 @@ inline LPSTR winx_call CombinePath(LPSTR szDest, LPCSTR lpszDir, LPCSTR lpszFile
 
 inline LPWSTR winx_call CombinePath(LPWSTR szDest, LPCWSTR lpszDir, LPCWSTR lpszFile)
 {
-	return PathCombineA(szDest, lpszDir, lpszFile);
+	return PathCombineW(szDest, lpszDir, lpszFile);
 }
 
 // -------------------------------------------------------------------------

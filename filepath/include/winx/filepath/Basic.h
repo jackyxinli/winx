@@ -23,6 +23,8 @@
 #include "../../../../stdext/include/stdext/Basic.h"
 #endif
 
+// -------------------------------------------------------------------------
+
 #ifndef NS_FILEPATH
 #define NS_FILEPATH			winx
 #define NS_FILEPATH_BEGIN	namespace winx {
@@ -30,10 +32,6 @@
 #endif
 
 // -------------------------------------------------------------------------
-
-// -------------------------------------------------------------------------
 // $Log: Basic.h,v $
-
-NS_FILEPATH_END
 
 #endif /* WINX_FILEPATH_BASIC_H */
