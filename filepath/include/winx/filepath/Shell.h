@@ -181,27 +181,28 @@ inline int winx_call CommonPrefixPath(LPCWSTR pszFile1, LPCWSTR pszFile2, LPWSTR
 // SearchFilePath
 
 template <class CharT>
-inline BOOL SearchFilePath(
+inline BOOL winx_call SearchFilePath(
 	CharT* szDestFile, const CharT* szFileSearch, const CharT* szDir)
 {
 	CombinePath(szDestFile, szDir, szFileSearch);
 	return FileExists(szDestFile);
 }
 
-template <class CharT>
-inline BOOL SearchFilePath(
+template <class CharT, class PathT>
+inline BOOL winx_call SearchFilePath(
 	CharT* szDestFile, const CharT* szFileSearch,
-	const CharT* const* szDirs, size_t nDirs,
-	const CharT* szBasePath = NULL)
+	const NS_STDEXT::Range<PathT> dirs, const CharT* szBasePath = NULL)
 {
+	typedef typename NS_STDEXT::Range<PathT>::const_iterator Iter;
+	
 	if (szBasePath)
 	{
 		if (SearchFilePath(szDestFile, szFileSearch, szBasePath))
 			return TRUE;
 	}
-	for (size_t i = 0; i < nDirs; ++i)
+	for (Iter it = dirs.begin(); it != dirs.end(); ++it)
 	{
-		if (SearchFilePath(szDestFile, szFileSearch, szDirs[i]))
+		if (SearchFilePath(szDestFile, szFileSearch, *it))
 			return TRUE;
 	}
 	return FALSE;

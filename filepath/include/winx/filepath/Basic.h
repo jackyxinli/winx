@@ -23,6 +23,10 @@
 #include "../../../../stdext/include/stdext/Basic.h"
 #endif
 
+#ifndef STDEXT_TEXT_RANGE_H
+#include "../../../../stdext/include/stdext/text/Range.h"
+#endif
+
 // -------------------------------------------------------------------------
 
 #ifndef NS_FILEPATH
