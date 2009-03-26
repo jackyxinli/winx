@@ -198,7 +198,7 @@ struct MatchNoCase
 	typedef CharT char_type;
 	typedef ToLower<CharT> TransformT;
 	typedef typename ArchiveCharTraits<char_type> Tr;
-	typedef Tr::int_type int_type;
+	typedef typename Tr::int_type int_type;
 
 	template <class Iterator>
 	static void winx_call copy(char_type* dest, Iterator src, size_t n)
