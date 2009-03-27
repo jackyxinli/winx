@@ -140,15 +140,12 @@ typedef DigitTableT<void> DigitTable;
 
 // -------------------------------------------------------------------------
 
-#define STD_CTYPE_STRING_													\
-	"UPPER", "LOWER", "DIGIT", "UNDERLINE", "XDIGIT", "PATH_SEP"
-
 #define STD_CTYPE_IS_(mask, c)												\
 	(STD_CTYPE_MAX_CHAR > (unsigned)(c) ? ((mask) & data[c]) : 0)
 
 #define STD_CTYPE_OP_(op, is)												\
 	struct op {																\
-		int winx_call operator()(int c) const { return is(c); }				\
+		unsigned winx_call operator()(int c) const { return is(c); }		\
 	}
 
 #define STD_CTYPE_OP_AND_NOT_(op, is)										\
@@ -161,71 +158,69 @@ typedef DigitTableT<void> DigitTable;
 template <class Unused>
 struct CharTypeT
 {
-	typedef int mask_type;
+	static unsigned data[STD_CTYPE_MAX_CHAR];
 
-	static int data[STD_CTYPE_MAX_CHAR];
-
-	static int winx_call is(int typeMask, int c) {
+	static unsigned winx_call is(unsigned typeMask, int c) {
 		return STD_CTYPE_IS_(typeMask, c);
 	}
 
-	static int winx_call isDigit(int c) {
+	static unsigned winx_call isDigit(int c) {
 		return STD_CTYPE_IS_(STD_CTYPE_DIGIT, c);
 	}
 
-	static int winx_call isLower(int c) {
+	static unsigned winx_call isLower(int c) {
 		return STD_CTYPE_IS_(STD_CTYPE_LOWER, c);
 	}
 
-	static int winx_call isUpper(int c) {
+	static unsigned winx_call isUpper(int c) {
 		return STD_CTYPE_IS_(STD_CTYPE_UPPER, c);
 	}
 
-	static int winx_call isAlpha(int c) {
+	static unsigned winx_call isAlpha(int c) {
 		return STD_CTYPE_IS_(STD_CTYPE_ALPHA, c);
 	}
 	
-	static int winx_call isXDigit(int c) {
+	static unsigned winx_call isXDigit(int c) {
 		return STD_CTYPE_IS_(STD_CTYPE_XDIGIT, c);
 	}
 
-	static int winx_call isSpace(int c) {
+	static unsigned winx_call isSpace(int c) {
 		return STD_CTYPE_IS_(STD_CTYPE_SPACE, c);
 	}
 
-	static int winx_call isSymbolFirstChar(int c) {
+	static unsigned winx_call isSymbolFirstChar(int c) {
 		return STD_CTYPE_IS_(STD_SYMBOL_FIRST_CHAR, c);
 	}
 
-	static int winx_call isSymbolNextChar(int c) {
+	static unsigned winx_call isSymbolNextChar(int c) {
 		return STD_CTYPE_IS_(STD_SYMBOL_NEXT_CHAR, c);
 	}
 
-	static int winx_call isCSymbolFirstChar(int c) {
+	static unsigned winx_call isCSymbolFirstChar(int c) {
 		return STD_CTYPE_IS_(STD_CSYMBOL_FIRST_CHAR, c);
 	}
 
-	static int winx_call isCSymbolNextChar(int c) {
+	static unsigned winx_call isCSymbolNextChar(int c) {
 		return STD_CTYPE_IS_(STD_CSYMBOL_NEXT_CHAR, c);
 	}
 
-	static int winx_call isXmlSymbolFirstChar(int c) {
+	static unsigned winx_call isXmlSymbolFirstChar(int c) {
 		return STD_CTYPE_IS_(STD_XMLSYMBOL_FIRST_CHAR, c);
 	}
 
-	static int winx_call isXmlSymbolNextChar(int c) {
+	static unsigned winx_call isXmlSymbolNextChar(int c) {
 		return STD_CTYPE_IS_(STD_XMLSYMBOL_NEXT_CHAR, c);
 	}
 
-	static int winx_call isPathSeparator(int c) {
+	static unsigned winx_call isPathSeparator(int c) {
 		return c == '/' || c == '\\';
 	}
 
-	static int winx_call isUnderline(int c) {
+	static unsigned winx_call isUnderline(int c) {
 		return c == '_';
 	}
 
-	static int winx_call isEOL(int c) {
+	static unsigned winx_call isEOL(int c) {
 		return c == 0x0a || c == 0x0d || c == -1;
 	}
 
@@ -261,7 +256,7 @@ struct CharTypeT
 };
 
 template <class Unused>
-int CharTypeT<Unused>::data[STD_CTYPE_MAX_CHAR] =
+unsigned CharTypeT<Unused>::data[STD_CTYPE_MAX_CHAR] =
 {
 	0,	//   [0]
 	0,	//   [1]
@@ -400,7 +395,7 @@ typedef CharTypeT<void> CharType;
 
 template <int typeMask>
 struct IsCharType {
-	int winx_call operator()(int c) const {
+	unsigned winx_call operator()(int c) const {
 		return CharType::is(typeMask, c);
 	}
 };
