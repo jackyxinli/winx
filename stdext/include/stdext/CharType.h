@@ -393,7 +393,7 @@ typedef CharTypeT<void> CharType;
 // -------------------------------------------------------------------------
 // class IsCharType
 
-template <int typeMask>
+template <unsigned typeMask>
 struct IsCharType {
 	unsigned winx_call operator()(int c) const {
 		return CharType::is(typeMask, c);
