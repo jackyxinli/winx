@@ -27,6 +27,10 @@
 #include "../../../../stdext/include/stdext/CharType.h"
 #endif
 
+#ifndef STDEXT_OPTYPE_H
+#include "../../../../stdext/include/stdext/OpType.h"
+#endif
+
 NS_TPL_BEGIN
 
 // -------------------------------------------------------------------------
@@ -194,6 +198,18 @@ class ChMask : public EqCh<NS_STDEXT::IsCharType<mask> >{
 template <unsigned mask>
 __forceinline Rule<ChMask<mask> > const TPL_CALL ch_mask() {
 	return Rule<ChMask<mask> >();
+}
+
+// -------------------------------------------------------------------------
+// function op_mask
+
+template <unsigned mask>
+class OpMask : public EqCh<NS_STDEXT::IsOpType<mask> >{
+};
+
+template <unsigned mask>
+__forceinline Rule<OpMask<mask> > const TPL_CALL op_mask() {
+	return Rule<OpMask<mask> >();
 }
 
 // -------------------------------------------------------------------------

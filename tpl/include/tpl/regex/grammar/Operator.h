@@ -312,7 +312,7 @@ public:
 };
 
 template <unsigned nMin, class T1> __forceinline
-Grammar<GRepeat<T1, nMin> > TPL_CALL const repeat_ge(const Grammar<T1>& x) {
+Grammar<GRepeat<T1, nMin> > const TPL_CALL repeat_ge(const Grammar<T1>& x) {
 	return Grammar<GRepeat<T1, nMin> >(x);
 }
 
