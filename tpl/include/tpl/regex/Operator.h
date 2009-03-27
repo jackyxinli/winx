@@ -329,7 +329,7 @@ Rule<Not<T1> > TPL_CALL operator~(const Rule<T1>& x) {
 TPL_RULE_UNARY_OP_(~, Not)
 
 // =========================================================================
-// peek
+// function peek
 
 // Usage: peek(ChRange)
 
@@ -358,8 +358,8 @@ private:
 	TPL_REQUIRE_CLASS(typename RegExT::assig_tag, TagAssigChar, ChRuleRequire_);
 };
 
-template <int m_c1, int m_c2 = m_c1, int m_c3 = m_c2>
-class PeekCh : public Peek<C_<m_c1, m_c2, m_c3> > {
+template <int m_c1, int m_c2 = m_c1, int m_c3 = m_c2, int m_c4 = m_c3>
+class PeekCh : public Peek<C_<m_c1, m_c2, m_c3, m_c4> > {
 };
 
 template <class T1> __forceinline
@@ -380,6 +380,38 @@ __forceinline Rule<PeekCh<m_c1, m_c2> > TPL_CALL peek() {
 template <int m_c1, int m_c2, int m_c3>
 __forceinline Rule<PeekCh<m_c1, m_c2, m_c3> > TPL_CALL peek() {
 	return Rule<PeekCh<m_c1, m_c2, m_c3> >();
+}
+
+template <int m_c1, int m_c2, int m_c3, int m_c4>
+__forceinline Rule<PeekCh<m_c1, m_c2, m_c3, m_c4> > TPL_CALL peek() {
+	return Rule<PeekCh<m_c1, m_c2, m_c3, m_c4> >();
+}
+
+// =========================================================================
+// function peek_not
+
+template <int m_c1, int m_c2 = m_c1, int m_c3 = m_c2, int m_c4 = m_c3>
+class PeekNot : public Peek<N_<m_c1, m_c2, m_c3, m_c4> > {
+};
+
+template <int m_c>
+__forceinline Rule<PeekNot<m_c> > TPL_CALL peek_not() {
+	return Rule<PeekNot<m_c> >();
+}
+
+template <int m_c1, int m_c2>
+__forceinline Rule<PeekNot<m_c1, m_c2> > TPL_CALL peek_not() {
+	return Rule<PeekNot<m_c1, m_c2> >();
+}
+
+template <int m_c1, int m_c2, int m_c3>
+__forceinline Rule<PeekNot<m_c1, m_c2, m_c3> > TPL_CALL peek_not() {
+	return Rule<PeekNot<m_c1, m_c2, m_c3> >();
+}
+
+template <int m_c1, int m_c2, int m_c3, int m_c4>
+__forceinline Rule<PeekNot<m_c1, m_c2, m_c3, m_c4> > TPL_CALL peek_not() {
+	return Rule<PeekNot<m_c1, m_c2, m_c3, m_c4> >();
 }
 
 // =========================================================================
