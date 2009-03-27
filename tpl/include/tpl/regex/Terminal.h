@@ -187,11 +187,11 @@ __forceinline Rule<ChNot<m_c1, m_c2, m_c3, m_c4> > const TPL_CALL ch_not() {
 // -------------------------------------------------------------------------
 // function ch_mask
 
-template <int mask>
+template <unsigned mask>
 class ChMask : public EqCh<NS_STDEXT::IsCharType<mask> >{
 };
 
-template <int mask>
+template <unsigned mask>
 __forceinline Rule<ChMask<mask> > const TPL_CALL ch_mask() {
 	return Rule<ChMask<mask> >();
 }
