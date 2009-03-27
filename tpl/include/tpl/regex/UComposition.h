@@ -247,6 +247,17 @@ inline Rule<EolG> TPL_CALL eol() {
 }
 
 // =========================================================================
+// function not_eol()
+
+typedef Ch<'\r', '\n'> EolSpace;
+
+typedef Not<EolSpace> NotEol;
+
+inline Rule<NotEol> const TPL_CALL not_eol() {
+	return Rule<NotEol>();
+}
+
+// =========================================================================
 // function c_symbol, xml_symbol, etc.
 
 // Usage: c_symbol()		--- means: matching a C symbol. that is: [a-zA-Z_][0-9a-zA-Z_]*

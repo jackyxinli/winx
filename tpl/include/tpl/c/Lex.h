@@ -165,15 +165,10 @@ inline Rule<typename CppCommentTraits<bEatEol>::rule_type> TPL_CALL cpp_comment(
 // function c_skip(), cpp_skip()
 
 typedef Lst<SkipWhiteSpaces, CCommentG> CSkipG; // for C
-typedef Lst<SkipNonEolSpaces, CCommentG> CSkipNonEolG; // for C Preprocessor
 typedef Lst<SkipWhiteSpaces, CppCommentEatEolG> CppSkipG; // for C++
 
 inline Rule<CSkipG> TPL_CALL c_skip() {
 	return Rule<CSkipG>();
-}
-
-inline Rule<CSkipNonEolG> TPL_CALL c_skip_non_eol() {
-	return Rule<CSkipNonEolG>();
 }
 
 inline Rule<CppSkipG> TPL_CALL cpp_skip() {
@@ -181,8 +176,36 @@ inline Rule<CppSkipG> TPL_CALL cpp_skip() {
 }
 
 TPL_CONST(Rule<CSkipG>, c_skip_);
-TPL_CONST(Rule<CSkipNonEolG>, c_skip_non_eol_);
 TPL_CONST(Rule<CppSkipG>, cpp_skip_);
+
+// =========================================================================
+// function c_skip_non_eol() - deprecated
+
+typedef Lst<SkipNonEolSpaces, CCommentG> CSkipNonEolG; // for C Preprocessor, deprecated
+
+__deprecated("Deprecated, please use function 'tpl::c_pp_skip()'.")
+inline Rule<CSkipNonEolG> TPL_CALL c_skip_non_eol() {
+	return Rule<CSkipNonEolG>();
+}
+
+TPL_CONST(Rule<CSkipNonEolG>, c_skip_non_eol_);
+
+// =========================================================================
+// function c_pp_skip()
+
+typedef And<ChDiv_, StrictEolG> CEscapeEol_;
+typedef Or<NonEolSpace, CEscapeEol_> CSpacePpG;
+typedef Repeat0<CSpacePpG> SkipSpacePpG;
+
+typedef Lst<SkipSpacePpG, CCommentG> CPpSkipG; // for C Preprocessor
+typedef Lst<SkipSpacePpG, CppCommentG> CPpSkipPlusG;
+
+inline Rule<CPpSkipG> TPL_CALL c_pp_skip() {
+	return Rule<CPpSkipG>();
+}
+
+TPL_CONST(Rule<CPpSkipG>, c_pp_skip_);
+TPL_CONST(Rule<CPpSkipPlusG>, c_pp_skip_plus_);
 
 // =========================================================================
 // function c_string(), c_char()
