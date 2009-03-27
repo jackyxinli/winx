@@ -194,11 +194,11 @@ TPL_CONST(Rule<CSkipNonEolG>, c_skip_non_eol_);
 // function c_pp_skip()
 
 typedef And<ChDiv_, StrictEolG> CEscapeEol_;
-typedef Or<NonEolSpace, CEscapeEol_> CSpacePpG;
-typedef Repeat0<CSpacePpG> SkipSpacePpG;
+typedef Or<NonEolSpace, CEscapeEol_> CPpSpaceG;
+typedef Repeat0<CPpSpaceG> CPpSkipSpaceG;
 
-typedef Lst<SkipSpacePpG, CCommentG> CPpSkipG; // for C Preprocessor
-typedef Lst<SkipSpacePpG, CppCommentG> CPpSkipPlusG;
+typedef Lst<CPpSkipSpaceG, CCommentG> CPpSkipG; // for C Preprocessor
+typedef Lst<CPpSkipSpaceG, CppCommentG> CPpSkipPlusG;
 
 inline Rule<CPpSkipG> TPL_CALL c_pp_skip() {
 	return Rule<CPpSkipG>();
