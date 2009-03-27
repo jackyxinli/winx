@@ -108,24 +108,25 @@ typedef DigitTableT<void> DigitTable;
 // -------------------------------------------------------------------------
 // STD_CTYPE_XXX
 
-#define STD_CTYPE_UPPER				0x01	/* upper case letter[A-Z] */
-#define STD_CTYPE_LOWER				0x02	/* lower case letter[a-z] */
-#define STD_CTYPE_DIGIT				0x04	/* digit[0-9] */
-#define STD_CTYPE_UNDERLINE			0x08	/* underline[_] */
-#define STD_CTYPE_XDIGIT			0x10	/* xdigit[0-9a-fA-F] */
-#define STD_CTYPE_SPACE				0x20	/* [ \t\r\n] */
-#define STD_CTYPE_ADD				0x40	/* [+] */
-#define STD_CTYPE_SUB				0x80	/* [-], dash(���ۺ�)/hyphen(l�ַ�) */
-#define STD_CTYPE_MUL				0x100	/* [*] */
-#define STD_CTYPE_DIV				0x200	/* [/] */
-#define STD_CTYPE_LT				0x400	/* [<] */
-#define STD_CTYPE_GT				0x800	/* [>] */
-#define STD_CTYPE_EQ				0x1000	/* [=] */
-#define STD_CTYPE_RDIV				0x2000	/* [\], right-division, anti-slash */
-#define STD_CTYPE_DOT				0x4000	/* [.] */
-#define STD_CTYPE_COLON				0x8000	/* [:], colon */
-#define STD_CTYPE_PERCENT			0x10000	/* [%] */
-#define STD_CTYPE_AND				0x20000	/* [&] */
+#define STD_CTYPE_UPPER				0x01		/* upper case letter[A-Z] */
+#define STD_CTYPE_LOWER				0x02		/* lower case letter[a-z] */
+#define STD_CTYPE_DIGIT				0x04		/* digit[0-9] */
+#define STD_CTYPE_UNDERLINE			0x08		/* underline[_] */
+#define STD_CTYPE_XDIGIT			0x10		/* xdigit[0-9a-fA-F] */
+#define STD_CTYPE_SPACE				0x20		/* [ \t\r\n] */
+#define STD_CTYPE_ADD				0x40		/* [+] */
+#define STD_CTYPE_SUB				0x80		/* [-], dash(���ۺ�)/hyphen(l�ַ�) */
+#define STD_CTYPE_MUL				0x100		/* [*] */
+#define STD_CTYPE_DIV				0x200		/* [/] */
+#define STD_CTYPE_LT				0x400		/* [<] */
+#define STD_CTYPE_GT				0x800		/* [>] */
+#define STD_CTYPE_EQ				0x1000		/* [=] */
+#define STD_CTYPE_RDIV				0x2000		/* [\], right-division, anti-slash */
+#define STD_CTYPE_DOT				0x4000		/* [.] */
+#define STD_CTYPE_COLON				0x8000		/* [:], colon */
+#define STD_CTYPE_PERCENT			0x10000		/* [%] */
+#define STD_CTYPE_AND				0x20000		/* [&] */
+#define STD_CTYPE_OR				0x40000		/* [|] */
 #define STD_CTYPE_MAX_CHAR			128
 
 #define STD_CTYPE_PATH_SEP			(STD_CTYPE_DIV|STD_CTYPE_RDIV)
@@ -385,6 +386,11 @@ int CharTypeT<Unused>::data[STD_CTYPE_MAX_CHAR] =
 	STD_CTYPE_LOWER,	// x [120]
 	STD_CTYPE_LOWER,	// y [121]
 	STD_CTYPE_LOWER,	// z [122]
+	0,	// { [123]
+	STD_CTYPE_OR,		// | [124]
+	0,	// } [125]
+	0,	// ~ [126]
+	0,	// del [127]
 };
 
 typedef CharTypeT<void> CharType;
