@@ -44,9 +44,15 @@ NS_STDEXT_BEGIN
 // =========================================================================
 // class Range
 
+#if defined(X_CC_VC6)
+#define WINX_RG_TYPENAME_
+#else
+#define WINX_RG_TYPENAME_	typename
+#endif
+
 template <
 	class Iterator,
-	class ValueT = std::iterator_traits_alter<Iterator>::value_type>
+	class ValueT = WINX_RG_TYPENAME_ std::iterator_traits_alter<Iterator>::value_type>
 class Range // std::pair<Iterator>
 {
 protected:
