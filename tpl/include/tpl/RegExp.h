@@ -119,7 +119,7 @@
 #include "regex/result/Context.h"
 #endif
 
-#ifndef TPL_REGEXP_DOM_H
+#ifndef TPL_REGEX_DOM_H
 #include "regex/DOM.h"
 #endif
 

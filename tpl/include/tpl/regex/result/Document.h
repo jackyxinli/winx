@@ -9,15 +9,15 @@
 // of this license. You must not remove this notice, or any other, from
 // this software.
 // 
-// Module: tpl/regex/Document.h
+// Module: tpl/regex/result/Document.h
 // Creator: xushiwei
 // Email: xushiweizh@gmail.com
 // Date: 2006-8-13 9:41:58
 // 
 // $Id$
 // -----------------------------------------------------------------------*/
-#ifndef TPL_REGEX_DOCUMENT_H
-#define TPL_REGEX_DOCUMENT_H
+#ifndef TPL_REGEX_RESULT_DOCUMENT_H
+#define TPL_REGEX_RESULT_DOCUMENT_H
 
 #ifndef TPL_REGEX_BASIC_H
 #include "../Basic.h"
@@ -477,5 +477,5 @@ inline void TPL_CALL json_print(
 
 NS_TPL_END
 
-#endif /* TPL_REGEX_DOCUMENT_H */
+#endif /* TPL_REGEX_RESULT_DOCUMENT_H */
 

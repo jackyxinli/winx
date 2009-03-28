@@ -16,10 +16,10 @@
 // 
 // $Id: DOM.h 783 2008-07-01 10:38:02Z xushiweizh@gmail.com $
 // -----------------------------------------------------------------------*/
-#ifndef TPL_REGEXP_DOM_H
-#define TPL_REGEXP_DOM_H
+#ifndef TPL_REGEX_DOM_H
+#define TPL_REGEX_DOM_H
 
-#ifndef TPL_MATCH_H
+#ifndef TPL_REGEX_MATCH_H
 #include "Match.h"
 #endif
 
@@ -27,11 +27,11 @@
 #include "result/Mark.h"
 #endif
 
-#ifndef TPL_REGEX_DOCUMENT_H
+#ifndef TPL_REGEX_RESULT_DOCUMENT_H
 #include "result/Document.h"
 #endif
 
-#ifndef TPL_REGEX_CONTEXT_H
+#ifndef TPL_REGEX_RESULT_CONTEXT_H
 #include "result/Context.h"
 #endif
 
@@ -119,5 +119,5 @@ inline bool TPL_CALL operator>>(
 
 NS_TPL_END
 
-#endif /* TPL_REGEXP_DOM_H */
+#endif /* TPL_REGEX_DOM_H */
 
