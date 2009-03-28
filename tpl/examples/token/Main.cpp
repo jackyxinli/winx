@@ -13,7 +13,7 @@ int main()
 	";
 
 	source >> cpp_skip_[
-		*gr(c_token()/eq(CTokens::symbol)/TPL_INFO("TOKEN"))
+		*gr(c_token()/TPL_INFO("TOKEN"))
 		];
 }
 

@@ -197,7 +197,7 @@ TPL_CONST(Rule<CSkipNonEolG>, c_skip_non_eol_);
 // =========================================================================
 // function c_pp_skip()
 
-typedef And<ChDiv_, StrictEolG> CEscapeEol_;
+typedef And<Ch<'\\'>, StrictEolG> CEscapeEol_;
 typedef Or<NonEolSpace, CEscapeEol_> CPpSpaceG;
 typedef Repeat0<CPpSpaceG> CPpSkipSpaceG;
 

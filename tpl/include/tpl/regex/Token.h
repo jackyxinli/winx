@@ -181,7 +181,7 @@ public:																		\
 	};																		\
 public:																		\
 	typedef CollectionT<1, TOKEN_TYPE_MAX>::TokenT token_type;				\
-	typedef TokenRule<token_type> rule_type;								\
+	typedef NS_TPL::TokenRule<token_type> rule_type;						\
 };
 
 // -------------------------------------------------------------------------
