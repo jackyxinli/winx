@@ -16,8 +16,8 @@
 // 
 // $Id: Match.h 783 2008-07-01 10:38:02Z xushiweizh@gmail.com $
 // -----------------------------------------------------------------------*/
-#ifndef TPL_REGEXP_MATCH_H
-#define TPL_REGEXP_MATCH_H
+#ifndef TPL_REGEX_MATCH_H
+#define TPL_REGEX_MATCH_H
 
 #ifndef TPL_REGEX_BASIC_H
 #include "Basic.h"
@@ -180,5 +180,5 @@ bool TPL_CALL operator!=(const ContainerT& src_, const Rule<RegExT>& rule_) {
 
 NS_TPL_END
 
-#endif /* TPL_REGEXP_MATCH_H */
+#endif /* TPL_REGEX_MATCH_H */
 

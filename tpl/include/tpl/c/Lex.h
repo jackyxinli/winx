@@ -23,6 +23,10 @@
 #include "../regex/Match.h"
 #endif
 
+#ifndef TPL_REGEX_TOKEN_H
+#include "../regex/Token.h"
+#endif
+
 NS_TPL_BEGIN
 
 // =========================================================================
@@ -292,9 +296,34 @@ inline Rule<CIntegerG> TPL_CALL c_integer() {
 }
 
 // =========================================================================
+// function c_token()
+
+#define TPL_C_NONDIV_OPMASK			(STD_OPTYPE_EXCLAMATION | STD_OPTYPE_QUESTION | STD_OPTYPE_SHARP |				\
+	STD_OPTYPE_PARENTHESIS_L | STD_OPTYPE_PARENTHESIS_R | STD_OPTYPE_ADD | STD_OPTYPE_SUB | STD_OPTYPE_MUL |		\
+	STD_OPTYPE_LT | STD_OPTYPE_GT | STD_OPTYPE_EQ | STD_OPTYPE_DOT | STD_OPTYPE_COLON | STD_OPTYPE_PERCENT |		\
+	STD_OPTYPE_AND | STD_OPTYPE_OR | STD_OPTYPE_XOR | STD_OPTYPE_SQUARE_BRACKET_L | STD_OPTYPE_SQUARE_BRACKET_R |	\
+	STD_OPTYPE_BRACE_L | STD_OPTYPE_BRACE_R | STD_OPTYPE_SEMICOLON | STD_OPTYPE_COMMA | STD_OPTYPE_REVERSE)
+
+typedef OpMask<TPL_C_NONDIV_OPMASK> COpNonDivG;		// op_mask<TPL_C_NONDIV_OPMASK>()
+typedef And<Ch<'/'>, PeekNot<'/', '*'> > COpDivG;	// ('/' + peek_not<'/', '*'>())
+
+TPL_TOKENS_BEGIN(CTokens)
+	TPL_TOKEN(symbol, CSymbolG)
+	TPL_TOKEN(op_nondiv, COpNonDivG)
+	TPL_TOKEN(op_div, COpDivG)
+	TPL_TOKEN(c_string, CStringG)
+	TPL_TOKEN(c_char, CCharG)
+TPL_TOKENS_END();
+
+typedef CTokens::rule_type CTokenG;
+
+inline Rule<CTokenG> TPL_CALL c_token() {
+	return Rule<CTokenG>();
+}
+
+// =========================================================================
 // $Log: $
 
 NS_TPL_END
 
 #endif /* TPL_C_LEX_H */
-

@@ -333,15 +333,15 @@ TPL_RULE_UNARY_OP_(~, Not)
 
 // Usage: peek(ChRange)
 
-template <class RegExT>
+template <class PredT>
 class Peek // ~Rule
 {
 public:
-	const RegExT m_x;
+	const PredT m_x;
 
 public:
 	Peek() : m_x() {}
-	Peek(const RegExT& x) : m_x(x) {}
+	Peek(const PredT& x) : m_x(x) {}
 
 public:
 	enum { character = 0 };
@@ -353,9 +353,6 @@ public:
 	bool TPL_CALL match(SourceT& ar, ContextT& context) const {
 		return m_x(ar.peek());
 	}
-
-private:
-	TPL_REQUIRE_CLASS(typename RegExT::assig_tag, TagAssigChar, ChRuleRequire_);
 };
 
 template <int m_c1, int m_c2 = m_c1, int m_c3 = m_c2, int m_c4 = m_c3>

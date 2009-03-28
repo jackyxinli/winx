@@ -41,6 +41,10 @@
 #include "regex/Operator.h"
 #endif
 
+#ifndef TPL_REGEX_TOKEN_H
+#include "regex/Token.h"
+#endif
+
 #ifndef TPL_REGEX_ACTION_H
 #include "regex/Action.h"
 #endif
