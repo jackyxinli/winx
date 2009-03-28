@@ -260,6 +260,7 @@ inline Rule<CStringOrCharG> TPL_CALL c_string_or_char() {
 
 struct TagAssigCHexInteger {};
 struct TagAssigCOctInteger {};
+struct TagAssigCHexOrOctInteger {};
 struct TagAssigCUInteger {};
 struct TagAssigCInteger {};
 
@@ -270,15 +271,18 @@ typedef Repeat0<OctDigit> OctIntegerOrNon_;
 typedef UAnd<CChar0_, CCharX_, HexIntegerU> CHexIntegerU;
 typedef UAnd<CChar0_, OctIntegerOrNon_> COctIntegerU;
 
-typedef UAnd<CChar0_, Or<UAnd<CCharX_, HexIntegerU>, OctIntegerOrNon_> > CHexOrOctIntegerU;
-
-typedef Or<CHexOrOctIntegerU, UIntegerU> CUIntegerU;
-typedef Or<CHexOrOctIntegerU, IntegerU> CIntegerU;
-
 TPL_REGEX_GUARD(CHexIntegerU, CHexIntegerG, TagAssigCHexInteger);
-TPL_REGEX_GUARD(COctIntegerU, COctIntegerG, TagAssigCOctInteger);
-TPL_REGEX_GUARD(CUIntegerU, CUIntegerG, TagAssigCUInteger);
-TPL_REGEX_GUARD(CIntegerU, CIntegerG, TagAssigCInteger);
+TPL_REGEX_GUARD0(COctIntegerU, COctIntegerG, TagAssigCOctInteger);
+
+typedef UAnd<CChar0_, Or<And<CCharX_, HexIntegerG>, OctIntegerOrNon_> > CHexOrOctIntegerU;
+
+TPL_REGEX_GUARD0(CHexOrOctIntegerU, CHexOrOctIntegerG, TagAssigCHexOrOctInteger);
+
+typedef Or<CHexOrOctIntegerG, UIntegerG> CUIntegerU;
+typedef Or<CHexOrOctIntegerG, IntegerG> CIntegerU;
+
+TPL_REGEX_GUARD0(CUIntegerU, CUIntegerG, TagAssigCUInteger);
+TPL_REGEX_GUARD0(CIntegerU, CIntegerG, TagAssigCInteger);
 
 inline Rule<CHexIntegerG> TPL_CALL c_hex_integer() {
 	return Rule<CHexIntegerG>();
