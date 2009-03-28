@@ -151,12 +151,6 @@ inline LPWSTR winx_call CombinePath(LPWSTR szDest, LPCWSTR lpszDir, LPCWSTR lpsz
 	return PathCombineW(szDest, lpszDir, lpszFile);
 }
 
-template <class CharT>
-inline LPWSTR winx_call CombinePath(LPWSTR szDest, LPCWSTR lpszDir, LPCWSTR lpszFile)
-{
-	return PathCombineW(szDest, lpszDir, lpszFile);
-}
-
 // -------------------------------------------------------------------------
 // CanonicalizePath
 
