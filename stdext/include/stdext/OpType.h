@@ -28,12 +28,12 @@ NS_STDEXT_BEGIN
 // -------------------------------------------------------------------------
 // STD_OPTYPE_XXX
 
-#define STD_OPTYPE_EXCLAMATION		0x01,		/* [!] */
-#define STD_OPTYPE_QUESTION			0x02,		/* [?] */
-#define STD_OPTYPE_SHARP			0x04,		/* [#] */
+#define STD_OPTYPE_EXCLAMATION		0x01		/* [!] */
+#define STD_OPTYPE_QUESTION			0x02		/* [?] */
+#define STD_OPTYPE_SHARP			0x04		/* [#] */
 #define STD_OPTYPE_UNDERLINE		0x08		/* underline[_] */
-#define STD_OPTYPE_PARENTHESIS_L	0x10,		/* [(] */
-#define STD_OPTYPE_PARENTHESIS_R	0x20,		/* [)] */
+#define STD_OPTYPE_PARENTHESIS_L	0x10		/* [(] */
+#define STD_OPTYPE_PARENTHESIS_R	0x20		/* [)] */
 #define STD_OPTYPE_ADD				0x40		/* [+] */
 #define STD_OPTYPE_SUB				0x80		/* [-], dash/hyphen */
 #define STD_OPTYPE_MUL				0x100		/* [*] */
@@ -58,8 +58,8 @@ NS_STDEXT_BEGIN
 #define STD_OPTYPE_DOLLAR			0x8000000	/* [$] */
 #define STD_OPTYPE_DOUBLE_QUOTATION	0x10000000	/* ["] */
 #define STD_OPTYPE_SINGLE_QUOTATION	0x20000000	/* ['] */
-#define STD_OPTYPE_AT				0x40000000,	/* [@] */
-#define	STD_OPTYPE_STOP				0x80000000,	/* [`] */
+#define STD_OPTYPE_AT				0x40000000	/* [@] */
+#define	STD_OPTYPE_STOP				0x80000000	/* [`] */
 #define STD_OPTYPE_MAX_CHAR			128
 
 // -------------------------------------------------------------------------
