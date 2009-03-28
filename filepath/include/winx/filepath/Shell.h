@@ -151,6 +151,12 @@ inline LPWSTR winx_call CombinePath(LPWSTR szDest, LPCWSTR lpszDir, LPCWSTR lpsz
 	return PathCombineW(szDest, lpszDir, lpszFile);
 }
 
+template <class CharT>
+inline LPWSTR winx_call CombinePath(LPWSTR szDest, LPCWSTR lpszDir, LPCWSTR lpszFile)
+{
+	return PathCombineW(szDest, lpszDir, lpszFile);
+}
+
 // -------------------------------------------------------------------------
 // CanonicalizePath
 
@@ -188,13 +194,22 @@ inline BOOL winx_call SearchFilePath(
 	return FileExists(szDestFile);
 }
 
-template <class CharT, class PathT>
+template <class CharT>
+inline BOOL winx_call SearchFilePath(
+	CharT* szDestFile,
+	const CharT* szFileSearch,
+	const NS_STDEXT::BasicString<CharT>& strDir)
+{
+	CombinePath(szDestFile, strDir.stl_str().c_str(), szFileSearch);
+	return FileExists(szDestFile);
+}
+
+template <class CharT, class PathT, class ValT>
 inline BOOL winx_call SearchFilePath(
 	CharT* szDestFile, const CharT* szFileSearch,
-	const NS_STDEXT::Range<PathT> dirs, const CharT* szBasePath = NULL)
+	const NS_STDEXT::Range<PathT, ValT>& dirs, const CharT* szBasePath = NULL)
 {
-	typedef typename NS_STDEXT::Range<PathT>::const_iterator Iter;
-	
+	typedef typename NS_STDEXT::Range<PathT, ValT>::const_iterator Iter;
 	if (szBasePath)
 	{
 		if (SearchFilePath(szDestFile, szFileSearch, szBasePath))
