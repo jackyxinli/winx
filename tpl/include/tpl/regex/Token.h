@@ -147,6 +147,12 @@ struct LinkToken<tokenType, void, PrevTokenT>
 //	TPL_TOKENS_END();
 //
 
+#define TPL_INVALID_TOKEN_(nVal)											\
+	template <>																\
+	struct Traits<nVal> {													\
+		typedef void rule_type;												\
+	}
+
 #define TPL_TOKENS_BEGIN(Tokens)											\
 class Tokens																\
 {																			\
@@ -167,6 +173,8 @@ public:																		\
 
 #define TPL_TOKENS_END()													\
 	enum { TOKEN_TYPE_MAX = __LINE__ - FIRST_LINE_ };						\
+	TPL_INVALID_TOKEN_(0);													\
+	TPL_INVALID_TOKEN_(TOKEN_TYPE_MAX);										\
 	template <int nVal, int nValMax>										\
 	struct CollectionT														\
 	{																		\

@@ -265,11 +265,12 @@ struct TagAssigCInteger {};
 
 typedef Ch<'0'> CChar0_;
 typedef Ch<'x', 'X'> CCharX_;
+typedef Repeat0<OctDigit> OctIntegerOrNon_;
 
 typedef UAnd<CChar0_, CCharX_, HexIntegerU> CHexIntegerU;
-typedef UAnd<CChar0_, OctIntegerU> COctIntegerU;
+typedef UAnd<CChar0_, OctIntegerOrNon_> COctIntegerU;
 
-typedef UAnd<CChar0_, Or<UAnd<CCharX_, HexIntegerU>, OctIntegerU> > CHexOrOctIntegerU;
+typedef UAnd<CChar0_, Or<UAnd<CCharX_, HexIntegerU>, OctIntegerOrNon_> > CHexOrOctIntegerU;
 
 typedef Or<CHexOrOctIntegerU, UIntegerU> CUIntegerU;
 typedef Or<CHexOrOctIntegerU, IntegerU> CIntegerU;
@@ -313,6 +314,7 @@ TPL_TOKENS_BEGIN(CTokens)
 	TPL_TOKEN(op_div, COpDivG)
 	TPL_TOKEN(c_string, CStringG)
 	TPL_TOKEN(c_char, CCharG)
+	TPL_TOKEN(integer, CIntegerG)
 TPL_TOKENS_END();
 
 typedef CTokens::rule_type CTokenG;
