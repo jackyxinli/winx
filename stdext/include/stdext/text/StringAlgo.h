@@ -121,91 +121,108 @@ inline BasicString<CharT> winx_call transform(
 
 template <class AllocT>
 __forceinline BasicString<char> winx_call upper(AllocT& alloc, const TempString<char>& str) {
-	return std::transform(alloc, str, ToUpper<char>());
+	return transform(alloc, str, ToUpper<char>());
 }
 
 template <class AllocT>
 __forceinline BasicString<wchar_t> winx_call upper(AllocT& alloc, const TempString<wchar_t>& str) {
-	return std::transform(alloc, str, ToUpper<wchar_t>());
+	return transform(alloc, str, ToUpper<wchar_t>());
 }
 
 template <class AllocT>
 __forceinline BasicString<char> winx_call lower(AllocT& alloc, const TempString<char>& str) {
-	return std::transform(alloc, str, ToLower<char>());
+	return transform(alloc, str, ToLower<char>());
 }
 
 template <class AllocT>
 __forceinline BasicString<wchar_t> winx_call lower(AllocT& alloc, const TempString<wchar_t>& str) {
-	return std::transform(alloc, str, ToLower<wchar_t>());
+	return transform(alloc, str, ToLower<wchar_t>());
 }
 
 // -------------------------------------------------------------------------
 // trim/trimLeft/trimRight
+
+template <class Iterator>
+inline Iterator winx_call trimLeft(Iterator first, Iterator last)
+{
+	return std::find_if(first, last, CharType::NotIsSpace());
+}
+
+template <class Iterator>
+inline Iterator winx_call trimRight(Iterator first, Iterator last)
+{
+	const CharType::NotIsSpace notSpace = CharType::NotIsSpace();
+	while (first != last)
+	{
+		if (notSpace(*--last))
+			return ++last;
+	}
+	return first;
+}
 
 template <class CharT>
 inline BasicString<CharT> winx_call trimLeft(const BasicString<CharT>& s)
 {
 	typedef typename BasicString<CharT>::const_iterator iterator;
 	const iterator last = s.end();
-	const iterator first = std::find_if(s.begin(), last, CharType::NotIsSpace());
-	return BasicString<CharT>(first, last);
+	return BasicString<CharT>(trimLeft(s.begin(), last), last);
 }
 
 template <class CharT>
 inline BasicString<CharT> winx_call trimRight(const BasicString<CharT>& s)
 {
 	typedef typename BasicString<CharT>::const_iterator iterator;
-	const CharType::NotIsSpace notSpace = CharType::NotIsSpace();
 	const iterator first = s.begin();
-	iterator last = s.end();
-	while (first != last) {
-		if (notSpace(*--last)) {
-			++last;
-			break;
-		}
-	}
-	return BasicString<CharT>(first, last);
+	return BasicString<CharT>(first, trimRight(first, s.end()));
 }
 
 template <class CharT>
 inline BasicString<CharT> winx_call trim(const BasicString<CharT>& s)
 {
 	typedef typename BasicString<CharT>::const_iterator iterator;
-	const CharType::NotIsSpace notSpace = CharType::NotIsSpace();
-	iterator last = s.end();
-	const iterator first = std::find_if(s.begin(), last, notSpace);
-	while (first != last) {
-		if (notSpace(*--last)) {
-			++last;
-			break;
-		}
-	}
-	return BasicString<CharT>(first, last);
+	const iterator last = s.end();
+	const iterator first = trimLeft(s.begin(), last);
+	return BasicString<CharT>(first, trimRight(first, last));
 }
 
 // -------------------------------------------------------------------------
 // explode
 
-template <bool bEraseEmpty, class CharT, class AllocT, class SepIt>
+enum ExplodeFlags
+{
+	efEraseEmpty = 0x01,
+	efTrim = 0x02,
+	efDefault = efEraseEmpty | efTrim
+};
+
+template <class CharT>
+struct ExplodeNode_
+{
+	BasicString<CharT> s;
+	const ExplodeNode_* prev;
+};
+
+template <int flags, class CharT, class AllocT>
 inline
 BasicArray<BasicString<CharT> >
-winx_call explode(AllocT& alloc, SepIt sep, SepIt sepEnd, const BasicString<CharT>& s)
+winx_call explode2(AllocT& alloc, CharT sep, const BasicString<CharT>& s)
 {
 	typedef typename BasicString<CharT>::const_iterator iterator;
-	
-	struct Node {
-		BasicString<CharT> s;
-		const Node* prev;
-	};
-	
+	typedef ExplodeNode_<CharT> Node;
+
+	size_t n = 0;
 	const Node* lst = NULL;
 	const iterator last = s.end();
-	const size_t sepLen = std::distance(sep, sepEnd);
-	size_t n = 0;
-	iterator first = s.begin();	
-	for (;;) {
-		const iterator it = std::search(first, last, sep, sepEnd);
-		if (!bEraseEmpty || it != first) {
+	iterator it, first = s.begin();
+	for (;;)
+	{
+		if (efTrim & flags)
+			first = trimLeft(first, last);
+		it = std::find(first, last, sep);
+		if (efTrim & flags)
+			it = trimRight(first, it);
+		if (!(efEraseEmpty & flags) || it != first)
+		{
 			Node* p = (Node*)_alloca(sizeof(Node));
 			p->s = BasicString<CharT>(first, it);
 			p->prev = lst;
@@ -214,44 +231,24 @@ winx_call explode(AllocT& alloc, SepIt sep, SepIt sepEnd, const BasicString<Char
 		}
 		if (it == last)
 			break;
-		first = it + sepLen;
+		first = ++it;
 	}
 	
 	size_t i = n;
 	BasicString<CharT>* arr = STD_ALLOC_ARRAY(alloc, BasicString<CharT>, n);
-	while (i) {
+	while (i)
+	{
 		arr[--i] = lst->s;
 		lst = lst->prev;
 	}
 	return BasicArray<BasicString<CharT> >(arr, n);
 }
 
-template <bool bEraseEmpty, class AllocT>
+template <class CharT, class AllocT>
 __forceinline
-BasicArray<BasicString<char> >
-winx_call explode(AllocT& alloc, const TempString<char>& sep, const BasicString<char>& s) {
-	return explode<bEraseEmpty>(alloc, sep.begin(), sep.end(), s);
-}
-
-template <class AllocT>
-__forceinline
-BasicArray<BasicString<char> >
-winx_call explode(AllocT& alloc, const TempString<char>& sep, const BasicString<char>& s) {
-	return explode<true>(alloc, sep.begin(), sep.end(), s);
-}
-
-template <bool bEraseEmpty, class AllocT>
-__forceinline
-BasicArray<BasicString<wchar_t> >
-winx_call explode(AllocT& alloc, const TempString<wchar_t>& sep, const BasicString<wchar_t>& s) {
-	return explode<bEraseEmpty>(alloc, sep.begin(), sep.end(), s);
-}
-
-template <class AllocT>
-__forceinline
-BasicArray<BasicString<wchar_t> >
-winx_call explode(AllocT& alloc, const TempString<wchar_t>& sep, const BasicString<wchar_t>& s) {
-	return explode<true>(alloc, sep.begin(), sep.end(), s);
+BasicArray<BasicString<CharT> >
+winx_call explode(AllocT& alloc, CharT sep, const BasicString<CharT>& s) {
+	return explode2<efDefault>(alloc, sep, s);
 }
 
 // -------------------------------------------------------------------------
@@ -420,39 +417,39 @@ class TestStringAlgo : public TestCase
 public:
 	void testIconv(LogT& log)
 	{
-		std::ScopedAlloc alloc;
+		NS_STDEXT::ScopedAlloc alloc;
 
-		std::WString s1 = std::iconv(alloc, std::cp_auto, "Hello, world!");
+		NS_STDEXT::WString s1 = NS_STDEXT::iconv(alloc, NS_STDEXT::cp_auto, "Hello, world!");
 		AssertExp(s1 == L"Hello, world!");
 
-		std::String s2 = std::iconv(alloc, s1, std::cp_utf8);
+		NS_STDEXT::String s2 = NS_STDEXT::iconv(alloc, s1, NS_STDEXT::cp_utf8);
 		AssertExp(s2 == "Hello, world!");
 	}
 	
 	void testConv(LogT& log)
 	{
-		std::ScopedAlloc alloc;
+		NS_STDEXT::ScopedAlloc alloc;
 
 		std::string s1 = "ABC";
-		AssertExp(std::lower(alloc, s1) == "abc");
+		AssertExp(NS_STDEXT::lower(alloc, s1) == "abc");
 		
-		std::String s2(alloc, "abc");
-		AssertExp(std::upper(alloc, s2) == "ABC");
+		NS_STDEXT::String s2(alloc, "abc");
+		AssertExp(NS_STDEXT::upper(alloc, s2) == "ABC");
 	}
 	
 	void testTrim(LogT& log)
 	{
-		std::ScopedAlloc alloc;
-		std::String s(alloc, " \t Hello, world! \t\n");
+		NS_STDEXT::ScopedAlloc alloc;
+		NS_STDEXT::String s(alloc, " \t Hello, world! \t\n");
 		
-		AssertExp(std::trim(s) == "Hello, world!");
-		AssertExp(std::trimLeft(s) == "Hello, world! \t\n");
-		AssertExp(std::trimRight(s) == " \t Hello, world!");
+		AssertExp(NS_STDEXT::trim(s) == "Hello, world!");
+		AssertExp(NS_STDEXT::trimLeft(s) == "Hello, world! \t\n");
+		AssertExp(NS_STDEXT::trimRight(s) == " \t Hello, world!");
 	}
 
 	void testImplode(LogT& log)
 	{
-		std::AutoFreeAlloc alloc;
+		NS_STDEXT::AutoFreeAlloc alloc;
 
 		std::list<std::string> lst;
 		lst.push_back("Hello,");
@@ -461,20 +458,20 @@ public:
 		lst.push_back("am");
 		lst.push_back("xushiwei!\n");
 
-		std::String s = std::implode(alloc, ' ', lst);
+		NS_STDEXT::String s = NS_STDEXT::implode(alloc, ' ', lst);
 		AssertExp(s == "Hello, world! I am xushiwei!\n");
 	
-		s = std::implode(alloc, " -> ", lst);
+		s = NS_STDEXT::implode(alloc, " -> ", lst);
 		AssertExp(s == "Hello, -> world! -> I -> am -> xushiwei!\n");
 	}
 	
 	void testExplode(LogT& log)
 	{
-		std::AutoFreeAlloc alloc;
+		NS_STDEXT::AutoFreeAlloc alloc;
 
-		std::String s(alloc, "Hello, world!  I am xushiwei!");
+		NS_STDEXT::String s(alloc, "Hello, world!  I am xushiwei!");
 
-		std::BasicArray<std::String> arr = std::explode(alloc, ' ', s);
+		NS_STDEXT::BasicArray<NS_STDEXT::String> arr = NS_STDEXT::explode(alloc, ' ', s);
 		AssertExp(arr.size() == 5);
 		AssertExp(
 			arr[0] == "Hello," &&
@@ -483,7 +480,7 @@ public:
 			arr[3] == "am" &&
 			arr[4] == "xushiwei!");
 		
-		arr = std::explode<false>(alloc, ' ', s);
+		arr = NS_STDEXT::explode2<0>(alloc, ' ', s);
 		AssertExp(arr.size() == 6);
 		AssertExp(
 			arr[0] == "Hello," &&
@@ -496,14 +493,14 @@ public:
 
 	void testConcat2(LogT& log)
 	{
-		std::AutoFreeAlloc alloc;
+		NS_STDEXT::AutoFreeAlloc alloc;
 		{
 			std::list<std::string> lst;
 			lst.push_back("Hello,");
 			lst.push_back(" ");
 			lst.push_back("world!");
 		
-			std::String s = std::concat(alloc, lst);
+			NS_STDEXT::String s = NS_STDEXT::concat(alloc, lst);
 			AssertExp(s == "Hello, world!");
 		}
 		{
@@ -512,34 +509,34 @@ public:
 			vec.push_back(" ");
 			vec.push_back("world!");
 		
-			std::String s = std::concat(alloc, vec);
+			NS_STDEXT::String s = NS_STDEXT::concat(alloc, vec);
 			AssertExp(s == "Hello, world!");
 		}
 	}
 
 	void testConcat(LogT& log)
 	{
-		std::ScopedAlloc alloc;
+		NS_STDEXT::ScopedAlloc alloc;
 
-		std::String s[4];
+		NS_STDEXT::String s[4];
 		s[0].attach("Hello");
 		s[1].assign(alloc, ", ");
-		s[2] = std::String(alloc, "world");
+		s[2] = NS_STDEXT::String(alloc, "world");
 		s[3].assign(alloc, 3, '!');
 
-		std::String result = std::concat(alloc, s, countof(s));
+		NS_STDEXT::String result = NS_STDEXT::concat(alloc, s, countof(s));
 		AssertExp(result == "Hello, world!!!");
 
-		std::String result2 = std::concat(alloc, "Hello", "!!!");
+		NS_STDEXT::String result2 = NS_STDEXT::concat(alloc, "Hello", "!!!");
 		AssertExp(result2 == "Hello!!!");
 
-		std::String result3 = std::concat(alloc, s[0], s[1], s[2], s[3]);
+		NS_STDEXT::String result3 = NS_STDEXT::concat(alloc, s[0], s[1], s[2], s[3]);
 		AssertExp(result == result3);
 
 		char s2buf[] = "world";
-		std::vector<char> s2(s2buf, std::end(s2buf));
+		std::vector<char> s2(s2buf, NS_STDEXT::end(s2buf));
 		std::string s1 = result2.stl_str();
-		std::String result4 = std::concat(alloc, s1, " ", s2, "!!", "!");
+		NS_STDEXT::String result4 = NS_STDEXT::concat(alloc, s1, " ", s2, "!!", "!");
 		AssertExp(result4 == "Hello!!! world!!!");
 	}
 };

@@ -71,7 +71,7 @@ void testExplode()
 
 	std::cout << "+++++++++++++++++++++\n";
 
-	arr = NS_STDEXT::explode<false>(alloc, ' ', s);
+	arr = NS_STDEXT::explode2<0>(alloc, ' ', s);
 	for (size_t i = 0; i < arr.size(); ++i)
 		std::cout << arr[i] << '\n';
 }

@@ -44,21 +44,20 @@ NS_STDEXT_BEGIN
 // =========================================================================
 // class Range
 
-template <class Iterator>
+template <
+	class Iterator,
+	class ValueT = std::iterator_traits_alter<Iterator>::value_type>
 class Range // std::pair<Iterator>
 {
 protected:
 	Iterator first;
 	Iterator second;
 
-private:
-	typedef std::iterator_traits_alter<Iterator> Tr_;
-
 public:
 	typedef ptrdiff_t difference_type;
 	typedef size_t size_type;
 
-	typedef typename Tr_::value_type value_type;
+	typedef ValueT value_type;
 	
 	typedef const value_type* pointer;
 	typedef const value_type* const_pointer;
@@ -350,10 +349,10 @@ inline void winx_call throw_out_of_range_()
 }
 
 template <class CharT>
-class TempString : public Range<const CharT*>
+class TempString : public Range<const CharT*, CharT>
 {
 private:
-	typedef Range<const CharT*> Base;
+	typedef Range<const CharT*, CharT> Base;
 
 public:	
 	typedef typename Base::size_type size_type;
@@ -402,11 +401,11 @@ public:
 // class BasicArray
 
 template <class Type>
-class BasicArray : public Range<const Type*>
+class BasicArray : public Range<const Type*, Type>
 {
 private:
 	typedef const Type* Iterator;
-	typedef Range<Iterator> Base;
+	typedef Range<Iterator, Type> Base;
 	
 public:	
 	typedef typename Base::size_type size_type;
@@ -438,9 +437,9 @@ public:
 // rangeof
 
 template <class Type>
-inline Range<const Type*> winx_call rangeof_(const Type v[], size_t n)
+inline Range<const Type*, Type> winx_call rangeof_(const Type v[], size_t n)
 {
-	return Range<const Type*>(v, v+n);
+	return Range<const Type*, Type>(v, v+n);
 }
 
 #define rangeof(array)		NS_STDEXT::rangeof_(array, countof(array))

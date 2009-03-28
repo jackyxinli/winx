@@ -86,10 +86,10 @@ public:																		\
 #endif
 
 template <class CharT>
-class BasicString : public Range<const CharT*>
+class BasicString : public Range<const CharT*, CharT>
 {
 private:
-	typedef Range<const CharT*> Base;
+	typedef Range<const CharT*, CharT> Base;
 	WINX_BASICSTRING_USING_;
 	
 	typedef TempString<CharT> String_;
