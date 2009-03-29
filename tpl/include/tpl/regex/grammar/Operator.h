@@ -176,8 +176,17 @@ public:
 	template <class SourceT, class ContextT, class SkipperT>
 	bool TPL_CALL match(SourceT& ar, ContextT& context, const SkipperT& skipper_) const
 	{
+#if defined(_DEBUG)
+		typename SourceT::iterator pos = ar.position();
+		while (m_x.match(ar, context, skipper_))
+		{
+			TPL_ASSERT(ar.position() != pos);
+			pos = ar.position();
+		}
+#else
 		while (m_x.match(ar, context, skipper_))
 			;
+#endif
 		return true;
 	}
 };
@@ -212,10 +221,22 @@ public:
 	template <class SourceT, class ContextT, class SkipperT>
 	bool TPL_CALL match(SourceT& ar, ContextT& context, const SkipperT& skipper_) const
 	{
+#if defined(_DEBUG)
+		typename SourceT::iterator pos = ar.position();
+		unsigned n = 0;
+		while (m_x.match(ar, context, skipper_))
+		{
+			TPL_ASSERT(ar.position() != pos);
+			pos = ar.position();
+			++n;
+		}
+		return n > 0;
+#else
 		unsigned n = 0;
 		while (m_x.match(ar, context, skipper_))
 			++n;
 		return n > 0;
+#endif
 	}
 };
 

@@ -264,6 +264,16 @@ __forceinline Rule<StrToken<m_c1, m_c2, m_c3, m_c4> > const TPL_CALL token() {
 }
 
 // -------------------------------------------------------------------------
+// class Paragraph
+
+class Paragraph : public FindIf<C_<0x0a, 0x0d>, false, true> {
+};
+
+__forceinline Rule<Paragraph> const TPL_CALL paragraph() {
+	return Rule<Paragraph>();
+}
+
+// -------------------------------------------------------------------------
 // class FindStr
 
 template <class Iterator, bool bEat = false, bool bGuard = true>
