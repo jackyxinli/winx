@@ -376,6 +376,8 @@ typedef EqCh<CharType::IsCSymbolNextChar> CSymbolNextChar;
 typedef EqCh<CharType::IsXmlSymbolFirstChar> XmlSymbolFirstChar;
 typedef EqCh<CharType::IsXmlSymbolNextChar> XmlSymbolNextChar;
 
+typedef EqCh<CharType::NotIsAlpha> NotAlpha;
+
 inline Rule<NonEolSpace> const TPL_CALL non_eol_space() {
 	return Rule<NonEolSpace>();
 }
@@ -386,6 +388,10 @@ inline Rule<Space> const TPL_CALL space() {
 
 inline Rule<Alpha> const TPL_CALL alpha() {
 	return Rule<Alpha>();
+}
+
+inline Rule<NotAlpha> const TPL_CALL not_alpha() {
+	return Rule<NotAlpha>();
 }
 
 inline Rule<LowerAlpha> const TPL_CALL lower() {

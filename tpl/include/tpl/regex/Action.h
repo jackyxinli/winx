@@ -33,16 +33,15 @@ NS_TPL_BEGIN
 // class Act0
 
 template <class RegExT, class ActionT>
-class Act0
+class Act0 : public RegExT
 {
 public:
-	const RegExT m_x;
 	const ActionT m_action;
 
 public:
-	Act0() : m_x(), m_action() {}
+	Act0() : RegExT(), m_action() {}
 	Act0(const RegExT& x, const ActionT& act)
-		: m_x(x), m_action(act) {}
+		: RegExT(x), m_action(act) {}
 
 public:
 	enum { character = RegExT::character };
@@ -53,7 +52,7 @@ public:
 	template <class SourceT, class ContextT>
 	bool TPL_CALL match(SourceT& ar, ContextT& context) const
 	{
-		if (m_x.match(ar, context)) {
+		if (RegExT::match(ar, context)) {
 			m_action();
 			return true;
 		}
@@ -139,16 +138,15 @@ struct SelectAssig {
 // class Act
 
 template <class RegExT, class ActionT>
-class Act
+class Act : public RegExT
 {
 public:
-	const RegExT m_x;
 	const ActionT m_action;
 
 public:
-	Act() : m_x(), m_action() {}
+	Act() : RegExT(), m_action() {}
 	Act(const RegExT& x, const ActionT& act)
-		: m_x(x), m_action(act) {}
+		: RegExT(x), m_action(act) {}
 
 public:
 	enum { character = RegExT::character };
@@ -162,9 +160,9 @@ public:
 		TPL_ASSIG_PREPARE(assig_tag, typename ActionT::value_type)
 		
 		const iterator pos = ar.position();
-		if (m_x.match(ar, context)) {
+		if (RegExT::match(ar, context)) {
 			const iterator pos2 = ar.position();
-			const value_type val(TPL_ASSIG_GET(pos, pos2, &m_x));
+			const value_type val(TPL_ASSIG_GET(pos, pos2, static_cast<const RegExT*>(this)));
 			m_action(val);
 			return true;
 		}

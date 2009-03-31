@@ -300,6 +300,29 @@ inline Rule<CIntegerG> TPL_CALL c_integer() {
 	return Rule<CIntegerG>();
 }
 
+// -------------------------------------------------------------------------
+// function c_integer_suffix, c_integer_with_suffix
+
+typedef Ch<'U', 'u'> ChU_;
+typedef Ch<'L', 'l'> ChL_;
+
+typedef And<ChU_, Repeat01<ChL_> > CIntSuffixU_;
+typedef And<ChL_, Repeat01<ChU_> > CIntSuffixL_;
+typedef Or<CIntSuffixU_, Or<CIntSuffixL_, Eps> > CIntSuffix_;
+typedef Not<ChMask<STD_CTYPE_ALPHA | STD_CTYPE_DIGIT> > CNotAlphaOrDigit_;
+typedef And<CIntSuffix_, Peek<CNotAlphaOrDigit_> > CIntSuffixG;
+typedef CIntSuffixG CIntegerSuffixG;
+
+typedef And<CIntegerG, CIntegerSuffixG> CIntegerWithSuffixG;
+
+inline Rule<CIntegerSuffixG> TPL_CALL c_integer_suffix() {
+	return Rule<CIntegerSuffixG>();
+}
+
+inline Rule<CIntegerWithSuffixG> TPL_CALL c_integer_with_suffix() {
+	return Rule<CIntegerWithSuffixG>();
+}
+
 // =========================================================================
 // function c_token()
 
@@ -318,7 +341,7 @@ TPL_TOKENS_BEGIN(CTokens)
 	TPL_TOKEN(op_div, COpDivG)
 	TPL_TOKEN(c_string, CStringG)
 	TPL_TOKEN(c_char, CCharG)
-	TPL_TOKEN(integer, CIntegerG)
+	TPL_TOKEN(integer, CIntegerWithSuffixG)
 TPL_TOKENS_END();
 
 typedef CTokens::rule_type CTokenG;
