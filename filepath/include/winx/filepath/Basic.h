@@ -23,8 +23,8 @@
 #include "../../../../stdext/include/stdext/Basic.h"
 #endif
 
-#ifndef STDEXT_TEXT_RANGE_H
-#include "../../../../stdext/include/stdext/text/Range.h"
+#ifndef STDEXT_TEXT_BASICSTRING_H
+#include "../../../../stdext/include/stdext/text/BasicString.h"
 #endif
 
 // -------------------------------------------------------------------------
