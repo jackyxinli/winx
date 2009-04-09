@@ -16,8 +16,8 @@
 // 
 // $Id: Basic.h,v 1.9 2006/12/22 10:22:28 xushiwei Exp $
 // -----------------------------------------------------------------------*/
-#ifndef __WINX_BASIC_H__
-#define __WINX_BASIC_H__
+#ifndef WINX_BASIC_H
+#define WINX_BASIC_H
 
 #if (0)
 #define WINX_NO_DEBUG_NEW
@@ -29,19 +29,19 @@
 
 // -------------------------------------------------------------------------
 
-#ifndef __STLPATCH_H__
+#ifndef STLPATCH_H
 #include "../../../stdext/include/stlpatch.h"
 #endif
 
-#ifndef __WINX_WINSDK_BASIC_H__
+#ifndef WINX_WINSDK_BASIC_H
 #include "winsdk/Basic.h"
 #endif
 
-#ifndef __WINX_WTL_WTLPORT_H__
+#ifndef WINX_WTL_WTLPORT_H
 #include "wtl/WtlPort.h"
 #endif
 
-#ifndef __STDEXT_H__
+#ifndef STDEXT_H
 #include "../../../stdext/include/stdext.h"
 #endif
 
@@ -59,6 +59,12 @@
 #define __WINX				winx::
 #define __WINX_BEGIN		namespace winx {
 #define __WINX_END			}
+#endif
+
+#ifndef NS_WINX
+#define NS_WINX				winx
+#define NS_WINX_BEGIN		namespace winx {
+#define NS_WINX_END			}
 #endif
 
 #ifndef WINX_VER
@@ -265,4 +271,4 @@ public:
 //   COM Support(Object, StackObject, FakeObject, COLESTR, etc)
 //
 
-#endif /* __WINX_BASIC_H__ */
+#endif /* WINX_BASIC_H */

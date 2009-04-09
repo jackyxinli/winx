@@ -16,16 +16,16 @@
 // 
 // $Id: BasicTypes.h,v 1.3 2006/08/21 18:45:48 xushiwei Exp $
 // -----------------------------------------------------------------------*/
-#ifndef __WINX_WIN_BASICTYPES_H__
-#define __WINX_WIN_BASICTYPES_H__
+#ifndef WINX_WIN_BASICTYPES_H
+#define WINX_WIN_BASICTYPES_H
 
-#ifndef __WINX_BASIC_H__
+#ifndef WINX_BASIC_H
 #include "../Basic.h"
 #endif
 
 #pragma pack(1)
 
-__WINX_BEGIN
+NS_WINX_BEGIN
 
 // =========================================================================
 // BasicTypes
@@ -427,8 +427,8 @@ public:
 //   COM Support(Object, StackObject, FakeObject, COLESTR, etc)
 //
 
-__WINX_END
+NS_WINX_END
 
 #pragma pack()
 
-#endif /* __WINX_WIN_BASICTYPES_H__ */
+#endif /* WINX_WIN_BASICTYPES_H */

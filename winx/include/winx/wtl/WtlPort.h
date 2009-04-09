@@ -16,8 +16,8 @@
 // 
 // $Id: WtlPort.h,v 1.11 2006/12/11 05:19:17 xushiwei Exp $
 // -----------------------------------------------------------------------*/
-#ifndef __WINX_WTL_WTLPORT_H__
-#define __WINX_WTL_WTLPORT_H__
+#ifndef WINX_WTL_WTLPORT_H
+#define WINX_WTL_WTLPORT_H
 
 //#define WINX_NO_WTL
 
@@ -26,13 +26,13 @@
 #define WINX_NO_ALTER_WINDOW
 #endif
 
-#ifndef __WINX_WTL_BASIC_H__
+#ifndef WINX_WTL_BASIC_H
 #include "Basic.h"
 #endif
 
 // -------------------------------------------------------------------------
 
-#ifndef __WTLPORT_BASIC_H__
+#ifndef WTLPORT_BASIC_H
 #include "../../../../wtlport/include/wtlport/Basic.h"
 #endif
 
@@ -50,4 +50,4 @@ typedef ::ATL::CWindow _AlterCWindow;
 // $Log: WtlPort.h,v $
 //
 
-#endif /* __WINX_WTL_WTLPORT_H__ */
+#endif /* WINX_WTL_WTLPORT_H */

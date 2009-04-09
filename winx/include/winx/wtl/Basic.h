@@ -16,8 +16,8 @@
 // 
 // $Id: Basic.h,v 1.11 2006/12/11 05:19:17 xushiwei Exp $
 // -----------------------------------------------------------------------*/
-#ifndef __WINX_WTL_BASIC_H__
-#define __WINX_WTL_BASIC_H__
+#ifndef WINX_WTL_BASIC_H
+#define WINX_WTL_BASIC_H
 
 #if (0)
 #define WINX_USE_APPMODULE
@@ -343,4 +343,4 @@ inline HRESULT AtlCreateActiveXControls(HWND hWndParent, HINSTANCE hInst, UINT n
 
 #endif // !defined(WINX_NO_WTL)
 
-#endif /* __WINX_WTL_BASIC_H__ */
+#endif /* WINX_WTL_BASIC_H */

@@ -16,8 +16,8 @@
 // 
 // $Id: Basic.h,v 1.7 2006/12/11 05:19:16 xushiwei Exp $
 // -----------------------------------------------------------------------*/
-#ifndef __WINX_WINSDK_BASIC_H__
-#define __WINX_WINSDK_BASIC_H__
+#ifndef WINX_WINSDK_BASIC_H
+#define WINX_WINSDK_BASIC_H
 
 #if (0)
 #define WINX_USE_WINSDK
@@ -252,4 +252,4 @@ inline BOOL InitRichEditControl(BOOL fInitRichEditV1 = TRUE)
 //   COM Support(Object, StackObject, FakeObject, COLESTR, etc)
 //
 
-#endif /* __WINX_WINSDK_BASIC_H__ */
+#endif /* WINX_WINSDK_BASIC_H */
