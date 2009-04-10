@@ -16,19 +16,19 @@
 // 
 // $Id: WindowHandle.h,v 1.3 2006/09/13 17:05:11 xushiwei Exp $
 // -----------------------------------------------------------------------*/
-#ifndef __WINX_WIN_WINDOWHANDLE_H__
-#define __WINX_WIN_WINDOWHANDLE_H__
+#ifndef WINX_WIN_WINDOWHANDLE_H
+#define WINX_WIN_WINDOWHANDLE_H
 
 #if (0)
 #define WINX_NULL_WINDOW_HANDLE
 #define WINX_NO_WTLPORT
 #endif
 
-#ifndef __WINX_WIN_BASICTYPES_H__
+#ifndef WINX_WIN_BASICTYPES_H
 #include "BasicTypes.h"
 #endif
 
-__WINX_BEGIN
+NS_WINX_BEGIN
 
 // =========================================================================
 // IsChildWindow/MoveToScreenRightMost/MoveWindowScreenPos/SetWindowScreenPos
@@ -192,16 +192,16 @@ inline CString winx_call GetWindowText(HWND hWnd)
 }
 
 template <class AllocT>
-inline std::TString winx_call GetWindowText(AllocT& alloc, HWND hWnd)
+inline NS_STDEXT::TString winx_call GetWindowText(AllocT& alloc, HWND hWnd)
 {
 	int nLen = ::GetWindowTextLength(hWnd);
 	if (nLen)
 	{
 		TCHAR* psz = STD_NEW_ARRAY(alloc, TCHAR, nLen+1);
 		::GetWindowText(hWnd, psz, nLen+1);
-		return std::TString(psz, nLen);
+		return NS_STDEXT::TString(psz, nLen);
 	}
-	return std::TString();
+	return NS_STDEXT::TString();
 }
 
 template <class StringT>
@@ -387,6 +387,6 @@ typedef WindowHandle DefaultWindowHandle;
 //   COM Support(Object, StackObject, FakeObject, COLESTR, etc)
 //
 
-__WINX_END
+NS_WINX_END
 
-#endif /* __WINX_WIN_WINDOWHANDLE_H__ */
+#endif /* WINX_WIN_WINDOWHANDLE_H */
