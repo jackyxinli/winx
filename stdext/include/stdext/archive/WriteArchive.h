@@ -277,6 +277,31 @@ public:
 	{
 		return m_handle.bad();
 	}
+
+public:
+	template <class DataIt, class SepT>
+	WriteArchive& winx_call printLines(
+		DataIt first, DataIt last, const SepT& sep) throw(IoException)
+	{
+		NS_STDEXT_IO_TEXT::printLines(*this, first, last, sep);
+		return *this;
+	}
+
+	template <class DataIt>
+	WriteArchive& winx_call printLines(
+		DataIt first, DataIt last) throw(IoException)
+	{
+		NS_STDEXT_IO_TEXT::printLines(*this, first, last);
+		return *this;
+	}
+
+	template <class ContainerT>
+	WriteArchive& winx_call printLines(
+		const ContainerT& rg) throw(IoException)
+	{
+		NS_STDEXT_IO_TEXT::printLines(*this, rg.begin(), rg.end());
+		return *this;
+	}
 };
 
 // -------------------------------------------------------------------------

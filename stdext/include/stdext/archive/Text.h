@@ -245,6 +245,55 @@ inline HRESULT winx_call scan_csymbol(
 }
 
 // -------------------------------------------------------------------------
+// ==== TextWriter ====
+
+template <class WriteArchiveT>
+inline void winx_call print(
+	WriteArchiveT& ar, TempString<char> s) throw(IoException)
+{
+	ar.put(s.data(), s.size());
+}
+
+template <class WriteArchiveT>
+inline void winx_call print(
+	WriteArchiveT& ar, TempString<wchar_t> s) throw(IoException)
+{
+	ar.put(s.data(), s.size());
+}
+
+template <class WriteArchiveT, class DataIt, class SepT>
+inline void winx_call printLines(
+	WriteArchiveT& ar, DataIt first, DataIt last, const SepT& sep) throw(IoException)
+{
+	for (; first != last; ++first)
+	{
+		print(*first);
+		print(sep);
+	}
+}
+
+template <class WriteArchiveT, class DataIt>
+inline void winx_call printLines(
+	WriteArchiveT& ar, DataIt first, DataIt last) throw(IoException)
+{
+	typedef typename WriteArchiveT::char_type CharT;
+	const CharT sepBuf[] = { '\r', '\n' };
+	const TempString<CharT> sep(sepBuf, 2);
+	for (; first != last; ++first)
+	{
+		print(ar, *first);
+		print(ar, sep);
+	}
+}
+
+template <class WriteArchiveT, class ContainerT>
+inline void winx_call printLines(
+	WriteArchiveT& ar, const ContainerT& rg) throw(IoException)
+{
+	printLines(ar, rg.begin(), rg.end());
+}
+
+// -------------------------------------------------------------------------
 // $Log: Text.h,v $
 
 NS_STDEXT_IO_TEXT_END

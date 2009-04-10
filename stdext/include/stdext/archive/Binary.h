@@ -16,8 +16,8 @@
 // 
 // $Id: Binary.h,v 1.4 2006/12/14 09:15:04 xushiwei Exp $
 // -----------------------------------------------------------------------*/
-#ifndef STDEXT_ARCHIVE_IO_BINARY_H
-#define STDEXT_ARCHIVE_IO_BINARY_H
+#ifndef STDEXT_ARCHIVE_BINARY_H
+#define STDEXT_ARCHIVE_BINARY_H
 
 #ifndef STDEXT_ARCHIVE_BASIC_H
 #include "Basic.h"
@@ -459,5 +459,5 @@ inline HRESULT winx_call wgets(ReadArchiveT& ar, AllocT& alloc, BasicString<UINT
 
 NS_STDEXT_IO_BINARY_END
 
-#endif /* STDEXT_ARCHIVE_IO_BINARY_H */
+#endif /* STDEXT_ARCHIVE_BINARY_H */
 

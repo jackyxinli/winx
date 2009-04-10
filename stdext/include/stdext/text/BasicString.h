@@ -92,6 +92,7 @@ private:
 	typedef Range<const CharT*, CharT> Base;
 	WINX_BASICSTRING_USING_;
 	
+	typedef std::basic_string<value_type> StlString_;
 	typedef TempString<CharT> String_;
 	typedef BasicString Myt_;
 
@@ -107,7 +108,7 @@ public:
 
 private:
 	template <class AllocT, class Iterator>
-	static const value_type* _makeBuf(AllocT& alloc, Iterator first, size_type cch)
+	static const value_type* makeBuf_(AllocT& alloc, Iterator first, size_type cch)
 	{
 		value_type* psz = (value_type*)alloc.allocate(cch * sizeof(value_type));
 		std::copy(first, first + cch, psz);
@@ -115,7 +116,7 @@ private:
 	}
 
 	template <class AllocT>
-	static const value_type* _makeBuf(AllocT& alloc, size_type count, value_type ch)
+	static const value_type* makeBuf_(AllocT& alloc, size_type count, value_type ch)
 	{
 		value_type* psz = (value_type*)alloc.allocate(count * sizeof(value_type));
 		std::fill_n(psz, count, ch);
@@ -158,21 +159,21 @@ public:
 	template <WINX_ALLOC_TEMPLATE_ARGS_>
 	Myt_& winx_call assign(WINX_ALLOC_TYPE_& alloc, const String_& s) {
 		const size_type cch = s.size();
-		const value_type* psz = _makeBuf(alloc, s.begin(), cch);
+		const value_type* psz = makeBuf_(alloc, s.begin(), cch);
 		Base::assign(psz, psz+cch);
 		return *this;
 	}
 
 	template <WINX_ALLOC_TEMPLATE_ARGS_>
 	Myt_& winx_call assign(WINX_ALLOC_TYPE_& alloc, const CharT* pszVal, size_type cch) {
-		const value_type* psz = _makeBuf(alloc, pszVal, cch);
+		const value_type* psz = makeBuf_(alloc, pszVal, cch);
 		Base::assign(psz, psz+cch);
 		return *this;
 	}
 
 	template <WINX_ALLOC_TEMPLATE_ARGS_>
 	Myt_& winx_call assign(WINX_ALLOC_TYPE_& alloc, size_type count, value_type ch) {
-		const value_type* psz = _makeBuf(alloc, count, ch);
+		const value_type* psz = makeBuf_(alloc, count, ch);
 		Base::assign(psz, psz+count);
 		return *this;
 	}
@@ -180,7 +181,7 @@ public:
 	template <WINX_ALLOC_TEMPLATE_ARGS_, class Iterator>
 	Myt_& winx_call assign(WINX_ALLOC_TYPE_& alloc, Iterator first, Iterator last) {
 		const size_type cch = std::distance(first, last);
-		const value_type* psz = _makeBuf(alloc, first, cch);
+		const value_type* psz = makeBuf_(alloc, first, cch);
 		Base::assign(psz, psz+cch);
 		return *this;
 	}
@@ -247,6 +248,10 @@ public:
 		return Myt_(Base::first + from, cchMax < cch ? cchMax : cch);
 	}
 
+	StlString_ winx_call stl_str() const {
+		return StlString_(first, second);
+	}
+	
 public:
 	WINX_FIND_CONST_(find, std::find, std::search)
 	WINX_FIND_CONST_(rfind, std::rfind, std::find_end)
@@ -290,6 +295,49 @@ typedef BasicString<wchar_t> WString;
 typedef WString TString;
 #else
 typedef String TString;
+#endif
+
+// -------------------------------------------------------------------------
+
+#define WINX_STRING_PRED_OP_(op)											\
+																			\
+template <class CharT, class T2> __forceinline								\
+	bool winx_call operator op(const BasicString<CharT>& a, const T2& b)	\
+    {return (a.compare(b) op 0); }											\
+																			\
+template <class CharT> __forceinline										\
+    bool winx_call operator op(const CharT* a, const BasicString<CharT>& b)	\
+    {return (b.compare(a) op 0); }											\
+																			\
+template <class CharT, class Tr, class AllocT> __forceinline				\
+    bool winx_call operator op(const std::basic_string<CharT, Tr, AllocT>& a, \
+							   const BasicString<CharT>& b)					\
+    {return (b.compare(a) op 0); }											\
+																			\
+template <class CharT, class AllocT> __forceinline							\
+    bool winx_call operator op(const std::vector<CharT, AllocT>& a,			\
+							   const BasicString<CharT>& b)					\
+    {return (b.compare(a) op 0); }
+
+WINX_STRING_PRED_OP_(==)
+WINX_STRING_PRED_OP_(!=)
+WINX_STRING_PRED_OP_(<=)
+WINX_STRING_PRED_OP_(<)
+WINX_STRING_PRED_OP_(>=)
+WINX_STRING_PRED_OP_(>)
+
+// -------------------------------------------------------------------------
+
+#if defined(WINX_HAS_OSTREAM)
+
+template <class CharT, class Tr>
+inline std::basic_ostream<CharT, Tr>& 
+winx_call operator<<(std::basic_ostream<CharT, Tr>& os, const BasicString<CharT>& v) {
+	typedef typename Range<Iterator>::value_type ValueT;
+	std::copy(v.begin(), v.end(), std::ostream_iterator<ValueT, CharT, Tr>(os));
+	return os;
+}
+
 #endif
 
 // -------------------------------------------------------------------------

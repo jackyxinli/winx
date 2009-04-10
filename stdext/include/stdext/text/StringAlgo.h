@@ -203,7 +203,7 @@ struct ExplodeNode_
 };
 
 template <int flags, class CharT, class AllocT>
-inline
+//__noinline
 BasicArray<BasicString<CharT> >
 winx_call explode2(AllocT& alloc, CharT sep, const BasicString<CharT>& s)
 {

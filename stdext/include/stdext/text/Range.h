@@ -88,9 +88,6 @@ public:
 			reverse_iterator;
 #endif
 
-private:
-	typedef std::basic_string<value_type> StlString_;
-
 public:
 	Range()
 		: first(), second() {}
@@ -167,10 +164,6 @@ public:
 		return reverse_iterator(first);
 	}
 
-	StlString_ winx_call stl_str() const {
-		return StlString_(first, second);
-	}
-
 	template <class LogT>
 	void winx_call trace(LogT& log) const {
 		log.printString(first, second);
@@ -224,128 +217,6 @@ public:
 	}
 };
 
-// -------------------------------------------------------------------------
-
-template <class Iterator, class T2> __forceinline
-	bool winx_call operator==(const Range<Iterator>& a, const T2& b)
-    {return (a.compare(b) == 0); }
-
-template <class Iterator> __forceinline
-    bool winx_call operator==(const typename Range<Iterator>::value_type* a, const Range<Iterator>& b)
-    {return (b.compare(a) == 0); }
-
-template <class Iterator, class CharT, class Tr, class AllocT> __forceinline
-    bool winx_call operator==(const std::basic_string<CharT, Tr, AllocT>& a, const Range<Iterator>& b)
-    {return (b.compare(a) == 0); }
-
-template <class Iterator, class CharT, class AllocT> __forceinline
-    bool winx_call operator==(const std::vector<CharT, AllocT>& a, const Range<Iterator>& b)
-    {return (b.compare(a) == 0); }
-
-// -------------------------------------------------------------------------
-
-template <class Iterator, class T2> __forceinline
-    bool winx_call operator!=(const Range<Iterator>& a, const T2& b)
-    {return (a.compare(b) != 0); }
-
-template <class Iterator> __forceinline
-    bool winx_call operator!=(const typename Range<Iterator>::value_type* a, const Range<Iterator>& b)
-    {return (b.compare(a) != 0); }
-
-template <class Iterator, class CharT, class Tr, class AllocT> __forceinline
-    bool winx_call operator!=(const std::basic_string<CharT, Tr, AllocT>& a, const Range<Iterator>& b)
-    {return (b.compare(a) != 0); }
-
-template <class Iterator, class CharT, class AllocT> __forceinline
-    bool winx_call operator!=(const std::vector<CharT, AllocT>& a, const Range<Iterator>& b)
-    {return (b.compare(a) != 0); }
-
-// -------------------------------------------------------------------------
-
-template <class Iterator, class T2> __forceinline
-    bool winx_call operator<(const Range<Iterator>& a, const T2& b)
-    {return (a.compare(b) < 0); }
-
-template <class Iterator> __forceinline
-    bool winx_call operator<(const typename Range<Iterator>::value_type* a, const Range<Iterator>& b)
-    {return (b.compare(a) > 0); }
-
-template <class Iterator, class CharT, class Tr, class AllocT> __forceinline
-    bool winx_call operator<(const std::basic_string<CharT, Tr, AllocT>& a, const Range<Iterator>& b)
-    {return (b.compare(a) > 0); }
-
-template <class Iterator, class CharT, class AllocT> __forceinline
-    bool winx_call operator<(const std::vector<CharT, AllocT>& a, const Range<Iterator>& b)
-    {return (b.compare(a) > 0); }
-
-// -------------------------------------------------------------------------
-
-template <class Iterator, class T2> __forceinline
-    bool winx_call operator>(const Range<Iterator>& a, const T2& b)
-    {return (b < a); }
-
-template <class Iterator> __forceinline
-    bool winx_call operator>(const typename Range<Iterator>::value_type* a, const Range<Iterator>& b)
-    {return (b < a); }
-
-template <class Iterator, class CharT, class Tr, class AllocT> __forceinline
-    bool winx_call operator>(const std::basic_string<CharT, Tr, AllocT>& a, const Range<Iterator>& b)
-    {return (b < a); }
-
-template <class Iterator, class CharT, class AllocT> __forceinline
-    bool winx_call operator>(const std::vector<CharT, AllocT>& a, const Range<Iterator>& b)
-    {return (b < a); }
-
-// -------------------------------------------------------------------------
-
-template <class Iterator, class T2> __forceinline
-	bool winx_call operator<=(const Range<Iterator>& a, const T2& b)
-	{return (!(b < a)); }
-
-template <class Iterator> __forceinline
-	bool winx_call operator<=(const typename Range<Iterator>::value_type* a, const Range<Iterator>& b)
-	{return (!(b < a)); }
-
-template <class Iterator, class CharT, class Tr, class AllocT> __forceinline
-	bool winx_call operator<=(const std::basic_string<CharT, Tr, AllocT>& a, const Range<Iterator>& b)
-	{return (!(b < a)); }
-
-template <class Iterator, class CharT, class AllocT> __forceinline
-	bool winx_call operator<=(const std::vector<CharT, AllocT>& a, const Range<Iterator>& b)
-	{return (!(b < a)); }
-
-// -------------------------------------------------------------------------
-
-template <class Iterator, class T2> __forceinline
-	bool winx_call operator>=(const Range<Iterator>& a, const T2& b)
-	{return (!(a < b)); }
-
-template <class Iterator> __forceinline
-	bool winx_call operator>=(const typename Range<Iterator>::value_type* a, const Range<Iterator>& b)
-	{return (!(a < b)); }
-
-template <class Iterator, class CharT, class Tr, class AllocT> __forceinline
-	bool winx_call operator>=(const std::basic_string<CharT, Tr, AllocT>& a, const Range<Iterator>& b)
-	{return (!(a < b)); }
-
-template <class Iterator, class CharT, class AllocT> __forceinline
-	bool winx_call operator>=(const std::vector<CharT, AllocT>& a, const Range<Iterator>& b)
-	{return (!(a < b)); }
-
-// -------------------------------------------------------------------------
-
-#if defined(WINX_HAS_OSTREAM)
-
-template <class CharT, class Tr, class Iterator>
-inline std::basic_ostream<CharT, Tr>& 
-winx_call operator<<(std::basic_ostream<CharT, Tr>& os, const Range<Iterator>& v) {
-	typedef typename Range<Iterator>::value_type ValueT;
-	std::copy(v.begin(), v.end(), std::ostream_iterator<ValueT, CharT, Tr>(os));
-	return os;
-}
-
-#endif
-
 // =========================================================================
 // class TempString
 
@@ -367,6 +238,10 @@ public:
 	TempString() {}
 	TempString(const CharT& ch)
 		: Base(&ch, &ch + 1) {
+	}
+
+	TempString(const Base& s)
+		: Base(s) {
 	}
 
 	TempString(const CharT* szVal)
@@ -436,6 +311,17 @@ public:
 
 	const Type& winx_call operator[](size_type i) const {
 		return Base::first[i];
+	}
+
+	BasicArray& winx_call sort() {
+		std::sort( (Type*)Base::first, (Type*)Base::second );
+		return *this;
+	}
+
+	template <class PredT>
+	BasicArray& winx_call sort(PredT pred) {
+		std::sort( (Type*)Base::first, (Type*)Base::second, pred );
+		return *this;
 	}
 };
 
