@@ -234,7 +234,16 @@ template <int flags, class CharT, class AllocT>
 __forceinline
 BasicArray<BasicString<CharT> >
 winx_call split2(AllocT& alloc, CharT sep, const BasicString<CharT>& s) {
-	return split2<flags>(alloc, sep, s);
+	std::vector<BasicString<CharT> > cont;
+	split2<flags>(sep, s, cont);
+	return BasicArray<BasicString<CharT> >(alloc, cont);
+}
+
+template <class CharT, class AllocT>
+__forceinline
+BasicArray<BasicString<CharT> >
+winx_call split(AllocT& alloc, CharT sep, const BasicString<CharT>& s) {
+	return split2<efDefault>(alloc, sep, s);
 }
 
 // -------------------------------------------------------------------------

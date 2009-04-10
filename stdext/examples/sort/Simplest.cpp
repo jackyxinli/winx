@@ -34,7 +34,7 @@ int main(int argc, const char* argv[])
 	if (argc < 3)
 		return -1;
 
-#define FAST_VERSION
+//#define FAST_VERSION
 #if defined(FAST_VERSION)
 	test2(argv);
 #else
