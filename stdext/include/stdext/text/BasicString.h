@@ -333,8 +333,7 @@ WINX_STRING_PRED_OP_(>)
 template <class CharT, class Tr>
 inline std::basic_ostream<CharT, Tr>& 
 winx_call operator<<(std::basic_ostream<CharT, Tr>& os, const BasicString<CharT>& v) {
-	typedef typename Range<Iterator>::value_type ValueT;
-	std::copy(v.begin(), v.end(), std::ostream_iterator<ValueT, CharT, Tr>(os));
+	std::copy(v.begin(), v.end(), std::ostream_iterator<CharT, CharT, Tr>(os));
 	return os;
 }
 
