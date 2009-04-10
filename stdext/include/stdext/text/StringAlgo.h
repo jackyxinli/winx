@@ -195,23 +195,11 @@ enum ExplodeFlags
 	efDefault = efEraseEmpty | efTrim
 };
 
-template <class CharT>
-struct ExplodeNode_
-{
-	BasicString<CharT> s;
-	const ExplodeNode_* prev;
-};
-
-template <int flags, class CharT, class AllocT>
-//__noinline
-BasicArray<BasicString<CharT> >
-winx_call explode2(AllocT& alloc, CharT sep, const BasicString<CharT>& s)
+template <int flags, class CharT, class ContainerT>
+void winx_call split2(ContainerT& cont, CharT sep, const BasicString<CharT>& s)
 {
 	typedef typename BasicString<CharT>::const_iterator iterator;
-	typedef ExplodeNode_<CharT> Node;
-
-	size_t n = 0;
-	const Node* lst = NULL;
+	
 	const iterator last = s.end();
 	iterator it, first = s.begin();
 	for (;;)
@@ -222,26 +210,28 @@ winx_call explode2(AllocT& alloc, CharT sep, const BasicString<CharT>& s)
 		if (efTrim & flags)
 			it = trimRight(first, it);
 		if (!(efEraseEmpty & flags) || it != first)
-		{
-			Node* p = (Node*)_alloca(sizeof(Node));
-			p->s = BasicString<CharT>(first, it);
-			p->prev = lst;
-			lst = p;
-			++n;
-		}
+			cont.push_back(BasicString<CharT>(first, it));
 		if (it == last)
 			break;
 		first = ++it;
 	}
-	
-	size_t i = n;
-	BasicString<CharT>* arr = STD_ALLOC_ARRAY(alloc, BasicString<CharT>, n);
-	while (i)
-	{
-		arr[--i] = lst->s;
-		lst = lst->prev;
-	}
-	return BasicArray<BasicString<CharT> >(arr, n);
+}
+
+template <class CharT, class ContainerT>
+__forceinline
+void winx_call split(ContainerT& cont, CharT sep, const BasicString<CharT>& s)
+{
+	split2<efDefault>(cont, sep, s);
+}
+
+template <int flags, class CharT, class AllocT>
+inline
+BasicArray<BasicString<CharT> >
+winx_call explode2(AllocT& alloc, CharT sep, const BasicString<CharT>& s)
+{
+	std::vector<BasicString<CharT> > cont;
+	split2<flags>(cont, sep, s);
+	return BasicArray<BasicString<CharT> >(alloc, cont);
 }
 
 template <class CharT, class AllocT>
