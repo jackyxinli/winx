@@ -196,7 +196,7 @@ enum ExplodeFlags
 };
 
 template <int flags, class CharT, class ContainerT>
-void winx_call split2(ContainerT& cont, CharT sep, const BasicString<CharT>& s)
+inline void winx_call split2(CharT sep, const BasicString<CharT>& s, ContainerT& cont)
 {
 	typedef typename BasicString<CharT>::const_iterator iterator;
 	
@@ -208,9 +208,16 @@ void winx_call split2(ContainerT& cont, CharT sep, const BasicString<CharT>& s)
 			first = trimLeft(first, last);
 		it = std::find(first, last, sep);
 		if (efTrim & flags)
-			it = trimRight(first, it);
-		if (!(efEraseEmpty & flags) || it != first)
-			cont.push_back(BasicString<CharT>(first, it));
+		{
+			const iterator it2 = trimRight(first, it);
+			if (!(efEraseEmpty & flags) || it2 != first)
+				cont.push_back(BasicString<CharT>(first, it2));
+		}
+		else
+		{
+			if (!(efEraseEmpty & flags) || it != first)
+				cont.push_back(BasicString<CharT>(first, it));
+		}
 		if (it == last)
 			break;
 		first = ++it;
@@ -219,9 +226,23 @@ void winx_call split2(ContainerT& cont, CharT sep, const BasicString<CharT>& s)
 
 template <class CharT, class ContainerT>
 __forceinline
-void winx_call split(ContainerT& cont, CharT sep, const BasicString<CharT>& s)
+void winx_call split(CharT sep, const BasicString<CharT>& s, ContainerT& cont)
 {
-	split2<efDefault>(cont, sep, s);
+	split2<efDefault>(sep, s, cont);
+}
+
+template <int flags, class CharT, class ContainerT>
+__forceinline
+void winx_call explode2(CharT sep, const BasicString<CharT>& s, ContainerT& cont)
+{
+	split2<flags>(sep, s, cont);
+}
+
+template <class CharT, class ContainerT>
+__forceinline
+void winx_call explode(CharT sep, const BasicString<CharT>& s, ContainerT& cont)
+{
+	split2<efDefault>(sep, s, cont);
 }
 
 template <int flags, class CharT, class AllocT>
@@ -230,7 +251,7 @@ BasicArray<BasicString<CharT> >
 winx_call explode2(AllocT& alloc, CharT sep, const BasicString<CharT>& s)
 {
 	std::vector<BasicString<CharT> > cont;
-	split2<flags>(cont, sep, s);
+	split2<flags>(sep, s, cont);
 	return BasicArray<BasicString<CharT> >(alloc, cont);
 }
 

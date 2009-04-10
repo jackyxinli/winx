@@ -23,7 +23,7 @@ inline void test2(const char* argv[])
 	const String s(input.begin(), input.end());
 	
 	std::deque<String> lines;
-	split(lines, '\n', s);
+	explode('\n', s, lines);
 	std::sort(lines.begin(), lines.end());
 	
 	output.printLines(lines);
