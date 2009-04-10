@@ -186,7 +186,7 @@ inline BasicString<CharT> winx_call trim(const BasicString<CharT>& s)
 }
 
 // -------------------------------------------------------------------------
-// explode
+// split
 
 enum ExplodeFlags
 {
@@ -226,40 +226,44 @@ inline void winx_call split2(CharT sep, const BasicString<CharT>& s, ContainerT&
 
 template <class CharT, class ContainerT>
 __forceinline
-void winx_call split(CharT sep, const BasicString<CharT>& s, ContainerT& cont)
-{
+void winx_call split(CharT sep, const BasicString<CharT>& s, ContainerT& cont) {
 	split2<efDefault>(sep, s, cont);
 }
 
+template <int flags, class CharT, class AllocT>
+__forceinline
+BasicArray<BasicString<CharT> >
+winx_call split2(AllocT& alloc, CharT sep, const BasicString<CharT>& s) {
+	return split2<flags>(alloc, sep, s);
+}
+
+// -------------------------------------------------------------------------
+// explode = split
+
 template <int flags, class CharT, class ContainerT>
 __forceinline
-void winx_call explode2(CharT sep, const BasicString<CharT>& s, ContainerT& cont)
-{
+void winx_call explode2(CharT sep, const BasicString<CharT>& s, ContainerT& cont) {
 	split2<flags>(sep, s, cont);
 }
 
 template <class CharT, class ContainerT>
 __forceinline
-void winx_call explode(CharT sep, const BasicString<CharT>& s, ContainerT& cont)
-{
+void winx_call explode(CharT sep, const BasicString<CharT>& s, ContainerT& cont) {
 	split2<efDefault>(sep, s, cont);
 }
 
 template <int flags, class CharT, class AllocT>
-inline
+__forceinline
 BasicArray<BasicString<CharT> >
-winx_call explode2(AllocT& alloc, CharT sep, const BasicString<CharT>& s)
-{
-	std::vector<BasicString<CharT> > cont;
-	split2<flags>(sep, s, cont);
-	return BasicArray<BasicString<CharT> >(alloc, cont);
+winx_call explode2(AllocT& alloc, CharT sep, const BasicString<CharT>& s) {
+	return split2<flags>(alloc, sep, s);
 }
 
 template <class CharT, class AllocT>
 __forceinline
 BasicArray<BasicString<CharT> >
 winx_call explode(AllocT& alloc, CharT sep, const BasicString<CharT>& s) {
-	return explode2<efDefault>(alloc, sep, s);
+	return split2<efDefault>(alloc, sep, s);
 }
 
 // -------------------------------------------------------------------------
