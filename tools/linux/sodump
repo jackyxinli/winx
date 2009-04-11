@@ -1,3 +1,0 @@
-objdump -T $1 | grep " w   DF .text"
-objdump -T $1 | grep "g    DF .text"
-
