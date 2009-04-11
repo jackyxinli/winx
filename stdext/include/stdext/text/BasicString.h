@@ -92,7 +92,7 @@ private:
 	typedef Range<const CharT*, CharT> Base;
 	WINX_BASICSTRING_USING_;
 	
-	typedef std::basic_string<value_type> StlString_;
+	typedef std::basic_string<CharT> StlString_;
 	typedef TempString<CharT> String_;
 	typedef BasicString Myt_;
 
@@ -249,7 +249,7 @@ public:
 	}
 
 	StlString_ winx_call stl_str() const {
-		return StlString_(first, second);
+		return StlString_(Base::first, Base::second);
 	}
 	
 public:

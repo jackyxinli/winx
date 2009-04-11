@@ -217,6 +217,48 @@ public:
 	}
 };
 
+// -------------------------------------------------------------------------
+
+#define WINX_RANGE_PRED_OP_(op)												\
+																			\
+template <class Iterator, class ValT, class T2> __forceinline				\
+	bool winx_call operator op(const Range<Iterator, ValT>& a, const T2& b)	\
+    {return (a.compare(b) op 0); }											\
+																			\
+template <class Iterator, class CharT> __forceinline							\
+    bool winx_call operator op(const CharT* a, const Range<Iterator, CharT>& b) \
+    {return (b.compare(a) op 0); }												\
+																				\
+template <class Iterator, class CharT, class Tr, class AllocT> __forceinline	\
+    bool winx_call operator op(const std::basic_string<CharT, Tr, AllocT>& a,	\
+							   const Range<Iterator, CharT>& b)					\
+    {return (b.compare(a) op 0); }											\
+																			\
+template <class Iterator, class CharT, class AllocT> __forceinline			\
+    bool winx_call operator op(const std::vector<CharT, AllocT>& a,			\
+							   const Range<Iterator, CharT>& b)				\
+    {return (b.compare(a) op 0); }
+
+WINX_RANGE_PRED_OP_(==)
+WINX_RANGE_PRED_OP_(!=)
+WINX_RANGE_PRED_OP_(<=)
+WINX_RANGE_PRED_OP_(<)
+WINX_RANGE_PRED_OP_(>=)
+WINX_RANGE_PRED_OP_(>)
+
+// -------------------------------------------------------------------------
+
+#if defined(WINX_HAS_OSTREAM)
+
+template <class Iterator, class ValT, class CharT, class Tr>
+inline std::basic_ostream<CharT, Tr>& 
+winx_call operator<<(std::basic_ostream<CharT, Tr>& os, const Range<Iterator, ValT>& v) {
+	std::copy(v.begin(), v.end(), std::ostream_iterator<ValT, CharT, Tr>(os));
+	return os;
+}
+
+#endif
+
 // =========================================================================
 // class TempString
 

@@ -197,7 +197,7 @@ struct MatchNoCase
 {
 	typedef CharT char_type;
 	typedef ToLower<CharT> TransformT;
-	typedef typename ArchiveCharTraits<char_type> Tr;
+	typedef ArchiveCharTraits<char_type> Tr;
 	typedef typename Tr::int_type int_type;
 
 	template <class Iterator>
