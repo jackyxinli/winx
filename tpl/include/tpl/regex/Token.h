@@ -149,25 +149,24 @@ struct LinkToken<tokenType, void, PrevTokenT>
 
 #define TPL_INVALID_TOKEN_(nVal)											\
 	template <>																\
-	struct Traits<nVal> {													\
+	struct Traits_<nVal> {													\
 		typedef void rule_type;												\
 	}
 
 #define TPL_TOKENS_BEGIN(Tokens)											\
-class Tokens																\
+namespace Tokens															\
 {																			\
 	enum { FIRST_LINE_ = __LINE__ };										\
 	template <int nVal>														\
-	struct Traits {															\
+	struct Traits_ {														\
 		typedef void rule_type;												\
 	};
 
 #define TPL_TOKEN(tokenType, RegExT)										\
-public:																		\
 	enum { tokenType = __LINE__ - FIRST_LINE_ };							\
-public:																		\
+																			\
 	template <>																\
-	struct Traits<tokenType> {												\
+	struct Traits_<tokenType> {												\
 		typedef RegExT rule_type;											\
 	};
 
@@ -176,19 +175,18 @@ public:																		\
 	TPL_INVALID_TOKEN_(0);													\
 	TPL_INVALID_TOKEN_(TOKEN_TYPE_MAX);										\
 	template <int nVal, int nValMax>										\
-	struct CollectionT														\
+	struct CollectionT_														\
 	{																		\
-		typedef typename Traits<nVal>::rule_type SelfT;						\
-		typedef typename CollectionT<nVal+1, nValMax>::TokenT PrevT;		\
+		typedef typename Traits_<nVal>::rule_type SelfT;					\
+		typedef typename CollectionT_<nVal+1, nValMax>::TokenT PrevT;		\
 		typedef typename NS_TPL::LinkToken<nVal, SelfT, PrevT>::token_type TokenT; \
 	};																		\
 	template <int nValMax>													\
-	struct CollectionT<nValMax, nValMax>									\
+	struct CollectionT_<nValMax, nValMax>									\
 	{																		\
 		typedef void TokenT;												\
 	};																		\
-public:																		\
-	typedef CollectionT<1, TOKEN_TYPE_MAX>::TokenT token_type;				\
+	typedef CollectionT_<1, TOKEN_TYPE_MAX>::TokenT token_type;				\
 	typedef NS_TPL::TokenRule<token_type> rule_type;						\
 };
 
