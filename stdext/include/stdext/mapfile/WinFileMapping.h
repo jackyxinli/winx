@@ -88,8 +88,8 @@ public:
 		if (good())
 			return E_ACCESSDENIED;
 		
-		m_hFile = CreateFile(
-			szFile, 
+		m_hFile = CreateFileA(
+			szFile,
 			Config::FileDesiredAccess,
 			Config::FileShareMode,
 			NULL,
