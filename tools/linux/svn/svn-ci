@@ -1,9 +1,0 @@
-if [ -z $1 ]; then
-	PerCount=64
-else
-	PerCount=$1
-fi
-AppPath=`dirname $0`
-$AppPath/svn-add
-svn status | grep -e '^A.*' | sed -e 's|. *\(.*\)|\1|' | xargs --no-run-if-empty -l$PerCount svn ci -N $* -m "svn commit"
-
