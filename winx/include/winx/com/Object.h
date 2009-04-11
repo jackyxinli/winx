@@ -16,18 +16,18 @@
 // 
 // $Id: Object.h,v 1.3 2006/08/26 03:53:34 xushiwei Exp $
 // -----------------------------------------------------------------------*/
-#ifndef __WINX_COM_OBJECT_H__
-#define __WINX_COM_OBJECT_H__
+#ifndef WINX_COM_OBJECT_H
+#define WINX_COM_OBJECT_H
 
-#ifndef __WINX_BASIC_H__
+#ifndef WINX_BASIC_H
 #include "../Basic.h"
 #endif
 
-#ifndef __WINX_COM_ATL_ATLCOMX_H__
+#ifndef WINX_COM_ATL_ATLCOMX_H
 #include "atl/atlcomx.h"
 #endif
 
-__WINX_BEGIN
+NS_WINX_BEGIN
 
 // -------------------------------------------------------------------------
 // interface - COM support
@@ -206,6 +206,6 @@ public:
 //   COM Support(Object, StackObject, FakeObject, COLESTR, etc)
 //
 
-__WINX_END
+NS_WINX_END
 
-#endif /* __WINX_COM_OBJECT_H__ */
+#endif /* WINX_COM_OBJECT_H */

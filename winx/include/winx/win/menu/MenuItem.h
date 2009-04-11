@@ -17,14 +17,14 @@
 // 
 // $Id: $
 // -----------------------------------------------------------------------*/
-#ifndef __WINX_WIN_MENU_MENUITEM_H__
-#define __WINX_WIN_MENU_MENUITEM_H__
+#ifndef WINX_WIN_MENU_MENUITEM_H
+#define WINX_WIN_MENU_MENUITEM_H
 
-#ifndef __WINX_WIN_BASIC_H__
+#ifndef WINX_WIN_BASIC_H
 #include "../Basic.h"
 #endif
 
-__WINX_BEGIN
+NS_WINX_BEGIN
 
 // -------------------------------------------------------------------------
 
@@ -512,6 +512,6 @@ inline BOOL MenuItemBase::Draw(
 // -------------------------------------------------------------------------
 // $Log: $
 
-__WINX_END
+NS_WINX_END
 
-#endif /* __WINX_WIN_MENU_MENUITEM_H__ */
+#endif /* WINX_WIN_MENU_MENUITEM_H */

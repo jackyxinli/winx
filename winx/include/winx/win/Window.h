@@ -16,18 +16,18 @@
 // 
 // $Id: Window.h,v 1.7 2006/11/23 06:12:53 xushiwei Exp $
 // -----------------------------------------------------------------------*/
-#ifndef __WINX_WIN_WINDOW_H__
-#define __WINX_WIN_WINDOW_H__
+#ifndef WINX_WIN_WINDOW_H
+#define WINX_WIN_WINDOW_H
 
-#ifndef __WINX_WIN_WINDOWHANDLE_H__
+#ifndef WINX_WIN_WINDOWHANDLE_H
 #include "WindowHandle.h"
 #endif
 
-#ifndef __WINX_WIN_MESSAGE_H__
+#ifndef WINX_WIN_MESSAGE_H
 #include "Message.h"
 #endif
 
-__WINX_BEGIN
+NS_WINX_BEGIN
 
 // =========================================================================
 // WINX_CLASS, WINX_CLASS_STYLE
@@ -863,6 +863,6 @@ class SimpleSafeCtrl : public LightSuperclassWindow<WindowClass>
 // WINX-Core: Message, Window, Dialog, Control
 //
 
-__WINX_END
+NS_WINX_END
 
-#endif /* __WINX_WIN_WINDOW_H__ */
+#endif /* WINX_WIN_WINDOW_H */

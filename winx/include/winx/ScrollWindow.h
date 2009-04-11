@@ -16,10 +16,10 @@
 // 
 // $Id: $
 // -----------------------------------------------------------------------*/
-#ifndef __WINX_SCROLLWINDOW_H__
-#define __WINX_SCROLLWINDOW_H__
+#ifndef WINX_SCROLLWINDOW_H
+#define WINX_SCROLLWINDOW_H
 
-#ifndef __WINX_WINCORE_H__
+#ifndef WINX_WINCORE_H
 #include "WinCore.h"
 #endif
 
@@ -37,7 +37,7 @@
 #define _DEBUG_SCROLLWINDOW_MSG
 #endif
 
-__WINX_BEGIN
+NS_WINX_BEGIN
 
 // =========================================================================
 // class ScrollImpl
@@ -215,6 +215,6 @@ public:
 // =========================================================================
 // $Log: $
 
-__WINX_END
+NS_WINX_END
 
-#endif /* __WINX_SCROLLWINDOW_H__ */
+#endif /* WINX_SCROLLWINDOW_H */

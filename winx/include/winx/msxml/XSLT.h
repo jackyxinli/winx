@@ -16,14 +16,14 @@
 // 
 // $Id: XSLT.h,v 1.1 2006/09/25 02:31:01 xushiwei Exp $
 // -----------------------------------------------------------------------*/
-#ifndef __WINX_MSXML_XSLT_H__
-#define __WINX_MSXML_XSLT_H__
+#ifndef WINX_MSXML_XSLT_H
+#define WINX_MSXML_XSLT_H
 
-#ifndef __WINX_MSXML_BASIC_H__
+#ifndef WINX_MSXML_BASIC_H
 #include "Basic.h"
 #endif
 
-__WINX_BEGIN
+NS_WINX_BEGIN
 
 // -------------------------------------------------------------------------
 // class InputBSTRVar
@@ -179,6 +179,6 @@ inline HRESULT winx_call XSLTConvert(
 // WINX-Extension: msxml (XSLT)
 //
 
-__WINX_END
+NS_WINX_END
 
-#endif /* __WINX_MSXML_XSLT_H__ */
+#endif /* WINX_MSXML_XSLT_H */

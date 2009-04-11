@@ -17,18 +17,18 @@
 // 
 // $Id: $
 // -----------------------------------------------------------------------*/
-#ifndef __WINX_WIN_MENU_MENUHOOK_H__
-#define __WINX_WIN_MENU_MENUHOOK_H__
+#ifndef WINX_WIN_MENU_MENUHOOK_H
+#define WINX_WIN_MENU_MENUHOOK_H
 
-#ifndef __WINX_APIHOOK_H__
+#ifndef WINX_APIHOOK_H
 #include "../../APIHook.h"
 #endif
 
-#ifndef __WINX_WIN_WINDOW_H__
+#ifndef WINX_WIN_WINDOW_H
 #include "../Window.h"
 #endif
 
-#ifndef __WINX_WIN_MENU_MENUITEM_H__
+#ifndef WINX_WIN_MENU_MENUITEM_H
 #include "MenuItem.h"
 #endif
 
@@ -44,7 +44,7 @@
 #define MIIM_STRING      0x00000040
 #endif
 
-__WINX_BEGIN
+NS_WINX_BEGIN
 
 // -----------------------------------------------------------------------
 // struct _ItemInfo
@@ -587,6 +587,6 @@ typedef AppLookNFeelT<void> AppLookNFeel;
 // -------------------------------------------------------------------------
 // $Log: $
 
-__WINX_END
+NS_WINX_END
 
-#endif /* __WINX_WIN_MENU_MENUHOOK_H__ */
+#endif /* WINX_WIN_MENU_MENUHOOK_H */

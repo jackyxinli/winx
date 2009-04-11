@@ -16,8 +16,8 @@
 // 
 // $Id: OpenCV.h,v 1.3 2006/10/08 01:54:06 xushiwei Exp $
 // -----------------------------------------------------------------------*/
-#ifndef __WINX_OPENCV_H__
-#define __WINX_OPENCV_H__
+#ifndef WINX_OPENCV_H
+#define WINX_OPENCV_H
 
 #if (0)
 #define WINX_DEBUG_OPENCV
@@ -75,9 +75,9 @@
 
 // -------------------------------------------------------------------------
 
-#if defined(__WINX_WINCORE_H__)
+#if defined(WINX_WINCORE_H)
 
-__WINX_BEGIN
+NS_WINX_BEGIN
 
 template <
 	class WindowClass, class HandleClass = WindowHandle,
@@ -329,9 +329,9 @@ public:
 	}
 };
 
-__WINX_END
+NS_WINX_END
 
-#endif // defined(__WINX_WINCORE_H__)
+#endif // defined(WINX_WINCORE_H)
 
 // -------------------------------------------------------------------------
 // $Log: OpenCV.h,v $
@@ -343,4 +343,4 @@ __WINX_END
 //   class CvWindowT, CvWindow, CvMainFrame
 //
 
-#endif /* __WINX_OPENCV_H__ */
+#endif /* WINX_OPENCV_H */

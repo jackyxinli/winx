@@ -16,18 +16,18 @@
 // 
 // $Id: Shell.h,v 1.3 2006/08/26 03:47:50 xushiwei Exp $
 // -----------------------------------------------------------------------*/
-#ifndef __WINX_SHELL_H__
-#define __WINX_SHELL_H__
+#ifndef WINX_SHELL_H
+#define WINX_SHELL_H
 
-#ifndef __WINX_BASIC_H__
+#ifndef WINX_BASIC_H
 #include "Basic.h"
 #endif
 
-#ifndef __WINX_SHELL_AUTOCOMPLETE_H__
+#ifndef WINX_SHELL_AUTOCOMPLETE_H
 #include "shell/AutoComplete.h"
 #endif
 
-__WINX_BEGIN
+NS_WINX_BEGIN
 
 // =========================================================================
 // DropFileHandle - simple wrapper for HDROP
@@ -77,6 +77,6 @@ public:
 //    DropFileHandle(simple wrapper for HDROP)
 //
 
-__WINX_END
+NS_WINX_END
 
-#endif /* __WINX_SHELL_H__ */
+#endif /* WINX_SHELL_H */

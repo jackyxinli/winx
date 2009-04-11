@@ -16,56 +16,56 @@
 // 
 // $Id: WinCore.h,v 1.2 2006/08/22 10:36:53 xushiwei Exp $
 // -----------------------------------------------------------------------*/
-#ifndef __WINX_WINCORE_H__
-#define __WINX_WINCORE_H__
+#ifndef WINX_WINCORE_H
+#define WINX_WINCORE_H
 
-#ifndef __WINX_BASIC_H__
+#ifndef WINX_BASIC_H
 #include "Basic.h"
 #endif
 
 // -------------------------------------------------------------------------
 
-#ifndef __WINX_WIN_BASICTYPES_H__
+#ifndef WINX_WIN_BASICTYPES_H
 #include "win/BasicTypes.h"
 #endif
 
-#ifndef __WINX_WIN_BASIC_H__
+#ifndef WINX_WIN_BASIC_H
 #include "win/Basic.h"
 #endif
 
-#ifndef __WINX_WIN_WINDOWHANDLE_H__
+#ifndef WINX_WIN_WINDOWHANDLE_H
 #include "win/WindowHandle.h"
 #endif
 
-#ifndef __WINX_WIN_WINDOWMAP_H__
+#ifndef WINX_WIN_WINDOWMAP_H
 #include "win/WindowMap.h"
 #endif
 
-#ifndef __WINX_WIN_RESOURCE_H__
+#ifndef WINX_WIN_RESOURCE_H
 #include "win/Resource.h"
 #endif
 
-#ifndef __WINX_WIN_GDI_H__
+#ifndef WINX_WIN_GDI_H
 #include "win/Gdi.h"
 #endif
 
-#ifndef __WINX_WIN_MESSAGE_H__
+#ifndef WINX_WIN_MESSAGE_H
 #include "win/Message.h"
 #endif
 
-#ifndef __WINX_WIN_WINDOW_H__
+#ifndef WINX_WIN_WINDOW_H
 #include "win/Window.h"
 #endif
 
-#ifndef __WINX_WIN_DIALOG_H__
+#ifndef WINX_WIN_DIALOG_H
 #include "win/Dialog.h"
 #endif
 
-#ifndef __WINX_WIN_CONTROL_H__
+#ifndef WINX_WIN_CONTROL_H
 #include "win/Control.h"
 #endif
 
-#ifndef __WINX_WIN_FRAME_H__
+#ifndef WINX_WIN_FRAME_H
 #include "win/Frame.h"
 #endif
 
@@ -93,4 +93,4 @@
 //   COM Support(Object, StackObject, FakeObject, COLESTR, etc)
 //
 
-#endif /* __WINX_WINCORE_H__ */
+#endif /* WINX_WINCORE_H */

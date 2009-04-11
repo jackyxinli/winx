@@ -16,14 +16,14 @@
 // 
 // $Id: IE.h,v 1.1 2006/08/25 15:13:19 xushiwei Exp $
 // -----------------------------------------------------------------------*/
-#ifndef __WINX_WINSDK_IE_H__
-#define __WINX_WINSDK_IE_H__
+#ifndef WINX_WINSDK_IE_H
+#define WINX_WINSDK_IE_H
 
 #if (0)
 #define WINX_INC_MSHTML
 #endif
 
-#ifndef __WINX_WINSDK_BASIC_H__
+#ifndef WINX_WINSDK_BASIC_H
 #include "Basic.h"
 #endif
 
@@ -94,4 +94,4 @@
 //    ActiveX, WebBrowser(IE), Theme(XPStyle) support
 //
 
-#endif /* __WINX_WINSDK_IE_H__ */
+#endif /* WINX_WINSDK_IE_H */

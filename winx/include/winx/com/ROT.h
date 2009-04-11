@@ -17,14 +17,14 @@
 // 
 // $Id: $
 // -----------------------------------------------------------------------*/
-#ifndef __WINX_COM_ROT_H__
-#define __WINX_COM_ROT_H__
+#ifndef WINX_COM_ROT_H
+#define WINX_COM_ROT_H
 
-#ifndef __STDEXT_TCHAR_H__
+#ifndef STDEXT_TCHAR_H
 #include "../../../../stdext/include/stdext/tchar.h"
 #endif
 
-#ifndef __WINX_COM_OBJECT_H__
+#ifndef WINX_COM_OBJECT_H
 #include "Object.h"
 #endif
 
@@ -36,7 +36,7 @@
 #define ROTFLAGS_ALLOWANYCLIENT	2
 #endif
 
-__WINX_BEGIN
+NS_WINX_BEGIN
 
 typedef CComPtr<IMoniker> MonikerPtr;
 
@@ -258,6 +258,6 @@ inline HRESULT winx_call ExRegisterActiveObject(
 // -------------------------------------------------------------------------
 // $Log: ROT.h,v $
 
-__WINX_END
+NS_WINX_END
 
-#endif /* __WINX_COM_ROT_H__ */
+#endif /* WINX_COM_ROT_H */

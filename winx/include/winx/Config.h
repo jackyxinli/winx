@@ -16,8 +16,8 @@
 // 
 // $Id: Config.h,v 1.2 2006/08/25 15:13:18 xushiwei Exp $
 // -----------------------------------------------------------------------*/
-#ifndef __WINX_CONFIG_H__
-#define __WINX_CONFIG_H__
+#ifndef WINX_CONFIG_H
+#define WINX_CONFIG_H
 
 // -------------------------------------------------------------------------
 // WINX_USE_WINSDK or WINX_USE_DEFSDK
@@ -39,4 +39,4 @@
 //    ActiveX, WebBrowser(IE), Theme(XPStyle) support
 //
 
-#endif /* __WINX_CONFIG_H__ */
+#endif /* WINX_CONFIG_H */

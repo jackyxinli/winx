@@ -16,10 +16,10 @@
 // 
 // $Id: Dispatch.h,v 1.1 2007/01/12 20:27:53 xushiwei Exp $
 // -----------------------------------------------------------------------*/
-#ifndef __WINX_DISPATCH_H__
-#define __WINX_DISPATCH_H__
+#ifndef WINX_DISPATCH_H
+#define WINX_DISPATCH_H
 
-#ifndef __WINX_BASIC_H__
+#ifndef WINX_BASIC_H
 #include "Basic.h"
 #endif
 
@@ -27,7 +27,7 @@
 #include <string>
 #endif
 
-__WINX_BEGIN
+NS_WINX_BEGIN
 
 typedef ATL::CComVariant CComVariant;
 
@@ -887,6 +887,6 @@ public:
 //   class DispatchHandle
 //
 
-__WINX_END
+NS_WINX_END
 
-#endif /* __WINX_DISPATCH_H__ */
+#endif /* WINX_DISPATCH_H */

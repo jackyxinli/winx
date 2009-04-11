@@ -16,14 +16,14 @@
 // 
 // $Id: Control.h,v 1.3 2006/12/11 05:19:08 xushiwei Exp $
 // -----------------------------------------------------------------------*/
-#ifndef __WINX_WIN_CONTROL_H__
-#define __WINX_WIN_CONTROL_H__
+#ifndef WINX_WIN_CONTROL_H
+#define WINX_WIN_CONTROL_H
 
-#ifndef __WINX_WIN_WINDOW_H__
+#ifndef WINX_WIN_WINDOW_H
 #include "Window.h"
 #endif
 
-__WINX_BEGIN
+NS_WINX_BEGIN
 
 // =========================================================================
 // Handle Classes - Common Controls
@@ -932,6 +932,6 @@ typedef SafeCtrl<LinkCtrlHandle, AltLinkCtrl> SafeLinkCtrl;
 // WINX-Core: Message, Window, Dialog, Control
 //
 
-__WINX_END
+NS_WINX_END
 
-#endif /* __WINX_WIN_CONTROL_H__ */
+#endif /* WINX_WIN_CONTROL_H */

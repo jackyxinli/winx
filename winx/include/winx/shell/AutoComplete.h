@@ -16,30 +16,30 @@
 // 
 // $Id: AutoComplete.h,v 1.2 2006/10/18 12:28:33 xushiwei Exp $
 // -----------------------------------------------------------------------*/
-#ifndef __WINX_SHELL_AUTOCOMPLETE_H__
-#define __WINX_SHELL_AUTOCOMPLETE_H__
+#ifndef WINX_SHELL_AUTOCOMPLETE_H
+#define WINX_SHELL_AUTOCOMPLETE_H
 
-#ifndef __WINX_BASIC_H__
+#ifndef WINX_BASIC_H
 #include "../Basic.h"
 #endif
 
-#ifndef __WINX_COM_OBJECT_H__
+#ifndef WINX_COM_OBJECT_H
 #include "../com/Object.h"
 #endif
 
-#ifndef __WINX_WINSDK_SHELL_H__
+#ifndef WINX_WINSDK_SHELL_H
 #include "../winsdk/Shell.h"
 #endif
 
-#ifndef __WINX_LINKLIB_H__
+#ifndef WINX_LINKLIB_H
 #include "../LinkLib.h"
 #endif
 
-#ifndef __STDEXT_ARCHIVE_H__
+#ifndef STDEXT_ARCHIVE_H
 #include "../../../../stdext/include/stdext/Archive.h"
 #endif
 
-__WINX_BEGIN
+NS_WINX_BEGIN
 
 // =========================================================================
 // GetAutoComplete/BindAutoComplete
@@ -301,6 +301,6 @@ typedef ACHistoryImpl<std::vector<ACString> > ACHistory;
 //    DropFileHandle(simple wrapper for HDROP)
 //
 
-__WINX_END
+NS_WINX_END
 
-#endif /* __WINX_SHELL_AUTOCOMPLETE_H__ */
+#endif /* WINX_SHELL_AUTOCOMPLETE_H */

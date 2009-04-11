@@ -16,14 +16,14 @@
 // 
 // $Id: Trace.h,v 1.3 2006/12/21 04:01:10 xushiwei Exp $
 // -----------------------------------------------------------------------*/
-#ifndef __WINX_TRACE_H__
-#define __WINX_TRACE_H__
+#ifndef WINX_TRACE_H
+#define WINX_TRACE_H
 
-#ifndef __WINX_BASIC_H__
+#ifndef WINX_BASIC_H
 #include "Basic.h"
 #endif
 
-__WINX_BEGIN
+NS_WINX_BEGIN
 
 // -------------------------------------------------------------------------
 // _vsnprintf_dbg, _vsnwprintf_dbg
@@ -229,6 +229,6 @@ typedef std::Log<TraceStorage> TraceWindow;
 //   EncoderParameters: ColorDepth, Transformation, SaveFlag, Compression, Quality
 //
 
-__WINX_END
+NS_WINX_END
 
-#endif /* __WINX_TRACE_H__ */
+#endif /* WINX_TRACE_H */

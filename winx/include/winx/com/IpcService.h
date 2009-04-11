@@ -17,18 +17,18 @@
 // 
 // $Id: $
 // -----------------------------------------------------------------------*/
-#ifndef __WINX_COM_IPCSERVICE_H__
-#define __WINX_COM_IPCSERVICE_H__
+#ifndef WINX_COM_IPCSERVICE_H
+#define WINX_COM_IPCSERVICE_H
 
-#ifndef __WINX_DISPATCH_H__
+#ifndef WINX_DISPATCH_H
 #include "../Dispatch.h"
 #endif
 
-#ifndef __WINX_DISPATCHEVENT_H__
+#ifndef WINX_DISPATCHEVENT_H
 #include "../DispatchEvent.h"
 #endif
 
-__WINX_BEGIN
+NS_WINX_BEGIN
 
 // =========================================================================
 // Ipc ServiceObject API
@@ -513,6 +513,6 @@ inline HRESULT winx_call RegisterIpcHost(HWND hWndHost)
 // =========================================================================
 // $Log: IpcService.h,v $
 
-__WINX_END
+NS_WINX_END
 
-#endif /* __WINX_COM_IPCSERVICE_H__ */
+#endif /* WINX_COM_IPCSERVICE_H */

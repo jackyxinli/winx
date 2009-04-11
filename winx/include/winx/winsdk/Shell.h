@@ -16,10 +16,10 @@
 // 
 // $Id: Shell.h,v 1.2 2006/08/26 03:47:04 xushiwei Exp $
 // -----------------------------------------------------------------------*/
-#ifndef __WINX_WINSDK_SHELL_H__
-#define __WINX_WINSDK_SHELL_H__
+#ifndef WINX_WINSDK_SHELL_H
+#define WINX_WINSDK_SHELL_H
 
-#ifndef __WINX_WINSDK_BASIC_H__
+#ifndef WINX_WINSDK_BASIC_H
 #include "Basic.h"
 #endif
 
@@ -107,4 +107,4 @@
 //    DropFileHandle(simple wrapper for HDROP)
 //
 
-#endif /* __WINX_WINSDK_SHELL_H__ */
+#endif /* WINX_WINSDK_SHELL_H */

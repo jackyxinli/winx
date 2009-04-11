@@ -16,14 +16,14 @@
 // 
 // $Id: WindowBehavior.h,v 1.2 2006/11/28 12:45:51 xushiwei Exp $
 // -----------------------------------------------------------------------*/
-#ifndef __WINX_BEHAVIOR_WINDOWBEHAVIOR_H__
-#define __WINX_BEHAVIOR_WINDOWBEHAVIOR_H__
+#ifndef WINX_BEHAVIOR_WINDOWBEHAVIOR_H
+#define WINX_BEHAVIOR_WINDOWBEHAVIOR_H
 
-#ifndef __WINX_WIN_BASIC_H__
+#ifndef WINX_WIN_BASIC_H
 #include "../win/Basic.h"
 #endif
 
-__WINX_BEGIN
+NS_WINX_BEGIN
 
 // =========================================================================
 // IWindowBehavior
@@ -196,6 +196,6 @@ public:
 // WINX-Extension: PropertySheet, PropertyPage
 //
 
-__WINX_END
+NS_WINX_END
 
-#endif /* __WINX_BEHAVIOR_WINDOWBEHAVIOR_H__ */
+#endif /* WINX_BEHAVIOR_WINDOWBEHAVIOR_H */

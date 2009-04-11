@@ -16,10 +16,10 @@
 // 
 // $Id: PropertySheet.h,v 1.3 2006/09/13 17:05:11 xushiwei Exp $
 // -----------------------------------------------------------------------*/
-#ifndef __WINX_WIN_PROPERTYSHEET_H__
-#define __WINX_WIN_PROPERTYSHEET_H__
+#ifndef WINX_WIN_PROPERTYSHEET_H
+#define WINX_WIN_PROPERTYSHEET_H
 
-#ifndef __WINX_WIN_DIALOG_H__
+#ifndef WINX_WIN_DIALOG_H
 #include "win/Dialog.h"
 #endif
 
@@ -55,7 +55,7 @@
 #include "../../../wtl/include/atldlgs.h"
 #endif
 
-__WINX_BEGIN
+NS_WINX_BEGIN
 
 // =========================================================================
 // class PropertySheetHandle
@@ -576,6 +576,6 @@ public:
 // WINX-Extension: PropertySheet, PropertyPage
 //
 
-__WINX_END
+NS_WINX_END
 
-#endif /* __WINX_WIN_PROPERTYSHEET_H__ */
+#endif /* WINX_WIN_PROPERTYSHEET_H */

@@ -16,8 +16,8 @@
 // 
 // $Id: WindowMap.h,v 1.3 2006/12/11 05:19:08 xushiwei Exp $
 // -----------------------------------------------------------------------*/
-#ifndef __WINX_WIN_WINDOWMAP_H__
-#define __WINX_WIN_WINDOWMAP_H__
+#ifndef WINX_WIN_WINDOWMAP_H
+#define WINX_WIN_WINDOWMAP_H
 
 #if (0)
 #define WINX_WINDOWMAP_SIMPLE
@@ -34,11 +34,11 @@
 #include <tchar.h>
 #endif
 
-#ifndef __WINX_WIN_BASICTYPES_H__
+#ifndef WINX_WIN_BASICTYPES_H
 #include "BasicTypes.h"
 #endif
 
-__WINX_BEGIN
+NS_WINX_BEGIN
 
 // =========================================================================
 // class WindowMapEx
@@ -339,6 +339,6 @@ typedef PackedMessageMapEx<0> PackedMessageMap;
 //   COM Support(Object, StackObject, FakeObject, COLESTR, etc)
 //
 
-__WINX_END
+NS_WINX_END
 
-#endif /* __WINX_WIN_WINDOWMAP_H__ */
+#endif /* WINX_WIN_WINDOWMAP_H */

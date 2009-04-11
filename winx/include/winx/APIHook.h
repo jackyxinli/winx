@@ -16,10 +16,10 @@
 // 
 // $Id: $
 // -----------------------------------------------------------------------*/
-#ifndef __WINX_APIHOOK_H__
-#define __WINX_APIHOOK_H__
+#ifndef WINX_APIHOOK_H
+#define WINX_APIHOOK_H
 
-#ifndef __WINX_BASIC_H__
+#ifndef WINX_BASIC_H
 #include "Basic.h"
 #endif
 
@@ -42,7 +42,7 @@
 
 EXTERN_C WINBASEAPI BOOL WINAPI IsDebuggerPresent(VOID);
 
-__WINX_BEGIN
+NS_WINX_BEGIN
 
 // -------------------------------------------------------------------------
 
@@ -407,6 +407,6 @@ public:
 // -------------------------------------------------------------------------
 // $Log: $
 
-__WINX_END
+NS_WINX_END
 
-#endif /* __WINX_APIHOOK_H__ */
+#endif /* WINX_APIHOOK_H */

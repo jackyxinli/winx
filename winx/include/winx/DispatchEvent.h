@@ -16,14 +16,14 @@
 // 
 // $Id: DispatchEvent.h,v 1.2 2006/08/26 16:27:53 xushiwei Exp $
 // -----------------------------------------------------------------------*/
-#ifndef __WINX_DISPATCHEVENT_H__
-#define __WINX_DISPATCHEVENT_H__
+#ifndef WINX_DISPATCHEVENT_H
+#define WINX_DISPATCHEVENT_H
 
-#ifndef __WINX_BASIC_H__
+#ifndef WINX_BASIC_H
 #include "Basic.h"
 #endif
 
-#ifndef __WINX_COM_SAFEARRAY_H__
+#ifndef WINX_COM_SAFEARRAY_H
 #include "com/SafeArray.h"
 #endif
 
@@ -702,7 +702,7 @@ private:
 // =========================================================================
 // namespace winx
 
-__WINX_BEGIN
+NS_WINX_BEGIN
 
 using ::DispEvAdvise;
 using ::DispEvUnadvise;
@@ -726,7 +726,7 @@ using ::DEFI8;
 using ::DispEventBaseImpl;
 using ::DispEventSimpleImpl;
 
-__WINX_END
+NS_WINX_END
 
 // =========================================================================
 // $Log: DispatchEvent.h,v $
@@ -735,4 +735,4 @@ __WINX_END
 //   Dispatch Event Implement(Connect-Point support)
 //
 
-#endif /* __WINX_DISPATCHEVENT_H__ */
+#endif /* WINX_DISPATCHEVENT_H */

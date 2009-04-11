@@ -16,10 +16,10 @@
 // 
 // $Id: CommonDialogs.h,v 1.3 2006/09/03 08:16:03 xushiwei Exp $
 // -----------------------------------------------------------------------*/
-#ifndef __WINX_COMMONDIALOGS_H__
-#define __WINX_COMMONDIALOGS_H__
+#ifndef WINX_COMMONDIALOGS_H
+#define WINX_COMMONDIALOGS_H
 
-#ifndef __WINX_WIN_BASIC_H__
+#ifndef WINX_WIN_BASIC_H
 #include "win/Basic.h"
 #endif
 
@@ -55,7 +55,7 @@
 #include "../../../wtl/include/atldlgs.h"
 #endif
 
-__WINX_BEGIN
+NS_WINX_BEGIN
 
 // -------------------------------------------------------------------------
 // class FileDialogT
@@ -296,6 +296,6 @@ typedef MultiFilesDialogT<fdtSaveFileDialog> SaveMultiFilesDialog;
 //   OpenFileDialog/SaveFileDialog, OpenMultiFilesDialog/SaveMultiFilesDialog
 //
 
-__WINX_END
+NS_WINX_END
 
-#endif /* __WINX_COMMONDIALOGS_H__ */
+#endif /* WINX_COMMONDIALOGS_H */

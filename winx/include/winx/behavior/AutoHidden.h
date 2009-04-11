@@ -16,14 +16,14 @@
 // 
 // $Id: AutoHidden.h,v 1.3 2006/11/28 12:45:51 xushiwei Exp $
 // -----------------------------------------------------------------------*/
-#ifndef __WINX_BEHAVIOR_AUTOHIDDEN_H__
-#define __WINX_BEHAVIOR_AUTOHIDDEN_H__
+#ifndef WINX_BEHAVIOR_AUTOHIDDEN_H
+#define WINX_BEHAVIOR_AUTOHIDDEN_H
 
-#ifndef __WINX_BEHAVIOR_WINDOWBEHAVIOR_H__
+#ifndef WINX_BEHAVIOR_WINDOWBEHAVIOR_H
 #include "WindowBehavior.h"
 #endif
 
-__WINX_BEGIN
+NS_WINX_BEGIN
 
 #pragma pack(1)
 
@@ -504,6 +504,6 @@ typedef AutoHiddenAnySide AutoHiddenAnySideI;
 
 #pragma pack()
 
-__WINX_END
+NS_WINX_END
 
-#endif /* __WINX_BEHAVIOR_AUTOHIDDEN_H__ */
+#endif /* WINX_BEHAVIOR_AUTOHIDDEN_H */

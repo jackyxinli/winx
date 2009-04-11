@@ -16,8 +16,8 @@
 // 
 // $Id: winx.h,v 1.13 2006/11/23 05:13:42 xushiwei Exp $
 // -----------------------------------------------------------------------*/
-#ifndef __WINX_H__
-#define __WINX_H__
+#ifndef WINX_H
+#define WINX_H
 
 #if (0)
 #define WINX_USE_WINSDK
@@ -30,37 +30,37 @@
 
 // -------------------------------------------------------------------------
 
-#ifndef __WINX_BASIC_H__
+#ifndef WINX_BASIC_H
 #include "winx/Basic.h"
 #endif
 
-#ifndef __WINX_TRACE_H__
+#ifndef WINX_TRACE_H
 #include "winx/Trace.h"
 #endif
 
-#ifndef __WINX_DISPATCH_H__
+#ifndef WINX_DISPATCH_H
 #include "winx/Dispatch.h"
 #endif
 
-#ifndef __WINX_DISPATCHEVENT_H__
+#ifndef WINX_DISPATCHEVENT_H
 #include "winx/DispatchEvent.h"
 #endif
 
-#ifndef __WINX_WINCORE_H__
+#ifndef WINX_WINCORE_H
 #include "winx/WinCore.h"
 #endif
 
 #if !defined(_ATL_NO_HOSTING)
-#ifndef __WINX_AXIMPL_H__
+#ifndef WINX_AXIMPL_H
 #include "winx/AxImpl.h"
 #endif
 #endif
 
-#ifndef __WINX_BEHAVIOR_WINDOWBEHAVIOR_H__
+#ifndef WINX_BEHAVIOR_WINDOWBEHAVIOR_H
 #include "winx/behavior/WindowBehavior.h"
 #endif
 
-#ifndef __WINX_BEHAVIOR_AUTOHIDDEN_H__
+#ifndef WINX_BEHAVIOR_AUTOHIDDEN_H
 #include "winx/behavior/AutoHidden.h"
 #endif
 
@@ -111,4 +111,4 @@
 //   COM Support(Object, StackObject, FakeObject, COLESTR, etc)
 //
 
-#endif /* __WINX_H__ */
+#endif /* WINX_H */

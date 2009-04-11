@@ -16,14 +16,14 @@
 // 
 // $Id: Dialog.h,v 1.13 2006/09/18 05:39:11 xushiwei Exp $
 // -----------------------------------------------------------------------*/
-#ifndef __WINX_WIN_DIALOG_H__
-#define __WINX_WIN_DIALOG_H__
+#ifndef WINX_WIN_DIALOG_H
+#define WINX_WIN_DIALOG_H
 
 #if defined(WINX_USE_DDX_FLOAT)
 #define _ATL_USE_DDX_FLOAT
 #endif
 
-#ifndef __WINX_WIN_MESSAGE_H__
+#ifndef WINX_WIN_MESSAGE_H
 #include "Message.h"
 #endif
 
@@ -31,7 +31,7 @@
 #include "../../../../wtl/include/atlddx.h"
 #endif
 
-__WINX_BEGIN
+NS_WINX_BEGIN
 
 // =========================================================================
 // SetDlgMsgResult
@@ -605,6 +605,6 @@ class AxSimpleDialog : public AxModelDialog<AxSimpleDialog<nDlgId>, nDlgId, Null
 // WINX-Core: Message, Window, Dialog, Control
 //
 
-__WINX_END
+NS_WINX_END
 
-#endif /* __WINX_WIN_DIALOG_H__ */
+#endif /* WINX_WIN_DIALOG_H */

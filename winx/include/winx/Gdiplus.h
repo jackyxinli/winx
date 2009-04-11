@@ -16,14 +16,14 @@
 // 
 // $Id: Gdiplus.h,v 1.1 2006/08/27 19:25:46 xushiwei Exp $
 // -----------------------------------------------------------------------*/
-#ifndef __WINX_GDIPLUS_H__
-#define __WINX_GDIPLUS_H__
+#ifndef WINX_GDIPLUS_H
+#define WINX_GDIPLUS_H
 
 #if (0)
 #define WINX_DELAYLOAD_GDIPLUS
 #endif
 
-#ifndef __WINX_BASIC_H__
+#ifndef WINX_BASIC_H
 #include "Basic.h"
 #endif
 
@@ -94,4 +94,4 @@ namespace Gdiplus {
 //   image-encoders / image-decoders / MultiFrameImageCreator
 //
 
-#endif /* __WINX_GDIPLUS_H__ */
+#endif /* WINX_GDIPLUS_H */

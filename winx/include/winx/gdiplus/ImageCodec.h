@@ -16,8 +16,8 @@
 // 
 // $Id: ImageCodec.h,v 1.2 2006/09/02 01:49:08 xushiwei Exp $
 // -----------------------------------------------------------------------*/
-#ifndef __WINX_GDIPLUS_IMAGECODEC_H__
-#define __WINX_GDIPLUS_IMAGECODEC_H__
+#ifndef WINX_GDIPLUS_IMAGECODEC_H
+#define WINX_GDIPLUS_IMAGECODEC_H
 
 #pragma pack(1)
 
@@ -568,4 +568,4 @@ typedef MultiFrameImageCreatorT<LPCWSTR> MultiFrameImageCreator;
 
 #pragma pack()
 
-#endif /* __WINX_GDIPLUS_IMAGECODEC_H__ */
+#endif /* WINX_GDIPLUS_IMAGECODEC_H */

@@ -16,14 +16,14 @@
 // 
 // $Id: OLESTR.h,v 1.1 2006/08/19 09:42:10 xushiwei Exp $
 // -----------------------------------------------------------------------*/
-#ifndef __WINX_COM_OLESTR_H__
-#define __WINX_COM_OLESTR_H__
+#ifndef WINX_COM_OLESTR_H
+#define WINX_COM_OLESTR_H
 
-#ifndef __WINX_BASIC_H__
+#ifndef WINX_BASIC_H
 #include "../Basic.h"
 #endif
 
-__WINX_BEGIN
+NS_WINX_BEGIN
 
 // -------------------------------------------------------------------------
 // AllocOLESTR
@@ -150,6 +150,6 @@ public:
 //   COM Support(Object, StackObject, FakeObject, COLESTR, etc)
 //
 
-__WINX_END
+NS_WINX_END
 
-#endif /* __WINX_COM_OLESTR_H__ */
+#endif /* WINX_COM_OLESTR_H */

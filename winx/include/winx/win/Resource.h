@@ -16,14 +16,14 @@
 // 
 // $Id: Resource.h,v 1.3 2006/12/11 05:19:08 xushiwei Exp $
 // -----------------------------------------------------------------------*/
-#ifndef __WINX_WIN_RESOURCE_H__
-#define __WINX_WIN_RESOURCE_H__
+#ifndef WINX_WIN_RESOURCE_H
+#define WINX_WIN_RESOURCE_H
 
-#ifndef __WINX_WIN_BASICTYPES_H__
+#ifndef WINX_WIN_BASICTYPES_H
 #include "BasicTypes.h"
 #endif
 
-__WINX_BEGIN
+NS_WINX_BEGIN
 
 // -------------------------------------------------------------------------
 // GetInstance/GetAppInstance
@@ -332,6 +332,6 @@ typedef WTL::CAccelerator Accelerator;
 //   COM Support(Object, StackObject, FakeObject, COLESTR, etc)
 //
 
-__WINX_END
+NS_WINX_END
 
-#endif /* __WINX_WIN_RESOURCE_H__ */
+#endif /* WINX_WIN_RESOURCE_H */

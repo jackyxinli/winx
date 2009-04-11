@@ -16,14 +16,14 @@
 // 
 // $Id: Gdi.h,v 1.4 2006/11/30 09:16:43 xushiwei Exp $
 // -----------------------------------------------------------------------*/
-#ifndef __WINX_WIN_GDI_H__
-#define __WINX_WIN_GDI_H__
+#ifndef WINX_WIN_GDI_H
+#define WINX_WIN_GDI_H
 
-#ifndef __WINX_WIN_BASICTYPES_H__
+#ifndef WINX_WIN_BASICTYPES_H
 #include "BasicTypes.h"
 #endif
 
-__WINX_BEGIN
+NS_WINX_BEGIN
 
 // =========================================================================
 // Rgn
@@ -961,6 +961,6 @@ typedef PaintDC  CPaintDC;
 //   COM Support(Object, StackObject, FakeObject, COLESTR, etc)
 //
 
-__WINX_END
+NS_WINX_END
 
-#endif /* __WINX_WIN_GDI_H__ */
+#endif /* WINX_WIN_GDI_H */

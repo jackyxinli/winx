@@ -16,10 +16,10 @@
 // 
 // $Id: CreditStatic.h,v 1.3 2006/09/16 18:06:12 xushiwei Exp $
 // -----------------------------------------------------------------------*/
-#ifndef __WINX_EXT_CREDITSTATIC_H__
-#define __WINX_EXT_CREDITSTATIC_H__
+#ifndef WINX_EXT_CREDITSTATIC_H
+#define WINX_EXT_CREDITSTATIC_H
 
-#ifndef __WINX_MFCPORT_H__
+#ifndef WINX_MFCPORT_H
 #include "../MfcPort.h"
 #endif
 
@@ -172,4 +172,4 @@ typedef CCreditStatic CreditStatic; //@@code insert
 //   Demo - port MFC controls to WINX (CreditStatic, RoundButton)
 //	
 
-#endif /* __WINX_EXT_CREDITSTATIC_H__ */
+#endif /* WINX_EXT_CREDITSTATIC_H */

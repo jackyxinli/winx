@@ -16,10 +16,10 @@
 // 
 // $Id: Basic.h,v 1.1 2006/09/25 02:31:01 xushiwei Exp $
 // -----------------------------------------------------------------------*/
-#ifndef __WINX_MSXML_BASIC_H__
-#define __WINX_MSXML_BASIC_H__
+#ifndef WINX_MSXML_BASIC_H
+#define WINX_MSXML_BASIC_H
 
-#ifndef __WINX_BASIC_H__
+#ifndef WINX_BASIC_H
 #include "../Basic.h"
 #endif
 
@@ -67,4 +67,4 @@
 // WINX-Extension: msxml (XSLT)
 //
 
-#endif /* __WINX_MSXML_BASIC_H__ */
+#endif /* WINX_MSXML_BASIC_H */

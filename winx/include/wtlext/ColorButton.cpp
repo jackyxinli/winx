@@ -96,7 +96,7 @@
 //
 //-----------------------------------------------------------------------------
 
-#ifndef __WINX_COMMONDIALOGS_H__
+#ifndef WINX_COMMONDIALOGS_H
 #include "../winx/CommonDialogs.h"
 #endif
 

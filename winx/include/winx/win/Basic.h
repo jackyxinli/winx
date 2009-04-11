@@ -16,14 +16,14 @@
 // 
 // $Id: Basic.h,v 1.3 2006/12/20 08:56:04 xushiwei Exp $
 // -----------------------------------------------------------------------*/
-#ifndef __WINX_WIN_BASIC_H__
-#define __WINX_WIN_BASIC_H__
+#ifndef WINX_WIN_BASIC_H
+#define WINX_WIN_BASIC_H
 
-#ifndef __WINX_WIN_BASICTYPES_H__
+#ifndef WINX_WIN_BASICTYPES_H
 #include "BasicTypes.h"
 #endif
 
-__WINX_BEGIN
+NS_WINX_BEGIN
 
 // =========================================================================
 // MsgBox
@@ -153,6 +153,6 @@ using std::NullClass;
 //   COM Support(Object, StackObject, FakeObject, COLESTR, etc)
 //
 
-__WINX_END
+NS_WINX_END
 
-#endif /* __WINX_WIN_BASIC_H__ */
+#endif /* WINX_WIN_BASIC_H */

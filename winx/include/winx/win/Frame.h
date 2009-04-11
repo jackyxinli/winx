@@ -16,14 +16,14 @@
 // 
 // $Id: Frame.h,v 1.5 2006/09/18 05:16:27 xushiwei Exp $
 // -----------------------------------------------------------------------*/
-#ifndef __WINX_WIN_FRAME_H__
-#define __WINX_WIN_FRAME_H__
+#ifndef WINX_WIN_FRAME_H
+#define WINX_WIN_FRAME_H
 
-#ifndef __WINX_WIN_WINDOW_H__
+#ifndef WINX_WIN_WINDOW_H
 #include "Window.h"
 #endif
 
-#ifndef __WINX_WIN_DIALOG_H__
+#ifndef WINX_WIN_DIALOG_H
 #include "Dialog.h"
 #endif
 
@@ -35,7 +35,7 @@
 #include "../../../../wtl/include/atlframe.h"
 #include "../wtl/UnWrapperMessage.h"
 
-__WINX_BEGIN
+NS_WINX_BEGIN
 
 // =========================================================================
 // WINX_MAINFRAME
@@ -110,7 +110,7 @@ public:
 // =========================================================================
 // Command State - UpdateUI
 
-#define __WINX_PROCESS_UPDATEUI()											\
+#define WINX_PROCESS_UPDATEUI__()											\
 BOOL winx_call ProcessUpdateUIMessage(										\
 	HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam, LRESULT& lResult)	\
 {																			\
@@ -136,7 +136,7 @@ public:
 
 #define WINX_UPDATEUI_BEGIN()		public: BEGIN_UPDATE_UI_MAP(void)
 #define WINX_UPDATEUI(nID, wType)	UPDATE_ELEMENT(nID, wType)
-#define WINX_UPDATEUI_END()			END_UPDATE_UI_MAP()	__WINX_PROCESS_UPDATEUI()
+#define WINX_UPDATEUI_END()			END_UPDATE_UI_MAP()	WINX_PROCESS_UPDATEUI__()
 
 // =========================================================================
 // Layout - DialogResize
@@ -177,7 +177,7 @@ public:
 	}
 };
 
-#define __WINX_PROCESS_DLGRESIZE(resizer)									\
+#define WINX_PROCESS_DLGRESIZE__(resizer)									\
 BOOL winx_call ProcessDialogResizeMessage(									\
 	HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam, LRESULT& lResult)	\
 {																			\
@@ -185,7 +185,7 @@ BOOL winx_call ProcessDialogResizeMessage(									\
 		hWnd, uMsg, wParam, lParam, lResult);								\
 }
 
-#define __WINX_INIT_DLGRESIZE(resizer)										\
+#define WINX_INIT_DLGRESIZE__(resizer)										\
 VOID winx_msg OnDialogResizeInit(HWND hWnd)									\
 {																			\
 	(resizer).Initialize(hWnd);												\
@@ -220,8 +220,8 @@ public:																		\
 
 #define WINX_DLGRESIZE_END_EX(resizer)										\
 	} resizer;																\
-	__WINX_INIT_DLGRESIZE(resizer)											\
-	__WINX_PROCESS_DLGRESIZE(resizer)
+	WINX_INIT_DLGRESIZE__(resizer)											\
+	WINX_PROCESS_DLGRESIZE__(resizer)
 
 // -------------------------------------------------------------------------
 
@@ -259,6 +259,6 @@ public:																		\
 //   CommandDispatch, CommandState, Demo: User-defined-control(Subclass, Superclass, SuperDialog)
 //
 
-__WINX_END
+NS_WINX_END
 
-#endif /* __WINX_WIN_FRAME_H__ */
+#endif /* WINX_WIN_FRAME_H */

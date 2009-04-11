@@ -16,20 +16,20 @@
 // 
 // $Id: $
 // -----------------------------------------------------------------------*/
-#ifndef __WINX_LOOKNFEEL_H__
-#define __WINX_LOOKNFEEL_H__
+#ifndef WINX_LOOKNFEEL_H
+#define WINX_LOOKNFEEL_H
 
 // -------------------------------------------------------------------------
 
-#ifndef __WINX_WIN_MENU_MENUITEM_H__
+#ifndef WINX_WIN_MENU_MENUITEM_H
 #include "win/menu/MenuItem.h"
 #endif
 
-#ifndef __WINX_WIN_MENU_MENUHOOK_H__
+#ifndef WINX_WIN_MENU_MENUHOOK_H
 #include "win/menu/MenuHook.h"
 #endif
 
 // -------------------------------------------------------------------------
 // $Log: $
 
-#endif /* __WINX_LOOKNFEEL_H__ */
+#endif /* WINX_LOOKNFEEL_H */

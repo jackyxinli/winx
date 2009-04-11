@@ -16,8 +16,8 @@
 // 
 // $Id: MessageFilter.h,v 1.2 2006/08/23 05:47:06 xushiwei Exp $
 // -----------------------------------------------------------------------*/
-#ifndef __WINX_WIN_MESSAGEFILTER_H__
-#define __WINX_WIN_MESSAGEFILTER_H__
+#ifndef WINX_WIN_MESSAGEFILTER_H
+#define WINX_WIN_MESSAGEFILTER_H
 
 #if (0)
 #define WINX_MT_HOOK
@@ -29,7 +29,7 @@
 #define WINX_APPICON_TRACE	__noop
 #endif
 
-#ifndef __WINX_WIN_BASICTYPES_H__
+#ifndef WINX_WIN_BASICTYPES_H
 #include "BasicTypes.h"
 #endif
 
@@ -37,7 +37,7 @@
 #include <vector>
 #endif
 
-__WINX_BEGIN
+NS_WINX_BEGIN
 
 // =========================================================================
 // HookCodeTraits
@@ -435,6 +435,6 @@ public:																		\
 // WINX-Core: Message, Window, Dialog, Control
 //
 
-__WINX_END
+NS_WINX_END
 
-#endif /* __WINX_WIN_MESSAGEFILTER_H__ */
+#endif /* WINX_WIN_MESSAGEFILTER_H */

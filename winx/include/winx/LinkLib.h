@@ -16,51 +16,51 @@
 // 
 // $Id: LinkLib.h,v 1.1 2006/08/26 03:47:04 xushiwei Exp $
 // -----------------------------------------------------------------------*/
-#ifndef __WINX_LINKLIB_H__
-#define __WINX_LINKLIB_H__
+#ifndef WINX_LINKLIB_H
+#define WINX_LINKLIB_H
 
 // -------------------------------------------------------------------------
 // WINX_LINK_SUFFIX
 
 #ifdef _MT
 #	ifdef _DLL
-#		define __WINX_LINK_CRT	    "-mtdll"
+#		define WINX_LINK_CRT__	    "-mtdll"
 #	else
-#		define __WINX_LINK_CRT		"-mt"
+#		define WINX_LINK_CRT__		"-mt"
 #	endif
 #else
-#	define __WINX_LINK_CRT		    "-st"
+#	define WINX_LINK_CRT__		    "-st"
 #endif
 
 #ifdef _DEBUG
-#	define __WINX_LINK_DEBUG		"-dbg"
+#	define WINX_LINK_DEBUG__		"-dbg"
 #else
-#	define __WINX_LINK_DEBUG		"-rls"
+#	define WINX_LINK_DEBUG__		"-rls"
 #endif
 
 #ifdef UNICODE
-#	define __WINX_LINK_UNICODE	    "-u"
+#	define WINX_LINK_UNICODE__	    "-u"
 #else
-#	define __WINX_LINK_UNICODE
+#	define WINX_LINK_UNICODE__
 #endif
 
 #if defined(_MSC_VER) && (_MSC_VER > 1200)
 #	if defined(_ATL_VER) && (_ATL_VER <= 0x0710) // VS.NET 2003
-#		define __WINX_LINK_VER			"-2003"
+#		define WINX_LINK_VER__			"-2003"
 #	else
-#		define __WINX_LINK_VER			"-2005"
+#		define WINX_LINK_VER__			"-2005"
 #	endif
 #else
-#	define __WINX_LINK_VER
+#	define WINX_LINK_VER__
 #endif
 
-#define __WINX_LINK_SUFFIX			\
-	__WINX_LINK_CRT __WINX_LINK_DEBUG __WINX_LINK_UNICODE __WINX_LINK_VER
+#define WINX_LINK_SUFFIX__				\
+	WINX_LINK_CRT__ WINX_LINK_DEBUG__ WINX_LINK_UNICODE__ WINX_LINK_VER__
 
 // -------------------------------------------------------------------------
 // link winx
 
-#pragma comment(lib, "winx" __WINX_LINK_SUFFIX)
+#pragma comment(lib, "winx" WINX_LINK_SUFFIX__)
 
 // -------------------------------------------------------------------------
 // $Log: LinkLib.h,v $
@@ -70,4 +70,4 @@
 //    DropFileHandle(simple wrapper for HDROP)
 //
 
-#endif /* __WINX_LINKLIB_H__ */
+#endif /* WINX_LINKLIB_H */

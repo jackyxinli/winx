@@ -16,14 +16,14 @@
 // 
 // $Id: MessagePrototype.h,v 1.15 2006/12/11 05:19:08 xushiwei Exp $
 // -----------------------------------------------------------------------*/
-#ifndef __WINX_WIN_MESSAGEPROTOTYPE_H__
-#define __WINX_WIN_MESSAGEPROTOTYPE_H__
+#ifndef WINX_WIN_MESSAGEPROTOTYPE_H
+#define WINX_WIN_MESSAGEPROTOTYPE_H
 
-#ifndef __WINX_WIN_BASICTYPES_H__
+#ifndef WINX_WIN_BASICTYPES_H
 #include "BasicTypes.h"
 #endif
 
-__WINX_BEGIN
+NS_WINX_BEGIN
 
 // =========================================================================
 // WindowMessage Helper
@@ -1257,6 +1257,6 @@ public:
 // WINX-Core: Message, Window, Dialog, Control
 //
 
-__WINX_END
+NS_WINX_END
 
-#endif /* __WINX_WIN_MESSAGEPROTOTYPE_H__ */
+#endif /* WINX_WIN_MESSAGEPROTOTYPE_H */

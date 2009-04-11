@@ -16,12 +16,12 @@
 // 
 // $Id: AxImpl.h,v 1.1 2006/08/25 15:13:18 xushiwei Exp $
 // -----------------------------------------------------------------------*/
-#ifndef __WINX_AXIMPL_H__
-#define __WINX_AXIMPL_H__
+#ifndef WINX_AXIMPL_H
+#define WINX_AXIMPL_H
 
 // -------------------------------------------------------------------------
 
-#ifndef __WINX_WINSDK_IE_H__
+#ifndef WINX_WINSDK_IE_H
 #include "winsdk/IE.h"	// to use the new version winsdk
 #endif
 
@@ -48,4 +48,4 @@
 //    ActiveX, WebBrowser(IE), Theme(XPStyle) support
 //
 
-#endif /* __WINX_AXIMPL_H__ */
+#endif /* WINX_AXIMPL_H */

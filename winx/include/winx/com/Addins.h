@@ -16,10 +16,10 @@
 // 
 // $Id: Addins.h,v 1.1 2006/12/06 14:06:25 xushiwei Exp $
 // -----------------------------------------------------------------------*/
-#ifndef __WINX_COM_ADDINS_H__
-#define __WINX_COM_ADDINS_H__
+#ifndef WINX_COM_ADDINS_H
+#define WINX_COM_ADDINS_H
 
-__WINX_BEGIN
+NS_WINX_BEGIN
 
 // -------------------------------------------------------------------------
 // class ComAddins
@@ -184,6 +184,6 @@ typedef impl_detail::ComAddins ComAddins;
 // class ComAddins
 //
 
-__WINX_END
+NS_WINX_END
 
-#endif /* __WINX_COM_ADDINS_H__ */
+#endif /* WINX_COM_ADDINS_H */

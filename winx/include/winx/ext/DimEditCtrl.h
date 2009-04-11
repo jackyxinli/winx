@@ -16,8 +16,8 @@
 // 
 // $Id: DimEditCtrl.h,v 1.3 2006/12/03 08:40:21 xushiwei Exp $
 // -----------------------------------------------------------------------*/
-#ifndef __WINX_EXT_DIMEDITCTRL_H__
-#define __WINX_EXT_DIMEDITCTRL_H__
+#ifndef WINX_EXT_DIMEDITCTRL_H
+#define WINX_EXT_DIMEDITCTRL_H
 
 // -------------------------------------------------------------------------
 
@@ -167,4 +167,4 @@ typedef CDimEditCtrl DimEditCtrl; //--> @@code add
 //   Demo - port MFC controls to WINX (DimEditCtrl)
 //
 
-#endif /* __WINX_EXT_DIMEDITCTRL_H__ */
+#endif /* WINX_EXT_DIMEDITCTRL_H */

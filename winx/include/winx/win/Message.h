@@ -16,18 +16,18 @@
 // 
 // $Id: Message.h,v 1.9 2006/12/02 15:28:54 xushiwei Exp $
 // -----------------------------------------------------------------------*/
-#ifndef __WINX_WIN_MESSAGE_H__
-#define __WINX_WIN_MESSAGE_H__
+#ifndef WINX_WIN_MESSAGE_H
+#define WINX_WIN_MESSAGE_H
 
-#ifndef __WINX_WIN_MESSAGEPROTOTYPE_H__
+#ifndef WINX_WIN_MESSAGEPROTOTYPE_H
 #include "MessagePrototype.h"
 #endif
 
-#ifndef __WINX_WIN_MESSAGEFILTER_H__
+#ifndef WINX_WIN_MESSAGEFILTER_H
 #include "MessageFilter.h"
 #endif
 
-__WINX_BEGIN
+NS_WINX_BEGIN
 
 // =========================================================================
 // WINX_ON_PAINT - No Double Buffer Support
@@ -927,6 +927,6 @@ public:
 // WINX-Core: Message, Window, Dialog, Control
 //
 
-__WINX_END
+NS_WINX_END
 
-#endif /* __WINX_WIN_MESSAGE_H__ */
+#endif /* WINX_WIN_MESSAGE_H */

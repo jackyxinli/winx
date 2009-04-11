@@ -16,8 +16,8 @@
 // 
 // $Id: atlcomx.h,v 1.3 2006/08/26 09:12:37 xushiwei Exp $
 // -----------------------------------------------------------------------*/
-#ifndef __WINX_COM_ATL_ATLCOMX_H__
-#define __WINX_COM_ATL_ATLCOMX_H__
+#ifndef WINX_COM_ATL_ATLCOMX_H
+#define WINX_COM_ATL_ATLCOMX_H
 
 #ifdef _SECURE_ATL
 #define ocscpy(dest, src)		wcscpy(dest, src)
@@ -223,4 +223,4 @@ STDMETHODIMP IEnumOnSTLImpl<Base, piid, T, Copy, CollType>::Skip(ULONG celt)
 
 }; // namespace ATLX
 
-#endif /* __WINX_COM_ATL_ATLCOMX_H__ */
+#endif /* WINX_COM_ATL_ATLCOMX_H */

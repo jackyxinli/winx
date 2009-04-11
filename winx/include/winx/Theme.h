@@ -16,14 +16,14 @@
 // 
 // $Id: Theme.h,v 1.2 2006/08/25 15:13:18 xushiwei Exp $
 // -----------------------------------------------------------------------*/
-#ifndef __WINX_THEME_H__
-#define __WINX_THEME_H__
+#ifndef WINX_THEME_H
+#define WINX_THEME_H
 
 #if (0)
 #define WINX_NO_DELAYLOAD_THEME
 #endif
 
-#ifndef __WINX_BASIC_H__
+#ifndef WINX_BASIC_H
 #include "Basic.h"
 #endif
 
@@ -73,7 +73,7 @@
 #include "wtl/WrapperMessage.h"
 #include "../../../wtl/include/atltheme.h"
 
-__WINX_BEGIN
+NS_WINX_BEGIN
 
 typedef WTL::CTheme ThemeHandle;
 
@@ -89,7 +89,7 @@ public:
 	}
 };
 
-__WINX_END
+NS_WINX_END
 
 #include "wtl/UnWrapperMessage.h"
 
@@ -128,4 +128,4 @@ public:																		\
 //    ActiveX, WebBrowser(IE), Theme(XPStyle) support
 //
 
-#endif /* __WINX_THEME_H__ */
+#endif /* WINX_THEME_H */

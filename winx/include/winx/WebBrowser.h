@@ -16,14 +16,14 @@
 // 
 // $Id: WebBrowser.h,v 1.2 2006/08/26 03:44:52 xushiwei Exp $
 // -----------------------------------------------------------------------*/
-#ifndef __WINX_WEBBROWSER_H__
-#define __WINX_WEBBROWSER_H__
+#ifndef WINX_WEBBROWSER_H
+#define WINX_WEBBROWSER_H
 
-#ifndef __WINX_DISPATCHEVENT_H__
+#ifndef WINX_DISPATCHEVENT_H
 #include "DispatchEvent.h"
 #endif
 
-#ifndef __WINX_WINSDK_IE_H__
+#ifndef WINX_WINSDK_IE_H
 #include "winsdk/IE.h"
 #endif
 
@@ -219,4 +219,4 @@ public:
 //    ActiveX, WebBrowser(IE), Theme(XPStyle) support
 //
 
-#endif /* __WINX_WEBBROWSER_H__ */
+#endif /* WINX_WEBBROWSER_H */

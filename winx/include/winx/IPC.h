@@ -17,16 +17,16 @@
 // 
 // $Id: $
 // -----------------------------------------------------------------------*/
-#ifndef __WINX_IPC_H__
-#define __WINX_IPC_H__
+#ifndef WINX_IPC_H
+#define WINX_IPC_H
 
 // -------------------------------------------------------------------------
 
-#ifndef __WINX_COM_IPCSERVICE_H__
+#ifndef WINX_COM_IPCSERVICE_H
 #include "com/IpcService.h"
 #endif
 
-#ifndef __WINX_COM_ROT_H__
+#ifndef WINX_COM_ROT_H
 #include "com/ROT.h"
 #endif
 
@@ -49,4 +49,4 @@ inline HRESULT winx_call GetActiveObject(REFCLSID rclsid, Interface** pp)
 // -------------------------------------------------------------------------
 // $Log: ipc.h,v $
 
-#endif /* __WINX_IPC_H__ */
+#endif /* WINX_IPC_H */

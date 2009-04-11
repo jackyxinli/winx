@@ -16,8 +16,8 @@
 // 
 // $Id: RoundButton.h,v 1.3 2006/08/26 09:12:37 xushiwei Exp $
 // -----------------------------------------------------------------------*/
-#ifndef __WINX_EXT_ROUNDBUTTON_H__
-#define __WINX_EXT_ROUNDBUTTON_H__
+#ifndef WINX_EXT_ROUNDBUTTON_H
+#define WINX_EXT_ROUNDBUTTON_H
 
 #ifndef _INC_MATH
 #include <math.h>
@@ -323,4 +323,4 @@ inline VOID winx_msg RoundButton::DrawItem(HWND hWnd, LPDRAWITEMSTRUCT lpDrawIte
 
 }; // namespace winx
 
-#endif /* __WINX_EXT_ROUNDBUTTON_H__ */
+#endif /* WINX_EXT_ROUNDBUTTON_H */

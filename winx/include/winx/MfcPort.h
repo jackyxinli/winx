@@ -16,10 +16,10 @@
 // 
 // $Id: $
 // -----------------------------------------------------------------------*/
-#ifndef __WINX_MFCPORT_H__
-#define __WINX_MFCPORT_H__
+#ifndef WINX_MFCPORT_H
+#define WINX_MFCPORT_H
 
-#ifndef __WINX_BASIC_H__
+#ifndef WINX_BASIC_H
 #include "winx/Basic.h"
 #endif
 
@@ -69,4 +69,4 @@
 // -------------------------------------------------------------------------
 // $Log: $
 
-#endif /* __WINX_MFCPORT_H__ */
+#endif /* WINX_MFCPORT_H */

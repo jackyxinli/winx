@@ -16,10 +16,10 @@
 // 
 // $Id: $
 // -----------------------------------------------------------------------*/
-#ifndef __WINX_COM_SAFEARRAY_H__
-#define __WINX_COM_SAFEARRAY_H__
+#ifndef WINX_COM_SAFEARRAY_H
+#define WINX_COM_SAFEARRAY_H
 
-#ifndef __WINX_BASIC_H__
+#ifndef WINX_BASIC_H
 #include "../Basic.h"
 #endif
 
@@ -31,7 +31,7 @@ inline void winx_call VariantInit(VARIANT* var, SABUFFER** saBuf)
 	var->pparray = (SAFEARRAY**)saBuf;
 }
 
-__WINX_BEGIN
+NS_WINX_BEGIN
 
 // -------------------------------------------------------------------------
 // SafeArrayGetSize
@@ -148,6 +148,6 @@ public:
 // -------------------------------------------------------------------------
 // $Log: $
 
-__WINX_END
+NS_WINX_END
 
-#endif /* __WINX_COM_SAFEARRAY_H__ */
+#endif /* WINX_COM_SAFEARRAY_H */
