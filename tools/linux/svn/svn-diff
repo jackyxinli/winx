@@ -1,2 +1,0 @@
-svn status | grep -e "^M.*" | sed -e 's|. *\(.*\)|\1|' | xargs svn diff
-
