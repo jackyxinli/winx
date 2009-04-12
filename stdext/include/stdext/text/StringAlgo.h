@@ -201,12 +201,15 @@ inline void winx_call split2(CharT sep, const BasicString<CharT>& s, ContainerT&
 	typedef typename BasicString<CharT>::const_iterator iterator;
 	
 	const iterator last = s.end();
+	
 	iterator it, first = s.begin();
 	for (;;)
 	{
 		if (efTrim & flags)
 			first = trimLeft(first, last);
 		it = std::find(first, last, sep);
+		if (it == last)
+			break;
 		if (efTrim & flags)
 		{
 			const iterator it2 = trimRight(first, it);
@@ -218,9 +221,21 @@ inline void winx_call split2(CharT sep, const BasicString<CharT>& s, ContainerT&
 			if (!(efEraseEmpty & flags) || it != first)
 				cont.push_back(BasicString<CharT>(first, it));
 		}
-		if (it == last)
-			break;
 		first = ++it;
+	}
+	if (first != it)
+	{
+		if (efTrim & flags)
+		{
+			const iterator it2 = trimRight(first, it);
+			if (!(efEraseEmpty & flags) || it2 != first)
+				cont.push_back(BasicString<CharT>(first, it2));
+		}
+		else
+		{
+			if (!(efEraseEmpty & flags) || it != first)
+				cont.push_back(BasicString<CharT>(first, it));
+		}
 	}
 }
 
