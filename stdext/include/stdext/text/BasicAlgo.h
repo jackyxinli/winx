@@ -269,17 +269,20 @@ inline int winx_call compare_by(
 // -------------------------------------------------------------------------
 // compare
 
-template <class Ty>
-__forceinline int winx_call compare_item(const Ty& a, const Ty& b) {
-	return (int)a - (int)b;
-}
-
-__forceinline int winx_call compare_item(char a, char b) {
+__forceinline int winx_call compare(char a, char b) {
 	return (unsigned char)a - (unsigned char)b;
 }
 
-__forceinline int winx_call compare_item(wchar_t a, wchar_t b) {
+__forceinline int winx_call compare(wchar_t a, wchar_t b) {
 	return a - b;
+}
+
+__forceinline int winx_call compare(const char* src, const char* dst) {
+	return strcmp(src, dst);
+}
+
+__forceinline int winx_call compare(const wchar_t* src, const wchar_t* dst) {
+	return wcscmp(src, dst);
 }
 
 template<class InputIt1, class InputIt2>
@@ -293,7 +296,7 @@ inline int winx_call compare(
 		if (first2 == last2)
 			return 1;
 		if (*first1 != *first2)
-			return compare_item(*first1, *first2);
+			return compare(*first1, *first2);
 	}
 }
 
@@ -306,20 +309,10 @@ inline int winx_call compare(
 		if (first == last)
 			return *str == 0 ? 0 : -1;
 		if (*first != *str)
-			return compare_item(*first, *str);
+			return compare(*first, *str);
 		if (*str == 0)
 			return 1;
 	}
-}
-
-__forceinline int winx_call compare(const char* src, const char* dst)
-{
-	return strcmp(src, dst);
-}
-
-__forceinline int winx_call compare(const wchar_t* src, const wchar_t* dst)
-{
-	return wcscmp(src, dst);
 }
 
 // -------------------------------------------------------------------------
