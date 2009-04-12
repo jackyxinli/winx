@@ -277,12 +277,10 @@ inline void winx_call printLines(
 	WriteArchiveT& ar, DataIt first, DataIt last) throw(IoException)
 {
 	typedef typename WriteArchiveT::char_type CharT;
-	const CharT sepBuf[] = { '\r', '\n' };
-	const TempString<CharT> sep(sepBuf, 2);
 	for (; first != last; ++first)
 	{
 		print(ar, *first);
-		print(ar, sep);
+		ar.put((CharT)'\n');
 	}
 }
 
