@@ -1,6 +1,7 @@
 #include <stdext/FileBuf.h>
 #include <stdext/Archive.h>
 #include <deque>
+#include <list>
 
 inline void test1(const char* argv[])
 {
@@ -46,14 +47,34 @@ inline void test3(const char* argv[])
 	output.printLines(lines);
 }
 
+inline void test4(const char* argv[])
+{
+	using namespace NS_STDEXT;
+	
+	AutoFreeAlloc alloc;
+	FileReader input(argv[1]);
+	FileWriter output(argv[2]);
+	
+	String line;
+	std::list<String> lines;
+	while (input.getline(alloc, line))
+		lines.push_back(line);
+	
+	lines.sort();
+	output.printLines(lines);
+}
+
 int main(int argc, const char* argv[])
 {
 	if (argc < 3)
 		return -1;
 
+#define LIST_SORT
 #define READ_ARCHIVE
 #define FAST_VERSION
-#if defined(READ_ARCHIVE)
+#if defined(LIST_SORT)
+	test4(argv);
+#elif defined(READ_ARCHIVE)
 	test3(argv);
 #elif defined(FAST_VERSION)
 	test2(argv);
