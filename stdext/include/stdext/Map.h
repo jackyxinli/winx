@@ -35,7 +35,7 @@ NS_STDEXT_BEGIN
 template <
 	class KeyT, class DataT,
 	class PredT = std::less<KeyT>,
-	class AllocT = ScopedAlloc
+	class AllocT = DefaultAlloc
 	>
 class Map : public std::map< KeyT, DataT, PredT, StlAlloc<DataT, AllocT> >
 {
@@ -69,7 +69,7 @@ public:
 template <
 	class KeyT, class DataT,
 	class PredT = std::less<KeyT>,
-	class AllocT = ScopedAlloc
+	class AllocT = DefaultAlloc
 	>
 class MultiMap : public std::multimap< KeyT, DataT, PredT, StlAlloc<DataT, AllocT> >
 {
@@ -133,25 +133,25 @@ public:
 
 	void testMap(LogT& log)
 	{
-		std::BlockPool recycle;
-		std::ScopedAlloc alloc(recycle);
-		std::Map<int, Obj> coll(alloc);
-		coll.insert(std::Map<int, Obj>::value_type(1, 2));
-		coll.insert(std::Map<int, Obj>::value_type(1, 4));
-		coll.insert(std::Map<int, Obj>::value_type(2, 4));
-		coll.insert(std::Map<int, Obj>::value_type(4, 8));
+		NS_STDEXT::BlockPool recycle;
+		NS_STDEXT::ScopedAlloc alloc(recycle);
+		NS_STDEXT::Map<int, Obj> coll(alloc);
+		coll.insert(NS_STDEXT::Map<int, Obj>::value_type(1, 2));
+		coll.insert(NS_STDEXT::Map<int, Obj>::value_type(1, 4));
+		coll.insert(NS_STDEXT::Map<int, Obj>::value_type(2, 4));
+		coll.insert(NS_STDEXT::Map<int, Obj>::value_type(4, 8));
 		AssertExp(coll.size() == 3);
 	}
 
 	void testMultiMap(LogT& log)
 	{
-		std::BlockPool recycle;
-		std::ScopedAlloc alloc(recycle);
-		std::MultiMap<int, Obj> coll(alloc);
-		coll.insert(std::MultiMap<int, Obj>::value_type(1, 2));
-		coll.insert(std::MultiMap<int, Obj>::value_type(1, 4));
-		coll.insert(std::MultiMap<int, Obj>::value_type(2, 4));
-		coll.insert(std::MultiMap<int, Obj>::value_type(4, 8));
+		NS_STDEXT::BlockPool recycle;
+		NS_STDEXT::ScopedAlloc alloc(recycle);
+		NS_STDEXT::MultiMap<int, Obj> coll(alloc);
+		coll.insert(NS_STDEXT::MultiMap<int, Obj>::value_type(1, 2));
+		coll.insert(NS_STDEXT::MultiMap<int, Obj>::value_type(1, 4));
+		coll.insert(NS_STDEXT::MultiMap<int, Obj>::value_type(2, 4));
+		coll.insert(NS_STDEXT::MultiMap<int, Obj>::value_type(4, 8));
 		AssertExp(coll.size() == 4);
 	}
 
@@ -162,7 +162,7 @@ public:
 	{
 		typedef std::map<int, int> MapT;
 		log.print("===== std::map =====\n");
-		std::PerformanceCounter counter;
+		NS_STDEXT::PerformanceCounter counter;
 		{
 			MapT coll;
 			for (int i = 0; i < N; ++i)
@@ -173,11 +173,11 @@ public:
 
 	void doMap1(LogT& log)
 	{
-		typedef std::Map<int, int, std::less<int>, std::AutoFreeAlloc> MapT;
-		log.print("===== std::Map (AutoFreeAlloc) =====\n");
-		std::PerformanceCounter counter;
+		typedef NS_STDEXT::Map<int, int, std::less<int>, NS_STDEXT::AutoAlloc> MapT;
+		log.print("===== NS_STDEXT::Map (AutoAlloc) =====\n");
+		NS_STDEXT::PerformanceCounter counter;
 		{
-			std::AutoFreeAlloc alloc;
+			NS_STDEXT::AutoAlloc alloc;
 			MapT coll(alloc);
 			for (int i = 0; i < N; ++i)
 				coll.insert(MapT::value_type(i, i));
@@ -187,12 +187,12 @@ public:
 
 	void doMap2(LogT& log)
 	{
-		typedef std::Map<int, int> MapT;
-		log.print("===== std::Map (ScopedAlloc) =====\n");
-		std::PerformanceCounter counter;
+		typedef NS_STDEXT::Map<int, int> MapT;
+		log.print("===== NS_STDEXT::Map (ScopedAlloc) =====\n");
+		NS_STDEXT::PerformanceCounter counter;
 		{
-			std::BlockPool recycle;
-			std::ScopedAlloc alloc(recycle);
+			NS_STDEXT::BlockPool recycle;
+			NS_STDEXT::ScopedAlloc alloc(recycle);
 			MapT coll(alloc);
 			for (int i = 0; i < N; ++i)
 				coll.insert(MapT::value_type(i, i));
@@ -202,15 +202,15 @@ public:
 
 	void doShareAllocMap(LogT& log)
 	{
-		typedef std::Map<int, int> MapT;
-		std::BlockPool recycle;
+		typedef NS_STDEXT::Map<int, int> MapT;
+		NS_STDEXT::BlockPool recycle;
 		log.newline();
 		for (int i = 0; i < 5; ++i)
 		{
 			log.print("===== doShareAllocMap =====\n");
-			std::PerformanceCounter counter;
+			NS_STDEXT::PerformanceCounter counter;
 			{
-				std::ScopedAlloc alloc(recycle);
+				NS_STDEXT::ScopedAlloc alloc(recycle);
 				MapT coll(alloc);
 				for (int i = 0; i < N; ++i)
 					coll.insert(MapT::value_type(i, i));

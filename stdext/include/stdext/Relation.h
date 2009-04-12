@@ -276,7 +276,7 @@ template <
 	int IndexedFieldMasks,
 	int PrimaryKeyUnionFieldMasks = 0,
 	template <int Field, class KeyT, class AllocT> class IndexingT = HashMapIndexing,
-	class AllocT = ScopedAlloc>
+	class AllocT = DefaultAlloc>
 class Relation
 {
 public:
@@ -469,9 +469,9 @@ class TestRelation : public TestCase
 public:
 	void testBasic(LogT& log)
 	{
-		typedef std::AutoFreeAlloc AllocT;
+		typedef NS_STDEXT::AutoAlloc AllocT;
 		typedef std::pair<std::string, int> TupleT;
-		typedef std::Relation<TupleT, 3, 0, std::HashMapIndexing, AllocT> RelationT;
+		typedef NS_STDEXT::Relation<TupleT, 3, 0, NS_STDEXT::HashMapIndexing, AllocT> RelationT;
 		typedef RelationT::Indexing<0> Indexing0;
 		typedef RelationT::Indexing<1> Indexing1;
 		

@@ -75,7 +75,7 @@ class TestSgiDeque : public TestCase
 	WINX_TEST_SUITE_END();	
 
 public:
-	typedef std::StlAlloc<char, std::ScopedAlloc> _DequeAlloc;
+	typedef std::StlAlloc<char, NS_STDEXT::ScopedAlloc> _DequeAlloc;
 	typedef stdext::deque<char, _DequeAlloc> _SgiDeque;
 	typedef std::_Deque<char, _DequeAlloc> _StdDeque;
 	typedef std::_Deque<char> _StdDeque0;
@@ -87,13 +87,13 @@ public:
 	{
 		const char szHello[] = "Hello, world!";
 
-		std::BlockPool recycle;
-		std::ScopedAlloc alloc(recycle);
+		NS_STDEXT::BlockPool recycle;
+		NS_STDEXT::ScopedAlloc alloc(recycle);
 
 		log.print("===== SgiDeque =====\n");
 	
 		_SgiDeque pool(alloc);
-		std::PerformanceCounter counter;
+		NS_STDEXT::PerformanceCounter counter;
 		{
 			for (int i = 0; i < N; ++i)
 				pool.insert(pool.end(), szHello, szHello + countof(szHello));
@@ -106,13 +106,13 @@ public:
 	{
 		const char szHello[] = "Hello, world!";
 
-		std::BlockPool recycle;
-		std::ScopedAlloc alloc(recycle);
+		NS_STDEXT::BlockPool recycle;
+		NS_STDEXT::ScopedAlloc alloc(recycle);
 
 		log.print("===== StdDeque =====\n");
 	
 		_StdDeque pool(alloc);
-		std::PerformanceCounter counter;
+		NS_STDEXT::PerformanceCounter counter;
 		{
 			for (int i = 0; i < N; ++i)
 				pool.insert(pool.end(), szHello, szHello + countof(szHello));
@@ -128,7 +128,7 @@ public:
 		log.print("===== StdDeque0 =====\n");
 
 		_StdDeque0 pool;
-		std::PerformanceCounter counter;
+		NS_STDEXT::PerformanceCounter counter;
 		{
 			for (int i = 0; i < N; ++i)
 				pool.insert(pool.end(), szHello, szHello + countof(szHello));
@@ -144,7 +144,7 @@ public:
 		log.print("===== StdVector =====\n");
 	
 		_StdVector pool;
-		std::PerformanceCounter counter;
+		NS_STDEXT::PerformanceCounter counter;
 		{
 			for (int i = 0; i < N; ++i)
 				pool.insert(pool.end(), szHello, szHello + countof(szHello));

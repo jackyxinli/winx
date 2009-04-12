@@ -187,7 +187,7 @@ public:
 	}
 
 	void winx_call attach(const CharT* szVal) {
-		Base::assign(szVal, std::end(szVal));
+		Base::assign(szVal, NS_STDEXT::end(szVal));
 	}
 
 	void winx_call attach(const CharT* szVal, size_type cch) {
@@ -416,9 +416,9 @@ class TestBasicString : public TestCase
 public:
 	void testFind(LogT& log)
 	{
-		const std::String a1("Hello", 5);
+		const NS_STDEXT::String a1("Hello", 5);
 
-		std::String::iterator it = a1.find("ell");
+		NS_STDEXT::String::iterator it = a1.find("ell");
 		AssertExp(it != a1.end());
 		AssertExp(*it == 'e');
 
@@ -435,37 +435,37 @@ public:
 
 	void testICompare(LogT& log)
 	{
-		std::String a("Hello", 5);
-		std::String b("hEllO", 5);
+		NS_STDEXT::String a("Hello", 5);
+		NS_STDEXT::String b("hEllO", 5);
 		AssertExp(a.icompare(b) == 0);
 	}
 
 	void testConstructor(LogT& log)
 	{
-		std::BlockPool recycle;
-		std::ScopedAlloc alloc(recycle);
+		NS_STDEXT::BlockPool recycle;
+		NS_STDEXT::ScopedAlloc alloc(recycle);
 
-		const std::String a1("Hello", 4);
+		const NS_STDEXT::String a1("Hello", 4);
 		AssertExp(a1.compare("Hell") == 0);
 
-		std::String a2 = a1.substr(3);
+		NS_STDEXT::String a2 = a1.substr(3);
 		AssertExp(a2.compare("l") == 0);
 
-		std::String a3 = a1.substr(1, 2);
+		NS_STDEXT::String a3 = a1.substr(1, 2);
 		AssertExp(a3.compare("el") == 0);
 
-		const std::String a4(alloc, a1);
+		const NS_STDEXT::String a4(alloc, a1);
 		AssertExp(a4 == "Hell");
 		AssertExp(a1 == a4);
 
 		std::string stl("1234");
-		AssertExp(std::String::cast(stl) == "1234");
-		AssertExp(std::String::cast(stl).size() == 4);
+		AssertExp(NS_STDEXT::String::cast(stl) == "1234");
+		AssertExp(NS_STDEXT::String::cast(stl).size() == 4);
 
-		std::String a5(alloc, stl);
+		NS_STDEXT::String a5(alloc, stl);
 		AssertExp(a5 == stl && stl == a5);
 
-		std::String a6 = a5;
+		NS_STDEXT::String a6 = a5;
 		AssertExp(a5.data() == a6.data() && a5.size() == a6.length());
 		AssertExp(a6.substr(1) == "234");
 		AssertExp(a6.substr(1, 1) == "2");

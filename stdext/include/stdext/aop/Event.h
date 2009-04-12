@@ -70,7 +70,7 @@ NS_STDEXT_END
 
 #if !defined(_DEBUG)
 
-STD_NO_DESTRUCTOR(std::BasicConnection);
+STD_NO_DESTRUCTOR(NS_STDEXT::BasicConnection);
 
 #endif
 
@@ -83,7 +83,7 @@ template <class EventT, class AllocT>
 class BasicEvent : public EventT
 {
 protected:
-	std::DclList<BasicConnection> m_connections;
+	NS_STDEXT::DclList<BasicConnection> m_connections;
 	AllocT& m_alloc;
 
 public:
@@ -104,24 +104,24 @@ NS_STDEXT_END
 #define _AOP_METHOD_ASSIGN(dest, src)	(*(void**)&(dest) = (src))
 
 #define EX_EVENT_TYPE(Alloc, Event, ParametersList, arguments_list)			\
-class Event##Impl : public std::BasicEvent<Event, Alloc>					\
+class Event##Impl : public NS_STDEXT::BasicEvent<Event, Alloc>				\
 {																			\
 private:																	\
-	typedef std::BasicEvent<Event, Alloc> BaseClass;						\
+	typedef NS_STDEXT::BasicEvent<Event, Alloc> BaseClass;					\
 																			\
 public:																		\
 	Event##Impl(Alloc& _winx_alloc) : BaseClass(_winx_alloc) {}				\
 																			\
 	void winx_call fire ParametersList										\
 	{																		\
-		typedef std::FakeTarget RealTarget;									\
+		typedef NS_STDEXT::FakeTarget RealTarget;							\
 		typedef void (__stdcall RealTarget::*RealMethod) ParametersList;	\
 																			\
 		RealMethod _winx_method;											\
-		const std::BasicConnection* _winx_conn = m_connections.first();		\
+		const NS_STDEXT::BasicConnection* _winx_conn = m_connections.first();	\
 		while (!m_connections.done(_winx_conn))								\
 		{																	\
-			const std::BasicConnection* _winx_next = _winx_conn->next();	\
+			const NS_STDEXT::BasicConnection* _winx_next = _winx_conn->next();	\
 			RealTarget* _winx_target = _winx_conn->target;					\
 			_AOP_METHOD_ASSIGN(_winx_method, _winx_conn->method);			\
 			(_winx_target->*_winx_method) arguments_list;					\
@@ -131,7 +131,7 @@ public:																		\
 }
 
 #define EVENT_TYPE(Event, ParametersList, arguments_list)					\
-	EX_EVENT_TYPE(std::ScopedAlloc, Event, ParametersList, arguments_list)
+	EX_EVENT_TYPE(NS_STDEXT::ScopedAlloc, Event, ParametersList, arguments_list)
 
 // -------------------------------------------------------------------------
 // class TestEvent
@@ -161,7 +161,7 @@ private:
 	TextChangedEvent m_changed;
 
 public:
-	Edit(std::ScopedAlloc& alloc) : m_changed(alloc) {
+	Edit(NS_STDEXT::ScopedAlloc& alloc) : m_changed(alloc) {
 	}
 
 	TextChanged* textChanged() {
@@ -181,11 +181,11 @@ public:
 class Dialog
 {
 protected:
-	std::ScopedAlloc m_alloc;
+	NS_STDEXT::ScopedAlloc m_alloc;
 
 	Edit m_edit;
-	std::Connection m_editChanged;
-	std::Connection m_editChanged2;
+	NS_STDEXT::Connection m_editChanged;
+	NS_STDEXT::Connection m_editChanged2;
 	// NOTE: even you don't need to disconnect, you must hold the connection handle.
 
 public:
@@ -221,7 +221,7 @@ class Dialog2 : public Dialog
 {
 public:
 	Edit m_edit2;
-	std::Connection m_editChanged;
+	NS_STDEXT::Connection m_editChanged;
 
 public:
 	Dialog2()

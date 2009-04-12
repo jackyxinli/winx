@@ -45,7 +45,7 @@ NS_STDEXT_BEGIN
 template <
 	class ValT,
 	class HashCompT = HashCompare<ValT>,
-	class AllocT = ScopedAlloc
+	class AllocT = DefaultAlloc
 	>
 class HashSet : public WINX_BASE_HASHSET_(ValT, HashCompT, AllocT)
 {
@@ -108,7 +108,7 @@ public:
 template <
 	class ValT,
 	class HashCompT = HashCompare<ValT>,
-	class AllocT = ScopedAlloc
+	class AllocT = DefaultAlloc
 	>
 class HashMultiSet : public WINX_BASE_HASHMULTISET_(ValT, HashCompT, AllocT)
 {
@@ -179,10 +179,10 @@ class TestHashSet : public TestCase
 public:
 	void testSet(LogT& log)
 	{
-		typedef std::HashSet<int> SetType;
+		typedef NS_STDEXT::HashSet<int> SetType;
 
-		std::BlockPool recycle;
-		std::ScopedAlloc alloc(recycle);
+		NS_STDEXT::BlockPool recycle;
+		NS_STDEXT::ScopedAlloc alloc(recycle);
 		
 		SetType simp(alloc);
 
@@ -198,10 +198,10 @@ public:
 
 	void testMultiSet(LogT& log)
 	{
-		typedef std::HashMultiSet<int> SetType;
+		typedef NS_STDEXT::HashMultiSet<int> SetType;
 
-		std::BlockPool recycle;
-		std::ScopedAlloc alloc(recycle);
+		NS_STDEXT::BlockPool recycle;
+		NS_STDEXT::ScopedAlloc alloc(recycle);
 		
 		SetType simp(alloc);
 

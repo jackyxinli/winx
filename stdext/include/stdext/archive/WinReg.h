@@ -44,7 +44,7 @@ public:
 	{
 		CharT szName[16];
 		szName[0] = _WINX_REG_STRING_PREFIX;
-		std::tchar::itoa(index, szName+1, 10);
+		NS_STDEXT::tchar::itoa(index, szName+1, 10);
 
 		LONG lRes = regKey.putString(szName, str);
 		return HRESULT_FROM_WIN32(lRes);
@@ -56,7 +56,7 @@ public:
 	{
 		CharT szName[16];
 		szName[0] = _WINX_REG_STRING_PREFIX;
-		std::tchar::itoa(index, szName+1, 10);
+		NS_STDEXT::tchar::itoa(index, szName+1, 10);
 
 		LONG lRes = regKey.getString(szName, str);
 		return HRESULT_FROM_WIN32(lRes);
@@ -211,30 +211,30 @@ class TestWinReg : public TestCase
 public:
 	void testBasic(LogT& log)
 	{
-		std::BlockPool recycle;
-		std::ScopedAlloc alloc(recycle);
+		NS_STDEXT::BlockPool recycle;
+		NS_STDEXT::ScopedAlloc alloc(recycle);
 		{
-			std::WinRegWriter ar(HKEY_CURRENT_USER, _WINX_TEST_WINREG_KEY);
+			NS_STDEXT::WinRegWriter ar(HKEY_CURRENT_USER, _WINX_TEST_WINREG_KEY);
 			ar.wputs(L"Hello");
 			ar.puts(std::string("World!"));
 			ar.puts(std::vector<char>(256, '!'));
 			ar.puts(std::vector<char>(65537, '?'));
 		}
 		{
-			std::WinRegReader ar(HKEY_CURRENT_USER, _WINX_TEST_WINREG_KEY);
+			NS_STDEXT::WinRegReader ar(HKEY_CURRENT_USER, _WINX_TEST_WINREG_KEY);
 			std::string s1;
 			AssertExp(ar.gets(s1) == S_OK);
 			AssertExp(s1 == "Hello");
 			std::vector<WCHAR> s2;
 			AssertExp(ar.wgets(s2) == S_OK);
-			AssertExp(std::compare(s2.begin(), s2.end(), L"World!") == 0);
-			std::String s3;
+			AssertExp(NS_STDEXT::compare(s2.begin(), s2.end(), L"World!") == 0);
+			NS_STDEXT::String s3;
 			AssertExp(ar.gets(alloc, s3) == S_OK);
-			AssertExp(s3 == std::String(alloc, 256, '!'));
-			std::String s4;
+			AssertExp(s3 == NS_STDEXT::String(alloc, 256, '!'));
+			NS_STDEXT::String s4;
 			AssertExp(ar.gets(alloc, s4) == S_OK);
-			AssertExp(s4 == std::String(alloc, 65537, '?'));
-			std::String s5;
+			AssertExp(s4 == NS_STDEXT::String(alloc, 65537, '?'));
+			NS_STDEXT::String s5;
 			AssertExp(ar.gets(alloc, s5) != S_OK);
 		}
 	}

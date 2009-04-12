@@ -45,7 +45,7 @@ NS_STDEXT_BEGIN
 template <
 	class KeyT, class DataT,
 	class HashCompT = HashCompare<KeyT>,
-	class AllocT = ScopedAlloc
+	class AllocT = DefaultAlloc
 	>
 class HashMap : public WINX_BASE_HASHMAP_(KeyT, DataT, HashCompT, AllocT)
 {
@@ -107,7 +107,7 @@ public:
 template <
 	class KeyT, class DataT,
 	class HashCompT = HashCompare<KeyT>,
-	class AllocT = ScopedAlloc
+	class AllocT = DefaultAlloc
 >
 class HashMultiMap : public WINX_BASE_HASHMULTIMAP_(KeyT, DataT, HashCompT, AllocT)
 {

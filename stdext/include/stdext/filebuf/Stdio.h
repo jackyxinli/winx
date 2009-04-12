@@ -80,7 +80,7 @@ public:
 	{
 		typedef std::vector<String> ContainerT;
 		
-		AutoFreeAlloc alloc;
+		AutoAlloc alloc;
 		ContainerT file;
 		readFile(alloc, file, fp, cbSeg);
 		

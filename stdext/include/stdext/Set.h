@@ -35,7 +35,7 @@ NS_STDEXT_BEGIN
 template <
 	class KeyT,
 	class PredT = std::less<KeyT>,
-	class AllocT = ScopedAlloc
+	class AllocT = DefaultAlloc
 	>
 class Set : public std::set< KeyT, PredT, StlAlloc<KeyT, AllocT> >
 {
@@ -69,7 +69,7 @@ public:
 template <
 	class KeyT,
 	class PredT = std::less<KeyT>,
-	class AllocT = ScopedAlloc
+	class AllocT = DefaultAlloc
 	>
 class MultiSet : public std::multiset< KeyT, PredT, StlAlloc<KeyT, AllocT> >
 {
@@ -136,9 +136,9 @@ public:
 
 	void testSet(LogT& log)
 	{
-		std::BlockPool recycle;
-		std::ScopedAlloc alloc(recycle);
-		std::Set<Obj> coll(alloc);
+		NS_STDEXT::BlockPool recycle;
+		NS_STDEXT::ScopedAlloc alloc(recycle);
+		NS_STDEXT::Set<Obj> coll(alloc);
 		coll.insert(1);
 		coll.insert(1);
 		coll.insert(2);
@@ -148,9 +148,9 @@ public:
 
 	void testMultiSet(LogT& log)
 	{
-		std::BlockPool recycle;
-		std::ScopedAlloc alloc(recycle);
-		std::MultiSet<Obj> coll(alloc);
+		NS_STDEXT::BlockPool recycle;
+		NS_STDEXT::ScopedAlloc alloc(recycle);
+		NS_STDEXT::MultiSet<Obj> coll(alloc);
 		coll.insert(1);
 		coll.insert(1);
 		coll.insert(2);
@@ -165,7 +165,7 @@ public:
 	{
 		typedef std::set<int> SetT;
 		log.print("===== std::set =====\n");
-		std::PerformanceCounter counter;
+		NS_STDEXT::PerformanceCounter counter;
 		{
 			SetT coll;
 			for (int i = 0; i < N; ++i)
@@ -176,11 +176,11 @@ public:
 
 	void doSet1(LogT& log)
 	{
-		typedef std::Set<int, std::less<int>, std::AutoFreeAlloc> SetT;
-		log.print("===== std::Set (AutoFreeAlloc) =====\n");
-		std::PerformanceCounter counter;
+		typedef NS_STDEXT::Set<int, std::less<int>, NS_STDEXT::AutoAlloc> SetT;
+		log.print("===== NS_STDEXT::Set (AutoFreeAlloc) =====\n");
+		NS_STDEXT::PerformanceCounter counter;
 		{
-			std::AutoFreeAlloc alloc;
+			NS_STDEXT::AutoAlloc alloc;
 			SetT coll(alloc);
 			for (int i = 0; i < N; ++i)
 				coll.insert(i);
@@ -190,12 +190,12 @@ public:
 
 	void doSet2(LogT& log)
 	{
-		typedef std::Set<int> SetT;
-		log.print("===== std::Set (ScopedAlloc) =====\n");
-		std::PerformanceCounter counter;
+		typedef NS_STDEXT::Set<int> SetT;
+		log.print("===== NS_STDEXT::Set (ScopedAlloc) =====\n");
+		NS_STDEXT::PerformanceCounter counter;
 		{
-			std::BlockPool recycle;
-			std::ScopedAlloc alloc(recycle);
+			NS_STDEXT::BlockPool recycle;
+			NS_STDEXT::ScopedAlloc alloc(recycle);
 			SetT coll(alloc);
 			for (int i = 0; i < N; ++i)
 				coll.insert(i);
@@ -205,15 +205,15 @@ public:
 
 	void doShareAllocSet(LogT& log)
 	{
-		typedef std::Set<int> SetT;
-		std::BlockPool recycle;
+		typedef NS_STDEXT::Set<int> SetT;
+		NS_STDEXT::BlockPool recycle;
 		log.newline();
 		for (int i = 0; i < 5; ++i)
 		{
 			log.print("===== doShareAllocSet =====\n");
-			std::PerformanceCounter counter;
+			NS_STDEXT::PerformanceCounter counter;
 			{
-				std::ScopedAlloc alloc(recycle);
+				NS_STDEXT::ScopedAlloc alloc(recycle);
 				SetT coll(alloc);
 				for (int i = 0; i < N; ++i)
 					coll.insert(i);

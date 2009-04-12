@@ -49,7 +49,7 @@ public:																		\
 // -------------------------------------------------------------------------
 // class TextPool
 
-template <class CharT, class AllocT = ScopedAlloc>
+template <class CharT, class AllocT = DefaultAlloc>
 class TextPool : public Deque<CharT, AllocT>
 {
 private:
@@ -353,32 +353,32 @@ class TestTextPool : public TestCase
 public:
 	void testConstruct(LogT& log)
 	{
-		std::BlockPool recycle;
-		std::ScopedAlloc alloc(recycle);
+		NS_STDEXT::BlockPool recycle;
+		NS_STDEXT::ScopedAlloc alloc(recycle);
 
-		std::TextPool<char> a1(alloc, 'a');
+		NS_STDEXT::TextPool<char> a1(alloc, 'a');
 		AssertExp(a1.size() == 1 && a1[0] == 'a');
 
-		std::TextPool<char> a2(alloc, 3, 'a');
+		NS_STDEXT::TextPool<char> a2(alloc, 3, 'a');
 		AssertExp(a2 == "aaa");
 
-		std::TextPool<char> a(alloc, "Hello");
+		NS_STDEXT::TextPool<char> a(alloc, "Hello");
 		AssertExp(a == "Hello");
 
-		std::TextPool<char> b(alloc, "Hello", 4);
+		NS_STDEXT::TextPool<char> b(alloc, "Hello", 4);
 		AssertExp(b == "Hell");
 
-		std::TextPool<char> c(alloc, b.begin(), b.end());
-		std::String d = c.str(alloc);
+		NS_STDEXT::TextPool<char> c(alloc, b.begin(), b.end());
+		NS_STDEXT::String d = c.str(alloc);
 		AssertExp(d == b && b == d);
 	}
 
 	void testSubstr(LogT& log)
 	{
-		std::BlockPool recycle;
-		std::ScopedAlloc alloc(recycle);
+		NS_STDEXT::BlockPool recycle;
+		NS_STDEXT::ScopedAlloc alloc(recycle);
 
-		std::TextPool<char> a(alloc, "Hello");
+		NS_STDEXT::TextPool<char> a(alloc, "Hello");
 		AssertExp(a.substr(alloc, 1, 3) == "ell");
 		AssertExp(a.substr(alloc, 1) == "ello");
 		AssertExp(a.substr(alloc, 5) == "");
@@ -386,10 +386,10 @@ public:
 
 	void testAssign(LogT& log)
 	{
-		std::BlockPool recycle;
-		std::ScopedAlloc alloc(recycle);
+		NS_STDEXT::BlockPool recycle;
+		NS_STDEXT::ScopedAlloc alloc(recycle);
 
-		std::TextPool<char> a(alloc);
+		NS_STDEXT::TextPool<char> a(alloc);
 		
 		a.assign('a');
 		AssertExp(a == "a");
@@ -400,7 +400,7 @@ public:
 		a.assign("Hello");
 		AssertExp(a == "Hello");
 
-		std::TextPool<char> b(alloc);
+		NS_STDEXT::TextPool<char> b(alloc);
 		b.assign("Hello", 2);
 		AssertExp(b == "He");
 
@@ -417,10 +417,10 @@ public:
 
 	void testAppend(LogT& log)
 	{
-		std::BlockPool recycle;
-		std::ScopedAlloc alloc(recycle);
+		NS_STDEXT::BlockPool recycle;
+		NS_STDEXT::ScopedAlloc alloc(recycle);
 
-		std::TextPool<char> a(alloc, "Hello");
+		NS_STDEXT::TextPool<char> a(alloc, "Hello");
 		a.append(3, '!');
 		AssertExp(a == "Hello!!!");
 
@@ -430,24 +430,24 @@ public:
 		a.append(' ').append(std::string("world"));
 		AssertExp(a == "Hello!!!! world");
 	
-		std::TextPool<char> temp(alloc, '!');
+		NS_STDEXT::TextPool<char> temp(alloc, '!');
 		a.append(temp);
 		AssertExp(a == "Hello!!!! world!");
 		
 		a.append(std::vector<char>(2, '!'));
 		AssertExp(a == "Hello!!!! world!!!");
 	
-		a.append(std::String("!", 1));
+		a.append(NS_STDEXT::String("!", 1));
 		AssertExp(a == "Hello!!!! world!!!!");
 	}
 
 	void testReplace(LogT& log)
 	{
-		std::BlockPool recycle;
-		std::ScopedAlloc alloc(recycle);
+		NS_STDEXT::BlockPool recycle;
+		NS_STDEXT::ScopedAlloc alloc(recycle);
 
-		std::TextPool<char> a(alloc, "Hello!!!! world! Good!");
-		std::TextPool<char>::iterator it = a.find("!!!!");
+		NS_STDEXT::TextPool<char> a(alloc, "Hello!!!! world! Good!");
+		NS_STDEXT::TextPool<char>::iterator it = a.find("!!!!");
 		AssertExp(it != a.end());
 		AssertExp(*(it-1) == 'o' && *it == '!');
 

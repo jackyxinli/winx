@@ -7,7 +7,7 @@
 
 void testConcat()
 {
-	NS_STDEXT::AutoFreeAlloc alloc;
+	NS_STDEXT::AutoAlloc alloc;
 
 	std::list<std::string> lst;
 	lst.push_back("Hello,");
@@ -31,7 +31,7 @@ void testConcat()
 
 void testImplode()
 {
-	NS_STDEXT::AutoFreeAlloc alloc;
+	NS_STDEXT::AutoAlloc alloc;
 
 	std::list<std::string> lst;
 	lst.push_back("Hello,");
@@ -56,7 +56,7 @@ void testImplode()
 
 void testExplode()
 {
-	NS_STDEXT::AutoFreeAlloc alloc;
+	NS_STDEXT::AutoAlloc alloc;
 
 	NS_STDEXT::String s(alloc, "Hello, world!  I am xushiwei!");
 

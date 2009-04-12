@@ -4,9 +4,9 @@
 // -------------------------------------------------------------------------
 // memory management
 
-void testAutoFreeAlloc()
+void testAutoAlloc()
 {
-    NS_STDEXT::AutoFreeAlloc alloc;
+    NS_STDEXT::AutoAlloc alloc;
     
     int* a;
     a = STD_NEW(alloc, int);
@@ -20,7 +20,7 @@ void testAutoFreeAlloc()
     int* d;
     d = STD_ALLOC_ARRAY(alloc, int, 100);
     
-    NS_STDEXT::AutoFreeAlloc* suballoc = STD_NEW(alloc, NS_STDEXT::AutoFreeAlloc);
+    NS_STDEXT::AutoAlloc* suballoc = STD_NEW(alloc, NS_STDEXT::AutoAlloc);
     
     int* e;
     e = STD_NEW(*suballoc, int);
@@ -33,12 +33,12 @@ void testScopedAlloc()
     
     int* a;
     a = STD_NEW(alloc, int);
-    // ... --> same as NS_STDEXT::AutoFreeAlloc
+    // ... --> same as NS_STDEXT::AutoAlloc
 }
 
 int main()
 {
-    testAutoFreeAlloc();
+    testAutoAlloc();
     testScopedAlloc();	
 	return 0;
 }

@@ -50,7 +50,7 @@ private:
 			return *m_name == name;
 		}
 	};
-	typedef std::Array<ValueType, EventCount> ContainerType;
+	typedef NS_STDEXT::Array<ValueType, EventCount> ContainerType;
 
 private:
 	ContainerType m_events;
@@ -122,7 +122,7 @@ namespace test_event_container {
 // Edit (v2.0) component
 //
 
-class EditV2 : public std::EventContainer<1>
+class EditV2 : public NS_STDEXT::EventContainer<1>
 {
 private:
 	typedef EVENT_TYPE(TextChanged, (Text text), (text)) TextChangedEvent;
@@ -131,7 +131,7 @@ private:
 	TextChangedEvent m_changed;
 
 public:
-	EditV2(std::ScopedAlloc& alloc) : m_changed(alloc)
+	EditV2(NS_STDEXT::ScopedAlloc& alloc) : m_changed(alloc)
 	{
 		addEvent(EID(TextChanged), m_changed);
 	}
@@ -150,11 +150,11 @@ public:
 class DialogV2
 {
 private:
-	std::ScopedAlloc m_alloc;
+	NS_STDEXT::ScopedAlloc m_alloc;
 
 	EditV2 m_edit;
-	std::Connection m_editChanged;
-	std::Connection m_editChanged2;
+	NS_STDEXT::Connection m_editChanged;
+	NS_STDEXT::Connection m_editChanged2;
 	// NOTE: even you don't need to disconnect, you must hold the connection handle.
 
 public:

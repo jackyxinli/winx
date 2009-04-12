@@ -97,7 +97,7 @@ template<class _CharT, class _Alloc> class _Rope_char_ptr_proxy;
 template<class _CharT, class _Alloc> class _Rope_iterator;
 template<class _CharT> class _Rope_const_iterator;
 
-template <class _CharT, class _Alloc = ScopedAlloc>
+template <class _CharT, class _Alloc = DefaultAlloc>
 class Rope {
     public:
         typedef _CharT value_type;

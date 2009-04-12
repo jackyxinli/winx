@@ -38,8 +38,8 @@ class TestAllocatorPerformance
 {
 private:
 	apr_pool_t* m_pool;
-	std::Accumulator m_acc;
-	std::BlockPool m_recycle;
+	NS_STDEXT::Accumulator m_acc;
+	NS_STDEXT::BlockPool m_recycle;
 
 	void __setUp()
 	{
@@ -59,7 +59,7 @@ public:
 	{
 		int i, **p;
 		p = new int*[PerAlloc];
-		std::PerformanceCounter counter;
+		NS_STDEXT::PerformanceCounter counter;
 		{
 			for (int j = 0; j < NAlloc; ++j)
 			{
@@ -82,7 +82,7 @@ public:
 	{
 		int i, **p;
 		p = (int**)dlmalloc(sizeof(int*)*PerAlloc);
-		std::PerformanceCounter counter;
+		NS_STDEXT::PerformanceCounter counter;
 		{
 			for (int j = 0; j < NAlloc; ++j)
 			{
@@ -110,7 +110,7 @@ public:
 		
 		int i, **p;
 		p = new int*[PerAlloc];
-		std::PerformanceCounter counter;
+		NS_STDEXT::PerformanceCounter counter;
 		{
 			for (int j = 0; j < NAlloc; ++j)
 			{
@@ -133,7 +133,7 @@ public:
 
 	void doBoostPool(LogT& log, int NAlloc, int PerAlloc)
 	{
-		std::PerformanceCounter counter;
+		NS_STDEXT::PerformanceCounter counter;
 		{
 			for (int j = 0; j < NAlloc; ++j)
 			{
@@ -150,7 +150,7 @@ public:
 
 	void doBoostObjectPool(LogT& log, int NAlloc, int PerAlloc)
 	{
-		std::PerformanceCounter counter;
+		NS_STDEXT::PerformanceCounter counter;
 		{
 			for (int j = 0; j < NAlloc; ++j)
 			{
@@ -168,7 +168,7 @@ public:
 	template <class LogT2>
 	void doAprPools(LogT2& log, int NAlloc, int PerAlloc)
 	{
-		std::PerformanceCounter counter;
+		NS_STDEXT::PerformanceCounter counter;
 		{
 			for (int j = 0; j < NAlloc; ++j)
 			{
@@ -188,11 +188,11 @@ public:
 	template <class LogT2>
 	void doAutoFreeAlloc(LogT2& log, int NAlloc, int PerAlloc)
 	{
-		std::PerformanceCounter counter;
+		NS_STDEXT::PerformanceCounter counter;
 		{
 			for (int j = 0; j < NAlloc; ++j)
 			{
-				std::AutoFreeAlloc alloc;
+				NS_STDEXT::AutoAlloc alloc;
 				for (int i = 0; i < PerAlloc; ++i)
 				{
 					int* p;
@@ -206,11 +206,11 @@ public:
 	template <class LogT2>
 	void doTlsScopedAlloc(LogT2& log, int NAlloc, int PerAlloc)
 	{
-		std::PerformanceCounter counter;
+		NS_STDEXT::PerformanceCounter counter;
 		{
 			for (int j = 0; j < NAlloc; ++j)
 			{
-				std::ScopedAlloc alloc;
+				NS_STDEXT::ScopedAlloc alloc;
 				for (int i = 0; i < PerAlloc; ++i)
 				{
 					int* p;
@@ -224,11 +224,11 @@ public:
 	template <class LogT2>
 	void doScopedAlloc(LogT2& log, int NAlloc, int PerAlloc)
 	{
-		std::PerformanceCounter counter;
+		NS_STDEXT::PerformanceCounter counter;
 		{
 			for (int j = 0; j < NAlloc; ++j)
 			{
-				std::ScopedAlloc alloc(m_recycle);
+				NS_STDEXT::ScopedAlloc alloc(m_recycle);
 				for (int i = 0; i < PerAlloc; ++i)
 				{
 					int* p;
@@ -246,7 +246,7 @@ public:
 		const int PerAlloc = Total / NAlloc;
 		
 		m_acc.start();
-		log.print(PerAlloc, "\n===== AutoFreeAlloc(%d) =====\n");
+		log.print(PerAlloc, "\n===== AutoAlloc(%d) =====\n");
 		for (i = 0; i < Count; ++i)
 			doAutoFreeAlloc(log, NAlloc, PerAlloc);
 		m_acc.trace_avg(log);
@@ -306,7 +306,7 @@ public:
 	
 	void testComparison(LogT& log)
 	{
-		std::NullLog nullLog;
+		NS_STDEXT::NullLog nullLog;
 		const int Total = 1000000;
 		__setUp();
 		doAutoFreeAlloc(nullLog, Total, 1);
@@ -322,8 +322,8 @@ public:
 
 int main()
 {
-	std::ErrorLog log;
-	TestAllocatorPerformance<std::ErrorLog> test;
+	NS_STDEXT::ErrorLog log;
+	TestAllocatorPerformance<NS_STDEXT::ErrorLog> test;
 	test.testComparison(log);
 	return 0;
 }

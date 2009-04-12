@@ -42,31 +42,31 @@ NS_STDEXT_BEGIN
 // -------------------------------------------------------------------------
 // end, length
 
-template <class _It>
-inline _It winx_call end(_It it)
+template <class InputIt>
+inline InputIt winx_call end(InputIt it)
 {
 	while (*it)
 		++it;
 	return it;
 }
 
-template <class _It>
-inline size_t winx_call length(_It it)
+template <class InputIt>
+inline size_t winx_call length(InputIt it)
 {
-	_It first = it;
+	InputIt first = it;
 	while (*it)
 		++it;
-	return it - first;
+	return std::distance(first, it);
 }
 
 // -------------------------------------------------------------------------
 // find_first_of, find_first_not_of
 
-template <class _InputIt, class _E>
-inline _InputIt winx_call find_first_of(
-	_InputIt first, _InputIt last, const _E* cset)
+template <class InputIt, class Ty>
+inline InputIt winx_call find_first_of(
+	InputIt first, InputIt last, const Ty* cset)
 {
-	const _E* str;
+	const Ty* str;
 	for (; first != last; ++first)
 	{
 		for (str = cset; *str; ++str)
@@ -78,11 +78,11 @@ inline _InputIt winx_call find_first_of(
 	return first;
 }
 
-template <class _InputIt, class _E>
-inline _InputIt winx_call find_first_not_of(
-	_InputIt first, _InputIt last, const _E* cset)
+template <class InputIt, class Ty>
+inline InputIt winx_call find_first_not_of(
+	InputIt first, InputIt last, const Ty* cset)
 {
-	const _E* str;
+	const Ty* str;
 	for (; first != last; ++first)
 	{
 		for (str = cset; *str; ++str)
@@ -96,11 +96,11 @@ inline _InputIt winx_call find_first_not_of(
 	return first;
 }
 
-template <class _InputIt, class _ForwardIt>
-inline _InputIt winx_call find_first_not_of(
-	_InputIt first, _InputIt last, _ForwardIt set_first, _ForwardIt set_last)
+template <class InputIt, class ForwardIt>
+inline InputIt winx_call find_first_not_of(
+	InputIt first, InputIt last, ForwardIt set_first, ForwardIt set_last)
 {
-	_ForwardIt set_it;
+	ForwardIt set_it;
 	for (; first != last; ++first)
 	{
 		for (set_it = set_first; set_it != set_last; ++set_it)
@@ -114,9 +114,9 @@ inline _InputIt winx_call find_first_not_of(
 	return first;
 }
 
-template <class _InputIt, class _ValT>
-inline _InputIt winx_call find_not(
-	_InputIt first, _InputIt last, const _ValT& val)
+template <class InputIt, class _ValT>
+inline InputIt winx_call find_not(
+	InputIt first, InputIt last, const _ValT& val)
 {
 	for (; first != last; ++first)
 	{
@@ -142,9 +142,9 @@ inline _BidiIt winx_call rfind(
 // -------------------------------------------------------------------------
 // search
 
-template <class _ForwardIt, class _E>
-inline _ForwardIt winx_call search(
-	_ForwardIt first, _ForwardIt last, const _E* pattern)
+template <class ForwardIt, class Ty>
+inline ForwardIt winx_call search(
+	ForwardIt first, ForwardIt last, const Ty* pattern)
 {
 	return std::search(
 		first, last,
@@ -155,11 +155,11 @@ inline _ForwardIt winx_call search(
 // -------------------------------------------------------------------------
 // match, match_symbol, match_csymbol
 
-template<class _InputIt1, class _InputIt2>
-inline _InputIt1 winx_call match(
-	_InputIt1 first1, _InputIt1 last1, _InputIt2 first2, _InputIt2 last2)
+template<class InputIt1, class InputIt2>
+inline InputIt1 winx_call match(
+	InputIt1 first1, InputIt1 last1, InputIt2 first2, InputIt2 last2)
 {
-	_InputIt1 first = first1;
+	InputIt1 first = first1;
 	for (;; ++first1, ++first2)
 	{
 		if (first2 == last2)
@@ -171,11 +171,11 @@ inline _InputIt1 winx_call match(
 	}
 }
 
-template<class _InputIt, class _E>
-inline _InputIt winx_call match(
-	_InputIt first, _InputIt last, const _E* str)
+template<class InputIt, class Ty>
+inline InputIt winx_call match(
+	InputIt first, InputIt last, const Ty* str)
 {
-	_InputIt first1 = first;
+	InputIt first1 = first;
 	for (;; ++first, ++str)
 	{
 		if (!*str)
@@ -187,10 +187,10 @@ inline _InputIt winx_call match(
 	}
 }
 
-template <class _InputIt, class _ForwardIt>
-inline _InputIt winx_call match_symbol(
-	_InputIt first, _InputIt last,
-	_ForwardIt set_first, _ForwardIt set_last1, _ForwardIt set_last2)
+template <class InputIt, class ForwardIt>
+inline InputIt winx_call match_symbol(
+	InputIt first, InputIt last,
+	ForwardIt set_first, ForwardIt set_last1, ForwardIt set_last2)
 {
 	if (first == last)
 		return first;
@@ -201,9 +201,9 @@ inline _InputIt winx_call match_symbol(
 	return find_first_not_of(++first, last, set_first, set_last2);
 }
 
-template <class _InputIt>
-inline _InputIt winx_call match_csymbol(
-	_InputIt first, _InputIt last)
+template <class InputIt>
+inline InputIt winx_call match_csymbol(
+	InputIt first, InputIt last)
 {
 	if (first == last)
 		return first;
@@ -217,16 +217,16 @@ inline _InputIt winx_call match_csymbol(
 // -------------------------------------------------------------------------
 // find_not_csymbol, find_digit_or_csymbol
 
-template <class _InputIt>
-inline _InputIt winx_call find_not_csymbol(
-	_InputIt first, _InputIt last)
+template <class InputIt>
+inline InputIt winx_call find_not_csymbol(
+	InputIt first, InputIt last)
 {
 	return std::find_if(first, last, CharType::NotIsCSymbolNextChar());
 }
 
-template <class _InputIt>
-inline _InputIt winx_call find_digit_or_csymbol(
-	_InputIt first, _InputIt last)
+template <class InputIt>
+inline InputIt winx_call find_digit_or_csymbol(
+	InputIt first, InputIt last)
 {
 	return std::find_if(first, last, CharType::IsCSymbolNextChar());
 }
@@ -234,9 +234,9 @@ inline _InputIt winx_call find_digit_or_csymbol(
 // -------------------------------------------------------------------------
 // compare_by
 
-template<class _InputIt1, class _InputIt2, class _Compr>
+template<class InputIt1, class InputIt2, class ComprT>
 inline int winx_call compare_by(
-	_InputIt1 first1, _InputIt1 last1, _InputIt2 first2, _InputIt2 last2, _Compr cmp)
+	InputIt1 first1, InputIt1 last1, InputIt2 first2, InputIt2 last2, ComprT cmp)
 {
 	for (;; ++first1, ++first2)
 	{
@@ -250,9 +250,9 @@ inline int winx_call compare_by(
 	}
 }
 
-template<class _InputIt, class _E, class _Compr>
+template<class InputIt, class Ty, class ComprT>
 inline int winx_call compare_by(
-	_InputIt first, _InputIt last, const _E* str, _Compr cmp)
+	InputIt first, InputIt last, const Ty* str, ComprT cmp)
 {
 	for (;; ++first, ++str)
 	{
@@ -269,9 +269,22 @@ inline int winx_call compare_by(
 // -------------------------------------------------------------------------
 // compare
 
-template<class _InputIt1, class _InputIt2>
+template <class Ty>
+__forceinline int winx_call compare_item(const Ty& a, const Ty& b) {
+	return (int)a - (int)b;
+}
+
+__forceinline int winx_call compare_item(char a, char b) {
+	return (unsigned char)a - (unsigned char)b;
+}
+
+__forceinline int winx_call compare_item(wchar_t a, wchar_t b) {
+	return a - b;
+}
+
+template<class InputIt1, class InputIt2>
 inline int winx_call compare(
-	_InputIt1 first1, _InputIt1 last1, _InputIt2 first2, _InputIt2 last2)
+	InputIt1 first1, InputIt1 last1, InputIt2 first2, InputIt2 last2)
 {
 	for (;; ++first1, ++first2)
 	{
@@ -280,20 +293,20 @@ inline int winx_call compare(
 		if (first2 == last2)
 			return 1;
 		if (*first1 != *first2)
-			return (int)*first1 - (int)*first2;
+			return compare_item(*first1, *first2);
 	}
 }
 
-template<class _InputIt, class _E>
+template<class InputIt, class Ty>
 inline int winx_call compare(
-	_InputIt first, _InputIt last, const _E* str)
+	InputIt first, InputIt last, const Ty* str)
 {
 	for (;; ++first, ++str)
 	{
 		if (first == last)
 			return *str == 0 ? 0 : -1;
 		if (*first != *str)
-			return (int)*first - (int)*str;
+			return compare_item(*first, *str);
 		if (*str == 0)
 			return 1;
 	}
@@ -312,15 +325,15 @@ __forceinline int winx_call compare(const wchar_t* src, const wchar_t* dst)
 // -------------------------------------------------------------------------
 // replace
 
-template <class _Container, class _RandIterator>
+template <class Container, class RandIterator>
 inline void winx_call replace(
-	_Container& container,
-	typename _Container::iterator first,
-	typename _Container::iterator last,
-	_RandIterator bfirst, _RandIterator blast)
+	Container& container,
+	typename Container::iterator first,
+	typename Container::iterator last,
+	RandIterator bfirst, RandIterator blast)
 {
-	typedef typename _Container::size_type size_type;
-	typedef typename _Container::difference_type difference_type;
+	typedef typename Container::size_type size_type;
+	typedef typename Container::difference_type difference_type;
 
 	const size_type cchDelete = last - first;
 	const size_type cchInsert = blast - bfirst;
@@ -338,16 +351,16 @@ inline void winx_call replace(
 	}
 }
 
-template <class _Container>
+template <class Container>
 inline void winx_call replace(
-	_Container& container,
-	typename _Container::iterator first,
-	typename _Container::iterator last,
-	typename _Container::size_type count,
-	const typename _Container::value_type& val)
+	Container& container,
+	typename Container::iterator first,
+	typename Container::iterator last,
+	typename Container::size_type count,
+	const typename Container::value_type& val)
 {
-	typedef typename _Container::size_type size_type;
-	typedef typename _Container::difference_type difference_type;
+	typedef typename Container::size_type size_type;
+	typedef typename Container::difference_type difference_type;
 
 	const size_type cchDelete = last - first;
 	const difference_type delta = count - cchDelete;

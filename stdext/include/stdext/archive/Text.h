@@ -166,11 +166,11 @@ inline size_t winx_call getline(ReadArchiveT& ar, StringT& s)
 	return get_while(ar, s, CharType::NotIsEOL()) + skip_eol(ar);
 }
 
-template <class ReadArchiveT, class AllocT>
+template <class ReadArchiveT, class AllocT, class CharT>
 inline size_t winx_call getline(
-	ReadArchiveT& ar, AllocT& alloc, BasicString<typename ReadArchiveT::char_type>& s)
+	ReadArchiveT& ar, AllocT& alloc, BasicString<CharT>& s)
 {
-	OutputBasicString<typename ReadArchiveT::char_type, AllocT> s1(alloc, s);
+	OutputBasicString<CharT, AllocT> s1(alloc, s);
 	return getline(ar, s1);
 }
 

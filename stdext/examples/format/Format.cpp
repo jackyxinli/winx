@@ -6,7 +6,7 @@
 
 int main()
 {
-	NS_STDEXT::AutoFreeAlloc alloc;
+	NS_STDEXT::AutoAlloc alloc;
 	NS_STDEXT::String s;
 	NS_STDEXT::WString ws;
 	

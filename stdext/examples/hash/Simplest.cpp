@@ -5,7 +5,7 @@
 
 void testHashMapCStr()
 {
-	typedef NS_STDEXT::AutoFreeAlloc AllocT;
+	typedef NS_STDEXT::AutoAlloc AllocT;
 	typedef NS_STDEXT::HashMap<const char*, int, NS_STDEXT::HashCompare<const char*>, AllocT> MapT;
 
 	AllocT alloc;
@@ -24,7 +24,7 @@ void testHashMapCStr()
 
 void testHashMapString()
 {
-	typedef NS_STDEXT::AutoFreeAlloc AllocT;
+	typedef NS_STDEXT::AutoAlloc AllocT;
 	typedef NS_STDEXT::HashMap<NS_STDEXT::String, int, NS_STDEXT::HashCompare<NS_STDEXT::String>, AllocT> MapT;
 
 	AllocT alloc;

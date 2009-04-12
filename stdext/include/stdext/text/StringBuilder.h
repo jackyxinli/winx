@@ -356,32 +356,32 @@ class TestStringBuilder : public TestCase
 public:
 	void testConstruct(LogT& log)
 	{
-		std::BlockPool recycle;
-		std::ScopedAlloc alloc(recycle);
+		NS_STDEXT::BlockPool recycle;
+		NS_STDEXT::ScopedAlloc alloc(recycle);
 
-		std::StringBuilder a1('a');
+		NS_STDEXT::StringBuilder a1('a');
 		AssertExp(a1.size() == 1 && a1[0] == 'a');
 
-		std::StringBuilder a2(3, 'a');
+		NS_STDEXT::StringBuilder a2(3, 'a');
 		AssertExp(a2.cast_str() == "aaa");
 
-		std::StringBuilder a("Hello");
+		NS_STDEXT::StringBuilder a("Hello");
 		AssertExp(a.cast_str() == "Hello");
 
-		std::StringBuilder b("Hello", 4);
+		NS_STDEXT::StringBuilder b("Hello", 4);
 		AssertExp(b == "Hell");
 
-		std::StringBuilder c(b.begin(), b.end());
-		std::String d = c.str(alloc);
+		NS_STDEXT::StringBuilder c(b.begin(), b.end());
+		NS_STDEXT::String d = c.str(alloc);
 		AssertExp(d == b && b == d);
 	}
 
 	void testSubstr(LogT& log)
 	{
-		std::BlockPool recycle;
-		std::ScopedAlloc alloc(recycle);
+		NS_STDEXT::BlockPool recycle;
+		NS_STDEXT::ScopedAlloc alloc(recycle);
 
-		std::StringBuilder a("Hello");
+		NS_STDEXT::StringBuilder a("Hello");
 		AssertExp(a.cast_substr(1, 3) == "ell");
 		AssertExp(a.substr(alloc, 1, 3) == "ell");
 		AssertExp(a.substr(alloc, 1) == "ello");
@@ -390,7 +390,7 @@ public:
 
 	void testAssign(LogT& log)
 	{
-		std::StringBuilder a;
+		NS_STDEXT::StringBuilder a;
 		
 		a.assign('a');
 		AssertExp(a.cast_str() == "a");
@@ -401,7 +401,7 @@ public:
 		a.assign("Hello");
 		AssertExp(a.cast_str() == "Hello");
 
-		std::StringBuilder b;
+		NS_STDEXT::StringBuilder b;
 		b.assign("Hello", 2);
 		AssertExp(b.cast_str() == "He");
 
@@ -418,7 +418,7 @@ public:
 
 	void testAppend(LogT& log)
 	{
-		std::StringBuilder a("Hello");
+		NS_STDEXT::StringBuilder a("Hello");
 		a.append(3, '!');
 		AssertExp(a == "Hello!!!");
 
@@ -428,21 +428,21 @@ public:
 		a.append(' ').append(std::string("world"));
 		AssertExp(a == "Hello!!!! world");
 	
-		std::StringBuilder temp('!');
+		NS_STDEXT::StringBuilder temp('!');
 		a.append(temp);
 		AssertExp(a == "Hello!!!! world!");
 		
 		a.append(std::vector<char>(2, '!'));
 		AssertExp(a == "Hello!!!! world!!!");
 	
-		a.append(std::String("!", 1));
+		a.append(NS_STDEXT::String("!", 1));
 		AssertExp(a == "Hello!!!! world!!!!");
 	}
 
 	void testReplace(LogT& log)
 	{
-		std::StringBuilder a("Hello!!!! world! Good!");
-		std::StringBuilder::iterator it = a.find("!!!!");
+		NS_STDEXT::StringBuilder a("Hello!!!! world! Good!");
+		NS_STDEXT::StringBuilder::iterator it = a.find("!!!!");
 		AssertExp(it != a.end());
 		AssertExp(*(it-1) == 'o' && *it == '!');
 

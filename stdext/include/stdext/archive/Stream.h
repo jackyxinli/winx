@@ -419,13 +419,13 @@ class TestStreamArchive : public TestCase
 public:
 	void testBasic(LogT& log)
 	{
-		typedef std::StreamReader ReaderT;
-		typedef std::StreamWriter WriterT;
+		typedef NS_STDEXT::StreamReader ReaderT;
+		typedef NS_STDEXT::StreamWriter WriterT;
 
 		const char stg[] = "/__teststream__.txt";
 
-		std::BlockPool recycle;
-		std::ScopedAlloc alloc(recycle);
+		NS_STDEXT::BlockPool recycle;
+		NS_STDEXT::ScopedAlloc alloc(recycle);
 
 		WINX_USES_CONVERSION;
 		{
@@ -448,8 +448,8 @@ public:
 			AssertExp(s1 == "hello");
 			std::vector<char> s2;
 			ar.getline(s2);
-			AssertExp(s2 == std::String(alloc, "!"));
-			std::String s3;
+			AssertExp(s2 == NS_STDEXT::String(alloc, "!"));
+			NS_STDEXT::String s3;
 			ar.getline(alloc, s3);
 			AssertExp(s3.empty());
 		}
@@ -499,13 +499,13 @@ public:
 			std::vector<char> s2;
 			AssertExp(ar.gets(s2) == S_OK);
 			AssertExp(std::compare(s2.begin(), s2.end(), "World") == 0);
-			std::String s3;
+			NS_STDEXT::String s3;
 			AssertExp(ar.gets(alloc, s3) == S_OK);
-			AssertExp(s3 == std::String(alloc, 255, '!'));
-			std::String s4;
+			AssertExp(s3 == NS_STDEXT::String(alloc, 255, '!'));
+			NS_STDEXT::String s4;
 			AssertExp(ar.gets(alloc, s4) == S_OK);
-			AssertExp(s4 == std::String(alloc, 65537, '?'));
-			std::String s5;
+			AssertExp(s4 == NS_STDEXT::String(alloc, 65537, '?'));
+			NS_STDEXT::String s5;
 			AssertExp(ar.gets(alloc, s5) != S_OK);
 		}
 	}

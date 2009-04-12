@@ -182,7 +182,7 @@ public:
 	template <class IntT>
 	void doTestIntToStr(const IntT& val, LogT& log)
 	{
-		NS_STDEXT::AutoFreeAlloc alloc;
+		NS_STDEXT::AutoAlloc alloc;
 		std::ostringstream os;
 		os << val;
 		AssertExp(os.str() == NS_STDEXT::str(alloc, val));
@@ -223,7 +223,7 @@ public:
 	template <class RealT>
 	void doTestRealToStr(const RealT& val, LogT& log)
 	{
-		NS_STDEXT::AutoFreeAlloc alloc;
+		NS_STDEXT::AutoAlloc alloc;
 		NS_STDEXT::String s = NS_STDEXT::str(alloc, val);
 		std::string s1 = s.stl_str();
 		std::istringstream is(s1);
@@ -248,7 +248,7 @@ public:
 	
 	void testBasic(LogT& log)
 	{
-		NS_STDEXT::AutoFreeAlloc alloc;
+		NS_STDEXT::AutoAlloc alloc;
 		NS_STDEXT::String s;
 		std::WString ws;
 		

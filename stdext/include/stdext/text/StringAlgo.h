@@ -473,7 +473,7 @@ public:
 
 	void testImplode(LogT& log)
 	{
-		NS_STDEXT::AutoFreeAlloc alloc;
+		NS_STDEXT::AutoAlloc alloc;
 
 		std::list<std::string> lst;
 		lst.push_back("Hello,");
@@ -491,7 +491,7 @@ public:
 	
 	void testExplode(LogT& log)
 	{
-		NS_STDEXT::AutoFreeAlloc alloc;
+		NS_STDEXT::AutoAlloc alloc;
 
 		NS_STDEXT::String s(alloc, "Hello, world!  I am xushiwei!");
 
@@ -517,7 +517,7 @@ public:
 
 	void testConcat2(LogT& log)
 	{
-		NS_STDEXT::AutoFreeAlloc alloc;
+		NS_STDEXT::AutoAlloc alloc;
 		{
 			std::list<std::string> lst;
 			lst.push_back("Hello,");

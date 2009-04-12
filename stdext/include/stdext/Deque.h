@@ -29,20 +29,20 @@
 		#include "../std/deque.h"
 		#endif
 		#define WINX_DEQUE_BASE_(DataT, AllocT) \
-			std::_Deque<DataT, std::StlAlloc<DataT, AllocT> >
+			std::_Deque<DataT, NS_STDEXT::StlAlloc<DataT, AllocT> >
 	#else
 		#ifndef __SGI_DEQUE_H__
 		#include "sgi/deque.h"
 		#endif
 		#define WINX_DEQUE_BASE_(DataT, AllocT) \
-			stdext::deque<DataT, std::StlAlloc<DataT, AllocT> >
+			stdext::deque<DataT, NS_STDEXT::StlAlloc<DataT, AllocT> >
 	#endif
 #else
 	#if !defined(_DEQUE) && !defined(_GLIBCXX_DEQUE) && !defined(_DEQUE_)
 	#include <deque>
 	#endif
 	#define WINX_DEQUE_BASE_(DataT, AllocT) \
-		std::deque<DataT, std::StlAlloc<DataT, AllocT> >
+		std::deque<DataT, NS_STDEXT::StlAlloc<DataT, AllocT> >
 #endif
 
 #if defined(STD_UNITTEST)
@@ -56,7 +56,7 @@ NS_STDEXT_BEGIN
 // -------------------------------------------------------------------------
 // class Deque
 
-template <class DataT, class AllocT = ScopedAlloc>
+template <class DataT, class AllocT = DefaultAlloc>
 class Deque : public WINX_DEQUE_BASE_(DataT, AllocT)
 {
 private:
@@ -108,9 +108,9 @@ class TestDeque : public TestCase
 public:
 	void testDeque(LogT& log)
 	{
-		std::BlockPool recycle;
-		std::ScopedAlloc alloc(recycle);
-		std::Deque<int> coll(alloc);
+		NS_STDEXT::BlockPool recycle;
+		NS_STDEXT::ScopedAlloc alloc(recycle);
+		NS_STDEXT::Deque<int> coll(alloc);
 		coll.push_back(1);
 		coll.push_back(2);
 		coll.push_back(3);
@@ -124,7 +124,7 @@ public:
 	{
 		typedef std::deque<int> DequeT;
 		log.print("===== std::deque =====\n");
-		std::PerformanceCounter counter;
+		NS_STDEXT::PerformanceCounter counter;
 		{
 			DequeT coll;
 			for (int i = 0; i < N; ++i)
@@ -135,12 +135,12 @@ public:
 
 	void doDeque(LogT& log)
 	{
-		typedef std::Deque<int> DequeT;
-		log.print("===== std::Deque (ScopedAlloc) =====\n");
-		std::PerformanceCounter counter;
+		typedef NS_STDEXT::Deque<int> DequeT;
+		log.print("===== NS_STDEXT::Deque (ScopedAlloc) =====\n");
+		NS_STDEXT::PerformanceCounter counter;
 		{
-			std::BlockPool recycle;
-			std::ScopedAlloc alloc(recycle);
+			NS_STDEXT::BlockPool recycle;
+			NS_STDEXT::ScopedAlloc alloc(recycle);
 			DequeT coll(alloc);
 			for (int i = 0; i < N; ++i)
 				coll.push_back(i);
@@ -150,15 +150,15 @@ public:
 
 	void doShareAllocDeque(LogT& log)
 	{
-		typedef std::Deque<int> DequeT;
-		std::BlockPool recycle;
+		typedef NS_STDEXT::Deque<int> DequeT;
+		NS_STDEXT::BlockPool recycle;
 		log.newline();
 		for (int i = 0; i < 5; ++i)
 		{
 			log.print("===== doShareAllocDeque =====\n");
-			std::PerformanceCounter counter;
+			NS_STDEXT::PerformanceCounter counter;
 			{
-				std::ScopedAlloc alloc(recycle);
+				NS_STDEXT::ScopedAlloc alloc(recycle);
 				DequeT coll(alloc);
 				for (int i = 0; i < N; ++i)
 					coll.push_back(i);

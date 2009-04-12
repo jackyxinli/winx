@@ -373,6 +373,17 @@ public:
 		std::sort( (Type*)Base::first, (Type*)Base::second, pred );
 		return *this;
 	}
+
+	BasicArray& winx_call stable_sort() {
+		std::stable_sort( (Type*)Base::first, (Type*)Base::second );
+		return *this;
+	}
+	
+	template <class PredT>
+		BasicArray& winx_call stable_sort(PredT pred) {
+		std::stable_sort( (Type*)Base::first, (Type*)Base::second, pred );
+		return *this;
+	}
 };
 
 // =========================================================================

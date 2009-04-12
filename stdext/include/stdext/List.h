@@ -36,7 +36,7 @@ NS_STDEXT_BEGIN
 // -------------------------------------------------------------------------
 // class List
 
-template <class ValT, class AllocT = ScopedAlloc>
+template <class ValT, class AllocT = DefaultAlloc>
 class List : public std::list< ValT, StlAlloc<ValT, AllocT> >
 {
 private:
@@ -75,7 +75,7 @@ public:
 
 #ifndef _WINX_NO_SLIST
 
-template <class ValT, class AllocT = ScopedAlloc>
+template <class ValT, class AllocT = DefaultAlloc>
 class Slist : public stdext::slist< ValT, StlAlloc<ValT, AllocT> >
 {
 private:
@@ -351,9 +351,9 @@ public:
 
 	void testBasic(LogT& log)
 	{
-		std::BlockPool recycle;
-		std::ScopedAlloc alloc(recycle);
-		std::List<Obj> coll(alloc);
+		NS_STDEXT::BlockPool recycle;
+		NS_STDEXT::ScopedAlloc alloc(recycle);
+		NS_STDEXT::List<Obj> coll(alloc);
 		coll.push_back(1);
 		coll.push_back(2);
 		coll.push_back(4);
@@ -379,13 +379,13 @@ class TestSlist : public TestCase
 public:
 	void testBasic(LogT& log)
 	{
-		std::BlockPool recycle;
-		std::ScopedAlloc alloc(recycle);
-		std::Slist<int> coll(alloc);
+		NS_STDEXT::BlockPool recycle;
+		NS_STDEXT::ScopedAlloc alloc(recycle);
+		NS_STDEXT::Slist<int> coll(alloc);
 		coll.push_front(1);
 		coll.push_front(2);
 		coll.push_front(4);
-		for (std::Slist<int>::const_iterator it = coll.begin(); it != coll.end(); ++it)
+		for (NS_STDEXT::Slist<int>::const_iterator it = coll.begin(); it != coll.end(); ++it)
 		{
 			log.print(*it).newline();
 		}
@@ -452,10 +452,10 @@ public:
 
 	void testBasic(LogT& log)
 	{
-		std::BlockPool recycle;
-		std::ScopedAlloc alloc(recycle);
+		NS_STDEXT::BlockPool recycle;
+		NS_STDEXT::ScopedAlloc alloc(recycle);
 		
-		std::DclList<Obj> coll;
+		NS_STDEXT::DclList<Obj> coll;
 
 		coll.push_back(STD_NEW(alloc, Obj)(1));
 		STD_NEW(alloc, Obj)(2, coll, true);
@@ -467,10 +467,10 @@ public:
 
 	void testInsertFront(LogT& log)
 	{
-		std::BlockPool recycle;
-		std::ScopedAlloc alloc(recycle);
+		NS_STDEXT::BlockPool recycle;
+		NS_STDEXT::ScopedAlloc alloc(recycle);
 		
-		std::DclList<Obj> coll;
+		NS_STDEXT::DclList<Obj> coll;
 
 		STD_NEW(alloc, Obj)(1, coll);
 		coll.push_front(STD_NEW(alloc, Obj)(2));

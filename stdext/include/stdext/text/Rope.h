@@ -170,10 +170,10 @@ class TestRope : public TestCase
 public:
 	void testFind(LogT& log)
 	{
-		std::BlockPool recycle;
-		std::ScopedAlloc alloc(recycle);
+		NS_STDEXT::BlockPool recycle;
+		NS_STDEXT::ScopedAlloc alloc(recycle);
 
-		std::Rope<char> a(alloc);
+		NS_STDEXT::Rope<char> a(alloc);
 		a.push_back('b');
 		a.push_front('a');
 		AssertExp(a == "ab");
@@ -182,19 +182,19 @@ public:
 
 	void testIterator(LogT& log) // slowly (not recommended)
 	{
-		std::BlockPool recycle;
-		std::ScopedAlloc alloc(recycle);
+		NS_STDEXT::BlockPool recycle;
+		NS_STDEXT::ScopedAlloc alloc(recycle);
 
-		std::Rope<char> a(alloc, "Hello");
-		std::Rope<char> b(alloc, "abc");
+		NS_STDEXT::Rope<char> a(alloc, "Hello");
+		NS_STDEXT::Rope<char> b(alloc, "abc");
 
-		std::Rope<char>::iterator it = a.mutable_begin();
+		NS_STDEXT::Rope<char>::iterator it = a.mutable_begin();
 		*it = 'e';
 		*(it+1) = 'f';
 		*(it+2) = 'g';
 		AssertExp(a == "efglo");
 		
-		std::Rope<char>::const_iterator it2 = it;
+		NS_STDEXT::Rope<char>::const_iterator it2 = it;
 		AssertExp(*it == 'e');
 		AssertExp(*it2 == 'e');
 		AssertExp(*(it2+1) == 'f');
@@ -202,7 +202,7 @@ public:
 		std::copy(b.begin(), b.end(), it);
 		AssertExp(a == "abclo");
 
-		std::Rope<char>::const_iterator it3;
+		NS_STDEXT::Rope<char>::const_iterator it3;
 		it3 = it;
 		AssertExp(*it3 == 'a');
 
@@ -213,12 +213,12 @@ public:
 
 	void testHash(LogT& log)
 	{
-		typedef std::Rope<char> KeyT;
+		typedef NS_STDEXT::Rope<char> KeyT;
 
-		std::BlockPool recycle;
-		std::ScopedAlloc alloc(recycle);
+		NS_STDEXT::BlockPool recycle;
+		NS_STDEXT::ScopedAlloc alloc(recycle);
 
-		std::HashMap<KeyT, int> cont(alloc);
+		NS_STDEXT::HashMap<KeyT, int> cont(alloc);
 		
 		KeyT a(alloc, "Hello");
 		cont[a] = 1;
@@ -230,13 +230,13 @@ public:
 
 	void testSequenceBuffer(LogT& log)
 	{
-		std::BlockPool recycle;
-		std::ScopedAlloc alloc(recycle);
+		NS_STDEXT::BlockPool recycle;
+		NS_STDEXT::ScopedAlloc alloc(recycle);
 		char buffer[256];
 
-		std::Rope<char> a(alloc);
+		NS_STDEXT::Rope<char> a(alloc);
 		{
-			std::SequenceBuffer<std::Rope<char>, 8> input(a);
+			NS_STDEXT::SequenceBuffer<NS_STDEXT::Rope<char>, 8> input(a);
 			input.append("Hello");
 			input.append(", ");
 			input.append("world!");
@@ -246,7 +246,7 @@ public:
 		*a.copy(buffer) = '\0';
 		AssertExp(a == "Hello, world!!????");
 		{
-			std::SequenceBuffer<std::Rope<char>, 16> input(a);
+			NS_STDEXT::SequenceBuffer<NS_STDEXT::Rope<char>, 16> input(a);
 			input.append(2, ' ');
 			input.append("You");
 			input.append("'re");
@@ -258,19 +258,19 @@ public:
 
 	void testBasic(LogT& log)
 	{
-		std::BlockPool recycle;
-		std::ScopedAlloc alloc(recycle);
+		NS_STDEXT::BlockPool recycle;
+		NS_STDEXT::ScopedAlloc alloc(recycle);
 
-		std::Rope<char> a(alloc);
+		NS_STDEXT::Rope<char> a(alloc);
 		a.append(20, 'a');
 		a.append("bcdefg");
 
-		std::Rope<char> b(a);
+		NS_STDEXT::Rope<char> b(a);
 		b.erase(b.size() - 7, 7);
 		b.append("abcdefg");
 		AssertExp(a.compare(b) == 0);
 
-		std::Rope<char> c(alloc);
+		NS_STDEXT::Rope<char> c(alloc);
 		c = a;
 		AssertExp(c == b);
 

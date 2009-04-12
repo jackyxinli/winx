@@ -41,7 +41,7 @@ class TestRelationPerformance
 {
 private:
 	NS_STDEXT::Accumulator m_acc;
-	NS_STDEXT::AutoFreeAlloc m_alloc;
+	NS_STDEXT::AutoAlloc m_alloc;
 	const char** m_keys;
 	int* m_vals;
 
@@ -128,7 +128,7 @@ public:
 		for (int j = 0; j < TestN; ++j)
 		{
 			typedef std::pair<const char*, int> TupleT;
-			typedef NS_STDEXT::Relation<TupleT, 3, 0, NS_STDEXT::HashMapIndexing, NS_STDEXT::AutoFreeAlloc> RelationT;
+			typedef NS_STDEXT::Relation<TupleT, 3, 0, NS_STDEXT::HashMapIndexing, NS_STDEXT::AutoAlloc> RelationT;
 			
 			RelationT rel(m_alloc);
 		
@@ -149,7 +149,7 @@ public:
 		for (int j = 0; j < TestN; ++j)
 		{
 			typedef std::pair<const char*, int> TupleT;
-			typedef NS_STDEXT::Relation<TupleT, 3, 0, NS_STDEXT::HashMapIndexing, NS_STDEXT::AutoFreeAlloc> RelationT;
+			typedef NS_STDEXT::Relation<TupleT, 3, 0, NS_STDEXT::HashMapIndexing, NS_STDEXT::AutoAlloc> RelationT;
 			typedef RelationT::Indexing<0> Indexing0;
 			
 			RelationT rel(m_alloc);

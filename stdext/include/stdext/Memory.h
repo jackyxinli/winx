@@ -38,9 +38,12 @@ typedef block_pool BlockPool;
 typedef tls_block_pool TlsBlockPool;
 typedef tls_block_pool TlsBlockPoolInit;
 
-typedef auto_alloc AutoFreeAlloc;
-typedef scoped_alloc ScopeAlloc;
+typedef auto_alloc AutoAlloc;
 typedef scoped_alloc ScopedAlloc;
+typedef default_alloc DefaultAlloc;
+
+typedef auto_alloc AutoFreeAlloc; // for backward compatibility
+typedef scoped_alloc ScopeAlloc; // for backward compatibility
 
 #define RegionAllocT region_alloc
 #define DestructorTraits destructor_traits

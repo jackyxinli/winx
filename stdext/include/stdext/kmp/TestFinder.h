@@ -49,13 +49,13 @@ public:
 public:
 	void testSearchInArchive(LogT& log)
 	{
-		std::BlockPool recycle;
-		std::ScopedAlloc alloc(recycle);
+		NS_STDEXT::BlockPool recycle;
+		NS_STDEXT::ScopedAlloc alloc(recycle);
 
 		std::string line;
-		std::StdioReader ar(__FILE__);
+		NS_STDEXT::StdioReader ar(__FILE__);
 
-		std::kmp::Finder<char> finder("std::kmp::Finder<char>");
+		NS_STDEXT::kmp::Finder<char> finder("NS_STDEXT::kmp::Finder<char>");
 		HRESULT hr = finder.next(ar);
 		AssertExp(hr == S_OK);
 
@@ -68,7 +68,7 @@ public:
 		std::string line;
 		std::ifstream is(__FILE__);
 		
-		std::kmp::Finder<char> finder("std::ifstream");
+		NS_STDEXT::kmp::Finder<char> finder("std::ifstream");
 		HRESULT hr = finder.istreamNext(is);
 		AssertExp(hr == S_OK);
 
@@ -81,7 +81,7 @@ public:
 		const char* p;
 		const char dest[] = "1234ababcde";
 		
-		std::kmp::Finder<char> finder("abc");
+		NS_STDEXT::kmp::Finder<char> finder("abc");
 		HRESULT hr = finder.cstrNext(dest, &p);
 		AssertExp(hr == S_OK);
 		AssertExp(strcmp(p, "de") == 0);
@@ -96,7 +96,7 @@ public:
 		Container dest(sizeof(destBuf));
 		std::copy(destBuf, destBuf+sizeof(destBuf), dest.begin());
 
-		std::kmp::Finder<char> finder("abc");
+		NS_STDEXT::kmp::Finder<char> finder("abc");
 		HRESULT hr = finder.iteratorNext(dest.begin(), dest.end(), &itFind);
 		AssertExp(hr == S_OK);
 		AssertExp(dest.end() - itFind == 3);
