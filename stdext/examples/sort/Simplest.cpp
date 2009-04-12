@@ -12,7 +12,7 @@ inline void test1(const char* argv[])
 	FileWriter output(argv[2]);
 	
 	const String s(input.begin(), input.end());
-	output.printLines(explode(alloc, '\n', s).sort());
+	output.printLines(explode2<0>(alloc, '\n', s).sort());
 }
 
 inline void test2(const char* argv[])
@@ -23,8 +23,8 @@ inline void test2(const char* argv[])
 	FileWriter output(argv[2]);	
 	const String s(input.begin(), input.end());
 	
-	std::deque<String> lines;
-	explode('\n', s, lines);
+	std::vector<String> lines;
+	explode2<0>('\n', s, lines);
 	std::stable_sort(lines.begin(), lines.end());
 	
 	output.printLines(lines);
@@ -39,7 +39,7 @@ inline void test3(const char* argv[])
 	FileWriter output(argv[2]);
 
 	String line;
-	std::deque<String> lines;
+	std::vector<String> lines;
 	while (input.getline(alloc, line))
 		lines.push_back(line);
 
@@ -69,8 +69,8 @@ int main(int argc, const char* argv[])
 	if (argc < 3)
 		return -1;
 
-#define LIST_SORT
-#define READ_ARCHIVE
+//#define LIST_SORT
+//#define READ_ARCHIVE
 #define FAST_VERSION
 #if defined(LIST_SORT)
 	test4(argv);
