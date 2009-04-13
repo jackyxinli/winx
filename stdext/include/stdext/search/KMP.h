@@ -31,9 +31,9 @@
 #include "../../std/string.h"
 #endif
 
-#define NS_KMP			std::kmp
-#define NS_KMP_BEGIN	namespace std { namespace kmp {
-#define NS_KMP_END		} }
+#define NS_KMP			NS_STDEXT::kmp
+#define NS_KMP_BEGIN	NS_STDEXT_BEGIN namespace kmp {
+#define NS_KMP_END		} NS_STDEXT_END
 
 NS_KMP_BEGIN
 
