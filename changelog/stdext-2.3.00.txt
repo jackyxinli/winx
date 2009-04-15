@@ -1,0 +1,115 @@
+# OpType
+ * see <stdext/OpType.h>
+ * class OpType
+		static unsigned is(unsigned typeMask, int c);
+ * template <unsigned typeMask> class IsOpType
+		unsigned operator()(int c) const;
+ * example: see http://code.google.com/p/winx/source/detail?r=977
+
+# BasicArray
+ * see <stdext/text/Range.h>
+ * add constructor: 
+		BasicArray(AllocT& alloc, const ContainerT& container);
+		
+# Range
+ * see <stdext/text/Range.h>
+ * change from:
+		template <typename Iterator> class Range
+	to:
+		template <typename Iterator, typename ValT = iterator_traits<Iterator>::value_type> class Range
+		// This change is only for supporting VC++ 6.0
+ * add macro rangeof (example: filepath/examples/OpenNotepad).
+
+# cast
+ * see <stdext/text/Cast.h>
+ * cast<Type>(string, radix) ==> cast<Type>(radix, string);
+ * add functions (see http://code.google.com/p/winx/issues/detail?id=105):
+		Type cast<Type>(string, failVal);
+		Type cast<Type>(radix, string, failVal);
+ * example: stdext/examples/cast
+
+# split/explode
+ * see <stdext/text/StringAlgo.h>
+ * change explode prototype from:
+		BasicArray<BasicString<CharT> > explode<bEraseEmpty>(
+			AllocT& alloc, SepIteratorT first, SepIteratorT last, BasicString<CharT> s);
+		BasicArray<BasicString<CharT> > explode(
+			AllocT& alloc, SepIteratorT first, SepIteratorT last, BasicString<CharT> s);
+		BasicArray<BasicString<CharT> > explode<bEraseEmpty>(
+			AllocT& alloc, SepT sep, BasicString<CharT> s);
+			// Here SepT can be: CharT, std::basic_string<CharT>, std::vector<CharT>, std::deque<CharT>, etc.
+		BasicArray<BasicString<CharT> > explode(
+			AllocT& alloc, SepT sep, BasicString<CharT> s);
+	to:
+		BasicArray<BasicString<CharT> > explode2<flags>(
+			AllocT& alloc, CharT sep, BasicString<CharT> s);
+			// We change some explode functions to explode2. This change is only for supporting VC++ 6.0
+			// Here, flags can be: 0, efEraseEmpty, efTrim, efEraseEmpty|efTrim
+		BasicArray<BasicString<CharT> > explode(
+			AllocT& alloc, CharT sep, BasicString<CharT> s);
+ * add functions:
+		BasicArray<BasicString<CharT> > explode2<flags>(
+			CharT sep, BasicString<CharT> s, ContainerT& cont);
+		BasicArray<BasicString<CharT> > explode(
+			CharT sep, BasicString<CharT> s, ContainerT& cont);
+			// Here, ContainerT can be any stl containers with element type = BasicString<CharT>
+ * alias split = explode, split2 = explode2
+
+# trim/trimLeft/trimRight
+ * see <stdext/text/StringAlgo.h>
+ * add functions:
+		Iterator trimLeft(Iterator first, Iterator last);
+		Iterator trimRight(Iterator first, Iterator last);
+ * refactor functions:
+		BasicString<CharT> trim(BasicString<CharT> s);
+		BasicString<CharT> trimLeft(BasicString<CharT> s);
+		BasicString<CharT> trimRight(BasicString<CharT> s);
+
+# WriteArchive
+ * see <stdext/archive/WriteArchive.h>
+ * add methods:
+		WriteArchive& printLines(Iterator lineFirst, Iterator lineLast, SepT sep);
+		WriteArchive& printLines(Iterator lineFirst, Iterator lineLast);
+		WriteArchive& printLines(const ContainerT& lines);
+
+# MMapReadArchive (http://code.google.com/p/winx/issues/detail?id=101)
+ * see <stdext/archive/MMapArchive.h>
+ * example: stdext/examples/archive
+
+# IO.Text
+ * see <stdext/archive/Text.h> (name space NS_STDEXT::io)
+ * add functions:
+		void print(WriteArchiveT& ar, StringT s);
+		void printLines(WriteArchiveT& ar, Iterator lineFirst, Iterator lineLast, SepT sep);
+		void printLines(WriteArchiveT& ar, Iterator lineFirst, Iterator lineLast);
+		void printLines(WriteArchiveT& ar, const ContainerT& lines);
+
+# FileBuf (http://code.google.com/p/winx/issues/detail?id=99)
+ * see <stdext/FileBuf.h>
+ * add class: MapFileBuf
+
+# FileMapping (http://code.google.com/p/winx/issues/detail?id=100)
+ * see <stdext/MMap.h>
+ * rename <stdext/FileMapping.h> to <stdext/MMap.h>
+ * add class: MapFile (see <stdext/mmap/MapFile.h>)
+ * add class: FileMapping (see <stdext/mmap/FileMapping.h>)
+ * add classes: (see <stdext/mmap/AccessBuffer.h>)
+		SegmentAllocBuffer
+		SegmentAccessBuffer/SegmentViewBuffer
+		AccessBuffer/ViewBuffer
+ * example: stdext/examples/mapfile
+
+# String Search Algoritm
+ * see <stdext/search/KMP.h>, <stdext/search/ShiftOr.h>
+ * see http://code.google.com/p/winx/issues/detail?id=97
+ * bugfix: searching algorithm can't end when FindNoCase<WCHAR>
+ * iteratorNext(it, limit, &itFind) ==>
+   iteratorNext(it, itEnd, &itFind);
+
+# Examples
+ * stdext/examples/archive
+ * stdext/examples/filebuf
+ * stdext/examples/archive
+ * stdext/examples/mapfile
+ * stdext/examples/mmap
+ * stdext/examples/sort

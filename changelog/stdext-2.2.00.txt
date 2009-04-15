@@ -1,0 +1,11 @@
+# Examples
+ * stdext/examples/cast
+ * stdext/examples/event
+ * stdext/examples/finder
+ * stdext/examples/format
+ * stdext/examples/hash
+ * stdext/examples/log
+ * stdext/examples/memory
+ * stdext/examples/relation
+ * stdext/examples/string
+ * stdext/examples/testcase
