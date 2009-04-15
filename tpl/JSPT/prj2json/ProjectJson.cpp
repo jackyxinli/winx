@@ -10,16 +10,16 @@ using namespace tpl;
 #define PRJ_ITEM	token<';', '\r', '\n'>()
 
 int main(int argc, const char* argv[])
-{	
+{
 	const bool array = true;
 
-	std::ErrorLog err;
+	NS_STDEXT::ErrorLog err;
 	if (argc < 2) {
 		err.print("Usage: prj2json <project.prj>\n");
 		return -1;
 	}
 
-	std::FileBuf file(argv[1]);
+	NS_STDEXT::FileBuf file(argv[1]);
 	if (!file.good()) {
 		err.print(">>> ERROR: open input file failed!\n");
 		return -2;
@@ -52,7 +52,7 @@ int main(int argc, const char* argv[])
 	dom::Node* plat = doc.insertNode(alloc, tagPlatform);
 	
 	#define PRJ_INSERT_LEAF(tag, data)	\
-		plat->insertLeaf(alloc, tag, std::TempString<char>(data))
+		plat->insertLeaf(alloc, tag, NS_STDEXT::TempString<char>(data))
 	
 	#if defined(__INTEL__)
 		PRJ_INSERT_LEAF(tagCPU, "intel");
@@ -150,7 +150,7 @@ int main(int argc, const char* argv[])
 			)
 		]/doc)
 	{
-		std::OutputLog log;
+		NS_STDEXT::OutputLog log;
 		json_print(alloc, log, doc);
 		return 0;
 	}
