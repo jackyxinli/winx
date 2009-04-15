@@ -160,7 +160,7 @@ Proc:		char* pData = m_pView + (SegmentSize - m_cbFree);
 };
 
 // -------------------------------------------------------------------------
-// class SegmentAccessBuffer - as the simplest way to accessing memory
+// class SegmentAccessBuffer - as the simplest way to access memory
 
 //
 // ***NOTE*** 
@@ -312,7 +312,7 @@ public:
 };
 
 // -------------------------------------------------------------------------
-// class AccessBuffer - as a general way to accessing memory
+// class AccessBuffer - as a general way to access memory
 
 template <class Base, BOOL ReadOnly = FALSE>
 class AccessBuffer : public Base
