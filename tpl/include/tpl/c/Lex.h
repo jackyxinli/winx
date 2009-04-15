@@ -75,11 +75,11 @@ public:
 };
 
 template <bool bEat>
-inline Rule<CFindContinuableEol<bEat> > TPL_CALL c_find_continuable_eol() {
+inline Rule<CFindContinuableEol<bEat> > const TPL_CALL c_find_continuable_eol() {
 	return Rule<CFindContinuableEol<bEat> >();
 }
 
-inline Rule<CFindContinuableEol<false> > TPL_CALL c_find_continuable_eol() {
+inline Rule<CFindContinuableEol<false> > const TPL_CALL c_find_continuable_eol() {
 	return Rule<CFindContinuableEol<false> >();
 }
 
@@ -97,7 +97,7 @@ typedef UAnd<ChDiv_, CppSingleLineCommentEnd_EatEol_> CppSingleLineCommentEatEol
 TPL_REGEX_GUARD(CppSingleLineCommentU, CppSingleLineCommentG, TagAssigNone);
 TPL_REGEX_GUARD(CppSingleLineCommentEatEolU, CppSingleLineCommentEatEolG, TagAssigNone);
 
-inline Rule<CppSingleLineCommentG> TPL_CALL cpp_single_line_comment() {
+inline Rule<CppSingleLineCommentG> const TPL_CALL cpp_single_line_comment() {
 	return Rule<CppSingleLineCommentG>();
 }
 
@@ -112,7 +112,7 @@ struct CppSingleLineCommentTraits<true> {
 };
 
 template <bool bEatEol>
-inline Rule<typename CppSingleLineCommentTraits<bEatEol>::rule_type> TPL_CALL cpp_single_line_comment() {
+inline Rule<typename CppSingleLineCommentTraits<bEatEol>::rule_type> const TPL_CALL cpp_single_line_comment() {
 	return Rule<typename CppSingleLineCommentTraits<bEatEol>::rule_type>();
 }
 
@@ -130,7 +130,7 @@ typedef UAnd<ChDiv_, CCommentEnd_> CCommentU;
 
 TPL_REGEX_GUARD(CCommentU, CCommentG, TagAssigNone);
 
-inline Rule<CCommentG> TPL_CALL c_comment() {
+inline Rule<CCommentG> const TPL_CALL c_comment() {
 	return Rule<CCommentG>();
 }
 
@@ -146,7 +146,7 @@ typedef UAnd<ChDiv_, CppCommentEnd_EatEol_> CppCommentEatEolU;
 TPL_REGEX_GUARD(CppCommentU, CppCommentG, TagAssigNone);
 TPL_REGEX_GUARD(CppCommentEatEolU, CppCommentEatEolG, TagAssigNone);
 
-inline Rule<CppCommentG> TPL_CALL cpp_comment() {
+inline Rule<CppCommentG> const TPL_CALL cpp_comment() {
 	return Rule<CppCommentG>();
 }
 
@@ -161,7 +161,7 @@ struct CppCommentTraits<true> {
 };
 
 template <bool bEatEol>
-inline Rule<typename CppCommentTraits<bEatEol>::rule_type> TPL_CALL cpp_comment() {
+inline Rule<typename CppCommentTraits<bEatEol>::rule_type> const TPL_CALL cpp_comment() {
 	return Rule<typename CppCommentTraits<bEatEol>::rule_type>();
 }
 
@@ -171,11 +171,11 @@ inline Rule<typename CppCommentTraits<bEatEol>::rule_type> TPL_CALL cpp_comment(
 typedef Lst<SkipWhiteSpaces, CCommentG> CSkipG; // for C
 typedef Lst<SkipWhiteSpaces, CppCommentEatEolG> CppSkipG; // for C++
 
-inline Rule<CSkipG> TPL_CALL c_skip() {
+inline Rule<CSkipG> const TPL_CALL c_skip() {
 	return Rule<CSkipG>();
 }
 
-inline Rule<CppSkipG> TPL_CALL cpp_skip() {
+inline Rule<CppSkipG> const TPL_CALL cpp_skip() {
 	return Rule<CppSkipG>();
 }
 
@@ -188,7 +188,7 @@ TPL_CONST(Rule<CppSkipG>, cpp_skip_);
 typedef Lst<SkipNonEolSpaces, CCommentG> CSkipNonEolG; // for C Preprocessor, deprecated
 
 __deprecated("Deprecated, please use function 'tpl::c_pp_skip()'.")
-inline Rule<CSkipNonEolG> TPL_CALL c_skip_non_eol() {
+inline Rule<CSkipNonEolG> const TPL_CALL c_skip_non_eol() {
 	return Rule<CSkipNonEolG>();
 }
 
@@ -204,7 +204,7 @@ typedef Repeat0<CPpSpaceG> CPpSkipSpaceG;
 typedef Lst<CPpSkipSpaceG, CCommentG> CPpSkipG; // for C Preprocessor
 typedef Lst<CPpSkipSpaceG, CppCommentG> CPpSkipPlusG;
 
-inline Rule<CPpSkipG> TPL_CALL c_pp_skip() {
+inline Rule<CPpSkipG> const TPL_CALL c_pp_skip() {
 	return Rule<CPpSkipG>();
 }
 
@@ -243,15 +243,15 @@ TPL_REGEX_GUARD(CCharU, CCharG, TagAssigCChar);
 typedef Or<CStringU, CCharU> CStringOrCharU;
 typedef Or<CStringG, CCharG> CStringOrCharG;
 
-inline Rule<CStringG> TPL_CALL c_string() {
+inline Rule<CStringG> const TPL_CALL c_string() {
 	return Rule<CStringG>();
 }
 
-inline Rule<CCharG> TPL_CALL c_char() {
+inline Rule<CCharG> const TPL_CALL c_char() {
 	return Rule<CCharG>();
 }
 
-inline Rule<CStringOrCharG> TPL_CALL c_string_or_char() {
+inline Rule<CStringOrCharG> const TPL_CALL c_string_or_char() {
 	return Rule<CStringOrCharG>();
 }
 
@@ -284,19 +284,19 @@ typedef Or<CHexOrOctIntegerG, IntegerG> CIntegerU;
 TPL_REGEX_GUARD0(CUIntegerU, CUIntegerG, TagAssigCUInteger);
 TPL_REGEX_GUARD0(CIntegerU, CIntegerG, TagAssigCInteger);
 
-inline Rule<CHexIntegerG> TPL_CALL c_hex_integer() {
+inline Rule<CHexIntegerG> const TPL_CALL c_hex_integer() {
 	return Rule<CHexIntegerG>();
 }
 
-inline Rule<COctIntegerG> TPL_CALL c_oct_integer() {
+inline Rule<COctIntegerG> const TPL_CALL c_oct_integer() {
 	return Rule<COctIntegerG>();
 }
 
-inline Rule<CUIntegerG> TPL_CALL c_u_integer() {
+inline Rule<CUIntegerG> const TPL_CALL c_u_integer() {
 	return Rule<CUIntegerG>();
 }
 
-inline Rule<CIntegerG> TPL_CALL c_integer() {
+inline Rule<CIntegerG> const TPL_CALL c_integer() {
 	return Rule<CIntegerG>();
 }
 
@@ -315,11 +315,11 @@ typedef CIntSuffixG CIntegerSuffixG;
 
 typedef And<CIntegerG, CIntegerSuffixG> CIntegerWithSuffixG;
 
-inline Rule<CIntegerSuffixG> TPL_CALL c_integer_suffix() {
+inline Rule<CIntegerSuffixG> const TPL_CALL c_integer_suffix() {
 	return Rule<CIntegerSuffixG>();
 }
 
-inline Rule<CIntegerWithSuffixG> TPL_CALL c_integer_with_suffix() {
+inline Rule<CIntegerWithSuffixG> const TPL_CALL c_integer_with_suffix() {
 	return Rule<CIntegerWithSuffixG>();
 }
 
@@ -346,7 +346,7 @@ TPL_TOKENS_END();
 
 typedef CTokens::rule_type CTokenG;
 
-inline Rule<CTokenG> TPL_CALL c_token() {
+inline Rule<CTokenG> const TPL_CALL c_token() {
 	return Rule<CTokenG>();
 }
 

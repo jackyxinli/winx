@@ -36,7 +36,6 @@ NS_TPL_BEGIN
 // =========================================================================
 // operator+
 
-// Usage: Rule1 >> Rule2
 // Usage: Rule1 + Rule2
 
 template <class RegExT1, class RegExT2>
@@ -68,7 +67,7 @@ public:
 };
 
 template <class T1, class T2> __forceinline
-Rule<And<T1, T2> > TPL_CALL operator+(const Rule<T1>& x, const Rule<T2>& y) {
+Rule<And<T1, T2> > const TPL_CALL operator+(const Rule<T1>& x, const Rule<T2>& y) {
 	return Rule<And<T1, T2> >(x, y);
 }
 
@@ -114,7 +113,7 @@ public:
 };
 
 template <class T1, class T2> __forceinline
-Rule<Or<T1, T2> > TPL_CALL operator|(const Rule<T1>& x, const Rule<T2>& y) {
+Rule<Or<T1, T2> > const TPL_CALL operator|(const Rule<T1>& x, const Rule<T2>& y) {
 	return Rule<Or<T1, T2> >(x, y);
 }
 
@@ -164,7 +163,7 @@ public:
 };
 
 template <class T1, class T2> __forceinline
-Rule<Restr<T1, T2> > TPL_CALL operator/(const Rule<T1>& x, const Rule<T2>& y) {
+Rule<Restr<T1, T2> > const TPL_CALL operator/(const Rule<T1>& x, const Rule<T2>& y) {
 	return Rule<Restr<T1, T2> >(x, y);
 }
 
@@ -210,7 +209,7 @@ public:
 };
 
 template <class T1> __forceinline
-Rule<Repeat0<T1> > TPL_CALL operator*(const Rule<T1>& x) {
+Rule<Repeat0<T1> > const TPL_CALL operator*(const Rule<T1>& x) {
 	return Rule<Repeat0<T1> >(x);
 }
 
@@ -260,7 +259,7 @@ public:
 };
 
 template <class T1> __forceinline
-Rule<Repeat1<T1> > TPL_CALL operator+(const Rule<T1>& x) {
+Rule<Repeat1<T1> > const TPL_CALL operator+(const Rule<T1>& x) {
 	return Rule<Repeat1<T1> >(x);
 }
 
@@ -297,7 +296,7 @@ public:
 };
 
 template <class T1> __forceinline
-Rule<Repeat01<T1> > TPL_CALL operator!(const Rule<T1>& x) {
+Rule<Repeat01<T1> > const TPL_CALL operator!(const Rule<T1>& x) {
 	return Rule<Repeat01<T1> >(x);
 }
 
@@ -343,7 +342,7 @@ private:
 };
 
 template <class T1> __forceinline
-Rule<Not<T1> > TPL_CALL operator~(const Rule<T1>& x) {
+Rule<Not<T1> > const TPL_CALL operator~(const Rule<T1>& x) {
 	return Rule<Not<T1> >(x);
 }
 
@@ -381,27 +380,27 @@ class PeekCh : public Peek<C_<m_c1, m_c2, m_c3, m_c4> > {
 };
 
 template <class T1> __forceinline
-Rule<Peek<T1> > TPL_CALL peek(const Rule<T1>& x) {
+Rule<Peek<T1> > const TPL_CALL peek(const Rule<T1>& x) {
 	return Rule<Peek<T1> >(x);
 }
 
 template <int m_c>
-__forceinline Rule<PeekCh<m_c> > TPL_CALL peek() {
+__forceinline Rule<PeekCh<m_c> > const TPL_CALL peek() {
 	return Rule<PeekCh<m_c> >();
 }
 
 template <int m_c1, int m_c2>
-__forceinline Rule<PeekCh<m_c1, m_c2> > TPL_CALL peek() {
+__forceinline Rule<PeekCh<m_c1, m_c2> > const TPL_CALL peek() {
 	return Rule<PeekCh<m_c1, m_c2> >();
 }
 
 template <int m_c1, int m_c2, int m_c3>
-__forceinline Rule<PeekCh<m_c1, m_c2, m_c3> > TPL_CALL peek() {
+__forceinline Rule<PeekCh<m_c1, m_c2, m_c3> > const TPL_CALL peek() {
 	return Rule<PeekCh<m_c1, m_c2, m_c3> >();
 }
 
 template <int m_c1, int m_c2, int m_c3, int m_c4>
-__forceinline Rule<PeekCh<m_c1, m_c2, m_c3, m_c4> > TPL_CALL peek() {
+__forceinline Rule<PeekCh<m_c1, m_c2, m_c3, m_c4> > const TPL_CALL peek() {
 	return Rule<PeekCh<m_c1, m_c2, m_c3, m_c4> >();
 }
 
@@ -413,22 +412,22 @@ class PeekNot : public Peek<N_<m_c1, m_c2, m_c3, m_c4> > {
 };
 
 template <int m_c>
-__forceinline Rule<PeekNot<m_c> > TPL_CALL peek_not() {
+__forceinline Rule<PeekNot<m_c> > const TPL_CALL peek_not() {
 	return Rule<PeekNot<m_c> >();
 }
 
 template <int m_c1, int m_c2>
-__forceinline Rule<PeekNot<m_c1, m_c2> > TPL_CALL peek_not() {
+__forceinline Rule<PeekNot<m_c1, m_c2> > const TPL_CALL peek_not() {
 	return Rule<PeekNot<m_c1, m_c2> >();
 }
 
 template <int m_c1, int m_c2, int m_c3>
-__forceinline Rule<PeekNot<m_c1, m_c2, m_c3> > TPL_CALL peek_not() {
+__forceinline Rule<PeekNot<m_c1, m_c2, m_c3> > const TPL_CALL peek_not() {
 	return Rule<PeekNot<m_c1, m_c2, m_c3> >();
 }
 
 template <int m_c1, int m_c2, int m_c3, int m_c4>
-__forceinline Rule<PeekNot<m_c1, m_c2, m_c3, m_c4> > TPL_CALL peek_not() {
+__forceinline Rule<PeekNot<m_c1, m_c2, m_c3, m_c4> > const TPL_CALL peek_not() {
 	return Rule<PeekNot<m_c1, m_c2, m_c3, m_c4> >();
 }
 
@@ -483,17 +482,17 @@ public:
 };
 
 template <unsigned nMin, class T1> __forceinline
-Rule<Repeat<T1, nMin> > TPL_CALL repeat_ge(const Rule<T1>& x) {
+Rule<Repeat<T1, nMin> > const TPL_CALL repeat_ge(const Rule<T1>& x) {
 	return Rule<Repeat<T1, nMin> >(x);
 }
 
 template <unsigned nMin, class T1> __forceinline
-Rule<Repeat<T1, nMin, nMin> > TPL_CALL repeat(const Rule<T1>& x) {
+Rule<Repeat<T1, nMin, nMin> > const TPL_CALL repeat(const Rule<T1>& x) {
 	return Rule<Repeat<T1, nMin, nMin> >(x);
 }
 
 template <unsigned nMin, unsigned nMax, class T1> __forceinline
-Rule<Repeat<T1, nMin, nMax> > TPL_CALL repeat(const Rule<T1>& x) {
+Rule<Repeat<T1, nMin, nMax> > const TPL_CALL repeat(const Rule<T1>& x) {
 	return Rule<Repeat<T1, nMin, nMax> >(x);
 }
 
@@ -559,7 +558,7 @@ public:
 #endif
 
 template <class T1, class T2> __forceinline
-Rule<Lst<T1, T2> > TPL_CALL operator%(const Rule<T1>& x, const Rule<T2>& y) {
+Rule<Lst<T1, T2> > const TPL_CALL operator%(const Rule<T1>& x, const Rule<T2>& y) {
 	return Rule<Lst<T1, T2> >(x, y);
 }
 
@@ -577,19 +576,19 @@ typedef Repeat1<Space> WhiteSpaces; // w+
 typedef Repeat0<NonEolSpace> SkipNonEolSpaces;
 typedef Repeat1<NonEolSpace> NonEolSpaces;
 
-inline Rule<WhiteSpaces> TPL_CALL ws() {
+inline Rule<WhiteSpaces> const TPL_CALL ws() {
 	return Rule<WhiteSpaces>();
 }
 
-inline Rule<SkipWhiteSpaces> TPL_CALL skipws() {
+inline Rule<SkipWhiteSpaces> const TPL_CALL skipws() {
 	return Rule<SkipWhiteSpaces>();
 }
 
-inline Rule<NonEolSpaces> TPL_CALL non_eol_ws() {
+inline Rule<NonEolSpaces> const TPL_CALL non_eol_ws() {
 	return Rule<NonEolSpaces>();
 }
 
-inline Rule<SkipNonEolSpaces> TPL_CALL skip_non_eol_ws() {
+inline Rule<SkipNonEolSpaces> const TPL_CALL skip_non_eol_ws() {
 	return Rule<SkipNonEolSpaces>();
 }
 
