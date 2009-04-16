@@ -115,6 +115,30 @@ inline bool TPL_CALL operator>>(
 }
 
 // -------------------------------------------------------------------------
+// operator==, operator!=
+
+template <class ContainerT, class RegExT, class LeafT, class AllocT, class TagCharT>
+inline bool TPL_CALL operator==(
+	const ContainerT& src_, const DocumentedRule<RegExT, LeafT, AllocT, TagCharT>& dr_)
+{
+	typedef typename ArchiveTraits<ContainerT>::type SourceT;
+	typedef Document<LeafT, AllocT, TagCharT> DocumentT;
+	typedef Context<typename SourceT::iterator, LeafT, AllocT, TagCharT> ContextT;
+	
+	SourceT source(src_);
+	DocumentT& doc(dr_.m_doc);
+	ContextT context(doc.get_alloc(), doc);
+	return dr_.m_rule.match(source, context) && (source.get() == SourceT::endch);
+}
+
+template <class ContainerT, class RegExT, class LeafT, class AllocT, class TagCharT>
+inline bool TPL_CALL operator!=(
+	const ContainerT& src_, const DocumentedRule<RegExT, LeafT, AllocT, TagCharT>& dr_)
+{
+	return !(src_ == dr_);
+}
+
+// -------------------------------------------------------------------------
 // $Log: $
 
 NS_TPL_END
