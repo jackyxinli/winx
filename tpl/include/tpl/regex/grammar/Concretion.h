@@ -48,7 +48,11 @@ public:
 
 	template <class SourceT, class ContextT>
 	bool TPL_CALL match(SourceT& ar, ContextT& context) const {
-		return m_gr.match(ar, context, m_skipper);
+		if (m_gr.match(ar, context, m_skipper)) {
+			m_skipper.match(ar, context);
+			return true;
+		}
+		return false;
 	}
 };
 
