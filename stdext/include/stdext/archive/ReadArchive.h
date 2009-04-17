@@ -174,6 +174,45 @@ public:
 		return nMax;
 	}
 
+private:
+	const char_type* winx_call do_peek_(size_type nMax)
+	{
+		const size_type cbRest = m_lpBufMax - m_lpBufCur;
+		if (nMax > m_nBufSize)
+		{
+			const size_type cbBufSize = ROUND(nMax, roundSize);
+			char_type* lpNewBuf = STD_ALLOC_ARRAY(m_alloc, char_type, cbBufSize);
+			copyMemory(lpNewBuf, m_lpBufCur, cbRest);
+			m_alloc.deallocate(m_lpBufStart, m_nBufSize);
+			m_lpBufStart = lpNewBuf;
+			m_nBufSize = cbBufSize;
+		}
+		else
+		{
+			copyMemory(m_lpBufStart, m_lpBufCur, cbRest);
+		}
+
+		const size_type cb = m_handle.get(m_lpBufStart + cbRest, m_nBufSize - cbRest) + cbRest;
+		
+		m_lpBufCur = m_lpBufStart;
+		m_lpBufMax = m_lpBufStart + cb;
+
+		return cb < nMax ? NULL : m_lpBufStart;
+	}
+
+public:
+	const char_type* winx_call peek(size_type nMax)
+	{
+		if (m_lpBufCur + nMax <= m_lpBufMax)
+		{
+			return m_lpBufCur;
+		}
+		else
+		{
+			return do_peek_(nMax);
+		}
+	}
+
 	const char_type* winx_call get(size_type nMax)
 	{
 		if (m_lpBufCur + nMax <= m_lpBufMax)
@@ -184,31 +223,12 @@ public:
 		}
 		else
 		{
-			const size_type cbRest = m_lpBufMax - m_lpBufCur;
-			if (nMax > m_nBufSize)
-			{
-				const size_type cbBufSize = ROUND(nMax, roundSize);
-				char_type* lpNewBuf = STD_ALLOC_ARRAY(m_alloc, char_type, cbBufSize);
-				copyMemory(lpNewBuf, m_lpBufCur, cbRest);
-				m_alloc.deallocate(m_lpBufStart, m_nBufSize);
-				m_lpBufStart = lpNewBuf;
-				m_nBufSize = cbBufSize;
+			const char_type* p = do_peek_(nMax);
+			if (p) {
+				m_lpBufCur += nMax;
+				return p;
 			}
-			else
-			{
-				copyMemory(m_lpBufStart, m_lpBufCur, cbRest);
-			}
-
-			const size_type cbRead = m_handle.get(m_lpBufStart + cbRest, m_nBufSize - cbRest);
-			if (cbRead + cbRest < nMax)
-			{
-				m_lpBufCur = m_lpBufMax;
-				return NULL; // Ê§°Ü£¡
-			}
-
-			m_lpBufMax = m_lpBufStart + (cbRead + cbRest);
-			m_lpBufCur = m_lpBufStart + nMax;
-			return m_lpBufStart;
+			return NULL;
 		}
 	}
 

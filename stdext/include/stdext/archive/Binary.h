@@ -273,13 +273,13 @@ inline bool winx_call get16i(ReadArchiveT& ar, INT16& val)
 }
 
 template <class ReadArchiveT>
-inline bool winx_call get16i(ReadArchiveT& ar, UINT32& val)
+inline bool winx_call get32i(ReadArchiveT& ar, UINT32& val)
 {
 	return ar.get((char*)&val, sizeof(val)) == sizeof(val);
 }
 
 template <class ReadArchiveT>
-inline bool winx_call get16i(ReadArchiveT& ar, INT32& val)
+inline bool winx_call get32i(ReadArchiveT& ar, INT32& val)
 {
 	return ar.get((char*)&val, sizeof(val)) == sizeof(val);
 }
@@ -288,6 +288,50 @@ template <class ReadArchiveT, class StrucType>
 inline bool winx_call get_struct(ReadArchiveT& ar, StrucType& val)
 {
 	return ar.get((char*)&val, sizeof(val)) == sizeof(val);
+}
+
+template <class ReadArchiveT>
+inline bool winx_call peek16i(ReadArchiveT& ar, UINT16& val)
+{
+	const char* p = ar.peek(sizeof(val));
+	if (p) {
+		val = *(const UINT16*)p;
+		return true;
+	}
+	return false;
+}
+
+template <class ReadArchiveT>
+inline bool winx_call peek16i(ReadArchiveT& ar, INT16& val)
+{
+	const char* p = ar.peek(sizeof(val));
+	if (p) {
+		val = *(const INT16*)p;
+		return true;
+	}
+	return false;
+}
+
+template <class ReadArchiveT>
+inline bool winx_call peek32i(ReadArchiveT& ar, UINT32& val)
+{
+	const char* p = ar.peek(sizeof(val));
+	if (p) {
+		val = *(const UINT32*)p;
+		return true;
+	}
+	return false;
+}
+
+template <class ReadArchiveT>
+inline bool winx_call peek32i(ReadArchiveT& ar, INT32& val)
+{
+	const char* p = ar.peek(sizeof(val));
+	if (p) {
+		val = *(const INT32*)p;
+		return true;
+	}
+	return false;
 }
 
 template <class ReadArchiveT>
@@ -305,21 +349,21 @@ inline bool winx_call get16i(ReadArchiveT& ar, INT16 warray[], size_t count)
 }
 
 template <class ReadArchiveT>
-inline bool get32i(ReadArchiveT& ar, UINT32 dwarray[], size_t count)
+inline bool winx_call get32i(ReadArchiveT& ar, UINT32 dwarray[], size_t count)
 {
 	const size_t cbToRead = sizeof(UINT32) * count;
 	return ar.get((char*)dwarray, cbToRead) == cbToRead;
 }
 
 template <class ReadArchiveT>
-inline bool get32i(ReadArchiveT& ar, INT32 dwarray[], size_t count)
+inline bool winx_call get32i(ReadArchiveT& ar, INT32 dwarray[], size_t count)
 {
 	const size_t cbToRead = sizeof(INT32) * count;
 	return ar.get((char*)dwarray, cbToRead) == cbToRead;
 }
 
 template <class ReadArchiveT, class StrucType>
-inline bool get_struct(ReadArchiveT& ar, StrucType array[], size_t count)
+inline bool winx_call get_struct(ReadArchiveT& ar, StrucType array[], size_t count)
 {
 	const size_t cbToRead = sizeof(StrucType) * count;
 	return ar.get((char*)array, cbToRead) == cbToRead;
