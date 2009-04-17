@@ -345,7 +345,7 @@ NS_STDEXT_END
 #include "Debug.h"
 #endif
 
-using std::DllMainInit;
+using NS_STDEXT::DllMainInit;
 
 // -------------------------------------------------------------------------
 // TestCase class
@@ -355,7 +355,7 @@ using std::DllMainInit;
 #endif
 
 #if !defined(STD_NO_GLOBAL_TESTCASE)
-typedef std::TestCase TestCase;
+typedef NS_STDEXT::TestCase TestCase;
 #endif
 
 // -------------------------------------------------------------------------

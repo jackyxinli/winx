@@ -1,9 +1,6 @@
 #define STD_UNITTEST
 #include <stdext/Basic.h>
 
-// Archive:
-#include <stdext/Archive.h>
-
 // Event:
 #define WINX_USE_DEFINE_IID
 #include <stdext/AOP.h>
@@ -23,9 +20,12 @@
 #include <stdext/text/Format.h>
 #include <stdext/text/Cast.h>
 
+// Archive:
+#include "archive.h"
+
 int main()
 {
-	WINX_TEST_APP(std::ErrorLog, "", "");
+	WINX_TEST_APP(NS_STDEXT::ErrorLog, "", "");
 
 	// Archive:
 	WINX_TEST_CLASS(TestRecord);
@@ -52,4 +52,3 @@ int main()
 	WINX_TEST_CLASS(TestFormat);
 	WINX_TEST_CLASS(TestCast);
 }
-

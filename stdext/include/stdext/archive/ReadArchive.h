@@ -410,4 +410,3 @@ public:
 NS_STDEXT_END
 
 #endif /* STDEXT_ARCHIVE_READARCHIVE_H */
-

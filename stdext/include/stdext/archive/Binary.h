@@ -65,78 +65,78 @@ inline void winx_call put_struct(
 #if defined(WINX_BYTESWAP)
 
 template <class WriteArchiveT>
-inline void put16i(
-	IN WriteArchiveT& ar, IN const UINT16 warray[], IN UINT count) throw(IoException)
+inline void winx_call put16i(
+	IN WriteArchiveT& ar, IN const UINT16 warray[], IN size_t count) throw(IoException)
 {
-	for (UINT i = 0; i < count; ++i)
+	for (size_t i = 0; i < count; ++i)
 		put16i(ar, warray[i]);
 }
 
 template <class WriteArchiveT>
-inline void put16i(
-	IN WriteArchiveT& ar, IN const INT16 warray[], IN UINT count) throw(IoException)
+inline void winx_call put16i(
+	IN WriteArchiveT& ar, IN const INT16 warray[], IN size_t count) throw(IoException)
 {
-	for (UINT i = 0; i < count; ++i)
+	for (size_t i = 0; i < count; ++i)
 		put16i(ar, warray[i]);
 }
 
 template <class WriteArchiveT>
-inline void WriteArchiveT& put32i(
-	IN WriteArchiveT& ar, IN const UINT32 dwarray[], IN UINT count) throw(IoException)
+inline void winx_call put32i(
+	IN WriteArchiveT& ar, IN const UINT32 dwarray[], IN size_t count) throw(IoException)
 {
-	for (UINT i = 0; i < count; ++i)
+	for (size_t i = 0; i < count; ++i)
 		put32i(ar, dwarray[i]);
 }
 
 template <class WriteArchiveT>
-inline void put32i(
-	IN WriteArchiveT& ar, IN const INT32 dwarray[], IN UINT count) throw(IoException)
+inline void winx_call put32i(
+	IN WriteArchiveT& ar, IN const INT32 dwarray[], IN size_t count) throw(IoException)
 {
-	for (UINT i = 0; i < count; ++i)
+	for (size_t i = 0; i < count; ++i)
 		put32i(ar, dwarray[i]);
 }
 
 template <class WriteArchiveT, class StrucType>
-inline void put_struct(
-	WriteArchiveT& ar, const StrucType* array, UINT count) throw(IoException)
+inline void winx_call put_struct(
+	WriteArchiveT& ar, const StrucType* array, size_t count) throw(IoException)
 {
-	for (UINT i = 0; i < count; ++i)
+	for (size_t i = 0; i < count; ++i)
 		put_struct(ar, array[i]);
 }
 
 #else
 
 template <class WriteArchiveT>
-inline void put16i(
-	WriteArchiveT& ar, IN const UINT16 warray[], IN UINT count) throw(IoException)
+inline void winx_call put16i(
+	WriteArchiveT& ar, IN const UINT16 warray[], IN size_t count) throw(IoException)
 {
 	ar.put( (const char*)warray, sizeof(UINT16)*count );
 }
 
 template <class WriteArchiveT>
-inline void put16i(
-	IN WriteArchiveT& ar, IN const INT16 warray[], IN UINT count) throw(IoException)
+inline void winx_call put16i(
+	IN WriteArchiveT& ar, IN const INT16 warray[], IN size_t count) throw(IoException)
 {
 	ar.put( (const char*)warray, sizeof(INT16)*count );
 }
 
 template <class WriteArchiveT>
-inline void put32i(
-	IN WriteArchiveT& ar, IN const UINT32 dwarray[], IN UINT count) throw(IoException)
+inline void winx_call put32i(
+	IN WriteArchiveT& ar, IN const UINT32 dwarray[], IN size_t count) throw(IoException)
 {
 	ar.put( (const char*)dwarray, sizeof(UINT32)*count );
 }
 
 template <class WriteArchiveT>
-inline void put32i(
-	IN WriteArchiveT& ar, IN const INT32 dwarray[], IN UINT count) throw(IoException)
+inline void winx_call put32i(
+	IN WriteArchiveT& ar, IN const INT32 dwarray[], IN size_t count) throw(IoException)
 {
 	ar.put( (const char*)dwarray, sizeof(INT32)*count );
 }
 
 template <class WriteArchiveT, class StrucType>
-inline void put_struct(
-	WriteArchiveT& ar, const StrucType* array, UINT count) throw(IoException)
+inline void winx_call put_struct(
+	WriteArchiveT& ar, const StrucType* array, size_t count) throw(IoException)
 {
 	ar.put( (const char*)array, sizeof(StrucType)*count );
 }
@@ -146,166 +146,183 @@ inline void put_struct(
 // -------------------------------------------------------------------------
 // ==== BinaryReader ====
 
-//
-// get binary data
-//
-
-template <class ReadArchiveT>
-inline HRESULT winx_call get16i(ReadArchiveT& ar, UINT16& val)
-{
-	UINT cbRead =  ar.get( (char*)&val, sizeof(val) );
-	if (cbRead != sizeof(val))
-		return STG_E_READFAULT;
-
-	_WinxByteSwap16(val);
-	return S_OK;
-}
-
-template <class ReadArchiveT>
-inline HRESULT winx_call get16i(ReadArchiveT& ar, INT16& val)
-{
-	UINT cbRead =  ar.get( (char*)&val, sizeof(val) );
-	if (cbRead != sizeof(val))
-		return STG_E_READFAULT;
-
-	_WinxByteSwap16(val);
-	return S_OK;
-}
-
-template <class ReadArchiveT>
-inline HRESULT winx_call get32i(ReadArchiveT& ar, UINT32& val)
-{
-	UINT cbRead =  ar.get( (char*)&val, sizeof(val) );
-	if (cbRead != sizeof(val))
-		return STG_E_READFAULT;
-	
-	_WinxByteSwap32(val);
-	return S_OK;
-}
-
-template <class ReadArchiveT>
-inline HRESULT winx_call get32i(ReadArchiveT& ar, INT32& val)
-{
-	UINT cbRead =  ar.get( (char*)&val, sizeof(val) );
-	if (cbRead != sizeof(val))
-		return STG_E_READFAULT;
-	
-	_WinxByteSwap32(val);
-	return S_OK;
-}
-
-template <class ReadArchiveT, class StrucType>
-inline HRESULT winx_call get_struct(ReadArchiveT& ar, StrucType& val)
-{
-	UINT cbRead =  ar.get( (char*)&val, sizeof(val) );
-	if (cbRead != sizeof(val))
-		return STG_E_READFAULT;
-	
-	_WinxByteSwapStruct(val);
-	return S_OK;
-}
-
-//
-// get binary array
-//
-
 #if defined(WINX_BYTESWAP)
 
 template <class ReadArchiveT>
-inline HRESULT winx_call get16i(ReadArchiveT& ar, UINT16 warray[], UINT count)
+inline bool winx_call get16i(ReadArchiveT& ar, UINT16& val)
 {
-	HRESULT hr = S_OK;
-	for (UINT i = 0; i < count; ++i)
-		hr = get16i(ar, warray[i]);
-	return hr;
+	if (ar.get((char*)&val, sizeof(val)) == sizeof(val))
+	{
+		_WinxByteSwap16(val);
+		return true;
+	}
+	return false;
 }
 
 template <class ReadArchiveT>
-inline HRESULT winx_call get16i(ReadArchiveT& ar, INT16 warray[], UINT count)
+inline bool winx_call get16i(ReadArchiveT& ar, INT16& val)
 {
-	HRESULT hr = S_OK;
-	for (UINT i = 0; i < count; ++i)
-		hr = get16i(ar, warray[i]);
-	return hr;
+	if (ar.get((char*)&val, sizeof(val)) == sizeof(val))
+	{
+		_WinxByteSwap16(val);
+		return true;
+	}
+	return false;
 }
 
 template <class ReadArchiveT>
-inline HRESULT winx_call get32i(ReadArchiveT& ar, UINT32 dwarray[], UINT count)
+inline bool winx_call get32i(ReadArchiveT& ar, UINT32& val)
 {
-	HRESULT hr = S_OK;
-	for (UINT i = 0; i < count; ++i)
-		hr = get32i(ar, warray[i]);
-	return hr;
+	if (ar.get((char*)&val, sizeof(val)) == sizeof(val))
+	{
+		_WinxByteSwap32(val);
+		return true;
+	}
+	return false;
 }
 
 template <class ReadArchiveT>
-inline HRESULT winx_call get32i(ReadArchiveT& ar, INT32 dwarray[], UINT count)
+inline bool winx_call get32i(ReadArchiveT& ar, INT32& val)
 {
-	HRESULT hr = S_OK;
-	for (UINT i = 0; i < count; ++i)
-		hr = get32i(ar, warray[i]);
-	return hr;
+	if (ar.get((char*)&val, sizeof(val)) == sizeof(val))
+	{
+		_WinxByteSwap32(val);
+		return true;
+	}
+	return false;
 }
 
 template <class ReadArchiveT, class StrucType>
-inline HRESULT winx_call get_struct(ReadArchiveT& ar, StrucType array[], UINT count)
+inline bool winx_call get_struct(ReadArchiveT& ar, StrucType& val)
 {
-	HRESULT hr = S_OK;
-	for (UINT i = 0; i < count; ++i)
-		hr = get_struct(ar, warray[i]);
-	return hr;
+	if (ar.get((char*)&val, sizeof(val)) == sizeof(val))
+	{
+		_WinxByteSwapStruct(val);
+		return true;
+	}
+	return false;
+}
+
+template <class ReadArchiveT>
+inline bool winx_call get16i(ReadArchiveT& ar, UINT16 warray[], size_t count)
+{
+	for (size_t i = 0; i < count; ++i)
+	{
+		if (!get16i(ar, warray[i]))
+			return false;
+	}
+	return true;
+}
+
+template <class ReadArchiveT>
+inline bool winx_call get16i(ReadArchiveT& ar, INT16 warray[], size_t count)
+{
+	for (size_t i = 0; i < count; ++i)
+	{
+		if (!get16i(ar, warray[i]))
+			return false;
+	}
+	return true;
+}
+
+template <class ReadArchiveT>
+inline bool winx_call get32i(ReadArchiveT& ar, UINT32 dwarray[], size_t count)
+{
+	for (size_t i = 0; i < count; ++i)
+	{
+		if (!get32i(ar, dwarray[i]))
+			return false;
+	}
+	return true;
+}
+
+template <class ReadArchiveT>
+inline bool winx_call get32i(ReadArchiveT& ar, INT32 dwarray[], size_t count)
+{
+	for (size_t i = 0; i < count; ++i)
+	{
+		if (!get32i(ar, dwarray[i]))
+			return false;
+	}
+	return true;
+}
+
+template <class ReadArchiveT, class StrucType>
+inline bool winx_call get_struct(ReadArchiveT& ar, StrucType array[], size_t count)
+{
+	for (size_t i = 0; i < count; ++i)
+	{
+		if (!get_struct(ar, array[i]))
+			return false;
+	}
+	return true;
 }
 
 #else
 
 template <class ReadArchiveT>
-inline HRESULT winx_call get16i(ReadArchiveT& ar, UINT16 warray[], UINT count)
+inline bool winx_call get16i(ReadArchiveT& ar, UINT16& val)
 {
-	UINT cbToRead = sizeof(UINT16) * count;
-	UINT cbRead =  ar.get( (char*)warray, cbToRead );
-	if (cbRead != cbToRead)
-		return STG_E_READFAULT;
-	return S_OK;
+	return ar.get((char*)&val, sizeof(val)) == sizeof(val);
 }
 
 template <class ReadArchiveT>
-inline HRESULT winx_call get16i(ReadArchiveT& ar, INT16 warray[], UINT count)
+inline bool winx_call get16i(ReadArchiveT& ar, INT16& val)
 {
-	UINT cbToRead = sizeof(INT16) * count;
-	UINT cbRead =  ar.get( (char*)warray, cbToRead );
-	if (cbRead != cbToRead)
-		return STG_E_READFAULT;
-	return S_OK;
+	return ar.get((char*)&val, sizeof(val)) == sizeof(val);
 }
 
 template <class ReadArchiveT>
-inline HRESULT get32i(ReadArchiveT& ar, UINT32 dwarray[], UINT count)
+inline bool winx_call get16i(ReadArchiveT& ar, UINT32& val)
 {
-	UINT cbToRead = sizeof(UINT32) * count;
-	UINT cbRead =  ar.get( (char*)dwarray, cbToRead );
-	if (cbRead != cbToRead)
-		return STG_E_READFAULT;
-	return S_OK;
+	return ar.get((char*)&val, sizeof(val)) == sizeof(val);
 }
 
 template <class ReadArchiveT>
-inline HRESULT get32i(ReadArchiveT& ar, INT32 dwarray[], UINT count)
+inline bool winx_call get16i(ReadArchiveT& ar, INT32& val)
 {
-	UINT cbToRead = sizeof(INT32) * count;
-	UINT cbRead =  ar.get( (char*)dwarray, cbToRead );
-	if (cbRead != cbToRead)
-		return STG_E_READFAULT;
-	return S_OK;
+	return ar.get((char*)&val, sizeof(val)) == sizeof(val);
 }
 
 template <class ReadArchiveT, class StrucType>
-inline HRESULT get_struct(ReadArchiveT& ar, StrucType array[], UINT count)
+inline bool winx_call get_struct(ReadArchiveT& ar, StrucType& val)
 {
-	UINT cbToRead = sizeof(StrucType) * count;
-	UINT cbRead =  ar.get( (char*)array, cbToRead );
-	if (cbRead != cbToRead)
-		return STG_E_READFAULT;
-	return S_OK;
+	return ar.get((char*)&val, sizeof(val)) == sizeof(val);
+}
+
+template <class ReadArchiveT>
+inline bool winx_call get16i(ReadArchiveT& ar, UINT16 warray[], size_t count)
+{
+	const size_t cbToRead = sizeof(UINT16) * count;
+	return ar.get((char*)warray, cbToRead) == cbToRead;
+}
+
+template <class ReadArchiveT>
+inline bool winx_call get16i(ReadArchiveT& ar, INT16 warray[], size_t count)
+{
+	const size_t cbToRead = sizeof(INT16) * count;
+	return ar.get((char*)warray, cbToRead) == cbToRead;
+}
+
+template <class ReadArchiveT>
+inline bool get32i(ReadArchiveT& ar, UINT32 dwarray[], size_t count)
+{
+	const size_t cbToRead = sizeof(UINT32) * count;
+	return ar.get((char*)dwarray, cbToRead) == cbToRead;
+}
+
+template <class ReadArchiveT>
+inline bool get32i(ReadArchiveT& ar, INT32 dwarray[], size_t count)
+{
+	const size_t cbToRead = sizeof(INT32) * count;
+	return ar.get((char*)dwarray, cbToRead) == cbToRead;
+}
+
+template <class ReadArchiveT, class StrucType>
+inline bool get_struct(ReadArchiveT& ar, StrucType array[], size_t count)
+{
+	const size_t cbToRead = sizeof(StrucType) * count;
+	return ar.get((char*)array, cbToRead) == cbToRead;
 }
 
 #endif // !defined(WINX_BYTESWAP)
@@ -382,63 +399,58 @@ inline void winx_call wputs(
 //
 
 template <class ReadArchiveT, class StringT>
-inline HRESULT winx_call gets(ReadArchiveT& ar, StringT& s)
+inline bool winx_call gets(ReadArchiveT& ar, StringT& s)
 {
 	typedef typename ReadArchiveT::size_type size_type;
 	
-	HRESULT hr;
-	size_type cch = ar.get();
+	bool hr;
+	size_type cch = (size_type)ar.get();
 	if (cch < 254) {
 		/* nothing todo */
 	}
 	else if (cch == 254) {
 		UINT16 cch2;
-		hr = get16i(ar, cch2);
-		if (hr != S_OK)
-			return hr;
+		if (!get16i(ar, cch2))
+			return false;
 		cch = cch2;
 	}
 	else if (cch == 255) {
 		INT32 cch4;
-		hr = get32i(ar, cch4);
-		if (hr != S_OK && cch4 < 0)
-			return STG_E_READFAULT;
+		if (!get32i(ar, cch4) || cch4 < 0)
+			return false;
 		cch = cch4;
 	}
 	else {
-		return E_UNEXPECTED;
+		return false;
 	}
-	size_type cbRead = ar.get(std::resize(s, cch), cch);
-	if (cbRead != cch)
-		return STG_E_READFAULT;
+	if (ar.get(std::resize(s, cch), cch) != cch)
+		return false;
 	if ( !(cch & 1) )
 		ar.get(); // padding
-	return S_OK;
+	return true;
 }
 
 template <class ReadArchiveT, class AllocT>
-inline HRESULT winx_call gets(ReadArchiveT& ar, AllocT& alloc, BasicString<char>& s)
+inline bool winx_call gets(ReadArchiveT& ar, AllocT& alloc, BasicString<char>& s)
 {
 	OutputBasicString<char, AllocT> s1(alloc, s);
 	return gets(ar, s1);
 }
 
 template <class ReadArchiveT, class StringT>
-inline HRESULT winx_call wgets(ReadArchiveT& ar, StringT& s)
+inline bool winx_call wgets(ReadArchiveT& ar, StringT& s)
 {
 	typedef typename ReadArchiveT::size_type size_type;
 
 	size_type cch;
 	UINT16 cch2;
-	HRESULT hr = get16i(ar, cch2);
-	if (hr != S_OK) {
-		return hr;
+	if (!get16i(ar, cch2)) {
+		return false;
 	}
 	else if (cch2 == 65535) {
 		INT32 cch4;
-		hr = get32i(ar, cch4);
-		if (hr != S_OK && cch4 < 0)
-			return STG_E_READFAULT;
+		if (!get32i(ar, cch4) || cch4 < 0)
+			return false;
 		cch = cch4;
 	}
 	else {
@@ -448,7 +460,7 @@ inline HRESULT winx_call wgets(ReadArchiveT& ar, StringT& s)
 }
 
 template <class ReadArchiveT, class AllocT>
-inline HRESULT winx_call wgets(ReadArchiveT& ar, AllocT& alloc, BasicString<UINT16>& s)
+inline bool winx_call wgets(ReadArchiveT& ar, AllocT& alloc, BasicString<UINT16>& s)
 {
 	OutputBasicString<UINT16, AllocT> s1(alloc, s);
 	return wgets(ar, s1);
