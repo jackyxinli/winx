@@ -398,12 +398,12 @@ public:
 // rangeof
 
 template <class Type>
-inline Range<const Type*, Type> winx_call rangeof_(const Type v[], size_t n)
+inline BasicArray<Type> winx_call arrayof(const Type v[], size_t n)
 {
-	return Range<const Type*, Type>(v, v+n);
+	return BasicArray<Type>(v, v+n);
 }
 
-#define rangeof(array)		NS_STDEXT::rangeof_(array, countof(array))
+#define rangeof(array)		NS_STDEXT::arrayof(array, countof(array))
 
 // =========================================================================
 // $Log: $
