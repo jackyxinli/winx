@@ -168,6 +168,27 @@ class TestMemArchive : public TestCase
 };
 
 // -------------------------------------------------------------------------
+// class TestStreamArchive
+
+template <class LogT>
+class TestStreamArchive : public TestCase
+{
+	WINX_TEST_SUITE(TestStreamArchive);
+		WINX_TEST(testBasic);
+	WINX_TEST_SUITE_END();
+
+public:
+	void testBasic(LogT& log)
+	{
+		const char stg[] = "/__teststream__.txt";
+
+		NS_STDEXT::StreamWriter* w = NULL;
+		NS_STDEXT::StreamReader* r = NULL;
+		test(log, w, r, stg);
+	}
+};
+
+// -------------------------------------------------------------------------
 // class TestRecord
 
 #if defined(STD_UNITTEST)
