@@ -267,8 +267,8 @@ inline void winx_call printLines(
 {
 	for (; first != last; ++first)
 	{
-		print(*first);
-		print(sep);
+		print(ar, *first);
+		print(ar, sep);
 	}
 }
 

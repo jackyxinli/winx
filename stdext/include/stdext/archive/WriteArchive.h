@@ -303,6 +303,14 @@ public:
 		return *this;
 	}
 
+	template <class ContainerT, class SepT>
+	WriteArchive& winx_call printLines(
+		const ContainerT& rg, const SepT& sep) throw(IoException)
+	{
+		NS_STDEXT_IO_TEXT::printLines(*this, rg.begin(), rg.end(), sep);
+		return *this;
+	}
+
 public:
 	void winx_call puts(const char* lpBuf, size_t cch) throw(IoException) {
 		NS_STDEXT_IO_BINARY::puts(*this, lpBuf, cch);
