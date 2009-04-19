@@ -1,2 +1,0 @@
-svn info . | grep 'URL: .*' | sed -e 's|URL: \(.*\)|\1|'
-
