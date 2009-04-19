@@ -20,6 +20,7 @@
 #include <winx/Config.h>
 #include <winx.h>
 #include <winx/Shell.h>
+#include <winx/LinkLib.h>
 #include "resource.h"
 
 #define ACKEY _T("Software\\winx\\tutorials\\autocomplete\\ACHistory")
