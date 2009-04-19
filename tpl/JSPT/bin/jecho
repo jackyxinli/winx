@@ -1,3 +1,0 @@
-AppPath=`dirname $0`
-$AppPath/jspt $AppPath/json2prj/include/print.php $*
-
