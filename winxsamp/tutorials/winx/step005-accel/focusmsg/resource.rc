@@ -1,0 +1,163 @@
+//Microsoft Developer Studio generated resource script.
+//
+#include "resource.h"
+
+#define APSTUDIO_READONLY_SYMBOLS
+/////////////////////////////////////////////////////////////////////////////
+//
+// Generated from the TEXTINCLUDE 2 resource.
+//
+#include "afxres.h"
+
+/////////////////////////////////////////////////////////////////////////////
+#undef APSTUDIO_READONLY_SYMBOLS
+
+/////////////////////////////////////////////////////////////////////////////
+// Chinese (P.R.C.) resources
+
+#if !defined(AFX_RESOURCE_DLL) || defined(AFX_TARG_CHS)
+#ifdef _WIN32
+LANGUAGE LANG_CHINESE, SUBLANG_CHINESE_SIMPLIFIED
+#pragma code_page(936)
+#endif //_WIN32
+
+#ifdef APSTUDIO_INVOKED
+/////////////////////////////////////////////////////////////////////////////
+//
+// TEXTINCLUDE
+//
+
+1 TEXTINCLUDE DISCARDABLE 
+BEGIN
+    "resource.h\0"
+END
+
+2 TEXTINCLUDE DISCARDABLE 
+BEGIN
+    "#include ""afxres.h""\r\n"
+    "\0"
+END
+
+3 TEXTINCLUDE DISCARDABLE 
+BEGIN
+    "\r\n"
+    "\0"
+END
+
+#endif    // APSTUDIO_INVOKED
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Dialog
+//
+
+IDD_HELLO DIALOG DISCARDABLE  0, 0, 428, 288
+STYLE DS_MODALFRAME | DS_CENTER | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "AMAZING Focus Message"
+MENU IDR_MAINMENU
+FONT 9, "ËÎÌו"
+BEGIN
+    DEFPUSHBUTTON   "OK",IDOK,188,267,50,14
+    CONTROL         "",IDC_RICHEDIT1,"RICHEDIT",ES_MULTILINE | 
+                    ES_AUTOHSCROLL | ES_WANTRETURN | WS_BORDER | WS_TABSTOP,
+                    7,7,414,130
+    CONTROL         "Custom1",IDC_CUSTOM1,"MyView",WS_BORDER | WS_TABSTOP,7,
+                    145,414,106
+END
+
+IDD_ABOUT DIALOG DISCARDABLE  0, 0, 321, 144
+STYLE DS_MODALFRAME | DS_CENTER | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "About - AMAZING Focus Message"
+FONT 9, "ËÎÌו"
+BEGIN
+    DEFPUSHBUTTON   "OK",IDOK,140,123,50,14
+    LTEXT           "Open(Ctrl+O) - can only handled by MyView(and need to set focus to MyView).\n\nUndo(Ctrl+Z) - handled by RichEdit if it is the focus and the command was from accelerator, not from menu. Otherwise Dialog will handle it. - THAT IS VERY AMAZING.",
+                    IDC_STATIC,7,10,307,46
+    LTEXT           "Redo(Ctrl+Y) - handled by RichEdit if it is the focus. Otherwise Dialog will handle it.\n\nAbout(F1) - handled by Dialog, in any case.",
+                    IDC_STATIC,7,59,307,38
+END
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// DESIGNINFO
+//
+
+#ifdef APSTUDIO_INVOKED
+GUIDELINES DESIGNINFO DISCARDABLE 
+BEGIN
+    IDD_HELLO, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 421
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 281
+    END
+
+    IDD_ABOUT, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 314
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 137
+    END
+END
+#endif    // APSTUDIO_INVOKED
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Accelerator
+//
+
+IDR_ACCEL ACCELERATORS DISCARDABLE 
+BEGIN
+    VK_F1,          ID_HELP_ABOUT,          VIRTKEY, NOINVERT
+    "Y",            ID_EDIT_REDO,           VIRTKEY, CONTROL, NOINVERT
+    "Z",            ID_EDIT_UNDO,           VIRTKEY, CONTROL, NOINVERT
+END
+
+IDR_ACCEL_MYVIEW ACCELERATORS DISCARDABLE 
+BEGIN
+    "O",            ID_FILE_OPEN,           VIRTKEY, CONTROL, NOINVERT
+END
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Menu
+//
+
+IDR_MAINMENU MENU DISCARDABLE 
+BEGIN
+    POPUP "&Command"
+    BEGIN
+        MENUITEM "&Open...\tCtrl+O",            ID_FILE_OPEN
+        MENUITEM SEPARATOR
+        MENUITEM "&Undo\tCtrl+Z",               ID_EDIT_UNDO
+        MENUITEM "&Redo\tCtrl+Y",               ID_EDIT_REDO
+        MENUITEM SEPARATOR
+        MENUITEM "&Exit\tEsc",                  IDCANCEL
+    END
+    POPUP "&Help"
+    BEGIN
+        MENUITEM "&About...\tF1",               ID_HELP_ABOUT
+    END
+END
+
+#endif    // Chinese (P.R.C.) resources
+/////////////////////////////////////////////////////////////////////////////
+
+
+
+#ifndef APSTUDIO_INVOKED
+/////////////////////////////////////////////////////////////////////////////
+//
+// Generated from the TEXTINCLUDE 3 resource.
+//
+
+
+/////////////////////////////////////////////////////////////////////////////
+#endif    // not APSTUDIO_INVOKED
+

@@ -1,0 +1,39 @@
+// activeobject2.idl : IDL source for activeobject2.dll
+//
+
+// This file will be processed by the MIDL tool to
+// produce the type library (activeobject2.tlb) and marshalling code.
+
+import "oaidl.idl";
+import "ocidl.idl";
+	[
+		object,
+		uuid(0AF59B0C-B253-49DD-9984-94080452F98B),
+		dual,
+		helpstring("IROTObject Interface"),
+		pointer_default(unique)
+	]
+	interface IROTObject : IDispatch
+	{
+		[id(1), helpstring("method MsgBox")] HRESULT MsgBox(BSTR msg);
+	};
+
+[
+	uuid(65DE4408-E06E-48AE-A391-7128C59622EF),
+	version(1.0),
+	helpstring("activeobject2 1.0 Type Library")
+]
+library ACTIVEOBJECT2Lib
+{
+	importlib("stdole32.tlb");
+	importlib("stdole2.tlb");
+
+	[
+		uuid(B3CABAFD-FC43-4D5C-94D1-7CA8439CDBAF),
+		helpstring("ROTObject Class")
+	]
+	coclass ROTObject
+	{
+		[default] interface IROTObject;
+	};
+};

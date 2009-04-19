@@ -1,0 +1,11 @@
+HKCR
+{
+	NoRemove AppID
+	{
+		{3171575C-B9B1-4E25-B535-0F6948642296} = s 'MyTestComApp'
+		'MyTestComApp.EXE'
+		{
+			val AppID = s {3171575C-B9B1-4E25-B535-0F6948642296}
+		}
+	}
+}

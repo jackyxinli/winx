@@ -1,0 +1,322 @@
+Class Members for MatrixStatic  digital display.
+By Nic Wilson (C) 2002  nicw@bigpond.net.au
+
+/*-------------------------------------------------------------------------------------------------------------
+MatrixStatic::SetAutoPadding
+
+This function pads the internal display string (set with the SetText() function) with a supplied character so
+that it equals the length of the value supplied in the SetXCharsPerLine() function.
+
+void SetAutoPadding(
+bool pad, 
+char ch = ' ');
+
+PARAMETERS
+
+pad
+A C++ boolean variable.  true = Strings will be automatically padded with the given character to equal the value
+supplied to the class in the SetXCharsPerLine() function.
+						 false = No auto padding will occur.
+ch
+a char variable.  This parameter is optional as it defaults to a space character.  This is the character used
+to pad the string if the above parameter is true.
+
+RETURN VALUE
+
+--------------------------------------------------------------------------------------------------------------*/
+/*-------------------------------------------------------------------------------------------------------------
+MatrixStatic::GetText
+
+This function fills a supplied buffer with the text that was set in the SetText() function.
+
+int  GetText(
+char *string,  
+int size);
+
+PARAMETERS
+
+string
+A pointer to a buffer the requested text will be placed in to.
+
+size
+An integer containing the length of the supplied buffer.
+
+RETURN VALUE
+
+Function returns an integer of the number of characters placed in the buffer.
+--------------------------------------------------------------------------------------------------------------*/
+/*-------------------------------------------------------------------------------------------------------------
+MatrixStatic::SetDisplayColors
+This function sets all three colours of the display characters in a single function call.
+
+void SetDisplayColors(
+COLORREF bk,  
+COLORREF on,  
+COLORREF off);
+
+PARAMETERS
+
+bk
+A COLORREF variable which supplies the RGB(x, x, x) value of the background colour of the display.
+
+on
+A COLORREF variable which supplies the RGB(x, x, x) value of the on colour of the display.
+
+off
+A COLORREF variable which supplies the RGB(x, x, x) value of the off colour of the display.
+
+RETURN VALUE
+
+--------------------------------------------------------------------------------------------------------------*/
+/*-------------------------------------------------------------------------------------------------------------
+MatrixStatic::SetBkColor
+This function sets the background colour of the display.
+
+void SetBkColor(
+COLORREF bk);
+
+PARAMETERS
+
+bk
+A COLORREF variable which supplies the RGB(x, x, x) value of the background colour of the display.
+
+RETURN VALUE
+--------------------------------------------------------------------------------------------------------------*/
+/*-------------------------------------------------------------------------------------------------------------
+MatrixStatic::SetColor
+This function sets the on and off colours of the display.
+
+void SetColor(
+COLORREF off,  
+COLORREF on);
+
+PARAMETERS
+
+on
+A COLORREF variable which supplies the RGB(x, x, x) value of the on colour of the display.
+
+off
+A COLORREF variable which supplies the RGB(x, x, x) value of the off colour of the display.
+
+RETURN VALUE
+--------------------------------------------------------------------------------------------------------------*/
+/*-------------------------------------------------------------------------------------------------------------
+MatrixStatic::SetBitmapResource
+This function is optional.  It allows for an alternate bitmap resource to be supplied.  
+(See the supplied resource bitmaps which can be used as a template for new character formats.)
+There are three bitmap resources supplied that the program requires. The correct one to use is set when you 
+call the SetSize() function.   They must have the ID's of(IDB_MATRIXLARGE,  IDB_MATRIXSMALL and IDBMATRIXTINY).
+
+If this function is used to supply a new or different bitmap,  even if the format is the same, you must also
+call the MatrixStatic::SetCustomCharSizes function to supply information about this bitmap.
+
+void SetBitmapResource(
+UINT bitmap);
+
+PARAMETERS
+
+bitmap
+Resource identifier of the bitmap resource.
+
+RETURN VALUE
+
+SEE ALSO
+SetSize which identifies the different size bitmaps supported.
+
+SetCustomCharSizes() which allows different format bitmaps.
+--------------------------------------------------------------------------------------------------------------*/
+/*-------------------------------------------------------------------------------------------------------------
+MatrixStatic::SetText
+This function supplies the text that is to be displayed.  Once called your supply string can be deleted, the 
+text is stored in a member CString variable.
+
+void SetText(
+LPCTSTR lpszText);
+
+PARAMETERS
+
+lpszText
+A 32-bit pointer to a constant character string 
+
+RETURN VALUE
+--------------------------------------------------------------------------------------------------------------*/
+/*-------------------------------------------------------------------------------------------------------------
+MatrixStatic::SetSize
+This function identifies which of the three supported sized bitmaps was supplied in the SetBitMapResource()
+function.
+
+void SetSize(
+int size = SMALL);
+
+PARAMETERS
+
+size
+an integer variable that identifies which of the three bitmap sizes supported was given in the 
+SetBitMapResource() function.  Possible values are LARGE, SMALL & TINY, which a defined within the class as
+0, 1 & 2 integers respectively.
+
+RETURN VALUE
+
+SEE ALSO
+See the three supplied bitmap templates as an example of this.
+
+SetCustomCharSizes() which allows custom format bitmaps.
+--------------------------------------------------------------------------------------------------------------*/
+/*-------------------------------------------------------------------------------------------------------------
+MatrixStatic::StopScroll
+This function ceases the scrolling of the display.
+
+void StopScroll();
+
+PARAMETERS
+
+RETURN VALUE
+--------------------------------------------------------------------------------------------------------------*/
+/*-------------------------------------------------------------------------------------------------------------
+MatrixStatic::DoScroll
+This function starts the display scrolling in the supplied direction.  This is not a pixel scroll but a 
+character scroll.
+
+void DoScroll(
+int speed, 
+BOOL dir);
+
+PARAMETERS
+
+speed
+Speed of the scrolling in milliseconds.  This is the same value you would supply to the Windows SetTimer()
+function.
+
+dir
+Direction of scroll.  Possible values are.
+
+SINGLE LINE DISPLAYS: (SetNumberOfLines was supplied a value of 1)
+LEFT or RIGHT, defined within the class as boolean 0 or 1 respectively.
+
+MULTILINE DISPLAYS:   (SetNumberOfLines was supplied a value greater than 1)
+UP, DOWN, LEFT or RIGHT, defined within the class as 0, 1, 2 or 3 respectively.
+
+RETURN VALUE
+--------------------------------------------------------------------------------------------------------------*/
+/*-------------------------------------------------------------------------------------------------------------
+MatrixStatic::SetCustomCharSizes
+This function allows you to use custom format bitmaps.  It sets the pixel sizes of the each character and
+the vertical and horizontal spacing.
+
+These values are automatically filled in for the three internally supported sizes of bitmaps.
+
+void SetCustomCharSizes(
+int width, 
+int height, 
+int xspace,  
+int yspace);
+
+PARAMETERS
+
+width
+An integer of the width of each character in pixels.
+
+height
+An integer of the height of each character in pixels.
+
+xspace
+An integer of the space between each character horizontally in pixels.
+
+yspace
+An integer of the space between each character vertically in pixels.
+
+RETURN VALUE
+--------------------------------------------------------------------------------------------------------------*/
+/*-------------------------------------------------------------------------------------------------------------
+MatrixStatic::AdjustClientYToSize
+This function allows the CStatic object to be automatically sized vertically for you to a given number of
+characters.
+
+void AdjustClientYToSize(
+int size);
+
+PARAMETERS
+
+size
+number of vertical display lines you want the object sized to.
+
+RETURN VALUE
+
+SEE ALSO
+SetNumberOfLines()
+SetXCharsPerLine()
+SetAutoPadding()
+AdjustClientXToSize
+--------------------------------------------------------------------------------------------------------------*/
+/*-------------------------------------------------------------------------------------------------------------
+MatrixStatic::AdjustClientXToSize
+This function allows the CStatic object to be automatically sized horizontally for you to a given number of
+characters.
+
+void AdjustClientXToSize(
+int size);
+
+PARAMETERS
+
+size
+number of characters you want the object sized to.
+
+RETURN VALUE
+
+SEE ALSO
+SetNumberOfLines()
+SetXCharsPerLine()
+SetAutoPadding()
+AdjustClientYToSize
+--------------------------------------------------------------------------------------------------------------*/
+/*-------------------------------------------------------------------------------------------------------------
+MatrixStatic::SetNumberOfLines
+This function sets the number of vertical display lines you want.    It does not have to equal the length of the
+string divided by the MaxXChars value.  This is useful for vertical scrolling. If the string is longer than the 
+number of characters shown in a multiline display and vertical scrolling is enabled, the display will scroll 
+through the string showing all characters.  An example of this is in the project example.
+
+void SetNumberOfLines(
+int max = 0);
+
+PARAMETERS
+
+max
+An integer that supplies the number of lines you want on the display..
+RETURN VALUE
+
+SEE ALSO
+SetXCharsPerLine()
+SetAutoPadding()
+AdjustClientXToSize
+AdjustClientYToSize
+--------------------------------------------------------------------------------------------------------------*/
+/*-------------------------------------------------------------------------------------------------------------
+MatrixStatic::SetXCharsPerLine
+This function sets the number of characters horizontally in the display.  In a single line display it sets 
+how many characters can be seen in the display at one time.  On multiline displays it sets how many 
+horizontal characters are to be used on each line.
+
+For example:  If you wanted three lines of ten characters each, a string of 30 characters would be supplied in the
+SetText() function.  This parameter would be set to 10, and the SetNumberOfLines() function would be supplied with 3.
+
+The difference between single and multiline is:  Single line displays can have a string longer than the supplied
+parameter and only the number of characters supplied here will be shown.  Multiline displays cannot,  The next line
+displayed starts at the character following the number of characters supplied here.
+
+void SetXCharsPerLine(
+int max = 0);
+
+PARAMETERS
+
+max
+An integer that supplies the number horizontal characters to display.
+
+RETURN VALUE
+
+SEE ALSO
+SetNumberOfLines()
+SetAutoPadding()
+AdjustClientXToSize
+AdjustClientYToSize
+--------------------------------------------------------------------------------------------------------------*/

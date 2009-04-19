@@ -1,0 +1,15 @@
+// HelloMfcDlg.cpp : implementation file
+//
+
+#include "stdafx.h"
+#include "HelloMfcDlg.h"
+
+/////////////////////////////////////////////////////////////////////////////
+// CHelloMfcDlg dialog
+
+CHelloMfcDlg::CHelloMfcDlg(CWnd* pParent /*=NULL*/)
+	: CDialog(CHelloMfcDlg::IDD, pParent)
+{
+}
+
+/////////////////////////////////////////////////////////////////////////////
