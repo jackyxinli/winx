@@ -31,10 +31,6 @@
 #include "../winsdk/Shell.h"
 #endif
 
-#ifndef WINX_LINKLIB_H
-#include "../LinkLib.h"
-#endif
-
 #ifndef STDEXT_ARCHIVE_H
 #include "../../../../stdext/include/stdext/Archive.h"
 #endif
@@ -123,7 +119,7 @@ inline VOID winx_call LoadACHistory(
 {
 	typedef typename ACHistoryType::value_type ACString;
 	ACString str;
-	while (ar.wgets(str) == S_OK)
+	while (ar.wgets(str))
 		acHis.push_back(str);
 }
 
@@ -132,7 +128,7 @@ inline HRESULT SaveACHistoryToFile(
 	IN const StringType& szFile, 
 	IN const ACHistoryType& acHis)
 {
-	std::FileWriter ar;
+	NS_STDEXT::FileWriter ar;
 	HRESULT hr = ar.open(szFile);
 	if (SUCCEEDED(hr))
 		SaveACHistory(ar, acHis);
@@ -144,7 +140,7 @@ inline HRESULT LoadACHistoryFromFile(
 	IN const StringType& szFile,
 	IN OUT ACHistoryType& acHis)
 {
-	std::FileReader ar;
+	NS_STDEXT::FileReader ar;
 	HRESULT hr = ar.open(szFile);
 	if (SUCCEEDED(hr))
 		LoadACHistory(ar, acHis);
@@ -157,7 +153,7 @@ inline HRESULT SaveACHistoryToRegistry(
 	IN LPCTSTR lpszKeyName,
 	IN const ACHistoryType& acHis)
 {
-	std::WinRegWriter ar;
+	NS_STDEXT::WinRegWriter ar;
 	HRESULT hr = ar.open(hKeyParent, lpszKeyName);
 	if (SUCCEEDED(hr))
 		SaveACHistory(ar, acHis);
@@ -170,7 +166,7 @@ inline HRESULT LoadACHistoryFromRegistry(
 	IN LPCTSTR lpszKeyName,
 	IN OUT ACHistoryType& acHis)
 {
-	std::WinRegReader ar;
+	NS_STDEXT::WinRegReader ar;
 	HRESULT hr = ar.open(hKeyParent, lpszKeyName);
 	if (SUCCEEDED(hr))
 		LoadACHistory(ar, acHis);
