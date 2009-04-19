@@ -302,6 +302,23 @@ public:
 		NS_STDEXT_IO_TEXT::printLines(*this, rg.begin(), rg.end());
 		return *this;
 	}
+
+public:
+	void winx_call puts(const char* lpBuf, size_t cch) throw(IoException) {
+		NS_STDEXT_IO_BINARY::puts(*this, lpBuf, cch);
+	}
+
+	void winx_call puts(const TempString<char> s) throw(IoException) {
+		NS_STDEXT_IO_BINARY::puts(*this, s);
+	}
+
+	void winx_call wputs(const UINT16* s, size_t cch) throw(IoException) {
+		NS_STDEXT_IO_BINARY::wputs(*this, s, cch);
+	}
+
+	void winx_call wputs(const TempString<UINT16> s) throw(IoException) {
+		NS_STDEXT_IO_BINARY::wputs(*this, s);
+	}
 };
 
 // -------------------------------------------------------------------------

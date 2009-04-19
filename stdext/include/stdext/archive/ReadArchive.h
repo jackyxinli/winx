@@ -422,6 +422,27 @@ public:
 	size_type winx_call getline(AllocT2& alloc, BasicString<char_type>& s) {
 		return NS_STDEXT_IO_TEXT::getline(*this, alloc, s);
 	}
+
+public:
+	template <class StringT>
+	bool winx_call gets(StringT& s) {
+		return NS_STDEXT_IO_BINARY::gets(*this, s);
+	}
+	
+	template <class AllocT>
+	bool winx_call gets(AllocT& alloc, BasicString<char>& s) {
+		return NS_STDEXT_IO_BINARY::gets(*this, alloc, s);
+	}
+	
+	template <class StringT>
+	bool winx_call wgets(StringT& s) {
+		return NS_STDEXT_IO_BINARY::wgets(*this, s);
+	}
+	
+	template <class AllocT>
+	bool winx_call wgets(AllocT& alloc, BasicString<UINT16>& s) {
+		return NS_STDEXT_IO_BINARY::wgets(*this, alloc, s);
+	}
 };
 
 // -------------------------------------------------------------------------

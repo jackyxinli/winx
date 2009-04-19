@@ -189,6 +189,54 @@ public:
 };
 
 // -------------------------------------------------------------------------
+// class TestWinReg
+
+#if defined(STD_UNITTEST)
+
+#define _WINX_TEST_WINREG_KEY	WINX_TEXT("Software\\winx\\TestStdExt\\TestWinReg")
+
+template <class LogT>
+class TestWinReg : public TestCase
+{
+	WINX_TEST_SUITE(TestWinReg);
+		WINX_TEST(testBasic);
+	WINX_TEST_SUITE_END();
+
+public:
+	void testBasic(LogT& log)
+	{
+		NS_STDEXT::BlockPool recycle;
+		NS_STDEXT::ScopedAlloc alloc(recycle);
+		{
+			NS_STDEXT::WinRegWriter ar(HKEY_CURRENT_USER, _WINX_TEST_WINREG_KEY);
+			ar.wputs(L"Hello");
+			ar.puts(std::string("World!"));
+			ar.puts(std::vector<char>(256, '!'));
+			ar.puts(std::vector<char>(65537, '?'));
+		}
+		{
+			NS_STDEXT::WinRegReader ar(HKEY_CURRENT_USER, _WINX_TEST_WINREG_KEY);
+			std::string s1;
+			AssertExp(ar.gets(s1));
+			AssertExp(s1 == "Hello");
+			std::vector<WCHAR> s2;
+			AssertExp(ar.wgets(s2));
+			AssertExp(NS_STDEXT::compare(s2.begin(), s2.end(), L"World!") == 0);
+			NS_STDEXT::String s3;
+			AssertExp(ar.gets(alloc, s3));
+			AssertExp(s3 == NS_STDEXT::String(alloc, 256, '!'));
+			NS_STDEXT::String s4;
+			AssertExp(ar.gets(alloc, s4));
+			AssertExp(s4 == NS_STDEXT::String(alloc, 65537, '?'));
+			NS_STDEXT::String s5;
+			AssertExp(!ar.gets(alloc, s5));
+		}
+	}
+};
+
+#endif // defined(STD_UNITTEST)
+
+// -------------------------------------------------------------------------
 // class TestRecord
 
 #if defined(STD_UNITTEST)

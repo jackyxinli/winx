@@ -19,6 +19,10 @@
 #ifndef STDEXT_ARCHIVE_WINREG_H
 #define STDEXT_ARCHIVE_WINREG_H
 
+#ifndef STDEXT_ARCHIVE_BASIC_H
+#include "Basic.h"
+#endif
+
 #ifndef STDEXT_REGISTRY_WINREGISTRY_H
 #include "../registry/WinRegistry.h"
 #endif
@@ -114,19 +118,21 @@ public:
 			lpszClass, dwOptions, samDesired, lpSecAttr, lpdwDisposition));
 	}
 
-	HRESULT winx_call puts(const TempString<char> str)
-	{
-		return WinRegHelper<char>::putString(m_regKey, ++m_nCount, str);
-	}
-
-	HRESULT winx_call wputs(const TempString<WCHAR> str)
-	{
-		return WinRegHelper<WCHAR>::putString(m_regKey, ++m_nCount, str);
-	}
-
-	int winx_call good() const
+	bool winx_call good() const
 	{
 		return m_regKey != NULL;
+	}
+
+public:
+	void winx_call puts(const TempString<char> str) throw(IoException)
+	{
+		WinRegHelper<char>::putString(m_regKey, ++m_nCount, str);
+
+	}
+
+	void winx_call wputs(const TempString<WCHAR> str) throw(IoException)
+	{
+		WinRegHelper<WCHAR>::putString(m_regKey, ++m_nCount, str);
 	}
 };
 
@@ -169,78 +175,32 @@ public:
 		return HRESULT_FROM_WIN32(m_regKey.open(hKeyParent, lpszKeyName));
 	}
 
+	bool winx_call good() const
+	{
+		return m_regKey != NULL;
+	}
+
+public:
 	template <class AllocT, class CharT>
-	HRESULT winx_call gets(AllocT& alloc, BasicString<CharT>& s)
+	bool winx_call gets(AllocT& alloc, BasicString<CharT>& s)
 	{
 		OutputBasicString<CharT, AllocT> s1(alloc, s);
-		return WinRegHelper<CharT>::getString(m_regKey, ++m_nCount, s1);
+		return WinRegHelper<CharT>::getString(m_regKey, ++m_nCount, s1) == S_OK;
 	}
 
 	template <class StringT>
-	HRESULT winx_call gets(StringT& str)
+	bool winx_call gets(StringT& str)
 	{
 		typedef typename StringT::value_type CharT;
-		return WinRegHelper<CharT>::getString(m_regKey, ++m_nCount, str);
+		return WinRegHelper<CharT>::getString(m_regKey, ++m_nCount, str) == S_OK;
 	}
 
 	template <class StringT>
-	HRESULT winx_call wgets(StringT& str)
+	bool winx_call wgets(StringT& str)
 	{
 		return gets(str);
 	}
-
-	int winx_call good() const {
-		return m_regKey != NULL;
-	}
 };
-
-// -------------------------------------------------------------------------
-// class TestWinReg
-
-#if defined(STD_UNITTEST)
-
-#define _WINX_TEST_WINREG_KEY	WINX_TEXT("Software\\winx\\TestStdExt\\TestWinReg")
-
-template <class LogT>
-class TestWinReg : public TestCase
-{
-	WINX_TEST_SUITE(TestWinReg);
-		WINX_TEST(testBasic);
-	WINX_TEST_SUITE_END();
-
-public:
-	void testBasic(LogT& log)
-	{
-		NS_STDEXT::BlockPool recycle;
-		NS_STDEXT::ScopedAlloc alloc(recycle);
-		{
-			NS_STDEXT::WinRegWriter ar(HKEY_CURRENT_USER, _WINX_TEST_WINREG_KEY);
-			ar.wputs(L"Hello");
-			ar.puts(std::string("World!"));
-			ar.puts(std::vector<char>(256, '!'));
-			ar.puts(std::vector<char>(65537, '?'));
-		}
-		{
-			NS_STDEXT::WinRegReader ar(HKEY_CURRENT_USER, _WINX_TEST_WINREG_KEY);
-			std::string s1;
-			AssertExp(ar.gets(s1) == S_OK);
-			AssertExp(s1 == "Hello");
-			std::vector<WCHAR> s2;
-			AssertExp(ar.wgets(s2) == S_OK);
-			AssertExp(NS_STDEXT::compare(s2.begin(), s2.end(), L"World!") == 0);
-			NS_STDEXT::String s3;
-			AssertExp(ar.gets(alloc, s3) == S_OK);
-			AssertExp(s3 == NS_STDEXT::String(alloc, 256, '!'));
-			NS_STDEXT::String s4;
-			AssertExp(ar.gets(alloc, s4) == S_OK);
-			AssertExp(s4 == NS_STDEXT::String(alloc, 65537, '?'));
-			NS_STDEXT::String s5;
-			AssertExp(ar.gets(alloc, s5) != S_OK);
-		}
-	}
-};
-
-#endif // defined(STD_UNITTEST)
 
 // -------------------------------------------------------------------------
 // $Log: WinReg.h,v $
