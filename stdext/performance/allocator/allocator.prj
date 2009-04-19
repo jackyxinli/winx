@@ -1,0 +1,23 @@
+[Include]
+.
+../../../stdext/include
+../../../boost
+../../../boostmm
+
+[Config Release]
+Product		Exe Release/testalloc
+Options		Release; MultiThread; AnsiChar; NoRtti; Exception; WarningAll
+ObjDir		Release
+LibDir		Release
+Libraries	rt; apr-1; boost-memory
+
+[Config Debug]
+Product		Exe Debug/testalloc
+Options		Debug; MultiThread; AnsiChar; NoRtti; Exception; WarningAll
+ObjDir		Debug
+LibDir		Debug
+Libraries	rt; apr-1; boost-memory
+
+[Source]
+AllocatorPerformance.cpp
+

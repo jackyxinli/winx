@@ -1,0 +1,4 @@
+./build.li32
+cd Release
+./test
+
