@@ -42,6 +42,9 @@ typedef auto_alloc AutoAlloc;
 typedef scoped_alloc ScopedAlloc;
 typedef default_alloc DefaultAlloc;
 
+typedef pool Pool;
+typedef scoped_pool ScopedPool;
+
 typedef auto_alloc AutoFreeAlloc; // for backward compatibility
 typedef scoped_alloc ScopeAlloc; // for backward compatibility
 
