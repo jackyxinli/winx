@@ -1,4 +1,5 @@
 #include <stdext/AOP.h>
+#include <stdext/LinkLib.h>
 
 // -------------------------------------------------------------------------
 // interface

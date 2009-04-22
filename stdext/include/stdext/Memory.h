@@ -50,6 +50,9 @@ typedef scoped_alloc ScopeAlloc; // for backward compatibility
 #define StlAlloc stl_allocator
 #define Defragment defragment
 
+#define DclListNode dcl_list_node
+#define DclList dcl_list
+
 NS_STDEXT_END
 
 #define STD_NO_CONSTRUCTOR(Type)				BOOST_MEMORY_NO_CONSTRUCTOR(Type)
@@ -76,7 +79,7 @@ NS_STDEXT_BEGIN
 #pragma warning(disable:4996) // XXX  was declared deprecated
 #endif
 
-inline void _reportCountLeak(unsigned nRef, const char* szClass, const char* szFile, int nLine)
+inline void reportCountLeak_(unsigned nRef, const char* szClass, const char* szFile, int nLine)
 {
 	char szBuf[1024];
 	size_t cch = 0;
@@ -104,7 +107,7 @@ public:
 		: m_nRef(0), m_szClass(szClass), m_szFile(szFile), m_nLine(nLine) {}
 	~CountChecker_()
 		{ if (m_nRef > 0)
-			_reportCountLeak(m_nRef, m_szClass, m_szFile, m_nLine); }
+			reportCountLeak_(m_nRef, m_szClass, m_szFile, m_nLine); }
 	void __stdcall operator++()	{ ++m_nRef; }
 	void __stdcall operator--()	{ --m_nRef; }
  
@@ -129,7 +132,7 @@ private:
 		CountChecker_& __stdcall counter()									\
 			{ static std::CountChecker_ r(#Class, __FILE__, __LINE__);		\
 			  return r; }													\
-	} _winx_cntchecker;
+	} winx_cntchecker_;
 #endif
 
 NS_STDEXT_END
