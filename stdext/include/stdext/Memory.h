@@ -49,6 +49,8 @@ typedef auto_alloc AutoFreeAlloc; // for backward compatibility
 typedef scoped_alloc ScopeAlloc; // for backward compatibility
 
 #define RegionAllocT region_alloc
+#define FixedAllocT fixed_alloc
+#define ConstructorTraits constructor_traits
 #define DestructorTraits destructor_traits
 #define StlAlloc stl_allocator
 #define Defragment defragment
