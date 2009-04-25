@@ -40,19 +40,19 @@ NS_STDEXT_BEGIN
 // -------------------------------------------------------------------------
 // class Array - see boost::array
 
-template <class Type, UINT nElement>
+template <class Type, size_t nElement>
 class Array
 {
 private:
 	Type m_data[nElement];
-	UINT m_size;
+	size_t m_size;
 
 	Array(const Array&);
 	void operator=(const Array&);
 
 public:
 	typedef Type value_type;
-	typedef UINT size_type;
+	typedef size_t size_type;
 	typedef ptrdiff_t difference_type;
 
 	typedef Type& reference;
@@ -64,11 +64,11 @@ public:
 public:
 	Array() : m_size(0) {}
 
-    void winx_call rangecheck(size_type i)
+	void winx_call rangecheck(size_type i)
 	{
-        if (i >= size())
-            throw std::range_error("Array<>: index out of range");
-    }
+		if (i >= size())
+			throw std::range_error("Array<>: index out of range");
+	}
 
 	void winx_call clear()	{ m_size = 0; }
 	void winx_call resize(size_type n)
@@ -104,13 +104,13 @@ public:
 
 	reference winx_call operator[](size_type i)
 	{
-		WINX_ASSERT( i < m_size && "out of range" );
+		WINX_ASSERT( i < size() && "out of range" );
 		return m_data[i];
 	}
 
 	const_reference winx_call operator[](size_type i) const 
-    {     
-		WINX_ASSERT( i < m_size && "out of range" );
+    {
+		WINX_ASSERT( i < size() && "out of range" );
 		return m_data[i];
     }
 
@@ -118,6 +118,7 @@ public:
 	{
 		WINX_ASSERT(it >= begin() && it <= end());
 		WINX_ASSERT(m_size < nElement);
+
 		if (m_size < nElement) {
 			std::copy_backward(it, end(), end()+1);
 			*it = val;
@@ -128,6 +129,7 @@ public:
 	void winx_call erase(iterator it)
 	{
 		WINX_ASSERT(it >= begin() && it <= end());
+		
 		std::copy(it+1, end(), it);
 		--m_size;
 	}
@@ -135,6 +137,7 @@ public:
 	void winx_call push_back(const_reference val)
 	{
 		WINX_ASSERT(m_size < nElement);
+		
 		if (m_size < nElement)
 			m_data[m_size++] = val;
 	}
@@ -156,7 +159,7 @@ public:
 
 template <class VectorT>
 inline void winx_call priority_push_back(
-	VectorT& cont, const typename VectorT::value_type& val, const UINT countLim)
+	VectorT& cont, const typename VectorT::value_type& val, const size_t countLim)
 {
 	if (cont.size() >= countLim)
 	{
@@ -170,7 +173,7 @@ inline void winx_call priority_push_back(
 
 template <class VectorT, class PredT>
 inline void winx_call priority_push_back(
-	VectorT& cont, const typename VectorT::value_type& val, const UINT countLim, PredT pred)
+	VectorT& cont, const typename VectorT::value_type& val, const size_t countLim, PredT pred)
 {
 	if (cont.size() >= countLim)
 	{
@@ -185,7 +188,7 @@ inline void winx_call priority_push_back(
 // -------------------------------------------------------------------------
 // class PriorityArray
 
-template <class Type, UINT nElement, class Pred = std::less<Type> >
+template <class Type, size_t nElement, class Pred = std::less<Type> >
 class PriorityArray : public Array<Type, nElement>
 {
 private:

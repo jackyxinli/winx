@@ -335,7 +335,7 @@ public:
 
 public:
 	BasicArray() {}
-	BasicArray(Iterator arr, size_t n)
+	BasicArray(Iterator arr, size_type n)
 		: Base(arr, arr+n) {}
 	BasicArray(Iterator first_, Iterator second_)
 		: Base(first_, second_) {}
@@ -343,7 +343,7 @@ public:
 	template <class PolicyT, class ContainerT>
 	BasicArray(RegionAllocT<PolicyT>& alloc, const ContainerT& cont)
 	{
-		const size_t n = cont.size();
+		const size_type n = cont.size();
 		Base::first = STD_NEW_ARRAY(alloc, Type, n);
 		Base::second = std::copy(cont.begin(), cont.end(), (Type*)Base::first);
 	}
@@ -351,7 +351,7 @@ public:
 	template <class ContainerT>
 	BasicArray(SystemAlloc& alloc, const ContainerT& cont)
 	{
-		const size_t n = cont.size();
+		const size_type n = cont.size();
 		Base::first = STD_NEW_ARRAY(alloc, Type, n);
 		Base::second = std::copy(cont.begin(), cont.end(), (Type*)Base::first);
 	}
