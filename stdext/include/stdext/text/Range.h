@@ -90,7 +90,7 @@ public:
 
 public:
 	Range()
-		: first(), second() {}
+		: first(iterator()), second(iterator()) {}
 
 	Range(Iterator first_, Iterator second_)
 		: first(first_), second(second_) {}
