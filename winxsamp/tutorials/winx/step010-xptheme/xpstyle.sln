@@ -1,0 +1,26 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 9.00
+# Visual Studio 2005
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "NoManifest", "2.no-manifest\hello2.vcproj", "{6FC279E6-D96C-4CB8-AE59-38371A5BFC88}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "OwnerDrawXP", "3.owner-draw\hello3.vcproj", "{54E9852F-311E-4FAA-9276-9F154D6BBB1E}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Win32 = Debug|Win32
+		Release|Win32 = Release|Win32
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{6FC279E6-D96C-4CB8-AE59-38371A5BFC88}.Debug|Win32.ActiveCfg = Debug|Win32
+		{6FC279E6-D96C-4CB8-AE59-38371A5BFC88}.Debug|Win32.Build.0 = Debug|Win32
+		{6FC279E6-D96C-4CB8-AE59-38371A5BFC88}.Release|Win32.ActiveCfg = Release|Win32
+		{6FC279E6-D96C-4CB8-AE59-38371A5BFC88}.Release|Win32.Build.0 = Release|Win32
+		{54E9852F-311E-4FAA-9276-9F154D6BBB1E}.Debug|Win32.ActiveCfg = Debug|Win32
+		{54E9852F-311E-4FAA-9276-9F154D6BBB1E}.Debug|Win32.Build.0 = Debug|Win32
+		{54E9852F-311E-4FAA-9276-9F154D6BBB1E}.Release|Win32.ActiveCfg = Release|Win32
+		{54E9852F-311E-4FAA-9276-9F154D6BBB1E}.Release|Win32.Build.0 = Release|Win32
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal

@@ -1,0 +1,43 @@
+// MyTestComApp.idl : IDL source for MyTestComApp.dll
+//
+
+// This file will be processed by the MIDL tool to
+// produce the type library (MyTestComApp.tlb) and marshalling code.
+
+import "oaidl.idl";
+import "ocidl.idl";
+
+[
+	uuid(5630B844-BE20-483E-97BF-9399551FC35F),
+	version(1.0),
+	helpstring("MyTestComApp 1.0 Type Library")
+]
+library MyTestComAppLib
+{
+	importlib("stdole32.tlb");
+	importlib("stdole2.tlb");
+
+	[
+		odl,
+		uuid(5F5A30A1-35AD-4d11-AC41-F59AB5325ADB),
+		version(1.0),
+		dual,
+		nonextensible,
+		oleautomation
+	]
+	interface _Application : IDispatch
+	{
+		[id(0x0001), propget]
+		HRESULT Caption([out, retval] BSTR* prop);
+
+		[id(0x0002)]
+		HRESULT MsgBox([in] BSTR msg, [in] BSTR title);
+	};
+
+    [
+		uuid(68C45EE7-1566-4eab-B99C-22EBCA5FEFE5)
+    ]
+    coclass Application {
+        [default] interface _Application;
+    };
+};

@@ -1,0 +1,11 @@
+HKCR
+{
+	NoRemove AppID
+	{
+		{4C2EAED7-49CE-4B99-A213-D6B25BC826DA} = s 'activeobject2'
+		'activeobject2.EXE'
+		{
+			val AppID = s {4C2EAED7-49CE-4B99-A213-D6B25BC826DA}
+		}
+	}
+}

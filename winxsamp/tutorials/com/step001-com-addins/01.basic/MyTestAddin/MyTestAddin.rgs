@@ -1,0 +1,47 @@
+HKCR
+{
+	MyNameSpace.MyTestAddin.1 = s 'MyTestAddin Class'
+	{
+		CLSID = s '{367E9E30-2C68-435D-A1ED-A5CBF3D5533A}'
+	}
+	MyNameSpace.MyTestAddin = s 'MyTestAddin Class'
+	{
+		CLSID = s '{367E9E30-2C68-435D-A1ED-A5CBF3D5533A}'
+		CurVer = s 'MyNameSpace.MyTestAddin.1'
+	}
+	NoRemove CLSID
+	{
+		ForceRemove {367E9E30-2C68-435D-A1ED-A5CBF3D5533A} = s 'MyTestAddin Class'
+		{
+			ProgID = s 'MyNameSpace.MyTestAddin.1'
+			VersionIndependentProgID = s 'MyNameSpace.MyTestAddin'
+			ForceRemove 'Programmable'
+			InprocServer32 = s '%MODULE%'
+			{
+				val ThreadingModel = s 'Apartment'
+			}
+		}
+	}
+}
+HKCU
+{
+  Software
+  {
+    winx
+    {
+		MyTestComApp
+		{
+		  Addins
+		  {
+			'MyNameSpace.MyTestAddin'
+			{
+			  val FriendlyName = s 'MyFriendlyName'
+			  val Description = s 'MyDescription'
+			  val LoadBehavior = d '00000003'
+			  val CommandLineSafe = d '00000001'
+			}
+		  }
+		}
+    }
+  }
+}
