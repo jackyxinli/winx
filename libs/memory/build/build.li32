@@ -1,0 +1,3 @@
+ln -s -f Makefile.li32 Makefile
+make CFG=Release
+

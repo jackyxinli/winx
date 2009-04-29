@@ -1,0 +1,5 @@
+EXPORTED {
+global:
+	boost_TlsBlockPool;
+local: *;
+};

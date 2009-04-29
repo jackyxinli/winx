@@ -1,0 +1,21 @@
+[Include]
+../../../..
+../../../../../boost
+
+[Config Release]
+Product		Exe LRelease/test
+Options		Release; MultiThread; AnsiChar; NoRtti; Exception
+ObjDir		LRelease
+LibDir		../../bin/linux
+Libraries	rt; boost-memory
+
+[Config Debug]
+Product		Exe LDebug/test
+Options		Debug; MultiThread; AnsiChar; NoRtti; Exception
+ObjDir		LDebug
+LibDir		../../bin/linux
+Libraries	rt; boost-memory
+
+[Source]
+test.dsp
+
