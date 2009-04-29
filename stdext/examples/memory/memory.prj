@@ -1,0 +1,21 @@
+[Include]
+../../../tpl/include
+../../../stdext/include
+
+[Config Release]
+Product		Exe Release/test
+Options		Release; MultiThread; AnsiChar; NoRtti; Exception; WarningAll
+ObjDir		Release
+LibDir		Release
+Libraries	boost-memory
+
+[Config Debug]
+Product		Exe Debug/test
+Options		Debug; MultiThread; AnsiChar; NoRtti; Exception; WarningAll
+ObjDir		Debug
+LibDir		Debug
+Libraries	boost-memory
+
+[Source]
+*.cpp
+

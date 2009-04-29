@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<CodeBlocks_project_file>
+	<FileVersion major="1" minor="6" />
+	<Project>
+		<Option title="TestStdExt" />
+		<Option pch_mode="2" />
+		<Option compiler="gcc" />
+		<Build>
+			<Target title="Win32 Release">
+				<Option output="E:\sourceforge\stdext\test\stdext\Release\TestStdExt.exe" prefix_auto="1" extension_auto="1" />
+				<Option object_output="Release" />
+				<Option type="1" />
+				<Option compiler="gcc" />
+				<Compiler>
+					<Add option="-W" />
+					<Add option="-fexceptions" />
+					<Add option="-O2" />
+					<Add option="-DWIN32" />
+					<Add option="-DNDEBUG" />
+					<Add option="-D_CONSOLE" />
+					<Add option="-D_MBCS" />
+					<Add directory="..\..\include" />
+					<Add directory="..\..\..\stdext\include" />
+					<Add directory="..\..\..\boost" />
+				</Compiler>
+			</Target>
+			<Target title="Win32 Debug">
+				<Option output="E:\sourceforge\stdext\test\stdext\Debug\TestStdExt.exe" prefix_auto="1" extension_auto="1" />
+				<Option object_output="Debug" />
+				<Option type="1" />
+				<Option compiler="gcc" />
+				<Compiler>
+					<Add option="-W" />
+					<Add option="-fexceptions" />
+					<Add option="-g" />
+					<Add option="-DWIN32" />
+					<Add option="-D_DEBUG" />
+					<Add option="-D_CONSOLE" />
+					<Add option="-D_MBCS" />
+					<Add directory="..\..\include" />
+					<Add directory="..\..\..\stdext\include" />
+					<Add directory="..\..\..\boost" />
+				</Compiler>
+			</Target>
+		</Build>
+		<Unit filename="TestStdExt.cpp" />
+		<Unit filename="TestStdNew.cpp" />
+		<Extensions>
+			<code_completion />
+		</Extensions>
+	</Project>
+</CodeBlocks_project_file>
