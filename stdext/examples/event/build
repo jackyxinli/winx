@@ -1,0 +1,5 @@
+mkdir -p Debug Release
+cp ../../../memory/libs/memory/bin/linux/32/libboost-memory.so Debug
+cp Debug/libboost-memory.so Release
+make CFG=Release
+

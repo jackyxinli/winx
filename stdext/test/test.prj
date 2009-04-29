@@ -1,0 +1,20 @@
+[Include]
+../../stdext/include
+
+[Config Release]
+Product		Exe Release/test
+Options		Release; MultiThread; AnsiChar; Rtti; Exception; WarningAll
+ObjDir		Release
+LibDir		Release
+Libraries	boost-memory; rt
+
+[Config Debug]
+Product		Exe Debug/test
+Options		Debug; MultiThread; AnsiChar; Rtti; Exception; WarningAll
+ObjDir		Debug
+LibDir		Debug
+Libraries	boost-memory; rt
+
+[Source]
+main.cpp
+
