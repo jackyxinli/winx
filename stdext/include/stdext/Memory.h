@@ -31,6 +31,8 @@
 
 NS_STDEXT_BEGIN
 
+typedef tls_key TlsKey;
+
 typedef system_alloc SystemAlloc;
 typedef stdlib_alloc DefaultStaticAlloc;
 
@@ -50,6 +52,7 @@ typedef scoped_alloc ScopeAlloc; // for backward compatibility
 
 #define RegionAllocT region_alloc
 #define FixedAllocT fixed_alloc
+#define ObjectPool object_pool
 #define ConstructorTraits constructor_traits
 #define DestructorTraits destructor_traits
 #define StlAlloc stl_allocator
