@@ -44,6 +44,9 @@ typedef auto_alloc AutoAlloc;
 typedef scoped_alloc ScopedAlloc;
 typedef default_alloc DefaultAlloc;
 
+typedef stdlib Stdlib;
+typedef scoped Scoped;
+
 typedef pool Pool;
 typedef scoped_pool ScopedPool;
 
@@ -53,6 +56,7 @@ typedef scoped_alloc ScopeAlloc; // for backward compatibility
 #define RegionAllocT region_alloc
 #define FixedAllocT fixed_alloc
 #define ObjectPool object_pool
+#define ObjectPoolTraits object_pool_traits
 #define ConstructorTraits constructor_traits
 #define DestructorTraits destructor_traits
 #define StlAlloc stl_allocator
