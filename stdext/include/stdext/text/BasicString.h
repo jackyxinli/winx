@@ -82,7 +82,7 @@ public:																		\
 
 #ifndef WINX_ALLOC_TYPE_
 #define WINX_ALLOC_TEMPLATE_ARGS_		class PolicyT
-#define WINX_ALLOC_TYPE_				RegionAllocT<PolicyT>
+#define WINX_ALLOC_TYPE_				NS_STDEXT::RegionAllocT<PolicyT>
 #endif
 
 template <class CharT>
@@ -184,6 +184,11 @@ public:
 		const value_type* psz = makeBuf_(alloc, first, cch);
 		Base::assign(psz, psz+cch);
 		return *this;
+	}
+
+	void winx_call assign(const CharT* first_, const CharT* second_) {
+		Base::first = first_;
+		Base::second = second_;
 	}
 
 	void winx_call attach(const CharT* szVal) {
