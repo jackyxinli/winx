@@ -354,13 +354,22 @@ inline Rule<HtmlPropG> const TPL_CALL html_prop() {
 	return Rule<HtmlPropG>();
 }
 
+// -------------------------------------------------------------------------
+// function html_prop_skip_invalid
+
+typedef FindIf<ChMask<TPL_HTMLSYMBOL_FIRST_CHAR|STD_CTYPE_GT|STD_CTYPE_DIV>, false, true> HtmlPropSkipInvalid;
+
+inline Rule<HtmlPropSkipInvalid> const TPL_CALL html_prop_skip_invalid() {
+	return Rule<HtmlPropSkipInvalid>();
+}
+
 // =========================================================================
 // function html_property
 
 //
-// html_prop() + html_skip_eq_value()
+// html_prop_skip_invalid() + html_prop() + html_skip_eq_value()
 //
-typedef UAnd<HtmlPropG, HtmlSkipEqValueG> HtmlPropertyG_;
+typedef UAnd<HtmlPropSkipInvalid, HtmlPropG, HtmlSkipEqValueG> HtmlPropertyG_;
 
 TPL_REGEX_GUARD0(HtmlPropertyG_, HtmlPropertyG, TagAssigNone);
 
