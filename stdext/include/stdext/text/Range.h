@@ -172,31 +172,31 @@ public:
 public:
 	template <class ContainerT>
 	int winx_call compare(const ContainerT& b) const {
-		return std::compare(first, second, b.begin(), b.end());
+		return NS_STDEXT::compare(first, second, b.begin(), b.end());
 	}
 
 	int winx_call compare(const value_type* b) const {
-		return std::compare(first, second, b);
+		return NS_STDEXT::compare(first, second, b);
 	}
 
 	int winx_call compare(const value_type* b, size_type blen) const {
-		return std::compare(first, second, b, b + blen);
+		return NS_STDEXT::compare(first, second, b, b + blen);
 	}
 
 public:
 	template <class ContainerT, class ComprT>
 	int winx_call compare_by(const ContainerT& b, ComprT cmp) const {
-		return std::compare_by(begin(), end(), b.begin(), b.end(), cmp);
+		return NS_STDEXT::compare_by(begin(), end(), b.begin(), b.end(), cmp);
 	}
 
 	template <class ComprT>
 	int winx_call compare_by(const value_type* b, ComprT cmp) const {
-		return std::compare_by(begin(), end(), b, cmp);
+		return NS_STDEXT::compare_by(begin(), end(), b, cmp);
 	}
 
 	template <class ComprT>
 	int winx_call compare_by(const value_type* b, size_type blen, ComprT cmp) const {
-		return std::compare_by(begin(), end(), b, b + blen, cmp);
+		return NS_STDEXT::compare_by(begin(), end(), b, b + blen, cmp);
 	}
 
 private:
@@ -287,7 +287,7 @@ public:
 	}
 
 	TempString(const CharT* szVal)
-		: Base(szVal, std::end(szVal)) {
+		: Base(szVal, NS_STDEXT::end(szVal)) {
 	}
 
 	TempString(const CharT* szVal, size_t len)
@@ -410,29 +410,29 @@ inline BasicArray<Type> winx_call arrayof(const Type v[], size_t n)
 
 NS_STDEXT_END
 
-STD_NO_DESTRUCTOR(std::Range<const char*>);
-STD_NO_DESTRUCTOR(std::Range<const wchar_t*>);
-STD_NO_DESTRUCTOR(std::Range<const int*>);
-STD_NO_DESTRUCTOR(std::Range<const long*>);
-STD_NO_DESTRUCTOR(std::Range<const short*>);
-STD_NO_DESTRUCTOR(std::Range<const unsigned int*>);
-STD_NO_DESTRUCTOR(std::Range<const unsigned long*>);
+STD_NO_DESTRUCTOR(NS_STDEXT::Range<const char*>);
+STD_NO_DESTRUCTOR(NS_STDEXT::Range<const wchar_t*>);
+STD_NO_DESTRUCTOR(NS_STDEXT::Range<const int*>);
+STD_NO_DESTRUCTOR(NS_STDEXT::Range<const long*>);
+STD_NO_DESTRUCTOR(NS_STDEXT::Range<const short*>);
+STD_NO_DESTRUCTOR(NS_STDEXT::Range<const unsigned int*>);
+STD_NO_DESTRUCTOR(NS_STDEXT::Range<const unsigned long*>);
 
-STD_NO_DESTRUCTOR(std::TempString<char>);
-STD_NO_DESTRUCTOR(std::TempString<wchar_t>);
-STD_NO_DESTRUCTOR(std::TempString<int>);
-STD_NO_DESTRUCTOR(std::TempString<long>);
-STD_NO_DESTRUCTOR(std::TempString<short>);
-STD_NO_DESTRUCTOR(std::TempString<unsigned int>);
-STD_NO_DESTRUCTOR(std::TempString<unsigned long>);
+STD_NO_DESTRUCTOR(NS_STDEXT::TempString<char>);
+STD_NO_DESTRUCTOR(NS_STDEXT::TempString<wchar_t>);
+STD_NO_DESTRUCTOR(NS_STDEXT::TempString<int>);
+STD_NO_DESTRUCTOR(NS_STDEXT::TempString<long>);
+STD_NO_DESTRUCTOR(NS_STDEXT::TempString<short>);
+STD_NO_DESTRUCTOR(NS_STDEXT::TempString<unsigned int>);
+STD_NO_DESTRUCTOR(NS_STDEXT::TempString<unsigned long>);
 
-STD_NO_DESTRUCTOR(std::BasicArray<char>);
-STD_NO_DESTRUCTOR(std::BasicArray<wchar_t>);
-STD_NO_DESTRUCTOR(std::BasicArray<int>);
-STD_NO_DESTRUCTOR(std::BasicArray<long>);
-STD_NO_DESTRUCTOR(std::BasicArray<short>);
-STD_NO_DESTRUCTOR(std::BasicArray<unsigned int>);
-STD_NO_DESTRUCTOR(std::BasicArray<unsigned long>);
+STD_NO_DESTRUCTOR(NS_STDEXT::BasicArray<char>);
+STD_NO_DESTRUCTOR(NS_STDEXT::BasicArray<wchar_t>);
+STD_NO_DESTRUCTOR(NS_STDEXT::BasicArray<int>);
+STD_NO_DESTRUCTOR(NS_STDEXT::BasicArray<long>);
+STD_NO_DESTRUCTOR(NS_STDEXT::BasicArray<short>);
+STD_NO_DESTRUCTOR(NS_STDEXT::BasicArray<unsigned int>);
+STD_NO_DESTRUCTOR(NS_STDEXT::BasicArray<unsigned long>);
 
 #endif /* STDEXT_TEXT_RANGE_H */
 

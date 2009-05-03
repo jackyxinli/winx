@@ -236,12 +236,32 @@ public:
 	static Myt_ winx_call cast(const vector<CharT, _Alloc2>& builder) {
 		return Myt_(_ConvIt(builder.begin()), builder.size());
 	}
-	
+
+	StlString_ winx_call stl_str() const {
+		return StlString_(Base::first, Base::second);
+	}
+
+	Myt_ winx_call left(size_type n) const
+	{
+		const CharT* last = Base::first + n;
+		if (Base::second < last)
+			return *this;
+		return Myt_(Base::first, last);
+	}
+
+	Myt_ winx_call right(size_type n) const
+	{
+		const CharT* s = Base::second - n;
+		if (s < Base::first)
+			return *this;
+		return Myt_(s, Base::second);
+	}
+
 	Myt_ winx_call substr(size_type from) const
 	{
 		const size_type cch = Base::size() - from;
 		if ((difference_type)cch < 0)
-			return Myt_(); // throw_out_of_range_();
+			return Myt_();
 		return Myt_(Base::first + from, cch);
 	}
 
@@ -249,12 +269,8 @@ public:
 	{
 		const size_type cchMax = Base::size() - from;
 		if ((difference_type)cchMax < 0)
-			return Myt_(); // throw_out_of_range_();
+			return Myt_();
 		return Myt_(Base::first + from, cchMax < cch ? cchMax : cch);
-	}
-
-	StlString_ winx_call stl_str() const {
-		return StlString_(Base::first, Base::second);
 	}
 	
 public:
