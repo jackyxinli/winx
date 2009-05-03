@@ -508,7 +508,7 @@ public:
 			}
 			else
 			{
-				TPL_ASSERT(ar.peek() == '\'' || ar.peek() == '\"');
+				TPL_ASSERT(ar.peek() == '\'' || ar.peek() == '"');
 				stringOrChar.match(ar, context);
 			}
 		}

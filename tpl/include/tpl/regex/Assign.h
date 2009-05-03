@@ -329,10 +329,10 @@ class Op																	\
 {																			\
 private:																	\
 	VarT& m_var;															\
-	const ValueT m_value;													\
+	ValueT m_value;															\
 																			\
 public:																		\
-	Op(VarT& var_, const ValueT value_)										\
+	Op(VarT& var_, ValueT value_)											\
 		: m_var(var_), m_value(value_) {}									\
 																			\
 	void TPL_CALL operator()() const {										\
@@ -346,11 +346,11 @@ class Op																	\
 {																			\
 private:																	\
 	VarT& m_var;															\
-	const T1 m_val1;														\
-	const T2 m_val2;														\
+	T1 m_val1;																\
+	T2 m_val2;																\
 																			\
 public:																		\
-	Op(VarT& var_, const T1 val1_, const T2 val2_)							\
+	Op(VarT& var_, T1 val1_, T2 val2_)										\
 		: m_var(var_), m_val1(val1_), m_val2(val2_) {}						\
 																			\
 	void TPL_CALL operator()() const {										\
