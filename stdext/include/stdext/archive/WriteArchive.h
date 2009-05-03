@@ -312,6 +312,10 @@ public:
 	}
 
 public:
+	size_t winx_call write(const void* buf, size_t cb) throw(IoException) {
+		return put((const char*)buf, cb);
+	}
+
 	void winx_call puts(const char* lpBuf, size_t cch) throw(IoException) {
 		NS_STDEXT_IO_BINARY::puts(*this, lpBuf, cch);
 	}

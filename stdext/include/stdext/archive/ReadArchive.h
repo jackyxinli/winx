@@ -424,6 +424,10 @@ public:
 	}
 
 public:
+	size_t winx_call read(void* buf, size_t cb) {
+		return get((char*)buf, cb);
+	}
+
 	template <class StringT>
 	bool winx_call gets(StringT& s) {
 		return NS_STDEXT_IO_BINARY::gets(*this, s);
