@@ -403,6 +403,12 @@ inline Rule<HtmlTextG> const TPL_CALL html_text() {
 	return Rule<HtmlTextG>();
 }
 
+typedef FindIf<ChMask<STD_CTYPE_SPACE|STD_CTYPE_LT|STD_CTYPE_AND>, false, true> HtmlNormalTextG;
+
+inline Rule<HtmlNormalTextG> const TPL_CALL html_normal_text() {
+	return Rule<HtmlNormalTextG>();
+}
+
 // =========================================================================
 // function html_u_integer
 
