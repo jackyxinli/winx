@@ -16,10 +16,10 @@
 // 
 // $Id: zlib.h,v 1.1 2006/11/30 08:45:42 xushiwei Exp $
 // -----------------------------------------------------------------------*/
-#ifndef __WRAPPER_ZLIB_H__
-#define __WRAPPER_ZLIB_H__
+#ifndef WRAPPER_ZLIB_H
+#define WRAPPER_ZLIB_H
 
-#ifndef __STDEXT_BASIC_H__
+#ifndef STDEXT_BASIC_H
 #include "../../../../stdext/include/stdext/Basic.h"
 #endif
 
@@ -34,8 +34,8 @@
 // -------------------------------------------------------------------------
 // Link zlib.lib
 
-#if !defined(__Linked_zlib)
-#define __Linked_zlib
+#if !defined(Wrapper_Linked_zlib)
+#define Wrapper_Linked_zlib
 #pragma comment(lib, "zlib1")
 #endif
 
@@ -124,4 +124,4 @@ lzExit:
 // -------------------------------------------------------------------------
 // $Log: zlib.h,v $
 
-#endif /* __WRAPPER_ZLIB_H__ */
+#endif /* WRAPPER_ZLIB_H */
