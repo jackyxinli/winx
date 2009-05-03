@@ -65,7 +65,7 @@ struct UTF8
 		else {
 			*outBuf++ = (UINT8)((in >> 12) | 0xE0);
 		}
-lz06:	*outBuf++ = (UINT8)WINX_UTF8_CONTINUE_BYTE(in >> 6);
+		*outBuf++ = (UINT8)WINX_UTF8_CONTINUE_BYTE(in >> 6);
 lz00:	*outBuf++ = (UINT8)WINX_UTF8_CONTINUE_BYTE(in);
 lzRet:	return outBuf;
 	}
@@ -101,7 +101,7 @@ lzRet:	return outBuf;
 			*outBuf++ = '?';
 			goto lzRet;
 		}
-lz24:	*outBuf++ = (UINT8)WINX_UTF8_CONTINUE_BYTE(in >> 24);
+		*outBuf++ = (UINT8)WINX_UTF8_CONTINUE_BYTE(in >> 24);
 lz18:	*outBuf++ = (UINT8)WINX_UTF8_CONTINUE_BYTE(in >> 18);
 lz12:	*outBuf++ = (UINT8)WINX_UTF8_CONTINUE_BYTE(in >> 12);
 lz06:	*outBuf++ = (UINT8)WINX_UTF8_CONTINUE_BYTE(in >> 6);
