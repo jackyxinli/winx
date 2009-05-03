@@ -166,17 +166,19 @@ typedef TagAssigNone TagAssigHtmlSmartValue;
 struct AssigHtmlStrictValue {
 	template <class TextT, class Iterator>
 	static TextT TPL_CALL get(Iterator pos, Iterator pos2, const void* = NULL) {
-		++pos; --pos2;
+		++pos;
+		--pos2;
 		return TextT(pos, pos2);
 	}
 };
 
 struct AssigHtmlValue {
 	template <class TextT, class Iterator>
-	static TextT TPL_CALL get(Iterator pos, Iterator pos2, const void* = NULL)
-	{
-		if (*pos == '\"' || *pos == '\'')
-			++pos; --pos2;
+	static TextT TPL_CALL get(Iterator pos, Iterator pos2, const void* = NULL) {
+		if (*pos == '\"' || *pos == '\'') {
+			++pos;
+			--pos2;
+		}
 		return TextT(pos, pos2);
 	}
 };
@@ -354,22 +356,13 @@ inline Rule<HtmlPropG> const TPL_CALL html_prop() {
 	return Rule<HtmlPropG>();
 }
 
-// -------------------------------------------------------------------------
-// function html_prop_skip_invalid
-
-typedef FindIf<ChMask<TPL_HTMLSYMBOL_FIRST_CHAR|STD_CTYPE_GT|STD_CTYPE_DIV>, false, true> HtmlPropSkipInvalid;
-
-inline Rule<HtmlPropSkipInvalid> const TPL_CALL html_prop_skip_invalid() {
-	return Rule<HtmlPropSkipInvalid>();
-}
-
 // =========================================================================
 // function html_property
 
 //
-// html_prop_skip_invalid() + html_prop() + html_skip_eq_value()
+// html_prop() + html_skip_eq_value()
 //
-typedef UAnd<HtmlPropSkipInvalid, HtmlPropG, HtmlSkipEqValueG> HtmlPropertyG_;
+typedef UAnd<HtmlPropG, HtmlSkipEqValueG> HtmlPropertyG_;
 
 TPL_REGEX_GUARD0(HtmlPropertyG_, HtmlPropertyG, TagAssigNone);
 
@@ -378,9 +371,18 @@ inline Rule<HtmlPropertyG> const TPL_CALL html_property() {
 }
 
 // -------------------------------------------------------------------------
+// function html_prop_skip_invalid
+
+typedef FindIf<ChMask<TPL_HTMLSYMBOL_FIRST_CHAR|STD_CTYPE_GT|STD_CTYPE_DIV> > HtmlPropSkipInvalid;
+
+inline Rule<HtmlPropSkipInvalid> const TPL_CALL html_prop_skip_invalid() {
+	return Rule<HtmlPropSkipInvalid>();
+}
+
+// -------------------------------------------------------------------------
 // function html_properties() - need optimize
 
-typedef Repeat0<And<HtmlSkipWs, HtmlPropertyG> > HtmlPropertiesG;
+typedef Repeat0<And<HtmlPropSkipInvalid, HtmlPropertyG> > HtmlPropertiesG;
 
 inline Rule<HtmlPropertiesG> const TPL_CALL html_properties() {
 	return Rule<HtmlPropertiesG>();
