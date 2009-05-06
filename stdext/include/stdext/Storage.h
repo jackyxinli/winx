@@ -89,6 +89,11 @@ public:
 		WINX_ASSERT(bOwn || !bCheckOwn);
 		m_fp = fopen(szFile, "w");
 	}
+
+	template <class LogT>
+	FILEStorageT(LogT& log) : m_fp(log.storage().m_fp) {
+	}
+
 	~FILEStorageT() {
 		if (bOwn)
 			close();
@@ -217,7 +222,8 @@ public:
 		StringT::append(buf, cch);
 	}
 };
-#if defined(_MSC_VER)
+
+#if defined(_MSC_VER)
 #pragma warning(default:4996) // XXX  was declared deprecated
 #endif
 

@@ -138,7 +138,7 @@ protected:
 	
 public:
 	Log() {}
-	
+
 	template <class ArgT>
 	Log(ArgT arg) : m_stg(arg) {}
 
@@ -618,6 +618,10 @@ public:
 
 class FileLog : public Log<FILEStorage>
 {
+private:
+	FileLog(const FileLog&);
+	void operator=(const FileLog&);
+
 public:
 	FileLog() {}
 
