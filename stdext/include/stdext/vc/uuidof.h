@@ -215,7 +215,11 @@ struct _WinxDbgGuidTraits<TheClass>											\
 #endif
 
 #ifndef interface
+#if defined(_WIN32) || defined(_WIN64)
+#include <objbase.h>
+#else
 #define interface	struct
+#endif
 #endif
 
 interface IUnknown;
