@@ -159,6 +159,11 @@ public:
 		void TPL_CALL assign(AllocT& alloc, const Rule<RegExT>& x) {
 			m_x.assign(alloc, x);
 		}
+
+		template <class RegExT>
+		void TPL_CALL operator=(const Rule<RegExT>& x) {
+			m_x = x;
+		}
 	};
 };
 
