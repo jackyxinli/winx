@@ -30,6 +30,21 @@
 NS_TPL_BEGIN
 
 // =========================================================================
+// function tpl_allocator
+
+template <class Unused>
+struct SingtonAllocatorT {
+	static DefaultAllocator g_inst;
+};
+
+template <class Unused>
+DefaultAllocator SingtonAllocatorT<Unused>::g_inst;
+
+typedef SingtonAllocatorT<void> SingtonAllocator;
+
+#define tpl_allocator()		NS_TPL::SingtonAllocator::g_inst
+
+// =========================================================================
 // class Concretion
 
 template <int uCharacter, class SourceT, class ContextT, bool bManaged = false>
@@ -57,6 +72,11 @@ public:
 	template <class AllocT, class RegExT>
 	Concretion(AllocT& alloc, const Rule<RegExT>& x) {
 		assign(alloc, x);
+	}
+
+	template <class RegExT>
+	Concretion(const Rule<RegExT>& x) {
+		assign(tpl_allocator(), x);
 	}
 
 public:
@@ -117,6 +137,12 @@ public:
 	{
 		m_this = this_;
 		m_fn = fn;
+	}
+
+	template <class RegExT>
+	void TPL_CALL operator=(const Rule<RegExT>& x)
+	{
+		assign(tpl_allocator(), x);
 	}
 
 public:

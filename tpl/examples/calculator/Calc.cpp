@@ -19,35 +19,31 @@ void calculator(const char* szExpr)
 
 	// ---- define rules ----
 
-	impl::Allocator alloc;
-
 	std::deque<double> stk;
 
 	impl::Grammar::Var rFactor;
 
-	impl::Grammar rTerm( alloc,
+	impl::Grammar rTerm =
 		rFactor + *(
 			'*' + rFactor/calc<std::multiplies>(stk) | 
-			'/' + rFactor/calc<std::divides>(stk) )
-		);
+			'/' + rFactor/calc<std::divides>(stk) );
 
-	impl::Grammar rExpr( alloc,
+	impl::Grammar rExpr =
 		rTerm + *(
 			'+' + rTerm/calc<std::plus>(stk) |
-			'-' + rTerm/calc<std::minus>(stk) )
-		);
+			'-' + rTerm/calc<std::minus>(stk) );
 
 	int arity;
-	impl::Rule rFun( alloc,
+	impl::Rule rFun =
 		"sin"/calc(stk, sin, arity) | "cos"/calc(stk, cos, arity) |
-		"pow"/calc(stk, pow, arity) | "max"/calc(stk, max_value, arity) );
+		"pow"/calc(stk, pow, arity) | "max"/calc(stk, max_value, arity);
 
-	rFactor.assign( alloc,
+	rFactor =
 		real()/append(stk) |
 		'-' + rFactor/calc<std::negate>(stk) |
 		'(' + rExpr + ')' |
 		(gr(c_symbol()) + '(' + rExpr % ','/assign(arity) + ')')/(gr(rFun) + '(') |
-		'+' + rFactor );
+		'+' + rFactor;
 
 	// ---- do match ----
 

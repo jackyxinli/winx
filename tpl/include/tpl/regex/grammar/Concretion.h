@@ -125,6 +125,11 @@ private:
 public:
 	GConcretion() : m_this(NULL) {}
 
+	template <class GrammarT>
+	GConcretion(const Grammar<GrammarT>& x) {
+		assign(tpl_allocator(), x);
+	}
+
 	template <class AllocT, class GrammarT>
 	GConcretion(AllocT& alloc, const Grammar<GrammarT>& x) {
 		assign(alloc, x);
@@ -177,6 +182,12 @@ public:
 		m_fn = Imp::match;
 	}
 
+	template <class GrammarT>
+	void TPL_CALL operator=(const Grammar<GrammarT>& x)
+	{
+		assign(tpl_allocator(), x);
+	}
+
 public:
 	class Var : public Grammar<GRef<GConcretion> >
 	{
@@ -190,6 +201,11 @@ public:
 		template <class AllocT, class GrammarT>
 		void TPL_CALL assign(AllocT& alloc, const Grammar<GrammarT>& x) {
 			m_x.assign(alloc, x);
+		}
+
+		template <class GrammarT>
+		void TPL_CALL operator=(const Grammar<GrammarT>& x) {
+			m_x = x;
 		}
 	};
 };

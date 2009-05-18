@@ -126,6 +126,10 @@ public:
 	public:
 		RuleT() {}
 
+		template <class RegExT>
+		RuleT(const RegExT& x)
+			: Base(x) {}
+
 		template <class AllocT, class RegExT>
 		RuleT(AllocT& alloc, const RegExT& x)
 			: Base(alloc, x) {}
@@ -145,6 +149,10 @@ public:
 
 	public:
 		ManagedRuleT() {}
+
+		template <class RegExT>
+		ManagedRuleT(const RegExT& x)
+			: Base(x) {}
 
 		template <class AllocT, class RegExT>
 		ManagedRuleT(AllocT& alloc, const RegExT& x)
@@ -184,6 +192,10 @@ public:
 
 	public:
 		GrammarT() {}
+
+		template <class RegExT>
+		GrammarT(const RegExT& x)
+			: Base(x) {}
 
 		template <class AllocT, class RegExT>
 		GrammarT(AllocT& alloc, const RegExT& x)
