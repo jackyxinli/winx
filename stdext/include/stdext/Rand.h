@@ -167,7 +167,7 @@ public:
 
 	//----> return: nSrcLen * nRepeat
 	template <class ValueType>
-	int winx_call rep_rand(
+	size_type winx_call rep_rand(
 		OUT ValueType* szValArray, // size: nSrcLen * nRepeat
 		IN const ValueType szSrcToRepeat[],
 		IN const size_type nSrcLen,
@@ -178,7 +178,7 @@ public:
 		
 		std::copy(szSrcToRepeat, szSrcToRepeat + nSrcLen, szValArray);
 		
-		int nDestLen = nSrcLen;
+		size_type nDestLen = nSrcLen;
 		for (int i = 1; i < nRepeat; ++i)
 		{
 			int iInsert = rand(nDestLen + 1);
@@ -251,7 +251,7 @@ public:
 
 	//-----> strlen(szBuf) ¡Ê [nStrLenMin, nBufSize)
 	template <class CharType>
-	int winx_call srand(
+	size_type winx_call srand(
 		OUT CharType szBuf[],
 		IN const size_type nStrLenMin,
 		IN const size_type nBufSize,
