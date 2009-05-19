@@ -349,32 +349,32 @@ class TestRand : public TestCase
 	WINX_TEST_SUITE_END();
 
 private:
-	std::Rand rnd;
+	NS_STDEXT::Rand rnd;
 
 public:
 	void testInteger(LogT& log)
 	{
-		std::Rand::value_type v1 = rnd.rand();
+		NS_STDEXT::Rand::value_type v1 = rnd.rand();
 		log.print(v1).newline();
 		AssertExp(v1 >= rnd.begin() && v1 < rnd.end());
 
-		std::Rand::value_type v2 = rnd.rand(2);
+		NS_STDEXT::Rand::value_type v2 = rnd.rand(2);
 		log.print(v2).newline();
 		AssertExp(v2 == 0 || v2 == 1);
 
-		std::Rand::value_type v3 = rnd.rand(30, 100);
+		NS_STDEXT::Rand::value_type v3 = rnd.rand(30, 100);
 		log.print(v3).newline();
 		AssertExp(v3 >= 30 && v3 < 100);
 
-		std::Rand::value_type v4[100];
+		NS_STDEXT::Rand::value_type v4[100];
 		rnd.rand(v4, countof(v4), 30, 100);
 		log.printArray("%d", v4, countof(v4)).newline();
 		log.print(*std::max_element(v4, v4+countof(v4))).newline();
 		for (int i = 0; i < countof(v4); ++i)
 			AssertExp(v4[i] >= 30 && v4[i] < 100);
 
-		std::Rand::value_type vals[] = { 1, 3, 5, 7, 9 };
-		std::Rand::value_type v5[100];
+		NS_STDEXT::Rand::value_type vals[] = { 1, 3, 5, 7, 9 };
+		NS_STDEXT::Rand::value_type v5[100];
 		rnd.rand(v5, countof(v5), vals, countof(vals));
 		log.printArray("%d", v5, countof(v5)).newline();
 		for (int j = 0; j < countof(v5); ++j)
