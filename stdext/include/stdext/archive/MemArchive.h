@@ -356,6 +356,17 @@ public:
 		}
 	}
 
+	size_type winx_call get(char_type* ch)
+	{
+		if (m_pos != m_last) {
+			*ch = *m_pos++;
+			return 1;
+		}
+		else {
+			return 0;
+		}
+	}
+
 	int_type winx_call get()
 	{
 		if (m_pos != m_last) {

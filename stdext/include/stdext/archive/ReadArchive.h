@@ -284,6 +284,17 @@ public:
 		return nRead;
 	}
 
+	size_type winx_call get(char_type* ch)
+	{
+		if (m_lpBufCur < m_lpBufMax) {
+			*ch = *m_lpBufCur++;
+			return 1;
+		}
+		else {
+			return get(ch, 1);
+		}
+	}
+
 	int_type winx_call get()
 	{
 		if (m_lpBufCur < m_lpBufMax)
