@@ -61,6 +61,15 @@ public:
 	}
 };
 
+template <class CharT>
+class Hash<BasicString<CharT> >
+{
+public:
+	size_t winx_call operator()(const std::BasicString<CharT>& o) const {
+		return hashOfString(o.begin(), o.end());
+	}
+};
+
 #else
 
 template <class KeyT>
