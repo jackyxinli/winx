@@ -34,18 +34,6 @@
 #define NS_BOOST_DETAIL			NS_STDEXT
 #endif
 
-#ifndef BOOST_DETAIL_DEBUG_HPP
-#include "../../../../memory/boost/detail/debug.hpp"
-#endif
-
-#ifndef BOOST_DETAIL_WINAPI_WINBASE_H
-#include "../../../../memory/boost/detail/winapi/winbase.h"
-#endif
-
-#ifndef BOOST_DETAIL_THREADMODEL_HPP
-#include "../../../../memory/boost/detail/threadmodel.hpp"
-#endif
-
 #ifndef BOOST_MEMORY_HPP
 #include "../../../../memory/boost/memory.hpp"
 #endif

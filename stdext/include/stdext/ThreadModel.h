@@ -19,35 +19,21 @@
 #ifndef STDEXT_THREADMODEL_H
 #define STDEXT_THREADMODEL_H
 
-#ifndef STDEXT_BASIC_H
-#include "Basic.h"
+#ifndef STDEXT_THREAD_REFCOUNT_H
+#include "thread/RefCount.h"
 #endif
 
-#ifndef STDEXT_BOOST_MEMORY_H
-#include "boost/Memory.h"
+#ifndef STDEXT_THREAD_MUTEX_H
+#include "thread/Mutex.h"
 #endif
 
 NS_STDEXT_BEGIN
 
 // -------------------------------------------------------------------------
-// class RefCountST
+// class CriticalSectionST, CriticalSectionMT
 
-typedef NS_BOOST_DETAIL::refcount_st RefCountST;
-
-// -------------------------------------------------------------------------
-// class CriticalSectionST
-
-typedef NS_BOOST_DETAIL::critical_section_st CriticalSectionST;
-
-// -------------------------------------------------------------------------
-// class RefCountMT
-
-typedef NS_BOOST_DETAIL::refcount_mt RefCountMT;
-
-// -------------------------------------------------------------------------
-// class CriticalSectionMT
-
-typedef NS_BOOST_DETAIL::critical_section_mt CriticalSectionMT;
+typedef FakeMutex CriticalSectionST;
+typedef Mutex CriticalSectionMT;
 
 // -------------------------------------------------------------------------
 // class MultiThreadModel

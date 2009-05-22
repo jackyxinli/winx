@@ -31,14 +31,10 @@
 
 NS_STDEXT_BEGIN
 
-typedef tls_key TlsKey;
-
 typedef system_alloc SystemAlloc;
 typedef stdlib_alloc DefaultStaticAlloc;
 
 typedef block_pool BlockPool;
-typedef tls_block_pool TlsBlockPool;
-typedef tls_block_pool TlsBlockPoolInit;
 
 typedef auto_alloc AutoAlloc;
 typedef scoped_alloc ScopedAlloc;
