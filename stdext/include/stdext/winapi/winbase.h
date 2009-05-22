@@ -55,7 +55,7 @@
 #endif
 
 #ifndef STDEXT_WINAPI_ATOMIC_WINDOWS_H
-#include "atomic/windows.hpp"
+#include "atomic/windows.h"
 #endif
 
 #else
@@ -66,16 +66,16 @@
 #include "wtypes.h"
 #endif
 
-#ifndef STDEXT_WINAPI_POSIX_PTHREAD_HPP
-#include "posix/pthread.hpp"
+#ifndef STDEXT_WINAPI_POSIX_PTHREAD_H
+#include "posix/pthread.h"
 #endif
 
-#ifndef STDEXT_WINAPI_POSIX_TIME_HPP
-#include "posix/time.hpp"
+#ifndef STDEXT_WINAPI_POSIX_TIME_H
+#include "posix/time.h"
 #endif
 
 #ifndef STDEXT_WINAPI_ATOMIC_ATOMIC_BUILTINS_H
-#include "atomic/atomic_builtins.hpp"
+#include "atomic/atomic_builtins.h"
 #endif
 
 #endif
