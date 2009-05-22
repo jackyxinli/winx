@@ -204,24 +204,6 @@ public:
 	}
 
 	template <class LogT2>
-	void doTlsScopedAlloc(LogT2& log, int NAlloc, int PerAlloc)
-	{
-		NS_STDEXT::PerformanceCounter counter;
-		{
-			for (int j = 0; j < NAlloc; ++j)
-			{
-				NS_STDEXT::ScopedAlloc alloc;
-				for (int i = 0; i < PerAlloc; ++i)
-				{
-					int* p;
-					p = STD_NEW(alloc, int);
-				}
-			}
-		}
-		m_acc.accumulate(counter.trace(log));
-	}
-
-	template <class LogT2>
 	void doScopedAlloc(LogT2& log, int NAlloc, int PerAlloc)
 	{
 		NS_STDEXT::PerformanceCounter counter;
@@ -255,12 +237,6 @@ public:
 		log.print(PerAlloc, "\n===== APR Pools(%d) =====\n");
 		for (i = 0; i < Count; ++i)
 			doAprPools(log, NAlloc, PerAlloc);
-		m_acc.trace_avg(log);
-
-		m_acc.start();
-		log.print(PerAlloc, "\n===== TlsScopedAlloc(%d) =====\n");
-		for (i = 0; i < Count; ++i)
-			doTlsScopedAlloc(log, NAlloc, PerAlloc);
 		m_acc.trace_avg(log);
 
 		m_acc.start();
@@ -310,7 +286,6 @@ public:
 		const int Total = 1000000;
 		__setUp();
 		doAutoFreeAlloc(nullLog, Total, 1);
-		doTlsScopedAlloc(nullLog, Total, 1);
 		doScopedAlloc(nullLog, Total, 1);
 		doAprPools(nullLog, Total, 1);
 		doComparison(log, Total, Total);
