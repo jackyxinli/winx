@@ -19,11 +19,60 @@
 #ifndef STDEXT_WINAPI_WINBASE_H
 #define STDEXT_WINAPI_WINBASE_H
 
-#ifndef BOOST_DETAIL_WINAPI_WINBASE_H
-#include "../../../../memory/boost/detail/winapi/winbase.h"
+// =========================================================================
+
+#if defined(_WIN32) || defined(_WIN64)
+
+#ifndef __wtypes_h__
+#include <wtypes.h>
 #endif
 
-// -------------------------------------------------------------------------
+#ifndef _WINBASE_
+#include <winbase.h>
+#endif
+
+#ifndef _BASETSD_H_
+#include <basetsd.h>
+#endif
+
+#if !defined(_W64)
+	#define BOOST_DETAIL_WINSDK_VC6
+	#if !defined(__midl) && (defined(_X86_) || defined(_M_IX86)) && _MSC_VER >= 1300
+	#define _W64 __w64
+	#else
+	#define _W64
+	#endif
+#endif
+
+#if defined(BOOST_DETAIL_WINSDK_VC6)
+	#if defined(_WIN64)
+		typedef __int64 LONG_PTR, *PLONG_PTR;
+		typedef unsigned __int64 ULONG_PTR, *PULONG_PTR;
+	#else
+		typedef _W64 long LONG_PTR, *PLONG_PTR;
+		typedef _W64 unsigned long ULONG_PTR, *PULONG_PTR;
+	#endif
+#endif
+
+#else
+
+#define STD_NO_WINSDK
+
+#ifndef STDEXT_WINAPI_WTYPES_H
+#include "wtypes.h"
+#endif
+
+#ifndef STDEXT_WINAPI_POSIX_PTHREAD_HPP
+#include "posix/pthread.hpp"
+#endif
+
+#ifndef STDEXT_WINAPI_POSIX_TIME_HPP
+#include "posix/time.hpp"
+#endif
+
+#endif
+
+// =========================================================================
 
 #ifdef STD_NO_WINSDK
 
@@ -706,7 +755,7 @@ inline BOOL WINAPI CloseHandle(
 
 #endif // STD_NO_WINSDK
 
-// -------------------------------------------------------------------------
+// =========================================================================
 // $Log: $
 
 #endif /* STDEXT_WINAPI_WINBASE_H */
