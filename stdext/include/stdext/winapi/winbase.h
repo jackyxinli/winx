@@ -36,7 +36,7 @@
 #endif
 
 #if !defined(_W64)
-	#define BOOST_DETAIL_WINSDK_VC6
+	#define WINX_DETAIL_WINSDK_VC6
 	#if !defined(__midl) && (defined(_X86_) || defined(_M_IX86)) && _MSC_VER >= 1300
 	#define _W64 __w64
 	#else
@@ -44,7 +44,7 @@
 	#endif
 #endif
 
-#if defined(BOOST_DETAIL_WINSDK_VC6)
+#if defined(WINX_DETAIL_WINSDK_VC6)
 	#if defined(_WIN64)
 		typedef __int64 LONG_PTR, *PLONG_PTR;
 		typedef unsigned __int64 ULONG_PTR, *PULONG_PTR;
@@ -52,6 +52,10 @@
 		typedef _W64 long LONG_PTR, *PLONG_PTR;
 		typedef _W64 unsigned long ULONG_PTR, *PULONG_PTR;
 	#endif
+#endif
+
+#ifndef STDEXT_WINAPI_ATOMIC_WINDOWS_H
+#include "atomic/windows.hpp"
 #endif
 
 #else
@@ -68,6 +72,10 @@
 
 #ifndef STDEXT_WINAPI_POSIX_TIME_HPP
 #include "posix/time.hpp"
+#endif
+
+#ifndef STDEXT_WINAPI_ATOMIC_ATOMIC_BUILTINS_H
+#include "atomic/atomic_builtins.hpp"
 #endif
 
 #endif
