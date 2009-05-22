@@ -42,6 +42,14 @@
 #endif
 
 // -------------------------------------------------------------------------
+
+#if !defined(STDEXT_THREAD_WINDOWS)
+
+#define STDEXT_HAS_ATOMIC_BUILTINS
+
+#endif
+
+// -------------------------------------------------------------------------
 //	$Log: $
 
 #endif /* STDEXT_THREAD_BASIC_H */
