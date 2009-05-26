@@ -36,7 +36,7 @@ template <class ValueT>
 class EQICase
 {
 private:
-	const ValueT m_val;
+	ValueT m_val;
 	
 public:
 	template <class T1>
@@ -53,7 +53,7 @@ template <class ValueT>
 class NEICase
 {
 private:
-	const ValueT m_val;
+	ValueT m_val;
 	
 public:
 	template <class T1>
@@ -71,7 +71,7 @@ template <class ValueT>										\
 class PredT													\
 {															\
 private:													\
-	const ValueT m_val;										\
+	ValueT m_val;											\
 															\
 public:														\
 	template <class T1>										\
