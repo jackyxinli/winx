@@ -1,0 +1,19 @@
+[Include]
+
+[Config Release]
+Product		Dll bin/linux/dlmalloc
+Options		Release; MultiThread; AnsiChar; NoRtti; Exception
+ObjDir		LRelease
+LibDir		
+Libraries	
+
+[Config Debug]
+Product		Dll bin/linuxd/dlmalloc
+Options		Debug; MultiThread; AnsiChar; NoRtti; Exception
+ObjDir		LDebug
+LibDir		
+Libraries	
+
+[Source]
+wrapper/malloc.c
+
