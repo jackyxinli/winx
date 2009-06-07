@@ -388,7 +388,7 @@ public:
 	}
 	
 	template <class PredT>
-		BasicArray& winx_call stable_sort(PredT pred) {
+	BasicArray& winx_call stable_sort(PredT pred) {
 		std::stable_sort( (Type*)Base::first, (Type*)Base::second, pred );
 		return *this;
 	}
