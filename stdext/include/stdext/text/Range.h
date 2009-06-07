@@ -330,7 +330,7 @@ private:
 	typedef const Type* Iterator;
 	typedef Range<Iterator, Type> Base;
 	
-public:	
+public:
 	typedef typename Base::size_type size_type;
 
 public:
@@ -339,6 +339,14 @@ public:
 		: Base(arr, arr+n) {}
 	BasicArray(Iterator first_, Iterator second_)
 		: Base(first_, second_) {}
+
+	template <class AllocT, class Iterator2>
+	BasicArray(AllocT& alloc_, Iterator2 first_, Iterator2 second_)
+	{
+		const size_type n = std::distance(first_, second_);
+		Base::first = STD_NEW_ARRAY(alloc, Type, n);
+		Base::second = std::copy(first_, second_, (Type*)Base::first);
+	}
 
 	template <class PolicyT, class ContainerT>
 	BasicArray(RegionAllocT<PolicyT>& alloc, const ContainerT& cont)
