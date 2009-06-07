@@ -348,8 +348,8 @@ public:
 		Base::second = std::copy(first_, second_, (Type*)Base::first);
 	}
 
-	template <class PolicyT, class ContainerT>
-	BasicArray(RegionAllocT<PolicyT>& alloc, const ContainerT& cont)
+	template <WINX_ALLOC_TEMPLATE_ARGS_, class ContainerT>
+	BasicArray(WINX_ALLOC_TYPE_& alloc, const ContainerT& cont)
 	{
 		const size_type n = cont.size();
 		Base::first = STD_NEW_ARRAY(alloc, Type, n);
