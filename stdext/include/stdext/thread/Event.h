@@ -49,15 +49,15 @@ public:
 		CloseHandle(hEvent);
 	}
 
-	void cerl_call wait() {
+	void winx_call wait() {
 		WaitForSingleObject(hEvent, INFINITE);
 	}
 
-	bool cerl_call timed_wait(duration_type ms) {
+	bool winx_call timed_wait(duration_type ms) {
 		return WaitForSingleObject(hEvent, ms) == WAIT_OBJECT_0;
 	}
 
-	void cerl_call notify() {
+	void winx_call notify() {
 		SetEvent(hEvent);
 	}
 };
