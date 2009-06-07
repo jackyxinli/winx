@@ -323,6 +323,11 @@ public:
 // =========================================================================
 // class BasicArray
 
+#ifndef WINX_ALLOC_TYPE_
+#define WINX_ALLOC_TEMPLATE_ARGS_		class PolicyT
+#define WINX_ALLOC_TYPE_				NS_STDEXT::RegionAllocT<PolicyT>
+#endif
+
 template <class Type>
 class BasicArray : public Range<const Type*, Type>
 {
