@@ -384,7 +384,19 @@ inline xchar* winx_call strecpy(xchar* pszDest, const xchar* pszSrc)
 	return pszDest;
 }
 
-namespace tchar { using std::strecpy; }
+namespace tchar { using NS_STDEXT::strecpy; }
+
+// -------------------------------------------------------------------------
+// strdup
+
+template <class AllocT, class CharT>
+inline CharT* winx_call strdup(AllocT& alloc, const CharT* s)
+{
+	size_t len = length(s) + 1;
+	CharT* s2 = (CharT*)alloc.allocate(sizeof(CharT) * len);
+	std::copy(s, s+len, s2);
+	return s2;
+}
 
 // -------------------------------------------------------------------------
 // class StringEqualTo, StringLess
