@@ -389,6 +389,11 @@ namespace tchar { using NS_STDEXT::strecpy; }
 // -------------------------------------------------------------------------
 // strdup
 
+#if defined(X_CC_VC_NET)
+#pragma push_macro("strdup")
+#undef strdup
+#endif
+
 template <class AllocT, class CharT>
 inline CharT* winx_call strdup(AllocT& alloc, const CharT* s)
 {
@@ -397,6 +402,10 @@ inline CharT* winx_call strdup(AllocT& alloc, const CharT* s)
 	std::copy(s, s+len, s2);
 	return s2;
 }
+
+#if defined(X_CC_VC_NET)
+#pragma pop_macro("strdup")
+#endif
 
 // -------------------------------------------------------------------------
 // class StringEqualTo, StringLess
