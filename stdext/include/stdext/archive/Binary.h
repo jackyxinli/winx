@@ -54,6 +54,22 @@ inline void winx_call put32i(
 	ar.put( (const char*)&val, sizeof(val) );
 }
 
+template <class WriteArchiveT>
+inline void winx_call put64i(
+	IN WriteArchiveT& ar, IN INT64 val) throw(IoException)
+{
+	_WinxByteSwap64(val);
+	ar.put( (const char*)&val, sizeof(val) );
+}
+
+template <class WriteArchiveT>
+inline void winx_call put64i(
+	IN WriteArchiveT& ar, IN UINT64 val) throw(IoException)
+{
+	_WinxByteSwap64(val);
+	ar.put( (const char*)&val, sizeof(val) );
+}
+
 template <class WriteArchiveT, class StrucType>
 inline void winx_call put_struct(
 	IN WriteArchiveT& ar, IN const StrucType& struc) throw(IoException)
@@ -280,6 +296,18 @@ inline bool winx_call get32i(ReadArchiveT& ar, UINT32& val)
 
 template <class ReadArchiveT>
 inline bool winx_call get32i(ReadArchiveT& ar, INT32& val)
+{
+	return ar.get((char*)&val, sizeof(val)) == sizeof(val);
+}
+
+template <class ReadArchiveT>
+inline bool winx_call get64i(ReadArchiveT& ar, UINT64& val)
+{
+	return ar.get((char*)&val, sizeof(val)) == sizeof(val);
+}
+
+template <class ReadArchiveT>
+inline bool winx_call get64i(ReadArchiveT& ar, INT64& val)
 {
 	return ar.get((char*)&val, sizeof(val)) == sizeof(val);
 }

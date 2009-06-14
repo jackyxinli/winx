@@ -196,6 +196,7 @@ public:
 	#define _WinxByteSwap(val)
 	#define _WinxByteSwap16(val)
 	#define _WinxByteSwap32(val)
+	#define _WinxByteSwap64(val)
 	#define _WinxByteSwapStruct(val)
 	#define _WinxByteSwap16Array(val)
 	#define _WinxByteSwap32Array(val)
