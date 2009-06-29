@@ -67,6 +67,7 @@ private:
 	typedef int _Handle;
 
 	enum { writeMode = O_TRUNC|O_CREAT|O_BINARY|O_WRONLY };
+	enum { appendMode = O_BINARY|O_WRONLY|O_APPEND };
 	enum { readMode = O_BINARY|O_RDONLY };
 	enum { CMASK = 0644 }; // wrr
 
@@ -122,6 +123,21 @@ public:
 	{
 		WINX_ASSERT(m_fd == nullfd);
 		m_fd = ::open(szFile, writeMode, CMASK);
+		return good() ? S_OK : E_ACCESSDENIED;
+	}
+
+	HRESULT winx_call open_to_append(LPCWSTR szFile)
+	{
+		WINX_ASSERT(m_fd == nullfd);
+		WINX_USES_CONVERSION;
+		m_fd = ::open(WINX_W2CA(szFile), appendMode, CMASK);
+		return good() ? S_OK : E_ACCESSDENIED;
+	}
+
+	HRESULT winx_call open_to_append(LPCSTR szFile)
+	{
+		WINX_ASSERT(m_fd == nullfd);
+		m_fd = ::open(szFile, appendMode, CMASK);
 		return good() ? S_OK : E_ACCESSDENIED;
 	}
 
