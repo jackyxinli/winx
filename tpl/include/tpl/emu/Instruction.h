@@ -615,7 +615,7 @@ public:
 	static void op(Operand para, StackT& stk, ExecuteContextT&)
 	{
 		typedef VariantTraits<Ty> Tr_;
-		const IntT count = Tr_::cast(stk.back());
+		const IntT count = (IntT)Tr_::cast(stk.back());
 		stk.pop_back();
 		
 		Ty* args = (Ty*)alloca(sizeof(Ty) * count);	

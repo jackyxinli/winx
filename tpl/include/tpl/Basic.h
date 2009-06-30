@@ -105,13 +105,15 @@ NS_TPL_BEGIN
 // class DefaultAllocator
 
 #if defined(TPL_USE_AUTO_ALLOC)
-typedef std::AutoFreeAlloc DefaultAllocator;
+typedef NS_STDEXT::AutoFreeAlloc DefaultAllocator;
 #else
-typedef std::ScopedAlloc DefaultAllocator;
+typedef NS_STDEXT::ScopedAlloc DefaultAllocator;
 #endif
 
 // =========================================================================
 // TPL_REQUIRE(e, Require) -- see BOOST_STATIC_ASSERT(e)
+
+#if !defined(X_CC_VC6)
 
 template <bool bOk>
 struct RequireFeatureTraits {
@@ -143,6 +145,8 @@ struct RequireClassTraits<ClassT, ClassT> {
 	typedef typename tpl::RequireClassTraits<T1, T2>::class_type RequireFeature_;
 #endif
 
+#endif // #if !defined(X_CC_VC6)
+
 // =========================================================================
 // TPL_CONST
 
@@ -150,7 +154,9 @@ struct RequireClassTraits<ClassT, ClassT> {
 #define TPL_CONST_EX(Type, var)	const Type var
 
 // =========================================================================
-// SelectValueType
+// class SelectValueType
+
+#if !defined(X_CC_VC6)
 
 struct DefaultType {};
 
@@ -164,8 +170,10 @@ struct SelectValueType<DefaultType, DefaultValT> {
 	typedef DefaultValT value_type;
 };
 
+#endif // #if !defined(X_CC_VC6)
+
 // =========================================================================
-// IsConvertible
+// class IsConvertible - macro TPL_CONVERTIBLE
 
 #if defined(TPL_USE_BOOST_IS_CONVERTIBLE)
 
@@ -205,6 +213,9 @@ struct IsConvertible
 #endif // defined(TPL_USE_BOOST_IS_CONVERTIBLE)
 
 // -------------------------------------------------------------------------
+// TPL_TEMPLATE_CONVERTIBLE
+
+#if !defined(X_CC_VC6)
 
 template <class From, template <class ArgT> class To>
 struct IsTemplateConvertible
@@ -229,6 +240,8 @@ struct IsTemplateConvertible
 };
 
 #define TPL_TEMPLATE_CONVERTIBLE(From, To)	tpl::IsTemplateConvertible<From, To>::value
+
+#endif // #if !defined(X_CC_VC6)
 
 // =========================================================================
 // $Log: $

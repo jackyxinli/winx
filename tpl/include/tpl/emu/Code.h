@@ -122,12 +122,23 @@ public:
 	}
 };
 
-template <bool bDebug>
-class Context<void, bDebug> : public ContextBase
+template <>
+class Context<void, true> : public ContextBase
 {
 public:
-	enum { debug = bDebug };
+	enum { debug = TRUE };
 
+	Context(size_t ip)
+		: ContextBase(ip) {
+	}
+};
+
+template <>
+class Context<void, false> : public ContextBase
+{
+public:
+	enum { debug = FALSE };
+	
 	Context(size_t ip)
 		: ContextBase(ip) {
 	}
@@ -210,10 +221,10 @@ class ExtInstrCode<ValT, InstructionT, ValT>
 // class Code
 
 template <class ValT, class ExecuteContextT, class AllocT = DefaultAllocator>
-class Code : public std::Deque<Instruction<Stack<ValT>, ExecuteContextT>, AllocT>
+class Code : public NS_STDEXT::Deque<Instruction<Stack<ValT>, ExecuteContextT>, AllocT>
 {
 private:
-	typedef std::Deque<Instruction<Stack<ValT>, ExecuteContextT>, AllocT> Base;
+	typedef NS_STDEXT::Deque<Instruction<Stack<ValT>, ExecuteContextT>, AllocT> Base;
 	
 	Code(const Code&);
 	void operator=(const Code&);
