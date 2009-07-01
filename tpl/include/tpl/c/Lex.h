@@ -350,6 +350,26 @@ inline Rule<CTokenG> const TPL_CALL c_token() {
 	return Rule<CTokenG>();
 }
 
+// -------------------------------------------------------------------------
+// function c_token_ext()
+
+TPL_TOKENS_BEGIN(CTokensExt)
+	TPL_TOKEN(whites, WhiteSpaces)
+	TPL_TOKEN(comment, CppCommentG)
+	TPL_TOKEN(symbol, CSymbolG)
+	TPL_TOKEN(op_nondiv, COpNonDivG)
+	TPL_TOKEN(op_div, COpDivG)
+	TPL_TOKEN(c_string, CStringG)
+	TPL_TOKEN(c_char, CCharG)
+	TPL_TOKEN(integer, CIntegerWithSuffixG)
+TPL_TOKENS_END();
+
+typedef CTokensExt::rule_type CTokenExtG;
+
+inline Rule<CTokenExtG> const TPL_CALL c_token_ext() {
+	return Rule<CTokenExtG>();
+}
+
 // =========================================================================
 // $Log: $
 
