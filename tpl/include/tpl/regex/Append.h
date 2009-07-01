@@ -164,7 +164,7 @@ template <class ValueT, class Ax, class ValueT2>
 class AppendVal<std::vector<ValueT, Ax>, ValueT2> : public PushBackVal<std::vector<ValueT, Ax>, ValueT2>
 {
 public:
-	AppendVal(std::vector<ValueT, Ax>& result, const ValueT2 value_)
+	AppendVal(std::vector<ValueT, Ax>& result, ValueT2 value_)
 		: PushBackVal<std::vector<ValueT, Ax>, ValueT2>(result, value_) {}
 };
 
