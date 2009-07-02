@@ -57,7 +57,7 @@ public:
 	typedef unsigned char	uchar_type;
 	typedef int				int_type;
 	
-	typedef unsigned int	size_type;
+	typedef size_t			size_type;
 	
 	typedef __off_t			pos_type;
 	typedef __off_t			off_type;
@@ -184,14 +184,14 @@ public:
 		}
 		return total;
 #else
-		ssize_t n = ::read(m_fd, buf, cch);
-		return (n > 0 ? n : 0);
+		ssize_t n = ::read(m_fd, buf, (unsigned int)cch);
+		return (n > 0 ? (size_type)n : 0);
 #endif
 	}
 
 	size_type winx_call put(const _E* s, size_type cch)
 	{
-		return ::write(m_fd, s, cch);
+		return ::write(m_fd, s, (unsigned int)cch);
 	}
 
 	void winx_call flush()
