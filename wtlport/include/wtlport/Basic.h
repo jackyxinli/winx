@@ -1283,7 +1283,7 @@ public:
 
 #if !defined(WTLPORT_DEFINED_RCDEFAULT)
 #define WTLPORT_DEFINED_RCDEFAULT
-const RECT CWindow::rcDefault = { CW_USEDEFAULT, CW_USEDEFAULT, 0, 0 };
+__declspec(selectany) const RECT CWindow::rcDefault = { CW_USEDEFAULT, CW_USEDEFAULT, 0, 0 };
 #endif
 
 NS_WTLPORT_END
