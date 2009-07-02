@@ -57,7 +57,7 @@ public:
 	typedef unsigned char	uchar_type;
 	typedef int				int_type;
 	
-	typedef unsigned int	size_type;
+	typedef size_t			size_type;
 	
 	typedef __off_t			pos_type;
 	typedef __off_t			off_type;
@@ -67,6 +67,7 @@ private:
 	typedef int _Handle;
 
 	enum { writeMode = O_TRUNC|O_CREAT|O_BINARY|O_WRONLY };
+	enum { appendMode = O_BINARY|O_WRONLY|O_APPEND };
 	enum { readMode = O_BINARY|O_RDONLY };
 	enum { CMASK = 0644 }; // wrr
 
@@ -125,6 +126,21 @@ public:
 		return good() ? S_OK : E_ACCESSDENIED;
 	}
 
+	HRESULT winx_call open_to_append(LPCWSTR szFile)
+	{
+		WINX_ASSERT(m_fd == nullfd);
+		WINX_USES_CONVERSION;
+		m_fd = ::open(WINX_W2CA(szFile), appendMode, CMASK);
+		return good() ? S_OK : E_ACCESSDENIED;
+	}
+
+	HRESULT winx_call open_to_append(LPCSTR szFile)
+	{
+		WINX_ASSERT(m_fd == nullfd);
+		m_fd = ::open(szFile, appendMode, CMASK);
+		return good() ? S_OK : E_ACCESSDENIED;
+	}
+
 	HRESULT winx_call open_to_read(LPCWSTR szFile)
 	{
 		WINX_ASSERT(m_fd == nullfd);
@@ -168,14 +184,14 @@ public:
 		}
 		return total;
 #else
-		ssize_t n = ::read(m_fd, buf, cch);
-		return (n > 0 ? n : 0);
+		ssize_t n = ::read(m_fd, buf, (unsigned int)cch);
+		return (n > 0 ? (size_type)n : 0);
 #endif
 	}
 
 	size_type winx_call put(const _E* s, size_type cch)
 	{
-		return ::write(m_fd, s, cch);
+		return ::write(m_fd, s, (unsigned int)cch);
 	}
 
 	void winx_call flush()
