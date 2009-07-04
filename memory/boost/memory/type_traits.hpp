@@ -16,6 +16,10 @@
 #include "basic.hpp"
 #endif
 
+#ifndef _STDLIB_H
+#include <stdlib.h>
+#endif
+
 NS_BOOST_MEMORY_BEGIN
 
 // =========================================================================
@@ -106,6 +110,8 @@ struct destructor_traits< Type >											\
 // =========================================================================
 // class array_factory
 
+#pragma pack(1)
+
 template <class Type>
 struct array_factory_has_destructor
 {
@@ -131,7 +137,7 @@ struct array_factory_has_destructor
 		destructor_header* hdr =
 			(destructor_header*)alloc.allocate(
 				sizeof(destructor_header) + sizeof(Type)*count, destruct);
-		Type* array = (Type*)hdr + 1;
+		Type* array = (Type*)(hdr + 1);
 		hdr->count = count;
 		constructor_traits<Type>::constructArray(array, count);
 		return array;
@@ -143,10 +149,11 @@ struct array_factory_has_destructor
 		destructor_header* hdr =
 			(destructor_header*)alloc.unmanaged_alloc(
 				sizeof(destructor_header) + sizeof(Type)*count, destruct);
-		Type* array = (Type*)hdr + 1;
+		Type* array = (Type*)(hdr + 1);
 		hdr->count = count;
 		constructor_traits<Type>::constructArray(array, count);
-		return (Type*)alloc.manage(array, destruct);
+		alloc.manage(hdr, destruct);
+		return array;
 	}
 #endif
 	
@@ -160,6 +167,8 @@ struct array_factory_has_destructor
 		return ((destructor_header*)array - 1)->count;
 	}
 };
+
+#pragma pack()
 
 template <class Type>
 struct array_factory_no_destructor
