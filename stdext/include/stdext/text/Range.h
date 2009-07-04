@@ -349,7 +349,7 @@ public:
 	BasicArray(AllocT& alloc_, Iterator2 first_, Iterator2 second_)
 	{
 		const size_type n = std::distance(first_, second_);
-		Base::first = STD_NEW_ARRAY(alloc, Type, n);
+		Base::first = STD_NEW_ARRAY(alloc_, Type, n);
 		Base::second = std::copy(first_, second_, (Type*)Base::first);
 	}
 
