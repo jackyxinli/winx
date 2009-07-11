@@ -1,5 +1,0 @@
-f [ -z "$*" ]; then
-	exit 0
-fi
-rm $*
-cvs rm $*

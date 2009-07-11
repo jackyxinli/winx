@@ -1,0 +1,9 @@
+RSA MD5 VISUAL C++ SOURCE CODE v1.2 - 
+Visual C++ implementation of the RSA MD5 
+message digest algorithm. Calculates a 32
+byte checksum for any data sequence. 
+Developed by Langfine Ltd. Note, RSA 
+copyright notices must be adhered 
+to - see the source code for details.
+Released November 2001
+

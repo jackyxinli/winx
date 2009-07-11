@@ -1,0 +1,143 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<HTML><HEAD><TITLE>RSA MD5 Message Digest Visual C++ Source Code</TITLE>
+<META http-equiv=Content-Language content=en-gb>
+<META content="Microsoft FrontPage 5.0" name=GENERATOR>
+<META content=FrontPage.Editor.Document name=ProgId>
+<META http-equiv=Content-Type content="text/html; charset=windows-1252"><!-- Comment for spiders that do not use meta tags --><!-- Visual C++ source code for the RSA MD5 Message Digest algorithm. 
+Includes a test program with performance statistics. This implementation was developed by Langfine Ltd 
+and placed in the public domain. -->
+<META 
+content="Visual C++ source code for the RSA MD5 Message Digest algorithm. &#13;&#10;Includes a test program with performance statistics. This implementation was developed by Langfine Ltd &#13;&#10;and placed in the public domain." 
+name=description>
+<META 
+content="RSA, MD5, message digest, checksum, visual c++, source code, free, public domain. download" 
+name=keywords>
+<META content=global name=distribution>
+<META content=all name=robots>
+<STYLE>P {
+	FONT-SIZE: 12pt; MARGIN-LEFT: 0in; MARGIN-RIGHT: 0in; FONT-FAMILY: "Times New Roman"
+}
+H3 {
+	FONT-WEIGHT: bold; FONT-SIZE: 13.5pt; MARGIN-LEFT: 0in; MARGIN-RIGHT: 0in; FONT-FAMILY: "Times New Roman"
+}
+</STYLE>
+
+<STYLE fprolloverstyle>A:hover {
+	FONT-WEIGHT: bold
+}
+</STYLE>
+</HEAD>
+<BODY background="">
+<P><B><FONT face=Verdana size=5>RSA MD5 Message Digest </FONT></B></P>
+<P align=justify><B><FONT face=Verdana size=2>Summary</FONT></B><SPAN 
+style="FONT-SIZE: 10pt; FONT-FAMILY: Verdana"><B><BR></B></SPAN><FONT 
+face=Verdana size=2>This is a Visual C++ implementation of the RSA MD5 message 
+digest algorithm. The algorithm calculates a 32 byte checksum for any data 
+sequence (e.g., array of bytes, a string or a file). Full details of the MD5 
+algorithm are provided within the code. </FONT></P>
+<P align=center><FONT face=Verdana size=2><BR><IMG height=451 
+alt="Screenshot of MD5 Test Program" src="RSA MD5 Doc_files/MD5ScreenShot1.jpg" 
+width=579 border=0></FONT></P>
+<P align=center><B><U><FONT face=Verdana size=2>MD5 Checksum Test 
+Program</FONT></U></B></P>
+<P align=justify><B><FONT face=Verdana size=2>Download</FONT><SPAN 
+style="FONT-SIZE: 10pt; FONT-FAMILY: Verdana"><BR></SPAN></B><FONT face=Verdana 
+size=2>The download consists of two Visual C++ V6 projects, the executable 
+program itself, test data files and documentation.</FONT> 
+<P><B><FONT face=Verdana size=2>Download Contents</FONT></B></P>
+<BLOCKQUOTE><FONT face=Verdana size=2><B>MD5 Library Source Code 
+  (MD5.dsw)</B></FONT><BR><FONT face=Verdana size=2>This Visual C++ project 
+  builds a static library that provides the MD5 calculation routines. The source 
+  code will unzip to a folder named 'Code'. The library will build to 'Release' 
+  or 'Debug' subfolders. Do not change this folder configuration if you wish to 
+  build the MD5 Test Program (see below).<BR></FONT><BR><FONT face=Verdana 
+  size=2><B>MD5 Test Program Source Code 
+  (MD5ChecksumTest.dsw)</B></FONT><BR><FONT face=Verdana size=2>This Visual C++ 
+  project builds an executable program that uses the MD5 library to calculate 
+  checksums. The source code will unzip to a folder named 'Test'. The executable 
+  will build to 'Release' or 'Debug' subfolders. The MD5 Library is a dependent 
+  subproject and so will build automatically before the test program. The MD5 
+  library source code must be held in a folder named 'Code' which should be at 
+  the same level as the 'Test' folder. This is the default folder configuration 
+  created by the zip file. <BR></FONT><BR><FONT face=Verdana size=2><B>MD5 Test 
+  Program Executable&nbsp; (MD5ChecksumTest.exe)</B></FONT><BR><FONT 
+  face=Verdana size=2>This is the executable program built by the MD5 Test 
+  Program Source Code (see screenshot above). It can be used to calculate the 
+  MD5 checksum for manually entered strings or for individual files. 
+  <BR></FONT><BR><FONT face=Verdana size=2><B>Test Data</B></FONT><BR><FONT 
+  face=Verdana size=2>Several test data files are included within the test 
+  program source code and executable zip files. These test files will unzip to a 
+  folder named 'TestData'. The MD5 Test program uses these files to perform an 
+  automatic self verification. It expects to find them within the TestData 
+  subfolder.</FONT>
+  <P><FONT face=Verdana size=2><B>Documentation<BR></B>A copy of this web page 
+  is included in the download. The majority of the projects' documentation is in 
+  the form of commented source code. </FONT></P></BLOCKQUOTE>
+<P align=justify><FONT face=Verdana size=2><B>Further Details - MD5 
+Library<BR></B><SPAN style="FONT-WEIGHT: 400">The MD5 message digest algorithm 
+is wrapped in a C++ class named CMD5Checksum. This exports three public 
+functions:-</SPAN></FONT></P>
+<BLOCKQUOTE>
+  <P align=justify><CODE><SPAN style="FONT-WEIGHT: 400"><FONT face=Verdana 
+  size=2>&#9679;&nbsp; CString GetMD5( BYTE* pBuf, UINT nLength )<BR>&#9679;&nbsp; CString 
+  GetMD5( CFile&amp; File )<BR>&#9679;&nbsp; CString GetMD5( const CString&amp; 
+  strFilePath ) </FONT></SPAN></P></CODE></BLOCKQUOTE>
+<P align=justify><FONT face=Verdana size=2>All three are implemented as static 
+functions. The checksum calculated is returned as a 32 character hexadecimal 
+number held in a CString. GetMD5 is overloaded to take data to be checksummed as 
+either an array of bytes or as a file. The class CMD5Checksum is held within the 
+MD5 library source code. Building this project creates the static library 
+MD5.lib. </FONT></P>
+<P align=justify><FONT face=Verdana size=2><B>Further Details - MD5 Test 
+Program<BR></B>A demonstration and test environment is provided in the MD5 test 
+program. This allows the user to:-</FONT></P>
+<BLOCKQUOTE>
+  <P align=justify><SPAN style="FONT-WEIGHT: 400"><FONT face=Verdana 
+  size=2>&#9679;&nbsp; </FONT></SPAN><FONT face=Verdana size=2>Type a string and see 
+  its checksum calculated in real time<BR></FONT><SPAN 
+  style="FONT-WEIGHT: 400"><FONT face=Verdana size=2>&#9679;&nbsp; </FONT></SPAN><FONT 
+  face=Verdana size=2>Select a file and calculate its checksum <BR></FONT><SPAN 
+  style="FONT-WEIGHT: 400"><FONT face=Verdana size=2>&#9679;&nbsp; Perform an 
+  automatic self verification<BR>&#9679;&nbsp; Get performance figures 
+<BR></P></BLOCKQUOTE></FONT></SPAN>
+<P align=justify><FONT face=Verdana size=2>The user may type into the "Enter a 
+string" edit box; the corresponding checksum will be calculated and displayed in 
+real time. The test program source code download includes test data files. The 
+user may browse and choose a file for checksum in the "Select a file" edit box; 
+the file's checksum is then displayed. The checksums for the smaller test files 
+may be verified by typing the contents directly into the "Enter a string" edit 
+box. Obviously, the checksums obtained by both methods should be the same! The 
+test environment also includes a "Self Test" button. This checksums each of the 
+supplied test data files in turn and verifies the results. Finally, a 
+"Performance Test" is provided. This displays and records statistics that 
+indicate the execution speed of the checksum calculation. Thus, the performance 
+implications of any modifications to the implementation can be assessed. 
+</FONT></P>
+<P align=justify><B><FONT face=Verdana size=2>Public Domain</FONT></B><FONT 
+face=Verdana size=2><BR>This implementation of the RSA MD5 algorithm was 
+developed by Langfine Ltd and has been placed in the public domain for free use. 
+However, wherever it is used, the RSA copyright notices must be adhered to, as 
+described within the code and the test application's "About" box. Also, Langfine 
+must be credited. If the code is modified in any way, this should be mentioned. 
+Source code should clearly distinguish between Langfine's original code and the 
+modifications.&nbsp; </FONT></P>
+<P align=justify><font face="Verdana" size="2"><b>Version History</b><br>
+V1.2&nbsp;&nbsp;&nbsp; Performance indicators added.<br>
+V1.1&nbsp;&nbsp;&nbsp; Performance improved by making some functions inline.<br>
+V1.0&nbsp;&nbsp;&nbsp; First release.</font></P>
+<P align=justify><FONT face=Verdana size=2><B>Disclaimer<BR></B>This download is 
+provided free of charge by Langfine Ltd. All use is at your own risk. No 
+liability of any kind whatsoever is accepted by Langfine Ltd. See <A 
+href="file:///D:/Data%20-%20Webs/Langfine%20-%20Software%20for%20the%203Rs/Legal.htm">Disclaimers</A>. 
+</FONT></P>
+<P align=justify><B><FONT face=Verdana size=2>Comments</FONT></B><FONT 
+face=Verdana size=2><BR>Comments are welcome at <A 
+href="mailto:md5@langfine.com">md5@langfine.com</A>. If you improve the 
+implementation in any way, we will be happy to update our code and make your 
+changes available here.</FONT></P>
+<P align=justify><font face="Verdana" size="2"><b>Updates</b><br>
+Please visit the downloads section of our website for updates;
+<a href="http://www.langfine.com">www.langfine.com</a>. </font></P>
+<P align=justify>&nbsp;</P>
+
+</BODY></HTML>

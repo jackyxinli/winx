@@ -1,0 +1,289 @@
+//Microsoft Developer Studio generated resource script.
+//
+#include "resource.h"
+
+#define APSTUDIO_READONLY_SYMBOLS
+/////////////////////////////////////////////////////////////////////////////
+//
+// Generated from the TEXTINCLUDE 2 resource.
+//
+#include "afxres.h"
+
+/////////////////////////////////////////////////////////////////////////////
+#undef APSTUDIO_READONLY_SYMBOLS
+
+/////////////////////////////////////////////////////////////////////////////
+// English (U.S.) resources
+
+#if !defined(AFX_RESOURCE_DLL) || defined(AFX_TARG_ENU)
+#ifdef _WIN32
+LANGUAGE LANG_ENGLISH, SUBLANG_ENGLISH_US
+#pragma code_page(1252)
+#endif //_WIN32
+
+#ifdef APSTUDIO_INVOKED
+/////////////////////////////////////////////////////////////////////////////
+//
+// TEXTINCLUDE
+//
+
+1 TEXTINCLUDE DISCARDABLE 
+BEGIN
+    "resource.h\0"
+END
+
+2 TEXTINCLUDE DISCARDABLE 
+BEGIN
+    "#include ""afxres.h""\r\n"
+    "\0"
+END
+
+3 TEXTINCLUDE DISCARDABLE 
+BEGIN
+    "#define _AFX_NO_SPLITTER_RESOURCES\r\n"
+    "#define _AFX_NO_OLE_RESOURCES\r\n"
+    "#define _AFX_NO_TRACKER_RESOURCES\r\n"
+    "#define _AFX_NO_PROPERTY_RESOURCES\r\n"
+    "\r\n"
+    "#if !defined(AFX_RESOURCE_DLL) || defined(AFX_TARG_ENU)\r\n"
+    "#ifdef _WIN32\r\n"
+    "LANGUAGE 9, 1\r\n"
+    "#pragma code_page(1252)\r\n"
+    "#endif //_WIN32\r\n"
+    "#include ""res\\MD5ChecksumTest.rc2""  // non-Microsoft Visual C++ edited resources\r\n"
+    "#include ""afxres.rc""         // Standard components\r\n"
+    "#endif\r\n"
+    "\0"
+END
+
+#endif    // APSTUDIO_INVOKED
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Icon
+//
+
+// Icon with lowest ID value placed first to ensure application icon
+// remains consistent on all systems.
+IDR_MAINFRAME           ICON    DISCARDABLE     "res\\MD5ChecksumTest.ico"
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Dialog
+//
+
+IDD_ABOUTBOX DIALOGEX 0, 0, 288, 254
+STYLE DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "About MD5ChecksumTest"
+FONT 8, "MS Sans Serif"
+BEGIN
+    CTEXT           "MD5ChecksumTest Version 1.2",IDC_STATIC,93,14,101,8,
+                    SS_NOPREFIX
+    DEFPUSHBUTTON   "OK",IDOK,117,214,50,14,WS_GROUP
+    CTEXT           "Langfine Ltd",IDC_STATIC,123,53,40,8
+    CTEXT           "Public Domain Software",IDC_STATIC,105,33,76,8
+    CONTROL         "",IDC_EDIT_RSA_COPYRIGHT,"RICHEDIT",ES_CENTER | 
+                    ES_MULTILINE | ES_READONLY | WS_BORDER | WS_VSCROLL | 
+                    WS_TABSTOP,26,98,232,103,WS_EX_ACCEPTFILES
+    CTEXT           "md5@langfine.com",IDC_STATIC,112,65,62,8
+    CTEXT           "www.langfine.com",IDC_STATIC,114,75,59,8
+END
+
+IDD_MD5CHECKSUMTEST_DIALOG DIALOGEX 0, 0, 382, 262
+STYLE DS_MODALFRAME | WS_MINIMIZEBOX | WS_POPUP | WS_VISIBLE | WS_CAPTION | 
+    WS_SYSMENU
+EXSTYLE WS_EX_APPWINDOW
+CAPTION "RSA MD5 Checksum Test"
+FONT 8, "MS Sans Serif"
+BEGIN
+    EDITTEXT        IDC_EDIT_STR,26,27,328,14,ES_AUTOHSCROLL
+    EDITTEXT        IDC_EDIT_SEL_FILE,25,101,332,14,ES_AUTOHSCROLL
+    PUSHBUTTON      "...",IDC_BUTTON_SEL_FILE,357,101,12,14
+    PUSHBUTTON      "SelfTest",IDC_BUTTON_SELFTEST,58,181,50,14
+    PUSHBUTTON      "About",IDC_BUTTON_ABOUT,315,238,50,14
+    EDITTEXT        IDC_EDIT_SELF_TEST_STATUS,59,203,50,14,ES_CENTER | 
+                    ES_AUTOHSCROLL | ES_READONLY | NOT WS_TABSTOP
+    EDITTEXT        IDC_EDIT_STR_CHECKSUM,121,48,185,14,ES_AUTOHSCROLL | 
+                    ES_READONLY | NOT WS_TABSTOP
+    EDITTEXT        IDC_EDIT_FILE_CHECKSUM,121,121,138,14,ES_AUTOHSCROLL | 
+                    ES_READONLY | NOT WS_TABSTOP
+    LTEXT           "MD5 Checksum",IDC_STATIC,63,51,57,10
+    LTEXT           "MD5 Checksum",IDC_STATIC,64,125,57,10
+    GROUPBOX        "Automatic Self Test",IDC_STATIC,18,166,139,63,BS_CENTER
+    GROUPBOX        "Select a file and see the checksum",IDC_STATIC,7,79,368,
+                    72
+    GROUPBOX        "Enter a string and see the checksum",IDC_STATIC,7,10,
+                    368,61
+    PUSHBUTTON      "Test",IDC_BUTTON_PERFTEST,191,181,50,14
+    EDITTEXT        IDC_EDIT_PERF_TEST_RESULT,191,203,50,14,ES_AUTOHSCROLL | 
+                    ES_READONLY | NOT WS_TABSTOP
+    GROUPBOX        "Performance Test",IDC_STATIC,169,166,200,63,BS_CENTER
+    EDITTEXT        IDC_EDIT_PERF_TEST_NUM_CYCLES,278,203,50,14,
+                    ES_AUTOHSCROLL | ES_READONLY | NOT WS_TABSTOP
+    PUSHBUTTON      "Show Log",IDC_BUTTON_SHOW_LOG,278,181,50,14
+    LTEXT           "Secs",IDC_STATIC,244,205,17,8
+    LTEXT           "Cycles",IDC_STATIC,331,205,22,8
+END
+
+
+#ifndef _MAC
+/////////////////////////////////////////////////////////////////////////////
+//
+// Version
+//
+
+VS_VERSION_INFO VERSIONINFO
+ FILEVERSION 1,2,0,0
+ PRODUCTVERSION 1,2,0,0
+ FILEFLAGSMASK 0x3fL
+#ifdef _DEBUG
+ FILEFLAGS 0x1L
+#else
+ FILEFLAGS 0x0L
+#endif
+ FILEOS 0x4L
+ FILETYPE 0x1L
+ FILESUBTYPE 0x0L
+BEGIN
+    BLOCK "StringFileInfo"
+    BEGIN
+        BLOCK "040904b0"
+        BEGIN
+            VALUE "Comments", "Contact Langfine at  mail@langfine.com\0"
+            VALUE "CompanyName", "Langfine Ltd\0"
+            VALUE "FileDescription", "MD5ChecksumTest MFC Application\0"
+            VALUE "FileVersion", "1, 2, 0, 0\0"
+            VALUE "InternalName", "MD5ChecksumTest\0"
+            VALUE "LegalCopyright", "\0"
+            VALUE "LegalTrademarks", "\0"
+            VALUE "OriginalFilename", "MD5ChecksumTest.EXE\0"
+            VALUE "PrivateBuild", "\0"
+            VALUE "ProductName", "MD5ChecksumTest Application\0"
+            VALUE "ProductVersion", "1, 2, 0, 0\0"
+            VALUE "SpecialBuild", "\0"
+        END
+    END
+    BLOCK "VarFileInfo"
+    BEGIN
+        VALUE "Translation", 0x409, 1200
+    END
+END
+
+#endif    // !_MAC
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// DESIGNINFO
+//
+
+#ifdef APSTUDIO_INVOKED
+GUIDELINES DESIGNINFO DISCARDABLE 
+BEGIN
+    IDD_ABOUTBOX, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 281
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 247
+    END
+
+    IDD_MD5CHECKSUMTEST_DIALOG, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 375
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 255
+    END
+END
+#endif    // APSTUDIO_INVOKED
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// String Table
+//
+
+STRINGTABLE DISCARDABLE 
+BEGIN
+    IDS_ABOUTBOX            "&About MD5ChecksumTest..."
+    IDS_PLEASE_WAIT         "Please Wait..."
+END
+
+#endif    // English (U.S.) resources
+/////////////////////////////////////////////////////////////////////////////
+
+
+/////////////////////////////////////////////////////////////////////////////
+// English (U.K.) resources
+
+#if !defined(AFX_RESOURCE_DLL) || defined(AFX_TARG_ENG)
+#ifdef _WIN32
+LANGUAGE LANG_ENGLISH, SUBLANG_ENGLISH_UK
+#pragma code_page(1252)
+#endif //_WIN32
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Dialog
+//
+
+IDD_PERF_LOG DIALOG DISCARDABLE  0, 0, 265, 231
+STYLE DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "Dialog"
+FONT 8, "MS Sans Serif"
+BEGIN
+    DEFPUSHBUTTON   "OK",IDOK,185,200,50,14
+    CONTROL         "",IDC_EDIT_PERF_LOG,"RICHEDIT",ES_MULTILINE | WS_BORDER | 
+                    WS_VSCROLL | WS_TABSTOP,19,16,227,174
+    PUSHBUTTON      "Clear Log",IDC_BUTTON_CLEAR,29,200,50,14
+    PUSHBUTTON      "Save Log",IDC_BUTTON_SAVE,107,200,50,14
+END
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// DESIGNINFO
+//
+
+#ifdef APSTUDIO_INVOKED
+GUIDELINES DESIGNINFO DISCARDABLE 
+BEGIN
+    IDD_PERF_LOG, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 258
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 224
+    END
+END
+#endif    // APSTUDIO_INVOKED
+
+#endif    // English (U.K.) resources
+/////////////////////////////////////////////////////////////////////////////
+
+
+
+#ifndef APSTUDIO_INVOKED
+/////////////////////////////////////////////////////////////////////////////
+//
+// Generated from the TEXTINCLUDE 3 resource.
+//
+#define _AFX_NO_SPLITTER_RESOURCES
+#define _AFX_NO_OLE_RESOURCES
+#define _AFX_NO_TRACKER_RESOURCES
+#define _AFX_NO_PROPERTY_RESOURCES
+
+#if !defined(AFX_RESOURCE_DLL) || defined(AFX_TARG_ENU)
+#ifdef _WIN32
+LANGUAGE 9, 1
+#pragma code_page(1252)
+#endif //_WIN32
+#include "res\MD5ChecksumTest.rc2"  // non-Microsoft Visual C++ edited resources
+#include "afxres.rc"         // Standard components
+#endif
+
+/////////////////////////////////////////////////////////////////////////////
+#endif    // not APSTUDIO_INVOKED
+
