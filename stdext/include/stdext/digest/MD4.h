@@ -39,7 +39,7 @@ namespace detail {
 class MD4Checksum
 {
 private:
-	MD4_CTX context;
+	detail::MD4_CTX context;
 
 public:
 	MD4Checksum() {
