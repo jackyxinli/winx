@@ -318,7 +318,7 @@ public:
 	//--> by xushiweizh@gmail.com: don't derive from me!
 	//virtual ~CMD5Checksum() {};
 
-	void Update(const BYTE* Input, ULONG nInputLen);
+	void Update(const BYTE* Input, UINT nInputLen);
 	//BYTE* Final();
 	//--> by xushiweizh@gmail.com: I change interface as follow:
 	void Final(OUT BYTE nChecksum[16]);

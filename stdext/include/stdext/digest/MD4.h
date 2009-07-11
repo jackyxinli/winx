@@ -9,15 +9,15 @@
 // of this license. You must not remove this notice, or any other, from
 // this software.
 // 
-// Module: stdext/digest/MD5.h
+// Module: stdext/digest/MD4.h
 // Creator: xushiwei
 // Email: xushiweizh@gmail.com
 // Date: 2006-11-29 19:27:08
 // 
-// $Id: MD5.h,v 1.4 2006/12/14 09:15:04 xushiwei Exp $
+// $Id: MD4.h,v 1.4 2006/12/14 09:15:04 xushiwei Exp $
 // -----------------------------------------------------------------------*/
-#ifndef STDEXT_DIGEST_MD5_H
-#define STDEXT_DIGEST_MD5_H
+#ifndef STDEXT_DIGEST_MD4_H
+#define STDEXT_DIGEST_MD4_H
 
 #ifndef STDEXT_BASIC_H
 #include "../Basic.h"
@@ -29,26 +29,47 @@ NS_STDEXT_BEGIN
 
 namespace detail {
 
-#include "md5/MD5Checksum.h"
-#include "md5/MD5ChecksumDefines.h"
-#include "md5/MD5ChecksumImpl.h"
+#include "md4/md4.h"
 
 } // namespace detail
 
-typedef detail::CMD5Checksum MD5Checksum;
+// -------------------------------------------------------------------------
+// class MD4Checksum
+
+class MD4Checksum
+{
+private:
+	MD4_CTX context;
+
+public:
+	MD4Checksum() {
+		detail::MD4Init(&context);
+	}
+
+	void winx_call Update(const BYTE* buf, UINT bytes) {
+		detail::MD4Update(&context, buf, bytes);
+	}
+
+	void winx_call Final(BYTE checksum[16]) {
+		detail::MD4Final(checksum, &context);
+	}
+};
 
 // -------------------------------------------------------------------------
-// function md5
+// function md4
 
-inline void winx_call md5(const void* buf, size_t bytes, BYTE checksum[16])
+inline void winx_call md4(const void* buf, UINT bytes, BYTE checksum[16])
 {
-	MD5Checksum chksum;
-	chksum.Update( (const BYTE*)buf, bytes );
-	chksum.Final( checksum );
+	using namespace detail;
+
+	MD4_CTX context;
+	MD4Init(&context);
+	MD4Update(&context, (const BYTE*)buf, bytes);
+	MD4Final(checksum, &context);
 }
 
 // -------------------------------------------------------------------------
 
 NS_STDEXT_END
 
-#endif /* STDEXT_DIGEST_MD5_H */
+#endif /* STDEXT_DIGEST_MD4_H */

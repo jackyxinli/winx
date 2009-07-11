@@ -476,7 +476,7 @@ ARGUMENTS:		BYTE* Input    : input block
 NOTES:			Computes the partial MD5 checksum for 'nInputLen' bytes of data in 'Input'
 *****************************************************************************************/
 inline
-void CMD5Checksum::Update( const BYTE* Input,	ULONG nInputLen )
+void CMD5Checksum::Update(const BYTE* Input, UINT nInputLen)
 {
 	//Compute number of bytes mod 64
 	UINT nIndex = (UINT)((m_nCount[0] >> 3) & 0x3F);
