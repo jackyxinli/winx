@@ -174,7 +174,7 @@ public:
 
 	size_type winx_call put(const char_type* const lpBuf, const size_type cch) throw(IoException)
 	{
-		WINX_ASSERT(lpBuf && m_lpBufStart && m_lpBufCur);
+		WINX_ASSERT((lpBuf || cch == 0) && m_lpBufStart && m_lpBufCur);
 		
 		// 1. Èç¹û»º´æ×ã¹»
 		const size_type cbUnused = (size_type)(m_lpBufMax - m_lpBufCur);
