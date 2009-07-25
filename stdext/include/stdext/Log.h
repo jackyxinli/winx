@@ -273,7 +273,7 @@ private:
 	Log& winx_call __printString(_It first, _It last, char)
 	{
 		if (m_stg)
-			m_stg.put(_ConvIt(first), last - first);
+			m_stg.put(iterToPointer(first), last - first);
 		return *this;
 	}
 	
@@ -281,7 +281,7 @@ private:
 	Log& winx_call __printString(_It first, _It last, unsigned char)
 	{
 		if (m_stg)
-			m_stg.put((char*)_ConvIt(first), last-first);
+			m_stg.put((char*)iterToPointer(first), last-first);
 		return *this;
 	}
 

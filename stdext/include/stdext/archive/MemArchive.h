@@ -335,7 +335,7 @@ public:
 			return NULL;
 		}
 		else {
-			const char_type* rgData = _ConvIt(m_pos);
+			const char_type* rgData = iterToPointer(m_pos);
 			m_pos += nMax;
 			return rgData;
 		}

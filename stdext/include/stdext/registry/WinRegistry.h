@@ -244,7 +244,7 @@ private:
 		s.reserve(strValue.size() + 1);
 		s.insert(s.end(), strValue.begin(), strValue.end());
 		s.push_back(0);
-		return __putString(pszValueName, _ConvIt(s.begin()), (DWORD)s.size(), dwType);
+		return __putString(pszValueName, iterToPointer(s.begin()), (DWORD)s.size(), dwType);
 	}
 
 public:

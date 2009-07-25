@@ -296,12 +296,12 @@ public:
 	
 	template <class Tr, class AllocT>
 	TempString(const std::basic_string<CharT, Tr, AllocT>& s)
-		: Base(_ConvIt(s.begin()), _ConvIt(s.end())) {
+		: Base(iterToPointer(s.begin()), iterToPointer(s.end())) {
 	}
 
 	template <class AllocT>
 	TempString(const std::vector<CharT, AllocT>& s)
-		: Base(_ConvIt(s.begin()), _ConvIt(s.end())) {
+		: Base(iterToPointer(s.begin()), iterToPointer(s.end())) {
 	}
 
 public:

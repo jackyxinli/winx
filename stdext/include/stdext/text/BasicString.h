@@ -229,7 +229,7 @@ public:
 
 	template <class _Alloc2>
 	static Myt_ winx_call cast(const vector<CharT, _Alloc2>& builder) {
-		return Myt_(_ConvIt(builder.begin()), builder.size());
+		return Myt_(iterToPointer(builder.begin()), builder.size());
 	}
 
 	StlString_ winx_call stl_str() const {

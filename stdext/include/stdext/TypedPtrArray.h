@@ -154,16 +154,16 @@ public:
 		{ return (const_reference)_Base::back(); }
 
 	iterator winx_call begin()
-		{ return (iterator)_ConvIt(_Base::begin()); }
+		{ return (iterator)iterToPointer(_Base::begin()); }
 
 	iterator winx_call end()
-		{ return (iterator)_ConvIt(_Base::end()); }
+		{ return (iterator)iterToPointer(_Base::end()); }
 
 	const_iterator winx_call begin() const
-		{ return (const_iterator)_ConvIt(_Base::begin()); }
+		{ return (const_iterator)iterToPointer(_Base::begin()); }
 
 	const_iterator winx_call end() const
-		{ return (const_iterator)_ConvIt(_Base::end()); }
+		{ return (const_iterator)iterToPointer(_Base::end()); }
 
 	void winx_call copy(const _Myt& from) {
 		_Base::operator=(from);
@@ -394,16 +394,16 @@ public:
 		{ return (const_reference)_Base::back(); }
 
 	iterator winx_call begin()
-		{ return (iterator)_ConvIt(_Base::begin()); }
+		{ return (iterator)iterToPointer(_Base::begin()); }
 
 	iterator winx_call end()
-		{ return (iterator)_ConvIt(_Base::end()); }
+		{ return (iterator)iterToPointer(_Base::end()); }
 
 	const_iterator winx_call begin() const
-		{ return (const_iterator)_ConvIt(_Base::begin()); }
+		{ return (const_iterator)iterToPointer(_Base::begin()); }
 
 	const_iterator winx_call end() const
-		{ return (const_iterator)_ConvIt(_Base::end()); }
+		{ return (const_iterator)iterToPointer(_Base::end()); }
 };
 
 // -------------------------------------------------------------------------

@@ -85,7 +85,7 @@ public:
 
 public:
 	BasicString<CharT> winx_call cast_str() const {
-		return BasicString<CharT>(_ConvIt(begin()), size());
+		return BasicString<CharT>(iterToPointer(begin()), size());
 	}
 
 	BasicString<CharT> winx_call cast_substr(
@@ -96,13 +96,13 @@ public:
 			throw_out_of_range_();
 		
 		size_type cchLength = (cchMax < cch ? cchMax : cch);
-		return BasicString<CharT>(_ConvIt(Base::begin() + from), cchLength);
+		return BasicString<CharT>(iterToPointer(Base::begin() + from), cchLength);
 	}
 
 public:
 	template <class AllocT>
 	BasicString<CharT> winx_call str(AllocT& alloc) const {
-		return BasicString<CharT>(alloc, _ConvIt(begin()), size());
+		return BasicString<CharT>(alloc, iterToPointer(begin()), size());
 	}
 
 	template <class AllocT>
@@ -114,11 +114,11 @@ public:
 
 	basic_string<CharT> winx_call stl_str() const
 	{
-		return basic_string<CharT>(_ConvIt(begin()), size());
+		return basic_string<CharT>(iterToPointer(begin()), size());
 	}
 
 	const CharT* winx_call data() const {
-		return _ConvIt(begin());
+		return iterToPointer(begin());
 	}
 
 	void winx_call erase() {
