@@ -67,7 +67,7 @@ private:
 	typedef int _Handle;
 
 	enum { writeMode = O_TRUNC|O_CREAT|O_BINARY|O_WRONLY };
-	enum { appendMode = O_BINARY|O_WRONLY|O_APPEND };
+	enum { appendMode = O_BINARY|O_RDWR|O_APPEND };
 	enum { readMode = O_BINARY|O_RDONLY };
 	enum { CMASK = 0644 }; // wrr
 
