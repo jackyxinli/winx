@@ -42,7 +42,7 @@ struct StringBufTraits_<Type> { \
 };
 
 #define WINX_STRBUF_SIZE(Target) \
-	std::StringBufTraits_<Target>::value
+	NS_STDEXT::StringBufTraits_<Target>::value
 
 // -------------------------------------------------------------------------
 // function to_str (integer/real)
@@ -250,13 +250,13 @@ public:
 	{
 		NS_STDEXT::AutoAlloc alloc;
 		NS_STDEXT::String s;
-		std::WString ws;
+		NS_STDEXT::WString ws;
 		
 		s = NS_STDEXT::str(alloc, 123);
 		AssertExp(s == "123");
 		
 		ws = NS_STDEXT::wstr(alloc, 123, 16);
-		AssertExp(std::upper(alloc, ws) == L"7B");
+		AssertExp(NS_STDEXT::upper(alloc, ws) == L"7B");
 		
 		s = NS_STDEXT::str(alloc, 12.3);
 		AssertExp(s == "12.3");
