@@ -170,6 +170,12 @@ public:
 	{
 		return _filelength(m_fd);
 	}
+
+	size_type winx_call pget(_E* buf, size_type cch, const pos_type& off)
+	{
+		seek(off);
+		return get(buf, cch);
+	}
 	
 	size_type winx_call get(_E* buf, size_type cch)
 	{
