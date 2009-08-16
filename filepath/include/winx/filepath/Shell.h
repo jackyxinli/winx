@@ -164,6 +164,15 @@ inline BOOL winx_call CanonicalizePath(LPWSTR pszBuf, LPCWSTR pszPath)
 	return PathCanonicalizeW(pszBuf, pszPath);
 }
 
+template <class CharT>
+inline BOOL winx_call CanonicalizePath(
+	CharT* pszBuf, const CharT* szBasePath, const CharT* szFile)
+{
+	char szDestFile[_MAX_PATH];
+	CombinePath(szDestFile, szBasePath, szFile);
+	return CanonicalizePath(pszBuf, szDestFile);
+}
+
 // -------------------------------------------------------------------------
 // CommonPrefixPath
 
