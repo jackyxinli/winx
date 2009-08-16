@@ -33,6 +33,10 @@
 #include "filepath/Directory.h"
 #endif
 
+#ifndef WINX_FILEPATH_PATH_H
+#include "filepath/Path.h"
+#endif
+
 // -------------------------------------------------------------------------
 // $Log: FilePath.h,v $
 
