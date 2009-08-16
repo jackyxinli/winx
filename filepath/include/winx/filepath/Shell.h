@@ -30,6 +30,32 @@
 NS_FILEPATH_BEGIN
 
 // -------------------------------------------------------------------------
+// WindowsPathToUnix
+
+template <class CharT>
+inline void winx_call WindowsPathToUnix(CharT* szFile)
+{
+	for (; *szFile; ++szFile)
+	{
+		if (*szFile == '\\')
+			*szFile = '/';
+	}
+}
+
+// -------------------------------------------------------------------------
+// UnixPathToWindows
+
+template <class CharT>
+inline void winx_call UnixPathToWindows(CharT* szFile)
+{
+	for (; *szFile; ++szFile)
+	{
+		if (*szFile == '/')
+			*szFile = '\\';
+	}
+}
+
+// -------------------------------------------------------------------------
 // FileExists
 
 #if !defined(WINX_NO_SHLWAPI)
@@ -168,8 +194,9 @@ template <class CharT>
 inline BOOL winx_call CanonicalizePath(
 	CharT* pszBuf, const CharT* szBasePath, const CharT* szFile)
 {
-	char szDestFile[_MAX_PATH];
+	CharT szDestFile[_MAX_PATH];
 	CombinePath(szDestFile, szBasePath, szFile);
+	UnixPathToWindows(szDestFile);
 	return CanonicalizePath(pszBuf, szDestFile);
 }
 
