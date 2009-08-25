@@ -416,6 +416,12 @@ inline BasicArray<Type> winx_call arrayof(const Type v[], size_t n)
 	return BasicArray<Type>(v, v+n);
 }
 
+template <class ContainerT>
+inline BasicArray<typename ContainerT::value_type> winx_call arrayof(const ContainerT& c)
+{
+	return BasicArray<typename ContainerT::value_type>(std::iterToPointer(c.begin()), c.size());
+}
+
 #define rangeof(array)		NS_STDEXT::arrayof(array, countof(array))
 
 // =========================================================================
