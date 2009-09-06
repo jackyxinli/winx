@@ -233,7 +233,6 @@ public:
     : m_pool(a),
       m_num_elements(0)
   {
-    WINX_ASSERT(a.element_size() == node_size());
     _M_initialize_buckets(n);
   }
 
@@ -473,7 +472,7 @@ private:
 
   NodeT* _M_new_node(const value_type& obj)
   {
-    NodeT* n = (NodeT*)m_pool.allocate();
+    NodeT* n = (NodeT*)m_pool.allocate(sizeof(NodeT));
     n->m_next = NULL;
 	WINX_TRY
 	{

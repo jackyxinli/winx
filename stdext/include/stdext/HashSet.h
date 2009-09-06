@@ -19,22 +19,8 @@
 #ifndef STDEXT_HASHSET_H
 #define STDEXT_HASHSET_H
 
-#ifndef STDEXT_BASIC_H
-#include "Basic.h"
-#endif
-
-#ifndef STD_HASH_SET_H
-#include "../std/hash_set.h"
-#endif
-
-#ifndef WINX_NO_HASH_SET_
-
-#ifndef STDEXT_HASH_H
-#include "Hash.h"
-#endif
-
-#ifndef STDEXT_MEMORY_H
-#include "Memory.h"
+#ifndef STDEXT_P_HASHSET_H
+#include "p/HashSet.h"
 #endif
 
 NS_STDEXT_BEGIN
@@ -47,7 +33,7 @@ template <
 	class HashCompT = HashCompare<ValT>,
 	class AllocT = DefaultAlloc
 	>
-class HashSet : public WINX_BASE_HASHSET_(ValT, HashCompT, AllocT)
+class HashSet : public PHashSet<ValT, HashCompT, AllocT>
 {
 public:
 	typedef ValT key_type;
@@ -55,51 +41,19 @@ public:
 	typedef typename HashCompT::hasher hasher;
 	typedef typename HashCompT::key_equal key_equal;
 	typedef typename HashCompT::key_pred key_pred;
-	typedef AllocT allocator_type;
 
 private:
-	typedef StlAlloc<ValT, AllocT> StlAllocT;
-	typedef WINX_BASE_HASHSET_(ValT, HashCompT, AllocT) Base;
-
-	HashSet(const HashSet&);
-	void operator=(const HashSet&);
+	typedef PHashSet<ValT, HashCompT, AllocT> Base;
 
 public:
 	typedef typename Base::size_type size_type;
 
-#if defined(X_STL_NET)
-	explicit HashSet(
-		allocator_type& alloc,
-		size_type n = 100) : Base(HashComp_<ValT, HashCompT>(), alloc)
-	{
-	}
-
+	explicit HashSet(AllocT& alloc, size_type n = 100)
+		: Base(alloc, n) {}
+	
 	template <class Iterator>
-	HashSet(
-		allocator_type& alloc,
-		Iterator first, Iterator last,
-		size_type n = 100) : Base(first, last, HashComp_<ValT, HashCompT>(), alloc)
-	{
-	}
-#else
-	explicit HashSet(
-		allocator_type& alloc,
-		size_type n = 100) : Base(n, hasher(), key_equal(), alloc)
-	{
-	}
-
-	template <class Iterator>
-	HashSet(
-		allocator_type& alloc,
-		Iterator first, Iterator last,
-		size_type n = 100) : Base(first, last, n, hasher(), key_equal(), alloc)
-	{
-	}
-#endif
-
-	void winx_call copy(const Base& from) {
-		Base::operator=(from);
-	}
+	HashSet(AllocT& alloc, Iterator first, Iterator last, size_type n = 100)
+		: Base(alloc, first, last, n) {}
 };
 
 // -------------------------------------------------------------------------
@@ -110,7 +64,7 @@ template <
 	class HashCompT = HashCompare<ValT>,
 	class AllocT = DefaultAlloc
 	>
-class HashMultiSet : public WINX_BASE_HASHMULTISET_(ValT, HashCompT, AllocT)
+class HashMultiSet : public PHashMultiSet<ValT, HashCompT, AllocT>
 {
 public:
 	typedef ValT key_type;
@@ -118,47 +72,19 @@ public:
 	typedef typename HashCompT::hasher hasher;
 	typedef typename HashCompT::key_equal key_equal;
 	typedef typename HashCompT::key_pred key_pred;
-	typedef AllocT allocator_type;
-
+	
 private:
-	typedef StlAlloc<ValT, AllocT> StlAllocT;
-	typedef WINX_BASE_HASHMULTISET_(ValT, HashCompT, AllocT) Base;
-
-	HashMultiSet(const HashMultiSet&);
-	void operator=(const HashMultiSet&);
-
+	typedef PHashMultiSet<ValT, HashCompT, AllocT> Base;
+	
 public:
 	typedef typename Base::size_type size_type;
-
-#if defined(X_STL_NET)
-	explicit HashMultiSet(
-		allocator_type& alloc,
-		size_type n = 100) : Base(HashComp_<ValT, HashCompT>(), alloc)
-	{
-	}
-
+	
+	explicit HashMultiSet(AllocT& alloc, size_type n = 100)
+		: Base(alloc, n) {}
+	
 	template <class Iterator>
-	HashMultiSet(
-		allocator_type& alloc,
-		Iterator first, Iterator last,
-		size_type n = 100) : Base(first, last, HashComp_<ValT, HashCompT>(), alloc)
-	{
-	}
-#else
-	explicit HashMultiSet(
-		allocator_type& alloc,
-		size_type n = 100) : Base(n, hasher(), key_equal(), alloc)
-	{
-	}
-
-	template <class Iterator>
-	HashMultiSet(
-		allocator_type& alloc,
-		Iterator first, Iterator last,
-		size_type n = 100) : Base(first, last, n, hasher(), key_equal(), alloc)
-	{
-	}
-#endif
+	HashMultiSet(AllocT& alloc, Iterator first, Iterator last, size_type n = 100)
+		: Base(alloc, first, last, n) {}
 };
 
 NS_STDEXT_END
@@ -221,7 +147,4 @@ public:
 // -------------------------------------------------------------------------
 // $Log: HashSet.h,v $
 
-#endif // WINX_NO_HASH_SET_
-
 #endif /* STDEXT_HASHSET_H */
-

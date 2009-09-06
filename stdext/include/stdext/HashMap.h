@@ -19,22 +19,8 @@
 #ifndef STDEXT_HASHMAP_H
 #define STDEXT_HASHMAP_H
 
-#ifndef STDEXT_BASIC_H
-#include "Basic.h"
-#endif
-
-#ifndef STD_HASH_MAP_H
-#include "../std/hash_map.h"
-#endif
-
-#ifndef WINX_NO_HASH_MAP_
-
-#ifndef STDEXT_HASH_H
-#include "Hash.h"
-#endif
-
-#ifndef STDEXT_MEMORY_H
-#include "Memory.h"
+#ifndef STDEXT_P_HASHMAP_H
+#include "p/HashMap.h"
 #endif
 
 NS_STDEXT_BEGIN
@@ -47,58 +33,26 @@ template <
 	class HashCompT = HashCompare<KeyT>,
 	class AllocT = DefaultAlloc
 	>
-class HashMap : public WINX_BASE_HASHMAP_(KeyT, DataT, HashCompT, AllocT)
+class HashMap : public PHashMap<KeyT, DataT, HashCompT, AllocT>
 {
 public:
 	typedef KeyT key_type;
 	typedef typename HashCompT::hasher hasher;
 	typedef typename HashCompT::key_equal key_equal;
 	typedef typename HashCompT::key_pred key_pred;
-	typedef AllocT allocator_type;
 
 private:
-	typedef StlAlloc<DataT, AllocT> StlAllocT;
-	typedef WINX_BASE_HASHMAP_(KeyT, DataT, HashCompT, AllocT) Base;
+	typedef PHashMap<KeyT, DataT, HashCompT, AllocT> Base;
 	
-	HashMap(const HashMap&);
-	void operator=(const HashMap&);
-
 public:
 	typedef typename Base::size_type size_type;
 
-#if defined(X_STL_NET)
-	explicit HashMap(
-		allocator_type& alloc,
-		size_type n = 100) : Base(HashComp_<KeyT, HashCompT>(), alloc)
-	{
-	}
+	explicit HashMap(AllocT& alloc, size_type n = 100)
+		: Base(alloc, n) {}
 
 	template <class Iterator>
-	HashMap(
-		allocator_type& alloc,
-		Iterator first, Iterator last,
-		size_type n = 100) : Base(first, last, HashComp_<KeyT, HashCompT>(), alloc)
-	{
-	}
-#else
-	explicit HashMap(
-		allocator_type& alloc,
-		size_type n = 100) : Base(n, hasher(), key_equal(), alloc)
-	{
-	}
-
-	template <class Iterator>
-	HashMap(
-		allocator_type& alloc,
-		Iterator first, Iterator last,
-		size_type n = 100) : Base(first, last, n, hasher(), key_equal(), alloc)
-	{
-	}
-#endif
-
-	void winx_call copy(const Base& from) {
-		Base::operator=(from);
-	}
+	HashMap(AllocT& alloc, Iterator first, Iterator last, size_type n = 100)
+		: Base(alloc, first, last, n) {}
 };
 
 // -------------------------------------------------------------------------
@@ -109,58 +63,26 @@ template <
 	class HashCompT = HashCompare<KeyT>,
 	class AllocT = DefaultAlloc
 >
-class HashMultiMap : public WINX_BASE_HASHMULTIMAP_(KeyT, DataT, HashCompT, AllocT)
+class HashMultiMap : public PHashMultiMap<KeyT, DataT, HashCompT, AllocT>
 {
 public:
 	typedef KeyT key_type;
 	typedef typename HashCompT::hasher hasher;
 	typedef typename HashCompT::key_equal key_equal;
 	typedef typename HashCompT::key_pred key_pred;
-	typedef AllocT allocator_type;
 
 private:
-	typedef StlAlloc<DataT, AllocT> StlAllocT;
-	typedef WINX_BASE_HASHMULTIMAP_(KeyT, DataT, HashCompT, AllocT) Base;
-
-	HashMultiMap(const HashMultiMap&);
-	void operator=(const HashMultiMap&);
+	typedef PHashMultiMap<KeyT, DataT, HashCompT, AllocT> Base;
 
 public:
 	typedef typename Base::size_type size_type;
 
-#if defined(X_STL_NET)
-	explicit HashMultiMap(
-		allocator_type& alloc,
-		size_type n = 100) : Base(HashComp_<KeyT, HashCompT>(), alloc)
-	{
-	}
-
+	explicit HashMultiMap(AllocT& alloc, size_type n = 100)
+		: Base(alloc, n) {}
+	
 	template <class Iterator>
-	HashMultiMap(
-		allocator_type& alloc,
-		Iterator first, Iterator last,
-		size_type n = 100) : Base(first, last, HashComp_<KeyT, HashCompT>(), alloc)
-	{
-	}
-#else
-	explicit HashMultiMap(
-		allocator_type& alloc,
-		size_type n = 100) : Base(n, hasher(), key_equal(), alloc)
-	{
-	}
-
-	template <class Iterator>
-	HashMultiMap(
-		allocator_type& alloc,
-		Iterator first, Iterator last,
-		size_type n = 100) : Base(first, last, n, hasher(), key_equal(), alloc)
-	{
-	}
-#endif
-
-	void winx_call copy(const Base& from) {
-		Base::operator=(from);
-	}
+	HashMultiMap(AllocT& alloc, Iterator first, Iterator last, size_type n = 100)
+		: Base(alloc, first, last, n) {}
 };
 
 NS_STDEXT_END
@@ -228,7 +150,5 @@ public:
 
 // -------------------------------------------------------------------------
 // $Log: HashMap.h,v $
-
-#endif // WINX_NO_HASH_MAP_
 
 #endif /* STDEXT_HASHMAP_H */

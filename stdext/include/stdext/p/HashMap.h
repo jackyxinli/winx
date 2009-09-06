@@ -119,6 +119,9 @@ public:
   size_type max_size() const { return m_ht.max_size(); }
   bool empty() const { return m_ht.empty(); }
   void swap(PHashMap& hs) { m_ht.swap(hs.m_ht); }
+  void copy(const PHashMap& from) {
+	  m_ht.copy(from.m_ht);
+  }
 
   bool operator==(const PHashMap& rhs) const { return m_ht == rhs.m_ht; }
   bool operator!=(const PHashMap& rhs) const { return m_ht != rhs.m_ht; }
@@ -227,6 +230,9 @@ public:
   size_type max_size() const { return m_ht.max_size(); }
   bool empty() const { return m_ht.empty(); }
   void swap(PHashMultiMap& hs) { m_ht.swap(hs.m_ht); }
+  void copy(const PHashMultiMap& from) {
+	  m_ht.copy(from.m_ht);
+  }
 
   bool operator==(const PHashMultiMap& rhs) const { return m_ht == rhs.m_ht; }
   bool operator!=(const PHashMultiMap& rhs) const { return m_ht != rhs.m_ht; }
