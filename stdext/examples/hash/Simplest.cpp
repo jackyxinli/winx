@@ -2,6 +2,7 @@
 #include <iostream>
 #include <stdext/HashMap.h>
 #include <stdext/p/HashMap.h>
+#include <stdext/p/HashSet.h>
 
 // -------------------------------------------------------------------------
 
@@ -89,6 +90,48 @@ void testPHashMapString()
 
 // -------------------------------------------------------------------------
 
+void testPHashSetCStr()
+{
+	typedef NS_STDEXT::PHashSet<const char*> MapT;
+	
+	NS_STDEXT::BlockPool recycle;
+	NS_STDEXT::ScopedPool alloc(recycle, MapT::node_size());
+	MapT cont(alloc);
+	
+	cont.insert("Mon");
+	cont.insert("Tue");
+	
+	const char key[] = "Mon";
+	MapT::iterator it = cont.find(key);
+	if (it != cont.end())
+		std::cout << *it << "\n";
+	else
+		std::cout << "ERROR: Not found!\n";
+}
+
+void testPHashSetString()
+{
+	typedef NS_STDEXT::PHashSet<NS_STDEXT::String> MapT;
+	
+	NS_STDEXT::BlockPool recycle;
+	NS_STDEXT::ScopedPool alloc(recycle, MapT::node_size());
+	MapT cont(alloc);
+	
+	NS_STDEXT::String s1 = NS_STDEXT::g_str("Mon");
+	NS_STDEXT::String s2 = NS_STDEXT::g_str("Tue");
+	
+	cont.insert(s1);
+	cont.insert(s2);
+	
+	MapT::iterator it = cont.find(s2);
+	if (it != cont.end())
+		std::cout << *it << "\n";
+	else
+		std::cout << "ERROR: Not found!\n";
+}
+
+// -------------------------------------------------------------------------
+
 int main()
 {
 	std::cout << "----------------------------------\n";
@@ -99,6 +142,10 @@ int main()
 	testPHashMapCStr();
 	std::cout << "----------------------------------\n";
 	testPHashMapString();
+	std::cout << "----------------------------------\n";
+	testPHashSetCStr();
+	std::cout << "----------------------------------\n";
+	testPHashSetString();
 	std::cout << "----------------------------------\n";
 	return 0;
 }
