@@ -118,7 +118,7 @@ public:
   size_type size() const { return m_ht.size(); }
   size_type max_size() const { return m_ht.max_size(); }
   bool empty() const { return m_ht.empty(); }
-  void swap(PHashSet& __hs) { m_ht.swap(__hs.m_ht); }
+  void swap(PHashSet& hs) { m_ht.swap(hs.m_ht); }
 
   bool operator==(const PHashSet& rhs) const { return m_ht == rhs.m_ht; }
   bool operator!=(const PHashSet& rhs) const { return m_ht != rhs.m_ht; }
