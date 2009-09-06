@@ -27,12 +27,6 @@
 #include "String.h" // class String, StringEqualTo, StringLess
 #endif
 
-#ifndef STD_HASH_H
-#include "../std/hash.h"
-#endif
-
-#ifndef WINX_NO_HASH_
-
 NS_STDEXT_BEGIN
 
 // -------------------------------------------------------------------------
@@ -47,35 +41,89 @@ inline size_t winx_call hashOfString(Iterator it, Iterator itEnd)
 	return (size_t)h;
 }
 
+template <class Iterator>
+inline size_t winx_call hashOfString(Iterator s)
+{
+	unsigned long h = 0; 
+	for ( ; *s; ++s)
+		h = 5*h + *s;
+	return (size_t)h;
+}
+
 // -------------------------------------------------------------------------
 // class Hash
 
-#if defined(X_STL_NET)
+template <class ValueT>
+class Hash {
+};
 
-template <class KeyT>
-class Hash
+template<> class Hash<char*>
 {
 public:
-	size_t winx_call operator()(const KeyT& v) const {
-		return stdext::hash_value(v);
-	}
+	size_t winx_call operator()(const char* s) const { return hashOfString(s); }
 };
 
-template <class CharT>
-class Hash<BasicString<CharT> >
+template<> class Hash<const char*>
 {
 public:
-	size_t winx_call operator()(const NS_STDEXT::BasicString<CharT>& o) const {
-		return hashOfString(o.begin(), o.end());
-	}
+	size_t winx_call operator()(const char* s) const { return hashOfString(s); }
 };
 
-#else
-
-template <class KeyT>
-class Hash : public stdext::hash<KeyT>
+template<> class Hash<char>
 {
+public:
+	size_t winx_call operator()(char x) const { return x; }
 };
+
+template<> class Hash<unsigned char>
+{
+public:
+	size_t winx_call operator()(unsigned char x) const { return x; }
+};
+
+template<> class Hash<signed char>
+{
+public:
+	size_t winx_call operator()(unsigned char x) const { return x; }
+};
+
+template<> class Hash<short>
+{
+public:
+	size_t winx_call operator()(short x) const { return x; }
+};
+
+template<> class Hash<unsigned short>
+{
+public:
+	size_t winx_call operator()(unsigned short x) const { return x; }
+};
+
+template<> class Hash<int>
+{
+public:
+	size_t winx_call operator()(int x) const { return x; }
+};
+
+template<> class Hash<unsigned int>
+{
+public:
+	size_t winx_call operator()(unsigned int x) const { return x; }
+};
+
+template<> class Hash<long>
+{
+public:
+	size_t winx_call operator()(long x) const { return x; }
+};
+
+template<> class Hash<unsigned long>
+{
+public:
+	size_t winx_call operator()(unsigned long x) const { return x; }
+};
+
+// -------------------------------------------------------------------------
 
 #if defined(WINX_NO_PARTIAL_SPECIALIZATION)
 
@@ -137,8 +185,6 @@ public:
 
 #endif // !defined(WINX_NO_PARTIAL_SPECIALIZATION)
 
-#endif // !defined(X_STL_NET)
-
 // -------------------------------------------------------------------------
 // class HashCompare
 
@@ -178,105 +224,7 @@ class HashCompare<wchar_t*> : public HashCompare<const wchar_t*> {
 };
 
 // -------------------------------------------------------------------------
-// Configuration
-
-#if defined(X_STL_NET)
-
-template <class KeyT, class HashCompT>
-struct HashComp_ : public stdext::hash_compare<KeyT, typename HashCompT::key_pred>
-{
-	typedef stdext::hash_compare<KeyT, typename HashCompT::key_pred> Base;
-
-	HashComp_() {}
-	HashComp_(typename HashCompT::key_pred pr) : Base(pr) {}
-
-	bool winx_call operator()(const KeyT& key1, const KeyT& key2) const
-	{
-		return Base::operator()(key1, key2);
-	}
-
-	size_t winx_call operator()(const KeyT& key) const
-	{
-		typename HashCompT::hasher hash;
-		ldiv_t Qrem_ = ldiv((long)hash(key), 127773);
-		Qrem_.rem = 16807 * Qrem_.rem - 2836 * Qrem_.quot;
-		if (Qrem_.rem < 0)
-			Qrem_.rem += 2147483647;
-		return ((size_t)Qrem_.rem);
-	}
-};
-
-#define WINX_BASE_HASHMAP_(KeyT, DataT, HashCompT, AllocT)					\
-	stdext::hash_map<														\
-		KeyT, DataT,														\
-		NS_STDEXT::HashComp_<KeyT, HashCompT>,								\
-		NS_STDEXT::StlAlloc<DataT, AllocT>									\
-	>
-
-#define WINX_BASE_HASHMULTIMAP_(KeyT, DataT, HashCompT, AllocT)				\
-	stdext::hash_multimap<													\
-		KeyT, DataT,														\
-		NS_STDEXT::HashComp_<KeyT, HashCompT>,								\
-		NS_STDEXT::StlAlloc<DataT, AllocT>									\
-	>
-
-#define WINX_BASE_HASHSET_(ValT, HashCompT, AllocT)							\
-	stdext::hash_set<														\
-		ValT,																\
-		NS_STDEXT::HashComp_<ValT, HashCompT>,								\
-		NS_STDEXT::StlAlloc<ValT, AllocT>									\
-	>
-
-#define WINX_BASE_HASHMULTISET_(ValT, HashCompT, AllocT)					\
-	stdext::hash_multiset<													\
-		ValT,																\
-		NS_STDEXT::HashComp_<ValT, HashCompT>,								\
-		NS_STDEXT::StlAlloc<ValT, AllocT>									\
-	>
-
-#else
-
-#define WINX_BASE_HASHMAP_(KeyT, DataT, HashCompT, AllocT)					\
-	stdext::hash_map<														\
-		KeyT, DataT,														\
-		typename HashCompT::hasher,											\
-		typename HashCompT::key_equal,										\
-		NS_STDEXT::StlAlloc<DataT, AllocT>									\
-		>
-
-#define WINX_BASE_HASHMULTIMAP_(KeyT, DataT, HashCompT, AllocT)				\
-	stdext::hash_multimap<													\
-		KeyT, DataT,														\
-		typename HashCompT::hasher,											\
-		typename HashCompT::key_equal,										\
-		NS_STDEXT::StlAlloc<DataT, AllocT>									\
-	>
-
-#define WINX_BASE_HASHSET_(ValT, HashCompT, AllocT)							\
-	stdext::hash_set<														\
-		ValT,																\
-		typename HashCompT::hasher,											\
-		typename HashCompT::key_equal,										\
-		NS_STDEXT::StlAlloc<ValT, AllocT>									\
-		>
-
-#define WINX_BASE_HASHMULTISET_(ValT, HashCompT, AllocT)					\
-	stdext::hash_multiset<													\
-		ValT,																\
-		typename HashCompT::hasher,											\
-		typename HashCompT::key_equal,										\
-		NS_STDEXT::StlAlloc<ValT, AllocT>									\
-	>
-
-#endif
-
-// -------------------------------------------------------------------------
-// $Log: Hash.h,v $
-//
 
 NS_STDEXT_END
 
-#endif // WINX_NO_HASH_
-
 #endif /* STDEXT_HASH_H */
-
