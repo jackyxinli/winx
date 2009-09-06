@@ -1,3 +1,4 @@
+#include <stlpatch.h>
 #include <iostream>
 #include <stdext/HashMap.h>
 
@@ -5,10 +6,10 @@
 
 void testHashMapCStr()
 {
-	typedef NS_STDEXT::AutoAlloc AllocT;
-	typedef NS_STDEXT::HashMap<const char*, int, NS_STDEXT::HashCompare<const char*>, AllocT> MapT;
+	typedef NS_STDEXT::HashMap<const char*, int, NS_STDEXT::HashCompare<const char*> > MapT;
 
-	AllocT alloc;
+	NS_STDEXT::BlockPool recycle;
+	NS_STDEXT::ScopedAlloc alloc(recycle);
 	MapT cont(alloc);
 
 	cont.insert(MapT::value_type("Mon", 1));
@@ -24,10 +25,10 @@ void testHashMapCStr()
 
 void testHashMapString()
 {
-	typedef NS_STDEXT::AutoAlloc AllocT;
-	typedef NS_STDEXT::HashMap<NS_STDEXT::String, int, NS_STDEXT::HashCompare<NS_STDEXT::String>, AllocT> MapT;
+	typedef NS_STDEXT::HashMap<NS_STDEXT::String, int, NS_STDEXT::HashCompare<NS_STDEXT::String> > MapT;
 
-	AllocT alloc;
+	NS_STDEXT::BlockPool recycle;
+	NS_STDEXT::ScopedAlloc alloc(recycle);
 	MapT cont(alloc);
 
 	NS_STDEXT::String s1(alloc, "Mon");
