@@ -203,7 +203,7 @@ private:
   typedef HashtableNode_<ValueT> NodeT;
 
 private:
-  vector<NodeT*>  m_buckets;
+  std::vector<NodeT*>  m_buckets;
   size_type       m_num_elements;
   PoolT&		  m_pool;
   hasher          m_hash;
@@ -277,14 +277,10 @@ public:
   size_type max_size() const { return size_type(-1); }
   bool empty() const { return size() == 0; }
 
-  void swap(Hashtable& ht); /* allocator swap?
+  void swap(Hashtable& ht)
   {
-    std::swap(m_hash, ht.m_hash);
-    std::swap(m_equals, ht.m_equals);
-    std::swap(m_get_key, ht.m_get_key);
-    m_buckets.swap(ht.m_buckets);
-    std::swap(m_num_elements, ht.m_num_elements);
-  } */
+	NS_STDEXT::swap_object(this, &ht);
+  }
 
   iterator begin()
   { 
@@ -558,6 +554,7 @@ HashtableCIter_<ValueT,KeyT,_HF,_ExK,_EqK,_All>::operator++(int)
   return tmp;
 }
 
+/*
 #ifndef __STL_CLASS_PARTIAL_SPECIALIZATION
 
 template <class ValueT, class KeyT, class _HF, class _ExK, class _EqK, 
@@ -830,14 +827,15 @@ inline void Hashtable<ValueT,KeyT,_HF,_Ex,_Eq,_All>::erase(const const_iterator&
 template <class ValueT, class KeyT, class _HF, class _Ex, class _Eq, class _All>
 void Hashtable<ValueT,KeyT,_HF,_Ex,_Eq,_All>::resize(size_type num_elements_hint)
 {
-  const size_type __old_n = m_buckets.size();
-  if (num_elements_hint > __old_n) {
+  const size_type old_n = m_buckets.size();
+  if (num_elements_hint > old_n)
+  {
     const size_type n = _M_next_size(num_elements_hint);
-    if (n > __old_n) {
-      vector<NodeT*> tmp(n, (NodeT*)(0));
-//      vector<NodeT*, _All> tmp(n, (NodeT*)(0),                                 m_buckets.get_allocator());
-      __STL_TRY {
-        for (size_type bucket = 0; bucket < __old_n; ++bucket) {
+    if (n > old_n)
+	{
+      std::vector<NodeT*> tmp(n);
+      WINX_TRY {
+        for (size_type bucket = 0; bucket < old_n; ++bucket) {
           NodeT* first = m_buckets[bucket];
           while (first) {
             size_type __new_bucket = _M_bkt_num(first->m_val, n);
@@ -849,7 +847,7 @@ void Hashtable<ValueT,KeyT,_HF,_Ex,_Eq,_All>::resize(size_type num_elements_hint
         }
         m_buckets.swap(tmp);
       }
-#         ifdef __STL_USE_EXCEPTIONS
+#ifdef WINX_USE_EXCEPTIONS
       catch(...) {
         for (size_type bucket = 0; bucket < tmp.size(); ++bucket) {
           while (tmp[bucket]) {
@@ -860,7 +858,7 @@ void Hashtable<ValueT,KeyT,_HF,_Ex,_Eq,_All>::resize(size_type num_elements_hint
         }
         throw;
       }
-#         endif /* __STL_USE_EXCEPTIONS */
+#endif /* WINX_USE_EXCEPTIONS */
     }
   }
 }
@@ -924,7 +922,7 @@ void Hashtable<ValueT,KeyT,_HF,_Ex,_Eq,_All>
   m_buckets.clear();
   m_buckets.reserve(ht.m_buckets.size());
   m_buckets.insert(m_buckets.end(), ht.m_buckets.size(), (NodeT*) 0);
-  __STL_TRY {
+  WINX_TRY {
     for (size_type i = 0; i < ht.m_buckets.size(); ++i) {
       const NodeT* cur = ht.m_buckets[i];
       if (cur) {
@@ -941,7 +939,7 @@ void Hashtable<ValueT,KeyT,_HF,_Ex,_Eq,_All>
     }
     m_num_elements = ht.m_num_elements;
   }
-  __STL_UNWIND(clear());
+  WINX_UNWIND(clear());
 }
 
 // -------------------------------------------------------------------------
