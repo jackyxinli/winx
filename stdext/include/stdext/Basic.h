@@ -292,8 +292,23 @@ typedef unsigned short UINT16, *PUINT16;
 // -------------------------------------------------------------------------
 // WINX_TRY { ... } WINX_TRY_END;
 
-#define WINX_TRY				try
-#define WINX_TRY_END			catch (...) { WINX_ASSERT_ONCE(!"WINX_TRY_END"); }
+#if defined(_CPPUNWIND) || defined(__EXCEPTIONS)
+#define WINX_USE_EXCEPTIONS
+#endif
+
+#ifdef WINX_USE_EXCEPTIONS
+#define WINX_TRY						try
+#define WINX_TRY_END					catch(...) { WINX_ASSERT_ONCE(false && "WINX_TRY_END"); }
+#define WINX_UNWIND(action)				catch(...) { action; throw; }
+#define WINX_CATCH_ALL					catch(...)
+#define WINX_RETHROW					throw
+#else
+#define WINX_TRY
+#define WINX_TRY_END
+#define WINX_UNWIND(action)
+#define WINX_CATCH_ALL					if(0)
+#define WINX_RETHROW
+#endif
 
 // -------------------------------------------------------------------------
 // ABS, ROUND, MAX, MIN - for general use
