@@ -43,10 +43,6 @@
  *
  */
 
-/* NOTE: This is an internal header file, included by other STL headers.
- *   You should not attempt to use it directly.
- */
-
 #ifndef STDEXT_P_HASHSET_H
 #define STDEXT_P_HASHSET_H
 
