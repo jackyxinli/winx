@@ -58,6 +58,12 @@
 #include "../Memory.h"
 #endif
 
+#if defined(_MSC_VER) && (_MSC_VER == 1200)
+#define WINX_PHASH_TYPENAME_
+#else
+#define WINX_PHASH_TYPENAME_	typename
+#endif
+
 NS_STDEXT_BEGIN
 
 // -------------------------------------------------------------------------
@@ -71,11 +77,11 @@ struct HashtableNode_
 };
 
 // -------------------------------------------------------------------------
-// class Hashtable::iterator, const_iterator
+// class PHashtable::iterator, const_iterator
 
 template <class ValueT, class KeyT, class HashT,
           class ExtractKeyT, class EqualKeyT, class PoolT>
-class Hashtable;
+class PHashtable;
 
 template <class ValueT, class KeyT, class HashT,
           class ExtractKeyT, class EqualKeyT, class PoolT>
@@ -89,7 +95,7 @@ template <class ValueT, class KeyT, class HashT,
           class ExtractKeyT, class EqualKeyT, class PoolT>
 struct HashtableIter_
 {
-  typedef Hashtable<ValueT, KeyT, HashT, ExtractKeyT, EqualKeyT, PoolT> HashtableT;
+  typedef PHashtable<ValueT, KeyT, HashT, ExtractKeyT, EqualKeyT, PoolT> HashtableT;
   typedef HashtableIter_<ValueT, KeyT, HashT, ExtractKeyT, EqualKeyT, PoolT> iterator;
   typedef HashtableCIter_<ValueT, KeyT, HashT, ExtractKeyT, EqualKeyT, PoolT> const_iterator;
   typedef HashtableNode_<ValueT> NodeT;
@@ -122,7 +128,7 @@ template <class ValueT, class KeyT, class HashT,
           class ExtractKeyT, class EqualKeyT, class PoolT>
 struct HashtableCIter_
 {
-  typedef Hashtable<ValueT, KeyT, HashT, ExtractKeyT, EqualKeyT, PoolT> HashtableT;
+  typedef PHashtable<ValueT, KeyT, HashT, ExtractKeyT, EqualKeyT, PoolT> HashtableT;
   typedef HashtableIter_<ValueT, KeyT, HashT, ExtractKeyT, EqualKeyT,PoolT> iterator;
   typedef HashtableCIter_<ValueT, KeyT, HashT, ExtractKeyT, EqualKeyT, PoolT> const_iterator;
   typedef HashtableNode_<ValueT> NodeT;
@@ -173,15 +179,15 @@ inline unsigned long hash_next_prime_(unsigned long n)
 }
 
 // -------------------------------------------------------------------------
-// class Hashtable
+// class PHashtable
 
 template <class ValueT, class KeyT, class HashT,
           class ExtractKeyT, class EqualKeyT, class PoolT>
-class Hashtable
+class PHashtable
 {
 private:
-  Hashtable(const &Hashtable);
-  void operator=(const Hashtable&);
+  PHashtable(const PHashtable&);
+  void operator=(const PHashtable&);
 
 public:
   typedef KeyT key_type;
@@ -223,33 +229,15 @@ public:
   HashtableCIter_<ValueT,KeyT,HashT,ExtractKeyT,EqualKeyT,PoolT>;
 
 public:
-  Hashtable(PoolT& a,
-			size_type n,
-            const HashT& hf,
-            const EqualKeyT& eql,
-            const ExtractKeyT& ext)
+  PHashtable(PoolT& a, size_type n = 100)
     : m_pool(a),
-      m_hash(hf),
-      m_equals(eql),
-      m_get_key(ext),
       m_num_elements(0)
   {
+    WINX_ASSERT(a.element_size() == node_size());
     _M_initialize_buckets(n);
   }
 
-  Hashtable(const PoolT& a,
-			size_type n,
-            const HashT& hf,
-            const EqualKeyT& eql)
-    : m_pool(a),
-      m_hash(hf),
-      m_equals(eql),
-      m_num_elements(0)
-  {
-    _M_initialize_buckets(n);
-  }
-
-  Hashtable(const PoolT& a, const Hashtable& ht)
+  PHashtable(const PoolT& a, const PHashtable& ht)
     : m_pool(a),
       m_hash(ht.m_hash),
       m_equals(ht.m_equals),
@@ -259,7 +247,7 @@ public:
     _M_copy_from(ht);
   }
 
-  Hashtable& copy(const Hashtable& ht)
+  PHashtable& copy(const PHashtable& ht)
   {
     if (&ht != this) {
       clear();
@@ -271,13 +259,13 @@ public:
     return *this;
   }
 
-  ~Hashtable() { clear(); }
+  ~PHashtable() { clear(); }
 
   size_type size() const { return m_num_elements; }
   size_type max_size() const { return size_type(-1); }
   bool empty() const { return size() == 0; }
 
-  void swap(Hashtable& ht)
+  void swap(PHashtable& ht)
   {
 	NS_STDEXT::swap_object(this, &ht);
   }
@@ -302,9 +290,9 @@ public:
 
   const_iterator end() const { return const_iterator(0, this); }
 
-  bool operator==(const Hashtable& ht2) const
+  bool operator==(const PHashtable& ht2) const
   {
-	  typedef typename Hashtable<ValueT,KeyT,_HF,_Ex,_Eq,_All>::NodeT NodeT;
+	  typedef typename PHashtable<ValueT,KeyT,_HF,_Ex,_Eq,_All>::NodeT NodeT;
 	  if (m_buckets.size() != ht2.m_buckets.size())
 		  return false;
 	  for (int n = 0; n < m_buckets.size(); ++n)
@@ -318,7 +306,7 @@ public:
 	  return true;
   }
 
-  bool operator!=(const Hashtable& ht2) const
+  bool operator!=(const PHashtable& ht2) const
   {
 	  return !(*this == ht2);
   }
@@ -334,7 +322,7 @@ public:
     return result;
   }
 
-  pair<iterator, bool> insert_unique(const value_type& obj)
+  std::pair<iterator, bool> insert_unique(const value_type& obj)
   {
     resize(m_num_elements + 1);
     return insert_unique_noresize(obj);
@@ -346,7 +334,7 @@ public:
     return insert_equal_noresize(obj);
   }
 
-  pair<iterator, bool> insert_unique_noresize(const value_type& obj);
+  std::pair<iterator, bool> insert_unique_noresize(const value_type& obj);
   iterator insert_equal_noresize(const value_type& obj);
  
   template <class _InputIterator>
@@ -434,8 +422,8 @@ public:
     return result;
   }
 
-  pair<iterator, iterator> equal_range(const key_type& key);
-  pair<const_iterator, const_iterator> equal_range(const key_type& key) const;
+  std::pair<iterator, iterator> equal_range(const key_type& key);
+  std::pair<const_iterator, const_iterator> equal_range(const key_type& key) const;
 
   size_type erase(const key_type& key);
   void erase(const iterator& it);
@@ -446,6 +434,10 @@ public:
 
   void resize(size_type num_elements_hint);
   void clear();
+
+  static size_type node_size() {
+	  return sizeof(NodeT);
+  }
 
 private:
   size_type _M_next_size(size_type n) const
@@ -491,16 +483,17 @@ private:
     return n;
   }
   
-  void _M_delete_node(NodeT* n)
+  template <class NodeT2>
+  void _M_delete_node(NodeT2* n)
   {
-    n->~NodeT();
+    n->~NodeT2();
     m_pool.deallocate(n);
   }
 
   void _M_erase_bucket(const size_type n, NodeT* first, NodeT* last);
   void _M_erase_bucket(const size_type n, NodeT* last);
 
-  void _M_copy_from(const Hashtable& ht);
+  void _M_copy_from(const PHashtable& ht);
 
 };
 
@@ -575,10 +568,10 @@ value_type(const HashtableIter_<ValueT,KeyT,_HF,_ExK,_EqK,_All>&)
 
 template <class ValueT, class KeyT, class _HF, class _ExK, class _EqK, 
           class _All>
-inline typename Hashtable<ValueT,KeyT,_HF,_ExK,_EqK,_All>::difference_type*
+inline typename PHashtable<ValueT,KeyT,_HF,_ExK,_EqK,_All>::difference_type*
 distance_type(const HashtableIter_<ValueT,KeyT,_HF,_ExK,_EqK,_All>&)
 {
-  return (Hashtable<ValueT,KeyT,_HF,_ExK,_EqK,_All>::difference_type*) 0;
+  return (PHashtable<ValueT,KeyT,_HF,_ExK,_EqK,_All>::difference_type*) 0;
 }
 
 template <class ValueT, class KeyT, class _HF, class _ExK, class _EqK, 
@@ -600,17 +593,17 @@ value_type(const HashtableCIter_<ValueT,KeyT,_HF,_ExK,_EqK,_All>&)
 
 template <class ValueT, class KeyT, class _HF, class _ExK, class _EqK, 
           class _All>
-inline typename Hashtable<ValueT,KeyT,_HF,_ExK,_EqK,_All>::difference_type*
+inline typename PHashtable<ValueT,KeyT,_HF,_ExK,_EqK,_All>::difference_type*
 distance_type(const HashtableCIter_<ValueT,KeyT,_HF,_ExK,_EqK,_All>&)
 {
-  return (Hashtable<ValueT,KeyT,_HF,_ExK,_EqK,_All>::difference_type*) 0;
+  return (PHashtable<ValueT,KeyT,_HF,_ExK,_EqK,_All>::difference_type*) 0;
 }
 
 #endif /* __STL_CLASS_PARTIAL_SPECIALIZATION */
 
 template <class ValueT, class KeyT, class _HF, class _Ex, class _Eq, class _All>
-pair<typename Hashtable<ValueT,KeyT,_HF,_Ex,_Eq,_All>::iterator, bool> 
-Hashtable<ValueT,KeyT,_HF,_Ex,_Eq,_All>
+std::pair<WINX_PHASH_TYPENAME_ PHashtable<ValueT, KeyT, _HF, _Ex, _Eq, _All>::iterator, bool> 
+PHashtable<ValueT,KeyT,_HF,_Ex,_Eq,_All>
   ::insert_unique_noresize(const value_type& obj)
 {
   const size_type n = _M_bkt_num(obj);
@@ -618,19 +611,18 @@ Hashtable<ValueT,KeyT,_HF,_Ex,_Eq,_All>
 
   for (NodeT* cur = first; cur; cur = cur->m_next) 
     if (m_equals(m_get_key(cur->m_val), m_get_key(obj)))
-      return pair<iterator, bool>(iterator(cur, this), false);
+      return std::pair<iterator, bool>(iterator(cur, this), false);
 
   NodeT* tmp = _M_new_node(obj);
   tmp->m_next = first;
   m_buckets[n] = tmp;
   ++m_num_elements;
-  return pair<iterator, bool>(iterator(tmp, this), true);
+  return std::pair<iterator, bool>(iterator(tmp, this), true);
 }
 
 template <class ValueT, class KeyT, class _HF, class _Ex, class _Eq, class _All>
-typename Hashtable<ValueT,KeyT,_HF,_Ex,_Eq,_All>::iterator 
-Hashtable<ValueT,KeyT,_HF,_Ex,_Eq,_All>
-  ::insert_equal_noresize(const value_type& obj)
+typename PHashtable<ValueT,KeyT,_HF,_Ex,_Eq,_All>::iterator 
+PHashtable<ValueT,KeyT,_HF,_Ex,_Eq,_All>::insert_equal_noresize(const value_type& obj)
 {
   const size_type n = _M_bkt_num(obj);
   NodeT* first = m_buckets[n];
@@ -652,8 +644,8 @@ Hashtable<ValueT,KeyT,_HF,_Ex,_Eq,_All>
 }
 
 template <class ValueT, class KeyT, class _HF, class _Ex, class _Eq, class _All>
-typename Hashtable<ValueT,KeyT,_HF,_Ex,_Eq,_All>::reference 
-Hashtable<ValueT,KeyT,_HF,_Ex,_Eq,_All>::find_or_insert(const value_type& obj)
+typename PHashtable<ValueT,KeyT,_HF,_Ex,_Eq,_All>::reference 
+PHashtable<ValueT,KeyT,_HF,_Ex,_Eq,_All>::find_or_insert(const value_type& obj)
 {
   resize(m_num_elements + 1);
 
@@ -672,11 +664,11 @@ Hashtable<ValueT,KeyT,_HF,_Ex,_Eq,_All>::find_or_insert(const value_type& obj)
 }
 
 template <class ValueT, class KeyT, class _HF, class _Ex, class _Eq, class _All>
-pair<typename Hashtable<ValueT,KeyT,_HF,_Ex,_Eq,_All>::iterator,
-     typename Hashtable<ValueT,KeyT,_HF,_Ex,_Eq,_All>::iterator> 
-Hashtable<ValueT,KeyT,_HF,_Ex,_Eq,_All>::equal_range(const key_type& key)
+std::pair<typename PHashtable<ValueT,KeyT,_HF,_Ex,_Eq,_All>::iterator,
+     typename PHashtable<ValueT,KeyT,_HF,_Ex,_Eq,_All>::iterator> 
+PHashtable<ValueT,KeyT,_HF,_Ex,_Eq,_All>::equal_range(const key_type& key)
 {
-  typedef pair<iterator, iterator> _Pii;
+  typedef std::pair<iterator, iterator> _Pii;
   const size_type n = _M_bkt_num_key(key);
 
   for (NodeT* first = m_buckets[n]; first; first = first->m_next)
@@ -694,12 +686,12 @@ Hashtable<ValueT,KeyT,_HF,_Ex,_Eq,_All>::equal_range(const key_type& key)
 }
 
 template <class ValueT, class KeyT, class _HF, class _Ex, class _Eq, class _All>
-pair<typename Hashtable<ValueT,KeyT,_HF,_Ex,_Eq,_All>::const_iterator, 
-     typename Hashtable<ValueT,KeyT,_HF,_Ex,_Eq,_All>::const_iterator> 
-Hashtable<ValueT,KeyT,_HF,_Ex,_Eq,_All>
+std::pair<typename PHashtable<ValueT,KeyT,_HF,_Ex,_Eq,_All>::const_iterator, 
+     typename PHashtable<ValueT,KeyT,_HF,_Ex,_Eq,_All>::const_iterator> 
+PHashtable<ValueT,KeyT,_HF,_Ex,_Eq,_All>
   ::equal_range(const key_type& key) const
 {
-  typedef pair<const_iterator, const_iterator> _Pii;
+  typedef std::pair<const_iterator, const_iterator> _Pii;
   const size_type n = _M_bkt_num_key(key);
 
   for (const NodeT* first = m_buckets[n] ;
@@ -723,8 +715,8 @@ Hashtable<ValueT,KeyT,_HF,_Ex,_Eq,_All>
 }
 
 template <class ValueT, class KeyT, class _HF, class _Ex, class _Eq, class _All>
-typename Hashtable<ValueT,KeyT,_HF,_Ex,_Eq,_All>::size_type 
-Hashtable<ValueT,KeyT,_HF,_Ex,_Eq,_All>::erase(const key_type& key)
+typename PHashtable<ValueT,KeyT,_HF,_Ex,_Eq,_All>::size_type 
+PHashtable<ValueT,KeyT,_HF,_Ex,_Eq,_All>::erase(const key_type& key)
 {
   const size_type n = _M_bkt_num_key(key);
   NodeT* first = m_buckets[n];
@@ -757,7 +749,7 @@ Hashtable<ValueT,KeyT,_HF,_Ex,_Eq,_All>::erase(const key_type& key)
 }
 
 template <class ValueT, class KeyT, class _HF, class _Ex, class _Eq, class _All>
-void Hashtable<ValueT,KeyT,_HF,_Ex,_Eq,_All>::erase(const iterator& it)
+void PHashtable<ValueT,KeyT,_HF,_Ex,_Eq,_All>::erase(const iterator& it)
 {
   NodeT* p = it.m_cur;
   if (p) {
@@ -788,7 +780,7 @@ void Hashtable<ValueT,KeyT,_HF,_Ex,_Eq,_All>::erase(const iterator& it)
 }
 
 template <class ValueT, class KeyT, class _HF, class _Ex, class _Eq, class _All>
-void Hashtable<ValueT,KeyT,_HF,_Ex,_Eq,_All>::erase(iterator first, iterator last)
+void PHashtable<ValueT,KeyT,_HF,_Ex,_Eq,_All>::erase(iterator first, iterator last)
 {
   size_type first_bucket = first.m_cur ? 
     _M_bkt_num(first.m_cur->m_val) : m_buckets.size();
@@ -809,23 +801,23 @@ void Hashtable<ValueT,KeyT,_HF,_Ex,_Eq,_All>::erase(iterator first, iterator las
 }
 
 template <class ValueT, class KeyT, class _HF, class _Ex, class _Eq, class _All>
-inline void Hashtable<ValueT,KeyT,_HF,_Ex,_Eq,_All>::erase(const_iterator first, const_iterator last)
+inline void PHashtable<ValueT,KeyT,_HF,_Ex,_Eq,_All>::erase(const_iterator first, const_iterator last)
 {
   erase(iterator(const_cast<NodeT*>(first.m_cur),
-                 const_cast<Hashtable*>(first.m_ht)),
+                 const_cast<PHashtable*>(first.m_ht)),
         iterator(const_cast<NodeT*>(last.m_cur),
-                 const_cast<Hashtable*>(last.m_ht)));
+                 const_cast<PHashtable*>(last.m_ht)));
 }
 
 template <class ValueT, class KeyT, class _HF, class _Ex, class _Eq, class _All>
-inline void Hashtable<ValueT,KeyT,_HF,_Ex,_Eq,_All>::erase(const const_iterator& it)
+inline void PHashtable<ValueT,KeyT,_HF,_Ex,_Eq,_All>::erase(const const_iterator& it)
 {
   erase(iterator(const_cast<NodeT*>(it.m_cur),
-                 const_cast<Hashtable*>(it.m_ht)));
+                 const_cast<PHashtable*>(it.m_ht)));
 }
 
 template <class ValueT, class KeyT, class _HF, class _Ex, class _Eq, class _All>
-void Hashtable<ValueT,KeyT,_HF,_Ex,_Eq,_All>::resize(size_type num_elements_hint)
+void PHashtable<ValueT,KeyT,_HF,_Ex,_Eq,_All>::resize(size_type num_elements_hint)
 {
   const size_type old_n = m_buckets.size();
   if (num_elements_hint > old_n)
@@ -864,7 +856,7 @@ void Hashtable<ValueT,KeyT,_HF,_Ex,_Eq,_All>::resize(size_type num_elements_hint
 }
 
 template <class ValueT, class KeyT, class _HF, class _Ex, class _Eq, class _All>
-void Hashtable<ValueT,KeyT,_HF,_Ex,_Eq,_All>
+void PHashtable<ValueT,KeyT,_HF,_Ex,_Eq,_All>
   ::_M_erase_bucket(const size_type n, NodeT* first, NodeT* last)
 {
   NodeT* cur = m_buckets[n];
@@ -886,7 +878,7 @@ void Hashtable<ValueT,KeyT,_HF,_Ex,_Eq,_All>
 }
 
 template <class ValueT, class KeyT, class _HF, class _Ex, class _Eq, class _All>
-void Hashtable<ValueT,KeyT,_HF,_Ex,_Eq,_All>
+void PHashtable<ValueT,KeyT,_HF,_Ex,_Eq,_All>
   ::_M_erase_bucket(const size_type n, NodeT* last)
 {
   NodeT* cur = m_buckets[n];
@@ -900,7 +892,7 @@ void Hashtable<ValueT,KeyT,_HF,_Ex,_Eq,_All>
 }
 
 template <class ValueT, class KeyT, class _HF, class _Ex, class _Eq, class _All>
-void Hashtable<ValueT,KeyT,_HF,_Ex,_Eq,_All>::clear()
+void PHashtable<ValueT,KeyT,_HF,_Ex,_Eq,_All>::clear()
 {
   for (size_type i = 0; i < m_buckets.size(); ++i) {
     NodeT* cur = m_buckets[i];
@@ -916,8 +908,8 @@ void Hashtable<ValueT,KeyT,_HF,_Ex,_Eq,_All>::clear()
 
     
 template <class ValueT, class KeyT, class _HF, class _Ex, class _Eq, class _All>
-void Hashtable<ValueT,KeyT,_HF,_Ex,_Eq,_All>
-  ::_M_copy_from(const Hashtable& ht)
+void PHashtable<ValueT,KeyT,_HF,_Ex,_Eq,_All>
+  ::_M_copy_from(const PHashtable& ht)
 {
   m_buckets.clear();
   m_buckets.reserve(ht.m_buckets.size());

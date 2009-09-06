@@ -68,13 +68,16 @@ struct Select1st_ : public unary_function<_Pair, typename _Pair::first_type> {
 // -------------------------------------------------------------------------
 // class PHashMap
 
-template <class KeyT, class DataT, class HashCompT = HashCompare<KeyT>, class PoolT>
+template <
+	class KeyT, class DataT,
+	class HashCompT = HashCompare<KeyT>,
+	class PoolT = ScopedPool>
 class PHashMap
 {
 private:
   typedef typename HashCompT::hasher _HashFcn;
   typedef typename HashCompT::key_equal _EqualKey;
-  typedef Hashtable<std::pair<const KeyT, DataT>, KeyT, _HashFcn,
+  typedef PHashtable<std::pair<const KeyT, DataT>, KeyT, _HashFcn,
                     Select1st_<std::pair<const KeyT, DataT> >, _EqualKey, PoolT> _Ht;
   _Ht m_ht;
 
@@ -164,18 +167,25 @@ public:
   size_type bucket_count() const { return m_ht.bucket_count(); }
   size_type elems_in_bucket(size_type n) const
     { return m_ht.elems_in_bucket(n); }
+
+  static size_type node_size() {
+	  return _Ht::node_size();
+  }
 };
 
 // -------------------------------------------------------------------------
 // class PHashMultiMap
 
-template <class KeyT, class DataT, class HashCompT = HashCompare<KeyT>, class PoolT>
+template <
+	class KeyT, class DataT,
+	class HashCompT = HashCompare<KeyT>,
+	class PoolT = ScopedPool>
 class PHashMultiMap
 {
 private:
   typedef typename HashCompT::hasher _HashFcn;
   typedef typename HashCompT::key_equal _EqualKey;
-  typedef Hashtable<std::pair<const KeyT, DataT>, KeyT, _HashFcn,
+  typedef PHashtable<std::pair<const KeyT, DataT>, KeyT, _HashFcn,
                     Select1st_<std::pair<const KeyT, DataT> >, _EqualKey, PoolT> _Ht;
   _Ht m_ht;
 
@@ -262,6 +272,10 @@ public:
   size_type bucket_count() const { return m_ht.bucket_count(); }
   size_type elems_in_bucket(size_type n) const
     { return m_ht.elems_in_bucket(n); }
+
+  static size_type node_size() {
+	  return _Ht::node_size();
+  }
 };
 
 // -------------------------------------------------------------------------
