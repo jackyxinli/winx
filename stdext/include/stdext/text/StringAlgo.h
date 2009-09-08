@@ -140,6 +140,21 @@ __forceinline BasicString<wchar_t> winx_call lower(AllocT& alloc, const TempStri
 }
 
 // -------------------------------------------------------------------------
+// append
+
+__forceinline
+std::vector<char>& winx_call append(std::vector<char>& s, const TempString<char>& str) {
+	s.insert(s.end(), str.begin(), str.end());
+	return s;
+}
+
+__forceinline
+std::vector<wchar_t>& winx_call append(std::vector<wchar_t>& s, const TempString<wchar_t>& str) {
+	s.insert(s.end(), str.begin(), str.end());
+	return s;
+}
+
+// -------------------------------------------------------------------------
 // trim/trimLeft/trimRight
 
 template <class Iterator>
