@@ -40,9 +40,10 @@
 NS_STDEXT_BEGIN
 
 // -------------------------------------------------------------------------
-// class PerformanceCounter
+// class PCounter - PerformanceCounter
 
-class PerformanceCounter
+template <bool fAutoReset = false>
+class PCounter
 {
 public:
 	typedef UINT64 value_type;
@@ -68,7 +69,7 @@ private:
 	}
 	
 public:
-	PerformanceCounter()
+	PCounter()
 	{
 		freq();
 		start();
@@ -79,11 +80,20 @@ public:
 		QueryPerformanceCounter(&(LARGE_INTEGER&)m_tick);
 	}
 
-	__forceinline value_type winx_call duration() const
+	__forceinline value_type winx_call duration()
 	{
 		value_type tickNow;
 		QueryPerformanceCounter(&(LARGE_INTEGER&)tickNow);
-		return tickNow - m_tick;
+		if (fAutoReset)
+		{
+			value_type tickDur = tickNow - m_tick;
+			m_tick = tickNow;
+			return tickDur;
+		}
+		else
+		{
+			return tickNow - m_tick;
+		}
 	}
 
 public:
@@ -140,13 +150,35 @@ public:
 	}
 
 	template <class LogT>
+	static void winx_call trace(LogT& log, const char* msg, const value_type& ticks)
+	{
+		double msVal = (INT64)ticks * 1000.0 / (INT64)freq();
+		char szTicks[radix10_cstr_size];
+		toRadix10(ticks, szTicks);
+		log.trace(
+			"---> %s: elapse %s ticks (%.2lf ms) (%.2lf min) ...\n",
+			msg, szTicks, msVal, msVal/60000.0
+			);
+	}
+
+	template <class LogT>
 	__forceinline value_type winx_call trace(LogT& log)
 	{
 		value_type dur = duration();
 		trace(log, dur);
 		return dur;
 	}
+
+	template <class LogT>
+	__forceinline value_type winx_call trace(LogT& log, const char* msg)
+	{
+		value_type dur = duration();
+		trace(log, msg, dur);
+		return dur;
+	}
 };
+
+typedef PCounter<false> PerformanceCounter;
 
 // -------------------------------------------------------------------------
 // class Accumulator
