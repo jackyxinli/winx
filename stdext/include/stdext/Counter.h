@@ -218,7 +218,7 @@ public:
 		++m_count;
 	}
 	
-	__forceinline void winx_call accumulate(const CounterT& counter) {
+	__forceinline void winx_call accumulate(CounterT& counter) {
 		m_acc += counter.duration();
 		++m_count;
 	}
