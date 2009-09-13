@@ -79,7 +79,8 @@ NS_STDEXT_BEGIN
 @*/
 template <class InputIterT1, class InputIterT2, class OperatorT>
 inline OperatorT& winx_call set_intersection_do(
-	InputIterT1 first1, InputIterT1 last1, InputIterT2 first2, InputIterT2 last2, OperatorT& op)
+	InputIterT1 first1, InputIterT1 last1,
+	InputIterT2 first2, InputIterT2 last2, OperatorT& op)
 {
 	for (; first1 != last1 && first2 != last2; )
 	{
@@ -89,6 +90,49 @@ inline OperatorT& winx_call set_intersection_do(
 			++first2;
 		else
 			op(*first1++, *first2++);
+	}
+	return op;
+}
+
+template <class InputIterT1, class InputIterT2, class OperatorT>
+inline OperatorT& winx_call set_difference_do(
+	InputIterT1 first1, InputIterT1 last1,
+	InputIterT2 first2, InputIterT2 last2, OperatorT& op)
+{
+	for (; first1 != last1 && first2 != last2; )
+	{
+		if (*first1 < *first2)
+			op(*first1++);
+		else if (*first2 < *first1)
+			++first2;
+		else
+			++first1, ++first2;
+	}
+	std::for_each(first1, last1, op);
+	return op;
+}
+
+template <class InputIterT1, class InputIterT2, class OperatorT>
+inline OperatorT& winx_call set_union_do(
+	InputIterT1 first1, InputIterT1 last1,
+	InputIterT2 first2, InputIterT2 last2, OperatorT& op)
+{
+	for (; first1 != last1 && first2 != last2; )
+	{
+		if (*first1 < *first2)
+			op.set1(*first1++);
+		else if (*first2 < *first1)
+			op.set2(*first2++);
+		else
+			op.set12(*first1++, *first2++);
+	}
+	for (; first1 != last1; )
+	{
+		op.set1(*first1++);
+	}
+	for (; first2 != last2; )
+	{
+		op.set2(*first2++);
 	}
 	return op;
 }
@@ -149,7 +193,8 @@ inline OperatorT& winx_call set_intersection_do(
 @*/
 template<class InputIterT1, class InputIterT2, class OperatorT, class PredT>
 inline OperatorT& winx_call set_intersection_do(
-	InputIterT1 first1, InputIterT1 last1, InputIterT2 first2, InputIterT2 last2, OperatorT& op, PredT pred)
+	InputIterT1 first1, InputIterT1 last1,
+	InputIterT2 first2, InputIterT2 last2, OperatorT& op, PredT pred)
 {
 	for (; first1 != last1 && first2 != last2; )
 	{
@@ -160,6 +205,24 @@ inline OperatorT& winx_call set_intersection_do(
 		else
 			op(*first1++, *first2++);
 	}
+	return op;
+}
+
+template<class InputIterT1, class InputIterT2, class OperatorT, class PredT>
+inline OperatorT& winx_call set_difference_do(
+	InputIterT1 first1, InputIterT1 last1,
+	InputIterT2 first2, InputIterT2 last2, OperatorT& op, PredT pred)
+{
+	for (; first1 != last1 && first2 != last2; )
+	{
+		if (pred(*first1, *first2))
+			op(*first1++);
+		else if (pred(*first2, *first1))
+			++first2;
+		else
+			++first1, ++first2;
+	}
+	std::for_each(first1, last1, op);
 	return op;
 }
 
@@ -183,7 +246,8 @@ template <class ContainerT1, class ContainerT2, class OperatorT>
 inline OperatorT& winx_call set_intersection_do(
 	const ContainerT1& cont1, const ContainerT2& cont2, OperatorT& op)
 {
-	return set_intersection_do(cont1.begin(), cont1.end(), cont2.begin(), cont2.end(), op);
+	return set_intersection_do(
+		cont1.begin(), cont1.end(), cont2.begin(), cont2.end(), op);
 }
 
 /*
@@ -211,7 +275,8 @@ template <class ContainerT1, class ContainerT2, class OperatorT, class PredT>
 inline OperatorT& winx_call set_intersection_do(
 	const ContainerT1& cont1, const ContainerT2& cont2, OperatorT& op, PredT pred)
 {
-	return set_intersection_do(cont1.begin(), cont1.end(), cont2.begin(), cont2.end(), op, pred);
+	return set_intersection_do(
+		cont1.begin(), cont1.end(), cont2.begin(), cont2.end(), op, pred);
 }
 
 // -------------------------------------------------------------------------
