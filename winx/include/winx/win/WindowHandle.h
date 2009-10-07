@@ -319,8 +319,11 @@ public:
 	BOOL winx_call GetDlgItemText(int nID, BSTR& bstrText) const {
 		return HandleClass::GetDlgItemText(nID, bstrText);
 	}
-	template <class StringT> inline
-	int winx_call GetDlgItemText(int nID, StringT& rString) const {
+	int winx_call GetDlgItemText(int nID, AnsiString& rString) const {
+		HWND hWndItem = ::GetDlgItem(m_hWnd, nID);
+		return winx::GetWindowText(hWndItem, rString);
+	}
+	int winx_call GetDlgItemText(int nID, UniString& rString) const {
 		HWND hWndItem = ::GetDlgItem(m_hWnd, nID);
 		return winx::GetWindowText(hWndItem, rString);
 	}
