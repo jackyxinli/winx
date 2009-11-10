@@ -50,10 +50,10 @@ public:
 	typedef LONG value_type;
 
 public:
-	WinSemaphore(value_type lInitialCount)
+	explicit WinSemaphore(value_type lInitialCount = 0)
 	{
 		enum { MaxCount = 2147483647L };
-		m_sem = CreateSemaphore(NULL, lInitialCount, MaxCount);
+		m_sem = CreateSemaphore(NULL, lInitialCount, MaxCount, NULL);
 	}
 	~WinSemaphore()
 	{
@@ -91,7 +91,7 @@ public:
 	typedef unsigned value_type;
 
 public:
-	PosixSemaphore(value_type lInitialCount) {
+	explicit PosixSemaphore(value_type lInitialCount = 0) {
 		sem_init(&m_sem, 0, lInitialCount);
 	}
 	~PosixSemaphore() {
