@@ -36,6 +36,10 @@ NS_STDEXT_BEGIN
 
 class WinCondition
 {
+public:
+	typedef WinMutex mutex_type;
+	typedef size_t duration_type;
+
 private:
 	typedef CRITICAL_SECTION& MutexRef;
 
@@ -43,39 +47,12 @@ private:
 	WinCondition(const WinCondition&);
 	void operator=(const WinCondition&);
 
-	HANDLE hEvent;
+public:
+	void cerl_call notify_all();
 
 public:
-	typedef WinMutex mutex_type;
-	typedef size_t duration_type;
-
-public:
-	WinCondition() {
-		hEvent = CreateEvent(NULL, FALSE, FALSE, NULL);
-	}
-	~WinCondition() {
-		CloseHandle(hEvent);
-	}
-
-public:
-	void cerl_call notify_all() {
-		SetEvent(hEvent);
-	}
-
-public:
-	void cerl_call wait(MutexRef cs)
-	{
-		LeaveCriticalSection(&cs);
-		WaitForSingleObject(hEvent, INFINITE);
-		EnterCriticalSection(&cs);
-	}
-
-	bool cerl_call timed_wait(MutexRef cs, duration_type ms)
-	{
-		LeaveCriticalSection(&cs);
-		WaitForSingleObject(hEvent, ms);
-		EnterCriticalSection(&cs);
-	}
+	void cerl_call wait(MutexRef cs);
+	bool cerl_call timed_wait(MutexRef cs, duration_type ms);
 };
 
 #endif // defined(STDEXT_THREAD_WINDOWS)
