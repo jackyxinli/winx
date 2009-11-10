@@ -67,7 +67,7 @@ public:
 
 	void winx_call release()
 	{
-		ReleaseSemaphore(m_sem);
+		ReleaseSemaphore(m_sem, 1, NULL);
 	}
 };
 
