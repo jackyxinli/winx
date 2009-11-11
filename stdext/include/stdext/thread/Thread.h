@@ -61,7 +61,7 @@ inline HTHREAD WINAPI CreateThread(
     size_t dwStackSize = 0)
 {
 	HTHREAD hThread;
-    const nRet = pthread_create(&hThread, NULL, lpStartAddress, lpParameter);
+    const int nRet = pthread_create(&hThread, NULL, lpStartAddress, lpParameter);
 	return (nRet == 0 ? hThread : NULL);
 }
 
