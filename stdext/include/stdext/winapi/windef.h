@@ -165,6 +165,10 @@ typedef void __RPC_FAR * RPC_IF_HANDLE;
 #define VOID void
 #endif
 
+#ifndef INFINITE
+#define INFINITE    0xFFFFFFFFL
+#endif
+
 // -------------------------------------------------------------------------
 
 typedef unsigned char UCHAR;
@@ -213,8 +217,11 @@ typedef void far            *LPVOID;
 typedef CONST void far      *LPCVOID;
 typedef unsigned int        *PUINT;
 
-typedef SHORT *PSHORT;  
-typedef LONG *PLONG;    
+typedef SHORT *PSHORT;
+typedef LONG *PLONG;
+
+typedef long LONG_PTR, *PLONG_PTR;
+typedef unsigned long ULONG_PTR, *PULONG_PTR;
 
 // -------------------------------------------------------------------------
 //
