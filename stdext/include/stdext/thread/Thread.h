@@ -43,6 +43,17 @@ inline BOOL WINAPI CloseThread(HTHREAD hThread)
     return CloseHandle(hThread);
 }
 
+inline void WINAPI WaitThread(HTHREAD hThread)
+{
+	WaitForSingleObject(hThread, INFINITE);
+};
+
+inline void WINAPI WaitThread(HTHREAD hThread, THREADRET* exitCode)
+{
+	WaitForSingleObject(hThread, INFINITE);
+	GetExitCodeThread(hThread, exitCode);
+};
+
 #endif
 
 // =========================================================================
@@ -61,7 +72,7 @@ inline HTHREAD WINAPI CreateThread(
     size_t dwStackSize = 0)
 {
 	HTHREAD hThread;
-    const int nRet = pthread_create(&hThread, NULL, lpStartAddress, lpParameter);
+	const int nRet = pthread_create(&hThread, NULL, lpStartAddress, lpParameter);
 	return (nRet == 0 ? hThread : NULL);
 }
 
@@ -74,6 +85,16 @@ inline BOOL WINAPI CloseThread(HTHREAD hThread)
 {
 	return TRUE;
 }
+
+inline void WINAPI WaitThread(HTHREAD hThread)
+{
+	pthread_join(hThread, NULL);
+};
+
+inline void WINAPI WaitThread(HTHREAD hThread, THREADRET* exitCode)
+{
+	pthread_join(hThread, exitCode);
+};
 
 #endif
 
