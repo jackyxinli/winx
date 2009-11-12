@@ -55,10 +55,10 @@ public:
 	typedef typename StreamHandle::off_type	off_type;
 	
 protected:
-	char_type*	m_lpBufStart;
-	size_type	m_nBufSize;
 	char_type*	m_lpBufCur;
+	char_type*	m_lpBufStart;
 	char_type*	m_lpBufMax;
+	size_type	m_nBufSize;
 
 	StreamHandle m_handle;
 	AllocT m_alloc;
@@ -232,31 +232,20 @@ public:
 		}
 	}
 
-	size_type winx_call get(char_type* lpBuf, size_type nMax)
+private:
+	size_type winx_call do_get_(char_type* lpBuf, size_type nMax)
 	{
-		WINX_ASSERT(lpBuf && m_lpBufStart && m_lpBufCur);
-		
-		// 1）在缓存数据足够时，读入数据并返回
-		if (nMax + m_lpBufCur <= m_lpBufMax)
-		{
-			copyMemory(lpBuf, m_lpBufCur, nMax);
-			m_lpBufCur += nMax;
-			return nMax;
-		}
-		
-		// 2）在缓存数据不足时
-		
 		// nRead	--- 读入的总字节数
 		// nMax		--- 剩余字节数
 		// nBlkRead --- 文件操作的返回值
 		size_type nBlkRead, nRead;
-		
+
 		// a）先读入缓存中的数据
 		nRead = (size_type)(m_lpBufMax - m_lpBufCur);
 		copyMemory(lpBuf, m_lpBufCur, nRead);
 		nMax -= nRead;
 		m_lpBufCur = m_lpBufMax;
-		
+
 		// b）将m_nBufSize的整数倍内容读入
 		size_type nTemp = nMax - nMax % m_nBufSize;
 		if (nTemp)
@@ -270,8 +259,9 @@ public:
 			}
 			nMax -= nTemp;
 		}
+
 		WINX_ASSERT(nMax < m_nBufSize);
-		
+
 		// c）剩余的先读入到缓冲区中，再写入目标内存
 		nBlkRead	= m_handle.get(m_lpBufStart, m_nBufSize);
 		m_lpBufMax	= (m_lpBufCur = m_lpBufStart) + nBlkRead;
@@ -280,8 +270,25 @@ public:
 		copyMemory(lpBuf + nRead, m_lpBufCur, nMax);
 		m_lpBufCur += nMax;
 		nRead += nMax;
-		
+
 		return nRead;
+	}
+
+public:
+	size_type winx_call get(char_type* lpBuf, size_type nMax)
+	{
+		WINX_ASSERT(lpBuf && m_lpBufStart && m_lpBufCur);
+		
+		// 1）在缓存数据足够时，读入数据并返回
+		if (nMax + m_lpBufCur <= m_lpBufMax)
+		{
+			copyMemory(lpBuf, m_lpBufCur, nMax);
+			m_lpBufCur += nMax;
+			return nMax;
+		}
+		
+		// 2）在缓存数据不足时
+		return do_get_(lpBuf, nMax);
 	}
 
 	size_type winx_call get(char_type* ch)
