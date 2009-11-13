@@ -236,10 +236,10 @@ public:
 #if defined(_DEBUG)
 
 #define WINX_THREAD_CALLER_CHECK()											\
-	NS_STDEXT::ThreadCallerCheck __threadCallerCheck
+	NS_STDEXT::ThreadCallerCheck winx_threadCallerCheck
 
 #define WINX_CHECK_THREAD()													\
-	WINX_ASSERT(__threadCallerCheck.isMe())
+	WINX_ASSERT(winx_threadCallerCheck.isMe())
 
 #else
 
