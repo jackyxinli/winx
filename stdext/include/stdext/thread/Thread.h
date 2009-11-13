@@ -32,7 +32,7 @@ typedef DWORD THREADRET;
 
 inline HTHREAD WINAPI CreateThread(
     LPTHREAD_START_ROUTINE lpStartAddress,
-    LPVOID lpParameter,
+    LPVOID lpParameter = NULL,
     size_t dwStackSize = 0)
 {
     return CreateThread(NULL, dwStackSize, lpStartAddress, lpParameter, 0, NULL);
@@ -68,7 +68,7 @@ typedef PTHREAD_START_ROUTINE LPTHREAD_START_ROUTINE;
 
 inline HTHREAD WINAPI CreateThread(
     LPTHREAD_START_ROUTINE lpStartAddress,
-    LPVOID lpParameter,
+    LPVOID lpParameter = NULL,
     size_t dwStackSize = 0)
 {
 	HTHREAD hThread;
@@ -97,6 +97,38 @@ inline void WINAPI WaitThread(HTHREAD hThread, THREADRET* exitCode)
 };
 
 #endif
+
+// =========================================================================
+// class Thread
+
+NS_STDEXT_BEGIN
+
+class Thread
+{
+public:
+	HTHREAD hThread;
+
+public:
+	Thread(
+		LPTHREAD_START_ROUTINE lpStartAddress,
+		LPVOID lpParameter = NULL,
+		size_t dwStackSize = 0)
+	{
+		hThread = CreateThread(lpStartAddress, lpParameter, dwStackSize);
+	}
+
+	~Thread()
+	{
+		CloseThread(hThread);
+	}
+
+	void cerl_call wait() const
+	{
+		WaitThread(hThread);
+	}
+};
+
+NS_STDEXT_END
 
 // =========================================================================
 
