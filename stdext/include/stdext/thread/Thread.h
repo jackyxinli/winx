@@ -122,7 +122,7 @@ public:
 		CloseThread(hThread);
 	}
 
-	void cerl_call wait() const
+	void cerl_call join() const
 	{
 		WaitThread(hThread);
 	}
