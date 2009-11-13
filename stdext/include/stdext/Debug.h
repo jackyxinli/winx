@@ -236,7 +236,7 @@ public:
 #if defined(_DEBUG)
 
 #define WINX_THREAD_CALLER_CHECK()											\
-	std::ThreadCallerCheck __threadCallerCheck
+	NS_STDEXT::ThreadCallerCheck __threadCallerCheck
 
 #define WINX_CHECK_THREAD()													\
 	WINX_ASSERT(__threadCallerCheck.isMe())
