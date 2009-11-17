@@ -253,6 +253,7 @@ public:
 #else
 
 #define WINX_THREAD_CALLER_CHECK()
+#define WINX_THREAD_CALLER_CHECK_S()
 #define WINX_CHECK_THREAD()
 
 #endif
