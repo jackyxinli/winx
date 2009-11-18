@@ -195,6 +195,22 @@
 	</References>
 	<Files>
 		<File
+			RelativePath="..\Basic.h"
+			>
+		</File>
+		<File
+			RelativePath="..\Comment.h"
+			>
+		</File>
+		<File
+			RelativePath="..\Lex.h"
+			>
+		</File>
+		<File
+			RelativePath="..\Lex.inl"
+			>
+		</File>
+		<File
 			RelativePath="..\Main.cpp"
 			>
 		</File>

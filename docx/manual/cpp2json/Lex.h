@@ -1,162 +1,111 @@
 /* -------------------------------------------------------------------------
-// CERL: C++ Erlang Server Model
+// WINX: a C++ template GUI library - MOST SIMPLE BUT EFFECTIVE
 // 
-// Module: cerl/Lex.h
+// This file is a part of the WINX Library.
+// The use and distribution terms for this software are covered by the
+// Common Public License 1.0 (http://opensource.org/licenses/cpl.php)
+// which can be found in the file CPL.txt at this distribution. By using
+// this software in any fashion, you are agreeing to be bound by the terms
+// of this license. You must not remove this notice, or any other, from
+// this software.
+// 
+// Module: cpp2json/Lex.h
 // Creator: xushiwei
 // Email: xushiweizh@gmail.com
-// Date: 2009-3-26 19:41:58
+// Date: 2006-8-18 18:08:57
 // 
-// $Id: Lex.h 619 2008-06-01 16:00:35Z xushiweizh $
+// $Id: Lex.h,v 1.6 2007/01/10 09:38:10 xushiwei Exp $
 // -----------------------------------------------------------------------*/
-#ifndef CERL_LEX_H
-#define CERL_LEX_H
+#ifndef CPP2JSON_LEX_H
+#define CPP2JSON_LEX_H
 
-#ifndef TPL_C_LEX_H
-#include <tpl/c/Lex.h>
+#ifndef CPP2JSON_COMMENT_H
+#include "Comment.h"
 #endif
-
-#ifndef TPL_REGEXP_H
-#include <tpl/RegExp.h>
-#endif
-
-#ifndef TR
-#define TR	TPL_INFO("TRACE")
-#endif
-
-// =========================================================================
-
-using namespace tpl;
-
-typedef impl::Result dom;
-
-extern dom::Document doc;
-	extern dom::Mark tagModule;
-	extern dom::NodeMark tagSentences;
-		extern dom::NodeMark tagCodedef;
-			extern dom::Mark tagName;
-			extern dom::Mark tagValue;
-		extern dom::NodeMark tagTypedef;
-			extern dom::Mark tagName;
-			extern dom::NodeMark tagType;
-		extern dom::NodeMark tagServer;
-			extern dom::NodeMark tagSentences;
-				extern dom::NodeMark tagConstructor;
-					extern dom::NodeMark tagArgs;
-				extern dom::NodeMark tagCodedef;
-				extern dom::NodeMark tagTypedef;
-				extern dom::NodeMark tagFunction;
-					extern dom::Mark tagId;
-					extern dom::Mark tagAsync;
-					extern dom::Mark tagName;
-					extern dom::NodeMark tagArgs;
-					extern dom::NodeMark tagType;
-
-extern dom::NodeMark tagType;
-	extern dom::NodeMark tagNamedType;
-		extern dom::Mark tagName;
-	extern dom::NodeMark tagStruct;
-		extern dom::NodeMark tagVars;
-			extern dom::NodeMark tagType;
-			extern dom::Mark tagName;
-	extern dom::NodeMark tagCodedType;
-		extern dom::NodeMark tagItems;
-			extern dom::Mark tagCode;
-			extern dom::NodeMark tagVars;
-				extern dom::NodeMark tagType;
-				extern dom::Mark tagName;
-	extern dom::NodeMark tagArray;
-		extern dom::Mark tagSize;
-
-extern impl::Allocator alloc;
-extern impl::MarkedGrammar rType;
-extern NS_STDEXT::String serverName;
 
 // -------------------------------------------------------------------------
 // common
 
-#define sdl_keyword(kw)				gr(c_symbol()/eq(kw))
-#define sdl_keyword2(kw, tag)		gr(c_symbol()/eq(kw)/tag)
-
-#define sdl_symbol_l				(lower() + *c_symbol_next_char())
-#define sdl_symbol_u				(upper() + *c_symbol_next_char())
-
-#define sdl_code					gr(sdl_symbol_l/tagCode)
-#define sdl_func_name				gr(sdl_symbol_l/tagName)
-#define sdl_var_name				gr(sdl_symbol_l/tagName)
-#define sdl_type_name				gr(sdl_symbol_u/tagName)
-#define sdl_type_name2(var)			gr(sdl_symbol_u/assign(var)/tagName)
+#define symbol					(c_symbol()/ne("const"))
+#define keyword(key)			gr(c_symbol()/eq(key))
+#define zero_keyword			gr(u_integer()/eq(0))
+#define class_keyword			gr(c_symbol()/eq3("class", "interface", "struct")/tagClassKeyword)
+#define access					gr(c_symbol()/eq3("private", "public", "protected")/tagAccess)
+#define signed_keyword			gr(c_symbol()/eq2("unsigned", "signed"))
+#define int_basetypes			gr(c_symbol()/eq4("int", "long", "short", "char"))
+#define call_type				gr(c_symbol()/eq("cerl_call")/tagCallType)
 
 // -------------------------------------------------------------------------
-// module
+// cppsymbol
 
-#define sdl_module					(sdl_keyword("module") + c_symbol()/tagModule + ';')
+#define cppsymbol2_templ		( "<" + ref(rType) % ',' + ">" )
+#define cppsymbol2				( symbol + !cppsymbol2_templ )
+
+#define operator_sym			( gr("++") | "+=" | "+" | "--" | "-=" | "-" | \
+								  "*=" | "*" | "/=" | "/" | "&=" | "&&" | "&" | \
+								  "|=" | "||" | "|" | "<=" | "<<" | "<" | ">=" | \
+								  ">>" | ">" | "==" | "=" | "!=" | "!" | "%=" | \
+								  "%" | "^=" | "^" | "[]" | "()" | "~" )
+
+#define operatorfn				( keyword("operator") + operator_sym )
+
+#define cppsymbol				( operatorfn | cppsymbol2 + !("::" + ref(rCppSymbol)) )
 
 // -------------------------------------------------------------------------
 // type
 
-//
-// var
-#define sdl_var						(ref(rType) + sdl_var_name)
-
-//
-// coded type
-#define sdl_coded_struct			('{' + sdl_code + *(',' + sdl_var/tagVars) + '}')
-#define sdl_coded_type_item			(sdl_code | sdl_coded_struct)
-#define sdl_coded_type				((sdl_coded_type_item/tagItems % '|')/tagCodedType)
-
-//
-// named type
-#define sdl_named_type				(sdl_type_name/tagNamedType)
-
-//
-// struct
-#define sdl_struct					(('{' + sdl_var/tagVars % ','  + '}')/tagStruct)
-
-//
-// type
-#define sdl_array					(('[' + !gr(c_integer()/tagSize) + ']')/tagArray)
-#define sdl_type					(((sdl_coded_type | sdl_named_type | sdl_struct) + !sdl_array)/tagType)
-
-// -------------------------------------------------------------------------
-// codedef
-
-#define sdl_codedef					((sdl_keyword("code") + sdl_var_name + '=' + c_integer()/tagValue + ';')/tagCodedef)
-
-// -------------------------------------------------------------------------
-// typedef
-
-#define sdl_typedef					((sdl_keyword("type") + sdl_type_name + '=' + ref(rType) + ';')/tagTypedef)
+#define int_types				( signed_keyword + int_basetypes )
+#define skipconst_				( skipws_[keyword("const")] )
+#define basetype				gr( skipws_[int_types | !class_keyword + cppsymbol] )
+#define type					gr( skipconst_[basetype + !keyword("const") + *gr('*') + !gr('&') ]/tagType )
 
 // -------------------------------------------------------------------------
 // function
 
-#define sdl_id						(gr("id") + '=' + c_integer()/tagId)
-#define sdl_func_attrs				('[' + sdl_id + !(',' + sdl_keyword2("async", tagAsync)) + ']')
-#define sdl_function_arg			sdl_var
-#define sdl_function_head			(sdl_func_name + '(' + !(sdl_function_arg/tagArgs % ',') + ')')
-#define sdl_ret_type				(sdl_coded_type/tagType)
-#define sdl_function				((sdl_func_attrs + sdl_function_head + !("->" + sdl_ret_type) + ';')/tagFunction)
+#define pure					( keyword("PURE") | gr('=') + zero_keyword )
+#define function_attr2			gr( skipws_[ !keyword("const") + !pure ]/tagAttr2 )
+
+#define defval_expr				( find_set<',', ')'>()/tagDefVal )
+#define defval					( '=' + skipws() + defval_expr )
+#define function_arg			( type + !gr(symbol/tagName) + !gr(defval) )
+#define function_args			( '(' + !(function_arg/tagArgs % ',') + ')' )
+
+#define func_tail				( function_args + function_attr2 )
+#define func_or_var				( type + !call_type + symbol/tagName + !func_tail + ';' )
 
 // -------------------------------------------------------------------------
-// server
+// class body
 
-#define sdl_constructor_impl		(gr(sdl_symbol_u/eq(serverName)) + '(' + !(sdl_function_arg/tagArgs % ',') + ')')
-#define sdl_constructor				((sdl_constructor_impl + ';')/tagConstructor)
-#define sdl_server_sentence			(sdl_function | sdl_typedef | sdl_codedef | sdl_constructor | ';')
-#define sdl_server_body				(*(sdl_server_sentence/tagSentences))
-#define sdl_server					((sdl_keyword("server") + sdl_type_name2(serverName) + '{' + sdl_server_body + '}')/tagServer)
+#define type_cast				( keyword("operator") + type + '(' + ')' + function_attr2 + ';')
 
-// -------------------------------------------------------------------------
-// sentence
+#define constructor				( gr(c_symbol()/eq(className)) + function_args + ';' )
 
-#define sdl_gbl_sentence			(sdl_codedef | sdl_typedef | sdl_server | ';')
+#define class_sentence			( constructor/tagConstructor | type_cast/tagTypeCast | func_or_var/tagMember )
+
+#define class_body				( '{' + *(class_sentence/tagSentences) + '}' )
 
 // -------------------------------------------------------------------------
-// doc
+// class
 
-#define sdl_doc						(cpp_skip_[ sdl_module + *(sdl_gbl_sentence/tagSentences) ]/doc)
+#define class_header			( class_keyword + symbol/tagName/assign(className) )
 
-// =========================================================================
-// $Log: $
+#define baseclass				( !access + symbol/tagName )
+#define baseclasses				( ':' + baseclass/tagBaseClasses % ',' )
 
-#endif /* CERL_LEX_H */
+#define class_impl				( !baseclasses + class_body )
+
+#define classdef				( class_header + class_impl )
+
+// -------------------------------------------------------------------------
+// global sentences
+
+#define global					( classdef/tagClass )
+
+// -------------------------------------------------------------------------
+// document
+
+#define document				( comment[*(global/tagSentences | ';')]/doc )
+
+// -------------------------------------------------------------------------
+
+#endif /* CPP2JSON_LEX_H */

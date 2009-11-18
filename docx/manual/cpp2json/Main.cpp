@@ -1,6 +1,6 @@
 #define TPL_USE_AUTO_ALLOC
 #include "Lex.h"
-#include "Lex.cpp"
+#include "Lex.inl"
 #include <stdext/FileBuf.h>
 
 // -------------------------------------------------------------------------
@@ -9,7 +9,7 @@ int main(int argc, const char* argv[])
 {
 	NS_STDEXT::ErrorLog err;
 	if (argc < 2) {
-		err.print("Usage: sdl2json <server_description_language_file.sdl>\n");
+		err.print("Usage: cpp2json <cpp_file>\n");
 		return -1;
 	}
 
@@ -19,7 +19,7 @@ int main(int argc, const char* argv[])
 		return -2;
 	}
 	
-	if (file == sdl_doc)
+	if (file == document)
 	{
 		NS_STDEXT::OutputLog log;
 		json_print(alloc, log, doc);
