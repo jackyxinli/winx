@@ -97,7 +97,9 @@ public:
 	template <class SourceT, class ContextT, class SkipperT>
 	bool TPL_CALL match(SourceT& ar, ContextT& context, const SkipperT& skipper_) const
 	{
-		skipper_.match(ar, context); // NOTE: @@add this code for performance optimization!
+		// skipper_.match(ar, context);
+		// 	--> NOTE: @@add this code for performance optimization!
+		// 	--> BUGFIX: @@may change meanings of Mark/Action/etc! So we disable this optimization!
 		return m_x.match(ar, context, skipper_) || m_y.match(ar, context, skipper_);
 	}
 };
