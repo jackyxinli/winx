@@ -7,6 +7,8 @@ extern dom::NodeMark tagClass("class");
 extern dom::NodeMark tagMember("member");
 extern dom::NodeMark tagConstructor("ctor");
 extern dom::NodeMark tagTypeCast("typecast");
+extern dom::NodeMark tagTypedef("type");
+extern dom::NodeMark tagEnum("enum");
 
 extern dom::Mark tagClassKeyword("keyword");
 extern dom::Mark tagAccess("access");

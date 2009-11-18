@@ -55,6 +55,8 @@ extern dom::NodeMark tagSentences;
 			extern dom::NodeMark tagConstructor;
 			extern dom::NodeMark tagMember; // member function or variable 
 			extern dom::NodeMark tagTypeCast;
+			extern dom::NodeMark tagTypedef;
+			extern dom::NodeMark tagEnum;
 	extern dom::NodeMark tagGlobal; // global function or variable
 		extern dom::Mark tagType;
 		extern dom::Mark tagCallType;

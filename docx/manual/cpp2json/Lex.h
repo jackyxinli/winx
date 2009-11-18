@@ -77,10 +77,13 @@
 // class body
 
 #define type_cast				( keyword("operator") + type + '(' + ')' + function_attr2 + ';')
+#define enumdef					( keyword("enum") + symbol/tagName + ';' )
+#define typedefine				( keyword("typedef") + (symbol/tagName + gr(';') | func_or_var) )
 
 #define constructor				( gr(c_symbol()/eq(className)) + function_args + ';' )
 
-#define class_sentence			( constructor/tagConstructor | type_cast/tagTypeCast | func_or_var/tagMember )
+#define class_sentence			( constructor/tagConstructor | type_cast/tagTypeCast | \
+								  enumdef/tagEnum | typedefine/tagTypedef | func_or_var/tagMember )
 
 #define class_body				( '{' + *(class_sentence/tagSentences) + '}' )
 
