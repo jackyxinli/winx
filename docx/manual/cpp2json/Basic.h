@@ -31,6 +31,8 @@
 #define TR	TPL_INFO("TRACE")
 #endif
 
+typedef NS_STDEXT::String String;
+
 // -------------------------------------------------------------------------
 
 #define eq2(s1, s2)				(eq(s1) || eq(s2))
@@ -73,7 +75,8 @@ extern dom::NodeMark tagSentences;
 extern impl::Allocator alloc;
 extern impl::MarkedGrammar rCppSymbol;
 extern impl::MarkedGrammar rType;
-extern NS_STDEXT::String className;
+
+extern String className;
 
 // -------------------------------------------------------------------------
 

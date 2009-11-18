@@ -26,6 +26,22 @@
 // -------------------------------------------------------------------------
 // common
 
+class IsCallType
+{
+public:
+	template <class ValueT>
+	bool TPL_CALL operator()(const ValueT& v) const
+	{
+		const String val(v.begin(), v.end());
+		if (val.endWithI("callback"))
+			return true;
+		const String last4 = val.substr(val.size() - 4);
+		if (last4.icompare("call") == 0 || last4 == "_msg" || last4 == "cdel")
+			return true;
+		return val == "WINAPI";
+	}
+};
+
 #define symbol					(c_symbol()/ne("const"))
 #define keyword(key)			gr(c_symbol()/eq(key))
 #define zero_keyword			gr(u_integer()/eq(0))
@@ -34,7 +50,7 @@
 #define access					gr(c_symbol()/eq3("private", "public", "protected")/tagAccess)
 #define signed_keyword			gr(c_symbol()/eq2("unsigned", "signed"))
 #define int_basetypes			gr(c_symbol()/eq4("int", "long", "short", "char"))
-#define call_type				gr(c_symbol()/eq("cerl_call")/tagCallType)
+#define call_type				gr(c_symbol()/meet(IsCallType())/tagCallType)
 
 // -------------------------------------------------------------------------
 // cppsymbol
@@ -58,7 +74,7 @@
 #define int_types				( signed_keyword + int_basetypes )
 #define skipconst_				( skipws_[keyword("const")] )
 #define basetype				gr( skipws_[int_types | !class_keyword + cppsymbol] )
-#define type					gr( skipconst_[basetype + !keyword("const") + *gr('*') + !gr('&') ]/tagType )
+#define type					gr( skipconst_[basetype + *gr('*') + !gr('&') ]/tagType )
 
 // -------------------------------------------------------------------------
 // function
@@ -77,7 +93,7 @@
 // -------------------------------------------------------------------------
 // class body
 
-#define type_cast				( keyword("operator") + type + '(' + ')' + function_attr2 + ';')
+#define type_cast				( keyword("operator") + type + '(' + ')' + function_attr2 + ';' )
 #define enumdef					( keyword("enum") + symbol/tagName + ';' )
 #define typedefine				( keyword("typedef") + (symbol/tagName + gr(';') | func_or_var) )
 

@@ -23,6 +23,6 @@ extern dom::Mark tagDefVal("defval");
 impl::Allocator alloc;
 impl::MarkedGrammar rCppSymbol(alloc, cppsymbol);
 impl::MarkedGrammar rType(alloc, type);
-NS_STDEXT::String className;
+String className;
 
 dom::Document doc(alloc);
