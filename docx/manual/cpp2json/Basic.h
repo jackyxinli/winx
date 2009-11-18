@@ -45,6 +45,8 @@ typedef impl::Result dom;
 
 extern dom::Document doc;
 extern dom::NodeMark tagSentences;
+	extern dom::NodeMark tagTemplate;
+		extern dom::Mark tagHeader;
 	extern dom::NodeMark tagClass;
 		extern dom::Mark tagClassKeyword;
 		extern dom::Mark tagName;

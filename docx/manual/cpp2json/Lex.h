@@ -29,6 +29,7 @@
 #define symbol					(c_symbol()/ne("const"))
 #define keyword(key)			gr(c_symbol()/eq(key))
 #define zero_keyword			gr(u_integer()/eq(0))
+#define typename_keyword		gr(c_symbol()/eq2("class", "typename"))
 #define class_keyword			gr(c_symbol()/eq3("class", "interface", "struct")/tagClassKeyword)
 #define access					gr(c_symbol()/eq3("private", "public", "protected")/tagAccess)
 #define signed_keyword			gr(c_symbol()/eq2("unsigned", "signed"))
@@ -95,14 +96,22 @@
 #define baseclass				( !access + symbol/tagName )
 #define baseclasses				( ':' + baseclass/tagBaseClasses % ',' )
 
-#define class_impl				( !baseclasses + class_body )
+#define classdef				( class_header + !baseclasses + class_body )
 
-#define classdef				( class_header + class_impl )
+// -------------------------------------------------------------------------
+// template
+
+#define tempate_arg_type_imp	gr( skipws_[typename_keyword | int_types | symbol]/tagType )
+#define template_arg_val		( '=' + gr(skipws_[cppsymbol | c_integer()]/tagDefVal) )
+#define template_arg			( tempate_arg_type_imp + symbol/tagName + !template_arg_val )
+#define template_header			( keyword("template") + '<' + !(template_arg/tagArgs % ',') + '>' )
+
+#define templatedef				( gr(skipws_[template_header]/tagHeader) + classdef/tagClass )
 
 // -------------------------------------------------------------------------
 // global sentences
 
-#define global					( classdef/tagClass )
+#define global					( templatedef/tagTemplate | classdef/tagClass )
 
 // -------------------------------------------------------------------------
 // document
