@@ -75,6 +75,7 @@ extern dom::NodeMark tagSentences;
 extern impl::Allocator alloc;
 extern impl::MarkedGrammar rCppSymbol;
 extern impl::MarkedGrammar rType;
+extern impl::MarkedRule rComment;
 
 extern String className;
 

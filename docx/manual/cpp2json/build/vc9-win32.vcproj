@@ -199,6 +199,10 @@
 			>
 		</File>
 		<File
+			RelativePath="..\Comment.cpp"
+			>
+		</File>
+		<File
 			RelativePath="..\Comment.h"
 			>
 		</File>

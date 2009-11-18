@@ -19,8 +19,8 @@
 #ifndef CPP2JSON_LEX_H
 #define CPP2JSON_LEX_H
 
-#ifndef CPP2JSON_COMMENT_H
-#include "Comment.h"
+#ifndef CPP2JSON_BASIC_H
+#include "Basic.h"
 #endif
 
 // -------------------------------------------------------------------------
@@ -132,7 +132,7 @@ public:
 // -------------------------------------------------------------------------
 // document
 
-#define document				( comment[*(global/tagSentences | ';')]/doc )
+#define document				( rComment[*(global/tagSentences | ';')]/doc )
 
 // -------------------------------------------------------------------------
 

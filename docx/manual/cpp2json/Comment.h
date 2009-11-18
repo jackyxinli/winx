@@ -19,13 +19,22 @@
 #ifndef CPP2JSON_COMMENT_H
 #define CPP2JSON_COMMENT_H
 
+#ifndef TPL_C_COMMENT_H
+#include <tpl/c/Comment.h>
+#endif
+
 #ifndef CPP2JSON_BASIC_H
 #include "Basic.h"
 #endif
 
 // -------------------------------------------------------------------------
 
-#define comment		cpp_skip()
+extern dom::Mark tagComment;
+
+// -------------------------------------------------------------------------
+
+#define comment_doc		( done()/tagComment )
+#define comment			( skipws() % cpp_comment_content(alloc, comment_doc) )
 
 // -------------------------------------------------------------------------
 
