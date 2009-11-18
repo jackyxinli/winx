@@ -143,6 +143,25 @@ public:
 };
 
 // -------------------------------------------------------------------------
+// match, match_all
+
+template <class ContainerT, class RegExT, class ContextT> inline 
+bool TPL_CALL match(const ContainerT& src_, const Rule<RegExT>& rule_, ContextT& context)
+{
+	typedef typename ArchiveTraits<ContainerT>::type SourceT;
+	SourceT source(src_);
+	return rule_.match(source, context);
+}
+
+template <class ContainerT, class RegExT, class ContextT> inline 
+bool TPL_CALL match_all(const ContainerT& src_, const Rule<RegExT>& rule_, ContextT& context)
+{
+	typedef typename ArchiveTraits<ContainerT>::type SourceT;
+	SourceT source(src_);
+	return rule_.match(source, context) && (source.get() == SourceT::endch);
+}
+
+// -------------------------------------------------------------------------
 // operator>>
 
 template <class ContainerT, class RegExT> inline 

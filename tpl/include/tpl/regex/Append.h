@@ -351,7 +351,34 @@ TPL_CALL push_back_pair(ContainerT& result, const KeyT& key) {
 }
 
 // =========================================================================
-// $Log: $
+// class Put_
+
+template <class ArchiveT>
+class Put_
+{
+private:
+	typedef typename ArchiveT::char_type char_type;
+
+	ArchiveT& m_result;
+
+public:
+	Put_(ArchiveT& result)
+		: m_result(result) {
+	}
+
+	typedef NS_STDEXT::Range<const char_type*> value_type;
+
+	void TPL_CALL operator()(const value_type& val) const {
+		m_result.put(val.begin(), val.size());
+	}
+};
+
+template <class ArchiveT>
+inline Action<Put_<ArchiveT> > TPL_CALL put(ArchiveT& result) {
+	return Action<Put_<ArchiveT> >(result);
+}
+
+// =========================================================================
 
 NS_TPL_END
 
