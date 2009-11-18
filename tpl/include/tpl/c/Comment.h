@@ -77,7 +77,7 @@ public:
 	}
 
 public:
-	enum { character = 0 };
+	enum { character = RegExT::character };
 
 	typedef SelfConvertible convertible_type;
 	typedef TagAssigNone assig_tag;
