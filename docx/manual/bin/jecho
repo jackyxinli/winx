@@ -1,0 +1,2 @@
+AppPath=`dirname $0`
+$AppPath/jspt $AppPath/inc/print.php $*
