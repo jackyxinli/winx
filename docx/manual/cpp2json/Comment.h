@@ -34,7 +34,7 @@ extern dom::Mark tagComment;
 // -------------------------------------------------------------------------
 
 #define comment_doc		( done()/tagComment )
-#define comment			( skipws() % cpp_comment_content(alloc, comment_doc) )
+#define comment			( cpp_comment_content(alloc, comment_doc) )
 
 // -------------------------------------------------------------------------
 

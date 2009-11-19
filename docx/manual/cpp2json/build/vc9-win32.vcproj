@@ -4,6 +4,7 @@
 	Version="9.00"
 	Name="cpp2json"
 	ProjectGUID="{EE4C99E9-EC3C-D26F-EE7F-A387A0E0425E}"
+	RootNamespace="cpp2json"
 	TargetFrameworkVersion="0"
 	>
 	<Platforms>

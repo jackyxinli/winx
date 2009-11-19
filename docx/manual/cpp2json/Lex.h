@@ -112,10 +112,12 @@ public:
 #define class_sentence1			( !(templatedef/tagTemplate) + (constructor/tagConstructor | \
 								  func_or_var/tagMember) )
 
-#define class_sentence			( class_sentence1 | type_cast/tagTypeCast | \
+#define class_sentence2			( class_sentence1 | type_cast/tagTypeCast | \
 								  enumdef/tagEnum | typedefine/tagTypedef )
 
-#define class_body				( '{' + *(class_sentence/tagSentences) + '}' )
+#define class_sentence			gr( rComment | cpp_skip_*class_sentence2 )
+
+#define class_body				gr( skipws_['{' + *(class_sentence/tagSentences) + '}'] )
 
 // -------------------------------------------------------------------------
 // class
@@ -130,12 +132,13 @@ public:
 // -------------------------------------------------------------------------
 // global sentences
 
-#define global					( !(templatedef/tagTemplate) + (classdef | func_or_var/tagGlobal) )
+#define global1					( !(templatedef/tagTemplate) + (classdef | func_or_var/tagGlobal) )
+#define global					gr( rComment | cpp_skip_*global1 )
 
 // -------------------------------------------------------------------------
 // document
 
-#define document				( rComment[*(global/tagSentences | ';')]/doc )
+#define document				( skipws_[*(global/tagSentences | ';')]/doc )
 
 // -------------------------------------------------------------------------
 
