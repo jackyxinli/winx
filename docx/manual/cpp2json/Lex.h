@@ -77,6 +77,16 @@ public:
 #define type					gr( skipconst_[basetype + *gr('*') + !gr('&') ]/tagType )
 
 // -------------------------------------------------------------------------
+// template
+
+#define tempate_arg_type_imp	gr( skipws_[typename_keyword | int_types | symbol]/tagType )
+#define template_arg_val		( '=' + gr(skipws_[cppsymbol | c_integer()]/tagDefVal) )
+#define template_arg			( tempate_arg_type_imp + symbol/tagName + !template_arg_val )
+#define template_header			( keyword("template") + '<' + !(template_arg/tagArgs % ',') + '>' )
+
+#define templatedef				gr( skipws_[template_header]/tagHeader )
+
+// -------------------------------------------------------------------------
 // function
 
 #define pure					( keyword("PURE") | gr('=') + zero_keyword )
@@ -99,8 +109,11 @@ public:
 
 #define constructor				( gr(c_symbol()/eq(className)) + function_args + ';' )
 
-#define class_sentence			( constructor/tagConstructor | type_cast/tagTypeCast | \
-								  enumdef/tagEnum | typedefine/tagTypedef | func_or_var/tagMember )
+#define class_sentence1			( !(templatedef/tagTemplate) + (constructor/tagConstructor | \
+								  func_or_var/tagMember) )
+
+#define class_sentence			( class_sentence1 | type_cast/tagTypeCast | \
+								  enumdef/tagEnum | typedefine/tagTypedef )
 
 #define class_body				( '{' + *(class_sentence/tagSentences) + '}' )
 
@@ -112,22 +125,12 @@ public:
 #define baseclass				( !access + symbol/tagName )
 #define baseclasses				( ':' + baseclass/tagBaseClasses % ',' )
 
-#define classdef				( class_header + !baseclasses + class_body )
-
-// -------------------------------------------------------------------------
-// template
-
-#define tempate_arg_type_imp	gr( skipws_[typename_keyword | int_types | symbol]/tagType )
-#define template_arg_val		( '=' + gr(skipws_[cppsymbol | c_integer()]/tagDefVal) )
-#define template_arg			( tempate_arg_type_imp + symbol/tagName + !template_arg_val )
-#define template_header			( keyword("template") + '<' + !(template_arg/tagArgs % ',') + '>' )
-
-#define templatedef				( gr(skipws_[template_header]/tagHeader) + classdef/tagClass )
+#define classdef				( (class_header + !baseclasses + class_body)/tagClass )
 
 // -------------------------------------------------------------------------
 // global sentences
 
-#define global					( templatedef/tagTemplate | classdef/tagClass )
+#define global					( !(templatedef/tagTemplate) + (classdef | func_or_var/tagGlobal) )
 
 // -------------------------------------------------------------------------
 // document

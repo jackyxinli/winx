@@ -16,7 +16,7 @@
 	<Configurations>
 		<Configuration
 			Name="Release|Win32"
-			OutputDirectory="../../bin/win32"
+			OutputDirectory="../../bin"
 			IntermediateDirectory="Release"
 			ConfigurationType="1"
 			UseOfMFC="0"
@@ -71,7 +71,7 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				OutputFile="../../bin/win32/cpp2json.exe"
+				OutputFile="../../bin/cpp2json.exe"
 				LinkIncremental="1"
 				SuppressStartupBanner="true"
 				AdditionalLibraryDirectories=""

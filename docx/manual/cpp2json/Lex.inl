@@ -6,6 +6,7 @@ extern dom::NodeMark tagArgs("args", true);
 extern dom::NodeMark tagTemplate("template");
 extern dom::NodeMark tagClass("class");
 extern dom::NodeMark tagMember("member");
+extern dom::NodeMark tagGlobal("global");
 extern dom::NodeMark tagConstructor("ctor");
 extern dom::NodeMark tagTypeCast("typecast");
 extern dom::NodeMark tagTypedef("type");
@@ -23,6 +24,7 @@ extern dom::Mark tagDefVal("defval");
 impl::Allocator alloc;
 impl::MarkedGrammar rCppSymbol(alloc, cppsymbol);
 impl::MarkedGrammar rType(alloc, type);
+impl::MarkedGrammar rClass(alloc, classdef);
 String className;
 
 dom::Document doc(alloc);
