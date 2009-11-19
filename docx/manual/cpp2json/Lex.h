@@ -115,7 +115,7 @@ public:
 #define class_sentence2			( class_sentence1 | type_cast/tagTypeCast | \
 								  enumdef/tagEnum | typedefine/tagTypedef )
 
-#define class_sentence			gr( rComment | cpp_skip_*class_sentence2 )
+#define class_sentence			gr( rComment | cpp_skip_ * class_sentence2 )
 
 #define class_body				gr( skipws_['{' + *(class_sentence/tagSentences) + '}'] )
 
@@ -133,7 +133,7 @@ public:
 // global sentences
 
 #define global1					( !(templatedef/tagTemplate) + (classdef | func_or_var/tagGlobal) )
-#define global					gr( rComment | cpp_skip_*global1 )
+#define global					gr( rComment | cpp_skip_ * global1 )
 
 // -------------------------------------------------------------------------
 // document
