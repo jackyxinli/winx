@@ -6,9 +6,9 @@
 // class Finder
 
 /*
-@class std::kmp::Finder
+@class Finder
 @brief
-	The std::kmp::Finder class implements KMP string searching algorithm.
+	The Finder class implements KMP string searching algorithm.
 @arg _E
 	The data type of a single character to be found in searching algorithm. It can be char or WCHAR.
 @arg _Strategy
