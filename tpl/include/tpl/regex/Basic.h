@@ -58,7 +58,7 @@ public:
 // struct IndexOpTraits
 
 template <class T1, class T2>
-struct IndexOpTraits
+struct IndexOpTraits // T1[T2]
 {
 //	concept:
 //

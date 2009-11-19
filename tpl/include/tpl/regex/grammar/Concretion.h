@@ -28,7 +28,7 @@ NS_TPL_BEGIN
 // =========================================================================
 // class GrBind -- Grammar + Skipper => Rule
 
-template <class GrammarT, class SkipperT>
+template <class GrammarT, class SkipperT, int fSkipTail = TRUE>
 class GrBind
 {
 public:
@@ -49,7 +49,8 @@ public:
 	template <class SourceT, class ContextT>
 	bool TPL_CALL match(SourceT& ar, ContextT& context) const {
 		if (m_gr.match(ar, context, m_skipper)) {
-			m_skipper.match(ar, context);
+			if (fSkipTail)
+				m_skipper.match(ar, context);
 			return true;
 		}
 		return false;
@@ -65,6 +66,12 @@ struct IndexOpTraits<Rule<SkipperT>, Grammar<GrammarT> >
 		return result_type(x, y);
 	}
 };
+
+template <class SkipperT, class GrammarT>
+inline Rule<GrBind<GrammarT, SkipperT, FALSE> > const
+TPL_CALL operator*(const Rule<SkipperT>& y, const Grammar<GrammarT>& x) {
+	return Rule<GrBind<GrammarT, SkipperT, FALSE> >(x, y);
+}
 
 #define TPL_SKIPPER_BIND_(GrammarT)		\
 template <class SkipperT>				\
