@@ -308,21 +308,22 @@ template <class CharT>
 struct JsonEscape
 {
 private:
-	enum { ESCAPE_MAX = 64 };
+	enum { ESCAPE_MAX = 96 };
 
 	static CharT m_escape[ESCAPE_MAX];
 	
-	static void TPL_CALL _insert(CharT c, CharT alt) {
+	static void TPL_CALL insert_(CharT c, CharT alt) {
 		TPL_ASSERT(c >= 0 && c < ESCAPE_MAX);
 		m_escape[(size_t)c] = alt;
 	}
 	
 public:
 	JsonEscape() {
-		_insert('\t', 't');
-		_insert('\r', 'r');
-		_insert('\n', 'n');
-		_insert('\"', '\"');
+		insert_('\t', 't');
+		insert_('\r', 'r');
+		insert_('\n', 'n');
+		insert_('\"', '\"');
+		insert_('\\', '\\');
 	}
 	
 	struct Escape {
