@@ -1,0 +1,22 @@
+#!/usr/bin/php
+<?php
+	$argc = $_SERVER["argc"];
+	
+	if ($argc == 1)
+		$doc = json_decode(stream_get_contents(STDIN));
+	else
+		$doc = json_decode(file_get_contents($argv[1]));
+		
+	if ($doc)
+	{
+		$exec_path = dirname($argv[0]);
+		require($exec_path . "\inc\html\functions.php");
+		require($exec_path . "\inc\html\gen.php");
+		return 0;
+	}
+	else
+	{
+		echo "Input file error: Maybe is not a valid json file?\n\n";
+		return -2;
+	}
+?>
