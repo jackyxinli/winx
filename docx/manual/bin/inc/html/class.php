@@ -30,51 +30,37 @@ function class_decl($classes)
 	echo "</PRE>\n";
 }
 
-function show_ctors($sentences, $path)
+function show_ctors($class, $base)
 {
-	foreach ($sentences as $s)
+	foreach ($class->sentences as $s)
 	{
 		if (isset($s->comment))
 			$ctordoc = $s->comment;
-		else if (isset($s->ctor))
+		else
 		{
-			$ctors[] = $ctordoc;
-			$ctors[] = $s->ctor;
+			if (isset($s->ctor))
+			{
+				$ctors[] = $ctordoc;
+				$ctors[] = $s->ctor;
+			}
+			unset($ctordoc);
 		}
 	}
 	
-	$count = count($ctors);
-	if ($count == 0)
-		return;
-	
-	echo "<H4>构造函数</H4>\n\t<TABLE height=\"1\">
-		<TR VALIGN=\"top\">
-			<TH align=\"left\" width=\"35%\" height=\"19\">Constructor</TH>
-			<TH align=\"left\" width=\"65%\" height=\"19\">Description</TH>
-		</TR>\n";
-		
-	for ($i = 0; $i < $count; $i += 2)
-	{
-		echo "<TR VALIGN=\"top\"><TD width=\"35%\" height=\"19\"><b><a>";
-		
-						<xsl:attribute name="href">
-							<xsl:value-of select="/ksdn/doc_path"/>
-							<xsl:text>_</xsl:text>
-							<xsl:value-of select="../class_decl/class_name"/>
-							<xsl:if test="ctor_args">(<xsl:value-of select="ctor_args"/>)</xsl:if>
-							<xsl:text>.htm</xsl:text>
-						</xsl:attribute>
-						<xsl:value-of select="../class_decl/class_name"/>
-						<xsl:if test="ctor_args">(<xsl:value-of select="ctor_args"/>)</xsl:if>
-					</a>
-				</b>
-			</TD>
-			<TD width="65%" height="19">
-				<xsl:copy-of select="brief"/>
-			</TD>
-		</TR>
-	}
-	echo "</TABLE>\n";
+	return show_index($class, $ctors, array(
+		"title" => "构造函数", "name" => "Constructor", "desc" => "Description"),
+		$base . "_$class->name");
+}
+
+function show_methods($class, $base)
+{
+	show_fntable($class, array(
+		"fn" => "member", "title" => "方法列表", "name" => "Method", "desc" => "Description"),
+		$base . "_$class->name");
+}
+
+function show_class()
+{
 }
 
 ?>
