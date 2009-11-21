@@ -107,7 +107,7 @@ public:
 #define enumdef					( keyword("enum") + symbol/tagName + ';' )
 #define typedefine				( keyword("typedef") + (symbol/tagName + gr(';') | func_or_var) )
 
-#define constructor				( gr(c_symbol()/eq(className)) + function_args + ';' )
+#define constructor				( gr(c_symbol()/eq(className)/tagName) + function_args + ';' )
 
 #define class_sentence1			( !(templatedef/tagTemplate) + (constructor/tagConstructor | \
 								  func_or_var/tagMember) )

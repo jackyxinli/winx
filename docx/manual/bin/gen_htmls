@@ -10,7 +10,8 @@
 	if ($doc)
 	{
 		$exec_path = dirname($argv[0]);
-		require($exec_path . "\inc\html\functions.php");
+		require($exec_path . "\inc\html\base.php");
+		require($exec_path . "\inc\html\class.php");
 		require($exec_path . "\inc\html\gen.php");
 		return 0;
 	}

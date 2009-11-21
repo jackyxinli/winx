@@ -1,10 +1,11 @@
 <?php
 
-function html_header($title) { echo
+function html_header($title, $env) { echo
 "<HEAD>
-	<TITLE>$title</TITLE>
-	<SCRIPT SRC=\"$RES_PATH/langref.js\"/>
-	<LINK REL=\"STYLESHEET\" HREF=\"$RES_PATH/backsdk4.css\"/>
+<META http-equiv=\"Content-Type\" content=\"text/html; charset=gbk\">
+<TITLE>$title</TITLE>
+<SCRIPT SRC=\"$env[respath]/langref.js\"></SCRIPT>
+<LINK REL=\"STYLESHEET\" HREF=\"$env[respath]/backsdk4.css\">
 </HEAD>
 "; }
 
@@ -19,31 +20,78 @@ function header_bar($category) { echo
 		<TD CLASS=\"runninghead\" NOWRAP=\"NOWRAP\">$category</TD>
 	</TR>
 </TABLE>
-<H1>$title</H1>
 "; }
 
 function extended_text($rtf)
 {
-	echo "$rtf";
+	foreach ($rtf as $item)
+	{
+		if (isset($item->text))
+			echo $item->text;
+	};
 }
 
-function topic_start($category, $title, $brief)
+function show_brief($comment)
 {
-	header_bar($categroy);
-	echo "<H1>$title</H1>";
-	extended_text($brief);
-}
-
-function show_args($args)
-{
-	if (!isset($args))
+	if (!isset($comment))
 		return;
 		
+	if (!isset($comment->brief))
+		return;
+	
+	extended_text($comment->brief);
+}
+
+function show_desc($comment)
+{
+}
+
+function show_remark($comment)
+{
+	if (!isset($comment))
+		return;
+		
+	if (!isset($comment->remark))
+		return;
+
+	extended_text($comment->remark);
+}
+
+function topic_start($comment, $code, $env)
+{
+	echo "<HTML>";
+	$title = sprintf($env["titlefmt"], $code->name);
+	$header = sprintf($env["headerfmt"], $code->name);
+	html_header($title, $env);
+	echo "<BODY TOPMARGIN=\"0\">\n";
+	if (isset($env["categroy"]))
+		header_bar($env["categroy"]);
+	echo "<H1>$header</H1>";
+	show_brief($comment);
+}
+
+function topic_end($comment, $env)
+{
+	//@example
+	echo "<DIV CLASS=\"itfBorder\"><IMG SRC=\"$env[respath]/tiny.gif\" width=\"1\" height=\"1\"/></DIV>";
+	//@require
+	//@see
+	echo "</BODY></HTML>";
+}
+
+function show_args($comment)
+{
+	if (!isset($comment))
+		return;
+	
+	if (!isset($comment->args))
+		return;
+	
 	echo "<H4>参数说明</H4><DL>";
-	for ($args as $arg)
+	foreach ($comment->args as $arg)
 	{
 		echo "<DT>";
-		if ($arg->attr)
+		if (isset($arg->attr))
 			echo "[$arg->attr] ";
 		echo "<I>$arg->name</I></DT><DD>";
 		extended_text($arg->body);
@@ -52,23 +100,12 @@ function show_args($args)
 	echo "</DL>\n";
 }
 
-function show_brief($codedoc)
+function check_topic_name($comment, $code)
 {
-	if (!isset($codedoc))
-		return;
-		
-	if (!isset($codedoc->brief))
-		return;
-	
-	extended_text($codedoc->brief);
-}
-
-function check_topic_name($codedoc, $code)
-{
-	if (!isset($code->name) || !isset($codedoc) || !isset($codedoc->topic) )
+	if (!isset($code->name) || !isset($comment) || !isset($comment->topic) )
 		return true;
 	
-	for ($codedoc->topic->args as $arg)
+	foreach ($comment->topic->args as $arg)
 	{
 		if ($arg == $code->name)
 			return true;
@@ -76,15 +113,15 @@ function check_topic_name($codedoc, $code)
 	return false;
 }
 
-function check_arg_names($codedoc, $code)
+function check_arg_names($comment, $code)
 {
-	if (!isset($codedoc) || !isset($codedoc->args) )
+	if (!isset($comment) || !isset($comment->args) )
 		return true;
 
 	if (!isset($code->args))
 		return false;
 
-	$args1 = $codedoc->args;
+	$args1 = $comment->args;
 	$args2 = $code->args;
 	
 	$count = count($args1);
@@ -104,7 +141,7 @@ function make_href($name)
 }
 
 /*@@todo: 一致性检查在topic自身处完成，而不是在引用处完成!
-		if (!check_topic_name($fndoc, $fn))
+		if (!check_topic_name($comment, $fn))
 		{
 			fwrite(STDERR, "错误：类 $name 在注释文档中的名称与代码不匹配!\n");
 			continue;
@@ -116,7 +153,7 @@ function make_href($name)
 			continue;
 		}
 */
-function show_index($code, $fns, $env, $base)
+function show_index($fns, $env, $base)
 {
 	$count = count($fns);
 	if ($count == 0)
@@ -125,9 +162,7 @@ function show_index($code, $fns, $env, $base)
 	echo "<H4>$env[title]</H4>
 	<TABLE height=\"1\">
 		<TR VALIGN=\"top\">
-			<TH align=\"left\" width=\"35%\" height=\"19\">
-				<xsl:value-of select=\"$env[name]\"/>
-			</TH>
+			<TH align=\"left\" width=\"35%\" height=\"19\">$env[name]</TH>
 			<TH align=\"left\" width=\"65%\" height=\"19\">$env[desc]</TH>
 		</TR>";
 	
@@ -135,14 +170,17 @@ function show_index($code, $fns, $env, $base)
 	{
 		$fn = $fns[$i+1];
 		$args_text = "";
-		foreach ($fn->args as $j => $arg)
+		if (isset($fn->args))
 		{
-			if ($j != 0)
-				$args_text .= ",";
-			$args_text .= $arg;
+			foreach ($fn->args as $j => $arg)
+			{
+				if ($j != 0)
+					$args_text .= ",";
+				$args_text .= $arg->name;
+			}
 		}
-
-		$name = (isset($fn->name) ? $fn->name : $code->name);
+		
+		$name = $fn->name;
 		$href =	$base . make_href($name) . ($count > 1 ? "($args_text).htm" : ".htm");
 		
 		echo "<TR VALIGN=\"top\"><TD width=\"35%\" height=\"19\"><b><a href=$href>$name($args_text)</a></b>\n";
@@ -158,18 +196,26 @@ function show_fntable($code, $env, $base)
 	foreach ($code->sentences as $s)
 	{
 		if (isset($s->comment))
-			$fndoc = $s->comment;
+			$comment = $s->comment;
 		else
 		{
 			if (isset($s->$fn) && isset($s->$fn->funcattr))
 			{
-				$fns[] = $fndoc;
+				$fns[] = $comment;
 				$fns[] = $s->$fn;
 			}
-			unset($fndoc);
+			unset($comment);
 		}
 	}
-	show_index($code, $fns, $env, $base);
+	show_index($fns, $env, $base);
+}
+
+function save($file)
+{
+	$fp = fopen($file, 'w');
+	fwrite($fp, ob_get_contents());
+	fclose($fp);
+	ob_clean();
 }
 
 ?>
