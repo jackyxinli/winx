@@ -1,7 +1,7 @@
 <?php
 	$env = array(
-		"respath" => "res", "titlefmt" => "%s", "headerfmt" => "%s",
-		"base" => "", "local" => "output/");
+		'ns' => '', 'base' => '', 'local' => 'output/',
+		'respath' => 'res');
 	
 	foreach ($doc->sentences as $s)
 	{
@@ -10,7 +10,7 @@
 			$comment = $s->comment;
 			if (isset($comment->category))
 			{
-				$env["category"] = $comment->category;
+				$env['category'] = $comment->category;
 			}
 		}
 		else
