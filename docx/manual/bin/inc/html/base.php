@@ -41,16 +41,43 @@ function show_args($fp, $comment)
 // -------------------------------------------------------------------------
 // topic start/end
 
-function html_header($fp, $title, $env) { fwrite($fp,
+function res_path($base)
+{
+	$p = '';
+	$off = 0;
+	for (;;)
+	{
+		$pos = strpos($base, '/', $off);
+		if ($pos === false)
+			return $p . 'res';
+		$p .= '../';
+		$off = $pos + 1;
+	}
+}
+
+function ns($base)
+{
+	if ($base == 'default/')
+		return '';
+	return str_replace('/', '::', $base);
+}
+
+function html_header($fp, $title, $env)
+{
+	$respath = res_path($env['base']);
+	fwrite($fp,
 "<HEAD>
 <META http-equiv=\"Content-Type\" content=\"text/html; charset=gbk\">
 <TITLE>$title</TITLE>
-<SCRIPT SRC=\"$env[respath]/langref.js\"></SCRIPT>
-<LINK REL=\"STYLESHEET\" HREF=\"$env[respath]/backsdk4.css\">
+<SCRIPT SRC=\"$respath/langref.js\"></SCRIPT>
+<LINK REL=\"STYLESHEET\" HREF=\"$respath/backsdk4.css\">
 </HEAD>
-"); }
+");
+}
 
-function header_bar($fp, $category) { fwrite($fp,
+function header_bar($fp, $category)
+{
+	fwrite($fp,
 "<TABLE CLASS=\"buttonbarshade\" CELLSPACING=\"0\">
 <TR><TD>&#x20;</TD></TR>
 </TABLE>
@@ -59,7 +86,8 @@ function header_bar($fp, $category) { fwrite($fp,
 <TD CLASS=\"runninghead\" NOWRAP=\"NOWRAP\">$category</TD>
 </TR>
 </TABLE>
-");}
+");
+}
 
 function show_brief($fp, $comment)
 {
@@ -67,8 +95,11 @@ function show_brief($fp, $comment)
 		return;
 		
 	if (!isset($comment->brief))
+	{
+		if (isset($comment->summary))
+			fwrite($fp, $comment->summary);
 		return;
-	
+	}
 	extended_text($fp, $comment->brief);
 }
 
@@ -91,7 +122,7 @@ function show_remark($fp, $comment)
 function topic_start($fp, $comment, $rel, $env)
 {
 	fwrite($fp, "<HTML>");
-	$title = $header = $env['ns'] . $rel;
+	$title = $header = ns($env['base']) . $rel;
 	html_header($fp, $title, $env);
 	fwrite($fp, "<BODY TOPMARGIN=\"0\">\n");
 	if (isset($env['category']))
@@ -102,8 +133,9 @@ function topic_start($fp, $comment, $rel, $env)
 
 function topic_end($fp, $comment, $env)
 {
+	$respath = res_path($env['base']);
 	//@example
-	fwrite($fp, "<DIV CLASS=\"itfBorder\"><IMG SRC=\"$env[respath]/tiny.gif\" width=\"1\" height=\"1\"/></DIV>");
+	fwrite($fp, "<DIV CLASS=\"itfBorder\"><IMG SRC=\"$respath/tiny.gif\" width=\"1\" height=\"1\"/></DIV>");
 	//@require
 	//@see
 	fwrite($fp, "</BODY></HTML>");
@@ -191,7 +223,7 @@ function show_fn($comment, $s, $rel, $env)
 {
 	$fntype = $env['fntype'];
 	$fn = $s->$fntype;
-	$file = $env['local'] . $rel . '.htm';
+	$file = $env['base'] . $rel . '.htm';
 	$fp = fopen($file, 'w');
 	if (!$fp) {
 		echo "---> ERROR: Create file `$file` failed!\n";
@@ -232,7 +264,7 @@ function show_index($fp, $fns, $env)
 </TR>");
 	
 	$base = $env['base'];
-	$local = $env['local'];
+	$relpath = substr($base, strlen($base) - strpos(strrev($base), '/', 1));
 	$fntype = $env['fntype'];
 	
 	for ($i = 0; $i < $count; $i += 2)
@@ -254,7 +286,7 @@ function show_index($fp, $fns, $env)
 		$rel = make_href($name) . ($overload ? "($args_text)" : "");
 		
 		fwrite($fp, "<TR VALIGN=\"top\">
-<TD width=\"35%\" height=\"19\"><b><a href=$base$rel.htm>$name($args_text)</a></b>\n</TD>
+<TD width=\"35%\" height=\"19\"><b><a href=$relpath$rel.htm>$name($args_text)</a></b>\n</TD>
 <TD width=\"65%\" height=\"19\">\n"); show_brief($fp, $fns[$i]);
 		fwrite($fp, "</TD></TR>\n");
 		
@@ -323,8 +355,7 @@ function show_methods($fp, $class, $env)
 function show_class($comment, $s, $env)
 {
 	$class = $s->class;
-	@mkdir($env['path']);
-	$file = $env['local'] . $class->name . '.htm';
+	$file = $env['base'] . $class->name . '.htm';
 	$fp = fopen($file, 'w');
 	if (!$fp) {
 		echo "---> ERROR: Create file `$file` failed!\n";
@@ -337,10 +368,9 @@ function show_class($comment, $s, $env)
 	show_desc($fp, $comment);
 	show_remark($fp, $comment);
 	{
-		$env2 = array_merge($env, array(
-			'ns' => $env['ns'] . "$class->name::",
-			'base' => $env['base'] . "$class->name.",
-			'local' => $env['local'] . "$class->name."));
+		$base = $env['base'] . "$class->name/";
+		@mkdir($base);
+		$env2 = array_merge($env, array('base' => $base));
 		show_ctors($fp, $class, $env2);
 		show_methods($fp, $class, $env2);
 	}

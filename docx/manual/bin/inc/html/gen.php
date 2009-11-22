@@ -1,7 +1,5 @@
 <?php
-	$env = array(
-		'ns' => '', 'base' => '', 'local' => 'default/',
-		'respath' => '../res', 'path' => 'default/');
+	$env = array('base' => 'default/');
 	
 	foreach ($doc->sentences as $s)
 	{
@@ -10,8 +8,12 @@
 			$comment = $s->comment;
 			if (isset($comment->category))
 				$env['category'] = $comment->category;
-			if (isset($comment->ns)) {
-				$env['local'] = $env['path'] = $comment->ns . '/';
+			if (isset($comment->ns))
+			{
+				$base = str_replace(array('::', '.', '\\'), array('/', '/', '/'), $comment->ns) . '/';
+				$base = str_replace('//', '/', $base);
+				@mkdir($base, 0700, true);
+				$env['base'] = $base;
 			}
 		}
 		else
