@@ -100,14 +100,20 @@ function show_desc($fp, $comment)
 {
 }
 
+function show_retval($fp, $comment)
+{
+	if (!isset($comment) || !isset($comment->return))
+		return;
+	
+	fwrite($fp, "<H4>返回值</H4>\n");
+	extended_text($fp, $comment->return);
+}
+
 function show_remark($fp, $comment)
 {
-	if (!isset($comment))
+	if (!isset($comment) || !isset($comment->remark))
 		return;
-		
-	if (!isset($comment->remark))
-		return;
-
+	
 	fwrite($fp, "<H4>注意点</H4>\n");
 	extended_text($fp, $comment->remark);
 }
@@ -226,6 +232,7 @@ function show_fn($comment, $s, $rel, $env)
 	topic_start($fp, $comment, $rel, $env);
 	fn_decl($fp, @$s->template, $fn);
 	show_args($fp, $comment);
+	show_retval($fp, $comment);
 	show_desc($fp, $comment);
 	show_remark($fp, $comment);
 	topic_end($fp, $comment, $env);
