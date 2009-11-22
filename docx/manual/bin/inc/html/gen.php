@@ -3,12 +3,18 @@
 
 	$env = array(
 		"respath" => "res", "titlefmt" => "%s", "headerfmt" => "%s",
-		"categroy" => "Test Library", "base" => "");
+		"base" => "");
 	
 	foreach ($doc->sentences as $s)
 	{
 		if (isset($s->comment))
+		{
 			$comment = $s->comment;
+			if (isset($comment->category))
+			{
+				$env["category"] = $comment->category;
+			}
+		}
 		else
 		{
 			if (isset($s->class))

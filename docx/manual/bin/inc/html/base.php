@@ -62,8 +62,8 @@ function topic_start($comment, $code, $env)
 	$header = sprintf($env["headerfmt"], $code->name);
 	html_header($title, $env);
 	echo "<BODY TOPMARGIN=\"0\">\n";
-	if (isset($env["categroy"]))
-		header_bar($env["categroy"]);
+	if (isset($env["category"]))
+		header_bar($env["category"]);
 	echo "<H1>$header</H1>";
 	show_brief($comment);
 }
