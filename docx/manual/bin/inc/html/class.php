@@ -24,23 +24,8 @@ function class_decl($fp, $template, $class)
 
 function show_ctors($fp, $class, $env)
 {
-	foreach ($class->sentences as $s)
-	{
-		if (isset($s->comment))
-			$comment = $s->comment;
-		else
-		{
-			if (isset($s->ctor))
-			{
-				$ctors[] = $comment;
-				$ctors[] = $s->ctor;
-			}
-			unset($comment);
-		}
-	}
-	
-	return show_index($fp, $ctors, array_merge($env, array(
-		"title" => "构造函数", "name" => "Constructor", "desc" => "Description")));
+	return show_fntable($fp, $class, array_merge($env, array(
+		"fn" => "ctor", "title" => "构造函数", "name" => "Constructor", "desc" => "Description")));
 }
 
 function show_methods($fp, $class, $env)

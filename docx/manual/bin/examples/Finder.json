@@ -97,7 +97,8 @@
           },
           {
             "ctor": {
-              "name": "Finder"
+              "name": "Finder",
+              "funcattr": ""
             }
           },
           {
@@ -160,7 +161,8 @@
                   "type": "size_type ",
                   "name": "cchLen"
                 }
-              ]
+              ],
+              "funcattr": ""
             }
           },
           {
@@ -209,7 +211,8 @@
                   "type": "const char_type* ",
                   "name": "szPattern"
                 }
-              ]
+              ],
+              "funcattr": ""
             }
           },
           {
@@ -259,7 +262,8 @@
                   "type": "const std::basic_string<_E>& ",
                   "name": "strPattern"
                 }
-              ]
+              ],
+              "funcattr": ""
             }
           },
           {
