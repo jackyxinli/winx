@@ -1,28 +1,28 @@
 <?php
 
-function class_decl($template, $class)
+function class_decl($fp, $template, $class)
 {
-	echo "<PRE class=\"syntax\"><B>";
+	fwrite($fp, "<PRE class=\"syntax\"><B>");
 	if (isset($template))
-		echo htmlspecialchars($template->header) . "<BR>";
-	echo "$class->keyword $class->name";
+		fwrite($fp, htmlspecialchars($template->header) . "<BR>");
+	fwrite($fp, "$class->keyword $class->name");
 	if (isset($class->bases))
 	{
-		echo " : <BR>\n";
+		fwrite($fp, " : <BR>\n");
 		foreach ($class->bases as $i => $base)
 		{
-			echo "&#x20;&#x20;";
+			fwrite($fp, "&#x20;&#x20;");
 			if ($i != 0)
-				echo ",<BR>";
+				fwrite($fp, ",<BR>");
 			if ($base->access)
-				echo "$base->access ";
-			echo $base->name;
+				fwrite($fp, "$base->access ");
+			fwrite($fp, $base->name);
 		}
 	}
-	echo ";<BR/></B></PRE>\n";
+	fwrite($fp, ";<BR/></B></PRE>\n");
 }
 
-function show_ctors($class, $base)
+function show_ctors($fp, $class, $env)
 {
 	foreach ($class->sentences as $s)
 	{
@@ -39,28 +39,40 @@ function show_ctors($class, $base)
 		}
 	}
 	
-	return show_index($ctors, array(
-		"title" => "构造函数", "name" => "Constructor", "desc" => "Description"),
-		$base . "$class->name.");
+	return show_index($fp, $ctors, array_merge($env, array(
+		"title" => "构造函数", "name" => "Constructor", "desc" => "Description")));
 }
 
-function show_methods($class, $base)
+function show_methods($fp, $class, $env)
 {
-	show_fntable($class, array(
-		"fn" => "member", "title" => "方法列表", "name" => "Method", "desc" => "Description"),
-		$base . "$class->name.");
+	show_fntable($fp, $class, array_merge($env, array(
+		"fn" => "member", "title" => "方法列表", "name" => "Method", "desc" => "Description")));
 }
 
 function show_class($comment, $template, $class, $env)
 {
-	topic_start($comment, $class, $env);
-	class_decl($template, $class);
-	show_args($comment);
-	show_desc($comment);
-	show_remark($comment);
-	show_ctors($class, $env["base"]);
-	show_methods($class, $env["base"]);
-	topic_end($comment, $env);
+	$file = $env["local"] . $class->name . ".htm";
+	$fp = fopen($file, 'w');
+	if (!$fp) {
+		echo "---> ERROR: Create file `$file` failed!\n";
+		return;
+	}
+
+	topic_start($fp, $comment, $class, $env);
+	class_decl($fp, $template, $class);
+	show_args($fp, $comment);
+	show_desc($fp, $comment);
+	show_remark($fp, $comment);
+	{
+		$env2 = array_merge($env, array(
+			"base" => $env["base"] . "$class->name.",
+			"local" => $env["local"] . "$class->name."));
+		show_ctors($fp, $class, $env2);
+		show_methods($fp, $class, $env2);
+	}
+	topic_end($fp, $comment, $env);
+	
+	fclose($fp);
 }
 
 ?>

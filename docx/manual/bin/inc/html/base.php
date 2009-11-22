@@ -1,15 +1,56 @@
 <?php
 
-function html_header($title, $env) { echo
+// -------------------------------------------------------------------------
+// utilities
+
+function make_href($name)
+{
+	return $name;
+}
+
+function extended_text($fp, $rtf)
+{
+	foreach ($rtf as $item)
+	{
+		if (isset($item->text))
+			fwrite($fp, $item->text);
+	};
+}
+
+function show_args($fp, $comment)
+{
+	if (!isset($comment))
+		return;
+	
+	if (!isset($comment->args))
+		return;
+	
+	fwrite($fp, "<H4>参数说明</H4><DL>");
+	foreach ($comment->args as $arg)
+	{
+		fwrite($fp, "<DT>");
+		if (isset($arg->attr))
+			fwrite($fp, "[$arg->attr] ");
+		fwrite($fp, "<I>$arg->name</I></DT><DD>");
+		extended_text($fp, $arg->body);
+		fwrite($fp, "</DD>");
+	}
+	fwrite($fp, "</DL>\n");
+}
+
+// -------------------------------------------------------------------------
+// topic start/end
+
+function html_header($fp, $title, $env) { fwrite($fp,
 "<HEAD>
 <META http-equiv=\"Content-Type\" content=\"text/html; charset=gbk\">
 <TITLE>$title</TITLE>
 <SCRIPT SRC=\"$env[respath]/langref.js\"></SCRIPT>
 <LINK REL=\"STYLESHEET\" HREF=\"$env[respath]/backsdk4.css\">
 </HEAD>
-"; }
+"); }
 
-function header_bar($category) { echo
+function header_bar($fp, $category) { fwrite($fp,
 "<TABLE CLASS=\"buttonbarshade\" CELLSPACING=\"0\">
 <TR><TD>&#x20;</TD></TR>
 </TABLE>
@@ -18,18 +59,9 @@ function header_bar($category) { echo
 <TD CLASS=\"runninghead\" NOWRAP=\"NOWRAP\">$category</TD>
 </TR>
 </TABLE>
-"; }
+");}
 
-function extended_text($rtf)
-{
-	foreach ($rtf as $item)
-	{
-		if (isset($item->text))
-			echo $item->text;
-	};
-}
-
-function show_brief($comment)
+function show_brief($fp, $comment)
 {
 	if (!isset($comment))
 		return;
@@ -37,14 +69,14 @@ function show_brief($comment)
 	if (!isset($comment->brief))
 		return;
 	
-	extended_text($comment->brief);
+	extended_text($fp, $comment->brief);
 }
 
-function show_desc($comment)
+function show_desc($fp, $comment)
 {
 }
 
-function show_remark($comment)
+function show_remark($fp, $comment)
 {
 	if (!isset($comment))
 		return;
@@ -52,51 +84,33 @@ function show_remark($comment)
 	if (!isset($comment->remark))
 		return;
 
-	extended_text($comment->remark);
+	extended_text($fp, $comment->remark);
 }
 
-function topic_start($comment, $code, $env)
+function topic_start($fp, $comment, $code, $env)
 {
-	echo "<HTML>";
+	fwrite($fp, "<HTML>");
 	$title = sprintf($env["titlefmt"], $code->name);
 	$header = sprintf($env["headerfmt"], $code->name);
-	html_header($title, $env);
-	echo "<BODY TOPMARGIN=\"0\">\n";
+	html_header($fp, $title, $env);
+	fwrite($fp, "<BODY TOPMARGIN=\"0\">\n");
 	if (isset($env["category"]))
-		header_bar($env["category"]);
-	echo "<H1>$header</H1>";
-	show_brief($comment);
+		header_bar($fp, $env["category"]);
+	fwrite($fp, "<H1>$header</H1>");
+	show_brief($fp, $comment);
 }
 
-function topic_end($comment, $env)
+function topic_end($fp, $comment, $env)
 {
 	//@example
-	echo "<DIV CLASS=\"itfBorder\"><IMG SRC=\"$env[respath]/tiny.gif\" width=\"1\" height=\"1\"/></DIV>";
+	fwrite($fp, "<DIV CLASS=\"itfBorder\"><IMG SRC=\"$env[respath]/tiny.gif\" width=\"1\" height=\"1\"/></DIV>");
 	//@require
 	//@see
-	echo "</BODY></HTML>";
+	fwrite($fp, "</BODY></HTML>");
 }
 
-function show_args($comment)
-{
-	if (!isset($comment))
-		return;
-	
-	if (!isset($comment->args))
-		return;
-	
-	echo "<H4>参数说明</H4><DL>";
-	foreach ($comment->args as $arg)
-	{
-		echo "<DT>";
-		if (isset($arg->attr))
-			echo "[$arg->attr] ";
-		echo "<I>$arg->name</I></DT><DD>";
-		extended_text($arg->body);
-		echo "</DD>";
-	}
-	echo "</DL>\n";
-}
+// -------------------------------------------------------------------------
+// show index table
 
 function check_topic_name($comment, $code)
 {
@@ -133,18 +147,6 @@ function check_arg_names($comment, $code)
 	return true;
 }
 
-function make_href($name)
-{
-	return $name;
-}
-
-function has_overload($fns, $name, $i, $n)
-{
-	if ($i >= 2 && $fns[$i - 1]->name == $name)
-		return true;
-	return ($i + 2 < $n && $fns[$i+3]->name == $name);
-}
-
 /*@@todo: 一致性检查在topic自身处完成，而不是在引用处完成!
 		if (!check_topic_name($comment, $fn))
 		{
@@ -158,18 +160,29 @@ function has_overload($fns, $name, $i, $n)
 			continue;
 		}
 */
-function show_index($fns, $env, $base)
+
+function has_overload($fns, $name, $i, $n)
 {
-	$count = count($fns);
+	if ($i >= 2 && $fns[$i - 1]->name == $name)
+		return true;
+	return ($i + 2 < $n && $fns[$i+3]->name == $name);
+}
+
+function show_index($fp, $fns, $env)
+{
+	$count = count($fns);	
 	if ($count == 0)
 		return;
 	
-	echo "<H4>$env[title]</H4>
+	fwrite($fp, "<H4>$env[title]</H4>
 <TABLE height=\"1\">
 <TR VALIGN=\"top\">
 <TH align=\"left\" width=\"35%\" height=\"19\">$env[name]</TH>
 <TH align=\"left\" width=\"65%\" height=\"19\">$env[desc]</TH>
-</TR>";
+</TR>");
+	
+	$base = $env["base"];
+	$local = $env["local"];
 	
 	for ($i = 0; $i < $count; $i += 2)
 	{
@@ -186,16 +199,19 @@ function show_index($fns, $env, $base)
 		}
 		
 		$name = $fn->name;
-		$href =	$base . make_href($name) . (has_overload($fns, $name, $i, $count) ? "($args_text).htm" : ".htm");
+		$rel = make_href($name) . (has_overload($fns, $name, $i, $count) ? "($args_text).htm" : ".htm");
 		
-		echo "<TR VALIGN=\"top\"><TD width=\"35%\" height=\"19\"><b><a href=$href>$name($args_text)</a></b>\n";
-		echo "</TD><TD width=\"65%\" height=\"19\">\n";	show_brief($fns[$i]);
-		echo "</TD></TR>\n";
+		fwrite($fp, "<TR VALIGN=\"top\">
+<TD width=\"35%\" height=\"19\"><b><a href=$base$rel>$name($args_text)</a></b>\n</TD>
+<TD width=\"65%\" height=\"19\">\n"); show_brief($fp, $fns[$i]);
+		fwrite($fp, "</TD></TR>\n");
 	}
-	echo "</TABLE>\n";
+	fwrite($fp, "</TABLE>\n");
 }
 
-function show_fntable($code, $env, $base)
+// -------------------------------------------------------------------------
+
+function show_fntable($fp, $code, $env)
 {
 	$fn = $env["fn"];
 	foreach ($code->sentences as $s)
@@ -212,15 +228,9 @@ function show_fntable($code, $env, $base)
 			unset($comment);
 		}
 	}
-	show_index($fns, $env, $base);
+	show_index($fp, $fns, $env);
 }
 
-function save($file)
-{
-	$fp = fopen($file, 'w');
-	fwrite($fp, ob_get_contents());
-	fclose($fp);
-	ob_clean();
-}
+// -------------------------------------------------------------------------
 
 ?>
