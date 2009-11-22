@@ -55,13 +55,6 @@ function res_path($base)
 	}
 }
 
-function ns($base)
-{
-	if ($base == 'default/')
-		return '';
-	return str_replace('/', '::', $base);
-}
-
 function html_header($fp, $title, $env)
 {
 	$respath = res_path($env['base']);
@@ -122,7 +115,7 @@ function show_remark($fp, $comment)
 function topic_start($fp, $comment, $rel, $env)
 {
 	fwrite($fp, "<HTML>");
-	$title = $header = ns($env['base']) . $rel;
+	$title = $header = $env['nsdisp'] . $rel;
 	html_header($fp, $title, $env);
 	fwrite($fp, "<BODY TOPMARGIN=\"0\">\n");
 	if (isset($env['category']))
@@ -370,7 +363,8 @@ function show_class($comment, $s, $env)
 	{
 		$base = $env['base'] . "$class->name/";
 		@mkdir($base);
-		$env2 = array_merge($env, array('base' => $base));
+		$env2 = array_merge($env, array(
+			'base' => $base, 'nsdisp' => "$class->name::"));
 		show_ctors($fp, $class, $env2);
 		show_methods($fp, $class, $env2);
 	}

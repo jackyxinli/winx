@@ -1,5 +1,5 @@
 <?php
-	$env = array('base' => 'default/');
+	$env = array('base' => 'default/', 'nsdisp' => '');
 	
 	foreach ($doc->sentences as $s)
 	{
@@ -14,6 +14,7 @@
 				$base = str_replace('//', '/', $base);
 				@mkdir($base, 0700, true);
 				$env['base'] = $base;
+				$env['nsdisp'] = str_replace('/', '::', $base);
 			}
 		}
 		else
