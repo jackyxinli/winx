@@ -41,14 +41,14 @@ function show_ctors($class, $base)
 	
 	return show_index($ctors, array(
 		"title" => "构造函数", "name" => "Constructor", "desc" => "Description"),
-		$base . "$class->name");
+		$base . "$class->name.");
 }
 
 function show_methods($class, $base)
 {
 	show_fntable($class, array(
 		"fn" => "member", "title" => "方法列表", "name" => "Method", "desc" => "Description"),
-		$base . "$class->name");
+		$base . "$class->name.");
 }
 
 function show_class($comment, $template, $class, $env)

@@ -138,6 +138,13 @@ function make_href($name)
 	return $name;
 }
 
+function has_overload($fns, $name, $i, $n)
+{
+	if ($i >= 2 && $fns[$i - 1]->name == $name)
+		return true;
+	return ($i + 2 < $n && $fns[$i+3]->name == $name);
+}
+
 /*@@todo: 一致性检查在topic自身处完成，而不是在引用处完成!
 		if (!check_topic_name($comment, $fn))
 		{
@@ -179,7 +186,7 @@ function show_index($fns, $env, $base)
 		}
 		
 		$name = $fn->name;
-		$href =	$base . make_href($name) . ($count > 1 ? "($args_text).htm" : ".htm");
+		$href =	$base . make_href($name) . (has_overload($fns, $name, $i, $count) ? "($args_text).htm" : ".htm");
 		
 		echo "<TR VALIGN=\"top\"><TD width=\"35%\" height=\"19\"><b><a href=$href>$name($args_text)</a></b>\n";
 		echo "</TD><TD width=\"65%\" height=\"19\">\n";	show_brief($fns[$i]);
