@@ -1,9 +1,9 @@
 @echo off
 if "%1" == "" (
-	echo "Usage: sdlc <server_description_language_file.sdl>"
+	echo "Usage: manual <cpp_file>"
 	goto exit
 	)
 set AppPath=%~dp0
-"%AppPath%\win32\sdl2json.exe" %1 | php "%AppPath%\gen_cpps"
+"%AppPath%\win32\cpp2json.exe" %1 | php "%AppPath%\gen_htmls"
 set AppPath=
 :exit
