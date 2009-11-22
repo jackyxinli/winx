@@ -19,6 +19,11 @@
 		}
 		else
 		{
+			if (!isset($base))
+			{
+				$base = 'default/';
+				@mkdir($base);
+			}
 			if (isset($s->class))
 			{
 				show_class($comment, $s, $env);

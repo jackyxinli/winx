@@ -5,10 +5,10 @@
 
 extern dom::Mark tagTopicArgs("args", true);
 extern dom::Mark tagTopicBrief("brief", true);
-extern dom::Mark tagSeeTopics("topics", true);
 
 extern dom::Mark tagCategory("category");
 extern dom::Mark tagNamespace("ns");
+extern dom::Mark tagInclude("include");
 extern dom::Mark tagTopicType("type");
 extern dom::Mark tagText("text");
 extern dom::Mark tagUnknown("unknown");
@@ -19,6 +19,7 @@ extern dom::Mark tagAttr("attr");
 extern dom::NodeMark tagVals("vals", true);
 extern dom::NodeMark tagDescs("descriptions", true);
 extern dom::NodeMark tagSees("sees", true);
+extern dom::NodeMark tagSeeTopics("topics", true);
 
 extern dom::NodeMark tagCommentDoc("comment");
 extern dom::NodeMark tagTopic("topic");

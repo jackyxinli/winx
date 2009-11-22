@@ -32,6 +32,7 @@
 extern dom::NodeMark tagCommentDoc;
 	extern dom::Mark tagCategory;
 	extern dom::Mark tagNamespace;
+	extern dom::Mark tagInclude;
 	extern dom::Mark tagSummary;
 	extern dom::NodeMark tagTopic;
 		extern dom::Mark tagTopicType;
@@ -53,7 +54,7 @@ extern dom::NodeMark tagCommentDoc;
 	extern dom::NodeMark tagReturn; // extend text
 	extern dom::NodeMark tagRemark; // extend text
 	extern dom::NodeMark tagSees;
-		extern dom::Mark tagSeeTopics;
+		extern dom::NodeMark tagSeeTopics;
 	extern dom::Mark tagUnknown;
 
 class TUnused;
@@ -85,7 +86,8 @@ class TUnused;
 
 #define categorydoc		( "@category" + ws() + find_eol()/tagCategory )
 #define nsdoc			( "@ns" + ws() + find_eol()/tagNamespace )
-#define envdoc			( categorydoc | nsdoc )
+#define incdoc			( "@include" + ws() + find_eol()/tagInclude )
+#define envdoc			( categorydoc | nsdoc | incdoc )
 
 #define retdoc			( "@return" + ws() + extend_text/tagReturn )
 
@@ -96,7 +98,10 @@ class TUnused;
 #define descdoc_one		( "@desc" + ws() + find_eol()/tagCaption + skipws() + extend_text/tagBody )
 #define descdoc			( +(skipws() + descdoc_one/tagDescs) )
 
-#define seedoc_one		( "@see" + ws() + topicsymbol/tagSeeTopics % comma )
+#define seesymbol		( !str("::") + (c_symbol() % "::") + symbol_arg )
+#define seetext1		( seesymbol/tagName )
+#define seetext2		( '[' + seetext1 + !(skipws() + '|' + skipws() + find(']')/tagText) + ']' )
+#define seedoc_one		( "@see" + ws() + (seetext2 | seetext1)/tagSeeTopics % comma )
 #define seedoc			( +(skipws() + seedoc_one/tagSees) )
 
 #define summarydoc		( token<'@'>()/tagSummary )

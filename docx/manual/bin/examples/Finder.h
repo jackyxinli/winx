@@ -1,6 +1,7 @@
 /*
 @category STL-Extension(stdext) Library
 @ns stdext.kmp
+@include <stdext/kmp/Finder.h>
 @*/
 
 // -------------------------------------------------------------------------
@@ -16,14 +17,14 @@ template < class _E, class _Strategy = MatchCase<_E> >
 class Finder
 {
 	/** Default constructor.
-	@see Finder, initPattern, getPattern
+	@see [Finder], initPattern, getPattern
 	@*/
 	Finder();
 	
 	/** Construct the finder object with a pattern string.
 	@arg [in] szPattern		The start address of pattern string buffer.
 	@arg [in] cchLen		The length of pattern string.
-	@see Finder, initPattern, getPattern
+	@see [Finder | constructor], initPattern, getPattern
 	@*/
 	Finder(const char_type* szPattern, size_type cchLen);
 	

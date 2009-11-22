@@ -3,9 +3,35 @@
 // -------------------------------------------------------------------------
 // utilities
 
-function make_href($name)
+function pathspec($name)
 {
 	return $name;
+}
+
+function makerel($href, $file)
+{
+	$off = 0;
+	for (;;)
+	{
+		$pos = strpos($href, '/', $off);
+		if ($pos === false)
+			break;
+		$len = $pos + 1 - $off;
+		if (substr($href, $off, $len) != substr($file, $off, $len))
+			break;
+		$off = $pos + 1;
+	}
+	
+	$p = '';
+	$href = substr($href, $off);
+	for (;;)
+	{
+		$pos = strpos($file, '/', $off);
+		if ($pos === false)
+			return $p . $href;
+		$p .= '../';
+		$off = $pos + 1;
+	}
 }
 
 function extended_text($fp, $rtf)
@@ -53,26 +79,41 @@ function show_args($fp, $comment)
 	fwrite($fp, "</DL>\n");
 }
 
+function show_sees($fp, $sees, $file, $env)
+{
+	if (!isset($sees))
+		return;
+	
+	$notfirst = false;
+	fwrite($fp, "<H4>See Also</H4><DL><DT><B>Reference</B></DT><DD>");
+	foreach ($sees as $see)
+	{
+		foreach ($see->topics as $topic)
+		{
+			$href = str_replace('::', '/', $topic->name) . '.htm';
+			$pos = strpos($href, '/');
+			if ($pos === false)
+				$href = $env['base'] . $href;
+			else if ($pos === 0)
+				$href = substr($href, 1);
+			$href = makerel($href, $file);
+			$text = (isset($topic->text) ? $topic->text : $topic->name);
+			if ($notfirst)
+				fwrite($fp, ' | ');
+			else
+				$notfirst = true;
+			fwrite($fp, "<a href=$href><b>$text</b></a>");
+		}
+	}
+	fwrite($fp, "</DD></DL>\n");
+}
+
 // -------------------------------------------------------------------------
 // topic start/end
 
-function res_path($base)
+function html_header($fp, $title, $file, $env)
 {
-	$p = '';
-	$off = 0;
-	for (;;)
-	{
-		$pos = strpos($base, '/', $off);
-		if ($pos === false)
-			return $p . 'res';
-		$p .= '../';
-		$off = $pos + 1;
-	}
-}
-
-function html_header($fp, $title, $env)
-{
-	$respath = res_path($env['base']);
+	$respath = makerel('res', $file);
 	fwrite($fp,
 "<HEAD>
 <META http-equiv=\"Content-Type\" content=\"text/html; charset=gbk\">
@@ -133,13 +174,13 @@ function show_remark($fp, $comment)
 	extended_text($fp, $comment->remark);
 }
 
-function topic_start($fp, $comment, $rel, $env)
+function topic_start($fp, $comment, $rel, $file, $env)
 {
 	fwrite($fp, "<HTML>");
 	$category = $env['category'];
 	$header = $env['nsdisp'] . $rel;
 	$title = isset($category) ? "$header - $category" : $header;
-	html_header($fp, $title, $env);
+	html_header($fp, $title, $file, $env);
 	fwrite($fp, "<BODY TOPMARGIN=\"0\">\n");
 	if (isset($category))
 		header_bar($fp, $category);
@@ -147,13 +188,13 @@ function topic_start($fp, $comment, $rel, $env)
 	show_brief($fp, $comment);
 }
 
-function topic_end($fp, $comment, $env)
+function topic_end($fp, $comment, $file, $env)
 {
-	$respath = res_path($env['base']);
-	//@example
+	$respath = makerel('res', $file);
+	//@@todo: example
 	fwrite($fp, "<DIV CLASS=\"itfBorder\"><IMG SRC=\"$respath/tiny.gif\" width=\"1\" height=\"1\"/></DIV>");
-	//@require
-	//@see
+	//@@todo: require
+	show_sees($fp, @$comment->sees, $file, $env);
 	fwrite($fp, "</BODY></HTML>");
 }
 
@@ -246,13 +287,13 @@ function show_fn($comment, $s, $rel, $env)
 		return;
 	}
 
-	topic_start($fp, $comment, $rel, $env);
+	topic_start($fp, $comment, $rel, $file, $env);
 	fn_decl($fp, @$s->template, $fn);
 	show_args($fp, $comment);
 	show_retval($fp, $comment);
 	show_desc($fp, $comment);
 	show_remark($fp, $comment);
-	topic_end($fp, $comment, $env);
+	topic_end($fp, $comment, $file, $env);
 	
 	fclose($fp);
 }
@@ -267,7 +308,7 @@ function has_overload($fns, $fntype, $name, $i, $n)
 	return ($i + 2 < $n && $fns[$i+3]->$fntype->name == $name);
 }
 
-function show_index($fp, $fns, $env)
+function show_index($fp, $fns, $file, $env)
 {
 	$count = count($fns);	
 	if ($count == 0)
@@ -281,7 +322,6 @@ function show_index($fp, $fns, $env)
 </TR>");
 	
 	$base = $env['base'];
-	$relpath = substr($base, strlen($base) - strpos(strrev($base), '/', 1));
 	$fntype = $env['fntype'];
 	
 	for ($i = 0; $i < $count; $i += 2)
@@ -300,10 +340,11 @@ function show_index($fp, $fns, $env)
 		
 		$name = $fn->name;
 		$overload = has_overload($fns, $fntype, $name, $i, $count);
-		$rel = make_href($name) . ($overload ? "($args_text)" : "");
+		$rel = pathspec($name) . ($overload ? "($args_text)" : "");
+		$href = makerel("$base$rel.htm", $file);
 		
 		fwrite($fp, "<TR VALIGN=\"top\">
-<TD width=\"35%\" height=\"19\"><b><a href=$relpath$rel.htm>$name($args_text)</a></b>\n</TD>
+<TD width=\"35%\" height=\"19\"><b><a href=$href>$name($args_text)</a></b>\n</TD>
 <TD width=\"65%\" height=\"19\">\n"); show_brief($fp, $fns[$i]);
 		fwrite($fp, "</TD></TR>\n");
 		
@@ -312,7 +353,7 @@ function show_index($fp, $fns, $env)
 	fwrite($fp, "</TABLE>\n");
 }
 
-function show_fntable($fp, $code, $env)
+function show_fntable($fp, $code, $file, $env)
 {
 	$fntype = $env['fntype'];
 	foreach ($code->sentences as $s)
@@ -329,7 +370,7 @@ function show_fntable($fp, $code, $env)
 			unset($comment);
 		}
 	}
-	show_index($fp, $fns, $env);
+	show_index($fp, $fns, $file, $env);
 }
 
 // -------------------------------------------------------------------------
@@ -357,15 +398,15 @@ function class_decl($fp, $template, $class)
 	fwrite($fp, ";<BR/></B></PRE>\n");
 }
 
-function show_ctors($fp, $class, $env)
+function show_ctors($fp, $class, $file, $env)
 {
-	return show_fntable($fp, $class, array_merge($env, array(
+	return show_fntable($fp, $class, $file, array_merge($env, array(
 		'fntype' => "ctor", "title" => "构造函数", "name" => "Constructor", "desc" => "Description")));
 }
 
-function show_methods($fp, $class, $env)
+function show_methods($fp, $class, $file, $env)
 {
-	show_fntable($fp, $class, array_merge($env, array(
+	show_fntable($fp, $class, $file, array_merge($env, array(
 		'fntype' => "member", "title" => "方法列表", "name" => "Method", "desc" => "Description")));
 }
 
@@ -379,7 +420,7 @@ function show_class($comment, $s, $env)
 		return;
 	}
 
-	topic_start($fp, $comment, $class->name, $env);
+	topic_start($fp, $comment, $class->name, $file, array_merge($env, array('nsdisp' => 'class ')));
 	class_decl($fp, $s->template, $class);
 	show_args($fp, $comment);
 	show_desc($fp, $comment);
@@ -389,10 +430,10 @@ function show_class($comment, $s, $env)
 		@mkdir($base);
 		$env2 = array_merge($env, array(
 			'base' => $base, 'nsdisp' => "$class->name::"));
-		show_ctors($fp, $class, $env2);
-		show_methods($fp, $class, $env2);
+		show_ctors($fp, $class, $file, $env2);
+		show_methods($fp, $class, $file, $env2);
 	}
-	topic_end($fp, $comment, $env);
+	topic_end($fp, $comment, $file, $env);
 	
 	fclose($fp);
 }

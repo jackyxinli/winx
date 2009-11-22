@@ -4,7 +4,8 @@
     {
       "comment": {
         "category": "STL-Extension(stdext) Library",
-        "ns": "stdext.kmp"
+        "ns": "stdext.kmp",
+        "include": "<stdext/kmp/Finder.h>"
       }
     },
     {
@@ -68,9 +69,15 @@
                 {
                   "topics": 
                   [
-                    "Finder",
-                    "initPattern",
-                    "getPattern"
+                    {
+                      "name": "Finder"
+                    },
+                    {
+                      "name": "initPattern"
+                    },
+                    {
+                      "name": "getPattern"
+                    }
                   ]
                 }
               ]
@@ -113,9 +120,16 @@
                 {
                   "topics": 
                   [
-                    "Finder",
-                    "initPattern",
-                    "getPattern"
+                    {
+                      "name": "Finder",
+                      "text": "constructor"
+                    },
+                    {
+                      "name": "initPattern"
+                    },
+                    {
+                      "name": "getPattern"
+                    }
                   ]
                 }
               ]
@@ -159,9 +173,15 @@
                 {
                   "topics": 
                   [
-                    "Finder",
-                    "initPattern",
-                    "getPattern"
+                    {
+                      "name": "Finder"
+                    },
+                    {
+                      "name": "initPattern"
+                    },
+                    {
+                      "name": "getPattern"
+                    }
                   ]
                 }
               ]
@@ -201,9 +221,15 @@
                 {
                   "topics": 
                   [
-                    "Finder",
-                    "initPattern",
-                    "getPattern"
+                    {
+                      "name": "Finder"
+                    },
+                    {
+                      "name": "initPattern"
+                    },
+                    {
+                      "name": "getPattern"
+                    }
                   ]
                 }
               ]
@@ -266,9 +292,15 @@
                 {
                   "topics": 
                   [
-                    "Finder",
-                    "initPattern",
-                    "getPattern"
+                    {
+                      "name": "Finder"
+                    },
+                    {
+                      "name": "initPattern"
+                    },
+                    {
+                      "name": "getPattern"
+                    }
                   ]
                 }
               ]
@@ -326,9 +358,15 @@
                 {
                   "topics": 
                   [
-                    "Finder",
-                    "initPattern",
-                    "getPattern"
+                    {
+                      "name": "Finder"
+                    },
+                    {
+                      "name": "initPattern"
+                    },
+                    {
+                      "name": "getPattern"
+                    }
                   ]
                 }
               ]
@@ -382,9 +420,15 @@
                 {
                   "topics": 
                   [
-                    "Finder",
-                    "initPattern",
-                    "getPattern"
+                    {
+                      "name": "Finder"
+                    },
+                    {
+                      "name": "initPattern"
+                    },
+                    {
+                      "name": "getPattern"
+                    }
                   ]
                 }
               ]
@@ -475,7 +519,9 @@
                 {
                   "topics": 
                   [
-                    "good"
+                    {
+                      "name": "good"
+                    }
                   ]
                 }
               ]
@@ -522,8 +568,12 @@
                 {
                   "topics": 
                   [
-                    "Finder",
-                    "initPattern"
+                    {
+                      "name": "Finder"
+                    },
+                    {
+                      "name": "initPattern"
+                    }
                   ]
                 }
               ]
@@ -723,7 +773,9 @@
                 {
                   "topics": 
                   [
-                    "next"
+                    {
+                      "name": "next"
+                    }
                   ]
                 }
               ]
@@ -834,7 +886,9 @@
                 {
                   "topics": 
                   [
-                    "next"
+                    {
+                      "name": "next"
+                    }
                   ]
                 }
               ]
@@ -938,7 +992,9 @@
                 {
                   "topics": 
                   [
-                    "next"
+                    {
+                      "name": "next"
+                    }
                   ]
                 }
               ]
