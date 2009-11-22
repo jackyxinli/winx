@@ -13,7 +13,22 @@ function extended_text($fp, $rtf)
 	foreach ($rtf as $item)
 	{
 		if (isset($item->text))
-			fwrite($fp, $item->text);
+			fwrite($fp, "$item->text");
+		else if (isset($item->table))
+		{
+			fwrite($fp, 
+"<TABLE height=\"1\"><TR VALIGN=\"top\">
+<TH align=\"left\" width=\"35%\" height=\"19\">Value</TH>
+<TH align=\"left\" width=\"65%\" height=\"19\">Meaning</TH>
+</TR>\n");
+			foreach ($item->table->vals as $v)
+			{
+				fwrite($fp,
+"<TR VALIGN=\"top\"><TD width=\"35%\" height=\"19\">$v->name</TD>
+<TD width=\"65%\" height=\"19\">$v->text</TD></TR>\n");
+			}
+			fwrite($fp, "</TABLE>\n");
+		}
 	}
 }
 
