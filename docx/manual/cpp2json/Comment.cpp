@@ -22,9 +22,9 @@ extern dom::NodeMark tagCommentDoc("comment");
 extern dom::NodeMark tagTopic("topic");
 extern dom::NodeMark tagBrief("brief", true); // extend text
 extern dom::NodeMark tagTable("table");
-extern dom::NodeMark tagBody("body"); // extend text
-extern dom::NodeMark tagReturn("return"); // extend text
-extern dom::NodeMark tagRemark("remark"); // extend text
+extern dom::NodeMark tagBody("body", true); // extend text
+extern dom::NodeMark tagReturn("return", true); // extend text
+extern dom::NodeMark tagRemark("remark", true); // extend text
 
 impl::MarkedRule rComment(alloc, comment);
 

@@ -11,14 +11,12 @@ function html_header($title, $env) { echo
 
 function header_bar($category) { echo
 "<TABLE CLASS=\"buttonbarshade\" CELLSPACING=\"0\">
-	<TR>
-		<TD>&#x20;</TD>
-	</TR>
+<TR><TD>&#x20;</TD></TR>
 </TABLE>
 <TABLE CLASS=\"buttonbartable\" CELLSPACING=\"0\">
-	<TR ID=\"hdr\">
-		<TD CLASS=\"runninghead\" NOWRAP=\"NOWRAP\">$category</TD>
-	</TR>
+<TR ID=\"hdr\">
+<TD CLASS=\"runninghead\" NOWRAP=\"NOWRAP\">$category</TD>
+</TR>
 </TABLE>
 "; }
 
@@ -160,11 +158,11 @@ function show_index($fns, $env, $base)
 		return;
 	
 	echo "<H4>$env[title]</H4>
-	<TABLE height=\"1\">
-		<TR VALIGN=\"top\">
-			<TH align=\"left\" width=\"35%\" height=\"19\">$env[name]</TH>
-			<TH align=\"left\" width=\"65%\" height=\"19\">$env[desc]</TH>
-		</TR>";
+<TABLE height=\"1\">
+<TR VALIGN=\"top\">
+<TH align=\"left\" width=\"35%\" height=\"19\">$env[name]</TH>
+<TH align=\"left\" width=\"65%\" height=\"19\">$env[desc]</TH>
+</TR>";
 	
 	for ($i = 0; $i < $count; $i += 2)
 	{
@@ -185,7 +183,7 @@ function show_index($fns, $env, $base)
 		
 		echo "<TR VALIGN=\"top\"><TD width=\"35%\" height=\"19\"><b><a href=$href>$name($args_text)</a></b>\n";
 		echo "</TD><TD width=\"65%\" height=\"19\">\n";	show_brief($fns[$i]);
-		echo "</TD></TR>";
+		echo "</TD></TR>\n";
 	}
 	echo "</TABLE>\n";
 }
