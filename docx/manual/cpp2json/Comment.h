@@ -31,10 +31,10 @@
 
 extern dom::NodeMark tagCommentDoc;
 	extern dom::Mark tagCategory;
-	extern dom::Mark tagText;
+	extern dom::Mark tagNamespace;
+	extern dom::Mark tagSummary;
 	extern dom::NodeMark tagTopic;
 		extern dom::Mark tagTopicType;
-		extern dom::Mark tagPath;
 		extern dom::Mark tagTopicArgs;
 		extern dom::Mark tagTopicBrief;
 	extern dom::NodeMark tagBrief; // extend text
@@ -54,6 +54,7 @@ extern dom::NodeMark tagCommentDoc;
 	extern dom::NodeMark tagRemark; // extend text
 	extern dom::NodeMark tagSees;
 		extern dom::Mark tagSeeTopics;
+	extern dom::Mark tagUnknown;
 
 class TUnused;
 
@@ -72,8 +73,7 @@ class TUnused;
 #define extend_text		+( (table/tagTable | text/tagText) )
 
 #define topic_args		( topicsymbol/tagTopicArgs % comma )
-#define topic_gen		( ws() + attribute(tagPath) + skipws() + topic_args + \
-						  skip_non_eol_ws() + !(paragraph()/tagTopicBrief) )
+#define topic_gen		( ws() + topic_args + skip_non_eol_ws() + !(paragraph()/tagTopicBrief) )
 
 #define ctordoc			( '@' + "ctor"/tagTopicType + symbol_arg + \
 						  skip_non_eol_ws() + !(paragraph()/tagTopicBrief) )
@@ -84,6 +84,8 @@ class TUnused;
 // -------------------------------------------------------------------------
 
 #define categorydoc		( "@category" + ws() + find_eol()/tagCategory )
+#define nsdoc			( "@ns" + ws() + find_eol()/tagNamespace )
+#define envdoc			( categorydoc | nsdoc )
 
 #define retdoc			( "@return" + ws() + extend_text/tagReturn )
 
@@ -97,15 +99,16 @@ class TUnused;
 #define seedoc_one		( "@see" + ws() + topicsymbol/tagSeeTopics % comma )
 #define seedoc			( +(skipws() + seedoc_one/tagSees) )
 
+#define summarydoc		( token<'@'>()/tagSummary )
 #define briefdoc		( "@brief" + ws() + extend_text/tagBrief )
 #define remarkdoc		( "@remark" + ws() + extend_text/tagRemark )
 #define eofdoc			( '@' + eos() )
 
 // -------------------------------------------------------------------------
 
-#define comment_doc_one	( argdoc | seedoc | topicdoc | retdoc | remarkdoc | briefdoc | \
-						  descdoc | eofdoc | categorydoc | done()/tagText )
-#define comment_doc		( *(not_eos() + skipws() + comment_doc_one) )
+#define comment_doc_one	( argdoc | seedoc | topicdoc | retdoc | remarkdoc | \
+						  briefdoc | descdoc | eofdoc | envdoc | done()/tagUnknown )
+#define comment_doc		( !summarydoc + *(not_eos() + skipws() + comment_doc_one) )
 #define comment			( cpp_comment_content(alloc, comment_doc/tagCommentDoc) )
 
 // -------------------------------------------------------------------------

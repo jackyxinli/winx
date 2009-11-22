@@ -323,6 +323,7 @@ function show_methods($fp, $class, $env)
 function show_class($comment, $s, $env)
 {
 	$class = $s->class;
+	@mkdir($env['path']);
 	$file = $env['local'] . $class->name . '.htm';
 	$fp = fopen($file, 'w');
 	if (!$fp) {

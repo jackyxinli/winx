@@ -3,29 +3,18 @@
   [
     {
       "comment": {
-        "category": "STL-Extension(stdext) Library"
+        "category": "STL-Extension(stdext) Library",
+        "ns": "stdext.kmp"
       }
     },
     {
       "comment": {
-        "text": "class Finder\r\n"
+        "summary": "class Finder\r\n"
       }
     },
     {
       "comment": {
-        "topic": {
-          "type": "class",
-          "args": 
-          [
-            "Finder"
-          ]
-        },
-        "brief": 
-        [
-          {
-            "text": "The Finder class implements KMP string searching algorithm.\r\n"
-          }
-        ],
+        "summary": "The Finder class implements KMP string searching algorithm.\r\n",
         "args": 
         [
           {
@@ -73,15 +62,7 @@
         [
           {
             "comment": {
-              "topic": {
-                "type": "ctor"
-              },
-              "brief": 
-              [
-                {
-                  "text": "Default constructor.\r\n"
-                }
-              ],
+              "summary": "Default constructor.\r\n",
               "sees": 
               [
                 {
@@ -103,15 +84,7 @@
           },
           {
             "comment": {
-              "topic": {
-                "type": "ctor"
-              },
-              "brief": 
-              [
-                {
-                  "text": "Construct the finder object with a pattern string.\r\n"
-                }
-              ],
+              "summary": "Construct the finder object with a pattern string.\r\n",
               "args": 
               [
                 {
@@ -167,15 +140,7 @@
           },
           {
             "comment": {
-              "topic": {
-                "type": "ctor"
-              },
-              "brief": 
-              [
-                {
-                  "text": "Construct the finder object with a null-terminated pattern string (C-Style).\r\n"
-                }
-              ],
+              "summary": "Construct the finder object with a null-terminated pattern string (C-Style).\r\n",
               "args": 
               [
                 {
@@ -217,15 +182,7 @@
           },
           {
             "comment": {
-              "topic": {
-                "type": "ctor"
-              },
-              "brief": 
-              [
-                {
-                  "text": "Construct the finder object with a pattern string object (C++ Style).\r\n"
-                }
-              ],
+              "summary": "Construct the finder object with a pattern string object (C++ Style).\r\n",
               "args": 
               [
                 {

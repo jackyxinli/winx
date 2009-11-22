@@ -1,14 +1,12 @@
 /*
 @category STL-Extension(stdext) Library
+@ns stdext.kmp
 @*/
 
 // -------------------------------------------------------------------------
 // class Finder
 
-/*
-@class Finder
-@brief
-	The Finder class implements KMP string searching algorithm.
+/** The Finder class implements KMP string searching algorithm.
 @arg _E
 	The data type of a single character to be found in searching algorithm. It can be char or WCHAR.
 @arg _Strategy
@@ -17,33 +15,25 @@
 template < class _E, class _Strategy = MatchCase<_E> >
 class Finder
 {
-	/*
-	@ctor()
-	@brief					Default constructor.
+	/** Default constructor.
 	@see Finder, initPattern, getPattern
 	@*/
 	Finder();
 	
-	/*
-	@ctor(szPattern,cchLen)
-	@brief					Construct the finder object with a pattern string.
+	/** Construct the finder object with a pattern string.
 	@arg [in] szPattern		The start address of pattern string buffer.
 	@arg [in] cchLen		The length of pattern string.
 	@see Finder, initPattern, getPattern
 	@*/
 	Finder(const char_type* szPattern, size_type cchLen);
 	
-	/*
-	@ctor(szPattern)
-	@brief					Construct the finder object with a null-terminated pattern string (C-Style).
+	/** Construct the finder object with a null-terminated pattern string (C-Style).
 	@arg [in] szPattern		The start address of pattern string buffer.
 	@see Finder, initPattern, getPattern
 	@*/
 	Finder(const char_type* szPattern);
 	
-	/*
-	@ctor(strPattern)
-	@brief					Construct the finder object with a pattern string object (C++ Style).
+	/** Construct the finder object with a pattern string object (C++ Style).
 	@arg [in] strPattern	The start address of pattern string buffer.
 	@see Finder, initPattern, getPattern
 	@*/

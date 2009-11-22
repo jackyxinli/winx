@@ -8,9 +8,11 @@ extern dom::Mark tagTopicBrief("brief", true);
 extern dom::Mark tagSeeTopics("topics", true);
 
 extern dom::Mark tagCategory("category");
+extern dom::Mark tagNamespace("ns");
 extern dom::Mark tagTopicType("type");
-extern dom::Mark tagPath("path");
 extern dom::Mark tagText("text");
+extern dom::Mark tagUnknown("unknown");
+extern dom::Mark tagSummary("summary");
 extern dom::Mark tagCaption("caption");
 extern dom::Mark tagAttr("attr");
 

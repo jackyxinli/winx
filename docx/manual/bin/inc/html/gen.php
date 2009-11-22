@@ -1,7 +1,7 @@
 <?php
 	$env = array(
-		'ns' => '', 'base' => '', 'local' => 'output/',
-		'respath' => 'res');
+		'ns' => '', 'base' => '', 'local' => 'default/',
+		'respath' => '../res', 'path' => 'default/');
 	
 	foreach ($doc->sentences as $s)
 	{
@@ -9,8 +9,9 @@
 		{
 			$comment = $s->comment;
 			if (isset($comment->category))
-			{
 				$env['category'] = $comment->category;
+			if (isset($comment->ns)) {
+				$env['local'] = $env['path'] = $comment->ns . '/';
 			}
 		}
 		else
