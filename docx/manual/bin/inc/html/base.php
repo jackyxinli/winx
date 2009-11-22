@@ -136,11 +136,13 @@ function show_remark($fp, $comment)
 function topic_start($fp, $comment, $rel, $env)
 {
 	fwrite($fp, "<HTML>");
-	$title = $header = $env['nsdisp'] . $rel;
+	$category = $env['category'];
+	$header = $env['nsdisp'] . $rel;
+	$title = isset($category) ? "$header - $category" : $header;
 	html_header($fp, $title, $env);
 	fwrite($fp, "<BODY TOPMARGIN=\"0\">\n");
-	if (isset($env['category']))
-		header_bar($fp, $env['category']);
+	if (isset($category))
+		header_bar($fp, $category);
 	fwrite($fp, "<H1>$header</H1>");
 	show_brief($fp, $comment);
 }
