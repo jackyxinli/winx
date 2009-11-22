@@ -110,7 +110,7 @@ function topic_end($fp, $comment, $env)
 }
 
 // -------------------------------------------------------------------------
-// show index table
+// show fn
 
 function check_topic_name($comment, $code)
 {
@@ -148,24 +148,70 @@ function check_arg_names($comment, $code)
 }
 
 /*@@todo: 一致性检查在topic自身处完成，而不是在引用处完成!
-		if (!check_topic_name($comment, $fn))
-		{
-			fwrite(STDERR, "错误：类 $name 在注释文档中的名称与代码不匹配!\n");
-			continue;
-		}
+	if (!check_topic_name($comment, $fn))
+	{
+		fwrite(STDERR, "错误：类 $name 在注释文档中的名称与代码不匹配!\n");
+		continue;
+	}
 
-		if (!check_arg_names($ctordoc, $ctor))
-		{
-			fwrite(STDERR, "错误：类 $name 的构造函数 $name($args_text) 在注释文档中的参数名名称与代码不匹配!\n");
-			continue;
-		}
+	if (!check_arg_names($ctordoc, $ctor))
+	{
+		fwrite(STDERR, "错误：类 $name 的构造函数 $name($args_text) 在注释文档中的参数名名称与代码不匹配!\n");
+		continue;
+	}
 */
 
-function has_overload($fns, $name, $i, $n)
+function fn_decl($fp, $template, $fn)
 {
-	if ($i >= 2 && $fns[$i - 1]->name == $name)
+	fwrite($fp, "<PRE class=\"syntax\"><B>");
+	if (isset($template))
+		fwrite($fp, htmlspecialchars($template->header) . "<BR>");
+/*	fwrite($fp, "$fn->keyword $fn->name");
+	if (isset($class->bases))
+	{
+		fwrite($fp, " : <BR>\n");
+		foreach ($class->bases as $i => $base)
+		{
+			fwrite($fp, "&#x20;&#x20;");
+			if ($i != 0)
+				fwrite($fp, ",<BR>");
+			if ($base->access)
+				fwrite($fp, "$base->access ");
+			fwrite($fp, $base->name);
+		}
+	}
+*/	fwrite($fp, ";<BR/></B></PRE>\n");
+}
+
+function show_fn($comment, $s, $rel, $env)
+{
+	$fntype = $env["fntype"];
+	$fn = $s->$fntype;
+	$file = $env["local"] . $rel;
+	$fp = fopen($file, 'w');
+	if (!$fp) {
+		echo "---> ERROR: Create file `$file` failed!\n";
+		return;
+	}
+
+	topic_start($fp, $comment, $fn, $env);
+	fn_decl($fp, @$s->template, $fn);
+	show_args($fp, $comment);
+	show_desc($fp, $comment);
+	show_remark($fp, $comment);
+	topic_end($fp, $comment, $env);
+	
+	fclose($fp);
+}
+
+// -------------------------------------------------------------------------
+// show fntable
+
+function has_overload($fns, $fntype, $name, $i, $n)
+{
+	if ($i >= 2 && $fns[$i - 1]->$fntype->name == $name)
 		return true;
-	return ($i + 2 < $n && $fns[$i+3]->name == $name);
+	return ($i + 2 < $n && $fns[$i+3]->$fntype->name == $name);
 }
 
 function show_index($fp, $fns, $env)
@@ -183,10 +229,11 @@ function show_index($fp, $fns, $env)
 	
 	$base = $env["base"];
 	$local = $env["local"];
+	$fntype = $env["fntype"];
 	
 	for ($i = 0; $i < $count; $i += 2)
 	{
-		$fn = $fns[$i+1];
+		$fn = $fns[$i+1]->$fntype;
 		$args_text = "";
 		if (isset($fn->args))
 		{
@@ -199,36 +246,101 @@ function show_index($fp, $fns, $env)
 		}
 		
 		$name = $fn->name;
-		$rel = make_href($name) . (has_overload($fns, $name, $i, $count) ? "($args_text).htm" : ".htm");
+		$overload = has_overload($fns, $fntype, $name, $i, $count);
+		$rel = make_href($name) . ($overload ? "($args_text).htm" : ".htm");
 		
 		fwrite($fp, "<TR VALIGN=\"top\">
 <TD width=\"35%\" height=\"19\"><b><a href=$base$rel>$name($args_text)</a></b>\n</TD>
 <TD width=\"65%\" height=\"19\">\n"); show_brief($fp, $fns[$i]);
 		fwrite($fp, "</TD></TR>\n");
+		
+		show_fn($fns[$i], $fns[$i+1], $rel, $env);
 	}
 	fwrite($fp, "</TABLE>\n");
 }
 
-// -------------------------------------------------------------------------
-
 function show_fntable($fp, $code, $env)
 {
-	$fn = $env["fn"];
+	$fntype = $env["fntype"];
 	foreach ($code->sentences as $s)
 	{
 		if (isset($s->comment))
 			$comment = $s->comment;
 		else
 		{
-			if (isset($s->$fn) && isset($s->$fn->funcattr))
+			if (isset($s->$fntype) && isset($s->$fntype->funcattr))
 			{
 				$fns[] = $comment;
-				$fns[] = $s->$fn;
+				$fns[] = $s;
 			}
 			unset($comment);
 		}
 	}
 	show_index($fp, $fns, $env);
+}
+
+// -------------------------------------------------------------------------
+// show class
+
+function class_decl($fp, $template, $class)
+{
+	fwrite($fp, "<PRE class=\"syntax\"><B>");
+	if (isset($template))
+		fwrite($fp, htmlspecialchars($template->header) . "<BR>");
+	fwrite($fp, "$class->keyword $class->name");
+	if (isset($class->bases))
+	{
+		fwrite($fp, " : <BR>\n");
+		foreach ($class->bases as $i => $base)
+		{
+			fwrite($fp, "&#x20;&#x20;");
+			if ($i != 0)
+				fwrite($fp, ",<BR>");
+			if ($base->access)
+				fwrite($fp, "$base->access ");
+			fwrite($fp, $base->name);
+		}
+	}
+	fwrite($fp, ";<BR/></B></PRE>\n");
+}
+
+function show_ctors($fp, $class, $env)
+{
+	return show_fntable($fp, $class, array_merge($env, array(
+		"fntype" => "ctor", "title" => "构造函数", "name" => "Constructor", "desc" => "Description")));
+}
+
+function show_methods($fp, $class, $env)
+{
+	show_fntable($fp, $class, array_merge($env, array(
+		"fntype" => "member", "title" => "方法列表", "name" => "Method", "desc" => "Description")));
+}
+
+function show_class($comment, $s, $env)
+{
+	$class = $s->class;
+	$file = $env["local"] . $class->name . ".htm";
+	$fp = fopen($file, 'w');
+	if (!$fp) {
+		echo "---> ERROR: Create file `$file` failed!\n";
+		return;
+	}
+
+	topic_start($fp, $comment, $class, $env);
+	class_decl($fp, $s->template, $class);
+	show_args($fp, $comment);
+	show_desc($fp, $comment);
+	show_remark($fp, $comment);
+	{
+		$env2 = array_merge($env, array(
+			"base" => $env["base"] . "$class->name.",
+			"local" => $env["local"] . "$class->name."));
+		show_ctors($fp, $class, $env2);
+		show_methods($fp, $class, $env2);
+	}
+	topic_end($fp, $comment, $env);
+	
+	fclose($fp);
 }
 
 // -------------------------------------------------------------------------

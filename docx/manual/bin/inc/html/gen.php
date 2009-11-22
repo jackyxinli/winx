@@ -17,7 +17,7 @@
 		{
 			if (isset($s->class))
 			{
-				show_class($comment, $s->template, $s->class, $env);
+				show_class($comment, $s, $env);
 			}
 			unset($comment);
 		}
