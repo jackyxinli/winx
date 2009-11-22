@@ -177,7 +177,7 @@ function show_remark($fp, $comment)
 function topic_start($fp, $comment, $rel, $file, $env)
 {
 	fwrite($fp, "<HTML>");
-	$category = $env['category'];
+	$category = @$env['category'];
 	$header = $env['nsdisp'] . $rel;
 	$title = isset($category) ? "$header - $category" : $header;
 	html_header($fp, $title, $file, $env);
