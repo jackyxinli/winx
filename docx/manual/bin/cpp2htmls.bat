@@ -1,6 +1,6 @@
 @echo off
 if "%1" == "" (
-	echo "Usage: manual <cpp_file>"
+	echo "Usage: cpp2htmls <cpp_file>"
 	goto exit
 	)
 set AppPath=%~dp0
