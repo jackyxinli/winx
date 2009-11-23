@@ -72,30 +72,26 @@ inline size_t winx_call skip_eol(ReadArchiveT& ar)
 {
 	typedef typename ReadArchiveT::int_type int_type;
 
-	int_type ch = ar.get();
+	const int_type ch = ar.peek();
 	if (ch == 0x0a)
 	{
-		ch = ar.get();
-		if (ch != 0x0d) {
-			ar.unget(ch);
+		ar.get();
+		if (ar.peek() == 0x0d) {
+			ar.get();
 			return 2;
 		}
 		return 1;
 	}
 	else if (ch == 0x0d)
 	{
-		ch = ar.get();
-		if (ch != 0x0a) {
-			ar.unget(ch);
+		ar.get();
+		if (ar.peek() == 0x0a) {
+			ar.get();
 			return 2;
 		}
 		return 1;
 	}
-	else
-	{
-		ar.unget(ch);
-		return 0;
-	}
+	return 0;
 }
 
 template <class ReadArchiveT>
