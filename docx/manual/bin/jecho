@@ -1,2 +1,9 @@
-AppPath=`dirname $0`
-$AppPath/jspt $AppPath/inc/print.php $*
+#!php
+<?php
+	$argc = $_SERVER["argc"];
+	$argv = $_SERVER["argv"];
+	$AppPath = dirname($argv[0]);
+	for ($i = 1; $i < $argc; ++$i)
+		$args .= $argv[$i];
+	system("$AppPath/jspt $AppPath/inc/print.php $args");
+?>

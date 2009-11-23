@@ -1,4 +1,4 @@
-#!/usr/bin/php
+#!php
 <?php
 	$argc = $_SERVER["argc"];
 	if ($argc < 2) {
