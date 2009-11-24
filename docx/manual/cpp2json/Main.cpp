@@ -40,7 +40,7 @@ int main(int argc, const char* argv[])
 		return 0;
 	}
 
-	err.print(">>> ERROR: invalid file format!\n");
+	err.print(" >>> ERROR: invalid file format!\n");
 	return -3;
 }
 

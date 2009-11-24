@@ -71,7 +71,7 @@ class TUnused;
 #define val_enum		( "@val" + ws() + find_eol()/tagName + skipws() + text/tagText )
 #define table			( +(val_enum/tagVals) + !(skipws() + "@end") )
 
-#define extend_text		+( (table/tagTable | text/tagText) )
+#define extend_text		!+( (table/tagTable | text/tagText) )
 
 #define topic_args		( topicsymbol/tagTopicArgs % comma )
 #define topic_gen		( ws() + topic_args + skip_non_eol_ws() + !(paragraph()/tagTopicBrief) )
@@ -109,11 +109,12 @@ class TUnused;
 #define briefdoc		( "@brief" + ws() + extend_text/tagBrief )
 #define remarkdoc		( "@remark" + ws() + extend_text/tagRemark )
 #define eofdoc			( '@' + eos() )
+#define unknowndoc		( done()/tagUnknown/error(" >>> WARN: Unknown instruction - %s") )
 
 // -------------------------------------------------------------------------
 
 #define comment_doc_one	( argdoc | seedoc | topicdoc | retdoc | remarkdoc | \
-						  briefdoc | descdoc | eofdoc | envdoc | done()/tagUnknown )
+						  briefdoc | descdoc | eofdoc | envdoc | unknowndoc )
 #define comment_doc		( !summarydoc + *(not_eos() + skipws() + comment_doc_one) )
 #define comment			( cpp_comment_content(alloc, comment_doc/tagCommentDoc) )
 

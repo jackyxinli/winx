@@ -16,7 +16,7 @@
 	}
 	else
 	{
-		echo "Input file error: Maybe is not a valid json file?\n\n";
+		echo " >>> ERROR: Input file maybe isn't a valid json file?\n\n";
 		return -2;
 	}
 ?>
