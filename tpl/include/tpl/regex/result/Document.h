@@ -384,22 +384,31 @@ public:
 
 public:
 	template <class AllocT, class ValueT>
-	void TPL_CALL print_val(AllocT& alloc_, const ValueT& val_)
+	void TPL_CALL print_val(AllocT& alloc_, const ValueT& val_, NS_STDEXT::codepage_t sourcecp)
 	{
 		if (val_.key().isNode())
 		{
-			print(alloc_, val_.node());
+			print(alloc_, val_.node(), sourcecp);
 		}
 		else
 		{
 			log_.print('\"');
-			json_print_string(log_, val_.leaf());
+			if (sourcecp != NS_STDEXT::cp_utf8)
+			{
+				std::BasicString<wchar_t> wStr = NS_STDEXT::iconv(alloc_, sourcecp, val_.leaf());
+				std::BasicString<char> utf8Str = NS_STDEXT::iconv(alloc_, wStr, NS_STDEXT::cp_utf8);
+				json_print_string(log_, utf8Str);
+			}
+			else
+			{
+				json_print_string(log_, val_.leaf());
+			}
 			log_.print('\"');
 		}
 	}
 
 	template <class AllocT, class ConsT>
-	ConsT TPL_CALL print_one(AllocT& alloc_, ConsT it_)
+	ConsT TPL_CALL print_one(AllocT& alloc_, ConsT it_, NS_STDEXT::codepage_t sourcecp)
 	{
 		typename ConsT::value_type val_ = it_.hd();
 		typename ConsT::key_type key_ = val_.key();
@@ -417,7 +426,7 @@ public:
 			indent_ += delta;
 			{
 				log_.put(indent_, ' ');
-				print_val(alloc_, val_);
+				print_val(alloc_, val_, sourcecp);
 				while ((it_ = it_->tail), it_)
 				{
 					if (it_.hd().key() != key_)
@@ -425,7 +434,7 @@ public:
 					log_.print(',')
 						.newline()
 						.put(indent_, ' ');
-					print_val(alloc_, it_.hd());
+					print_val(alloc_, it_.hd(), sourcecp);
 				}
 			}
 			indent_ -= delta;
@@ -436,13 +445,13 @@ public:
 		}
 		else
 		{
-			print_val(alloc_, val_);
+			print_val(alloc_, val_, sourcecp);
 			return it_->tail;
 		}		
 	}
 	
 	template <class AllocT, class NodeT>
-	void TPL_CALL print(AllocT& alloc_, const NodeT& node_)
+	void TPL_CALL print(AllocT& alloc_, const NodeT& node_, NS_STDEXT::codepage_t sourcecp)
 	{
 		log_.print('{');
 		indent_ += delta;
@@ -454,7 +463,7 @@ public:
 					log_.print(',');
 				else
 					prev_ = true;
-				it_ = print_one(alloc_, it_);
+				it_ = print_one(alloc_, it_, sourcecp);
 			}
 		}
 		indent_ -= delta;
@@ -466,10 +475,10 @@ public:
 
 template <class AllocT, class LogT, class LeafT, class TagCharT>
 inline void TPL_CALL json_print(
-	AllocT& alloc_, LogT& log_, const Node<LeafT, TagCharT>& node_, int indent_ = 0)
+	AllocT& alloc_, LogT& log_, const Node<LeafT, TagCharT>& node_, NS_STDEXT::codepage_t sourcecp, int indent_ = 0)
 {
 	NodeJsonPrint_<LogT> op(log_, indent_);
-	op.print(alloc_, node_);
+	op.print(alloc_, node_, sourcecp);
 	log_.newline();
 }
 
