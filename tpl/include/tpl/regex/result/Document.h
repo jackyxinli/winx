@@ -371,7 +371,7 @@ inline void TPL_CALL json_print_string(LogT& log_, const StringT& str_) {
 
 // -------------------------------------------------------------------------
 
-template <class LogT, int delta = 2>
+template <class LogT, bool fEncoding, int delta = 2>
 class NodeJsonPrint_
 {
 private:
@@ -393,7 +393,7 @@ public:
 		else
 		{
 			log_.print('\"');
-			if (sourcecp != NS_STDEXT::cp_utf8)
+			if (fEncoding && sourcecp != NS_STDEXT::cp_utf8)
 			{
 				std::BasicString<wchar_t> wStr = NS_STDEXT::iconv(alloc_, sourcecp, val_.leaf());
 				std::BasicString<char> utf8Str = NS_STDEXT::iconv(alloc_, wStr, NS_STDEXT::cp_utf8);
@@ -477,8 +477,17 @@ template <class AllocT, class LogT, class LeafT, class TagCharT>
 inline void TPL_CALL json_print(
 	AllocT& alloc_, LogT& log_, const Node<LeafT, TagCharT>& node_, NS_STDEXT::codepage_t sourcecp, int indent_ = 0)
 {
-	NodeJsonPrint_<LogT> op(log_, indent_);
+	NodeJsonPrint_<LogT, true> op(log_, indent_);
 	op.print(alloc_, node_, sourcecp);
+	log_.newline();
+}
+
+template <class AllocT, class LogT, class LeafT, class TagCharT>
+inline void TPL_CALL json_print(
+	AllocT& alloc_, LogT& log_, const Node<LeafT, TagCharT>& node_, int indent_ = 0)
+{
+	NodeJsonPrint_<LogT, false> op(log_, indent_);
+	op.print(alloc_, node_, NS_STDEXT::cp_utf8);
 	log_.newline();
 }
 
