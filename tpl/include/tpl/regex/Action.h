@@ -175,12 +175,12 @@ public:
 
 // Usage: Rule/info("...")
 
-inline void TPL_CALL _trace_info(const char* prompt_, const std::string& val) {
-	printf("%s: %s\n", prompt_, val.c_str());
+inline void TPL_CALL trace_info_(const char* prompt_, const std::string& val) {
+	printf(prompt_, val.c_str());
 }
 
-inline void TPL_CALL _trace_info(const wchar_t* prompt_, const std::wstring& val) {
-	wprintf(L"%s: %s\n", prompt_, val.c_str());
+inline void TPL_CALL trace_info_(const wchar_t* prompt_, const std::wstring& val) {
+	wprintf(prompt_, val.c_str());
 }
 
 template <class CharT>
@@ -197,7 +197,7 @@ public:
 	typedef std::basic_string<CharT> value_type;
 
 	void TPL_CALL operator()(const value_type& val) const {
-		_trace_info(m_prompt, val);
+		trace_info_(m_prompt, val);
 	}
 };
 
@@ -207,7 +207,43 @@ inline Action<Info<CharT> > const TPL_CALL info(const CharT* prompt_) {
 }
 
 // =========================================================================
-// debug: TPL_INFO
+// function error
+
+// Usage: Rule/error("...")
+
+inline void TPL_CALL trace_error_(const char* prompt_, const std::string& val) {
+	fprintf(stderr, prompt_, val.c_str());
+}
+
+inline void TPL_CALL trace_error_(const wchar_t* prompt_, const std::wstring& val) {
+	fwprintf(stderr, prompt_, val.c_str());
+}
+
+template <class CharT>
+class Error
+{
+private:
+	const CharT* m_prompt;
+
+public:
+	Error(const CharT* prompt_) : m_prompt(prompt_) {
+	}
+
+public:
+	typedef std::basic_string<CharT> value_type;
+
+	void TPL_CALL operator()(const value_type& val) const {
+		trace_error_(m_prompt, val);
+	}
+};
+
+template <class CharT>
+inline Action<Error<CharT> > const TPL_CALL error(const CharT* prompt_) {
+	return Action<Error<CharT> >(prompt_);
+}
+
+// =========================================================================
+// debug: TPL_INFO/TPL_ERROR
 
 enum NullAction { null_action = 0 };
 
@@ -217,16 +253,18 @@ const T1& TPL_CALL operator/(const T1& sth, NullAction na) {
 };
 
 #if defined(_DEBUG)
-#define TPL_INFO(prompt_)	tpl::info(prompt_)
+#define TPL_INFO(prompt_)	tpl::info(prompt_ " : %s\n")
+#define TPL_ERROR(prompt_)	tpl::error(prompt_ " : %s\n")
 #else
 #define TPL_INFO(prompt_)	tpl::null_action
+#define TPL_ERROR(prompt_)	tpl::null_action
 #endif
 
 // =========================================================================
 // function println
 
 template <class PredT>
-inline void _print_ln(const NS_STDEXT::Range<const char*>& s, const PredT& pred_) {
+inline void print_ln_(const NS_STDEXT::Range<const char*>& s, const PredT& pred_) {
 	if (pred_(s)) {
 		fwrite(s.begin(), s.size(), 1, stdout);
 		putc('\n', stdout);
@@ -247,7 +285,7 @@ public:
 
 	template <class ValueT>
 	void TPL_CALL operator()(const ValueT& s) const {
-		_print_ln(s, m_pred);
+		print_ln_(s, m_pred);
 	}
 };
 
@@ -257,7 +295,6 @@ inline Action<PrintLn<PredT> > const TPL_CALL println(const PredT& pred_) {
 }
 
 // =========================================================================
-// $Log: $
 
 NS_TPL_END
 
