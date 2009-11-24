@@ -87,7 +87,8 @@ class TUnused;
 #define categorydoc		( "@category" + ws() + find_eol()/tagCategory )
 #define nsdoc			( "@ns" + ws() + find_eol()/tagNamespace )
 #define incdoc			( "@include" + ws() + find_eol()/tagInclude )
-#define envdoc			( categorydoc | nsdoc | incdoc )
+#define encodingdoc		( "@encoding" + ws() + find_eol()/assign(encoding) )
+#define envdoc			( categorydoc | nsdoc | incdoc | encodingdoc )
 
 #define retdoc			( "@return" + ws() + extend_text/tagReturn )
 

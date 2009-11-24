@@ -4,6 +4,6 @@ if "%1" == "" (
 	goto exit
 	)
 set AppPath=%~dp0
-"%AppPath%\win32\cpp2json.exe" %1 | php "%AppPath%\gen_htmls"
+"%AppPath%\cpp2json.exe" %1 | php "%AppPath%\gen_htmls"
 set AppPath=
 :exit

@@ -79,6 +79,7 @@ extern impl::MarkedGrammar rClass;
 extern impl::MarkedRule rComment;
 
 extern String className;
+extern String encoding;
 
 // -------------------------------------------------------------------------
 

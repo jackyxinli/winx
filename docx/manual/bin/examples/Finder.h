@@ -1,4 +1,5 @@
 /*
+@encoding gbk
 @category STL-Extension(stdext) Library
 @ns stdext.kmp
 @include <stdext/kmp/Finder.h>
@@ -11,7 +12,7 @@
 @arg _E
 	The data type of a single character to be found in searching algorithm. It can be char or WCHAR.
 @arg _Strategy
-	The strategy of searching algorithm. Default is \<MatchCase>, and it also can be \<MatchNoCase>.
+	The strategy ≤‚ ‘ of searching algorithm. Default is \<MatchCase>, and it also can be \<MatchNoCase>.
 @*/
 template < class _E, class _Strategy = MatchCase<_E> >
 class Finder
@@ -40,18 +41,14 @@ class Finder
 	@*/
 	Finder(const std::basic_string<_E>& strPattern);
 
-	/*
-	@fn initPattern(szPattern,cchLen)
-	@brief					Initialize the finder object with a pattern string.
+	/** Initialize the finder object with a pattern string.
 	@arg [in] szPattern		The start address of pattern string buffer.
 	@arg [in] cchLen		The length of pattern string.
 	@see Finder, initPattern, getPattern
 	@*/
 	HRESULT winx_call initPattern(const char_type* szPattern, size_type cchLen);
 	
-	/*
-	@fn initPattern(szPattern)
-	@brief					Initialize the finder object with a null-terminated pattern string (C-Style).
+	/** Initialize the finder object with a null-terminated pattern string (C-Style).
 	@arg [in] szPattern		The start address of pattern string buffer.
 	@see Finder, initPattern, getPattern
 	@*/

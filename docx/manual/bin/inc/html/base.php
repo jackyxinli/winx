@@ -5,7 +5,7 @@
 
 function pathspec($name)
 {
-	return $name;
+	return str_replace(array('::', '*', '/', '?'), array('_', 'MUL', 'DIV', '$'), $name);
 }
 
 function makerel($href, $file)
@@ -66,7 +66,7 @@ function show_args($fp, $comment)
 	if (!isset($comment->args))
 		return;
 	
-	fwrite($fp, "<H4>²ÎÊıËµÃ÷</H4><DL>");
+	fwrite($fp, "<H4>å‚æ•°è¯´æ˜</H4><DL>");
 	foreach ($comment->args as $arg)
 	{
 		fwrite($fp, "<DT>");
@@ -116,7 +116,7 @@ function html_header($fp, $title, $file, $env)
 	$respath = makerel('res', $file);
 	fwrite($fp,
 "<HEAD>
-<META http-equiv=\"Content-Type\" content=\"text/html; charset=gbk\">
+<META http-equiv=\"Content-Type\" content=\"text/html; charset=utf-8\">
 <TITLE>$title</TITLE>
 <SCRIPT SRC=\"$respath/langref.js\"></SCRIPT>
 <LINK REL=\"STYLESHEET\" HREF=\"$respath/backsdk4.css\">
@@ -161,7 +161,7 @@ function show_retval($fp, $comment)
 	if (!isset($comment) || !isset($comment->return))
 		return;
 	
-	fwrite($fp, "<H4>·µ»ØÖµ</H4>\n");
+	fwrite($fp, "<H4>è¿”å›å€¼</H4>\n");
 	extended_text($fp, $comment->return);
 }
 
@@ -170,7 +170,7 @@ function show_remark($fp, $comment)
 	if (!isset($comment) || !isset($comment->remark))
 		return;
 	
-	fwrite($fp, "<H4>×¢Òâµã</H4>\n");
+	fwrite($fp, "<H4>æ³¨æ„ç‚¹</H4>\n");
 	extended_text($fp, $comment->remark);
 }
 
@@ -401,13 +401,13 @@ function class_decl($fp, $template, $class)
 function show_ctors($fp, $class, $file, $env)
 {
 	return show_fntable($fp, $class, $file, array_merge($env, array(
-		'fntype' => "ctor", "title" => "¹¹Ôìº¯Êı", "name" => "Constructor", "desc" => "Description")));
+		'fntype' => "ctor", "title" => "æ„é€ å‡½æ•°", "name" => "Constructor", "desc" => "Description")));
 }
 
 function show_methods($fp, $class, $file, $env)
 {
 	show_fntable($fp, $class, $file, array_merge($env, array(
-		'fntype' => "member", "title" => "·½·¨ÁĞ±í", "name" => "Method", "desc" => "Description")));
+		'fntype' => "member", "title" => "æ–¹æ³•åˆ—è¡¨", "name" => "Method", "desc" => "Description")));
 }
 
 function show_class($comment, $s, $env)

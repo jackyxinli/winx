@@ -26,5 +26,6 @@ impl::MarkedGrammar rCppSymbol(alloc, cppsymbol);
 impl::MarkedGrammar rType(alloc, type);
 impl::MarkedGrammar rClass(alloc, classdef);
 String className;
+String encoding;
 
 dom::Document doc(alloc);
