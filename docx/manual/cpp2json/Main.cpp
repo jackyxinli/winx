@@ -22,7 +22,7 @@ int main(int argc, const char* argv[])
 	if (file == document)
 	{
 		NS_STDEXT::OutputLog log;
-		long sourcecp = NS_STDEXT::cp_auto;
+		NS_STDEXT::codepage_t sourcecp = NS_STDEXT::cp_auto;
 		if (!encoding.empty())
 		{
 			NS_STDEXT::BasicString<char> lowerEncode = NS_STDEXT::lower(alloc, encoding);
@@ -36,7 +36,7 @@ int main(int argc, const char* argv[])
 				sourcecp = NS_STDEXT::cp_big5;
 		}
 		
-		json_print(alloc, log, doc, (NS_STDEXT::codepage_t)sourcecp);
+		json_print(alloc, log, doc, sourcecp);
 		return 0;
 	}
 
