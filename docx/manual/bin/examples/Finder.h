@@ -22,6 +22,8 @@ class Finder
 	@*/
 	Finder();
 	
+	~Finder();
+	
 	/** Construct the finder object with a pattern string.
 	@arg [in] szPattern		The start address of pattern string buffer.
 	@arg [in] cchLen		The length of pattern string.

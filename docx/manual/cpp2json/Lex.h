@@ -109,11 +109,13 @@ public:
 
 #define constructor				( gr(c_symbol()/eq(className)/tagName) + func_tail + ';' )
 
+#define destructor				( '~' + gr(c_symbol()/eq(className)/tagName) + '(' + ')' + ';' )
+
 #define class_sentence1			( !(templatedef/tagTemplate) + (constructor/tagConstructor | \
 								  func_or_var/tagMember) )
 
 #define class_sentence2			( class_sentence1 | type_cast/tagTypeCast | \
-								  enumdef/tagEnum | typedefine/tagTypedef )
+								  enumdef/tagEnum | typedefine/tagTypedef | destructor/tagDestructor)
 
 #define class_sentence			gr( rComment | cpp_skip_ * class_sentence2 )
 
