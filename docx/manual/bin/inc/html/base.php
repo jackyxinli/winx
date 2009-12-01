@@ -1,7 +1,152 @@
 <?php
 
 // -------------------------------------------------------------------------
+// tag or var sets
+
+$html_tags = array(
+	"a" 	=> true,
+	"b" 	=> true,
+	"i" 	=> true,
+	"u" 	=> true,
+	"img" 	=> true,
+	"p" 	=> true,
+	"br" 	=> true,
+	"pre" 	=> true,
+	"code" 	=> true,
+	"h1" 	=> true,
+	"h2" 	=> true,
+	"h3" 	=> true,
+	"h4" 	=> true,
+	"li" 	=> true,
+	"ul" 	=> true,
+	"ol" 	=> true,
+	"font" 	=> true,
+	"table" => true,
+	"tr" 	=> true,
+	"th" 	=> true,
+	"td" 	=> true,
+	"em" 	=> true,
+);
+
+
+// -------------------------------------------------------------------------
 // utilities
+function encode_angle_bracket($text)
+{
+	global $html_tags;
+	$off = 0;
+	$str = "";
+	$len = strlen($text);
+	$tag_states = array();
+
+	for ($i = 0; $i < $len; $i++)
+	{
+		$cur = $text[$i];
+		if ($cur ==  '<')
+		{
+			$j = $i + 1;
+			while($text[$j] == ' ') $j ++;
+			for ($j; $j < $len; $j ++)
+			{
+				$ch = $text[$j];
+				if ($ch == ' ' || $ch == '>')
+					break;
+			}
+			$tlen = $j - $i - 1;
+			$tagname = substr($text, $i+1, $tlen);
+			$key = ($tagname[0] == '/') ? strtolower(substr($tagname, 1)) : strtolower($tagname);
+			if (@$html_tags[$key])
+			{
+				array_push($tag_states, "yes");
+				$str .= "<$tagname";
+			}
+			else
+			{
+				array_push($tag_states, "no");
+				$str .= "&lt;$tagname";
+			}
+			$i += $tlen;
+		} // end of "if ($cur ==  '<')"
+		else if ($cur == '>')
+		{
+			$val = array_pop($tag_states);
+			if ($val == "yes")
+				$str .= '>';
+			else if (NULL == $val)
+				$str .= '>';
+			else 
+				$str .= '&gt;';
+		} // end of "else if ($cur == '>')"
+		else
+		{
+			$str .= $cur;
+		}
+	}
+	return $str;
+}
+
+function match_reference($file, $env, $text)
+{
+	$off = 0;
+	$str = "";
+	$total_len = strlen($text);
+	
+	for (;;)
+	{
+		$pos = strpos($text, '\\<', $off);
+		if ($pos === false)
+		{
+			$str .= substr($text, $off);
+			break;
+		}
+		$len  = $pos - $off;
+		$str .= substr($text, $off, $len); 
+		$off = $pos + 2;
+		
+		$pre_flag = false;
+		for ($i = $off; $i < $total_len; $i++)
+		{
+			$ch = $text[$i];
+			if ( $ch == '<' )
+			{
+				$pre_flag = true;
+				break;
+			}
+			else if ($ch == '>')
+			{
+				break;
+			}
+		}
+		$key = substr($text, $off, $i - $off);
+		if ($pre_flag)
+		{
+			$str .= "\<" . $key;
+			$off = $i;
+		}
+		else
+		{
+			$off = $i + 1;		
+			$href = str_replace('::', '/', $key) . '.htm';
+			$pos = strpos($href, '/');
+			if ($pos === false)
+				$href = $env['base'] . $href;
+			else if ($pos === 0)
+				$href = substr($href, 1);
+			$href = makerel($href, $file);
+			$str .= "<a href=$href><b>$key</b></a>";
+		}
+	}
+	return str;
+}
+
+function esctext2html($file, $env, $text)
+{
+	global $html_tags;
+	global $trans_newline;
+	$text = strtr($text, $trans_newline);
+	$text = match_reference($file, $env, $text);
+	return encode_angle_bracket($text);
+}
 
 function pathspec($name)
 {
