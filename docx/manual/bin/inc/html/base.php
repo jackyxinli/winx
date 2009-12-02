@@ -1,31 +1,19 @@
-<?php
+﻿<?php
 
 // -------------------------------------------------------------------------
 // tag or var sets
+$trans_newline = array(
+	"\\p" . PHP_EOL => "<br>",
+	"\\n" . PHP_EOL => "<br>",
+);
 
 $html_tags = array(
-	"a" 	=> true,
-	"b" 	=> true,
-	"i" 	=> true,
-	"u" 	=> true,
-	"img" 	=> true,
-	"p" 	=> true,
-	"br" 	=> true,
-	"pre" 	=> true,
-	"code" 	=> true,
-	"h1" 	=> true,
-	"h2" 	=> true,
-	"h3" 	=> true,
-	"h4" 	=> true,
-	"li" 	=> true,
-	"ul" 	=> true,
-	"ol" 	=> true,
-	"font" 	=> true,
-	"table" => true,
-	"tr" 	=> true,
-	"th" 	=> true,
-	"td" 	=> true,
-	"em" 	=> true,
+	"a" 	=> true, "b" 	=> true, "i" 	=> true, "u" 	=> true,
+	"img" 	=> true, "p" 	=> true, "br" 	=> true, "pre" 	=> true,
+	"code" 	=> true, "h1" 	=> true, "h2" 	=> true, "h3" 	=> true,
+	"h4" 	=> true, "li" 	=> true, "ul" 	=> true, "ol" 	=> true,
+	"font" 	=> true, "table" => true, "tr" 	=> true, "th" 	=> true,
+	"td" 	=> true, "em" 	=> true
 );
 
 
@@ -85,7 +73,7 @@ function encode_angle_bracket($text)
 	return $str;
 }
 
-function match_reference($file, $env, $text)
+function match_reference($text, $file, $env)
 {
 	$off = 0;
 	$str = "";
@@ -133,18 +121,18 @@ function match_reference($file, $env, $text)
 			else if ($pos === 0)
 				$href = substr($href, 1);
 			$href = makerel($href, $file);
-			$str .= "<a href=$href><b>$key</b></a>";
+			$str .= "<a href=\"$href\"><b>$key</b></a>";
 		}
 	}
-	return str;
+	return $str;
 }
 
-function esctext2html($file, $env, $text)
+function esctext2html($text, $file, $env)
 {
 	global $html_tags;
 	global $trans_newline;
 	$text = strtr($text, $trans_newline);
-	$text = match_reference($file, $env, $text);
+	$text = match_reference($text, $file, $env);
 	return encode_angle_bracket($text);
 }
 
@@ -179,12 +167,15 @@ function makerel($href, $file)
 	}
 }
 
-function extended_text($fp, $rtf)
+function extended_text($fp, $rtf, $file, $env)
 {
 	foreach ($rtf as $item)
 	{
 		if (isset($item->text))
-			fwrite($fp, "$item->text");
+		{
+			$text = esctext2html($item->text, $file, $env);
+			fwrite($fp, "$text");
+		}
 		else if (isset($item->table))
 		{
 			fwrite($fp, 
@@ -194,16 +185,17 @@ function extended_text($fp, $rtf)
 </TR>\n");
 			foreach ($item->table->vals as $v)
 			{
+				$text = esctext2html($v->text, $file, $env);
 				fwrite($fp,
 "<TR VALIGN=\"top\"><TD width=\"35%\" height=\"19\">$v->name</TD>
-<TD width=\"65%\" height=\"19\">$v->text</TD></TR>\n");
+<TD width=\"65%\" height=\"19\">$text</TD></TR>\n");
 			}
 			fwrite($fp, "</TABLE>\n");
 		}
 	}
 }
 
-function show_args($fp, $comment)
+function show_args($fp, $comment, $file, $env)
 {
 	if (!isset($comment))
 		return;
@@ -218,7 +210,7 @@ function show_args($fp, $comment)
 		if (isset($arg->attr))
 			fwrite($fp, "[$arg->attr] ");
 		fwrite($fp, "<I>$arg->name</I></DT><DD>");
-		extended_text($fp, $arg->body);
+		extended_text($fp, $arg->body, $file, $env);
 		fwrite($fp, "</DD>");
 	}
 	fwrite($fp, "</DL>\n");
@@ -283,7 +275,7 @@ function header_bar($fp, $category)
 ");
 }
 
-function show_brief($fp, $comment)
+function show_brief($fp, $comment, $file, $env)
 {
 	if (!isset($comment))
 		return;
@@ -294,29 +286,29 @@ function show_brief($fp, $comment)
 			fwrite($fp, $comment->summary);
 		return;
 	}
-	extended_text($fp, $comment->brief);
+	extended_text($fp, $comment->brief, $file, $env);
 }
 
 function show_desc($fp, $comment)
 {
 }
 
-function show_retval($fp, $comment)
+function show_retval($fp, $comment, $file, $env)
 {
 	if (!isset($comment) || !isset($comment->return))
 		return;
 	
-	fwrite($fp, "<H4>返回值</H4>\n");
-	extended_text($fp, $comment->return);
+	fwrite($fp, "<H4>返回�?/H4>\n");
+	extended_text($fp, $comment->return, $file, $env);
 }
 
-function show_remark($fp, $comment)
+function show_remark($fp, $comment, $file, $env)
 {
 	if (!isset($comment) || !isset($comment->remark))
 		return;
 	
-	fwrite($fp, "<H4>注意点</H4>\n");
-	extended_text($fp, $comment->remark);
+	fwrite($fp, "<H4>注意�?/H4>\n");
+	extended_text($fp, $comment->remark, $file, $env);
 }
 
 function topic_start($fp, $comment, $rel, $file, $env)
@@ -330,7 +322,7 @@ function topic_start($fp, $comment, $rel, $file, $env)
 	if (isset($category))
 		header_bar($fp, $category);
 	fwrite($fp, "<H1>$header</H1>");
-	show_brief($fp, $comment);
+	show_brief($fp, $comment, $file, $env);
 }
 
 function topic_end($fp, $comment, $file, $env)
@@ -434,10 +426,10 @@ function show_fn($comment, $s, $rel, $env)
 
 	topic_start($fp, $comment, $rel, $file, $env);
 	fn_decl($fp, @$s->template, $fn);
-	show_args($fp, $comment);
-	show_retval($fp, $comment);
+	show_args($fp, $comment, $file, $env);
+	show_retval($fp, $comment, $file, $env);
 	show_desc($fp, $comment);
-	show_remark($fp, $comment);
+	show_remark($fp, $comment, $file, $env);
 	topic_end($fp, $comment, $file, $env);
 	
 	fclose($fp);
@@ -490,7 +482,7 @@ function show_index($fp, $fns, $file, $env)
 		
 		fwrite($fp, "<TR VALIGN=\"top\">
 <TD width=\"35%\" height=\"19\"><b><a href=$href>$name($args_text)</a></b>\n</TD>
-<TD width=\"65%\" height=\"19\">\n"); show_brief($fp, $fns[$i]);
+<TD width=\"65%\" height=\"19\">\n"); show_brief($fp, $fns[$i], $file, $env);
 		fwrite($fp, "</TD></TR>\n");
 		
 		show_fn($fns[$i], $fns[$i+1], $rel, $env);
@@ -567,9 +559,9 @@ function show_class($comment, $s, $env)
 
 	topic_start($fp, $comment, $class->name, $file, array_merge($env, array('nsdisp' => 'class ')));
 	class_decl($fp, $s->template, $class);
-	show_args($fp, $comment);
+	show_args($fp, $comment, $file, $env);
 	show_desc($fp, $comment);
-	show_remark($fp, $comment);
+	show_remark($fp, $comment, $file, $env);
 	{
 		$base = $env['base'] . "$class->name/";
 		@mkdir($base);

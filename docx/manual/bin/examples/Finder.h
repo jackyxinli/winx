@@ -10,9 +10,12 @@
 
 /** The Finder class implements KMP string searching algorithm.
 @arg _E
-	The data type of a single character to be found in searching algorithm. It can be char or WCHAR.
+	The data type of a single character to be found in searching \p
+	algorithm. 
+	It can be char or \n
+	WCHAR.
 @arg _Strategy
-	The strategy ≤‚ ‘ of searching algorithm. Default is \<MatchCase>, and it also can be \<MatchNoCase>.
+	The strategy ≤‚ ‘ <a href="http://krzycube.net">click me</a> This is only a class A<class T> of searching algorithm. Default is \<MatchCase>, and it also can be \<MatchNoCase>.
 @*/
 template < class _E, class _Strategy = MatchCase<_E> >
 class Finder
