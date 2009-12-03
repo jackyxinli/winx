@@ -9,6 +9,10 @@
 // class Finder
 
 /** The Finder class implements KMP string searching algorithm.
+
+@macro CerlIoService(fiber)	获得IoService对象。
+@macro Schedule(self, fiber) 
+
 @arg _E
 	The data type of a single character to be found in searching \p
 	algorithm. 
@@ -16,6 +20,7 @@
 	WCHAR.
 @arg _Strategy
 	The strategy 测试 <a href="http://krzycube.net">click me</a> This is only a class A<class T> of searching algorithm. Default is \<MatchCase>, and it also can be \<MatchNoCase>.
+	
 @*/
 template < class _E, class _Strategy = MatchCase<_E> >
 class Finder

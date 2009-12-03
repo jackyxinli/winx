@@ -1,4 +1,4 @@
-ï»¿<?php
+<?php
 
 // -------------------------------------------------------------------------
 // tag or var sets
@@ -298,7 +298,7 @@ function show_retval($fp, $comment, $file, $env)
 	if (!isset($comment) || !isset($comment->return))
 		return;
 	
-	fwrite($fp, "<H4>è¿”å›å€?/H4>\n");
+	fwrite($fp, "<H4>è¿”å›å€¼</H4>\n");
 	extended_text($fp, $comment->return, $file, $env);
 }
 
@@ -307,7 +307,7 @@ function show_remark($fp, $comment, $file, $env)
 	if (!isset($comment) || !isset($comment->remark))
 		return;
 	
-	fwrite($fp, "<H4>æ³¨æ„ç‚?/H4>\n");
+	fwrite($fp, "<H4></H4>\n");
 	extended_text($fp, $comment->remark, $file, $env);
 }
 
@@ -373,16 +373,16 @@ function check_arg_names($comment, $code)
 	return true;
 }
 
-/*@@todo: Ò»ÖÂĞÔ¼ì²éÔÚtopic×ÔÉí´¦Íê³É£¬¶ø²»ÊÇÔÚÒıÓÃ´¦Íê³É!
+/*@@todo: ä¸€è‡´æ€§æ£€æŸ¥åœ¨topicè‡ªèº«å¤„å®Œæˆï¼Œè€Œä¸æ˜¯åœ¨å¼•ç”¨å¤„å®Œæˆ!
 	if (!check_topic_name($comment, $fn))
 	{
-		fwrite(STDERR, "´íÎó£ºÀà $name ÔÚ×¢ÊÍÎÄµµÖĞµÄÃû³ÆÓë´úÂë²»Æ¥Åä!\n");
+		fwrite(STDERR, "é”™è¯¯ï¼šç±» $name åœ¨æ³¨é‡Šæ–‡æ¡£ä¸­çš„åç§°ä¸ä»£ç ä¸åŒ¹é…!\n");
 		continue;
 	}
 
 	if (!check_arg_names($ctordoc, $ctor))
 	{
-		fwrite(STDERR, "´íÎó£ºÀà $name µÄ¹¹Ôìº¯Êı $name($args_text) ÔÚ×¢ÊÍÎÄµµÖĞµÄ²ÎÊıÃûÃû³ÆÓë´úÂë²»Æ¥Åä!\n");
+		fwrite(STDERR, "é”™è¯¯ï¼šç±» $name çš„æ„é€ å‡½æ•° $name($args_text) åœ¨æ³¨é‡Šæ–‡æ¡£ä¸­çš„å‚æ•°ååç§°ä¸ä»£ç ä¸åŒ¹é…!\n");
 		continue;
 	}
 */
