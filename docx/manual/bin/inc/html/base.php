@@ -307,7 +307,7 @@ function show_remark($fp, $comment, $file, $env)
 	if (!isset($comment) || !isset($comment->remark))
 		return;
 	
-	fwrite($fp, "<H4></H4>\n");
+	fwrite($fp, "<H4>注意点</H4>\n");
 	extended_text($fp, $comment->remark, $file, $env);
 }
 
@@ -413,6 +413,11 @@ function fn_decl($fp, $template, $fn)
 	fwrite($fp, "<B>)$fnattr;<BR></B></PRE>\n");
 }
 
+function macro_decl($fp, $macro)
+{
+	fwrite($fp, "<PRE class=\"syntax\"><B>#define $macro</B></PRE>\n");
+}
+
 function show_fn($comment, $s, $rel, $env)
 {
 	$fntype = $env['fntype'];
@@ -426,6 +431,52 @@ function show_fn($comment, $s, $rel, $env)
 
 	topic_start($fp, $comment, $rel, $file, $env);
 	fn_decl($fp, @$s->template, $fn);
+	show_args($fp, $comment, $file, $env);
+	show_retval($fp, $comment, $file, $env);
+	show_desc($fp, $comment);
+	show_remark($fp, $comment, $file, $env);
+	topic_end($fp, $comment, $file, $env);
+	
+	fclose($fp);
+}
+
+function show_global_fn($comment, $s, $env)
+{
+	$global = $s->global;
+	$file = $env['base'] . $global->name . '.htm';
+	$fp = fopen($file, 'w');
+	if (!$fp) {
+		echo "---> ERROR: Create file `$file` failed!\n";
+		return;
+	}
+	
+	$env2 = array_merge($env, array('nsdisp' => '::'));
+	topic_start($fp, $comment, $global->name, $file, $env2);
+	fn_decl($fp, @$s->template, $global);
+	show_args($fp, $comment, $file, $env);
+	show_retval($fp, $comment, $file, $env);
+	show_desc($fp, $comment);
+	show_remark($fp, $comment, $file, $env);
+	topic_end($fp, $comment, $file, $env);
+	
+	fclose($fp);
+}
+
+function show_macro($comment, $env)
+{
+	$macro_topic = $comment->topic;
+	$macro_name = $macro_topic->args[0];
+
+	$file = $macro_name . '.htm';
+	$fp = fopen($file, 'w');
+	if (!$fp) {
+		echo "---> ERROR: Create file `$file` failed!\n";
+		return;
+	}
+	
+	$env2 = array_merge($env, array('nsdisp' => 'macro '));
+	topic_start($fp, $comment, $macro_name, $file, $env2);
+	macro_decl($fp, $macro_name);
 	show_args($fp, $comment, $file, $env);
 	show_retval($fp, $comment, $file, $env);
 	show_desc($fp, $comment);
@@ -482,9 +533,9 @@ function show_index($fp, $fns, $file, $env)
 		
 		fwrite($fp, "<TR VALIGN=\"top\">
 <TD width=\"35%\" height=\"19\"><b><a href=$href>$name($args_text)</a></b>\n</TD>
-<TD width=\"65%\" height=\"19\">\n"); show_brief($fp, $fns[$i], $file, $env);
+<TD width=\"65%\" height=\"19\">\n"); 
+		show_brief($fp, $fns[$i], $file, $env);
 		fwrite($fp, "</TD></TR>\n");
-		
 		show_fn($fns[$i], $fns[$i+1], $rel, $env);
 	}
 	fwrite($fp, "</TABLE>\n");
@@ -541,6 +592,13 @@ function show_ctors($fp, $class, $file, $env)
 		'fntype' => "ctor", "title" => "构造函数", "name" => "Constructor", "desc" => "Description")));
 }
 
+
+function show_dtors($fp, $class, $file, $env)
+{
+	return show_fntable($fp, $class, $file, array_merge($env, array(
+		'fntype' => "dtor", "title" => "析构函数", "name" => "Destructor", "desc" => "Description")));
+}
+
 function show_methods($fp, $class, $file, $env)
 {
 	show_fntable($fp, $class, $file, array_merge($env, array(
@@ -568,6 +626,7 @@ function show_class($comment, $s, $env)
 		$env2 = array_merge($env, array(
 			'base' => $base, 'nsdisp' => "$class->name::"));
 		show_ctors($fp, $class, $file, $env2);
+		show_dtors($fp, $class, $file, $env2); 
 		show_methods($fp, $class, $file, $env2);
 	}
 	topic_end($fp, $comment, $file, $env);

@@ -109,7 +109,8 @@ public:
 
 #define constructor				( gr(c_symbol()/eq(className)/tagName) + func_tail + ';' )
 
-#define destructor				( '~' + gr(c_symbol()/eq(className)/tagName) + '(' + ')' + ';' )
+#define destructor_name			( skipws_['~' + gr(c_symbol()/eq(className))]/tagName )
+#define destructor				( gr(skipws() + destructor_name) + func_tail + ';' )
 
 #define class_sentence1			( !(templatedef/tagTemplate) + (constructor/tagConstructor | \
 								  func_or_var/tagMember) )

@@ -1,5 +1,5 @@
 <?php
-	$env = array('base' => 'default/', 'nsdisp' => '');
+	$env = array('base' => './', 'nsdisp' => '');
 	
 	foreach ($doc->sentences as $s)
 	{
@@ -16,17 +16,29 @@
 				$env['base'] = $base;
 				$env['nsdisp'] = str_replace('/', '::', $base);
 			}
+			
+			if (isset($comment->topic))
+			{
+				$topic = $comment->topic;
+				if ($topic->type == "macro")
+				{
+					show_macro($comment, $env);
+				}
+			}
 		}
 		else
 		{
 			if (!isset($base))
 			{
-				$base = 'default/';
-				@mkdir($base);
+				$base = './';
 			}
 			if (isset($s->class))
 			{
 				show_class($comment, $s, $env);
+			}
+			else if (isset($s->global))
+			{
+				show_global_fn($comment, $s, $env);
 			}
 			unset($comment);
 		}
