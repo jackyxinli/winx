@@ -6,13 +6,39 @@
 @*/
 
 // -------------------------------------------------------------------------
+// macro CerlIoService
+
+/*
+@macro CerlIoService(fiber)
+@brief
+	获得IoService对象。
+@arg fiber
+	一个\<Fiber>的句柄。返回启动该Fiber的\<IoService>对象。
+@return
+	一个IoService*类型的指针。
+@*/
+
+/**	将执行权从当前纤程切换到负责执行调度的纤程。yield函数将使正在执行的纤程阻塞，直到有其他纤程来唤醒或者切换执行该纤程。
+@arg [in] self
+	当前拥有执行权的纤程。
+@remark
+	yield应用场景：
+	当纤程必须等待某条件的满足才能继续执行的时候，需要执行yield函数进行阻塞，当条件满足时由其他纤程唤醒。
+	典型的情况就是在异步IO操作之后需要利用异步操作的结果（比如读写字节数），此时就需要在异步操作之后加入yield。
+	唤醒yield纤程的方法：
+	1. 由其他纤程调用scheduleFiber函数，将一条调用消息post到调度队列，等待下一次调度即可执行；
+	2. 由其他纤程调用schedule函数，直接进行执行权的切换。
+@see
+	schedule, scheduleFiber
+@*/
+void cerl_call yield(Fiber self);
+
+/*@ns stdext.kmp*/
+
+// -------------------------------------------------------------------------
 // class Finder
 
 /** The Finder class implements KMP string searching algorithm.
-
-@macro CerlIoService(fiber)	获得IoService对象。
-@macro Schedule(self, fiber) 
-
 @arg _E
 	The data type of a single character to be found in searching \p
 	algorithm. 
@@ -30,6 +56,10 @@ class Finder
 	@*/
 	Finder();
 	
+	/** Default destructor.
+	@see [Finder]
+	@remark This is a test remark
+	@*/
 	~Finder();
 	
 	/** Construct the finder object with a pattern string.
