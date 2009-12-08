@@ -36,6 +36,8 @@
 
 // =========================================================================
 
+#if defined(X_CC_VC6)
+
 #if (INT_MAX == 2147483647)
 #define WINX_CB_PTR				4
 #elif (INT_MAX == 9223372036854775807i64)
@@ -44,10 +46,6 @@
 
 #define _WINX_CB_EBP			WINX_CB_PTR
 #define _WINX_CB_CALLFRAME		(WINX_CB_PTR+WINX_CB_PTR)
-
-// -------------------------------------------------------------------------
-
-#if defined(X_CC_VC6)
 
 //
 // vargs template fuction: 1 extra parameter, n parameters
