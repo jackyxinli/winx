@@ -67,6 +67,21 @@ __forceinline BOOL WINAPI QueryPerformanceCounter(LARGE_INTEGER* lp)
 #endif
 
 // -------------------------------------------------------------------------
-// $Log: $
+
+__forceinline VOID WINAPI Sleep(DWORD dwMilliseconds)
+{
+	/** The usleep() function suspends execution of the calling process for (at least)
+	    usec microseconds. The sleep may be lengthened slightly by any system activity
+		or by the time spent processing the call or by the granularity of system timers.
+	*/
+	usleep(dwMilliseconds);
+}
+
+__forceinline VOID WINAPI SleepEx(DWORD dwMilliseconds, BOOL bAlertable)
+{
+	usleep(dwMilliseconds);
+}
+
+// -------------------------------------------------------------------------
 
 #endif /* STDEXT_WINAPI_POSIX_TIME_H */
