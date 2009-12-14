@@ -64,6 +64,13 @@ __forceinline BOOL WINAPI QueryPerformanceCounter(LARGE_INTEGER* lp)
     return TRUE;
 }
 
+__forceinline DWORD WINAPI GetTickCount()
+{
+    struct timespec now;
+    clock_gettime(CLOCK_MONOTONIC, &now);
+    return (long)now.tv_sec * 1000 + (now.tv_nsec / 1000000);
+}
+
 #endif
 
 // -------------------------------------------------------------------------
