@@ -163,7 +163,7 @@ foreach ($doc->config as $cfg)
 				Name="VCCLCompilerTool"
 				Optimization="<?php echo $optimization ?>"
 				InlineFunctionExpansion="<?php echo $inline ?>"
-				AdditionalIncludeDirectories="<?php echo join(',', $doc->include) ?>"
+				AdditionalIncludeDirectories="<?php if (isset($doc->include)) echo join(',', $doc->include); ?>"
 				PreprocessorDefinitions="<?php echo $define ?>"
 				StringPooling="true"
 				RuntimeLibrary="<?php echo $crt_type ?>"
