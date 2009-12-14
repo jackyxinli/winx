@@ -61,7 +61,7 @@ __forceinline BOOL WINAPI QueryPerformanceCounter(LARGE_INTEGER* lp)
     clock_gettime(CLOCK_MONOTONIC, &now);
     UINT64 ticks = (UINT64)now.tv_sec * 1000000000 + now.tv_nsec;
     lp->QuadPart = ticks;
-	return TRUE;
+    return TRUE;
 }
 
 #endif
@@ -74,12 +74,12 @@ __forceinline VOID WINAPI Sleep(DWORD dwMilliseconds)
 	    usec microseconds. The sleep may be lengthened slightly by any system activity
 		or by the time spent processing the call or by the granularity of system timers.
 	*/
-	usleep(dwMilliseconds);
+	usleep(dwMilliseconds * 1000);
 }
 
 __forceinline VOID WINAPI SleepEx(DWORD dwMilliseconds, BOOL bAlertable)
 {
-	usleep(dwMilliseconds);
+	usleep(dwMilliseconds * 1000);
 }
 
 // -------------------------------------------------------------------------
