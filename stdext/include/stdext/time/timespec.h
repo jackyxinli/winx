@@ -23,6 +23,7 @@
 #include "../Basic.h"
 #endif
 
+#if defined(X_OS_WINDOWS)
 #ifndef HAVE_STRUCT_TIMESPEC
 #define HAVE_STRUCT_TIMESPEC 1
 struct timespec {
@@ -30,6 +31,7 @@ struct timespec {
 	long tv_nsec;
 };
 #endif /* HAVE_STRUCT_TIMESPEC */
+#endif
 
 NS_STDEXT_BEGIN
 
@@ -75,16 +77,23 @@ inline bool winx_call is_valid_time(const timespec& t)
 // =========================================================================
 // get_current_time
 
+#if defined(_WIN32) || defined(_WIN64)
+
 inline void winx_call get_current_time(timespec& t)
 {
-#if defined(_WIN32) || defined(_WIN64)
 	FILETIME curr;
 	GetSystemTimeAsFileTime(&curr);
 	ptw32_filetime_to_timespec_(&curr, &t);
-#else
-#error "todo"
-#endif
 }
+
+#else
+
+inline void winx_call get_current_time(timespec& t)
+{
+	clock_gettime(CLOCK_REALTIME, &t);
+}
+
+#endif
 
 // =========================================================================
 // init_duration_in_ms
