@@ -43,7 +43,7 @@
 			/>
 			<Tool
 				Name="VCCLCompilerTool"
-				Optimization="2"
+				Optimization="1"
 				InlineFunctionExpansion="1"
 				AdditionalIncludeDirectories="../../../../tpl/include,../../../../stdext/include"
 				PreprocessorDefinitions="WIN32;__32BIT__;_CONSOLE;NDEBUG;_MT"
