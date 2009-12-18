@@ -105,8 +105,8 @@ __forceinline char* winx_call to_str(char buf[], double val, int ndigit = 12) {
 inline wchar_t* winx_call to_str(wchar_t buf[], double val, int ndigit = 12) {
 	enum { bufsize = WINX_STRBUF_SIZE(double) };
 	char cbuf[bufsize];
-	_gcvt(val, ndigit, cbuf);
-	for (size_t i = 0; (buf[i] = cbuf[i]) != 0; ++i);
+	const char* src = _gcvt(val, ndigit, cbuf);
+	for (size_t i = 0; (buf[i] = src[i]) != '\0'; ++i);
 	return buf;
 }
 
