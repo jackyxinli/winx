@@ -204,8 +204,15 @@ public:
 			m_stg.put(s, count);
 		return *this;
 	}
-	
+
 	Log& winx_call repeat(char ch)
+	{
+		if (m_stg)
+			m_stg.put(ch);
+		return *this;
+	}
+
+	Log& winx_call repeat(BYTE ch)
 	{
 		if (m_stg)
 			m_stg.put(ch);
