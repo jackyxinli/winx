@@ -54,11 +54,9 @@ inline void WINAPI WaitThread(HTHREAD hThread, THREADRET* exitCode)
 	GetExitCodeThread(hThread, exitCode);
 };
 
-#endif
-
 // =========================================================================
 
-#if defined(STDEXT_HAS_PTHREAD)
+#elif defined(STDEXT_HAS_PTHREAD)
 
 typedef pthread_t HTHREAD;
 typedef void* THREADRET;
