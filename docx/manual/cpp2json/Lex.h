@@ -133,10 +133,19 @@ public:
 #define classdef				( (class_header + !baseclasses + class_body)/tagClass )
 
 // -------------------------------------------------------------------------
+// macro
+
+#define macro_args				( '(' + !(gr(symbol/tagMacroArgs) % ',') + ')' )
+#define macro_header			( '#' + keyword("define") + symbol/tagName + !(macro_args/tagMacroArgList) )
+#define macro_body				( c_find_continuable_eol()/tagMacroBody )
+#define macrodef				( gr(cpp_skip_ * (macro_header) + macro_body)/tagMacro )
+
+// -------------------------------------------------------------------------
 // global sentences
 
 #define global1					( !(templatedef/tagTemplate) + (classdef | func_or_var/tagGlobal) )
-#define global					gr( rComment | cpp_skip_ * global1 )
+#define global2					( global1 | macrodef )
+#define global					gr( rComment | cpp_skip_ * global2 )
 
 // -------------------------------------------------------------------------
 // document

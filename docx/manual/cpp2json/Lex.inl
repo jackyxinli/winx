@@ -12,6 +12,8 @@ extern dom::NodeMark tagDestructor("dtor");
 extern dom::NodeMark tagTypeCast("typecast");
 extern dom::NodeMark tagTypedef("type");
 extern dom::NodeMark tagEnum("enum");
+extern dom::NodeMark tagMacro("macro");
+extern dom::NodeMark tagMacroArgList("arglist");
 
 extern dom::Mark tagClassKeyword("keyword");
 extern dom::Mark tagHeader("header");
@@ -21,6 +23,8 @@ extern dom::Mark tagCallType("calltype");
 extern dom::Mark tagName("name");
 extern dom::Mark tagAttr2("funcattr");
 extern dom::Mark tagDefVal("defval");
+extern dom::Mark tagMacroBody("body");
+extern dom::Mark tagMacroArgs("args", true);
 
 impl::Allocator alloc;
 impl::MarkedGrammar rCppSymbol(alloc, cppsymbol);

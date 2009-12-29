@@ -70,6 +70,11 @@ extern dom::NodeMark tagSentences;
 			extern dom::Mark tagName;
 			extern dom::Mark tagDefVal;
 		extern dom::Mark tagAttr2; // to distinguish function from variable
+	extern dom::NodeMark tagMacro;
+		extern dom::Mark tagName;
+		extern dom::NodeMark tagMacroArgList;
+			extern dom::Mark tagMacroArgs;
+		extern dom::Mark tagMacroBody;
 
 // -------------------------------------------------------------------------
 
