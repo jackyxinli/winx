@@ -42,7 +42,17 @@ public:
 	}
 };
 
-#define symbol					(c_symbol()/ne("const"))
+class NotIsKeyword
+{
+public:
+	template <class ValueT>
+	bool TPL_CALL operator()(const ValueT& v) const
+	{
+		return v.compare("const") != 0;
+	}
+};
+
+#define symbol					(c_symbol()/meet(NotIsKeyword()))
 #define keyword(key)			gr(c_symbol()/eq(key))
 #define zero_keyword			gr(u_integer()/eq(0))
 #define typename_keyword		gr(c_symbol()/eq2("class", "typename"))
