@@ -9,12 +9,12 @@
 // of this license. You must not remove this notice, or any other, from
 // this software.
 // 
-// Module: tpl/regex/RuleTraits_.h
+// Module: tpl/regex/RuleTraits.h
 // Creator: xushiwei
 // Email: xushiweizh@gmail.com
 // Date: 2006-8-13 9:41:58
 // 
-// $Id: RuleTraits_.h 794 2008-07-04 06:27:26Z xushiweizh@gmail.com $
+// $Id: RuleTraits.h 794 2008-07-04 06:27:26Z xushiweizh@gmail.com $
 // -----------------------------------------------------------------------*/
 #ifndef TPL_REGEX_RULETRAITS_H
 #define TPL_REGEX_RULETRAITS_H
@@ -268,7 +268,6 @@ Grammar< Op<T1, Gr<EqStr_<CharT> > > > const TPL_CALL operator op(const Grammar<
 	TPL_GRAMMAR_RULE_BINARY_OP_(op, Op)
 
 // =========================================================================
-// $Log: $
 
 NS_TPL_END
 
