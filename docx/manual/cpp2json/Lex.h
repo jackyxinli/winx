@@ -113,10 +113,10 @@ public:
 #define destructor				( gr(skipws() + destructor_name) + func_tail + ';' )
 
 #define class_sentence1			( !(templatedef/tagTemplate) + (constructor/tagConstructor | \
-								  func_or_var/tagMember) )
+								  ref(rClass) | func_or_var/tagMember) )
 
-#define class_sentence2			( class_sentence1 | type_cast/tagTypeCast | \
-								  enumdef/tagEnum | typedefine/tagTypedef | destructor/tagDestructor)
+#define class_sentence2			( type_cast/tagTypeCast | enumdef/tagEnum | \
+								  typedefine/tagTypedef | destructor/tagDestructor | class_sentence1 )
 
 #define class_sentence			gr( rComment | cpp_skip_ * class_sentence2 )
 
@@ -130,7 +130,7 @@ public:
 #define baseclass				( !access + symbol/tagName )
 #define baseclasses				( ':' + baseclass/tagBaseClasses % ',' )
 
-#define classdef				( (class_header + !baseclasses + class_body)/tagClass )
+#define classdef				( (class_header + !baseclasses + class_body)/tagClass + !gr(';') )
 
 // -------------------------------------------------------------------------
 // macro
@@ -138,13 +138,13 @@ public:
 #define macro_args				( '(' + !(gr(symbol/tagMacroArgs) % ',') + ')' )
 #define macro_header			( '#' + keyword("define") + symbol/tagName + !(macro_args/tagMacroArgList) )
 #define macro_body				( c_find_continuable_eol()/tagMacroBody )
-#define macrodef				( gr(cpp_skip_ * (macro_header) + macro_body)/tagMacro )
+#define macrodef				( gr(cpp_skip_ * macro_header + macro_body)/tagMacro )
 
 // -------------------------------------------------------------------------
 // global sentences
 
 #define global1					( !(templatedef/tagTemplate) + (classdef | func_or_var/tagGlobal) )
-#define global2					( global1 | macrodef )
+#define global2					( typedefine/tagTypedef | macrodef | global1 )
 #define global					gr( rComment | cpp_skip_ * global2 )
 
 // -------------------------------------------------------------------------
