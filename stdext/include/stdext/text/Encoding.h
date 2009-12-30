@@ -78,7 +78,7 @@ public:
 // -------------------------------------------------------------------------
 // function getEncoding
 
-inline codepage_t winx_call getEncoding(const detail::Encoding& encoding, codepage_t cpError = cp_unknown)
+inline codepage_t winx_call getEncoding(const TempString<char>& encoding, codepage_t cpError = cp_unknown)
 {
 	using namespace detail;
 
