@@ -371,7 +371,7 @@ public:
 
 	template <class SourceT, class ContextT>
 	bool TPL_CALL match(SourceT& ar, ContextT& context) const {
-		return m_x(ar.peek());
+		return m_x(ar.peek()) != 0;
 	}
 };
 

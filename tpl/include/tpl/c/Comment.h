@@ -31,8 +31,11 @@ NS_TPL_BEGIN
 #define TPL_CSKIP_M1_		( +ch('*') )
 #define TPL_CSKIP_M2_		( +ch('-') )
 #define TPL_CSKIP_M3_		( +ch('=') )
-#define TPL_CSKIP_MX_		( TPL_CSKIP_M1_ | TPL_CSKIP_M2_ | TPL_CSKIP_M3_ )
-#define TPL_CSKIP_M_		( "//" | TPL_CSKIP_MX_ + ws() )
+#define TPL_CSKIP_M4_		( +ch('/') )
+#define TPL_CSKIP_M5_		( '!' )
+#define TPL_CSKIP_MX_		( TPL_CSKIP_M1_ | TPL_CSKIP_M2_ | TPL_CSKIP_M3_ | TPL_CSKIP_M4_ | TPL_CSKIP_M5_ )
+#define TPL_CSKIP_SP_		( non_eol_space() | peek<0x0a, 0x0d, -1>() )
+#define TPL_CSKIP_M_		( skipws() + TPL_CSKIP_MX_ + TPL_CSKIP_SP_ )
 
 template <class ArchiveT>
 class FilterCComment
@@ -52,7 +55,7 @@ public:
 
 	void TPL_CALL operator()(const value_type& val) const
 	{
-		val >> *( skipws() + !TPL_CSKIP_M_ + (paragraph() + eol())/put(m_wr) );
+		val >> *( !TPL_CSKIP_M_ + ((paragraph() + eol())/put(m_wr) | strict_eol()) );
 	}
 };
 
