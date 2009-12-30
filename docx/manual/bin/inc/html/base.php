@@ -450,8 +450,8 @@ function show_global_fn($comment, $s, $env)
 		return;
 	}
 	
-	$env2 = array_merge($env, array('nsdisp' => '::'));
-	topic_start($fp, $comment, $global->name, $file, $env2);
+	//$env2 = array_merge($env, array('nsdisp' => '::'));
+	topic_start($fp, $comment, $global->name, $file, $env);
 	fn_decl($fp, @$s->template, $global);
 	show_args($fp, $comment, $file, $env);
 	show_retval($fp, $comment, $file, $env);
