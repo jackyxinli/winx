@@ -16,15 +16,6 @@
 				$env['base'] = $base;
 				$env['nsdisp'] = str_replace('/', '::', $base);
 			}
-			
-			if (isset($comment->topic))
-			{
-				$topic = $comment->topic;
-				/*if ($topic->type == "macro")
-				{
-					show_macro($comment, $env);
-				}*/
-			}
 		}
 		else
 		{

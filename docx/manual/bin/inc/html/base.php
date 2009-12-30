@@ -464,34 +464,60 @@ function show_global_fn($comment, $s, $env)
 
 function show_macro($comment, $sentence, $env)
 {
-	$macro_name = $sentence->macro->name;
-	
-	$args = $comment->args;
-	$macro_args = '(';
-	foreach ($args as $arg)
+	if (isset($comment->topic))
 	{
-		$macro_args = $macro_args . $arg->name;
+		$macro_topic = $comment->topic;
+		$macro_name = $macro_topic->args[0];
+		
+		$file = $macro_name . '.htm';
+		$fp = fopen($file, 'w');
+		if (!$fp) {
+			echo "---> ERROR: Create file `$file` failed!\n";
+			return;
+		}
+		
+		$env2 = array_merge($env, array('nsdisp' => 'macro '));
+		topic_start($fp, $comment, $macro_name, $file, $env2);
+		macro_decl($fp, $macro_name);
+		show_args($fp, $comment, $file, $env);
+		show_retval($fp, $comment, $file, $env);
+		show_desc($fp, $comment);
+		show_remark($fp, $comment, $file, $env);
+		topic_end($fp, $comment, $file, $env);
+		
+		fclose($fp);
 	}
-	$macro_args = $macro_args . ')';
-	$macro_name = $macro_name . $macro_args;
-	
-	$file = $macro_name . '.htm';
-	$fp = fopen($file, 'w');
-	if (!$fp) {
-		echo "---> ERROR: Create file `$file` failed!\n";
-		return;
+	else
+	{
+		$macro_name = $sentence->macro->name;
+		
+		$args = $comment->args;
+		$macro_args = '(';
+		foreach ($args as $arg)
+		{
+			$macro_args = $macro_args . $arg->name;
+		}
+		$macro_args = $macro_args . ')';
+		$macro_name = $macro_name . $macro_args;
+		
+		$file = $macro_name . '.htm';
+		$fp = fopen($file, 'w');
+		if (!$fp) {
+			echo "---> ERROR: Create file `$file` failed!\n";
+			return;
+		}
+		
+		$env2 = array_merge($env, array('nsdisp' => 'macro '));
+		topic_start($fp, $comment, $macro_name, $file, $env2);
+		macro_decl($fp, $macro_name);
+		show_args($fp, $comment, $file, $env);
+		show_retval($fp, $comment, $file, $env);
+		show_desc($fp, $comment);
+		show_remark($fp, $comment, $file, $env);
+		topic_end($fp, $comment, $file, $env);
+		
+		fclose($fp);
 	}
-	
-	$env2 = array_merge($env, array('nsdisp' => 'macro '));
-	topic_start($fp, $comment, $macro_name, $file, $env2);
-	macro_decl($fp, $macro_name);
-	show_args($fp, $comment, $file, $env);
-	show_retval($fp, $comment, $file, $env);
-	show_desc($fp, $comment);
-	show_remark($fp, $comment, $file, $env);
-	topic_end($fp, $comment, $file, $env);
-	
-	fclose($fp);
 }
 
 // -------------------------------------------------------------------------
