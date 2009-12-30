@@ -20,10 +20,10 @@
 			if (isset($comment->topic))
 			{
 				$topic = $comment->topic;
-				if ($topic->type == "macro")
+				/*if ($topic->type == "macro")
 				{
 					show_macro($comment, $env);
-				}
+				}*/
 			}
 		}
 		else
@@ -31,6 +31,10 @@
 			if (!isset($base))
 			{
 				$base = './';
+			}
+			if (isset($s->macro))
+			{
+				show_macro($comment, $s, $env);
 			}
 			if (isset($s->class))
 			{

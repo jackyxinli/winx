@@ -279,7 +279,7 @@ function show_brief($fp, $comment, $file, $env)
 {
 	if (!isset($comment))
 		return;
-		
+
 	if (!isset($comment->brief))
 	{
 		if (isset($comment->summary))
@@ -321,7 +321,7 @@ function topic_start($fp, $comment, $rel, $file, $env)
 	fwrite($fp, "<BODY TOPMARGIN=\"0\">\n");
 	if (isset($category))
 		header_bar($fp, $category);
-	fwrite($fp, "<H1>$header</H1>");
+	fwrite($fp, "<H1>${header}</H1>");
 	show_brief($fp, $comment, $file, $env);
 }
 
@@ -462,11 +462,19 @@ function show_global_fn($comment, $s, $env)
 	fclose($fp);
 }
 
-function show_macro($comment, $env)
+function show_macro($comment, $sentence, $env)
 {
-	$macro_topic = $comment->topic;
-	$macro_name = $macro_topic->args[0];
-
+	$macro_name = $sentence->macro->name;
+	
+	$args = $comment->args;
+	$macro_args = '(';
+	foreach ($args as $arg)
+	{
+		$macro_args = $macro_args . $arg->name;
+	}
+	$macro_args = $macro_args . ')';
+	$macro_name = $macro_name . $macro_args;
+	
 	$file = $macro_name . '.htm';
 	$fp = fopen($file, 'w');
 	if (!$fp) {
@@ -630,8 +638,58 @@ function show_class($comment, $s, $env)
 		show_methods($fp, $class, $file, $env2);
 	}
 	topic_end($fp, $comment, $file, $env);
-	
 	fclose($fp);
+		
+	foreach ($s->class->sentences as $s)
+	{
+		if (isset($s->comment))
+		{
+			$comment = $s->comment;
+			if (isset($comment->category))
+				$env['category'] = $comment->category;
+			if (isset($comment->ns))
+			{
+				$base = str_replace(array('::', '.', '\\'), array('/', '/', '/'), $comment->ns) . '/';
+				$base = str_replace('//', '/', $base);
+				@mkdir($base, 0700, true);
+				$env['base'] = $base;
+				$env['nsdisp'] = str_replace('/', '::', $base);
+			}
+			
+			if (isset($comment->topic))
+			{
+				$topic = $comment->topic;
+				/*if ($topic->type == "macro")
+				{
+					show_macro($comment, $env);
+				}*/
+			}
+		}
+		else
+		{
+			if (!isset($base))
+			{
+				$base = './';
+			}
+			if (isset($s->macro))
+			{
+				show_macro($comment, $s, $env);
+			}
+			if (isset($s->class))
+			{
+				show_class($comment, $s, $env);
+			}
+			else if (isset($s->global))
+			{
+				show_global_fn($comment, $s, $env);
+			}
+			unset($comment);
+		}
+	}
+			
+			
+			
+		
 }
 
 // -------------------------------------------------------------------------
