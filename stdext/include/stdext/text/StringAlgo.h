@@ -42,6 +42,7 @@ NS_STDEXT_BEGIN
 
 enum codepage_t
 {
+	cp_unknown	= -1,
 	cp_auto		= 0,
 	cp_utf7		= 65000,
 	cp_utf8		= 65001,
@@ -598,7 +599,6 @@ public:
 #endif // defined(STD_UNITTEST)
 
 // -------------------------------------------------------------------------
-// $Log: StringAlgo.h,v $
 
 #endif /* STDEXT_TEXT_STRINGALGO_H */
 
