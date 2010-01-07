@@ -30,10 +30,25 @@ template <
 	>
 class HashMap : public PHashMap<KeyT, DataT, HashCompT, AllocT>
 {
-	typedef size_type;
-
+	
+/**	哈希表初始化
+@arg alloc
+	哈希表使用的内存分配器。
+@arg n
+	根据输入的n值，计算哈希表的存储桶数量。
+@*/
 	HashMap(AllocT& alloc, size_type n = 100);
 
+/**	哈希表初始化
+@arg alloc
+	哈希表使用的内存分配器。
+@arg first
+	从迭代器向哈希表输入的第一个元素。
+@arg last
+	从迭代器向哈希表输入的最后一个元素。
+@arg n
+	哈希表的存储桶数量。
+@*/
 	template <class Iterator>
 	HashMap(AllocT& alloc, Iterator first, Iterator last, size_type n = 100);
 };
@@ -67,10 +82,25 @@ template <
 	>
 class HashMultiMap : public PHashMultiMap<KeyT, DataT, HashCompT, AllocT>
 {
-	typedef size_type;
 
+/** 多值哈希表初始化
+@arg alloc
+	多值哈希表使用的内存分配器。
+@arg n
+	多值哈希表的存储桶数量。
+@*/
 	HashMultiMap(AllocT& alloc, size_type n = 100);
-	
+
+/** 多值哈希表初始化
+@arg alloc
+	多值哈希表使用的内存分配器。
+@arg first
+	从迭代器向多值哈希表输入的第一个元素。
+@arg last
+	从迭代器向多值哈希表输入的最后一个元素。
+@arg n
+	多值哈希表的存储桶数量。
+@*/
 	template <class Iterator>
 	HashMultiMap(AllocT& alloc, Iterator first, Iterator last, size_type n = 100);
 };
