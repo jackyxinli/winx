@@ -4,22 +4,22 @@
 // -------------------------------------------------------------------------
 // class HashSet
 
-/** ��ϣ���ϡ�����һ�ִ洢Key���������������洢��Key��Ψһ�ġ���ϣ�������ڿ��ٲ���һ��Key��
+/** 哈希集合。这是一种存储Key的容器，该容器存储的Key是唯一的。哈希集合可以用来消除重复的Key。
 @arg ValT
-	��ϣ�����д�ŵ�Key�������͡�
+	哈希集合中存放的Key数据类型。
 @arg HashCompT
-	��ϣ����Key��Ҫʵ�ֵĲ����ࡣ����Ϊ��
+	哈希集合Key需要实现的操作类。其规格为：
 		[[code type="c++"]]
 			concept HashCompare
 			{
-				typename hasher; // ��Key��hashֵ
-				typename key_equal; // �Ƚ�����Key�Ƿ����
-				typename key_pred; // �ж�һ��Key�Ƿ�С����һ��Key
+				typename hasher; // 求Key的hash值
+				typename key_equal; // 比较两个Key是否相等
+				typename key_pred; // 判断一个Key是否小于另一个Key
 			};
 		[[/code]]
-	Ĭ�� HashCompT ȡ NS_STDEXT::HashCompare<ValT>��
+	默认 HashCompT 取 NS_STDEXT::HashCompare<ValT>。
 @arg AllocT
-	�ù�ϣ���ϵ��ڴ��������ࡣĬ�� AllocT ȡ NS_STDEXT::DefaultAlloc��
+	该哈希集合的内存分配操作类。默认 AllocT 取 NS_STDEXT::DefaultAlloc。
 @*/
 template <
 	class ValT,
@@ -29,24 +29,24 @@ template <
 class HashSet : public PHashSet<ValT, HashCompT, AllocT>
 {
 
-/** ��ϣ���ϵĳ�ʼ����
+/** 哈希集合的初始化。
 @arg alloc
-	��ϣ����ʹ�õ��ڴ��������
+	哈希集合使用的内存分配器。
 @arg n
-	���������nֵ������洢Ͱ������
+	根据输入的n值，计算存储桶数量。
 @*/
 	explicit HashSet(AllocT& alloc, size_type n = 100)
 		: Base(alloc, n) {}
 
-/** ��ϣ���ϵĳ�ʼ��
+/** 哈希集合的初始化
 @arg alloc
-	��ϣ����ʹ�õ��ڴ��������
+	哈希集合使用的内存分配器。
 @arg first
-	�ӵ��������ϣ��������ĵ�һ��Ԫ�ء�
+	从迭代器向哈希集合输入的第一个元素。
 @arg last
-	�ӵ��������ϣ������������һ��Ԫ�ء�
+	从迭代器向哈希集合输入的最后一个元素。
 @arg n
-	���������nֵ������洢Ͱ������
+	根据输入的n值，计算存储桶数量。
 @*/
 	template <class Iterator>
 	HashSet(AllocT& alloc, Iterator first, Iterator last, size_type n = 100)
@@ -56,22 +56,22 @@ class HashSet : public PHashSet<ValT, HashCompT, AllocT>
 // -------------------------------------------------------------------------
 // class HashMultiSet
 
-/** ��ֵ��ϣ���ϡ�����һ�ִ洢Key������������ͨ��ϣ���ϲ�ͬ���ǣ������ж����ͬ��Key��
+/** 多值哈希集合。这是一种存储Key的容器，与普通哈希集合不同的是，可以有多个相同的Key。
 @arg ValT
-	��ϣ�����д�ŵ�Key�������͡�
+	哈希集合中存放的Key数据类型。
 @arg HashCompT
-	��ϣ����Key��Ҫʵ�ֵĲ����ࡣ����Ϊ��
+	哈希集合Key需要实现的操作类。其规格为：
 		[[code type="c++"]]
 			concept HashCompare
 			{
-				typename hasher; // ��Key��hashֵ
-				typename key_equal; // �Ƚ�����Key�Ƿ����
-				typename key_pred; // �ж�һ��Key�Ƿ�С����һ��Key
+				typename hasher; // 求Key的hash值
+				typename key_equal; // 比较两个Key是否相等
+				typename key_pred; // 判断一个Key是否小于另一个Key
 			};
 		[[/code]]
-	Ĭ�� HashCompT ȡ NS_STDEXT::HashCompare<ValT>��
+	默认 HashCompT 取 NS_STDEXT::HashCompare<ValT>。
 @arg AllocT
-	�ù�ϣ���ϵ��ڴ��������ࡣĬ�� AllocT ȡ NS_STDEXT::DefaultAlloc��
+	该哈希集合的内存分配操作类。默认 AllocT 取 NS_STDEXT::DefaultAlloc。
 @*/
 template <
 	class ValT,
@@ -81,24 +81,24 @@ template <
 class HashMultiSet : public PHashMultiSet<ValT, HashCompT, AllocT>
 {
 
-/** ��ֵ��ϣ���ϵĳ�ʼ��
+/** 多值哈希集合的初始化
 @arg alloc
-	��ֵ��ϣ����ʹ�õ��ڴ��������
+	多值哈希集合使用的内存分配器。
 @arg n
-	���������nֵ������洢Ͱ������
+	根据输入的n值，计算存储桶数量。
 @*/
 	explicit HashMultiSet(AllocT& alloc, size_type n = 100)
 		: Base(alloc, n) {}
 
-/** ��ֵ��ϣ���ϵĳ�ʼ��
+/** 多值哈希集合的初始化
 @arg alloc
-	��ֵ��ϣ����ʹ�õ��ڴ��������
+	多值哈希集合使用的内存分配器。
 @arg first
-	�ӵ��������ֵ��ϣ��������ĵ�һ��Ԫ�ء�
+	从迭代器向多值哈希集合输入的第一个元素。
 @arg last
-	�ӵ��������ֵ��ϣ������������һ��Ԫ�ء�
+	从迭代器向多值哈希集合输入的最后一个元素。
 @arg n
-	���������nֵ������洢Ͱ������
+	根据输入的n值，计算存储桶数量。
 @*/
 	template <class Iterator>
 	HashMultiSet(AllocT& alloc, Iterator first, Iterator last, size_type n = 100)
