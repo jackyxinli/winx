@@ -4,11 +4,11 @@
 // -------------------------------------------------------------------------
 // class HashSet
 
-/** 哈希集合。
+/** 哈希集合。这是一种存储Key的容器，该容器存储的Key是唯一的。哈希集合用于快速查找一个Key。
 @arg ValT
-	哈希集合中存放的数据类型。
+	哈希集合中存放的Key数据类型。
 @arg HashCompT
-	哈希表Key需要实现的操作类。其规格为：
+	哈希集合Key需要实现的操作类。其规格为：
 		[[code type="c++"]]
 			concept HashCompare
 			{
@@ -56,6 +56,23 @@ class HashSet : public PHashSet<ValT, HashCompT, AllocT>
 // -------------------------------------------------------------------------
 // class HashMultiSet
 
+/** 多值哈希集合。这是一种存储Key的容器，与普通哈希集合不同的是，可以有多个相同的Key。
+@arg ValT
+	哈希集合中存放的Key数据类型。
+@arg HashCompT
+	哈希集合Key需要实现的操作类。其规格为：
+		[[code type="c++"]]
+			concept HashCompare
+			{
+				typename hasher; // 求Key的hash值
+				typename key_equal; // 比较两个Key是否相等
+				typename key_pred; // 判断一个Key是否小于另一个Key
+			};
+		[[/code]]
+	默认 HashCompT 取 NS_STDEXT::HashCompare<ValT>。
+@arg AllocT
+	该哈希集合的内存分配操作类。默认 AllocT 取 NS_STDEXT::DefaultAlloc。
+@*/
 template <
 	class ValT,
 	class HashCompT = HashCompare<ValT>,
