@@ -47,7 +47,7 @@
 #define STDEXT_P_HASHSET_H
 
 #ifndef STDEXT_P_HASHTABLE_H
-#include "Hashtable.h"
+#include "HashTable.h"
 #endif
 
 NS_STDEXT_BEGIN
