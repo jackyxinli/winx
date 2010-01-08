@@ -149,7 +149,8 @@ public:
 
 	void winx_call copy(const Array& from)
 	{
-		std::copy(from.begin(), from.end(), begin());
+		m_size = from.m_size;
+		std::copy(from.m_data, from.m_data + m_size, m_data);
 	}
 };
 

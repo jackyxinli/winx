@@ -36,7 +36,7 @@ NS_STDEXT_BEGIN
 // -------------------------------------------------------------------------
 // class TypedPtrArray
 
-#define __STDEXT_PTRARRAY_USING												\
+#define STDEXT_PTRARRAY_USING__												\
 public:																		\
 	using _Base::size;														\
 	using _Base::resize;													\
@@ -51,7 +51,7 @@ class TypedPtrArray : private std::vector<void*>
 private:
 	typedef std::vector<void*> _Base;
 	typedef TypedPtrArray<_PtrType> _Myt;
-	__STDEXT_PTRARRAY_USING;
+	STDEXT_PTRARRAY_USING__;
 
 private:
 	TypedPtrArray(const TypedPtrArray&);
@@ -173,7 +173,7 @@ public:
 // -------------------------------------------------------------------------
 // class InterfaceArray
 
-#define __STDEXT_INTERFACE_ARRAY_USING										\
+#define STDEXT_INTERFACE_ARRAY_USING__										\
 public:																		\
 	using _Base::size;														\
 	using _Base::empty;														\
@@ -186,7 +186,7 @@ private:
 	typedef std::vector<void*> _Base;
 	typedef Interface* _PtrType;
 	typedef InterfaceArray<Interface> _Myt;
-	__STDEXT_INTERFACE_ARRAY_USING;
+	STDEXT_INTERFACE_ARRAY_USING__;
 
 private:
 	InterfaceArray(const InterfaceArray&);
