@@ -9,12 +9,12 @@
 // of this license. You must not remove this notice, or any other, from
 // this software.
 // 
-// Module: stdext/FixedQueue.h
+// Module: stdext/Queue.h
 // Creator: xushiwei
 // Email: xushiweizh@gmail.com
 // Date: 2006-12-20 15:29:13
 // 
-// $Id: FixedQueue.h,v 1.2 2007/01/10 09:33:50 xushiwei Exp $
+// $Id: Queue.h,v 1.2 2007/01/10 09:33:50 xushiwei Exp $
 // -----------------------------------------------------------------------*/
 #ifndef STDEXT_QUEUE_H
 #define STDEXT_QUEUE_H
