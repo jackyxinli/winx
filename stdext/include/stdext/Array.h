@@ -80,6 +80,7 @@ public:
 	size_type winx_call capacity() const	{ return nElement; }
 	size_type winx_call size() const		{ return m_size; }
 	bool winx_call empty() const			{ return m_size == 0; }
+	bool winx_call full() const				{ return m_size >= nElement; }
 
     // direct access to data (read-only)
     const value_type* winx_call data() const { return m_data; }
@@ -117,13 +118,11 @@ public:
 	void winx_call insert(iterator it, const_reference val)
 	{
 		WINX_ASSERT(it >= begin() && it <= end());
-		WINX_ASSERT(m_size < nElement);
+		WINX_ASSERT(!full());
 
-		if (m_size < nElement) {
-			std::copy_backward(it, end(), end()+1);
-			*it = val;
-			++m_size;
-		}
+		std::copy_backward(it, end(), end()+1);
+		*it = val;
+		++m_size;
 	}
 
 	void winx_call erase(iterator it)
@@ -136,16 +135,16 @@ public:
 
 	void winx_call push_back(const_reference val)
 	{
-		WINX_ASSERT(m_size < nElement);
+		WINX_ASSERT(!full());
 		
-		if (m_size < nElement)
-			m_data[m_size++] = val;
+		m_data[m_size++] = val;
 	}
 
 	void winx_call pop_back()
 	{
-		if (m_size)
-			--m_size;
+		WINX_ASSERT(!empty());
+
+		--m_size;
 	}
 
 	void winx_call copy(const Array& from)
@@ -161,6 +160,8 @@ template <class VectorT>
 inline void winx_call priority_push_back(
 	VectorT& cont, const typename VectorT::value_type& val, const size_t countLim)
 {
+	WINX_ASSRET(cont.capacity() >= countLim);
+
 	if (cont.size() >= countLim)
 	{
 		if (cont.back() < val)
@@ -175,6 +176,8 @@ template <class VectorT, class PredT>
 inline void winx_call priority_push_back(
 	VectorT& cont, const typename VectorT::value_type& val, const size_t countLim, PredT pred)
 {
+	WINX_ASSRET(cont.capacity() >= countLim);
+
 	if (cont.size() >= countLim)
 	{
 		if (pred(cont.back(), val))
