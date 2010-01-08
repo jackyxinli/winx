@@ -26,18 +26,19 @@
 NS_STDEXT_BEGIN
 
 // -------------------------------------------------------------------------
-// class FixedQueue
+// class LimitedQueue
 
-template <class Type, size_t nElement>
-class FixedQueue
+template <class Type>
+class LimitedQueue
 {
 private:
-	Type m_data[nElement];
+	Type* m_data;
 	size_t m_i;
 	size_t m_size;
+	size_t const nElement;
 
-	FixedQueue(const FixedQueue&);
-	void operator=(const FixedQueue&);
+	LimitedQueue(const LimitedQueue&);
+	void operator=(const LimitedQueue&);
 
 public:
 	typedef Type value_type;
@@ -47,8 +48,13 @@ public:
 	typedef const Type& const_reference;
 
 public:
-	FixedQueue() : m_i(0), m_size(0) {}
+	LimitedQueue(Type data[], size_t n)
+		: m_data(data), nElement(n),
+		  m_i(0), m_size(0)
+	{
+	}
 
+public:
 	void winx_call clear()	{ m_size = 0; }
 
 	size_type winx_call capacity() const	{ return nElement; }
@@ -78,7 +84,7 @@ public:
 		--m_size;
 	}
 
-	void winx_call copy(const FixedQueue& from)
+	void winx_call copy(const LimitedQueue& from)
 	{
 		m_size = from.m_size;
 		m_i = from.m_i;
