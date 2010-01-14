@@ -9,7 +9,7 @@
 			if (is_file("$dir/$dir.prj"))
 				system("cd $dir; mk $args");
 			else if (is_file("$dir/build"))
-				system("cd $dir; ./build");
+				system("cd $dir; ./build $args");
 			else
 				printf("=============> Unable to build project: $dir\n");
 		}
