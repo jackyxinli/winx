@@ -5,9 +5,13 @@
 	foreach (glob('*') as $dir)
 	{
 		if (is_dir($dir) && $dir[0] != '.')
-        {
-        	if (is_file("$dir/$dir.prj"))
+		{
+			if (is_file("$dir/$dir.prj"))
 				system("cd $dir; mk $args");
+			else if (is_file("$dir/build"))
+				system("cd $dir; ./build");
+			else
+				printf("=============> Unable to build project: $dir\n");
 		}
 	}
 ?>
