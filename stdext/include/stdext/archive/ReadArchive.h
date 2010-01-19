@@ -83,7 +83,7 @@ public:
 		m_lpBufStart = STD_ALLOC_ARRAY(alloc, char_type, cacheSize);
 		m_nBufSize	 = cacheSize;
 		m_lpBufCur	 = m_lpBufMax = m_lpBufStart;
-		m_handle.open_handle(hFile, pos);
+		m_handle.open_handle(hFile);
 	}
 
 	explicit ReadArchive(LPCWSTR szFile, AllocT alloc = AllocT())
@@ -384,7 +384,7 @@ public:
 	void winx_call open_handle(Handle hFile, pos_type pos = 0)
 	{
 		if (!m_handle.good())
-			m_handle.open_handle(hFile, pos);
+			m_handle.open_handle(hFile);
 	}
 
 	void winx_call close()

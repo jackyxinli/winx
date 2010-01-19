@@ -92,13 +92,6 @@ public:
 		m_pFile = pFile;
 	}
 
-	void winx_call open_handle(_Handle pFile, const pos_type& pos)
-	{
-		WINX_ASSERT(m_pFile == NULL);
-		WINX_ASSERT(tell() == pos);
-		m_pFile = pFile;
-	}
-
 	HRESULT winx_call open_to_write(LPCWSTR szFile)
 	{
 		WINX_ASSERT(m_pFile == NULL);

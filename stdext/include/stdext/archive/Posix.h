@@ -100,14 +100,6 @@ public:
 	void winx_call open_handle(_Handle fd)
 	{
 		WINX_ASSERT(m_fd == nullfd);
-		WINX_ASSERT(fd == STDIN_FILENO || tell() == 0);
-		m_fd = fd;
-	}
-
-	void winx_call open_handle(_Handle fd, const pos_type& pos)
-	{
-		WINX_ASSERT(m_fd == nullfd);
-		WINX_ASSERT(fd == STDIN_FILENO || tell() == pos);
 		m_fd = fd;
 	}
 

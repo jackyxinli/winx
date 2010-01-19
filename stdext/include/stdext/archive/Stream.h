@@ -136,16 +136,6 @@ public:
 			pStrm->AddRef();
 	}
 
-	void winx_call open_handle(IStream* pStrm, const pos_type& pos)
-	{
-		WINX_ASSERT(m_pStrm == NULL);
-		WINX_ASSERT(tell() == pos);
-
-		m_pStrm = pStrm;
-		if(pStrm)
-			pStrm->AddRef();
-	}
-
 	HRESULT winx_call open_to_read(LPCWSTR szFile)
 	{
 		WINX_ASSERT(m_pStrm == NULL);
