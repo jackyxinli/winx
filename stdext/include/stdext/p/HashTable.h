@@ -217,16 +217,11 @@ private:
   ExtractKeyT     m_get_key;
 
 public:
-  typedef HashtableIter_<ValueT,KeyT,HashT,ExtractKeyT,EqualKeyT,PoolT>
-          iterator;
-  typedef HashtableCIter_<ValueT,KeyT,HashT,ExtractKeyT,EqualKeyT,
-                                    PoolT>
-          const_iterator;
+  typedef HashtableIter_<ValueT,KeyT,HashT,ExtractKeyT,EqualKeyT,PoolT> iterator;
+  typedef HashtableCIter_<ValueT,KeyT,HashT,ExtractKeyT,EqualKeyT,PoolT> const_iterator;
 
-  friend struct
-  HashtableIter_<ValueT,KeyT,HashT,ExtractKeyT,EqualKeyT,PoolT>;
-  friend struct
-  HashtableCIter_<ValueT,KeyT,HashT,ExtractKeyT,EqualKeyT,PoolT>;
+  friend struct HashtableIter_<ValueT,KeyT,HashT,ExtractKeyT,EqualKeyT,PoolT>;
+  friend struct HashtableCIter_<ValueT,KeyT,HashT,ExtractKeyT,EqualKeyT,PoolT>;
 
 public:
   PHashtable(PoolT& a, size_type n = 100)
@@ -291,7 +286,7 @@ public:
 
   bool operator==(const PHashtable& ht2) const
   {
-	  typedef typename PHashtable<ValueT,KeyT,_HF,_Ex,_Eq,_All>::NodeT NodeT;
+	  typedef typename PHashtable<ValueT,KeyT,HashT,ExtractKeyT,EqualKeyT,PoolT>::NodeT NodeT;
 	  if (m_buckets.size() != ht2.m_buckets.size())
 		  return false;
 	  for (int n = 0; n < m_buckets.size(); ++n)
