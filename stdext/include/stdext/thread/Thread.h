@@ -79,6 +79,11 @@ inline void WINAPI ExitThread(THREADRET exitCode)
 	pthread_exit(exitCode);
 }
 
+inline BOOL WINAPI SwitchToThread()
+{
+	return TRUE;
+}
+
 inline BOOL WINAPI CloseThread(HTHREAD hThread)
 {
 	return TRUE;
