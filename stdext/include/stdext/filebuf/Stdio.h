@@ -49,7 +49,7 @@ inline void winx_call readFile(
 	AllocT& alloc, ContainerT& file, FILE* fp, size_t cbSeg = WINX_FILEBUF_SEGMENT_BYTES)
 {
 	size_t cb;
-	char* buf;	
+	char* buf;
 	do
 	{
 		buf = (char*)alloc.allocate(cbSeg);
