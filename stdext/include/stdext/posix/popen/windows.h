@@ -105,7 +105,7 @@ inline PFILE popen_ex(const char *command, const char *type, const char *cwd, ch
 
 	dwCreateFlags = NORMAL_PRIORITY_CLASS;
 
-#if 1 // defined(STDEXT_POPEN_NO_WINDOW)
+#if defined(STDEXT_POPEN_NO_WINDOW)
 	dwCreateFlags |= CREATE_NO_WINDOW;
 #endif
 
