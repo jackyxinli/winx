@@ -26,3 +26,7 @@ cd $AppPath
 ln -s -f $PLATFORM/prj2json prj2json.exe
 cp -f jspt jspt.bat
 
+mkdir -p ~/bin
+ln -s -f $AppPath ~/bin/jspt.dir
+cp $AppPath/install.dir/* ~/bin
+
