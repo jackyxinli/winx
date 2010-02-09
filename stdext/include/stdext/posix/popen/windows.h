@@ -112,6 +112,7 @@ inline PFILE popen_ex(const char *command, const char *type, const char *cwd, ch
 	cmd = (char*)malloc(strlen(command)+strlen(comspec)+sizeof(" /c ")+2);
 	sprintf(cmd, "%s /c \"%s\"", comspec, command);
 	if (!CreateProcess(NULL, cmd, &security, &security, security.bInheritHandle, dwCreateFlags, env, cwd, &startup, &process)) {
+		free(cmd);
 		PFILE fp = { 0, 0 };
 		return fp;
 	}
