@@ -180,14 +180,25 @@
 #endif
 
 // -------------------------------------------------------------------------
-// --> CPU Detection
+// --> CPU Detection - http://predef.sourceforge.net/prearch.html
 
-#if defined(__SPARC__) || defined(SPARC) || defined(_SPARC)
-#	define X_CPU_SPARC
+#if defined(_M_IX86) || defined(_X86_) || defined(__i386__) || defined(__i486__) || defined(__i586__) || defined(__i686__)
+#	define X_CPU_X86	// Intel x86
+#elif defined(_M_IA64) || defined(__ia64__) || defined(__IA64__) || defined(_IA64) || defined(__ia64)
+#	define X_CPU_IA64	// Intel Architecture-64
+#elif defined(_M_ALPHA) || defined(__alpha__)
+#	define X_CPU_ALPHA	// Alpha
+#elif defined(_M_X64) || defined(__amd64__) || defined(__amd64) || defined(__x86_64__)
+#	define X_CPU_AMD64	// AMD64
+#elif defined(__SPARC__) || defined(SPARC) || defined(_SPARC) || defined(__sparc) || defined(__sparc__)
+#	define X_CPU_SPARC	// SPARC
+#else
+#	error "Unknown CPU Architecture!"
+#endif
+
+#if defined(X_CPU_SPARC)
 #	undef  BYTESWAP
 #	define BYTESWAP
-#else
-#	define X_CPU_X86
 #endif
 
 #if defined(BYTESWAP)
