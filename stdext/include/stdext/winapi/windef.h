@@ -190,7 +190,8 @@ typedef unsigned long ULONG;
 typedef unsigned short USHORT;
 
 typedef long LONG;
-typedef unsigned long       DWORD;
+
+typedef unsigned int        DWORD;
 typedef int                 BOOL;
 typedef unsigned char       BYTE;
 typedef unsigned short      WORD;

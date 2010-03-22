@@ -299,10 +299,10 @@ void CMD5Checksum::ByteToDWord(DWORD* Output, const BYTE* Input, UINT nLength)
 	//transfer the data by shifting and copying
 	for ( ; j < nLength; i++, j += 4)
 	{
-		Output[i] = (ULONG)Input[j]			| 
-					(ULONG)Input[j+1] << 8	| 
-					(ULONG)Input[j+2] << 16 | 
-					(ULONG)Input[j+3] << 24;
+		Output[i] = (DWORD)Input[j]			| 
+					(DWORD)Input[j+1] << 8	| 
+					(DWORD)Input[j+2] << 16 | 
+					(DWORD)Input[j+3] << 24;
 	}
 }
 
@@ -320,13 +320,13 @@ inline
 void CMD5Checksum::Transform(const BYTE Block[64])
 {
 	//initialise local data with current checksum
-	ULONG a = m_lMD5[0];
-	ULONG b = m_lMD5[1];
-	ULONG c = m_lMD5[2];
-	ULONG d = m_lMD5[3];
+	DWORD a = m_lMD5[0];
+	DWORD b = m_lMD5[1];
+	DWORD c = m_lMD5[2];
+	DWORD d = m_lMD5[3];
 
-	//copy BYTES from input 'Block' to an array of ULONGS 'X'
-	ULONG X[16];
+	//copy BYTES from input 'Block' to an array of DWORDS 'X'
+	DWORD X[16];
 	ByteToDWord( X, Block, 64 );
 
 	//Perform Round 1 of the transformation
