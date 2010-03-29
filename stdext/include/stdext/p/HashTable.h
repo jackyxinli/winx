@@ -210,8 +210,8 @@ private:
 
 private:
   std::vector<NodeT*>  m_buckets;
-  size_type       m_num_elements;
   PoolT&		  m_pool;
+  size_type       m_num_elements;
   hasher          m_hash;
   key_equal       m_equals;
   ExtractKeyT     m_get_key;
@@ -593,7 +593,7 @@ distance_type(const HashtableCIter_<ValueT,KeyT,_HF,_ExK,_EqK,_All>&)
   return (PHashtable<ValueT,KeyT,_HF,_ExK,_EqK,_All>::difference_type*) 0;
 }
 
-#endif /* __STL_CLASS_PARTIAL_SPECIALIZATION */
+#endif // __STL_CLASS_PARTIAL_SPECIALIZATION */
 
 template <class ValueT, class KeyT, class _HF, class _Ex, class _Eq, class _All>
 std::pair<WINX_PHASH_TYPENAME_ PHashtable<ValueT, KeyT, _HF, _Ex, _Eq, _All>::iterator, bool> 
