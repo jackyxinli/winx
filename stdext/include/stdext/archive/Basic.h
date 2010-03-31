@@ -158,14 +158,14 @@ inline BOOL winx_call isStgWritable(IStream* pstm)
 // -------------------------------------------------------------------------
 // class IoException
 
-class IoException : public std::exception
+class IoException : public Exception
 {
 private:
 	HRESULT m_scode;
 
 public:
 	IoException(HRESULT sc, const char* errMsg = "Io Exception")
-		: std::exception(errMsg), m_scode(sc) {
+		: Exception(errMsg), m_scode(sc) {
 	}
 	
 	HRESULT winx_call getError() const {

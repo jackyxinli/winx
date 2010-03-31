@@ -116,9 +116,7 @@ inline void pause()
 }
 
 #if defined(_DEBUG) && defined(WINX_GCC)
-#define WINX_DBG_PAUSE()	std::pause()
-#elif defined(WINX_GCC)
-#define WINX_DBG_PAUSE()	printf("\n")
+#define WINX_DBG_PAUSE()	NS_STDEXT::pause()
 #else
 #define WINX_DBG_PAUSE()
 #endif
@@ -135,7 +133,7 @@ public:
 #if defined(X_OS_WINDOWS)
 #define WINX_TEST_RUNNER_EXIT_()
 #else
-#define WINX_TEST_RUNNER_EXIT_()	std::ExitTestRunner _winx_test_runner_exit
+#define WINX_TEST_RUNNER_EXIT_()	NS_STDEXT::ExitTestRunner _winx_test_runner_exit
 #endif
 
 // -------------------------------------------------------------------------
@@ -144,7 +142,7 @@ public:
 #define WINX_TESTCASE_LOG(LogT)												\
 	_CrtSetDbgFlag(															\
 		_CrtSetDbgFlag(_CRTDBG_REPORT_FLAG)|_CRTDBG_LEAK_CHECK_DF);			\
-	typedef std::TestRunner< LogT > TestCaseLog;							\
+	typedef NS_STDEXT::TestRunner< LogT > TestCaseLog;							\
 	TestCaseLog log
 
 #define WINX_TEST_APP(LogT, Test, Case)										\
@@ -251,7 +249,7 @@ bool winx_call isEqBuf(_It1 a1, _It2 a2, size_t count)
 	ReportErrorMsgIf("Failed: AssertEq(" #a "," #b ");", (a) == (b))
 
 #define AssertEqBuf(a1, a2, count)											\
-	ReportErrorMsgIf("Failed: AssertEqBuf(" #a1 "," #a2 "," #count ");", std::isEqBuf(a1, a2, count))
+	ReportErrorMsgIf("Failed: AssertEqBuf(" #a1 "," #a2 "," #count ");", NS_STDEXT::isEqBuf(a1, a2, count))
 
 // =========================================================================
 // WINX_SELECT_RUN, WINX_AUTORUN, WINX_AUTORUN_CLASS
@@ -321,14 +319,14 @@ inline AutoRun& __autoRun_impl()
 };
 
 #define WINX_SELECT_RUN(szFun)												\
-	std::__autoRun_impl().select(szFun)
+	NS_STDEXT::__autoRun_impl().select(szFun)
 
 #define WINX_AUTORUN_ALL()													\
-	std::__autoRun_impl().run()
+	NS_STDEXT::__autoRun_impl().run()
 
 #define WINX_AUTORUN(Fun)													\
-	static std::AutoRunFunc __g_autoRun_##Fun(								\
-		Fun, #Fun, std::__autoRun_impl().getChain())
+	static NS_STDEXT::AutoRunFunc __g_autoRun_##Fun(								\
+		Fun, #Fun, NS_STDEXT::__autoRun_impl().getChain())
 
 #define WINX_AUTORUN_CLASS(Test, LogT)										\
 	inline void __autoRun_##Test()											\

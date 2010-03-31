@@ -232,6 +232,40 @@ typedef unsigned short UINT16, *PUINT16;
 #endif
 
 // -------------------------------------------------------------------------
+// class Exception
+
+#if !defined(__EXCEPTION__) && !defined(_EXCEPTION_)
+#include <exception>
+#endif
+
+#if defined(WINX_GCC)
+
+NS_STDEXT_BEGIN
+
+class Exception : public std::exception
+{
+private:
+	const char* _m_what;
+
+public:
+	Exception() : _m_what("") {}
+	Exception(const char* msg) : _m_what(msg) {}
+	virtual const char* what() const throw() { return _m_what; }
+};
+
+NS_STDEXT_END
+
+#else
+
+NS_STDEXT_BEGIN
+
+typedef std::exception Exception;
+
+NS_STDEXT_END
+
+#endif // defined(WINX_GCC)
+
+// -------------------------------------------------------------------------
 // __deprecated(msg) - for code management
 
 #if !defined(__deprecated)

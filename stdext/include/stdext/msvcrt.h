@@ -119,32 +119,6 @@ inline void __not_impl(const char* szFeature)
 #endif // WINX_GCC
 
 // -------------------------------------------------------------------------
-// ==== std::exception ====
-
-#if defined(WINX_GCC)
-
-#ifndef __EXCEPTION__
-#include <exception>
-#endif
-
-namespace std
-{
-	class msvc_exception : public exception
-	{
-	private:
-		const char* _m_what;
-	public:
-		msvc_exception() : _m_what("") {}
-		msvc_exception(const char* msg) : _m_what(msg) {}
-		virtual const char* what() const throw() { return _m_what; }
-	};
-}
-
-#define exception msvc_exception
-
-#endif // defined(WINX_GCC)
-
-// -------------------------------------------------------------------------
 // ==== atlconv.h ====
 
 #ifndef STDEXT_MSVCRT_ATLCONV_H
@@ -152,6 +126,5 @@ namespace std
 #endif
 
 // -------------------------------------------------------------------------
-// $Log: $
 
 #endif /* STDEXT_MSVCRT_H */
