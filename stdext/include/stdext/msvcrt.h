@@ -75,12 +75,12 @@
 #include "tchar.h"
 #endif
 
-#define _itoa		std::tchar::itoa
-#define _ltoa		std::tchar::ltoa
-#define _ultoa		std::tchar::ultoa
-#define	_i64toa		std::tchar::i64toa
-#define _ui64toa	std::tchar::ui64toa
-#define _ui64tow	std::tchar::ui64toa
+#define _itoa		NS_STDEXT::tchar::itoa
+#define _ltoa		NS_STDEXT::tchar::ltoa
+#define _ultoa		NS_STDEXT::tchar::ultoa
+#define	_i64toa		NS_STDEXT::tchar::i64toa
+#define _ui64toa	NS_STDEXT::tchar::ui64toa
+#define _ui64tow	NS_STDEXT::tchar::ui64toa
 #define _gcvt		gcvt
 #define _ecvt		ecvt
 #define _fcvt		fcvt
