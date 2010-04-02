@@ -143,7 +143,7 @@ namespace ns {																\
 	};
 
 #define WINX_VARIANT_TYPES_END()											\
-	typedef std::Variant<TypeTraits_> Variant;								\
+	typedef NS_STDEXT::Variant<TypeTraits_> Variant;						\
 }
 
 // -------------------------------------------------------------------------
