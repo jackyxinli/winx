@@ -206,16 +206,16 @@ public:
 	void testTrim(LogT& log)
 	{
 		std::string s = " \t  abc 123  \r\n";
-		std::trim(s);
+		NS_STDEXT::trim(s);
 		AssertExp(s == "abc 123");
 	}
 
 	void testUpperLower(LogT& log)
 	{
 		std::string s = "abc123";
-		std::strupper(s);
+		NS_STDEXT::strupper(s);
 		AssertExp(s == "ABC123");
-		std::strlower(s);
+		NS_STDEXT::strlower(s);
 		AssertExp(s == "abc123");
 	}
 };

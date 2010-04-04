@@ -23,6 +23,11 @@
 #include "Range.h"
 #endif
 
+#if !defined(WINX_HAS_OSTREAM)
+#define WINX_HAS_OSTREAM
+#include <ostream>
+#endif
+
 NS_STDEXT_BEGIN
 
 // -------------------------------------------------------------------------

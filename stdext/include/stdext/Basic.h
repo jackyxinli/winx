@@ -39,6 +39,10 @@
 #define _CRT_SECURE_NO_DEPRECATE
 #endif
 
+#ifndef _SCL_SECURE_NO_WARNINGS
+#define _SCL_SECURE_NO_WARNINGS
+#endif
+
 #ifndef _SECURE_SCL
 #define _SECURE_SCL 0
 #endif

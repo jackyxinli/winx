@@ -398,13 +398,23 @@ winx_call implode(AllocT& alloc, const wchar_t glue, const ContainerT& cont) {
 // -------------------------------------------------------------------------
 // concat
 
+template <class ContainerContT>
+struct ConcatTraits
+{
+	typedef typename ContainerContT::value_type container_type;
+	typedef typename container_type::value_type char_type;
+	typedef BasicString<char_type> return_type;
+};
+
 template <class AllocT, class Iterator>
 inline
-BasicString<typename iterator_traits_alter<Iterator>::value_type::value_type>
+typename ConcatTraits<iterator_traits_alter<Iterator> >::return_type
 winx_call concat(AllocT& alloc, const Iterator first, const size_t count)
 {
-	typedef typename iterator_traits_alter<Iterator>::value_type ContainerT;
-	typedef typename ContainerT::value_type ValueT;
+	typedef ConcatTraits<iterator_traits_alter<Iterator> > Traits;
+	typedef typename Traits::container_type ContainerT;
+	typedef typename Traits::char_type ValueT;
+	typedef typename Traits::return_type RetType;
 
 	Iterator it = first;
 	size_t i, len = 0;
@@ -414,22 +424,22 @@ winx_call concat(AllocT& alloc, const Iterator first, const size_t count)
 	it = first;
 	ValueT* buf = STD_NEW_ARRAY(alloc, ValueT, len);
 	for (i = 0; i < count; ++i) {
-		const ContainerT& cont = *it++; 
+		const ContainerT& cont = *it++;
 		buf = std::copy(cont.begin(), cont.end(), buf);
 	}
 
-	return BasicString<ValueT>(buf-len, buf);
+	return RetType(buf-len, buf);
 }
 
 template <class AllocT, class ContainerT>
 __forceinline
-BasicString<typename ContainerT::value_type::value_type>
+typename ConcatTraits<ContainerT>::return_type
 winx_call concat(AllocT& alloc, const ContainerT& cont) {
 	return concat(alloc, cont.begin(), cont.size());
 }
 
 template <class AllocT, class CharT>
-inline BasicString<CharT> winx_call __concatString(
+inline BasicString<CharT> winx_call concatString__(
 	AllocT& alloc, const TempString<CharT>* val[], size_t count)
 {
 	size_t i, len = 0;
@@ -444,10 +454,10 @@ inline BasicString<CharT> winx_call __concatString(
 }
 
 WINX_VARGS_TFUNC_EP1_REF(
-	BasicString<char>, concat, AllocT, const TempString<char>, __concatString);
+	BasicString<char>, concat, AllocT, const TempString<char>, concatString__);
 
 WINX_VARGS_TFUNC_EP1_REF(
-	BasicString<wchar_t>, concat, AllocT, const TempString<wchar_t>, __concatString);
+	BasicString<wchar_t>, concat, AllocT, const TempString<wchar_t>, concatString__);
 
 NS_STDEXT_END
 

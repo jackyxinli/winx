@@ -1,20 +1,21 @@
+#include <stdext/String.h>
 #include <iostream>
 #include <list>
 #include <vector>
-#include <stdext/String.h>
 
 // -------------------------------------------------------------------------
 
 void testConcat()
 {
 	NS_STDEXT::AutoAlloc alloc;
+	NS_STDEXT::String s;
 
 	std::list<std::string> lst;
 	lst.push_back("Hello,");
 	lst.push_back(" ");
 	lst.push_back("world!\n");
 
-	NS_STDEXT::String s = NS_STDEXT::concat(alloc, lst);
+	s = NS_STDEXT::concat(alloc, lst);
 	std::cout << s;
 
 	std::vector<std::string> vec;
@@ -22,9 +23,9 @@ void testConcat()
 	vec.push_back(" am");
 	vec.push_back(" xushiwei!\n");
 
-	s = NS_STDEXT::concat(alloc, vec);
+	//s = NS_STDEXT::concat(alloc, vec);
 	std::cout << s;
-	
+
 	s = NS_STDEXT::concat(alloc, "Hello", " ", "world!", " I", " am", " xushiwei!\n");
 	std::cout << s;
 }
