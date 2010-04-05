@@ -19,30 +19,8 @@
 #ifndef STDEXT_DEQUE_H
 #define STDEXT_DEQUE_H
 
-#ifndef STDEXT_MEMORY_H
-#include "Memory.h"
-#endif
-
-#if defined(X_CC_VC6)
-	#if defined(NO_SGISTL)
-		#ifndef STD_DEQUE_H
-		#include "../std/deque.h"
-		#endif
-		#define WINX_DEQUE_BASE_(DataT, AllocT) \
-			std::_Deque<DataT, NS_STDEXT::StlAlloc<DataT, AllocT> >
-	#else
-		#ifndef __SGI_DEQUE_H__
-		#include "sgi/deque.h"
-		#endif
-		#define WINX_DEQUE_BASE_(DataT, AllocT) \
-			stdext::deque<DataT, NS_STDEXT::StlAlloc<DataT, AllocT> >
-	#endif
-#else
-	#if !defined(_DEQUE) && !defined(_GLIBCXX_DEQUE) && !defined(_DEQUE_)
-	#include <deque>
-	#endif
-	#define WINX_DEQUE_BASE_(DataT, AllocT) \
-		std::deque<DataT, NS_STDEXT::StlAlloc<DataT, AllocT> >
+#ifndef STDEXT_P_DEQUE_H
+	#include "p/Deque.h"
 #endif
 
 #if defined(STD_UNITTEST)
@@ -57,18 +35,14 @@ NS_STDEXT_BEGIN
 // class Deque
 
 template <class DataT, class AllocT = DefaultAlloc>
-class Deque : public WINX_DEQUE_BASE_(DataT, AllocT)
+class Deque : public PDeque<DataT, AllocT>
 {
 private:
-	typedef WINX_DEQUE_BASE_(DataT, AllocT) Base;
-
-	Deque(const Deque&);
-	void operator=(const Deque&);
+	typedef PDeque<DataT, AllocT> Base;
 
 public:
 	typedef typename Base::size_type size_type;
 
-public:
 	explicit Deque(AllocT& a)
 		: Base(a) {}
 	
@@ -78,18 +52,6 @@ public:
 	template <class Iterator>
 	Deque(AllocT& a, Iterator first, Iterator last)
 		: Base(first, last, a) {}
-
-public:
-	void winx_call copy(const Base& from) {
-		Base::operator=(from);
-	}
-
-public:
-	typedef AllocT alloc_type;
-	
-	AllocT& get_alloc() const {
-		return Base::get_allocator().get_alloc();
-	}
 };
 
 // -------------------------------------------------------------------------
@@ -182,7 +144,6 @@ public:
 #endif // defined(STD_UNITTEST)
 
 // -------------------------------------------------------------------------
-// $Log: Deque.h,v $
 
 NS_STDEXT_END
 

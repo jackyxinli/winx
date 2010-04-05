@@ -103,10 +103,10 @@ class TestHashMap : public TestCase
 public:
 	void testMap(LogT& log)
 	{
-		typedef std::HashMap<int, int> MapType;
+		typedef NS_STDEXT::HashMap<int, int> MapType;
 
-		std::BlockPool recycle;
-		std::ScopedAlloc alloc(recycle);
+		NS_STDEXT::BlockPool recycle;
+		NS_STDEXT::ScopedAlloc alloc(recycle);
 		
 		MapType simp(alloc);
 
@@ -125,10 +125,10 @@ public:
 
 	void testMultiMap(LogT& log)
 	{
-		typedef std::HashMultiMap<int, int> MapType;
+		typedef NS_STDEXT::HashMultiMap<int, int> MapType;
 
-		std::BlockPool recycle;
-		std::ScopedAlloc alloc(recycle);
+		NS_STDEXT::BlockPool recycle;
+		NS_STDEXT::ScopedAlloc alloc(recycle);
 		
 		MapType simp(alloc);
 
@@ -149,6 +149,5 @@ public:
 #endif // defined(STD_UNITTEST)
 
 // -------------------------------------------------------------------------
-// $Log: HashMap.h,v $
 
 #endif /* STDEXT_HASHMAP_H */

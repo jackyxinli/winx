@@ -472,7 +472,6 @@ public:
 #endif // defined(STD_UNITTEST)
 
 // -------------------------------------------------------------------------
-// $Log: TextPool.h,v $
 
 #endif /* STDEXT_TEXT_TEXTPOOL_H */
 
