@@ -45,6 +45,7 @@ typedef scoped Scoped;
 
 typedef pool Pool;
 typedef scoped_pool ScopedPool;
+typedef scoped_pools ScopedPools;
 
 typedef auto_alloc AutoFreeAlloc; // for backward compatibility
 typedef scoped_alloc ScopeAlloc; // for backward compatibility
@@ -147,7 +148,6 @@ private:
 NS_STDEXT_END
 
 // -------------------------------------------------------------------------
-// $Log: Memory.h,v $
 
 #endif /* STDEXT_MEMORY_H */
 

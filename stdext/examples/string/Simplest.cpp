@@ -23,7 +23,7 @@ void testConcat()
 	vec.push_back(" am");
 	vec.push_back(" xushiwei!\n");
 
-	//s = NS_STDEXT::concat(alloc, vec);
+	s = NS_STDEXT::concat(alloc, vec);
 	std::cout << s;
 
 	s = NS_STDEXT::concat(alloc, "Hello", " ", "world!", " I", " am", " xushiwei!\n");
@@ -64,7 +64,7 @@ void testExplode()
 	NS_STDEXT::BasicArray<NS_STDEXT::String> arr = NS_STDEXT::explode(alloc, ' ', s);
 	for (size_t i = 0; i < arr.size(); ++i)
 		std::cout << arr[i] << '\n';
-	
+
 	std::cout << "+++++++++++++++++++++\n";
 
 	NS_STDEXT::String s2 = NS_STDEXT::implode(alloc, " -> ", arr);
@@ -77,6 +77,17 @@ void testExplode()
 		std::cout << arr[i] << '\n';
 }
 
+#include <stdext/p/String.h>
+
+void testPString()
+{
+	NS_STDEXT::BlockPool recycle;
+	NS_STDEXT::ScopedPools alloc(recycle);
+	
+	NS_STDEXT::PString s(alloc, "abc");
+	std::cout << s.c_str() << ", size:" << s.size() << '\n';
+}
+
 int main()
 {
 	std::cout << "----------------------------------\n";
@@ -85,6 +96,8 @@ int main()
 	testImplode();
 	std::cout << "----------------------------------\n";
 	testExplode();
+	std::cout << "----------------------------------\n";
+	testPString();
 	std::cout << "----------------------------------\n";
 	return 0;
 }
