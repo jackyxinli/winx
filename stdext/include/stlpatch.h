@@ -52,9 +52,19 @@ namespace std {
 
 #if defined(X_STL_NET) // visual c++ .net
 
+#if _MSC_VER < 1600
+
 template <class _It>
 __forceinline typename _It::pointer iterToPointer(_It it)
 	{return (typename _It::pointer)it._Myptr; }
+
+#else // _MSC_VER = 1600: visual c++ 2010
+
+template <class _It>
+__forceinline typename _It::pointer iterToPointer(_It it)
+	{return (typename _It::pointer)it._Ptr; }
+
+#endif
 
 template <class _Ty>
 __forceinline _Ty* iterToPointer(_Ty* it)
