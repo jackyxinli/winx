@@ -77,14 +77,12 @@ void testExplode()
 		std::cout << arr[i] << '\n';
 }
 
-#include <stdext/p/String.h>
-
-void testPString()
+void testCString()
 {
 	NS_STDEXT::BlockPool recycle;
 	NS_STDEXT::ScopedPools alloc(recycle);
 	
-	NS_STDEXT::PString s(alloc, "abc");
+	NS_STDEXT::CString s(alloc, "abc");
 	std::cout << s.c_str() << ", size:" << s.size() << '\n';
 }
 
@@ -97,7 +95,7 @@ int main()
 	std::cout << "----------------------------------\n";
 	testExplode();
 	std::cout << "----------------------------------\n";
-	testPString();
+	testCString();
 	std::cout << "----------------------------------\n";
 	return 0;
 }

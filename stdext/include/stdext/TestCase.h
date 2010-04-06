@@ -142,7 +142,7 @@ public:
 #define WINX_TESTCASE_LOG(LogT)												\
 	_CrtSetDbgFlag(															\
 		_CrtSetDbgFlag(_CRTDBG_REPORT_FLAG)|_CRTDBG_LEAK_CHECK_DF);			\
-	typedef NS_STDEXT::TestRunner< LogT > TestCaseLog;							\
+	typedef NS_STDEXT::TestRunner< LogT > TestCaseLog;						\
 	TestCaseLog log
 
 #define WINX_TEST_APP(LogT, Test, Case)										\
@@ -312,37 +312,31 @@ public:
 	}
 };
 
-inline AutoRun& __autoRun_impl()
+inline AutoRun& autoRun_impl_()
 {
 	static AutoRun impl;
 	return impl;
 };
 
 #define WINX_SELECT_RUN(szFun)												\
-	NS_STDEXT::__autoRun_impl().select(szFun)
+	NS_STDEXT::autoRun_impl_().select(szFun)
 
 #define WINX_AUTORUN_ALL()													\
-	NS_STDEXT::__autoRun_impl().run()
+	NS_STDEXT::autoRun_impl_().run()
 
 #define WINX_AUTORUN(Fun)													\
-	static NS_STDEXT::AutoRunFunc __g_autoRun_##Fun(								\
-		Fun, #Fun, NS_STDEXT::__autoRun_impl().getChain())
+	static NS_STDEXT::AutoRunFunc winx_autoRun_##Fun(						\
+		Fun, #Fun, NS_STDEXT::autoRun_impl_().getChain())
 
 #define WINX_AUTORUN_CLASS(Test, LogT)										\
-	inline void __autoRun_##Test()											\
+	inline void winx_testCase_##Test()										\
 	{																		\
 		WINX_TESTCASE_LOG(LogT);											\
 		WINX_TEST_CLASS(Test);												\
 	}																		\
-	WINX_AUTORUN(__autoRun_##Test)
+	WINX_AUTORUN(winx_testCase_##Test)
 
 // =========================================================================
-// $Log: TestCase.h,v $
-// Revision 1.1  2006/09/26 07:51:00  xushiwei
-// STL-Extension:
-//  TestCase(WINX_TEST_APP, WINX_TEST_CLASS, WINX_TEST_SUITE, WINX_TEST, WINX_TEST_SUITE_END)
-//  UnitTestAssert(AssertExp, AssertEq, AssertEqBuf)
-//
 
 NS_STDEXT_END
 

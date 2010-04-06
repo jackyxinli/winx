@@ -31,6 +31,10 @@
 #include "text/BasicString.h"
 #endif
 
+#ifndef STDEXT_TEXT_CSTRING_H
+#include "text/CString.h"
+#endif
+
 #ifndef STDEXT_TEXT_STRINGBUILDER_H
 #include "text/StringBuilder.h"
 #endif
