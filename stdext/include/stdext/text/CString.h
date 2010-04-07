@@ -41,6 +41,8 @@ private:
 	typedef BasicString<CharT> Base;
 
 public:
+	typedef AllocT alloc_type;
+
 	typedef typename Base::size_type size_type;
 	typedef typename Base::difference_type difference_type;
 	typedef typename Base::value_type value_type;
@@ -81,9 +83,6 @@ public:
 	using Base::operator[];
 
 private:
-	typedef AllocT PoolsT;
-	typedef typename PoolsT::pool_type PoolT;
-
 	typedef std::basic_string<CharT> StlString_;
 	typedef TempString<CharT> String_;
 	typedef BasicCString Myt_;
@@ -91,7 +90,7 @@ private:
 	struct ExtraData
 	{
 		size_t ref;
-		PoolT* pool;
+		AllocT* alloc;
 	};
 	
 	struct StringData
@@ -102,6 +101,11 @@ private:
 	
 	static StringData s_null;
 
+	static size_type winx_call alloc_size(size_type cch)
+	{
+		return sizeof(ExtraData) + (cch + 1) * sizeof(CharT);
+	}
+	
 	ExtraData& winx_call edata() const
 	{
 		return *((ExtraData*)Base::first - 1);
@@ -110,23 +114,23 @@ private:
 	template <class Iterator>
 	void winx_call init(AllocT& alloc, Iterator first, size_type cch)
 	{
-		PoolT& pool = alloc.get_pool(sizeof(ExtraData) + (cch + 1) * sizeof(CharT));
-		ExtraData* extra = (ExtraData*)pool.allocate();
+		ExtraData* const extra = (ExtraData*)alloc.allocate(alloc_size(cch));
 		extra->ref = 1;
-		extra->pool = &pool;
-		Base::attach((CharT*)(extra + 1), cch);
-		*std::copy(first, first + cch, (CharT*)Base::first) = CharT();
+		extra->alloc = &alloc;
+		Base::first = (CharT*)(extra + 1);
+		Base::second = std::copy(first, first + cch, (CharT*)Base::first);
+		*(CharT*)Base::second = CharT();
 	}
 	
 	template <class Iterator>
 	void winx_call init(AllocT& alloc, size_type count, CharT ch)
 	{
-		PoolT& pool = alloc.get_pool(sizeof(ExtraData) + (count + 1) * sizeof(CharT));
-		ExtraData* extra = (ExtraData*)pool.allocate();
+		ExtraData* const extra = (ExtraData*)alloc.allocate(alloc_size(count));
 		extra->ref = 1;
-		extra->pool = &pool;
-		Base::attach((CharT*)(extra + 1), count);
-		*std::fill_n((CharT*)Base::first, count, ch) = CharT();
+		extra->alloc = &alloc;
+		Base::first = (CharT*)(extra + 1);
+		Base::second = std::fill_n((CharT*)Base::first, count, ch);
+		*(CharT*)Base::second = CharT();
 	}
 	
 	void winx_call acquire() const
@@ -137,9 +141,9 @@ private:
 	void winx_call release()
 	{
 		ExtraData& extra = edata();
-		if (--extra.ref == 0 && extra.pool != NULL)
+		if (--extra.ref == 0 && extra.alloc != NULL)
 		{
-			extra.pool->deallocate(&extra);
+			extra.alloc->deallocate(&extra, alloc_size(Base::second - Base::first));
 			Base::assign(s_null.str, s_null.str);
 		}
 	}
@@ -232,6 +236,11 @@ public:
 	void winx_call swap(BasicCString& b) {
 		std::swap(Base::first, b.first);
 		std::swap(Base::second, b.second);
+	}
+	
+	alloc_type& winx_call getAlloc() const {
+		WINX_ASSERT(!empty());
+		return *edata().alloc;
 	}
 };
 
