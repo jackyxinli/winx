@@ -83,7 +83,9 @@ void testCString()
 	NS_STDEXT::ScopedPools alloc(recycle);
 	
 	NS_STDEXT::CString s(alloc, "abc");
+	NS_STDEXT::CString s2(s.getAlloc(), "hello, xsw!", 5);
 	std::cout << s.c_str() << ", size:" << s.size() << '\n';
+	std::cout << s2.c_str() << ", size:" << s2.size() << '\n';
 }
 
 int main()
