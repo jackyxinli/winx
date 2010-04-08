@@ -12,15 +12,15 @@
 // Module: stdext/Deque.h
 // Creator: xushiwei
 // Email: xushiweizh@gmail.com
-// Date: 2006-8-18 18:56:07
+// Date: 2009-9-6 10:08:57
 // 
-// $Id: Deque.h,v 1.1 2006/10/18 12:13:39 xushiwei Exp $
+// $Id: Deque.h 2009-9-6 10:08:57 xushiwei Exp $
 // -----------------------------------------------------------------------*/
 #ifndef STDEXT_DEQUE_H
 #define STDEXT_DEQUE_H
 
-#ifndef STDEXT_P_DEQUE_H
-	#include "p/Deque.h"
+#ifndef STDEXT_MEMORY_H
+#include "Memory.h"
 #endif
 
 #if defined(STD_UNITTEST)
@@ -29,16 +29,88 @@
 	#endif
 #endif
 
-NS_STDEXT_BEGIN
+// -------------------------------------------------------------------------
+// class StlDeque
+
+#if defined(X_CC_VC6)
+
+#ifndef _DEQUE_
+#include <deque>
+#endif
+
+#ifndef AllocTLGORITHM_
+#include <algorithm>
+#endif
+
+#define WINX_DEQUE_USING_BASE_												\
+public:																		\
+	using Base::begin;														\
+	using Base::end;														\
+	using Base::assign;														\
+	using Base::insert;														\
+	using Base::resize
+
+template<class DataT, class AllocT = allocator<DataT> >
+class StlDeque : public std::deque<DataT, AllocT>
+{
+private:
+	typedef std::deque<DataT, AllocT> Base;
+	WINX_DEQUE_USING_BASE_;
+
+public:
+	typedef typename Base::iterator iterator;
+
+	explicit StlDeque(const AllocT& alloc = AllocT())
+		: Base(alloc) {}
+	
+	explicit StlDeque(size_type count, const DataT& val = DataT(), const AllocT& alloc = AllocT())
+		: Base(count, val, alloc) {}
+
+	template <class Iterator>
+	StlDeque(Iterator first, Iterator last, const AllocT& alloc = AllocT())
+		: Base(alloc)
+	{
+		std::copy(first, last, std::back_insert_iterator<Base>(*this));
+	}
+
+public:
+	template <class Iterator>
+	void assign(Iterator first, Iterator last)
+	{
+		Base::resize(std::distance(first, last));
+		std::copy(first, last, begin());
+	}
+
+	template <class Iterator>
+	void insert(iterator it, Iterator first, Iterator last)
+	{
+		std::copy(first, last, std::insert_iterator<Base>(*this, it));
+	}
+};
+
+#else
+
+#if !defined(_DEQUE_) && !defined(_GLIBCXX_DEQUE) && !defined(_DEQUE)
+#include <deque>
+#endif
+
+#define StlDeque	std::deque
+
+#endif
 
 // -------------------------------------------------------------------------
 // class Deque
 
-template <class DataT, class AllocT = DefaultAlloc>
-class Deque : public PDeque<DataT, AllocT>
+NS_STDEXT_BEGIN
+
+template <class DataT, class AllocT = ScopedPools>
+class Deque : public StlDeque<DataT, StlAlloc<DataT, AllocT> >
 {
 private:
-	typedef PDeque<DataT, AllocT> Base;
+	typedef StlDeque<DataT, StlAlloc<DataT, AllocT> > Base;
+
+	Deque(const Deque&);
+	void operator=(const Deque&);
 
 public:
 	typedef typename Base::size_type size_type;
@@ -52,7 +124,13 @@ public:
 	template <class Iterator>
 	Deque(AllocT& a, Iterator first, Iterator last)
 		: Base(first, last, a) {}
+
+	void winx_call copy(const Base& from) {
+		Base::operator=(from);
+	}
 };
+
+NS_STDEXT_END
 
 // -------------------------------------------------------------------------
 // class TestDeque
@@ -71,7 +149,7 @@ public:
 	void testDeque(LogT& log)
 	{
 		NS_STDEXT::BlockPool recycle;
-		NS_STDEXT::ScopedAlloc alloc(recycle);
+		NS_STDEXT::ScopedPools alloc(recycle);
 		NS_STDEXT::Deque<int> coll(alloc);
 		coll.push_back(1);
 		coll.push_back(2);
@@ -97,7 +175,7 @@ public:
 
 	void doDeque(LogT& log)
 	{
-		typedef NS_STDEXT::Deque<int> DequeT;
+		typedef NS_STDEXT::Deque<int, NS_STDEXT::ScopedAlloc> DequeT;
 		log.print("===== NS_STDEXT::Deque (ScopedAlloc) =====\n");
 		NS_STDEXT::PerformanceCounter counter;
 		{
@@ -112,7 +190,7 @@ public:
 
 	void doShareAllocDeque(LogT& log)
 	{
-		typedef NS_STDEXT::Deque<int> DequeT;
+		typedef NS_STDEXT::Deque<int, NS_STDEXT::ScopedAlloc> DequeT;
 		NS_STDEXT::BlockPool recycle;
 		log.newline();
 		for (int i = 0; i < 5; ++i)
@@ -144,8 +222,6 @@ public:
 #endif // defined(STD_UNITTEST)
 
 // -------------------------------------------------------------------------
-
-NS_STDEXT_END
 
 #endif /* STDEXT_DEQUE_H */
 

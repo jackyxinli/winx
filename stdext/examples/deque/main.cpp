@@ -3,12 +3,12 @@
 
 // -------------------------------------------------------------------------
 
-int main()
+void testSimple()
 {
 	NS_STDEXT::BlockPool recycle;
 	NS_STDEXT::ScopedPools alloc(recycle);
 
-	typedef NS_STDEXT::PDeque<int> IntQ;
+	typedef NS_STDEXT::Deque<int> IntQ;
 
 	{
 		IntQ q(alloc);
@@ -31,6 +31,33 @@ int main()
 			q.pop_front();
 		}
 	}
+}
+
+// -------------------------------------------------------------------------
+
+void testUserAllocator()
+{
+	typedef NS_STDEXT::Deque<int, NS_STDEXT::ScopedAlloc> DequeT;
+
+	NS_STDEXT::BlockPool recycle;
+	NS_STDEXT::ScopedAlloc alloc(recycle);
+	DequeT q(alloc);
+	for (int i = 0; i < 5; ++i)
+		q.push_back(i);
+	while (!q.empty())
+	{
+		std::cout << q.front() << '\n';
+		q.pop_front();
+	}
+}
+
+// -------------------------------------------------------------------------
+
+int main()
+{
+	testSimple();
+	std::cout << "------------------------------------------------\n";
+	testUserAllocator();
 	return 0;
 }
 
