@@ -134,7 +134,7 @@ public:
 	void testMap(LogT& log)
 	{
 		NS_STDEXT::BlockPool recycle;
-		NS_STDEXT::ScopedAlloc alloc(recycle);
+		NS_STDEXT::ScopedPools alloc(recycle);
 		NS_STDEXT::Map<int, Obj> coll(alloc);
 		coll.insert(NS_STDEXT::Map<int, Obj>::value_type(1, 2));
 		coll.insert(NS_STDEXT::Map<int, Obj>::value_type(1, 4));
@@ -146,7 +146,7 @@ public:
 	void testMultiMap(LogT& log)
 	{
 		NS_STDEXT::BlockPool recycle;
-		NS_STDEXT::ScopedAlloc alloc(recycle);
+		NS_STDEXT::ScopedPools alloc(recycle);
 		NS_STDEXT::MultiMap<int, Obj> coll(alloc);
 		coll.insert(NS_STDEXT::MultiMap<int, Obj>::value_type(1, 2));
 		coll.insert(NS_STDEXT::MultiMap<int, Obj>::value_type(1, 4));
@@ -187,8 +187,8 @@ public:
 
 	void doMap2(LogT& log)
 	{
-		typedef NS_STDEXT::Map<int, int> MapT;
-		log.print("===== NS_STDEXT::Map (ScopedAlloc) =====\n");
+		typedef NS_STDEXT::Map<int, int, std::less<int>, NS_STDEXT::ScopedAlloc> MapT;
+		log.print("===== NS_STDEXT::Map (ScopedPools) =====\n");
 		NS_STDEXT::PerformanceCounter counter;
 		{
 			NS_STDEXT::BlockPool recycle;
@@ -202,7 +202,7 @@ public:
 
 	void doShareAllocMap(LogT& log)
 	{
-		typedef NS_STDEXT::Map<int, int> MapT;
+		typedef NS_STDEXT::Map<int, int, std::less<int>, NS_STDEXT::ScopedAlloc> MapT;
 		NS_STDEXT::BlockPool recycle;
 		log.newline();
 		for (int i = 0; i < 5; ++i)
@@ -235,7 +235,6 @@ public:
 #endif // defined(STD_UNITTEST)
 
 // -------------------------------------------------------------------------
-// $Log: Map.h,v $
 
 NS_STDEXT_END
 

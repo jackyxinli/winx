@@ -467,7 +467,6 @@ public:
 #endif // defined(STD_UNITTEST)
 
 // -------------------------------------------------------------------------
-// $Log: StringBuilder.h,v $
 
 #endif /* STDEXT_TEXT_STRINGBUILDER_H */
 

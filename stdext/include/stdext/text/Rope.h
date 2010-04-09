@@ -171,7 +171,7 @@ public:
 	void testFind(LogT& log)
 	{
 		NS_STDEXT::BlockPool recycle;
-		NS_STDEXT::ScopedAlloc alloc(recycle);
+		NS_STDEXT::ScopedPools alloc(recycle);
 
 		NS_STDEXT::Rope<char> a(alloc);
 		a.push_back('b');
@@ -183,7 +183,7 @@ public:
 	void testIterator(LogT& log) // slowly (not recommended)
 	{
 		NS_STDEXT::BlockPool recycle;
-		NS_STDEXT::ScopedAlloc alloc(recycle);
+		NS_STDEXT::ScopedPools alloc(recycle);
 
 		NS_STDEXT::Rope<char> a(alloc, "Hello");
 		NS_STDEXT::Rope<char> b(alloc, "abc");
@@ -216,7 +216,7 @@ public:
 		typedef NS_STDEXT::Rope<char> KeyT;
 
 		NS_STDEXT::BlockPool recycle;
-		NS_STDEXT::ScopedAlloc alloc(recycle);
+		NS_STDEXT::ScopedPools alloc(recycle);
 
 		NS_STDEXT::HashMap<KeyT, int> cont(alloc);
 		
@@ -231,7 +231,7 @@ public:
 	void testSequenceBuffer(LogT& log)
 	{
 		NS_STDEXT::BlockPool recycle;
-		NS_STDEXT::ScopedAlloc alloc(recycle);
+		NS_STDEXT::ScopedPools alloc(recycle);
 		char buffer[256];
 
 		NS_STDEXT::Rope<char> a(alloc);
@@ -259,7 +259,7 @@ public:
 	void testBasic(LogT& log)
 	{
 		NS_STDEXT::BlockPool recycle;
-		NS_STDEXT::ScopedAlloc alloc(recycle);
+		NS_STDEXT::ScopedPools alloc(recycle);
 
 		NS_STDEXT::Rope<char> a(alloc);
 		a.append(20, 'a');
@@ -295,6 +295,5 @@ public:
 #endif // defined(STD_UNITTEST)
 
 // -------------------------------------------------------------------------
-// $Log: Rope.h,v $
 
 #endif /* STDEXT_TEXT_ROPE_H */

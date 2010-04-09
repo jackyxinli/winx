@@ -514,7 +514,6 @@ public:
 #endif // defined(STD_UNITTEST)
 
 // -------------------------------------------------------------------------
-// $Log: Relation.h,v $
 
 #endif /* STDEXT_RELATION_H */
 

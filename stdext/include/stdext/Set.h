@@ -137,7 +137,7 @@ public:
 	void testSet(LogT& log)
 	{
 		NS_STDEXT::BlockPool recycle;
-		NS_STDEXT::ScopedAlloc alloc(recycle);
+		NS_STDEXT::DefaultAlloc alloc(recycle);
 		NS_STDEXT::Set<Obj> coll(alloc);
 		coll.insert(1);
 		coll.insert(1);
@@ -149,7 +149,7 @@ public:
 	void testMultiSet(LogT& log)
 	{
 		NS_STDEXT::BlockPool recycle;
-		NS_STDEXT::ScopedAlloc alloc(recycle);
+		NS_STDEXT::DefaultAlloc alloc(recycle);
 		NS_STDEXT::MultiSet<Obj> coll(alloc);
 		coll.insert(1);
 		coll.insert(1);
@@ -190,8 +190,8 @@ public:
 
 	void doSet2(LogT& log)
 	{
-		typedef NS_STDEXT::Set<int> SetT;
-		log.print("===== NS_STDEXT::Set (ScopedAlloc) =====\n");
+		typedef NS_STDEXT::Set<int, std::less<int>, NS_STDEXT::ScopedAlloc> SetT;
+		log.print("===== NS_STDEXT::Set (DefaultAlloc) =====\n");
 		NS_STDEXT::PerformanceCounter counter;
 		{
 			NS_STDEXT::BlockPool recycle;
@@ -205,7 +205,7 @@ public:
 
 	void doShareAllocSet(LogT& log)
 	{
-		typedef NS_STDEXT::Set<int> SetT;
+		typedef NS_STDEXT::Set<int, std::less<int>, NS_STDEXT::ScopedAlloc> SetT;
 		NS_STDEXT::BlockPool recycle;
 		log.newline();
 		for (int i = 0; i < 5; ++i)
@@ -238,7 +238,6 @@ public:
 #endif // defined(STD_UNITTEST)
 
 // -------------------------------------------------------------------------
-// $Log: Set.h,v $
 
 NS_STDEXT_END
 

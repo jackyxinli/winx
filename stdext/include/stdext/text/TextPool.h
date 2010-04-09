@@ -354,7 +354,7 @@ public:
 	void testConstruct(LogT& log)
 	{
 		NS_STDEXT::BlockPool recycle;
-		NS_STDEXT::ScopedAlloc alloc(recycle);
+		NS_STDEXT::DefaultAlloc alloc(recycle);
 
 		NS_STDEXT::TextPool<char> a1(alloc, 'a');
 		AssertExp(a1.size() == 1 && a1[0] == 'a');
@@ -376,7 +376,7 @@ public:
 	void testSubstr(LogT& log)
 	{
 		NS_STDEXT::BlockPool recycle;
-		NS_STDEXT::ScopedAlloc alloc(recycle);
+		NS_STDEXT::DefaultAlloc alloc(recycle);
 
 		NS_STDEXT::TextPool<char> a(alloc, "Hello");
 		AssertExp(a.substr(alloc, 1, 3) == "ell");
@@ -387,7 +387,7 @@ public:
 	void testAssign(LogT& log)
 	{
 		NS_STDEXT::BlockPool recycle;
-		NS_STDEXT::ScopedAlloc alloc(recycle);
+		NS_STDEXT::DefaultAlloc alloc(recycle);
 
 		NS_STDEXT::TextPool<char> a(alloc);
 		
@@ -418,7 +418,7 @@ public:
 	void testAppend(LogT& log)
 	{
 		NS_STDEXT::BlockPool recycle;
-		NS_STDEXT::ScopedAlloc alloc(recycle);
+		NS_STDEXT::DefaultAlloc alloc(recycle);
 
 		NS_STDEXT::TextPool<char> a(alloc, "Hello");
 		a.append(3, '!');
@@ -444,7 +444,7 @@ public:
 	void testReplace(LogT& log)
 	{
 		NS_STDEXT::BlockPool recycle;
-		NS_STDEXT::ScopedAlloc alloc(recycle);
+		NS_STDEXT::DefaultAlloc alloc(recycle);
 
 		NS_STDEXT::TextPool<char> a(alloc, "Hello!!!! world! Good!");
 		NS_STDEXT::TextPool<char>::iterator it = a.find("!!!!");

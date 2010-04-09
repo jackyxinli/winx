@@ -149,7 +149,7 @@ public:
 	void testDeque(LogT& log)
 	{
 		NS_STDEXT::BlockPool recycle;
-		NS_STDEXT::ScopedPools alloc(recycle);
+		NS_STDEXT::DefaultAlloc alloc(recycle);
 		NS_STDEXT::Deque<int> coll(alloc);
 		coll.push_back(1);
 		coll.push_back(2);
