@@ -34,7 +34,7 @@ NS_STDEXT_BEGIN
 
 #pragma pack(1)
 
-template <class CharT, class AllocT = ScopedPools>
+template <class CharT, class AllocT = DefaultAlloc>
 class BasicCString : private BasicString<CharT>
 {
 private:

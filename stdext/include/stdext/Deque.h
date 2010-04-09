@@ -103,7 +103,7 @@ public:
 
 NS_STDEXT_BEGIN
 
-template <class DataT, class AllocT = ScopedPools>
+template <class DataT, class AllocT = DefaultAlloc>
 class Deque : public StlDeque<DataT, StlAlloc<DataT, AllocT> >
 {
 private:
