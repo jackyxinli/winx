@@ -24,11 +24,11 @@ int main()
 	std::string dest;
 
 	NS_STDEXT::format(
-		dest, "value: %*d%s%s\n", 2, 123, "! ", NS_STDEXT::String("xushiwei", 2));
+		dest, "value: %d%s%s %f\n", 123, "! ", NS_STDEXT::String("xushiwei", 2), 134.5);
 	std::cout << dest;
 	
 	NS_STDEXT::format(
-		dest, "value 2: %*d%s%s\n", 2, 123, "! ", NS_STDEXT::String("xushiwei", 2));
+		dest, "value 2: %X - %s%s\n", 123, "Hi! ", NS_STDEXT::String("xushiwei", 2));
 	std::cout << dest;
 
 	return 0;
