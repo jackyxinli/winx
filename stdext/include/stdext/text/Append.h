@@ -60,13 +60,6 @@ inline void winx_call clear(FILE& dest)
 // -------------------------------------------------------------------------
 
 template <class CharT, class AllocT>
-inline void winx_call append(std::vector<CharT, AllocT>& dest, const CharT* val)
-{
-	const CharT* valEnd = NS_STDEXT::end(val);
-	dest.insert(dest.end(), val, valEnd);
-}
-
-template <class CharT, class AllocT>
 inline void winx_call append(std::vector<CharT, AllocT>& dest, const CharT* val, const CharT* valEnd)
 {
 	dest.insert(dest.end(), val, valEnd);
@@ -86,8 +79,14 @@ inline void winx_call append(std::vector<CharT, AllocT>& dest, const CharT val)
 
 // -------------------------------------------------------------------------
 
-template <class CharT, class Tr, class AllocT>
-inline void winx_call append(std::basic_string<CharT, Tr, AllocT>& dest, const CharT* val)
+template <class Tr, class AllocT>
+inline void winx_call append(std::basic_string<char, Tr, AllocT>& dest, const char* val)
+{
+	dest.append(val);
+}
+
+template <class Tr, class AllocT>
+inline void winx_call append(std::basic_string<wchar_t, Tr, AllocT>& dest, const wchar_t* val)
 {
 	dest.append(val);
 }
@@ -111,13 +110,6 @@ inline void winx_call append(std::basic_string<CharT, Tr, AllocT>& dest, const C
 }
 
 // -------------------------------------------------------------------------
-
-template <class CharT>
-inline void winx_call append(FILE& fp, const CharT* val)
-{
-	const CharT* valEnd = NS_STDEXT::end(val);
-	fwrite(val, sizeof(CharT), valEnd - val, &fp);
-}
 
 template <class CharT>
 inline void winx_call append(FILE& fp, const CharT* val, const CharT* valEnd)
