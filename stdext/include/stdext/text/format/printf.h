@@ -35,24 +35,28 @@ namespace format_detail
 		const CharT* p;
 
 Retry:	p = tchar::strchr(fmt, (CharT)'%');
-		if (p == NULL)
+		if (p != NULL)
+		{
+			NS_STDEXT_TEXT::append(dest, fmt, p);
+			++p;
+
+			if (*p != (CharT)'%')
+			{
+				return NS_STDEXT_FORMAT::put(dest, p, arg);
+			}
+			else
+			{
+				fmt = ++p;
+				NS_STDEXT_TEXT::append(dest, (CharT)'%');
+				goto Retry;
+			}
+		}
+		else
 		{
 			static const CharT s_null = CharT();
 			NS_STDEXT_TEXT::append(dest, fmt);
 			return &s_null;
 		}
-
-		NS_STDEXT_TEXT::append(dest, fmt, p);
-		++p;
-
-		if (*p == (CharT)'%')
-		{
-			fmt = ++p;
-			NS_STDEXT_TEXT::append(dest, (CharT)'%');
-			goto Retry;
-		}
-
-		return NS_STDEXT_FORMAT::put(dest, p, arg);
 	}
 }
 
