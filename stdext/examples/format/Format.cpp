@@ -23,7 +23,7 @@ int main()
 
 	NS_STDEXT::StringBuilder s2;
 	NS_STDEXT::format(
-		s2, "value: %d%s%s %f\n", 123, "! ", NS_STDEXT::String("xushiwei", 2), 134.5);
+		s2, "value: %d%s%s %f\n", (unsigned int)123, "! ", NS_STDEXT::String("xushiwei", 2), 134.5);
 	std::cout << s2;
 	
 	std::string dest;

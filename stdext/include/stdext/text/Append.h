@@ -19,7 +19,7 @@
 #ifndef STDEXT_TEXT_APPEND_H
 #define STDEXT_TEXT_APPEND_H
 
-#ifndef STD_STRING_H
+#ifndef STDEXT_TEXT_STRINGBUILDER_H
 #include "StringBuilder.h"
 #endif
 
