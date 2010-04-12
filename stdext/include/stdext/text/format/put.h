@@ -114,6 +114,91 @@ const CharT* winx_call getFormatParams(FormatParams& params, StringT& dest, cons
 	return fmt;
 }
 
+template <class StringT, class CharT>
+void winx_call format(StringT& dest, const FormatParams& params, const CharT* text, const CharT* textEnd)
+{
+    CharT prefix[2];
+	/* numeric prefix -- up to two characters */
+    
+	int prefixlen = 0;
+	/* length of prefix -- 0 means no prefix */
+
+    int padding;
+	/* amount of padding, negative means zero */
+
+	const unsigned flags = params.flags;
+
+    if (params.specifier & (STD_PRINTYPE_F | STD_PRINTYPE_I_DEC))
+	{
+        if (*text == '-')
+		{
+            /* prefix is a '-' */
+            prefix[0] = '-';
+            prefixlen = 1;
+			++text;
+        }
+        else if (flags & STD_PRINTYPE_FLAGS_ADD)
+		{
+            /* prefix is '+' */
+            prefix[0] = '+';
+            prefixlen = 1;
+        }
+        else if (flags & STD_PRINTYPE_FLAGS_SPACE)
+		{
+            /* prefix is ' ' */
+            prefix[0] = ' ';
+            prefixlen = 1;
+        }
+    }
+	else if (params.specifier & STD_PRINTYPE_I_HEX)
+	{
+		if (flags & STD_PRINTYPE_FLAGS_SHARP)
+		{
+			/* alternate form means '0x' prefix */
+			prefix[0] = '0';
+			prefix[1] = (params.specifier & STD_PRINTYPE_I_HEX_UPPER) ? 'X' : 'x'; /* 'x' or 'X' */
+			prefixlen = 2;
+		}
+	}
+
+    /*
+	 *  calculate amount of padding
+	 *  -- might be negative
+     *  but this will just mean zero
+	 */
+    padding = params.width - (textEnd - text) - prefixlen;
+
+    /* put out the padding, prefix, and text */
+
+    if (!(flags & (STD_PRINTYPE_FLAGS_SUB | STD_PRINTYPE_FLAGS_ZERO))) 
+	{
+        /* pad on left with blanks */
+		if (padding > 0)
+			NS_STDEXT_TEXT::append(dest, padding, (CharT)' ');
+	}
+
+    /* write prefix */
+	if (prefixlen > 0)
+		NS_STDEXT_TEXT::append(dest, prefix, prefix + prefixlen);
+
+    if ((flags & STD_PRINTYPE_FLAGS_ZERO) && !(flags & STD_PRINTYPE_FLAGS_SUB))
+	{
+        /* write leading zeros */
+		if (padding > 0)
+			NS_STDEXT_TEXT::append(dest, padding, (CharT)'0');
+    }
+
+    /* write text */
+	NS_STDEXT_TEXT::append(dest, text, textEnd);
+
+    if (flags & STD_PRINTYPE_FLAGS_SUB)
+	{
+        /* pad on right with blanks */
+		if (padding > 0)
+			NS_STDEXT_TEXT::append(dest, padding, (CharT)' ');
+    }
+}
+
 // -------------------------------------------------------------------------
 
 template <class StringT, class CharT>
@@ -132,7 +217,8 @@ const CharT* winx_call put(StringT& dest, const CharT* fmt, long val)
 			tchar::ltoa(val, buf, radix);
 		else
 			tchar::ultoa(val, buf, radix);
-		NS_STDEXT_TEXT::append(dest, buf);
+
+		format(dest, params, buf, NS_STDEXT::end(buf));
 	}
 	
 	return fmt;

@@ -46,14 +46,16 @@ NS_STDEXT_BEGIN
 #define STD_PRINTYPE_I_DEC			0x100		/* [di] */
 #define STD_PRINTYPE_I_UDEC			0x200		/* [u] */
 #define STD_PRINTYPE_I_OCT			0x400		/* [o] */
-#define STD_PRINTYPE_I_HEX			0x800		/* [Xx] */
-#define STD_PRINTYPE_F_G			0x1000		/* [Gg] */
+#define STD_PRINTYPE_I_HEX_UPPER	0x800		/* [X] */
+#define STD_PRINTYPE_I_HEX_LOWER	0x1000		/* [x] */
 #define STD_PRINTYPE_F_SCIENTIFIC	0x2000		/* [Ee] */
 #define STD_PRINTYPE_F_POINT		0x4000		/* [f] */
-#define STD_PRINTYPE_CHAR			0x8000		/* [c] */
+#define STD_PRINTYPE_F_G			0x8000		/* [Gg] */
 #define STD_PRINTYPE_STRING			0x10000		/* [s] */
 #define STD_PRINTYPE_PTR			0x20000		/* [p] */
 #define STD_PRINTYPE_SIZE			0x40000		/* [n] */
+#define STD_PRINTYPE_CHAR			0x80000		/* [c] */
+#define STD_PRINTYPE_I_HEX			(STD_PRINTYPE_I_HEX_UPPER |	STD_PRINTYPE_I_HEX_LOWER)
 #define STD_PRINTYPE_I				(STD_PRINTYPE_I_DEC | STD_PRINTYPE_I_UDEC | STD_PRINTYPE_I_OCT | STD_PRINTYPE_I_HEX)
 #define STD_PRINTYPE_F				(STD_PRINTYPE_F_G | STD_PRINTYPE_F_SCIENTIFIC | STD_PRINTYPE_F_POINT)
 #define STD_PRINTYPE_SPECIFIER		(STD_PRINTYPE_I | STD_PRINTYPE_F | STD_PRINTYPE_CHAR | \
@@ -170,7 +172,7 @@ unsigned PrinTypeT<Unused>::data[STD_PRINTYPE_MAX_CHAR] =
 	0,	// U [85]
 	0,	// V [86]
 	0,	// W [87]
-	STD_PRINTYPE_I_HEX,	// X [88]
+	STD_PRINTYPE_I_HEX_UPPER,	// X [88]
 	0,	// Y [89]
 	0,	// Z [90]
 	0,	// [ [91]
@@ -202,7 +204,7 @@ unsigned PrinTypeT<Unused>::data[STD_PRINTYPE_MAX_CHAR] =
 	STD_PRINTYPE_I_UDEC,	// u [117]
 	0,	// v [118]
 	0,	// w [119]
-	STD_PRINTYPE_I_HEX,	// x [120]
+	STD_PRINTYPE_I_HEX_LOWER,	// x [120]
 	0,	// y [121]
 	0,	// z [122]
 	0,	// { [123]

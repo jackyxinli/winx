@@ -109,6 +109,12 @@ inline void winx_call append(FILE& fp, const CharT* val, const CharT* valEnd)
 	fwrite(val, sizeof(CharT), valEnd - val, &fp);
 }
 
+inline void winx_call append(FILE& fp, size_t count, const char val)
+{
+	while (count--)
+		putc(val, &fp);
+}
+
 inline void winx_call append(FILE& fp, const char val)
 {
 	putc(val, &fp);
