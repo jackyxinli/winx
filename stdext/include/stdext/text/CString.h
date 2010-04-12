@@ -225,6 +225,10 @@ public:
 		return *(const TempString<CharT>*)this;
 	}
 
+	operator const BasicString<CharT>&() const {
+		return *this;
+	}
+
 	const BasicString<CharT>& winx_call str() const {
 		return *this;
 	}
