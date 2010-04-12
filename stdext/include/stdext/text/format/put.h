@@ -114,6 +114,8 @@ const CharT* winx_call getFormatParams(FormatParams& params, StringT& dest, cons
 	return fmt;
 }
 
+#define STD_PRINTYPE_FLAGS_NEGATIVE STD_PRINTYPE_RESERVED
+
 template <class StringT, class CharT>
 void winx_call format(StringT& dest, const FormatParams& params, const CharT* text, const CharT* textEnd)
 {
@@ -130,12 +132,11 @@ void winx_call format(StringT& dest, const FormatParams& params, const CharT* te
 
     if (params.specifier & (STD_PRINTYPE_F | STD_PRINTYPE_I_DEC))
 	{
-        if (*text == '-')
+        if (flags & STD_PRINTYPE_FLAGS_NEGATIVE)
 		{
             /* prefix is a '-' */
             prefix[0] = '-';
             prefixlen = 1;
-			++text;
         }
         else if (flags & STD_PRINTYPE_FLAGS_ADD)
 		{
@@ -210,15 +211,60 @@ const CharT* winx_call put(StringT& dest, const CharT* fmt, long val)
 	if (params.specifier & STD_PRINTYPE_I)
 	{
 		CharT buf[64];
-		const int radix = (
-			(params.specifier & (STD_PRINTYPE_I_DEC | STD_PRINTYPE_I_UDEC)) ? 10 :
-			(params.specifier & STD_PRINTYPE_I_HEX) ? 16 : 8);
-		if (STD_PRINTYPE_I_UDEC)
-			tchar::ltoa(val, buf, radix);
+		CharT* text = buf + countof(buf);
+		
+		int hexadd, radix;
+	
+		if (params.specifier & (STD_PRINTYPE_I_DEC | STD_PRINTYPE_I_UDEC))
+		{
+			radix = 10;
+		}
+		else if (params.specifier & STD_PRINTYPE_I_HEX)
+		{
+			radix = 16;
+			hexadd = (params.specifier & STD_PRINTYPE_I_HEX_UPPER) ? ('A' - '9' - 1) : ('a' - '9' - 1);
+		}
 		else
-			tchar::ultoa(val, buf, radix);
+		{
+			radix = 8;
+		}
+		
+		if (params.specifier & STD_PRINTYPE_I_DEC)
+		{
+			if (val < 0)
+			{
+				params.flags |= STD_PRINTYPE_FLAGS_NEGATIVE;
+				val = -val;
+			}
+		}
+		
+		if (params.precision < 0)
+		{
+			params.precision = 1;
+		}
+		else
+		{
+			params.flags &= ~STD_PRINTYPE_FLAGS_ZERO;
+		}
 
-		format(dest, params, buf, NS_STDEXT::end(buf));
+		while (params.precision-- > 0 || val != 0)
+		{
+			int digit = (int)(val % radix) + '0';
+			val /= radix;
+			if (digit > '9')
+			{
+				/* a hex digit, make it a letter */
+				digit += hexadd;
+			}
+			*--text = (CharT)digit;
+		}
+
+		if ((params.flags & STD_PRINTYPE_FLAGS_SHARP) && radix == 8)
+		{
+			*--text = '0';
+		}
+
+		format(dest, params, text, buf + countof(buf));
 	}
 	
 	return fmt;
