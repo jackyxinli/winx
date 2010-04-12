@@ -71,8 +71,14 @@ inline void winx_call append(std::vector<CharT, AllocT>& dest, const size_t coun
 	dest.insert(dest.end(), count, val);
 }
 
-template <class CharT, class AllocT>
-inline void winx_call append(std::vector<CharT, AllocT>& dest, const CharT val)
+template <class AllocT>
+inline void winx_call append(std::vector<char, AllocT>& dest, const char val)
+{
+	dest.push_back(val);
+}
+
+template <class AllocT>
+inline void winx_call append(std::vector<wchar_t, AllocT>& dest, const wchar_t val)
 {
 	dest.push_back(val);
 }
@@ -103,8 +109,14 @@ inline void winx_call append(std::basic_string<CharT, Tr, AllocT>& dest, const s
 	dest.append(count, val);
 }
 
-template <class CharT, class Tr, class AllocT>
-inline void winx_call append(std::basic_string<CharT, Tr, AllocT>& dest, const CharT val)
+template <class Tr, class AllocT>
+inline void winx_call append(std::basic_string<char, Tr, AllocT>& dest, const char val)
+{
+	dest.append(1, val);
+}
+
+template <class Tr, class AllocT>
+inline void winx_call append(std::basic_string<wchar_t, Tr, AllocT>& dest, const wchar_t val)
 {
 	dest.append(1, val);
 }
