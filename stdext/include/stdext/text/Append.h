@@ -19,16 +19,8 @@
 #ifndef STDEXT_TEXT_APPEND_H
 #define STDEXT_TEXT_APPEND_H
 
-#ifndef STDEXT_BASIC_H
-#include "../Basic.h"
-#endif
-
-#ifndef STD_VECTOR_H
-#include "../../std/vector.h"
-#endif
-
 #ifndef STD_STRING_H
-#include "../../std/string.h"
+#include "StringBuilder.h"
 #endif
 
 #ifndef NS_STDEXT_TEXT
@@ -71,28 +63,22 @@ inline void winx_call append(std::vector<CharT, AllocT>& dest, const size_t coun
 	dest.insert(dest.end(), count, val);
 }
 
-template <class AllocT>
-inline void winx_call append(std::vector<char, AllocT>& dest, const char val)
+template <class CharT, class AllocT>
+inline void winx_call append(std::vector<CharT, AllocT>& dest, const CharT val)
 {
 	dest.push_back(val);
 }
 
-template <class AllocT>
-inline void winx_call append(std::vector<wchar_t, AllocT>& dest, const wchar_t val)
+template <class CharT>
+inline void winx_call append(NS_STDEXT::BasicStringBuilder<CharT>& dest, const CharT val)
 {
 	dest.push_back(val);
 }
 
 // -------------------------------------------------------------------------
 
-template <class Tr, class AllocT>
-inline void winx_call append(std::basic_string<char, Tr, AllocT>& dest, const char* val)
-{
-	dest.append(val);
-}
-
-template <class Tr, class AllocT>
-inline void winx_call append(std::basic_string<wchar_t, Tr, AllocT>& dest, const wchar_t* val)
+template <class CharT, class Tr, class AllocT>
+inline void winx_call append(std::basic_string<CharT, Tr, AllocT>& dest, const CharT* val)
 {
 	dest.append(val);
 }
@@ -109,14 +95,8 @@ inline void winx_call append(std::basic_string<CharT, Tr, AllocT>& dest, const s
 	dest.append(count, val);
 }
 
-template <class Tr, class AllocT>
-inline void winx_call append(std::basic_string<char, Tr, AllocT>& dest, const char val)
-{
-	dest.append(1, val);
-}
-
-template <class Tr, class AllocT>
-inline void winx_call append(std::basic_string<wchar_t, Tr, AllocT>& dest, const wchar_t val)
+template <class CharT, class Tr, class AllocT>
+inline void winx_call append(std::basic_string<CharT, Tr, AllocT>& dest, const CharT val)
 {
 	dest.append(1, val);
 }

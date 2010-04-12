@@ -1,4 +1,4 @@
-#include <stdext/text/Format.h>
+#include <stdext/String.h>
 #include <iostream> 	// std::cout
 
 // -------------------------------------------------------------------------
@@ -20,6 +20,11 @@ int main()
 	
 	s = NS_STDEXT::str(alloc, 12.33, 3);
 	std::cout << s << '\n'; // 12.3
+
+	NS_STDEXT::StringBuilder s2;
+	NS_STDEXT::format(
+		s2, "value: %d%s%s %f\n", 123, "! ", NS_STDEXT::String("xushiwei", 2), 134.5);
+	std::cout << s2;
 	
 	std::string dest;
 
