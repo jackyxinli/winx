@@ -60,9 +60,14 @@ const CharT* winx_call getFormatParams(FormatParams& params, StringT& dest, cons
 	{
 		const unsigned flag = PrinType::is(STD_PRINTYPE_FLAGS, *fmt);
 		if (flag)
+		{
 			params.flags |= flag;
+			++fmt;
+		}
 		else
+		{
 			break;
+		}
 	}
 
 	//
