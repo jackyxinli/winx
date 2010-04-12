@@ -29,11 +29,11 @@ NS_STDEXT_BEGIN
 
 namespace format_detail
 {
-	template <class StringT, class CharT>
-	const CharT* winx_call prepare(StringT& dest, const CharT* fmt)
+	template <class StringT, class CharT, class ArgT>
+	const CharT* winx_call put(StringT& dest, const CharT* fmt, const ArgT& arg)
 	{
 		const CharT* p;
-		
+
 Retry:	p = tchar::strchr(fmt, (CharT)'%');
 		if (p == NULL)
 		{
@@ -41,7 +41,7 @@ Retry:	p = tchar::strchr(fmt, (CharT)'%');
 			NS_STDEXT_TEXT::append(dest, fmt);
 			return &s_null;
 		}
-		
+
 		NS_STDEXT_TEXT::append(dest, fmt, p);
 		++p;
 
@@ -52,14 +52,7 @@ Retry:	p = tchar::strchr(fmt, (CharT)'%');
 			goto Retry;
 		}
 
-		return p;
-	}
-
-	template <class StringT, class CharT, class ArgT>
-	const CharT* winx_call put(StringT& dest, const CharT* fmt, const ArgT& arg)
-	{
-		fmt = prepare(dest, fmt);
-		return NS_STDEXT_FORMAT::put(dest, fmt, arg);
+		return NS_STDEXT_FORMAT::put(dest, p, arg);
 	}
 }
 
@@ -193,28 +186,28 @@ void winx_call formatAppend(
 // -------------------------------------------------------------------------
 
 template <class StringT, class CharT, class ArgT1>
-void winx_call format(StringT& dest, const CharT* fmt, const ArgT1& arg1)
+inline void winx_call format(StringT& dest, const CharT* fmt, const ArgT1& arg1)
 {
 	NS_STDEXT_TEXT::clear(dest);
 	formatAppend(dest, fmt, arg1);
 }
 
 template <class StringT, class CharT, class ArgT1, class ArgT2>
-void winx_call format(StringT& dest, const CharT* fmt, const ArgT1& arg1, const ArgT2& arg2)
+inline void winx_call format(StringT& dest, const CharT* fmt, const ArgT1& arg1, const ArgT2& arg2)
 {
 	NS_STDEXT_TEXT::clear(dest);
 	formatAppend(dest, fmt, arg1, arg2);
 }
 
 template <class StringT, class CharT, class ArgT1, class ArgT2, class ArgT3>
-void winx_call format(StringT& dest, const CharT* fmt, const ArgT1& arg1, const ArgT2& arg2, const ArgT3& arg3)
+inline void winx_call format(StringT& dest, const CharT* fmt, const ArgT1& arg1, const ArgT2& arg2, const ArgT3& arg3)
 {
 	NS_STDEXT_TEXT::clear(dest);
 	formatAppend(dest, fmt, arg1, arg2, arg3);
 }
 
 template <class StringT, class CharT, class ArgT1, class ArgT2, class ArgT3, class ArgT4>
-void winx_call format(
+inline void winx_call format(
 	StringT& dest, const CharT* fmt,
 	const ArgT1& arg1, const ArgT2& arg2, const ArgT3& arg3, const ArgT4& arg4)
 {
@@ -223,7 +216,7 @@ void winx_call format(
 }
 
 template <class StringT, class CharT, class ArgT1, class ArgT2, class ArgT3, class ArgT4, class ArgT5>
-void winx_call format(
+inline void winx_call format(
 	StringT& dest, const CharT* fmt,
 	const ArgT1& arg1, const ArgT2& arg2,
 	const ArgT3& arg3, const ArgT4& arg4, const ArgT5& arg5)
@@ -235,7 +228,7 @@ void winx_call format(
 template <
 	class StringT, class CharT,
 	class ArgT1, class ArgT2, class ArgT3, class ArgT4, class ArgT5, class ArgT6>
-void winx_call format(
+inline void winx_call format(
 	StringT& dest, const CharT* fmt,
 	const ArgT1& arg1, const ArgT2& arg2,
 	const ArgT3& arg3, const ArgT4& arg4, const ArgT5& arg5, const ArgT6& arg6)
@@ -247,7 +240,7 @@ void winx_call format(
 template <
 	class StringT, class CharT,
 	class ArgT1, class ArgT2, class ArgT3, class ArgT4, class ArgT5, class ArgT6, class ArgT7>
-void winx_call format(
+inline void winx_call format(
 	StringT& dest, const CharT* fmt,
 	const ArgT1& arg1, const ArgT2& arg2, const ArgT3& arg3,
 	const ArgT4& arg4, const ArgT5& arg5, const ArgT6& arg6, const ArgT7& arg7)
@@ -259,7 +252,7 @@ void winx_call format(
 template <
 	class StringT, class CharT,
 	class ArgT1, class ArgT2, class ArgT3, class ArgT4, class ArgT5, class ArgT6, class ArgT7, class ArgT8>
-void winx_call format(
+inline void winx_call format(
 	StringT& dest, const CharT* fmt,
 	const ArgT1& arg1, const ArgT2& arg2, const ArgT3& arg3,
 	const ArgT4& arg4, const ArgT5& arg5, const ArgT6& arg6, const ArgT7& arg7, const ArgT8& arg8)
@@ -271,7 +264,7 @@ void winx_call format(
 template <
 	class StringT, class CharT,
 	class ArgT1, class ArgT2, class ArgT3, class ArgT4, class ArgT5, class ArgT6, class ArgT7, class ArgT8, class ArgT9>
-void winx_call format(
+inline void winx_call format(
 	StringT& dest, const CharT* fmt,
 	const ArgT1& arg1, const ArgT2& arg2, const ArgT3& arg3, const ArgT4& arg4,
 	const ArgT5& arg5, const ArgT6& arg6, const ArgT7& arg7, const ArgT8& arg8, const ArgT9& arg9)
