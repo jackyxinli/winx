@@ -31,6 +31,15 @@ int main()
 		dest, "value 2: %X - %s%s\n", 123, "Hi! ", NS_STDEXT::String("xushiwei", 2));
 	std::cout << dest;
 
+	NS_STDEXT::format(
+		*stdout, "stdout: %o - %s %f\n", 123, "Hello!", 134.5);
+
+	NS_STDEXT::printf(
+		"printf - stdout: %o - %s %f\n", 123, "Hello!", 134.5);
+
+	NS_STDEXT::format(
+		*stderr, "stderr: %o - %s %f\n", 123, "Hello!", 134.5);
+
 	return 0;
 }
 

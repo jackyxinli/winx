@@ -282,6 +282,87 @@ void winx_call format(
 
 // -------------------------------------------------------------------------
 
+template <class CharT, class ArgT1>
+inline void winx_call printf(const CharT* fmt, const ArgT1& arg1)
+{
+	formatAppend(*stdout, fmt, arg1);
+}
+
+template <class CharT, class ArgT1, class ArgT2>
+inline void winx_call printf(const CharT* fmt, const ArgT1& arg1, const ArgT2& arg2)
+{
+	formatAppend(*stdout, fmt, arg1, arg2);
+}
+
+template <class CharT, class ArgT1, class ArgT2, class ArgT3>
+inline void winx_call printf(const CharT* fmt, const ArgT1& arg1, const ArgT2& arg2, const ArgT3& arg3)
+{
+	formatAppend(*stdout, fmt, arg1, arg2, arg3);
+}
+
+template <class CharT, class ArgT1, class ArgT2, class ArgT3, class ArgT4>
+inline void winx_call printf(
+	const CharT* fmt,
+	const ArgT1& arg1, const ArgT2& arg2, const ArgT3& arg3, const ArgT4& arg4)
+{
+	formatAppend(*stdout, fmt, arg1, arg2, arg3, arg4);
+}
+
+template <class CharT, class ArgT1, class ArgT2, class ArgT3, class ArgT4, class ArgT5>
+inline void winx_call printf(
+	const CharT* fmt,
+	const ArgT1& arg1, const ArgT2& arg2,
+	const ArgT3& arg3, const ArgT4& arg4, const ArgT5& arg5)
+{
+	formatAppend(*stdout, fmt, arg1, arg2, arg3, arg4, arg5);
+}
+
+template <
+	class CharT,
+	class ArgT1, class ArgT2, class ArgT3, class ArgT4, class ArgT5, class ArgT6>
+inline void winx_call printf(
+	const CharT* fmt,
+	const ArgT1& arg1, const ArgT2& arg2,
+	const ArgT3& arg3, const ArgT4& arg4, const ArgT5& arg5, const ArgT6& arg6)
+{
+	formatAppend(*stdout, fmt, arg1, arg2, arg3, arg4, arg5, arg6);
+}
+
+template <
+	class CharT,
+	class ArgT1, class ArgT2, class ArgT3, class ArgT4, class ArgT5, class ArgT6, class ArgT7>
+inline void winx_call printf(
+	const CharT* fmt,
+	const ArgT1& arg1, const ArgT2& arg2, const ArgT3& arg3,
+	const ArgT4& arg4, const ArgT5& arg5, const ArgT6& arg6, const ArgT7& arg7)
+{
+	formatAppend(*stdout, fmt, arg1, arg2, arg3, arg4, arg5, arg6, arg7);
+}
+
+template <
+	class CharT,
+	class ArgT1, class ArgT2, class ArgT3, class ArgT4, class ArgT5, class ArgT6, class ArgT7, class ArgT8>
+inline void winx_call printf(
+	const CharT* fmt,
+	const ArgT1& arg1, const ArgT2& arg2, const ArgT3& arg3,
+	const ArgT4& arg4, const ArgT5& arg5, const ArgT6& arg6, const ArgT7& arg7, const ArgT8& arg8)
+{
+	formatAppend(*stdout, fmt, arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8);
+}
+
+template <
+	class CharT,
+	class ArgT1, class ArgT2, class ArgT3, class ArgT4, class ArgT5, class ArgT6, class ArgT7, class ArgT8, class ArgT9>
+inline void winx_call printf(
+	const CharT* fmt,
+	const ArgT1& arg1, const ArgT2& arg2, const ArgT3& arg3, const ArgT4& arg4,
+	const ArgT5& arg5, const ArgT6& arg6, const ArgT7& arg7, const ArgT8& arg8, const ArgT9& arg9)
+{
+	formatAppend(*stdout, fmt, arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9);
+}
+
+// -------------------------------------------------------------------------
+
 NS_STDEXT_END
 
 #endif /* STDEXT_TEXT_FORMAT_PRINTF_H */
