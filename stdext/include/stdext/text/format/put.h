@@ -23,6 +23,10 @@
 #include "../Append.h"
 #endif
 
+#ifndef STDEXT_INT_TRAITS_H
+#include "../../int/Traits.h"
+#endif
+
 #ifndef STDEXT_TCHAR_H
 #include "../../tchar.h"
 #endif
@@ -114,10 +118,12 @@ const CharT* winx_call getFormatParams(FormatParams& params, StringT& dest, cons
 	return fmt;
 }
 
+// -------------------------------------------------------------------------
+
 #define STD_PRINTYPE_FLAGS_NEGATIVE STD_PRINTYPE_RESERVED
 
 template <class StringT, class CharT>
-void winx_call format(StringT& dest, const FormatParams& params, const CharT* text, const CharT* textEnd)
+void winx_call formatVal(StringT& dest, const FormatParams& params, const CharT* text, const CharT* textEnd)
 {
     CharT prefix[2];
 	/* numeric prefix -- up to two characters */
@@ -138,27 +144,27 @@ void winx_call format(StringT& dest, const FormatParams& params, const CharT* te
             prefix[0] = '-';
             prefixlen = 1;
         }
-        else if (flags & STD_PRINTYPE_FLAGS_ADD)
+        else if (flags & (STD_PRINTYPE_FLAGS_ADD | STD_PRINTYPE_FLAGS_SPACE))
 		{
-            /* prefix is '+' */
-            prefix[0] = '+';
-            prefixlen = 1;
-        }
-        else if (flags & STD_PRINTYPE_FLAGS_SPACE)
-		{
-            /* prefix is ' ' */
-            prefix[0] = ' ';
+            /* prefix is '+' or ' ' */
+            prefix[0] = ((flags & STD_PRINTYPE_FLAGS_ADD) ? '+' : ' ');
             prefixlen = 1;
         }
     }
-	else if (params.specifier & STD_PRINTYPE_I_HEX)
+	else if (flags & STD_PRINTYPE_FLAGS_SHARP)
 	{
-		if (flags & STD_PRINTYPE_FLAGS_SHARP)
+		if (params.specifier & STD_PRINTYPE_I_HEX)
 		{
 			/* alternate form means '0x' prefix */
 			prefix[0] = '0';
-			prefix[1] = (params.specifier & STD_PRINTYPE_I_HEX_UPPER) ? 'X' : 'x'; /* 'x' or 'X' */
+			prefix[1] = (params.specifier & STD_PRINTYPE_I_HEX_UPPER) ? 'X' : 'x';
 			prefixlen = 2;
+		}
+		else if (params.specifier & STD_PRINTYPE_I_OCT)
+		{
+			/* alternate form means '0' prefix */
+			prefix[0] = '0';
+			prefixlen = 1;
 		}
 	}
 
@@ -171,64 +177,122 @@ void winx_call format(StringT& dest, const FormatParams& params, const CharT* te
 
     /* put out the padding, prefix, and text */
 
-    if (!(flags & (STD_PRINTYPE_FLAGS_SUB | STD_PRINTYPE_FLAGS_ZERO))) 
+	if (padding > 0 && !(flags & (STD_PRINTYPE_FLAGS_SUB | STD_PRINTYPE_FLAGS_ZERO)))
 	{
-        /* pad on left with blanks */
-		if (padding > 0)
-			NS_STDEXT_TEXT::append(dest, padding, (CharT)' ');
+		/* pad on left with blanks */
+		NS_STDEXT_TEXT::append(dest, padding, (CharT)' ');
 	}
 
-    /* write prefix */
+	/* write prefix */
 	if (prefixlen > 0)
 		NS_STDEXT_TEXT::append(dest, prefix, prefix + prefixlen);
 
-    if ((flags & STD_PRINTYPE_FLAGS_ZERO) && !(flags & STD_PRINTYPE_FLAGS_SUB))
+	if (padding > 0 && (flags & STD_PRINTYPE_FLAGS_ZERO) && !(flags & STD_PRINTYPE_FLAGS_SUB))
 	{
-        /* write leading zeros */
-		if (padding > 0)
-			NS_STDEXT_TEXT::append(dest, padding, (CharT)'0');
-    }
+		/* write leading zeros */
+		NS_STDEXT_TEXT::append(dest, padding, (CharT)'0');
+	}
 
-    /* write text */
+	/* write text */
 	NS_STDEXT_TEXT::append(dest, text, textEnd);
 
-    if (flags & STD_PRINTYPE_FLAGS_SUB)
+	if (padding > 0 && (flags & STD_PRINTYPE_FLAGS_SUB))
 	{
-        /* pad on right with blanks */
-		if (padding > 0)
-			NS_STDEXT_TEXT::append(dest, padding, (CharT)' ');
-    }
+		/* pad on right with blanks */
+		NS_STDEXT_TEXT::append(dest, padding, (CharT)' ');
+	}
 }
 
-// -------------------------------------------------------------------------
-
 template <class StringT, class CharT>
-const CharT* winx_call put(StringT& dest, const CharT* fmt, long val)
+inline void winx_call formatString(StringT& dest, const FormatParams& params, const CharT* text, const CharT* textEnd)
 {
+	const unsigned flags = params.flags;
+
+    /*
+	 *  calculate amount of padding
+	 *  -- might be negative
+     *  but this will just mean zero
+	 */
+	const int padding = params.width - (textEnd - text);
+
+    /* put out the padding, prefix, and text */
+
+	if (padding > 0 && !(flags & STD_PRINTYPE_FLAGS_SUB))
+	{
+		/* pad on left with blanks */
+		NS_STDEXT_TEXT::append(dest, padding, (CharT)' ');
+	}
+
+	/* write text */
+	NS_STDEXT_TEXT::append(dest, text, textEnd);
+
+	if (padding > 0 && (flags & STD_PRINTYPE_FLAGS_SUB))
+	{
+		/* pad on right with blanks */
+		NS_STDEXT_TEXT::append(dest, padding, (CharT)' ');
+	}
+}
+
+template <class CharT, class UIntT>
+const CharT* winx_call formatUInt(CharT* textEnd, UIntT val, unsigned specifier, int precision = 1)
+{
+	int radix, hexadd;
+	
+	if (specifier & (STD_PRINTYPE_I_DEC | STD_PRINTYPE_I_UDEC))
+	{
+		radix = 10;
+	}
+	else if (specifier & STD_PRINTYPE_I_HEX)
+	{
+		radix = 16;
+		hexadd = (specifier & STD_PRINTYPE_I_HEX_UPPER) ? ('A' - '9' - 1) : ('a' - '9' - 1);
+	}
+	else
+	{
+		radix = 8;
+	}
+
+	while (precision-- > 0 || val != 0)
+	{
+		const int digit = (int)(val % radix) + '0';
+		val /= radix;
+		*--textEnd = (CharT)(digit < '9' ? digit : digit + hexadd);
+	}
+
+	return textEnd;
+}
+
+template <class CharT>
+struct Utils
+{
+	template <class StringT>
+	static void winx_call formatPtr(StringT& dest, const void* val)
+	{
+		CharT buf[64];
+		const CharT* text = formatUInt(buf + countof(buf), (unsigned long)val, STD_PRINTYPE_I_HEX, 8);
+		NS_STDEXT_TEXT::append(dest, text, buf + countof(buf));
+	}
+};
+
+// -------------------------------------------------------------------------
+// format Integer
+
+template <class StringT, class CharT, class IntT>
+const CharT* winx_call putInt(StringT& dest, const CharT* fmt, IntT val)
+{
+	typedef NS_STDEXT::IntTypeTraits<IntT> Traits;
+	typedef typename Traits::signed_type signed_type;
+	typedef typename Traits::unsigned_type unsigned_type;
+
 	FormatParams params;
 	fmt = getFormatParams(params, dest, fmt);
+	WINX_ASSERT(params.specifier & (STD_PRINTYPE_I | STD_PRINTYPE_CHAR));
 
 	if (params.specifier & STD_PRINTYPE_I)
 	{
 		CharT buf[64];
-		CharT* text = buf + countof(buf);
-		
-		int hexadd, radix;
-	
-		if (params.specifier & (STD_PRINTYPE_I_DEC | STD_PRINTYPE_I_UDEC))
-		{
-			radix = 10;
-		}
-		else if (params.specifier & STD_PRINTYPE_I_HEX)
-		{
-			radix = 16;
-			hexadd = (params.specifier & STD_PRINTYPE_I_HEX_UPPER) ? ('A' - '9' - 1) : ('a' - '9' - 1);
-		}
-		else
-		{
-			radix = 8;
-		}
-		
+		const CharT* text;
+
 		if (params.specifier & STD_PRINTYPE_I_DEC)
 		{
 			if (val < 0)
@@ -236,90 +300,130 @@ const CharT* winx_call put(StringT& dest, const CharT* fmt, long val)
 				params.flags |= STD_PRINTYPE_FLAGS_NEGATIVE;
 				val = -val;
 			}
-		}
-		
-		if (params.precision < 0)
-		{
-			params.precision = 1;
+			text = formatUInt(buf + countof(buf), (signed_type)val, params.specifier, params.precision);
 		}
 		else
 		{
-			params.flags &= ~STD_PRINTYPE_FLAGS_ZERO;
+			text = formatUInt(buf + countof(buf), (unsigned_type)val, params.specifier, params.precision);
 		}
 
-		while (params.precision-- > 0 || val != 0)
-		{
-			int digit = (int)(val % radix) + '0';
-			val /= radix;
-			if (digit > '9')
-			{
-				/* a hex digit, make it a letter */
-				digit += hexadd;
-			}
-			*--text = (CharT)digit;
-		}
-
-		if ((params.flags & STD_PRINTYPE_FLAGS_SHARP) && radix == 8)
-		{
-			*--text = '0';
-		}
-
-		format(dest, params, text, buf + countof(buf));
+		formatVal(dest, params, text, buf + countof(buf));
+	}
+	else if (params.specifier & STD_PRINTYPE_CHAR)
+	{
+		NS_STDEXT_TEXT::append(dest, (CharT)val);
 	}
 	
 	return fmt;
 }
 
 template <class StringT, class CharT>
+inline const CharT* winx_call put(StringT& dest, const CharT* fmt, long val)
+{
+	return putInt(dest, fmt, (long)val);
+}
+
+template <class StringT, class CharT>
 inline const CharT* winx_call put(StringT& dest, const CharT* fmt, unsigned long val)
 {
-	return put(dest, fmt, (long)val);
+	return putInt(dest, fmt, (long)val);
 }
 
 template <class StringT, class CharT>
 inline const CharT* winx_call put(StringT& dest, const CharT* fmt, unsigned int val)
 {
-	return put(dest, fmt, (long)val);
+	return putInt(dest, fmt, (int)val);
 }
 
 template <class StringT, class CharT>
 inline const CharT* winx_call put(StringT& dest, const CharT* fmt, int val)
 {
-	return put(dest, fmt, (long)val);
+	return putInt(dest, fmt, val);
+}
+
+template <class StringT, class CharT>
+inline const CharT* winx_call put(StringT& dest, const CharT* fmt, unsigned short val)
+{
+	return putInt(dest, fmt, (int)val);
+}
+
+template <class StringT, class CharT>
+inline const CharT* winx_call put(StringT& dest, const CharT* fmt, short val)
+{
+	return putInt(dest, fmt, (int)val);
+}
+
+template <class StringT, class CharT>
+inline const CharT* winx_call put(StringT& dest, const CharT* fmt, unsigned char val)
+{
+	return putInt(dest, fmt, (int)val);
+}
+
+template <class StringT, class CharT>
+inline const CharT* winx_call put(StringT& dest, const CharT* fmt, char val)
+{
+	return putInt(dest, fmt, (int)val);
 }
 
 // -------------------------------------------------------------------------
+// format Pointer
 
-template <class StringT, class CharT, class ValT>
-const CharT* winx_call putString(StringT& dest, const CharT* fmt, const ValT& val)
+template <class StringT, class CharT>
+const CharT* winx_call put(StringT& dest, const CharT* fmt, const void* val)
+{
+	WINX_ASSERT(*fmt == 'p');
+
+	if (*fmt == 'p')
+	{
+		++fmt;
+		Utils<CharT>::formatPtr(dest, val);
+	}
+	return fmt;
+}
+
+// -------------------------------------------------------------------------
+// format String
+
+template <class StringT, class CharT>
+const CharT* winx_call putString(StringT& dest, const CharT* fmt, const CharT* text, const CharT* textEnd)
 {
 	FormatParams params;
 	fmt = getFormatParams(params, dest, fmt);
+	WINX_ASSERT(params.specifier & STD_PRINTYPE_STRING);
 
-	NS_STDEXT_TEXT::append(dest, val);
-
+	formatString(dest, params, text, textEnd);
 	return fmt;
 }
 
 template <class StringT, class CharT>
-inline const CharT* winx_call put(StringT& dest, const CharT* fmt, const CharT* val)
+const CharT* winx_call put(StringT& dest, const CharT* fmt, const CharT* val)
 {
-	return putString(dest, fmt, val);
+	FormatParams params;
+	fmt = getFormatParams(params, dest, fmt);
+	WINX_ASSERT(params.specifier & (STD_PRINTYPE_STRING | STD_PRINTYPE_PTR));
+
+	if (params.specifier & STD_PRINTYPE_STRING)
+		formatString(dest, params, val, NS_STDEXT::end(val));
+	else if (params.specifier & STD_PRINTYPE_PTR)
+		Utils<CharT>::formatPtr(dest, val);
+
+	return fmt;
 }
 
 template <class StringT>
 inline const char* winx_call put(StringT& dest, const char* fmt, const TempString<char>& val)
 {
-	return putString(dest, fmt, val);
+	return putString(dest, fmt, val.begin(), val.end());
 }
 
 template <class StringT>
 inline const wchar_t* winx_call put(StringT& dest, const wchar_t* fmt, const TempString<wchar_t>& val)
 {
-	return putString(dest, fmt, val);
+	return putString(dest, fmt, val.begin(), val.end());
 }
 
 // -------------------------------------------------------------------------
+// format Float-Pointer
 
 template <class StringT>
 const char* winx_call put(StringT& dest, const char* fmt, const double val)
