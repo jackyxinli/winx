@@ -100,6 +100,12 @@ public:
 	}
 
 public:
+	const CharT* winx_call c_str() {
+		Base::push_back('\0');
+		Base::pop_back();
+		return iterToPointer(begin());
+	}
+	
 	template <class AllocT>
 	BasicString<CharT> winx_call str(AllocT& alloc) const {
 		return BasicString<CharT>(alloc, iterToPointer(begin()), size());
