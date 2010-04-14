@@ -41,7 +41,7 @@ NS_STDEXT_BEGIN
 #define STD_PRINTYPE_WIDTH_MUL		0x40		/* [*] */
 #define STD_PRINTYPE_WIDTH			(STD_PRINTYPE_WIDTH_NUMBER | STD_PRINTYPE_WIDTH_MUL)
 
-#define STD_PRINTYPE_LENGTH			0x80		/* [hlL] */
+#define STD_PRINTYPE_LENGTH			0x80		/* [hlLqjzt] */
 
 #define STD_PRINTYPE_I_DEC			0x100		/* [di] */
 #define STD_PRINTYPE_I_UDEC			0x200		/* [u] */
@@ -191,23 +191,23 @@ unsigned PrinTypeT<Unused>::data[STD_PRINTYPE_MAX_CHAR] =
 	STD_PRINTYPE_F_G,	// g [103]
 	STD_PRINTYPE_LENGTH,	// h [104]
 	STD_PRINTYPE_I_DEC,	// i [105]
-	0,	// j [106]
+	STD_PRINTYPE_LENGTH,	// j [106]
 	0,	// k [107]
 	STD_PRINTYPE_LENGTH,	// l [108]
 	0,	// m [109]
 	STD_PRINTYPE_SIZE,	// n [110]
 	STD_PRINTYPE_I_OCT,	// o [111]
 	STD_PRINTYPE_PTR,	// p [112]
-	0,	// q [113]
+	STD_PRINTYPE_LENGTH,	// q [113]
 	0,	// r [114]
 	STD_PRINTYPE_STRING,	// s [115]
-	0,	// t [116]
+	STD_PRINTYPE_LENGTH,	// t [116]
 	STD_PRINTYPE_I_UDEC,	// u [117]
 	0,	// v [118]
 	0,	// w [119]
 	STD_PRINTYPE_I_HEX_LOWER,	// x [120]
 	0,	// y [121]
-	0,	// z [122]
+	STD_PRINTYPE_LENGTH,	// z [122]
 	0,	// { [123]
 	0,	// | [124]
 	0,	// } [125]

@@ -105,7 +105,7 @@ const CharT* winx_call getFormatParams(FormatParams& params, StringT& dest, cons
 	//
 	// Length
 	//
-	if (PrinType::is(STD_PRINTYPE_LENGTH, *fmt))
+	while (PrinType::is(STD_PRINTYPE_LENGTH, *fmt))
 		++fmt;
 
 	//
