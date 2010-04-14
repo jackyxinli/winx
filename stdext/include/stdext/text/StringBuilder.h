@@ -52,7 +52,7 @@ private:
 	typedef std::vector<CharT> Base, BaseClass;
 	WINX_BSB_USING_VECTOR_;
 	
-	typedef TempString<CharT> String_;
+	typedef BasicString<CharT> String_;
 	typedef BasicStringBuilder Myt_;
 
 private:

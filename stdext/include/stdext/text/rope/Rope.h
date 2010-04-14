@@ -366,7 +366,7 @@ class Rope {
             return _S_compare(_M_tree_ptr, __y._M_tree_ptr);
         }
 
-		int winx_call compare(TempString<_CharT> s) const { //@@todo
+		int winx_call compare(const BasicString<_CharT>& s) const { //@@todo
 			const Rope b(*_M_alloc, s.begin(), s.end());
 			return compare(b);
 		}
@@ -421,7 +421,7 @@ class Rope {
                0 : _S_new_RopeFunction(__fn, __len, __delete_fn, __a);
         }
 
-		Rope& winx_call operator=(TempString<_CharT> s)
+		Rope& winx_call operator=(const BasicString<_CharT>& s)
 		{
 			Rope b(*_M_alloc, s.begin(), s.end());
 			return operator=(b);

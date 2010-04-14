@@ -218,7 +218,7 @@ public:
 		return 1;
 	}
 
-	size_type winx_call put(const TempString<char_type> s) throw(IoException)
+	size_type winx_call put(const BasicString<char_type>& s) throw(IoException)
 	{
 		return put(s.data(), s.size());
 	}
@@ -320,7 +320,7 @@ public:
 		NS_STDEXT_IO_BINARY::puts(*this, lpBuf, cch);
 	}
 
-	void winx_call puts(const TempString<char> s) throw(IoException) {
+	void winx_call puts(const String& s) throw(IoException) {
 		NS_STDEXT_IO_BINARY::puts(*this, s);
 	}
 
@@ -328,7 +328,7 @@ public:
 		NS_STDEXT_IO_BINARY::wputs(*this, s, cch);
 	}
 
-	void winx_call wputs(const TempString<UINT16> s) throw(IoException) {
+	void winx_call wputs(const BasicString<UINT16>& s) throw(IoException) {
 		NS_STDEXT_IO_BINARY::wputs(*this, s);
 	}
 };

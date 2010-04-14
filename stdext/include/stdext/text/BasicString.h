@@ -93,7 +93,7 @@ private:
 	WINX_BASICSTRING_USING_;
 	
 	typedef std::basic_string<CharT> StlString_;
-	typedef TempString<CharT> String_;
+	typedef BasicString String_;
 	typedef BasicString Myt_;
 
 public:
@@ -125,14 +125,32 @@ private:
 
 public:
 	BasicString() {}
+	BasicString(const CharT& ch)
+		: Base(&ch, &ch + 1) {
+	}
+	BasicString(const Base& s)
+		: Base(s) {
+	}
+	BasicString(const CharT* szVal)
+		: Base(szVal, NS_STDEXT::end(szVal)) {
+	}
+
+	template <class Tr, class AllocT>
+	BasicString(const std::basic_string<CharT, Tr, AllocT>& s)
+		: Base(std::iterToPointer(s.begin()), std::iterToPointer(s.end())) {
+	}
+
+	template <class AllocT>
+	BasicString(const std::vector<CharT, AllocT>& s)
+		: Base(std::iterToPointer(s.begin()), std::iterToPointer(s.end())) {
+	}
+
 	BasicString(const CharT* pszVal, size_type cch)
 		: Base(pszVal, pszVal + cch) {
 	}
+
 	BasicString(const CharT* first, const CharT* last)
 		: Base(first, last) {
-	}
-	BasicString(const BasicArray<CharT>& s)
-		: Base(s) {
 	}
 
 	template <WINX_ALLOC_TEMPLATE_ARGS_>
@@ -217,10 +235,6 @@ public:
 
 	const CharT& winx_call operator[](size_type i) const {
 		return Base::first[i];
-	}
-
-	operator const TempString<CharT>&() const {
-		return *(const TempString<CharT>*)this;
 	}
 
 	operator const BasicArray<CharT>&() const {
@@ -317,6 +331,8 @@ typedef WString TString;
 #else
 typedef String TString;
 #endif
+
+#define TempString BasicString
 
 // -------------------------------------------------------------------------
 
@@ -496,7 +512,6 @@ public:
 #endif // defined(STD_UNITTEST)
 
 // -------------------------------------------------------------------------
-// $Log: BasicString.h,v $
 
 #endif /* STDEXT_TEXT_BASICSTRING_H */
 

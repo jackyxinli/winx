@@ -344,42 +344,42 @@ __forceinline Type winx_call cast(const char* s, Type failVal) {
 }
 
 template <class Type>
-__forceinline Type winx_call cast(const TempString<char>& s) {
+__forceinline Type winx_call cast(const String& s) {
 	return Cast<Type>::get(s.begin(), s.end());
 }
 
 template <class Type>
-__forceinline Type winx_call cast(const TempString<wchar_t>& s) {
+__forceinline Type winx_call cast(const WString& s) {
 	return Cast<Type>::get(s.begin(), s.end());
 }
 
 template <class Type>
-__forceinline Type winx_call cast(const TempString<char>& s, Type failVal) {
+__forceinline Type winx_call cast(const String& s, Type failVal) {
 	return Cast<Type>::get(s.begin(), s.end(), failVal);
 }
 
 template <class Type>
-__forceinline Type winx_call cast(const TempString<wchar_t>& s, Type failVal) {
+__forceinline Type winx_call cast(const WString& s, Type failVal) {
 	return Cast<Type>::get(s.begin(), s.end(), failVal);
 }
 
 template <class Type>
-__forceinline Type winx_call cast(unsigned radix, const TempString<char>& s) {
+__forceinline Type winx_call cast(unsigned radix, const String& s) {
 	return Cast<Type>::get(radix, s.begin(), s.end());
 }
 
 template <class Type>
-__forceinline Type winx_call cast(unsigned radix, const TempString<wchar_t>& s) {
+__forceinline Type winx_call cast(unsigned radix, const WString& s) {
 	return Cast<Type>::get(radix, s.begin(), s.end());
 }
 
 template <class Type>
-__forceinline Type winx_call cast(unsigned radix, const TempString<char>& s, Type failVal) {
+__forceinline Type winx_call cast(unsigned radix, const String& s, Type failVal) {
 	return Cast<Type>::get(radix, s.begin(), s.end(), failVal);
 }
 
 template <class Type>
-__forceinline Type winx_call cast(unsigned radix, const TempString<wchar_t>& s, Type failVal) {
+__forceinline Type winx_call cast(unsigned radix, const WString& s, Type failVal) {
 	return Cast<Type>::get(radix, s.begin(), s.end(), failVal);
 }
 
@@ -408,7 +408,7 @@ public:
 		AssertExp(NS_STDEXT::cast<double>("1.2e10") == 1.2e10);
 		AssertExp(NS_STDEXT::cast<float>("1.2e10") == 1.2e10);
 		
-		NS_STDEXT::TempString<wchar_t> s(L"123.4");
+		NS_STDEXT::WString s(L"123.4");
 		AssertExp(NS_STDEXT::cast<double>(s) == 123.4);
 
 		NS_STDEXT::String s2("123.4", 3);

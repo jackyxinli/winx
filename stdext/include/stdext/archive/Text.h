@@ -245,14 +245,14 @@ inline HRESULT winx_call scan_csymbol(
 
 template <class WriteArchiveT>
 inline void winx_call print(
-	WriteArchiveT& ar, TempString<char> s) throw(IoException)
+	WriteArchiveT& ar, const String& s) throw(IoException)
 {
 	ar.put(s.data(), s.size());
 }
 
 template <class WriteArchiveT>
 inline void winx_call print(
-	WriteArchiveT& ar, TempString<wchar_t> s) throw(IoException)
+	WriteArchiveT& ar, const WString& s) throw(IoException)
 {
 	ar.put(s.data(), s.size());
 }

@@ -433,7 +433,7 @@ inline void winx_call puts(
 
 template <class WriterArchiveT>
 inline void winx_call puts(
-	WriterArchiveT& ar, const TempString<char> s) throw(IoException)
+	WriterArchiveT& ar, const String& s) throw(IoException)
 {
 	puts(ar, s.data(), s.size());
 }
@@ -458,7 +458,7 @@ inline void winx_call wputs(
 
 template <class WriterArchiveT>
 inline void winx_call wputs(
-	WriterArchiveT& ar, const TempString<UINT16> s) throw(IoException)
+	WriterArchiveT& ar, const BasicString<UINT16>& s) throw(IoException)
 {
 	wputs(ar, s.data(), s.size());
 }

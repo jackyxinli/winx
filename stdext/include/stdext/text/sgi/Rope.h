@@ -61,7 +61,7 @@ public:
 		return *this;
 	}
 
-	SequenceBuffer& winx_call append(TempString<value_type> s)
+	SequenceBuffer& winx_call append(const BasicString<value_type>& s)
 	{
 		return append(s.data(), s.size());
 	}
@@ -121,13 +121,13 @@ public:
 	}
 
 public:
-	int winx_call compare(TempString<_CharT> s) const
+	int winx_call compare(const BasicString<_CharT>& s) const
 	{
 		_Base b(s.begin(), s.end(), _Base::get_allocator());
 		return _Base::compare(b);
 	}
 
-	Rope& winx_call operator=(TempString<_CharT> s)
+	Rope& winx_call operator=(const BasicString<_CharT>& s)
 	{
 		_Base b(s.begin(), s.end(), _Base::get_allocator());
 		_Base::operator=(b);

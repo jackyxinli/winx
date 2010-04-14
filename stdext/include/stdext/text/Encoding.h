@@ -34,7 +34,7 @@ NS_STDEXT_BEGIN
 
 namespace detail {
 
-typedef TempString<char> Encoding;
+typedef String Encoding;
 
 struct ICaseLess
 {
@@ -78,7 +78,7 @@ public:
 // -------------------------------------------------------------------------
 // function getEncoding
 
-inline codepage_t winx_call getEncoding(const TempString<char>& encoding, codepage_t cpError = cp_unknown)
+inline codepage_t winx_call getEncoding(const String& encoding, codepage_t cpError = cp_unknown)
 {
 	using namespace detail;
 

@@ -95,14 +95,14 @@ inline BasicString<char> winx_call iconv(
 
 template <class AllocT>
 __forceinline BasicString<wchar_t> winx_call iconv(
-	AllocT& alloc, codepage_t from, const TempString<char>& str)
+	AllocT& alloc, codepage_t from, const String& str)
 {
 	return iconv(alloc, from, str.data(), str.size());
 }
 
 template <class AllocT>
 __forceinline BasicString<char> winx_call iconv(
-	AllocT& alloc, const TempString<wchar_t>& str, codepage_t to)
+	AllocT& alloc, const WString& str, codepage_t to)
 {
 	return iconv(alloc, str.data(), str.size(), to);
 }
@@ -112,7 +112,7 @@ __forceinline BasicString<char> winx_call iconv(
 
 template <class CharT, class AllocT, class TransT>
 inline BasicString<CharT> winx_call transform(
-	AllocT& alloc, const TempString<CharT>& str, const TransT& trans)
+	AllocT& alloc, const BasicString<CharT>& str, const TransT& trans)
 {
 	size_t n = str.size();
 	CharT* p = STD_NEW_ARRAY(alloc, CharT, n);
@@ -121,22 +121,22 @@ inline BasicString<CharT> winx_call transform(
 }
 
 template <class AllocT>
-__forceinline BasicString<char> winx_call upper(AllocT& alloc, const TempString<char>& str) {
+__forceinline BasicString<char> winx_call upper(AllocT& alloc, const String& str) {
 	return transform(alloc, str, ToUpper<char>());
 }
 
 template <class AllocT>
-__forceinline BasicString<wchar_t> winx_call upper(AllocT& alloc, const TempString<wchar_t>& str) {
+__forceinline BasicString<wchar_t> winx_call upper(AllocT& alloc, const WString& str) {
 	return transform(alloc, str, ToUpper<wchar_t>());
 }
 
 template <class AllocT>
-__forceinline BasicString<char> winx_call lower(AllocT& alloc, const TempString<char>& str) {
+__forceinline BasicString<char> winx_call lower(AllocT& alloc, const String& str) {
 	return transform(alloc, str, ToLower<char>());
 }
 
 template <class AllocT>
-__forceinline BasicString<wchar_t> winx_call lower(AllocT& alloc, const TempString<wchar_t>& str) {
+__forceinline BasicString<wchar_t> winx_call lower(AllocT& alloc, const WString& str) {
 	return transform(alloc, str, ToLower<wchar_t>());
 }
 
@@ -144,13 +144,13 @@ __forceinline BasicString<wchar_t> winx_call lower(AllocT& alloc, const TempStri
 // append
 
 __forceinline
-std::vector<char>& winx_call append(std::vector<char>& s, const TempString<char>& str) {
+std::vector<char>& winx_call append(std::vector<char>& s, const String& str) {
 	s.insert(s.end(), str.begin(), str.end());
 	return s;
 }
 
 __forceinline
-std::vector<wchar_t>& winx_call append(std::vector<wchar_t>& s, const TempString<wchar_t>& str) {
+std::vector<wchar_t>& winx_call append(std::vector<wchar_t>& s, const WString& str) {
 	s.insert(s.end(), str.begin(), str.end());
 	return s;
 }
@@ -342,14 +342,14 @@ winx_call implode(AllocT& alloc, const GlueIt glue, size_t n, const Iterator fir
 template <class AllocT, class Iterator>
 __forceinline
 BasicString<char>
-winx_call implode(AllocT& alloc, const TempString<char>& glue, Iterator first, size_t count) {
+winx_call implode(AllocT& alloc, const String& glue, Iterator first, size_t count) {
 	return implode(alloc, glue.begin(), glue.size(), first, count);
 }
 
 template <class AllocT, class Iterator>
 __forceinline
 BasicString<wchar_t>
-winx_call implode(AllocT& alloc, const TempString<wchar_t>& glue, Iterator first, size_t count) {
+winx_call implode(AllocT& alloc, const WString& glue, Iterator first, size_t count) {
 	return implode(alloc, glue.begin(), glue.size(), first, count);
 }
 
@@ -370,14 +370,14 @@ winx_call implode(AllocT& alloc, const wchar_t glue, Iterator first, size_t coun
 template <class AllocT, class ContainerT>
 __forceinline
 BasicString<char>
-winx_call implode(AllocT& alloc, const TempString<char>& glue, const ContainerT& cont) {
+winx_call implode(AllocT& alloc, const String& glue, const ContainerT& cont) {
 	return implode(alloc, glue.begin(), glue.size(), cont.begin(), cont.size());
 }
 
 template <class AllocT, class ContainerT>
 __forceinline
 BasicString<wchar_t>
-winx_call implode(AllocT& alloc, const TempString<wchar_t>& glue, const ContainerT& cont) {
+winx_call implode(AllocT& alloc, const WString& glue, const ContainerT& cont) {
 	return implode(alloc, glue.begin(), glue.size(), cont.begin(), cont.size());
 }
 
@@ -440,7 +440,7 @@ winx_call concat(AllocT& alloc, const ContainerT& cont) {
 
 template <class AllocT, class CharT>
 inline BasicString<CharT> winx_call concatString__(
-	AllocT& alloc, const TempString<CharT>* val[], size_t count)
+	AllocT& alloc, const BasicString<CharT>* val[], size_t count)
 {
 	size_t i, len = 0;
 	for (i = 0; i < count; ++i)
@@ -454,10 +454,10 @@ inline BasicString<CharT> winx_call concatString__(
 }
 
 WINX_VARGS_TFUNC_EP1_REF(
-	BasicString<char>, concat, AllocT, const TempString<char>, concatString__);
+	BasicString<char>, concat, AllocT, const String, concatString__);
 
 WINX_VARGS_TFUNC_EP1_REF(
-	BasicString<wchar_t>, concat, AllocT, const TempString<wchar_t>, concatString__);
+	BasicString<wchar_t>, concat, AllocT, const WString, concatString__);
 
 NS_STDEXT_END
 

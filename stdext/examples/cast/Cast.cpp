@@ -24,7 +24,7 @@ int main1()
 	float fval = NS_STDEXT::cast<float>("1.2e10");
 	std::cout << fval << '\n';
 
-	NS_STDEXT::TempString<wchar_t> s(L"123.4");
+	NS_STDEXT::WString s(L"123.4");
 	std::cout << NS_STDEXT::cast<double>(s) << '\n';
 
 	NS_STDEXT::String s2("123.4", 3);

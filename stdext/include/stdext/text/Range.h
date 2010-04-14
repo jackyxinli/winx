@@ -260,73 +260,17 @@ winx_call operator<<(std::basic_ostream<CharT, Tr>& os, const Range<Iterator, Va
 #endif
 
 // =========================================================================
-// class TempString
-
-inline void winx_call throw_out_of_range_()
-{
-	throw std::out_of_range("invalid string position");
-}
-
-template <class CharT>
-class TempString : public Range<const CharT*, CharT>
-{
-private:
-	typedef Range<const CharT*, CharT> Base;
-
-public:	
-	typedef typename Base::size_type size_type;
-
-public:
-	TempString() {}
-	TempString(const CharT& ch)
-		: Base(&ch, &ch + 1) {
-	}
-
-	TempString(const Base& s)
-		: Base(s) {
-	}
-
-	TempString(const CharT* szVal)
-		: Base(szVal, NS_STDEXT::end(szVal)) {
-	}
-
-	TempString(const CharT* szVal, size_t len)
-		: Base(szVal, szVal+len) {
-	}
-	
-	template <class Tr, class AllocT>
-	TempString(const std::basic_string<CharT, Tr, AllocT>& s)
-		: Base(iterToPointer(s.begin()), iterToPointer(s.end())) {
-	}
-
-	template <class AllocT>
-	TempString(const std::vector<CharT, AllocT>& s)
-		: Base(iterToPointer(s.begin()), iterToPointer(s.end())) {
-	}
-
-public:
-	const CharT* winx_call data() const {
-		return Base::first;
-	}
-
-	const CharT& winx_call at(size_type i) const {
-		if (i <= Base::size())
-			throw_out_of_range_();
-		return Base::first[i];
-	}
-
-	const CharT& winx_call operator[](size_type i) const {
-		return Base::first[i];
-	}
-};
-
-// =========================================================================
 // class BasicArray
 
 #ifndef WINX_ALLOC_TYPE_
 #define WINX_ALLOC_TEMPLATE_ARGS_		class PolicyT
 #define WINX_ALLOC_TYPE_				NS_STDEXT::RegionAllocT<PolicyT>
 #endif
+
+inline void winx_call throw_out_of_range_()
+{
+	throw std::out_of_range("invalid string position");
+}
 
 template <class Type>
 class BasicArray : public Range<const Type*, Type>
@@ -425,7 +369,6 @@ inline BasicArray<typename ContainerT::value_type> winx_call arrayof(const Conta
 #define rangeof(array)		NS_STDEXT::arrayof(array, countof(array))
 
 // =========================================================================
-// $Log: $
 
 NS_STDEXT_END
 
@@ -436,14 +379,6 @@ STD_NO_DESTRUCTOR(NS_STDEXT::Range<const long*>);
 STD_NO_DESTRUCTOR(NS_STDEXT::Range<const short*>);
 STD_NO_DESTRUCTOR(NS_STDEXT::Range<const unsigned int*>);
 STD_NO_DESTRUCTOR(NS_STDEXT::Range<const unsigned long*>);
-
-STD_NO_DESTRUCTOR(NS_STDEXT::TempString<char>);
-STD_NO_DESTRUCTOR(NS_STDEXT::TempString<wchar_t>);
-STD_NO_DESTRUCTOR(NS_STDEXT::TempString<int>);
-STD_NO_DESTRUCTOR(NS_STDEXT::TempString<long>);
-STD_NO_DESTRUCTOR(NS_STDEXT::TempString<short>);
-STD_NO_DESTRUCTOR(NS_STDEXT::TempString<unsigned int>);
-STD_NO_DESTRUCTOR(NS_STDEXT::TempString<unsigned long>);
 
 STD_NO_DESTRUCTOR(NS_STDEXT::BasicArray<char>);
 STD_NO_DESTRUCTOR(NS_STDEXT::BasicArray<wchar_t>);

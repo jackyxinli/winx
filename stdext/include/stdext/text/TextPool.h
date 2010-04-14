@@ -57,7 +57,7 @@ private:
 	WINX_TP_USING_DEQUE_;
 	
 	typedef std::basic_string<CharT> StlString_;
-	typedef TempString<CharT> String_;
+	typedef BasicString<CharT> String_;
 	typedef TextPool Myt_;
 
 public:

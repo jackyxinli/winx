@@ -122,7 +122,7 @@ public:
 		}
 		return *this;
 	}
-	SequenceBuffer& winx_call append(TempString<value_type> s)
+	SequenceBuffer& winx_call append(const BasicString<value_type>& s)
 	{
 		return append(s.data(), s.size());
 	}

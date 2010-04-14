@@ -237,7 +237,7 @@ private:
 	template <class CharT>
 	LONG winx_call __putString(
 		__in_z const CharT* pszValueName,
-		__in const TempString<CharT>& strValue,
+		__in const BasicString<CharT>& strValue,
 		__in DWORD dwType)
 	{
 		std::vector<CharT> s;
@@ -268,7 +268,7 @@ public:
 
 	LONG winx_call putString(
 		__in_z LPCSTR pszValueName,
-		__in const TempString<char> strValue,
+		__in const String& strValue,
 		__in DWORD dwType = REG_SZ)
 	{
 		return __putString(pszValueName, strValue, dwType);
@@ -276,7 +276,7 @@ public:
 
 	LONG winx_call putString(
 		__in_z LPCWSTR pszValueName,
-		__in const TempString<WCHAR> strValue,
+		__in const WString& strValue,
 		__in DWORD dwType = REG_SZ)
 	{
 		return __putString(pszValueName, strValue, dwType);

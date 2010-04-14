@@ -123,13 +123,13 @@ inline void winx_call append(FILE& fp, const char val)
 // -------------------------------------------------------------------------
 
 template <class StringT>
-inline void winx_call append(StringT& dest, const TempString<char>& val)
+inline void winx_call append(StringT& dest, const String& val)
 {
 	append(dest, val.begin(), val.end());
 }
 
 template <class StringT>
-inline void winx_call append(StringT& dest, const TempString<wchar_t>& val)
+inline void winx_call append(StringT& dest, const WString& val)
 {
 	append(dest, val.begin(), val.end());
 }

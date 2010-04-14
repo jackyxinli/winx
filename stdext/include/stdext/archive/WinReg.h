@@ -124,13 +124,13 @@ public:
 	}
 
 public:
-	void winx_call puts(const TempString<char> str) throw(IoException)
+	void winx_call puts(const String& str) throw(IoException)
 	{
 		WinRegHelper<char>::putString(m_regKey, ++m_nCount, str);
 
 	}
 
-	void winx_call wputs(const TempString<WCHAR> str) throw(IoException)
+	void winx_call wputs(const BasicString<WCHAR>& str) throw(IoException)
 	{
 		WinRegHelper<WCHAR>::putString(m_regKey, ++m_nCount, str);
 	}

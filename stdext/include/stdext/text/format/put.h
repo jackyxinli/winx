@@ -411,13 +411,13 @@ const CharT* winx_call put(StringT& dest, const CharT* fmt, const CharT* val)
 }
 
 template <class StringT>
-inline const char* winx_call put(StringT& dest, const char* fmt, const TempString<char>& val)
+inline const char* winx_call put(StringT& dest, const char* fmt, const String& val)
 {
 	return putString(dest, fmt, val.begin(), val.end());
 }
 
 template <class StringT>
-inline const wchar_t* winx_call put(StringT& dest, const wchar_t* fmt, const TempString<wchar_t>& val)
+inline const wchar_t* winx_call put(StringT& dest, const wchar_t* fmt, const WString& val)
 {
 	return putString(dest, fmt, val.begin(), val.end());
 }

@@ -84,7 +84,7 @@ public:
 
 private:
 	typedef std::basic_string<CharT> StlString_;
-	typedef TempString<CharT> String_;
+	typedef BasicString<CharT> String_;
 	typedef BasicCString Myt_;
 	
 	struct ExtraData
@@ -219,10 +219,6 @@ public:
 public:
 	operator const CharT*() const {
 		return Base::first;
-	}
-	
-	operator const TempString<CharT>&() const {
-		return *(const TempString<CharT>*)this;
 	}
 
 	operator const BasicString<CharT>&() const {
