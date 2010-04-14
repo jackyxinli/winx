@@ -54,6 +54,11 @@ int main()
 
 	// ----------------------------------------
 
+	NS_STDEXT::BlockPool recycle;
+	NS_STDEXT::ScopedPools alloc2(recycle);
+	NS_STDEXT::CString s5(alloc2, "Hello, CString!");
+
+	NS_STDEXT::print("int64: %d, %#x, %s\n", (UINT64)32, (INT64)32, s5);
 	NS_STDEXT::format(*stderr, "stderr: %o - %s %f\n", 123, "Hello!", 134.5);
 
 	// ----------------------------------------
