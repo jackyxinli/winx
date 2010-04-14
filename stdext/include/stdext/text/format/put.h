@@ -256,7 +256,7 @@ const CharT* winx_call formatUInt(CharT* textEnd, UIntT val, unsigned specifier,
 	{
 		const int digit = (int)(val % radix) + '0';
 		val /= radix;
-		*--textEnd = (CharT)(digit < '9' ? digit : digit + hexadd);
+		*--textEnd = (CharT)(digit <= '9' ? digit : digit + hexadd);
 	}
 
 	return textEnd;
