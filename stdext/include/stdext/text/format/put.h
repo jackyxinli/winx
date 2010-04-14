@@ -318,6 +318,18 @@ const CharT* winx_call putInt(StringT& dest, const CharT* fmt, IntT val)
 }
 
 template <class StringT, class CharT>
+inline const CharT* winx_call put(StringT& dest, const CharT* fmt, INT64 val)
+{
+	return putInt(dest, fmt, val);
+}
+
+template <class StringT, class CharT>
+inline const CharT* winx_call put(StringT& dest, const CharT* fmt, UINT64 val)
+{
+	return putInt(dest, fmt, (INT64)val);
+}
+
+template <class StringT, class CharT>
 inline const CharT* winx_call put(StringT& dest, const CharT* fmt, long val)
 {
 	return putInt(dest, fmt, (long)val);

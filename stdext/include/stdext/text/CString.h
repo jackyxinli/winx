@@ -35,7 +35,7 @@ NS_STDEXT_BEGIN
 #pragma pack(1)
 
 template <class CharT, class AllocT = DefaultAlloc>
-class BasicCString : private BasicString<CharT>
+class BasicCString : public BasicString<CharT>
 {
 private:
 	typedef BasicString<CharT> Base;
@@ -219,10 +219,6 @@ public:
 public:
 	operator const CharT*() const {
 		return Base::first;
-	}
-
-	operator const BasicString<CharT>&() const {
-		return *this;
 	}
 
 	const BasicString<CharT>& winx_call str() const {
