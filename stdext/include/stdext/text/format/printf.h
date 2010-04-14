@@ -9,12 +9,12 @@
 // of this license. You must not remove this notice, or any other, from
 // this software.
 // 
-// Module: stdext/text/format/printf.h
+// Module: stdext/text/format/print.h
 // Creator: xushiwei
 // Email: xushiweizh@gmail.com
 // Date: 2006-8-18 18:56:07
 // 
-// $Id: printf.h,v 1.1 2006/10/18 12:13:39 xushiwei Exp $
+// $Id: print.h,v 1.1 2006/10/18 12:13:39 xushiwei Exp $
 // -----------------------------------------------------------------------*/
 #ifndef STDEXT_TEXT_FORMAT_PRINTF_H
 #define STDEXT_TEXT_FORMAT_PRINTF_H
@@ -61,7 +61,7 @@ Retry:	p = tchar::strchr(fmt, (CharT)'%');
 }
 
 // -------------------------------------------------------------------------
-// http://www.cplusplus.com/reference/clibrary/cstdio/printf/
+// http://www.cplusplus.com/reference/clibrary/cstdio/print/
 
 template <class StringT, class CharT, class ArgT1>
 void winx_call formatAppend(StringT& dest, const CharT* fmt, const ArgT1& arg1)
@@ -280,25 +280,25 @@ inline void winx_call format(
 // -------------------------------------------------------------------------
 
 template <class CharT, class ArgT1>
-inline void winx_call printf(const CharT* fmt, const ArgT1& arg1)
+inline void winx_call print(const CharT* fmt, const ArgT1& arg1)
 {
 	formatAppend(*stdout, fmt, arg1);
 }
 
 template <class CharT, class ArgT1, class ArgT2>
-inline void winx_call printf(const CharT* fmt, const ArgT1& arg1, const ArgT2& arg2)
+inline void winx_call print(const CharT* fmt, const ArgT1& arg1, const ArgT2& arg2)
 {
 	formatAppend(*stdout, fmt, arg1, arg2);
 }
 
 template <class CharT, class ArgT1, class ArgT2, class ArgT3>
-inline void winx_call printf(const CharT* fmt, const ArgT1& arg1, const ArgT2& arg2, const ArgT3& arg3)
+inline void winx_call print(const CharT* fmt, const ArgT1& arg1, const ArgT2& arg2, const ArgT3& arg3)
 {
 	formatAppend(*stdout, fmt, arg1, arg2, arg3);
 }
 
 template <class CharT, class ArgT1, class ArgT2, class ArgT3, class ArgT4>
-inline void winx_call printf(
+inline void winx_call print(
 	const CharT* fmt,
 	const ArgT1& arg1, const ArgT2& arg2, const ArgT3& arg3, const ArgT4& arg4)
 {
@@ -306,7 +306,7 @@ inline void winx_call printf(
 }
 
 template <class CharT, class ArgT1, class ArgT2, class ArgT3, class ArgT4, class ArgT5>
-inline void winx_call printf(
+inline void winx_call print(
 	const CharT* fmt,
 	const ArgT1& arg1, const ArgT2& arg2,
 	const ArgT3& arg3, const ArgT4& arg4, const ArgT5& arg5)
@@ -317,7 +317,7 @@ inline void winx_call printf(
 template <
 	class CharT,
 	class ArgT1, class ArgT2, class ArgT3, class ArgT4, class ArgT5, class ArgT6>
-inline void winx_call printf(
+inline void winx_call print(
 	const CharT* fmt,
 	const ArgT1& arg1, const ArgT2& arg2,
 	const ArgT3& arg3, const ArgT4& arg4, const ArgT5& arg5, const ArgT6& arg6)
@@ -328,7 +328,7 @@ inline void winx_call printf(
 template <
 	class CharT,
 	class ArgT1, class ArgT2, class ArgT3, class ArgT4, class ArgT5, class ArgT6, class ArgT7>
-inline void winx_call printf(
+inline void winx_call print(
 	const CharT* fmt,
 	const ArgT1& arg1, const ArgT2& arg2, const ArgT3& arg3,
 	const ArgT4& arg4, const ArgT5& arg5, const ArgT6& arg6, const ArgT7& arg7)
@@ -339,7 +339,7 @@ inline void winx_call printf(
 template <
 	class CharT,
 	class ArgT1, class ArgT2, class ArgT3, class ArgT4, class ArgT5, class ArgT6, class ArgT7, class ArgT8>
-inline void winx_call printf(
+inline void winx_call print(
 	const CharT* fmt,
 	const ArgT1& arg1, const ArgT2& arg2, const ArgT3& arg3,
 	const ArgT4& arg4, const ArgT5& arg5, const ArgT6& arg6, const ArgT7& arg7, const ArgT8& arg8)
@@ -350,7 +350,7 @@ inline void winx_call printf(
 template <
 	class CharT,
 	class ArgT1, class ArgT2, class ArgT3, class ArgT4, class ArgT5, class ArgT6, class ArgT7, class ArgT8, class ArgT9>
-inline void winx_call printf(
+inline void winx_call print(
 	const CharT* fmt,
 	const ArgT1& arg1, const ArgT2& arg2, const ArgT3& arg3, const ArgT4& arg4,
 	const ArgT5& arg5, const ArgT6& arg6, const ArgT7& arg7, const ArgT8& arg8, const ArgT9& arg9)
