@@ -27,6 +27,10 @@
 #include "../Memory.h"
 #endif
 
+#ifndef STDEXT_TCHAR_H
+#include "../tchar.h"
+#endif
+
 NS_STDEXT_BEGIN
 
 // -------------------------------------------------------------------------
@@ -59,7 +63,6 @@ public:
 	using Base::end;
 	using Base::rbegin;
 	using Base::rend;
-	using Base::compare;
 	using Base::compare_by;
 	using Base::icompare;
 	
@@ -217,6 +220,20 @@ public:
 	}
 
 public:
+	template <class ContainerT>
+	int winx_call compare(const ContainerT& b) const {
+		return NS_STDEXT::compare(Base::first, Base::second, b.begin(), b.end());
+	}
+
+	int winx_call compare(const value_type* b) const {
+		return tchar::strcmp(Base::first, b);
+	}
+
+	int winx_call compare(const value_type* b, size_type blen) const {
+		return NS_STDEXT::compare(Base::first, Base::second, b, b + blen);
+	}
+
+public:
 	operator const CharT*() const {
 		return Base::first;
 	}
@@ -247,6 +264,35 @@ typedef BasicCString<char> CString;
 typedef BasicCString<wchar_t> WCString;
 
 #pragma pack()
+
+// -------------------------------------------------------------------------
+
+#define WINX_CSTRING_PRED_OP_(op)											\
+																			\
+template <class CharT, class T2> __forceinline								\
+	bool winx_call operator op(const BasicCString<CharT>& a, const T2& b)	\
+    {return (a.compare(b) op 0); }											\
+																			\
+template <class CharT> __forceinline										\
+    bool winx_call operator op(const CharT* a, const BasicCString<CharT>& b) \
+    {return (b.compare(a) op 0); }											\
+																			\
+template <class CharT, class Tr, class AllocT> __forceinline				\
+    bool winx_call operator op(const std::basic_string<CharT, Tr, AllocT>& a, \
+							   const BasicCString<CharT>& b)				\
+    {return (b.compare(a) op 0); }											\
+																			\
+template <class CharT, class AllocT> __forceinline							\
+    bool winx_call operator op(const std::vector<CharT, AllocT>& a,			\
+							   const BasicCString<CharT>& b)				\
+    {return (b.compare(a) op 0); }
+
+WINX_CSTRING_PRED_OP_(==)
+WINX_CSTRING_PRED_OP_(!=)
+WINX_CSTRING_PRED_OP_(<=)
+WINX_CSTRING_PRED_OP_(<)
+WINX_CSTRING_PRED_OP_(>=)
+WINX_CSTRING_PRED_OP_(>)
 
 // -------------------------------------------------------------------------
 
