@@ -63,6 +63,12 @@ Retry:	p = tchar::strchr(fmt, (CharT)'%');
 // -------------------------------------------------------------------------
 // http://www.cplusplus.com/reference/clibrary/cstdio/print/
 
+template <class StringT, class CharT>
+inline void winx_call formatAppend(StringT& dest, const CharT* fmt)
+{
+	NS_STDEXT_TEXT::append(dest, fmt);
+}
+
 template <class StringT, class CharT, class ArgT1>
 void winx_call formatAppend(StringT& dest, const CharT* fmt, const ArgT1& arg1)
 {
@@ -189,6 +195,13 @@ void winx_call formatAppend(
 
 // -------------------------------------------------------------------------
 
+template <class StringT, class CharT>
+inline void winx_call format(StringT& dest, const CharT* fmt)
+{
+	NS_STDEXT_TEXT::clear(dest);
+	NS_STDEXT_TEXT::append(dest, fmt);
+}
+
 template <class StringT, class CharT, class ArgT1>
 inline void winx_call format(StringT& dest, const CharT* fmt, const ArgT1& arg1)
 {
@@ -278,6 +291,12 @@ inline void winx_call format(
 }
 
 // -------------------------------------------------------------------------
+
+template <class CharT>
+inline void winx_call print(const CharT* fmt)
+{
+	NS_STDEXT_TEXT::append(*stdout, fmt);
+}
 
 template <class CharT, class ArgT1>
 inline void winx_call print(const CharT* fmt, const ArgT1& arg1)
