@@ -204,6 +204,11 @@ public:
 		return *this;
 	}
 
+	Myt_& winx_call assign(const Myt_& s) {
+		Base::operator=(s);
+		return *this;
+	}
+
 	void winx_call assign(const CharT* first_, const CharT* second_) {
 		Base::first = first_;
 		Base::second = second_;
