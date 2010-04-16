@@ -136,8 +136,7 @@ public:
 
 	void testBasic(LogT& log)
 	{
-		NS_STDEXT::BlockPool recycle;
-		NS_STDEXT::DefaultAlloc alloc(recycle);
+		NS_STDEXT::DefaultAlloc alloc;
 		NS_STDEXT::List<Obj> coll(alloc);
 		coll.push_back(1);
 		coll.push_back(2);
@@ -164,8 +163,7 @@ class TestSlist : public TestCase
 public:
 	void testBasic(LogT& log)
 	{
-		NS_STDEXT::BlockPool recycle;
-		NS_STDEXT::DefaultAlloc alloc(recycle);
+		NS_STDEXT::DefaultAlloc alloc;
 		NS_STDEXT::Slist<int> coll(alloc);
 		coll.push_front(1);
 		coll.push_front(2);
@@ -238,7 +236,7 @@ public:
 	void testBasic(LogT& log)
 	{
 		NS_STDEXT::BlockPool recycle;
-		NS_STDEXT::DefaultAlloc alloc(recycle);
+		NS_STDEXT::ScopedAlloc alloc(recycle);
 		
 		NS_STDEXT::DclList<Obj> coll;
 
@@ -253,7 +251,7 @@ public:
 	void testInsertFront(LogT& log)
 	{
 		NS_STDEXT::BlockPool recycle;
-		NS_STDEXT::DefaultAlloc alloc(recycle);
+		NS_STDEXT::ScopedAlloc alloc(recycle);
 		
 		NS_STDEXT::DclList<Obj> coll;
 

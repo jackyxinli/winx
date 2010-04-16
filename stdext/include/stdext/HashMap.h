@@ -33,7 +33,8 @@ template <
 	class HashCompT = HashCompare<KeyT>,
 	class AllocT = DefaultAlloc
 	>
-class HashMap : public PHashMap<KeyT, DataT, HashCompT, AllocT>
+class HashMap : public PHashMap<
+	KeyT, DataT, HashCompT, WINX_HASH_TYPENAME_ HashtableAllocTraits<AllocT>::alloc_type>
 {
 public:
 	typedef KeyT key_type;
@@ -42,17 +43,19 @@ public:
 	typedef typename HashCompT::key_pred key_pred;
 
 private:
-	typedef PHashMap<KeyT, DataT, HashCompT, AllocT> Base;
+	typedef HashtableAllocTraits<AllocT> Traits;
+	typedef typename Traits::alloc_type BaseAllocT;
+	typedef PHashMap<KeyT, DataT, HashCompT, BaseAllocT> Base;
 	
 public:
 	typedef typename Base::size_type size_type;
 
 	explicit HashMap(AllocT& alloc, size_type n = 100)
-		: Base(alloc, n) {}
+		: Base(Traits::getAlloc((Base*)0, alloc), n) {}
 
 	template <class Iterator>
 	HashMap(AllocT& alloc, Iterator first, Iterator last, size_type n = 100)
-		: Base(alloc, first, last, n) {}
+		: Base(Traits::getAlloc((Base*)0, alloc), first, last, n) {}
 };
 
 // -------------------------------------------------------------------------
@@ -62,8 +65,9 @@ template <
 	class KeyT, class DataT,
 	class HashCompT = HashCompare<KeyT>,
 	class AllocT = DefaultAlloc
->
-class HashMultiMap : public PHashMultiMap<KeyT, DataT, HashCompT, AllocT>
+	>
+class HashMultiMap : public PHashMultiMap<
+	KeyT, DataT, HashCompT, WINX_HASH_TYPENAME_ HashtableAllocTraits<AllocT>::alloc_type>
 {
 public:
 	typedef KeyT key_type;
@@ -72,17 +76,19 @@ public:
 	typedef typename HashCompT::key_pred key_pred;
 
 private:
-	typedef PHashMultiMap<KeyT, DataT, HashCompT, AllocT> Base;
+	typedef HashtableAllocTraits<AllocT> Traits;
+	typedef typename Traits::alloc_type BaseAllocT;
+	typedef PHashMultiMap<KeyT, DataT, HashCompT, BaseAllocT> Base;
 
 public:
 	typedef typename Base::size_type size_type;
 
 	explicit HashMultiMap(AllocT& alloc, size_type n = 100)
-		: Base(alloc, n) {}
+		: Base(Traits::getAlloc((Base*)0, alloc), n) {}
 	
 	template <class Iterator>
 	HashMultiMap(AllocT& alloc, Iterator first, Iterator last, size_type n = 100)
-		: Base(alloc, first, last, n) {}
+		: Base(Traits::getAlloc((Base*)0, alloc), first, last, n) {}
 };
 
 NS_STDEXT_END
@@ -105,9 +111,7 @@ public:
 	{
 		typedef NS_STDEXT::HashMap<int, int> MapType;
 
-		NS_STDEXT::BlockPool recycle;
-		NS_STDEXT::ScopedAlloc alloc(recycle);
-		
+		NS_STDEXT::DefaultAlloc alloc;
 		MapType simp(alloc);
 
 		simp.insert(MapType::value_type(1, 2));
@@ -127,9 +131,7 @@ public:
 	{
 		typedef NS_STDEXT::HashMultiMap<int, int> MapType;
 
-		NS_STDEXT::BlockPool recycle;
-		NS_STDEXT::ScopedAlloc alloc(recycle);
-		
+		NS_STDEXT::DefaultAlloc alloc;
 		MapType simp(alloc);
 
 		simp.insert(MapType::value_type(1, 2));

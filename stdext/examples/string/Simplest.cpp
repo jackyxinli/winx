@@ -79,11 +79,10 @@ void testExplode()
 
 void testCString()
 {
-	NS_STDEXT::BlockPool recycle;
-	NS_STDEXT::ScopedPools alloc(recycle);
+	NS_STDEXT::Pools alloc;
 	
 	NS_STDEXT::CString s(alloc, "abc");
-	NS_STDEXT::CString s2(s.getAlloc(), "hello, xsw!", 5);
+	NS_STDEXT::CString s2(s.get_alloc(), "hello, xsw!", 5);
 	std::cout << s.c_str() << ", size:" << s.size() << '\n';
 	std::cout << s2.c_str() << ", size:" << s2.size() << '\n';
 }

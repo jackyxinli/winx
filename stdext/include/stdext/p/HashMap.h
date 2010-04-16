@@ -101,34 +101,17 @@ public:
 public:
   explicit PHashMap(PoolT& a) : m_ht(a) {}
 
-  template <class PoolsT>
-  explicit PHashMap(PoolsT& a) : m_ht(a.get_pool(node_size())) {}
-
   PHashMap(PoolT& a, size_type n)
     : m_ht(a, n) {}
-
-  template <class PoolsT>
-  PHashMap(PoolsT& a, size_type n)
-	  : m_ht(a.get_pool(node_size()), n) {}
 
   template <class _InputIterator>
   PHashMap(PoolT& a, _InputIterator f, _InputIterator l)
 	: m_ht(a)
     { m_ht.insert_unique(f, l); }
 
-  template <class PoolsT, class _InputIterator>
-  PHashMap(PoolsT& a, _InputIterator f, _InputIterator l)
-	: m_ht(a.get_pool(node_size()))
-	{ m_ht.insert_unique(f, l); }
-
   template <class _InputIterator>
   PHashMap(PoolT& a, _InputIterator f, _InputIterator l, size_type n)
 	: m_ht(a, n)
-	{ m_ht.insert_unique(f, l); }
-
-  template <class PoolsT, class _InputIterator>
-  PHashMap(PoolsT& a, _InputIterator f, _InputIterator l, size_type n)
-	: m_ht(a.get_pool(node_size()), n)
 	{ m_ht.insert_unique(f, l); }
 
 public:

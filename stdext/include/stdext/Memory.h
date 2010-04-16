@@ -33,28 +33,21 @@ NS_STDEXT_BEGIN
 
 typedef system_alloc SystemAlloc;
 typedef stdlib_alloc DefaultStaticAlloc;
+typedef default_alloc DefaultAlloc;
 
 typedef block_pool BlockPool;
 
 typedef auto_alloc AutoAlloc;
 typedef scoped_alloc ScopedAlloc;
-typedef default_alloc DefaultAlloc;
+typedef scoped_pool ScopedPool;
 
 typedef stdlib Stdlib;
 typedef scoped Scoped;
 
 typedef pool Pool;
-typedef scoped_pool ScopedPool;
-typedef scoped_pools ScopedPools;
-
-typedef auto_alloc AutoFreeAlloc; // for backward compatibility
-typedef scoped_alloc ScopeAlloc; // for backward compatibility
+typedef pools Pools;
 
 #define RegionAllocT region_alloc
-#define FixedAllocT fixed_alloc
-#define ObjectPool object_pool
-#define ObjectPoolTraits object_pool_traits
-#define ScopedObjectPool scoped_object_pool
 #define ConstructorTraits constructor_traits
 #define DestructorTraits destructor_traits
 #define StlAlloc stl_allocator
@@ -75,6 +68,20 @@ NS_STDEXT_END
 
 #define STD_ALLOC(alloc, Type)					BOOST_MEMORY_ALLOC(alloc, Type)
 #define STD_ALLOC_ARRAY(alloc, Type, count)		BOOST_MEMORY_ALLOC_ARRAY(alloc, Type, count)
+
+// -------------------------------------------------------------------------
+
+NS_STDEXT_BEGIN
+
+typedef auto_alloc AutoFreeAlloc; // for backward compatibility
+typedef scoped_alloc ScopeAlloc; // for backward compatibility
+
+#define FixedAllocT fixed_alloc
+#define ObjectPool object_pool
+#define ObjectPoolTraits object_pool_traits
+#define ScopedObjectPool scoped_object_pool
+
+NS_STDEXT_END
 
 // -------------------------------------------------------------------------
 // --> Memory leak checker - count-checker

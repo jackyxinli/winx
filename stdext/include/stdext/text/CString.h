@@ -251,7 +251,7 @@ public:
 		std::swap(Base::second, b.second);
 	}
 	
-	alloc_type& winx_call getAlloc() const {
+	alloc_type& winx_call get_alloc() const {
 		WINX_ASSERT(!empty());
 		return *edata().alloc;
 	}

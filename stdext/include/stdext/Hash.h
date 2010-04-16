@@ -224,6 +224,37 @@ class HashCompare<wchar_t*> : public HashCompare<const wchar_t*> {
 };
 
 // -------------------------------------------------------------------------
+// struct HashtableAllocTraits
+
+#if defined(X_CC_VC6)
+#define WINX_HASH_TYPENAME_
+#else
+#define WINX_HASH_TYPENAME_	typename
+#endif
+
+template <class AllocT>
+struct HashtableAllocTraits
+{
+	typedef AllocT alloc_type;
+
+	template <class HashtableT>
+	static alloc_type& winx_call getAlloc(HashtableT* h, AllocT& alloc) {
+		return alloc;
+	}
+};
+
+template <>
+struct HashtableAllocTraits<Pools>
+{
+	typedef Pools::pool_type alloc_type;
+
+	template <class HashtableT>
+	static alloc_type& winx_call getAlloc(HashtableT* h, Pools& alloc) {
+		return alloc.get_pool(HashtableT::node_size());
+	}
+};
+
+// -------------------------------------------------------------------------
 
 NS_STDEXT_END
 

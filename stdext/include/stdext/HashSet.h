@@ -33,7 +33,8 @@ template <
 	class HashCompT = HashCompare<ValT>,
 	class AllocT = DefaultAlloc
 	>
-class HashSet : public PHashSet<ValT, HashCompT, AllocT>
+class HashSet : public PHashSet<
+	ValT, HashCompT, WINX_HASH_TYPENAME_ HashtableAllocTraits<AllocT>::alloc_type>
 {
 public:
 	typedef ValT key_type;
@@ -43,17 +44,19 @@ public:
 	typedef typename HashCompT::key_pred key_pred;
 
 private:
-	typedef PHashSet<ValT, HashCompT, AllocT> Base;
+	typedef HashtableAllocTraits<AllocT> Traits;
+	typedef typename Traits::alloc_type BaseAllocT;
+	typedef PHashSet<ValT, HashCompT, BaseAllocT> Base;
 
 public:
 	typedef typename Base::size_type size_type;
 
 	explicit HashSet(AllocT& alloc, size_type n = 100)
-		: Base(alloc, n) {}
+		: Base(Traits::getAlloc((Base*)0, alloc), n) {}
 	
 	template <class Iterator>
 	HashSet(AllocT& alloc, Iterator first, Iterator last, size_type n = 100)
-		: Base(alloc, first, last, n) {}
+		: Base(Traits::getAlloc((Base*)0, alloc), first, last, n) {}
 };
 
 // -------------------------------------------------------------------------
@@ -64,7 +67,8 @@ template <
 	class HashCompT = HashCompare<ValT>,
 	class AllocT = DefaultAlloc
 	>
-class HashMultiSet : public PHashMultiSet<ValT, HashCompT, AllocT>
+class HashMultiSet : public PHashMultiSet<
+	ValT, HashCompT, WINX_HASH_TYPENAME_ HashtableAllocTraits<AllocT>::alloc_type>
 {
 public:
 	typedef ValT key_type;
@@ -74,17 +78,19 @@ public:
 	typedef typename HashCompT::key_pred key_pred;
 	
 private:
-	typedef PHashMultiSet<ValT, HashCompT, AllocT> Base;
+	typedef HashtableAllocTraits<AllocT> Traits;
+	typedef typename Traits::alloc_type BaseAllocT;
+	typedef PHashMultiSet<ValT, HashCompT, BaseAllocT> Base;
 	
 public:
 	typedef typename Base::size_type size_type;
 	
 	explicit HashMultiSet(AllocT& alloc, size_type n = 100)
-		: Base(alloc, n) {}
+		: Base(Traits::getAlloc((Base*)0, alloc), n) {}
 	
 	template <class Iterator>
 	HashMultiSet(AllocT& alloc, Iterator first, Iterator last, size_type n = 100)
-		: Base(alloc, first, last, n) {}
+		: Base(Traits::getAlloc((Base*)0, alloc), first, last, n) {}
 };
 
 NS_STDEXT_END
@@ -107,9 +113,7 @@ public:
 	{
 		typedef NS_STDEXT::HashSet<int> SetType;
 
-		NS_STDEXT::BlockPool recycle;
-		NS_STDEXT::ScopedAlloc alloc(recycle);
-		
+		NS_STDEXT::DefaultAlloc alloc;
 		SetType simp(alloc);
 
 		simp.insert(1);
@@ -126,9 +130,7 @@ public:
 	{
 		typedef NS_STDEXT::HashMultiSet<int> SetType;
 
-		NS_STDEXT::BlockPool recycle;
-		NS_STDEXT::ScopedAlloc alloc(recycle);
-		
+		NS_STDEXT::DefaultAlloc alloc;
 		SetType simp(alloc);
 
 		simp.insert(1);
@@ -145,6 +147,5 @@ public:
 #endif // defined(STD_UNITTEST)
 
 // -------------------------------------------------------------------------
-// $Log: HashSet.h,v $
 
 #endif /* STDEXT_HASHSET_H */
