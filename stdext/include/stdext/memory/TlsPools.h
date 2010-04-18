@@ -23,14 +23,55 @@
 #include "../boost/Memory.h"
 #endif
 
+#ifndef STDEXT_THREAD_TLS_H
+#include "../thread/TLS.h"
+#endif
+
 NS_BOOST_MEMORY_BEGIN
 
 // -------------------------------------------------------------------------
 // class tls_pools
 
-class tls_pools
+template <class PolicyT>
+class tls_pools_alloc
 {
+private:
+	static NS_STDEXT::TlsKey g_tls;
+	
+public:
+	typedef pools_alloc<PolicyT> pools_type;
+
+	static void BOOST_MEMORY_CALL init(pools_type& r)
+	{
+		g_tls.put(&r);
+	}
+
+	static pools_type& BOOST_MEMORY_CALL get()
+	{
+		pools_type* p = (pools_type*)g_tls.get();
+		BOOST_MEMORY_ASSERT(p != NULL);
+		return *p;
+	}
+
+	static void* BOOST_MEMORY_CALL allocate(size_t cb)
+	{
+		pools_type* p = (pools_type*)g_tls.get();
+		BOOST_MEMORY_ASSERT(p != NULL);
+		return p->allocate(cb);
+	}
+
+	static void* BOOST_MEMORY_CALL deallocate(void* p, size_t cb)
+	{
+		pools_type* p = (pools_type*)g_tls.get();
+		BOOST_MEMORY_ASSERT(p != NULL);
+		return p->deallocate(p, cb);
+	}
 };
+
+template <class PolicyT>
+NS_STDEXT::TlsKey tls_pools_alloc<PolicyT>::g_tls;
+
+typedef tls_pools_alloc<NS_BOOST_MEMORY_POLICY::stdlib> tls_pools;
 
 // -------------------------------------------------------------------------
 
