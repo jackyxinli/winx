@@ -19,8 +19,6 @@
 #ifndef STDEXT_MEMORY_H
 #define STDEXT_MEMORY_H
 
-// -------------------------------------------------------------------------
-
 #ifndef STDEXT_BASIC_H
 #include "Basic.h"
 #endif
@@ -28,6 +26,12 @@
 #ifndef STDEXT_BOOST_MEMORY_H
 #include "boost/Memory.h"
 #endif
+
+#ifndef STDEXT_MEMORY_TLSPOOLS_H
+#include "memory/TlsPools.h"
+#endif
+
+// -------------------------------------------------------------------------
 
 NS_STDEXT_BEGIN
 
@@ -46,6 +50,8 @@ typedef scoped Scoped;
 
 typedef pool Pool;
 typedef pools Pools;
+typedef tls_pools TlsPools;
+typedef tls_pools_init TlsPoolsInit;
 
 #define RegionAllocT region_alloc
 #define ConstructorTraits constructor_traits
@@ -68,20 +74,6 @@ NS_STDEXT_END
 
 #define STD_ALLOC(alloc, Type)					BOOST_MEMORY_ALLOC(alloc, Type)
 #define STD_ALLOC_ARRAY(alloc, Type, count)		BOOST_MEMORY_ALLOC_ARRAY(alloc, Type, count)
-
-// -------------------------------------------------------------------------
-
-NS_STDEXT_BEGIN
-
-typedef auto_alloc AutoFreeAlloc; // for backward compatibility
-typedef scoped_alloc ScopeAlloc; // for backward compatibility
-
-#define FixedAllocT fixed_alloc
-#define ObjectPool object_pool
-#define ObjectPoolTraits object_pool_traits
-#define ScopedObjectPool scoped_object_pool
-
-NS_STDEXT_END
 
 // -------------------------------------------------------------------------
 // --> Memory leak checker - count-checker
@@ -155,6 +147,20 @@ private:
 NS_STDEXT_END
 
 // -------------------------------------------------------------------------
+// backward compatibility
+
+NS_STDEXT_BEGIN
+
+typedef auto_alloc AutoFreeAlloc; // for backward compatibility
+typedef scoped_alloc ScopeAlloc; // for backward compatibility
+
+#define FixedAllocT fixed_alloc
+#define ObjectPool object_pool
+#define ObjectPoolTraits object_pool_traits
+#define ScopedObjectPool scoped_object_pool
+
+NS_STDEXT_END
+
+// -------------------------------------------------------------------------
 
 #endif /* STDEXT_MEMORY_H */
-

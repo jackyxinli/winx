@@ -34,15 +34,90 @@
 NS_STDEXT_BEGIN
 
 // -------------------------------------------------------------------------
+// class ScopedCString
+
+#if (0)
+
+template <class CharT>
+class ScopedCString : public BasicString<CharT>
+{
+private:
+	template <class AllocT, class Iterator>
+	void winx_call init(AllocT& alloc, Iterator first, size_type cch)
+	{
+		Base::first = (CharT*)alloc.allocate(cch + 1);
+		Base::second = std::copy(first, first + cch, (CharT*)Base::first);
+		*(CharT*)Base::second = CharT();
+	}
+
+	template <class AllocT>
+	void winx_call init(AllocT& alloc, size_type count, CharT ch)
+	{
+		Base::first = (CharT*)alloc.allocate(count + 1);
+		Base::second = std::fill_n((CharT*)Base::first, count, ch);
+		*(CharT*)Base::second = CharT();
+	}
+
+public:
+	template <class AllocT>
+	ScopedCString(AllocT& alloc, const String_& s) {
+		init(alloc, s.begin(), s.size());
+	}
+
+	template <class AllocT>
+	ScopedCString(AllocT& alloc, const value_type* pszVal, size_type cch) {
+		init(alloc, pszVal, cch);
+	}
+
+	template <class AllocT>
+	ScopedCString(AllocT& alloc, size_type count, value_type ch) {
+		init(alloc, count, ch);
+	}
+
+	template <class AllocT, class Iterator>
+	ScopedCString(AllocT& alloc, Iterator first, Iterator last) {
+		init(alloc, first, last - first);
+	}
+
+	template <class AllocT>
+	Myt_& winx_call assign(AllocT& alloc, const String_& s) {
+		init(alloc, s.begin(), s.size());
+		return *this;
+	}
+
+	template <class AllocT>
+	Myt_& winx_call assign(AllocT& alloc, const CharT* pszVal, size_type cch) {
+		init(alloc, pszVal, cch);
+		return *this;
+	}
+
+	template <class AllocT>
+	Myt_& winx_call assign(AllocT& alloc, size_type count, value_type ch) {
+		init(alloc, count, ch);
+		return *this;
+	}
+
+	template <class AllocT, class Iterator>
+	Myt_& winx_call assign(AllocT& alloc, Iterator first, Iterator last) {
+		init(alloc, first, last - first);
+		return *this;
+	}
+};
+
+#endif
+
+// -------------------------------------------------------------------------
 // class BasicCString
 
 #pragma pack(1)
 
-template <class CharT, class AllocT = DefaultAlloc>
+template <class CharT, class AllocT = TlsPools>
 class BasicCString : public BasicString<CharT>
 {
 private:
 	typedef BasicString<CharT> Base;
+
+	using Base::attach;
 
 public:
 	typedef AllocT alloc_type;
@@ -90,64 +165,58 @@ private:
 	typedef BasicString<CharT> String_;
 	typedef BasicCString Myt_;
 	
-	struct ExtraData
-	{
-		size_t ref;
-		AllocT* alloc;
-	};
-	
 	struct StringData
 	{
-		ExtraData extra;
-		CharT str[1];
+		CharT str[2];
 	};
-	
+
 	static StringData s_null;
 
 	static size_type winx_call alloc_size(size_type cch)
 	{
-		return sizeof(ExtraData) + (cch + 1) * sizeof(CharT);
+		return (cch + 2) * sizeof(CharT);
 	}
-	
-	ExtraData& winx_call edata() const
-	{
-		return *((ExtraData*)Base::first - 1);
-	}
-	
+
 	template <class Iterator>
-	void winx_call init(AllocT& alloc, Iterator first, size_type cch)
+	void winx_call init(Iterator first, size_type cch)
 	{
-		ExtraData* const extra = (ExtraData*)alloc.allocate(alloc_size(cch));
-		extra->ref = 1;
-		extra->alloc = &alloc;
-		Base::first = (CharT*)(extra + 1);
+		Base::first = (CharT*)AllocT::allocate(alloc_size(cch));
 		Base::second = std::copy(first, first + cch, (CharT*)Base::first);
 		*(CharT*)Base::second = CharT();
+		*((CharT*)Base::second + 1) = CharT(1);
 	}
-	
-	template <class Iterator>
-	void winx_call init(AllocT& alloc, size_type count, CharT ch)
+
+	void winx_call init(size_type count, CharT ch)
 	{
-		ExtraData* const extra = (ExtraData*)alloc.allocate(alloc_size(count));
-		extra->ref = 1;
-		extra->alloc = &alloc;
-		Base::first = (CharT*)(extra + 1);
+		Base::first = (CharT*)AllocT::allocate(alloc_size(count));
 		Base::second = std::fill_n((CharT*)Base::first, count, ch);
 		*(CharT*)Base::second = CharT();
+		*((CharT*)Base::second + 1) = CharT(1);
 	}
-	
+
 	void winx_call acquire() const
 	{
-		++edata().ref;
+		CharT& ref = *((CharT*)Base::second + 1);
+		if (++ref == 0)
+		{
+			if (Base::first != s_null.str)
+			{
+				--ref;
+				((Myt_*)this)->init(Base::first, Base::second - Base::first);
+			}
+		}
 	}
-	
+
 	void winx_call release()
 	{
-		ExtraData& extra = edata();
-		if (--extra.ref == 0 && extra.alloc != NULL)
+		CharT& ref = *((CharT*)Base::second + 1);
+		if (--ref == 0)
 		{
-			extra.alloc->deallocate(&extra, alloc_size(Base::second - Base::first));
-			Base::assign(s_null.str, s_null.str);
+			if (Base::first != s_null.str)
+			{
+				AllocT::deallocate((void*)Base::first, alloc_size(Base::second - Base::first));
+				Base::assign(s_null.str, s_null.str);
+			}
 		}
 	}
 
@@ -158,30 +227,30 @@ public:
 	
 	BasicCString(const BasicCString& s)
 		: Base(s) {
-		acquire();
-	}
-	
-	BasicCString(AllocT& alloc, const String_& s) {
-		init(alloc, s.begin(), s.size());
+		s.acquire();
 	}
 
-	BasicCString(AllocT& alloc, const value_type* pszVal, size_type cch) {
-		init(alloc, pszVal, cch);
+	explicit BasicCString(const String_& s) {
+		init(s.begin(), s.size());
 	}
 
-	BasicCString(AllocT& alloc, size_type count, value_type ch) {
-		init(alloc, count, ch);
+	BasicCString(const value_type* pszVal, size_type cch) {
+		init(pszVal, cch);
+	}
+
+	BasicCString(size_type count, value_type ch) {
+		init(count, ch);
 	}
 
 	template <class Iterator>
-	BasicCString(AllocT& alloc, Iterator first, Iterator last) {
-		init(alloc, first, last - first);
+	BasicCString(Iterator first, Iterator last) {
+		init(first, last - first);
 	}
-	
+
 	~BasicCString() {
 		release();
 	}
-	
+
 public:
 	Myt_& winx_call operator=(const Myt_& s) {
 		s.acquire();
@@ -194,28 +263,28 @@ public:
 		return *this = s;
 	}
 
-	Myt_& winx_call assign(AllocT& alloc, const String_& s) {
+	Myt_& winx_call assign(const String_& s) {
 		release();
-		init(alloc, s.begin(), s.size());
+		init(s.begin(), s.size());
 		return *this;
 	}
 
-	Myt_& winx_call assign(AllocT& alloc, const CharT* pszVal, size_type cch) {
+	Myt_& winx_call assign(const CharT* pszVal, size_type cch) {
 		release();
-		init(alloc, pszVal, cch);
+		init(pszVal, cch);
 		return *this;
 	}
 
-	Myt_& winx_call assign(AllocT& alloc, size_type count, value_type ch) {
+	Myt_& winx_call assign(size_type count, value_type ch) {
 		release();
-		init(alloc, count, ch);
+		init(count, ch);
 		return *this;
 	}
 
 	template <class Iterator>
-	Myt_& winx_call assign(AllocT& alloc, Iterator first, Iterator last) {
+	Myt_& winx_call assign(Iterator first, Iterator last) {
 		release();
-		init(alloc, first, last - first);
+		init(first, last - first);
 		return *this;
 	}
 
@@ -249,11 +318,6 @@ public:
 	void winx_call swap(BasicCString& b) {
 		std::swap(Base::first, b.first);
 		std::swap(Base::second, b.second);
-	}
-	
-	alloc_type& winx_call get_alloc() const {
-		WINX_ASSERT(!empty());
-		return *edata().alloc;
 	}
 };
 

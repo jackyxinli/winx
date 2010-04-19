@@ -54,11 +54,24 @@ int main()
 
 	// ----------------------------------------
 
-	NS_STDEXT::Pools alloc2;
-	NS_STDEXT::CString s5(alloc2, "Hello, CString!");
+	NS_STDEXT::TlsPoolsInit tpInit;
 
-	NS_STDEXT::print("int64: %d, %#x, %s\n", (UINT64)32, (INT64)32, s5);
-	NS_STDEXT::format(*stderr, "stderr: %o - %s %f\n", 123, "Hello!", 134.5);
+	NS_STDEXT::Pools pools;
+	NS_STDEXT::TlsPools::put(pools);
+
+	NS_STDEXT::CString s5("Hello, CString!");
+	NS_STDEXT::String s6(alloc, "AutoAlloc String!");
+	NS_STDEXT::CString s7 = s5;
+
+	NS_STDEXT::print("int64: %d, %#x, %s %s\n", (UINT64)32, (INT64)32, s5, s7);
+	NS_STDEXT::format(*stderr, "stderr: %o - %s %f\n", 123, s6, 134.5);
+
+	typedef std::vector<NS_STDEXT::CString> Vec;
+	Vec vec(256, s5);
+	for (size_t i = vec.size(); i-- > 250; )
+	{
+		NS_STDEXT::print("%p: %s\n", vec[i].data(), vec[i]);
+	}
 
 	// ----------------------------------------
 

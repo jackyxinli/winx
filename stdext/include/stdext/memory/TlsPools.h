@@ -41,30 +41,47 @@ private:
 public:
 	typedef pools_alloc<PolicyT> pools_type;
 
-	static void BOOST_MEMORY_CALL init(pools_type& r)
+	static void BOOST_MEMORY_CALL init()
+	{
+		g_tls.create();
+	}
+
+	static void BOOST_MEMORY_CALL term()
+	{
+		g_tls.clear();
+	}
+
+	static void BOOST_MEMORY_CALL put(pools_type& r)
 	{
 		g_tls.put(&r);
 	}
 
 	static pools_type& BOOST_MEMORY_CALL get()
 	{
-		pools_type* p = (pools_type*)g_tls.get();
-		BOOST_MEMORY_ASSERT(p != NULL);
-		return *p;
+		pools_type* po = (pools_type*)g_tls.get();
+		BOOST_MEMORY_ASSERT(po!= NULL);
+		return *po;
 	}
 
 	static void* BOOST_MEMORY_CALL allocate(size_t cb)
 	{
-		pools_type* p = (pools_type*)g_tls.get();
-		BOOST_MEMORY_ASSERT(p != NULL);
-		return p->allocate(cb);
+		pools_type* po = (pools_type*)g_tls.get();
+		BOOST_MEMORY_ASSERT(po != NULL);
+		return po->allocate(cb);
 	}
 
-	static void* BOOST_MEMORY_CALL deallocate(void* p, size_t cb)
+	static void BOOST_MEMORY_CALL deallocate(void* p, size_t cb)
 	{
-		pools_type* p = (pools_type*)g_tls.get();
-		BOOST_MEMORY_ASSERT(p != NULL);
-		return p->deallocate(p, cb);
+		pools_type* po = (pools_type*)g_tls.get();
+		BOOST_MEMORY_ASSERT(po != NULL);
+		po->deallocate(p, cb);
+	}
+
+	static size_t BOOST_MEMORY_CALL alloc_size(void* p, size_t cb)
+	{
+		pools_type* po = (pools_type*)g_tls.get();
+		BOOST_MEMORY_ASSERT(po != NULL);
+		return po->alloc_size(p, cb);
 	}
 };
 
@@ -72,6 +89,29 @@ template <class PolicyT>
 NS_STDEXT::TlsKey tls_pools_alloc<PolicyT>::g_tls;
 
 typedef tls_pools_alloc<NS_BOOST_MEMORY_POLICY::stdlib> tls_pools;
+
+// -------------------------------------------------------------------------
+// class tls_pools_init
+
+template <class PolicyT>
+class tls_pools_alloc_init
+{
+private:
+	typedef tls_pools_alloc<PolicyT> AllocT;
+
+public:
+	tls_pools_alloc_init()
+	{
+		AllocT::init();
+	}
+
+	~tls_pools_alloc_init()
+	{
+		AllocT::term();
+	}
+};
+
+typedef tls_pools_alloc_init<NS_BOOST_MEMORY_POLICY::stdlib> tls_pools_init;
 
 // -------------------------------------------------------------------------
 
