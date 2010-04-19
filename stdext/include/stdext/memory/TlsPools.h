@@ -48,7 +48,7 @@ public:
 
 	static void BOOST_MEMORY_CALL term()
 	{
-		g_tls.clear();
+		// g_tls.clear(); -- todo;
 	}
 
 	static void BOOST_MEMORY_CALL put(pools_type& r)

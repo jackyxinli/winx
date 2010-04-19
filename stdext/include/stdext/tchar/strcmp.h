@@ -49,3 +49,13 @@ int __xdecl __xcharfunc(strcmp)(const xchar * src, const xchar * dst)
 		++src, ++dst;
 	return ret;
 }
+
+__forceinline int __xdecl strcmp(const char* src, const char* dst)
+{
+	return ::strcmp(src, dst);
+}
+
+__forceinline int __xdecl strcmp(const wchar_t* src, const wchar_t* dst)
+{
+	return ::wcscmp(src, dst);
+}

@@ -294,6 +294,10 @@ public:
 		return NS_STDEXT::compare(Base::first, Base::second, b.begin(), b.end());
 	}
 
+	int winx_call compare(const Myt_& b) const {
+		return tchar::strcmp(Base::first, b.first);
+	}
+
 	int winx_call compare(const value_type* b) const {
 		return tchar::strcmp(Base::first, b);
 	}
@@ -333,22 +337,22 @@ typedef BasicCString<wchar_t> WCString;
 
 #define WINX_CSTRING_PRED_OP_(op)											\
 																			\
-template <class CharT, class T2> __forceinline								\
-	bool winx_call operator op(const BasicCString<CharT>& a, const T2& b)	\
+template <class CharT, class AllocT, class T2> __forceinline				\
+	bool winx_call operator op(const BasicCString<CharT, AllocT>& a, const T2& b) \
     {return (a.compare(b) op 0); }											\
 																			\
-template <class CharT> __forceinline										\
-    bool winx_call operator op(const CharT* a, const BasicCString<CharT>& b) \
-    {return (b.compare(a) op 0); }											\
-																			\
-template <class CharT, class Tr, class AllocT> __forceinline				\
-    bool winx_call operator op(const std::basic_string<CharT, Tr, AllocT>& a, \
-							   const BasicCString<CharT>& b)				\
-    {return (b.compare(a) op 0); }											\
-																			\
 template <class CharT, class AllocT> __forceinline							\
+    bool winx_call operator op(const CharT* a, const BasicCString<CharT, AllocT>& b) \
+    {return (b.compare(a) op 0); }											\
+																			\
+template <class CharT, class Tr, class AllocT, class AllocT2> inline		\
+    bool winx_call operator op(const std::basic_string<CharT, Tr, AllocT>& a, \
+							   const BasicCString<CharT, AllocT2>& b)		\
+    {return (b.compare(a) op 0); }											\
+																			\
+template <class CharT, class AllocT, class AllocT2> inline					\
     bool winx_call operator op(const std::vector<CharT, AllocT>& a,			\
-							   const BasicCString<CharT>& b)				\
+							   const BasicCString<CharT, AllocT2>& b)		\
     {return (b.compare(a) op 0); }
 
 WINX_CSTRING_PRED_OP_(==)
