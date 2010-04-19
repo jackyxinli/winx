@@ -54,8 +54,6 @@ int main()
 
 	// ----------------------------------------
 
-	NS_STDEXT::TlsPoolsInit tpInit;
-
 	NS_STDEXT::Pools pools;
 	NS_STDEXT::TlsPools::put(pools);
 

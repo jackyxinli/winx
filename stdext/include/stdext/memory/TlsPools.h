@@ -38,21 +38,18 @@ class tls_pools_alloc
 private:
 	static NS_STDEXT::TlsKey g_tls;
 	
+	static int BOOST_MEMORY_CALL init()
+	{
+		g_tls.create();
+		return 0;
+	}
+
 public:
 	typedef pools_alloc<PolicyT> pools_type;
 
-	static void BOOST_MEMORY_CALL init()
-	{
-		g_tls.create();
-	}
-
-	static void BOOST_MEMORY_CALL term()
-	{
-		// g_tls.clear(); -- todo;
-	}
-
 	static void BOOST_MEMORY_CALL put(pools_type& r)
 	{
+		static int g_result = init();
 		g_tls.put(&r);
 	}
 
@@ -93,25 +90,9 @@ typedef tls_pools_alloc<NS_BOOST_MEMORY_POLICY::stdlib> tls_pools;
 // -------------------------------------------------------------------------
 // class tls_pools_init
 
-template <class PolicyT>
-class tls_pools_alloc_init
+class tls_pools_init
 {
-private:
-	typedef tls_pools_alloc<PolicyT> AllocT;
-
-public:
-	tls_pools_alloc_init()
-	{
-		AllocT::init();
-	}
-
-	~tls_pools_alloc_init()
-	{
-		AllocT::term();
-	}
 };
-
-typedef tls_pools_alloc_init<NS_BOOST_MEMORY_POLICY::stdlib> tls_pools_init;
 
 // -------------------------------------------------------------------------
 
