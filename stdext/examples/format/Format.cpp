@@ -73,6 +73,9 @@ int main()
 		NS_STDEXT::print("%p: %s\n", vec[i].data(), vec[i]);
 	}
 
+	if (vec[250] == s7)
+		NS_STDEXT::print("CString compare ok!\n");
+
 	// ----------------------------------------
 
 	return 0;
