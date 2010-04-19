@@ -204,6 +204,5 @@ namespace std {
 #endif
 
 // -------------------------------------------------------------------------
-// $Log: iterator.h,v $
 
 #endif /* STD_ITERATOR_H */

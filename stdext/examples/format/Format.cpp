@@ -41,16 +41,18 @@ int main()
 
 	std::vector<char> s4;
 	NS_STDEXT::format(s4, "1: %-#6X! %x! - %s%s\n", 123, -1, "Hi! ", NS_STDEXT::String("xushiwei", 2));
+	NS_STDEXT::format(std::cout, "2: %-#6X! %x! - %s%s\n", 123, -1, "Hi! ", NS_STDEXT::String("xushiwei", 2));
 	s4.push_back('\0');
 	std::cout << &s4[0];
 
-	printf("2: %-#6X! %x! - %s%s\n", 123, -1, "Hi! ", "xu");
+	printf("3: %-#6X! %x! - %s%s\n", 123, -1, "Hi! ", "xu");
 
 	// ----------------------------------------
 
 	NS_STDEXT::format(*stdout, "1: %#6o! - %p %g\n", 123, &s4, 134.5);
-	NS_STDEXT::print("2: %#6o! - %p %g\n", 123, &s4, 134.5);
-	printf("3: %#6o! - %p %g\n", 123, &s4, 134.5);
+	NS_STDEXT::format(std::cout, "2: %#6o! - %p %g\n", 123, &s4, 134.5);
+	NS_STDEXT::print("3: %#6o! - %p %g\n", 123, &s4, 134.5);
+	printf("4: %#6o! - %p %g\n", 123, &s4, 134.5);
 
 	// ----------------------------------------
 

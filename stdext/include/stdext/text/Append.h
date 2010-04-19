@@ -45,6 +45,11 @@ inline void winx_call clear(std::basic_string<CharT, Tr, AllocT>& dest)
 	dest.erase();
 }
 
+template<class CharT, class Tr>
+inline void winx_call clear(std::basic_ostream<CharT, Tr>& os)
+{
+}
+
 inline void winx_call clear(FILE& dest)
 {
 }
@@ -99,6 +104,27 @@ template <class CharT, class Tr, class AllocT>
 inline void winx_call append(std::basic_string<CharT, Tr, AllocT>& dest, const CharT val)
 {
 	dest.append(1, val);
+}
+
+// -------------------------------------------------------------------------
+
+template<class CharT, class Tr>
+inline void winx_call append(std::basic_ostream<CharT, Tr>& os, const CharT* val, const CharT* valEnd)
+{
+	os.write(val, valEnd - val);
+}
+
+template<class CharT, class Tr>
+inline void winx_call append(std::basic_ostream<CharT, Tr>& os, size_t count, const CharT val)
+{
+	while (count--)
+		os.put(val);
+}
+
+template<class CharT, class Tr>
+inline void winx_call append(std::basic_ostream<CharT, Tr>& os, const CharT val)
+{
+	os.put(val);
 }
 
 // -------------------------------------------------------------------------
