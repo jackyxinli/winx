@@ -108,19 +108,17 @@ public:
 
 private:
 	template <class AllocT, class Iterator>
-	static const value_type* makeBuf_(AllocT& alloc, Iterator first, size_type cch)
+	void winx_call init(AllocT& alloc, Iterator first, size_type cch)
 	{
-		value_type* psz = (value_type*)alloc.allocate(cch * sizeof(value_type));
-		std::copy(first, first + cch, psz);
-		return psz;
+		Base::first = (CharT*)alloc.allocate(cch * sizeof(CharT));
+		Base::second = std::copy(first, first + cch, (CharT*)Base::first);
 	}
-
+	
 	template <class AllocT>
-	static const value_type* makeBuf_(AllocT& alloc, size_type count, value_type ch)
+	void winx_call init(AllocT& alloc, size_type count, CharT ch)
 	{
-		value_type* psz = (value_type*)alloc.allocate(count * sizeof(value_type));
-		std::fill_n(psz, count, ch);
-		return psz;
+		Base::first = (CharT*)alloc.allocate(count * sizeof(CharT));
+		Base::second = std::fill_n((CharT*)Base::first, count, ch);
 	}
 
 public:
@@ -155,52 +153,46 @@ public:
 
 	template <WINX_ALLOC_TEMPLATE_ARGS_>
 	BasicString(WINX_ALLOC_TYPE_& alloc, const String_& s) {
-		assign(alloc, s);
+		init(alloc, s.begin(), s.size());
 	}
 
 	template <WINX_ALLOC_TEMPLATE_ARGS_>
 	BasicString(WINX_ALLOC_TYPE_& alloc, const value_type* pszVal, size_type cch) {
-		assign(alloc, pszVal, cch);
+		init(alloc, pszVal, cch);
 	}
 
 	template <WINX_ALLOC_TEMPLATE_ARGS_>
 	BasicString(WINX_ALLOC_TYPE_& alloc, size_type count, value_type ch) {
-		assign(alloc, count, ch);
+		init(alloc, count, ch);
 	}
 
 	template <WINX_ALLOC_TEMPLATE_ARGS_, class Iterator>
 	BasicString(WINX_ALLOC_TYPE_& alloc, Iterator first, Iterator last) {
-		assign(alloc, first, last);
+		init(alloc, first, last - first);
 	}
 
 public:
 	template <WINX_ALLOC_TEMPLATE_ARGS_>
 	Myt_& winx_call assign(WINX_ALLOC_TYPE_& alloc, const String_& s) {
-		const size_type cch = s.size();
-		const value_type* psz = makeBuf_(alloc, s.begin(), cch);
-		Base::assign(psz, psz+cch);
+		init(alloc, s.begin(), s.size());
 		return *this;
 	}
 
 	template <WINX_ALLOC_TEMPLATE_ARGS_>
 	Myt_& winx_call assign(WINX_ALLOC_TYPE_& alloc, const CharT* pszVal, size_type cch) {
-		const value_type* psz = makeBuf_(alloc, pszVal, cch);
-		Base::assign(psz, psz+cch);
+		init(alloc, pszVal, cch);
 		return *this;
 	}
 
 	template <WINX_ALLOC_TEMPLATE_ARGS_>
 	Myt_& winx_call assign(WINX_ALLOC_TYPE_& alloc, size_type count, value_type ch) {
-		const value_type* psz = makeBuf_(alloc, count, ch);
-		Base::assign(psz, psz+count);
+		init(alloc, count, ch);
 		return *this;
 	}
 
 	template <WINX_ALLOC_TEMPLATE_ARGS_, class Iterator>
 	Myt_& winx_call assign(WINX_ALLOC_TYPE_& alloc, Iterator first, Iterator last) {
-		const size_type cch = std::distance(first, last);
-		const value_type* psz = makeBuf_(alloc, first, cch);
-		Base::assign(psz, psz+cch);
+		init(alloc, first, last - first);
 		return *this;
 	}
 
@@ -219,7 +211,7 @@ public:
 	}
 
 	void winx_call attach(const CharT* szVal, size_type cch) {
-		Base::assign(szVal, szVal+cch);
+		Base::assign(szVal, szVal + cch);
 	}
 
 	const Myt_& winx_call operator=(const BasicArray<CharT>& s) {

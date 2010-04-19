@@ -45,7 +45,7 @@ private:
 	template <class AllocT, class Iterator>
 	void winx_call init(AllocT& alloc, Iterator first, size_type cch)
 	{
-		Base::first = (CharT*)alloc.allocate(cch + 1);
+		Base::first = (CharT*)alloc.allocate((cch + 1) * sizeof(CharT));
 		Base::second = std::copy(first, first + cch, (CharT*)Base::first);
 		*(CharT*)Base::second = CharT();
 	}
@@ -53,7 +53,7 @@ private:
 	template <class AllocT>
 	void winx_call init(AllocT& alloc, size_type count, CharT ch)
 	{
-		Base::first = (CharT*)alloc.allocate(count + 1);
+		Base::first = (CharT*)alloc.allocate((count + 1) * sizeof(CharT));
 		Base::second = std::fill_n((CharT*)Base::first, count, ch);
 		*(CharT*)Base::second = CharT();
 	}
