@@ -26,15 +26,48 @@
 // -------------------------------------------------------------------------
 
 #if defined(X_OS_WINDOWS)
-	#error "to do"
-#else
-	#ifndef	_UNISTD_H
-	#include <unistd.h>
-	#endif
 
-	#ifndef	_SYS_TYPES_H
-	#include <sys/types.h>
-	#endif
+#ifndef _INC_IO
+#include <io.h>
+#endif
+
+#ifndef _INC_FCNTL
+#include <fcntl.h>
+#endif
+
+inline int winx_call ftruncate(int fd, off_t length)
+{
+	const errno_t e = _chsize_s(fd, length);
+	return e == 0 ? 0 : -1;
+}
+
+inline int winx_call truncate(const char* path, off_t length) /* Truncate PATH to LENGTH bytes. */
+{
+	int fd, ret, save;
+
+	fd = _open(path, O_WRONLY);
+	if (fd < 0)
+		return -1;
+
+	ret = ftruncate(fd, length);
+	save = errno;
+	_close(fd);
+	if (ret < 0)
+		errno = save;
+	
+	return ret;
+}
+
+#else
+
+#ifndef	_UNISTD_H
+#include <unistd.h>
+#endif
+
+#ifndef	_SYS_TYPES_H
+#include <sys/types.h>
+#endif
+
 #endif
 
 // -------------------------------------------------------------------------
