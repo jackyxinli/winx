@@ -236,7 +236,8 @@ inline void winx_call formatString(StringT& dest, const FormatParams& params, co
 template <class CharT, class UIntT>
 const CharT* winx_call formatUInt(CharT* textEnd, UIntT val, unsigned specifier, int precision = 1)
 {
-	int radix, hexadd;
+	int radix;
+	const char* dig = "0123456789abcdef";
 	
 	if (specifier & (STD_PRINTYPE_I_DEC | STD_PRINTYPE_I_UDEC))
 	{
@@ -245,7 +246,8 @@ const CharT* winx_call formatUInt(CharT* textEnd, UIntT val, unsigned specifier,
 	else if (specifier & STD_PRINTYPE_I_HEX)
 	{
 		radix = 16;
-		hexadd = (specifier & STD_PRINTYPE_I_HEX_UPPER) ? ('A' - '9' - 1) : ('a' - '9' - 1);
+		if (specifier & STD_PRINTYPE_I_HEX_UPPER)
+			dig = "0123456789ABCDEF";
 	}
 	else
 	{
@@ -254,9 +256,8 @@ const CharT* winx_call formatUInt(CharT* textEnd, UIntT val, unsigned specifier,
 
 	while (precision-- > 0 || val != 0)
 	{
-		const int digit = (int)(val % radix) + '0';
+		*--textEnd = (CharT)dig[val % radix];
 		val /= radix;
-		*--textEnd = (CharT)(digit <= '9' ? digit : digit + hexadd);
 	}
 
 	return textEnd;
