@@ -51,7 +51,6 @@ typedef scoped Scoped;
 typedef pool Pool;
 typedef pools Pools;
 typedef tls_pools TlsPools;
-typedef tls_pools_init TlsPoolsInit;
 
 #define RegionAllocT region_alloc
 #define ConstructorTraits constructor_traits

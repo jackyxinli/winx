@@ -88,13 +88,6 @@ NS_STDEXT::TlsKey tls_pools_alloc<PolicyT>::g_tls;
 typedef tls_pools_alloc<NS_BOOST_MEMORY_POLICY::stdlib> tls_pools;
 
 // -------------------------------------------------------------------------
-// class tls_pools_init
-
-class tls_pools_init
-{
-};
-
-// -------------------------------------------------------------------------
 
 NS_BOOST_MEMORY_END
 
