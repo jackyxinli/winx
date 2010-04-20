@@ -37,8 +37,12 @@
 
 inline int winx_call ftruncate(int fd, off_t length)
 {
+#if defined(X_CC_VC6)
+	return _chsize(fd, length);
+#else
 	const errno_t e = _chsize_s(fd, length);
 	return e == 0 ? 0 : -1;
+#endif
 }
 
 inline int winx_call truncate(const char* path, off_t length) /* Truncate PATH to LENGTH bytes. */
