@@ -27,6 +27,14 @@
 #include "../text/Range.h"
 #endif
 
+#ifndef STDEXT_ARCHIVE_TEXT_H
+#include "Text.h"
+#endif
+
+#ifndef STDEXT_ARCHIVE_BINARY_H
+#include "Binary.h"
+#endif
+
 NS_STDEXT_BEGIN
 
 // -------------------------------------------------------------------------
