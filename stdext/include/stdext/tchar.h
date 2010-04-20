@@ -19,8 +19,12 @@
 #ifndef STDEXT_TCHAR_H
 #define STDEXT_TCHAR_H
 
-#ifndef _INC_LIMITS
+#if !defined(_LIBC_LIMITS_H_) && !defined(_INC_LIMITS)
 #include <limits.h>
+#endif
+
+#if !defined(_WCHAR_H) && !defined(_INC_WCHAR)
+#include <wchar.h>
 #endif
 
 NS_STDEXT_BEGIN
