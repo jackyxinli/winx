@@ -23,6 +23,10 @@
 #include "StringBuilder.h"
 #endif
 
+#ifndef STDEXT_ARCHIVE_WRITEARCHIVE_H
+#include "../archive/WriteArchive.h"
+#endif
+
 #ifndef NS_STDEXT_TEXT
 #define NS_STDEXT_TEXT				NS_STDEXT::ns_text
 #define NS_STDEXT_TEXT_BEGIN		namespace NS_STDEXT { namespace ns_text {
@@ -47,6 +51,11 @@ inline void winx_call clear(std::basic_string<CharT, Tr, AllocT>& dest)
 
 template<class CharT, class Tr>
 inline void winx_call clear(std::basic_ostream<CharT, Tr>& os)
+{
+}
+
+template <class Handle, class StreamHandle, class CacheT>
+inline void winx_call clear(WriteArchive<Handle, StreamHandle, CacheT>& ar)
 {
 }
 
@@ -125,6 +134,27 @@ template<class CharT, class Tr>
 inline void winx_call append(std::basic_ostream<CharT, Tr>& os, const CharT val)
 {
 	os.put(val);
+}
+
+// -------------------------------------------------------------------------
+
+template <class Handle, class StreamHandle, class CacheT, class CharT>
+inline void winx_call append(WriteArchive<Handle, StreamHandle, CacheT>& ar, const CharT* val, const CharT* valEnd)
+{
+	ar.put(val, valEnd - val);
+}
+
+template <class Handle, class StreamHandle, class CacheT, class CharT>
+inline void winx_call append(WriteArchive<Handle, StreamHandle, CacheT>& ar, size_t count, const CharT val)
+{
+	while (count--)
+		ar.put(val);
+}
+
+template <class Handle, class StreamHandle, class CacheT, class CharT>
+inline void winx_call append(WriteArchive<Handle, StreamHandle, CacheT>& ar, const CharT val)
+{
+	ar.put(val);
 }
 
 // -------------------------------------------------------------------------

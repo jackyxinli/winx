@@ -1,4 +1,5 @@
 #include <stdext/String.h>
+#include <stdext/Archive.h>
 #include <iostream> 	// std::cout
 
 // -------------------------------------------------------------------------
@@ -6,6 +7,8 @@
 
 int main()
 {
+	NS_STDEXT::FileWriter ar(1);
+
 	NS_STDEXT::AutoAlloc alloc;
 	NS_STDEXT::String s;
 	
@@ -53,6 +56,8 @@ int main()
 	NS_STDEXT::format(std::cout, "2: %#6o! - %p %g\n", 123, &s4, 134.5);
 	NS_STDEXT::print("3: %#6o! - %p %g\n", 123, &s4, 134.5);
 	printf("4: %#6o! - %p %g\n", 123, &s4, 134.5);
+	NS_STDEXT::format(ar, "5: %#6o! - %p %g\n", 123, &s4, 134.5);
+	ar.clear_cache();
 
 	// ----------------------------------------
 
