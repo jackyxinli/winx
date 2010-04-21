@@ -137,7 +137,7 @@ public:
 		// offset		--- m_lpBufCur
 		pos_type position = m_handle.tell();
 		pos_type delta = position - offset;
-		if (delta <= (pos_type)(INT)(m_lpBufMax - m_lpBufStart))
+		if (delta <= (pos_type)(INT)(m_lpBufMax - m_lpBufStart) && delta >= 0)
 		{
 			m_lpBufCur = m_lpBufMax - toUInt(delta);
 		}
