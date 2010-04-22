@@ -245,6 +245,20 @@ public:
 			return E_ACCESSDENIED;
 		return m_handle.open_to_write(szFile);
 	}
+	
+	HRESULT winx_call open_to_append(LPCWSTR szFile)
+	{
+		if (m_handle.good())
+			return E_ACCESSDENIED;
+		return m_handle.open_to_append(szFile);
+	}
+
+	HRESULT winx_call open_to_append(LPCSTR szFile)
+	{
+		if (m_handle.good())
+			return E_ACCESSDENIED;
+		return m_handle.open_to_append(szFile);
+	}
 
 	void winx_call open_handle(Handle hFile)
 	{
