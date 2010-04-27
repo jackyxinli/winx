@@ -29,6 +29,10 @@
 #include "format/printf.h"
 #endif
 
+#ifndef STDEXT_TEXT_FORMAT_FORMATTER_H
+#include "format/formatter.h"
+#endif
+
 // -------------------------------------------------------------------------
 
 #endif /* STDEXT_TEXT_FORMAT_H */
