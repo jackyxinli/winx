@@ -99,6 +99,7 @@ typedef union _ULARGE_INTEGER {
     ULONGLONG QuadPart;
 } ULARGE_INTEGER;
 
+typedef LARGE_INTEGER *PLARGE_INTEGER;
 typedef ULARGE_INTEGER *PULARGE_INTEGER;
 
 // =========================================================================

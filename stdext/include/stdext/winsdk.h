@@ -90,9 +90,10 @@ inline int StringFromGUID2(REFGUID guid, LPOLESTR lpsz, int cchMax)
 		return 0;
 
 	char buf[40];
-	char* bufEnd = StringFromGUID(buf, sizeof(buf), guid);
+	char* bufEnd = StringFromGUID(buf, guid);
 	*lpsz++ = '{';
-	lpsz = StringFromGUID(lpsz, guid);
+	for (char* p = buf; p != bufEnd; ++p)
+		*lpsz++ = *p;
 	*lpsz++ = '}';
 	*lpsz = '\0';
 	return 39;
