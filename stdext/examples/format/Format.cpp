@@ -82,6 +82,17 @@ int main()
 		NS_STDEXT::print("CString compare ok!\n");
 
 	// ----------------------------------------
+	// any
+
+	GUID guid;
+	CoCreateGuid(&guid);
+	NS_STDEXT::print("%a! %a! - %a %a - %a - {%a}\n", 123, 'c', "Hi!", NS_STDEXT::String("xushiwei", 2), 11.2, guid);
+	{
+		WINX_USES_CONVERSION;
+		WCHAR buf[40];
+		StringFromGUID2(guid, buf, 40);
+		NS_STDEXT::print("%a\n", WINX_W2A(buf));
+	}
 
 	return 0;
 }

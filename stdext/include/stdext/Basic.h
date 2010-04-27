@@ -192,44 +192,19 @@ typedef unsigned long long __uint64;
 typedef unsigned __int64 __uint64;
 #endif
 
-#ifndef STDEXT_VC_DECLSPEC_H
-#include "vc/declspec.h"
-#endif
-
-#if !defined(STD_NO_WINSDK)
-
-#ifndef __wtypes_h__
-#include <wtypes.h>
-#endif
-
-#ifndef _OBJBASE_H_
-#include <objbase.h>		// for CoTaskMemAlloc, CoTaskMemFree
-#endif
-
-#else
-
-#ifndef STDEXT_WINAPI_WTYPES_H
-#include "winapi/wtypes.h"
-#endif
-
-#ifndef STDEXT_WINAPI_OBJBASE_H
-#include "winapi/objbase.h"
-#endif
-
-#endif
-
-#if !defined(_W64)
-typedef signed char INT8, *PINT8;
-typedef signed short INT16, *PINT16;
-typedef unsigned char UINT8, *PUINT8;
-typedef unsigned short UINT16, *PUINT16;
-#endif
-
 #if !defined(WINX_VC_NET)
 #ifndef __w64
 #define __w64
 #endif
 #endif // !defined(WINX_VC_NET)
+
+#ifndef STDEXT_VC_DECLSPEC_H
+#include "vc/declspec.h"
+#endif
+
+#ifndef STDEXT_WINSDK_H
+#include "winsdk.h"
+#endif
 
 #ifndef STDEXT_MSVCRT_H
 #include "msvcrt.h"

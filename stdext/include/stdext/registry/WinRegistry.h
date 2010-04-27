@@ -204,7 +204,7 @@ public:
 	}
 
 private:
-	LONG winx_call __putString(
+	LONG winx_call putString_(
 		__in_z const WCHAR* pszValueName,
 		__in_z const WCHAR* pszValue,
 		__in DWORD dwLen,
@@ -219,7 +219,7 @@ private:
 			dwLen * sizeof(WCHAR));
 	}
 
-	LONG winx_call __putString(
+	LONG winx_call putString_(
 		__in_z const char* pszValueName,
 		__in_z const char* pszValue,
 		__in DWORD dwLen,
@@ -235,7 +235,7 @@ private:
 	}
 
 	template <class CharT>
-	LONG winx_call __putString(
+	LONG winx_call putString_(
 		__in_z const CharT* pszValueName,
 		__in const BasicString<CharT>& strValue,
 		__in DWORD dwType)
@@ -244,7 +244,7 @@ private:
 		s.reserve(strValue.size() + 1);
 		s.insert(s.end(), strValue.begin(), strValue.end());
 		s.push_back(0);
-		return __putString(pszValueName, iterToPointer(s.begin()), (DWORD)s.size(), dwType);
+		return putString_(pszValueName, iterToPointer(s.begin()), (DWORD)s.size(), dwType);
 	}
 
 public:
@@ -254,7 +254,7 @@ public:
 		__in_z const CharT* pszValue,
 		__in DWORD dwType = REG_SZ)
 	{
-		return __putString(pszValueName, pszValue, (DWORD)std::length(pszValue)+1, dwType);
+		return putString_(pszValueName, pszValue, (DWORD)std::length(pszValue)+1, dwType);
 	}
 
 	template <class CharT>
@@ -263,7 +263,7 @@ public:
 		__in const basic_string<CharT>& strValue,
 		__in DWORD dwType = REG_SZ)
 	{
-		return __putString(pszValueName, strValue.c_str(), strValue.size()+1, dwType);
+		return putString_(pszValueName, strValue.c_str(), strValue.size()+1, dwType);
 	}
 
 	LONG winx_call putString(
@@ -271,7 +271,7 @@ public:
 		__in const String& strValue,
 		__in DWORD dwType = REG_SZ)
 	{
-		return __putString(pszValueName, strValue, dwType);
+		return putString_(pszValueName, strValue, dwType);
 	}
 
 	LONG winx_call putString(
@@ -279,7 +279,7 @@ public:
 		__in const WString& strValue,
 		__in DWORD dwType = REG_SZ)
 	{
-		return __putString(pszValueName, strValue, dwType);
+		return putString_(pszValueName, strValue, dwType);
 	}
 
 	LONG winx_call putBinary(LPCTSTR pszValueName, const void* pData, ULONG nBytes)
@@ -586,7 +586,7 @@ public:
 // -------------------------------------------------------------------------
 // class TestWinRegKey
 
-#define _WINX_TEST_KEY	WINX_TEXT("Software\\winx\\TestStdExt\\TestWinRegKey")
+#define WINX_TEST_KEY_	WINX_TEXT("Software\\winx\\TestStdExt\\TestWinRegKey")
 
 template <class LogT>
 class TestWinRegKey
@@ -603,26 +603,26 @@ public:
 public:
 	void testWrite(LogT& log)
 	{
-		NS_STDEXT::WinRegWriteKey(HKEY_CURRENT_USER, _WINX_TEST_KEY)
+		NS_STDEXT::WinRegWriteKey(HKEY_CURRENT_USER, WINX_TEST_KEY_)
 			.putDWord(WINX_TEXT("dword"), 123);
 
-		NS_STDEXT::WinRegWriteKey(HKEY_CURRENT_USER, _WINX_TEST_KEY)
+		NS_STDEXT::WinRegWriteKey(HKEY_CURRENT_USER, WINX_TEST_KEY_)
 			.putGuid(WINX_TEXT("guid"), IID_IClassFactory);
 
-		NS_STDEXT::WinRegWriteKey(HKEY_CURRENT_USER, _WINX_TEST_KEY)
+		NS_STDEXT::WinRegWriteKey(HKEY_CURRENT_USER, WINX_TEST_KEY_)
 			.putString(WINX_TEXT("string"), WINX_TEXT("abc"));
 	
-		NS_STDEXT::WinRegWriteKey(HKEY_CURRENT_USER, _WINX_TEST_KEY)
+		NS_STDEXT::WinRegWriteKey(HKEY_CURRENT_USER, WINX_TEST_KEY_)
 			.putString(WINX_TEXT("string2"), std::vector<TCHAR>(257, '!'));
 
 		std::basic_string<TCHAR> s3(WINX_TEXT("string3"));
-		NS_STDEXT::WinRegWriteKey(HKEY_CURRENT_USER, _WINX_TEST_KEY)
+		NS_STDEXT::WinRegWriteKey(HKEY_CURRENT_USER, WINX_TEST_KEY_)
 			.putString(WINX_TEXT("string3"), s3);
 	}
 
 	void testRead(LogT& log)
 	{
-		NS_STDEXT::WinRegReadKey key(HKEY_CURRENT_USER, _WINX_TEST_KEY);
+		NS_STDEXT::WinRegReadKey key(HKEY_CURRENT_USER, WINX_TEST_KEY_);
 		
 		DWORD dword = 0;
 		key.getDWord(WINX_TEXT("dword"), dword);
@@ -651,7 +651,6 @@ public:
 };
 
 // -------------------------------------------------------------------------
-// $Log: $
 
 NS_STDEXT_END
 

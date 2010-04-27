@@ -93,6 +93,10 @@ inline void __not_impl(const char* szFeature)
 
 #elif defined(X_CC_VC)
 
+#if !defined(_INC_STDIO)
+#include <stdio.h>
+#endif
+
 #define snprintf	_snprintf
 
 #endif // WINX_GCC

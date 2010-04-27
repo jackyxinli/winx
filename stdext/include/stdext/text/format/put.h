@@ -279,7 +279,7 @@ struct Utils
 // format Integer
 
 template <class StringT, class CharT, class IntT>
-const CharT* winx_call putInt(StringT& dest, const CharT* fmt, IntT val)
+const CharT* winx_call putInt(StringT& dest, const CharT* fmt, IntT val, unsigned specifierAny)
 {
 	typedef NS_STDEXT::IntTypeTraits<IntT> Traits;
 	typedef typename Traits::signed_type signed_type;
@@ -287,8 +287,9 @@ const CharT* winx_call putInt(StringT& dest, const CharT* fmt, IntT val)
 
 	FormatParams params;
 	fmt = getFormatParams(params, dest, fmt);
-	WINX_ASSERT(params.specifier & (STD_PRINTYPE_I | STD_PRINTYPE_CHAR));
+	WINX_ASSERT(params.specifier & (STD_PRINTYPE_I | STD_PRINTYPE_CHAR | STD_PRINTYPE_ANY));
 
+lzRetry:
 	if (params.specifier & STD_PRINTYPE_I)
 	{
 		CharT buf[64];
@@ -314,6 +315,12 @@ const CharT* winx_call putInt(StringT& dest, const CharT* fmt, IntT val)
 	{
 		NS_STDEXT_TEXT::append(dest, (CharT)val);
 	}
+	else if (params.specifier & STD_PRINTYPE_ANY)
+	{
+		WINX_ASSERT(!(specifierAny & STD_PRINTYPE_ANY));
+		params.specifier = specifierAny;
+		goto lzRetry;
+	}
 	
 	return fmt;
 }
@@ -321,61 +328,61 @@ const CharT* winx_call putInt(StringT& dest, const CharT* fmt, IntT val)
 template <class StringT, class CharT>
 inline const CharT* winx_call put(StringT& dest, const CharT* fmt, INT64 val)
 {
-	return putInt(dest, fmt, val);
+	return putInt(dest, fmt, val, STD_PRINTYPE_I_DEC);
 }
 
 template <class StringT, class CharT>
 inline const CharT* winx_call put(StringT& dest, const CharT* fmt, UINT64 val)
 {
-	return putInt(dest, fmt, (INT64)val);
+	return putInt(dest, fmt, (INT64)val, STD_PRINTYPE_I_UDEC);
 }
 
 template <class StringT, class CharT>
 inline const CharT* winx_call put(StringT& dest, const CharT* fmt, long val)
 {
-	return putInt(dest, fmt, (long)val);
+	return putInt(dest, fmt, (long)val, STD_PRINTYPE_I_DEC);
 }
 
 template <class StringT, class CharT>
 inline const CharT* winx_call put(StringT& dest, const CharT* fmt, unsigned long val)
 {
-	return putInt(dest, fmt, (long)val);
+	return putInt(dest, fmt, (long)val, STD_PRINTYPE_I_UDEC);
 }
 
 template <class StringT, class CharT>
 inline const CharT* winx_call put(StringT& dest, const CharT* fmt, unsigned int val)
 {
-	return putInt(dest, fmt, (int)val);
+	return putInt(dest, fmt, (int)val, STD_PRINTYPE_I_UDEC);
 }
 
 template <class StringT, class CharT>
 inline const CharT* winx_call put(StringT& dest, const CharT* fmt, int val)
 {
-	return putInt(dest, fmt, val);
+	return putInt(dest, fmt, val, STD_PRINTYPE_I_DEC);
 }
 
 template <class StringT, class CharT>
 inline const CharT* winx_call put(StringT& dest, const CharT* fmt, unsigned short val)
 {
-	return putInt(dest, fmt, (int)val);
+	return putInt(dest, fmt, (int)val, STD_PRINTYPE_I_UDEC);
 }
 
 template <class StringT, class CharT>
 inline const CharT* winx_call put(StringT& dest, const CharT* fmt, short val)
 {
-	return putInt(dest, fmt, (int)val);
+	return putInt(dest, fmt, (int)val, STD_PRINTYPE_I_DEC);
 }
 
 template <class StringT, class CharT>
 inline const CharT* winx_call put(StringT& dest, const CharT* fmt, unsigned char val)
 {
-	return putInt(dest, fmt, (int)val);
+	return putInt(dest, fmt, (int)val, STD_PRINTYPE_CHAR);
 }
 
 template <class StringT, class CharT>
 inline const CharT* winx_call put(StringT& dest, const CharT* fmt, char val)
 {
-	return putInt(dest, fmt, (int)val);
+	return putInt(dest, fmt, (int)val, STD_PRINTYPE_CHAR);
 }
 
 // -------------------------------------------------------------------------
@@ -402,7 +409,7 @@ const CharT* winx_call putString(StringT& dest, const CharT* fmt, const CharT* t
 {
 	FormatParams params;
 	fmt = getFormatParams(params, dest, fmt);
-	WINX_ASSERT(params.specifier & STD_PRINTYPE_STRING);
+	WINX_ASSERT(params.specifier & (STD_PRINTYPE_STRING | STD_PRINTYPE_ANY));
 
 	formatString(dest, params, text, textEnd);
 	return fmt;
@@ -413,9 +420,9 @@ const CharT* winx_call put(StringT& dest, const CharT* fmt, const CharT* val)
 {
 	FormatParams params;
 	fmt = getFormatParams(params, dest, fmt);
-	WINX_ASSERT(params.specifier & (STD_PRINTYPE_STRING | STD_PRINTYPE_PTR));
+	WINX_ASSERT(params.specifier & (STD_PRINTYPE_STRING | STD_PRINTYPE_PTR | STD_PRINTYPE_ANY));
 
-	if (params.specifier & STD_PRINTYPE_STRING)
+	if (params.specifier & (STD_PRINTYPE_STRING | STD_PRINTYPE_ANY))
 		formatString(dest, params, val, NS_STDEXT::end(val));
 	else if (params.specifier & STD_PRINTYPE_PTR)
 		Utils<CharT>::formatPtr(dest, val);
@@ -463,6 +470,24 @@ const wchar_t* winx_call put(StringT& dest, const wchar_t* fmt, const double val
 	for (size_t i = 0; (wbuf[i] = buf[i]) != '\0'; ++i);
 	NS_STDEXT_TEXT::append(dest, wbuf);
 	
+	return fmt;
+}
+
+// -------------------------------------------------------------------------
+// format GUID
+
+template <class StringT>
+const char* winx_call put(StringT& dest, const char* fmt, const GUID& val)
+{
+	WINX_ASSERT(*fmt == 'a');
+
+	if (*fmt == 'a')
+		++fmt;
+
+	char str[40];
+	char* strEnd = StringFromGUID(str, val);
+	NS_STDEXT_TEXT::append(dest, str, strEnd);
+
 	return fmt;
 }
 

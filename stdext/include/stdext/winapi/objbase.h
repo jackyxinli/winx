@@ -99,6 +99,10 @@ __inline BOOL operator!=(const GUID& guidOne, const GUID& guidOther)
 #include "oleauto.h"
 #endif
 
+#ifndef STDEXT_WINAPI_GUID_COCREATEGUID_H
+#include "guid/CoCreateGuid.h"
+#endif
+
 // =========================================================================
 
 /* Storage instantiation modes */
@@ -145,7 +149,5 @@ __inline BOOL operator!=(const GUID& guidOne, const GUID& guidOther)
 #define STGFMT_DOCUMENT         0
 
 // =========================================================================
-// $Log: objbase.h,v $
-//
 
 #endif /* STDEXT_WINAPI_OBJBASE_H */
