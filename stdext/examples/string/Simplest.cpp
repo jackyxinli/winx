@@ -98,8 +98,11 @@ void testCArray()
 	NS_STDEXT::CArray<char> s(4, '!');
 	NS_STDEXT::BasicArray<char> s2 = s;
 	NS_STDEXT::String s3 = s;
+	NS_STDEXT::CArray<char> s4 = s;
+	NS_STDEXT::CArray<char> s5;
+	s5 = s4;
 
-	std::cout << s3 << '\n';
+	std::cout << s3 << s4 << '\n';
 }
 
 int main()

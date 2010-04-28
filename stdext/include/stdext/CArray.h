@@ -47,6 +47,10 @@ public:
 	{
 		init(arr, n);
 	}
+	CArray(const CArray& rhs)
+	{
+		init(rhs.first, rhs.second - rhs.first);
+	}
 
 	template <class Iterator>
 	CArray(Iterator first_, Iterator second_)
@@ -111,6 +115,19 @@ public:
 	{
 		clear();
 		init_n(n, val);
+	}
+
+	void winx_call assign(const CArray& rhs)
+	{
+		clear();
+		init(Base::first, Base::second - Base::first);
+	}
+
+	const CArray& winx_call operator=(const CArray& rhs)
+	{
+		clear();
+		init(Base::first, Base::second - Base::first);
+		return *this;
 	}
 
 public:
