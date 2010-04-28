@@ -127,6 +127,16 @@ inline void __not_impl(const char* szFeature)
 #endif // WINX_GCC
 
 // -------------------------------------------------------------------------
+
+#ifndef _alloca_array
+#define _alloca_array(Type, count)	((Type*)_alloca(sizeof(Type)*(count)))
+#endif
+
+#ifndef _alloca_type
+#define _alloca_type(Type)		((Type*)_alloca(sizeof(Type)))
+#endif
+
+// -------------------------------------------------------------------------
 // ==== atlconv.h ====
 
 #ifndef STDEXT_MSVCRT_ATLCONV_H

@@ -31,10 +31,6 @@
 #include "../CharType.h"
 #endif
 
-#ifndef STDEXT_MSVCRT_VARGS_H
-#include "../msvcrt/vargs.h"
-#endif
-
 NS_STDEXT_BEGIN
 
 // -------------------------------------------------------------------------
@@ -396,70 +392,12 @@ winx_call implode(AllocT& alloc, const wchar_t glue, const ContainerT& cont) {
 }
 
 // -------------------------------------------------------------------------
-// concat
-
-template <class ContainerContT>
-struct ConcatTraits
-{
-	typedef typename ContainerContT::value_type container_type;
-	typedef typename container_type::value_type char_type;
-	typedef BasicString<char_type> return_type;
-};
-
-template <class AllocT, class Iterator>
-inline
-typename ConcatTraits<iterator_traits_alter<Iterator> >::return_type
-winx_call concat(AllocT& alloc, const Iterator first, const size_t count)
-{
-	typedef ConcatTraits<iterator_traits_alter<Iterator> > Traits;
-	typedef typename Traits::container_type ContainerT;
-	typedef typename Traits::char_type ValueT;
-	typedef typename Traits::return_type RetType;
-
-	Iterator it = first;
-	size_t i, len = 0;
-	for (i = 0; i < count; ++i)
-		len += (*it++).size();
-
-	it = first;
-	ValueT* buf = STD_NEW_ARRAY(alloc, ValueT, len);
-	for (i = 0; i < count; ++i) {
-		const ContainerT& cont = *it++;
-		buf = std::copy(cont.begin(), cont.end(), buf);
-	}
-
-	return RetType(buf-len, buf);
-}
-
-template <class AllocT, class ContainerT>
-__forceinline
-typename ConcatTraits<ContainerT>::return_type
-winx_call concat(AllocT& alloc, const ContainerT& cont) {
-	return concat(alloc, cont.begin(), cont.size());
-}
-
-template <class AllocT, class CharT>
-inline BasicString<CharT> winx_call concatString__(
-	AllocT& alloc, const BasicString<CharT>* val[], size_t count)
-{
-	size_t i, len = 0;
-	for (i = 0; i < count; ++i)
-		len += val[i]->size();
-
-	CharT* buf = STD_NEW_ARRAY(alloc, CharT, len);
-	for (i = 0; i < count; ++i)
-		buf = std::copy(val[i]->begin(), val[i]->end(), buf);
-
-	return BasicString<CharT>(buf-len, len);
-}
-
-WINX_VARGS_TFUNC_EP1_REF(
-	BasicString<char>, concat, AllocT, const String, concatString__);
-
-WINX_VARGS_TFUNC_EP1_REF(
-	BasicString<wchar_t>, concat, AllocT, const WString, concatString__);
 
 NS_STDEXT_END
+
+#ifndef STDEXT_TEXT_CONCAT_ALGO_H
+#include "concat/algo.h"
+#endif
 
 // -------------------------------------------------------------------------
 // class TestStringAlgo

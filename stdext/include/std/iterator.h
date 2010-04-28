@@ -41,6 +41,10 @@
 
 #if defined(X_CC_VC6)
 
+#ifndef STD_STRING_H
+#include "string.h"
+#endif
+
 namespace std {
 
 	template <class Iterator>
@@ -194,6 +198,24 @@ namespace std {
 		typedef ptrdiff_t					difference_type;
 		typedef const unsigned long*		pointer;
 		typedef const unsigned long&		reference;
+	};
+
+	template <>
+	struct iterator_traits_alter<std::string*> {
+		typedef random_access_iterator_tag	iterator_category;
+		typedef std::string					value_type;
+		typedef ptrdiff_t					difference_type;
+		typedef std::string*				pointer;
+		typedef std::string&				reference;
+	};
+	
+	template <>
+	struct iterator_traits_alter<const std::string*> {
+		typedef random_access_iterator_tag	iterator_category;
+		typedef std::string					value_type;
+		typedef ptrdiff_t					difference_type;
+		typedef const std::string*			pointer;
+		typedef const std::string&			reference;
 	};
 };
 

@@ -123,7 +123,7 @@ public:
 		: Base(&ch, &ch + 1) {
 	}
 	BasicString(const Base& s)
-		: Base(s) {
+		: Base(s.begin(), s.end()) {
 	}
 	BasicString(const CharT* szVal)
 		: Base(szVal, NS_STDEXT::end(szVal)) {
@@ -210,7 +210,7 @@ public:
 		Base::assign(szVal, szVal + cch);
 	}
 
-	const Myt_& winx_call operator=(const BasicArray<CharT>& s) {
+	const Myt_& winx_call operator=(const Range<const CharT*, CharT>& s) {
 		Base::operator=(s);
 		return *this;
 	}
@@ -428,6 +428,38 @@ STD_NO_DESTRUCTOR(NS_STDEXT::BasicString<long>);
 STD_NO_DESTRUCTOR(NS_STDEXT::BasicString<short>);
 STD_NO_DESTRUCTOR(NS_STDEXT::BasicString<unsigned int>);
 STD_NO_DESTRUCTOR(NS_STDEXT::BasicString<unsigned long>);
+
+// -------------------------------------------------------------------------
+
+#if defined(X_CC_VC6)
+
+#ifndef STD_ITERATOR_H
+#include "../../std/iterator.h"
+#endif
+
+namespace std {
+
+template <>
+struct iterator_traits_alter<NS_STDEXT::String*> {
+	typedef random_access_iterator_tag	iterator_category;
+	typedef NS_STDEXT::String			value_type;
+	typedef ptrdiff_t					difference_type;
+	typedef NS_STDEXT::String*			pointer;
+	typedef NS_STDEXT::String&			reference;
+};
+
+template <>
+struct iterator_traits_alter<const NS_STDEXT::String*> {
+	typedef random_access_iterator_tag	iterator_category;
+	typedef NS_STDEXT::String			value_type;
+	typedef ptrdiff_t					difference_type;
+	typedef const NS_STDEXT::String*	pointer;
+	typedef const NS_STDEXT::String&	reference;
+};
+
+} // namespace std
+
+#endif
 
 // -------------------------------------------------------------------------
 // class TestBasicString

@@ -58,9 +58,14 @@ public:
 		init(first_, std::distance(first_, second_));
 	}
 
-	CArray(size_type n, const Type& val = Type())
+	CArray(size_type n, const Type& val)
 	{
 		init_n(n, val);
+	}
+
+	explicit CArray(size_type n)
+	{
+		new_n(n);
 	}
 
 	~CArray()
@@ -88,14 +93,27 @@ private:
 			new(dest) Type(val);
 	}
 
+	void winx_call new_n(size_type n)
+	{
+		Base::first = (Type*)AllocT::allocate(sizeof(Type) * n);
+		Base::second = Base::first + n;
+		NS_BOOST_MEMORY::constructor_traits<Type>::constructArray((Type*)Base::first, n);
+	}
+
 public:
 	void winx_call clear()
 	{
 		if (Base::first != NULL)
 		{
-			NS_BOOST_MEMORY::destructor_traits<Type>::
-				destructArray((Type*)Base::first, Base::second - Base::first);
+			NS_BOOST_MEMORY::destructor_traits<Type>::destructArray((Type*)Base::first, Base::second - Base::first);
 		}
+	}
+
+	Type* winx_call newArray(size_type n)
+	{
+		clear();
+		new_n(n);
+		return (Type*)Base::first;
 	}
 
 	void winx_call assign(const Type* arr, size_type n)
@@ -140,17 +158,17 @@ public:
 	}
 
 	Type* winx_call data() {
-		return Base::first;
+		return (Type*)Base::first;
 	}
 
 	Type* winx_call c_array() {
-		return Base::first;
+		return (Type*)Base::first;
 	}
 
 	Type& winx_call at(size_type i) {
 		if (i <= Base::size())
 			throw_out_of_range_();
-		return Base::first[i];
+		return *((Type*)Base::first + i);
 	}
 
 	const Type& winx_call at(size_type i) const {
@@ -160,7 +178,7 @@ public:
 	}
 
 	Type& winx_call operator[](size_type i) {
-		return Base::first[i];
+		return *((Type*)Base::first + i);
 	}
 
 	const Type& winx_call operator[](size_type i) const {
