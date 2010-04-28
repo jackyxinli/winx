@@ -113,7 +113,8 @@ private:
 	void winx_call init(AllocT& alloc, size_type count, CharT ch)
 	{
 		Base::first = (CharT*)alloc.allocate(count * sizeof(CharT));
-		Base::second = std::fill_n((CharT*)Base::first, count, ch);
+		Base::second = Base::first + count;
+		std::fill_n((CharT*)Base::first, count, ch);
 	}
 
 public:

@@ -1,4 +1,5 @@
 #include <stdext/String.h>
+#include <stdext/CArray.h>
 #include <iostream>
 #include <list>
 #include <vector>
@@ -80,11 +81,25 @@ void testExplode()
 void testCString()
 {
 	NS_STDEXT::Pools alloc;
+	NS_STDEXT::TlsPools::put(alloc);
 	
-	NS_STDEXT::CString s(alloc, "abc");
-	NS_STDEXT::CString s2(s.get_alloc(), "hello, xsw!", 5);
+	NS_STDEXT::CString s("abc");
+	NS_STDEXT::CString s1(4, '!');
+	NS_STDEXT::CString s2("hello, xsw!", 5);
 	std::cout << s.c_str() << ", size:" << s.size() << '\n';
-	std::cout << s2.c_str() << ", size:" << s2.size() << '\n';
+	std::cout << s2.c_str() << ", size:" << s2.size() << s1 << '\n';
+}
+
+void testCArray()
+{
+	NS_STDEXT::Pools alloc;
+	NS_STDEXT::TlsPools::put(alloc);
+
+	NS_STDEXT::CArray<char> s(4, '!');
+	NS_STDEXT::BasicArray<char> s2 = s;
+	NS_STDEXT::String s3 = s;
+
+	std::cout << s3 << '\n';
 }
 
 int main()
@@ -97,6 +112,7 @@ int main()
 	testExplode();
 	std::cout << "----------------------------------\n";
 	testCString();
+	testCArray();
 	std::cout << "----------------------------------\n";
 	return 0;
 }

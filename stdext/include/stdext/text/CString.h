@@ -51,10 +51,11 @@ private:
 	}
 
 	template <class AllocT>
-	void winx_call init(AllocT& alloc, size_type count, CharT ch)
+	void winx_call init_n(AllocT& alloc, size_type count, CharT ch)
 	{
 		Base::first = (CharT*)alloc.allocate((count + 1) * sizeof(CharT));
-		Base::second = std::fill_n((CharT*)Base::first, count, ch);
+		Base::second = Base::first + count;
+		std::fill_n((CharT*)Base::first, count, ch);
 		*(CharT*)Base::second = CharT();
 	}
 
@@ -71,7 +72,7 @@ public:
 
 	template <class AllocT>
 	ScopedCString(AllocT& alloc, size_type count, value_type ch) {
-		init(alloc, count, ch);
+		init_n(alloc, count, ch);
 	}
 
 	template <class AllocT, class Iterator>
@@ -93,7 +94,7 @@ public:
 
 	template <class AllocT>
 	Myt_& winx_call assign(AllocT& alloc, size_type count, value_type ch) {
-		init(alloc, count, ch);
+		init_n(alloc, count, ch);
 		return *this;
 	}
 
@@ -186,10 +187,11 @@ private:
 		*((CharT*)Base::second + 1) = CharT(1);
 	}
 
-	void winx_call init(size_type count, CharT ch)
+	void winx_call init_n(size_type count, CharT ch)
 	{
 		Base::first = (CharT*)AllocT::allocate(alloc_size(count));
-		Base::second = std::fill_n((CharT*)Base::first, count, ch);
+		Base::second = Base::first + count;
+		std::fill_n((CharT*)Base::first, count, ch);
 		*(CharT*)Base::second = CharT();
 		*((CharT*)Base::second + 1) = CharT(1);
 	}
@@ -239,7 +241,7 @@ public:
 	}
 
 	BasicCString(size_type count, value_type ch) {
-		init(count, ch);
+		init_n(count, ch);
 	}
 
 	template <class Iterator>
@@ -277,7 +279,7 @@ public:
 
 	Myt_& winx_call assign(size_type count, value_type ch) {
 		release();
-		init(count, ch);
+		init_n(count, ch);
 		return *this;
 	}
 
