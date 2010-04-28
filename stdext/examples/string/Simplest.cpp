@@ -17,19 +17,21 @@ void testConcat()
 	lst.push_back("world!\n");
 
 	s = NS_STDEXT::concat(alloc, lst);
-	std::cout << s;
+	NS_STDEXT::print("%s", s);
 
 	std::vector<std::string> vec;
 	vec.push_back("I");
 	vec.push_back(" am");
 	vec.push_back(" xushiwei!\n");
 
-	s = NS_STDEXT::concat(alloc, vec);
-	std::cout << s;
+	s = NS_STDEXT::concat(alloc, vec.begin(), vec.end());
+	NS_STDEXT::print("%s", s);
 
 	s = NS_STDEXT::concat(alloc, "Hello", " ", "world!", " I", " am", " xushiwei!\n");
-	std::cout << s;
+	NS_STDEXT::print("%s", s);
 }
+
+#if !defined(X_CC_VC6)
 
 void testImplode()
 {
@@ -58,12 +60,14 @@ void testImplode()
 
 void testExplode()
 {
+	size_t i;
+
 	NS_STDEXT::AutoAlloc alloc;
 
 	NS_STDEXT::String s(alloc, "Hello, world!  I am xushiwei!");
 
 	NS_STDEXT::BasicArray<NS_STDEXT::String> arr = NS_STDEXT::explode(alloc, ' ', s);
-	for (size_t i = 0; i < arr.size(); ++i)
+	for (i = 0; i < arr.size(); ++i)
 		std::cout << arr[i] << '\n';
 
 	std::cout << "+++++++++++++++++++++\n";
@@ -74,9 +78,11 @@ void testExplode()
 	std::cout << "+++++++++++++++++++++\n";
 
 	arr = NS_STDEXT::explode2<0>(alloc, ' ', s);
-	for (size_t i = 0; i < arr.size(); ++i)
+	for (i = 0; i < arr.size(); ++i)
 		std::cout << arr[i] << '\n';
 }
+
+#endif
 
 void testCString()
 {
@@ -86,8 +92,9 @@ void testCString()
 	NS_STDEXT::CString s("abc");
 	NS_STDEXT::CString s1(4, '!');
 	NS_STDEXT::CString s2("hello, xsw!", 5);
-	std::cout << s.c_str() << ", size:" << s.size() << '\n';
-	std::cout << s2.c_str() << ", size:" << s2.size() << s1 << '\n';
+
+	NS_STDEXT::print("%s, size: %d\n", s, s.size());
+	NS_STDEXT::print("%s, size: %d%s\n", s2, s2.size(), s1);
 }
 
 void testCArray()
@@ -102,23 +109,29 @@ void testCArray()
 	NS_STDEXT::CArray<char> s5;
 	s5 = s4;
 
-	std::cout << s3 << s4 << '\n';
+	NS_STDEXT::CArray<char> s6(5);
+	s6[2] = '\0';
+
+	NS_STDEXT::print("%s%s, s6:%s\n", s3, s4, s6.data());
 }
 
 int main()
 {
-	std::cout << "----------------------------------\n";
+	printf("----------------------------------\n");
 	testConcat();
-	std::cout << "----------------------------------\n";
+
+#if !defined(X_CC_VC6)
+	printf("----------------------------------\n");
 	testImplode();
-	std::cout << "----------------------------------\n";
+	printf("----------------------------------\n");
 	testExplode();
-	std::cout << "----------------------------------\n";
+#endif
+
+	printf("----------------------------------\n");
 	testCString();
 	testCArray();
-	std::cout << "----------------------------------\n";
+	printf("----------------------------------\n");
 	return 0;
 }
 
 // -------------------------------------------------------------------------
-
