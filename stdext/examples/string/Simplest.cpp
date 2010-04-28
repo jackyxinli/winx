@@ -24,7 +24,7 @@ void testConcat()
 	vec.push_back(" am");
 	vec.push_back(" xushiwei!\n");
 
-	s = NS_STDEXT::concat(alloc, vec.begin(), vec.end());
+	s = NS_STDEXT::concat(alloc, vec);
 	NS_STDEXT::print("%s", s);
 
 	s = NS_STDEXT::concat(alloc, "Hello", " ", "world!", " I", " am", " xushiwei!\n");
