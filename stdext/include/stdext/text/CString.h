@@ -368,4 +368,54 @@ WINX_CSTRING_PRED_OP_(>)
 
 NS_STDEXT_END
 
+// -------------------------------------------------------------------------
+
+#if defined(X_CC_VC6)
+
+#ifndef STD_ITERATOR_H
+#include "../../std/iterator.h"
+#endif
+
+namespace std {
+	
+template <>
+struct iterator_traits_alter<NS_STDEXT::CString*> {
+	typedef random_access_iterator_tag	iterator_category;
+	typedef NS_STDEXT::CString			value_type;
+	typedef ptrdiff_t					difference_type;
+	typedef NS_STDEXT::CString*			pointer;
+	typedef NS_STDEXT::CString&			reference;
+};
+
+template <>
+struct iterator_traits_alter<const NS_STDEXT::CString*> {
+	typedef random_access_iterator_tag	iterator_category;
+	typedef NS_STDEXT::CString			value_type;
+	typedef ptrdiff_t					difference_type;
+	typedef const NS_STDEXT::CString*	pointer;
+	typedef const NS_STDEXT::CString&	reference;
+};
+
+template <>
+struct iterator_traits_alter<NS_STDEXT::WCString*> {
+	typedef random_access_iterator_tag	iterator_category;
+	typedef NS_STDEXT::WCString			value_type;
+	typedef ptrdiff_t					difference_type;
+	typedef NS_STDEXT::WCString*		pointer;
+	typedef NS_STDEXT::WCString&		reference;
+};
+
+template <>
+struct iterator_traits_alter<const NS_STDEXT::WCString*> {
+	typedef random_access_iterator_tag	iterator_category;
+	typedef NS_STDEXT::WCString			value_type;
+	typedef ptrdiff_t					difference_type;
+	typedef const NS_STDEXT::WCString*	pointer;
+	typedef const NS_STDEXT::WCString&	reference;
+};
+
+} // namespace std
+
+#endif
+
 #endif /* STDEXT_TEXT_CSTRING_H */

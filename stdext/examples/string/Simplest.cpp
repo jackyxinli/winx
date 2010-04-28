@@ -27,6 +27,18 @@ void testConcat()
 	s = NS_STDEXT::concat(alloc, vec);
 	NS_STDEXT::print("%s", s);
 
+	{
+		NS_STDEXT::Pools alloc2;
+		NS_STDEXT::TlsPools::put(alloc2);
+		std::vector<NS_STDEXT::CString> vec2;
+		vec2.push_back((NS_STDEXT::CString)"I");
+		vec2.push_back((NS_STDEXT::CString)" am");
+		vec2.push_back((NS_STDEXT::CString)" xushiwei!\n");
+		
+		s = NS_STDEXT::concat(alloc, vec2);
+		NS_STDEXT::print("%s", s);
+	}
+
 	s = NS_STDEXT::concat(alloc, "Hello", " ", "world!", " I", " am", " xushiwei!\n");
 	NS_STDEXT::print("%s", s);
 }

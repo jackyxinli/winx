@@ -457,6 +457,24 @@ struct iterator_traits_alter<const NS_STDEXT::String*> {
 	typedef const NS_STDEXT::String&	reference;
 };
 
+template <>
+struct iterator_traits_alter<NS_STDEXT::WString*> {
+	typedef random_access_iterator_tag	iterator_category;
+	typedef NS_STDEXT::WString			value_type;
+	typedef ptrdiff_t					difference_type;
+	typedef NS_STDEXT::WString*			pointer;
+	typedef NS_STDEXT::WString&			reference;
+};
+
+template <>
+struct iterator_traits_alter<const NS_STDEXT::WString*> {
+	typedef random_access_iterator_tag	iterator_category;
+	typedef NS_STDEXT::WString			value_type;
+	typedef ptrdiff_t					difference_type;
+	typedef const NS_STDEXT::WString*	pointer;
+	typedef const NS_STDEXT::WString&	reference;
+};
+
 } // namespace std
 
 #endif
