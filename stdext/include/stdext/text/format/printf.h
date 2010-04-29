@@ -58,6 +58,29 @@ Retry:	p = tchar::strchr(fmt, (CharT)'%');
 			return &s_null;
 		}
 	}
+
+	template <class StringT, class CharT>
+	void winx_call put(StringT& dest, const CharT* fmt)
+	{
+		const CharT* p;
+
+Retry:	p = tchar::strchr(fmt, (CharT)'%');
+		if (p != NULL)
+		{
+			++p;
+			NS_STDEXT_TEXT::append(dest, fmt, p);
+			if (*p == (CharT)'%')
+				++p;
+
+			fmt = p;
+			goto Retry;
+		}
+		else
+		{
+			static const CharT s_null = CharT();
+			NS_STDEXT_TEXT::append(dest, fmt);
+		}
+	}
 }
 
 // -------------------------------------------------------------------------
@@ -66,14 +89,14 @@ Retry:	p = tchar::strchr(fmt, (CharT)'%');
 template <class StringT, class CharT>
 inline void winx_call formatAppend(StringT& dest, const CharT* fmt)
 {
-	NS_STDEXT_TEXT::append(dest, fmt);
+	format_detail::put(dest, fmt);
 }
 
 template <class StringT, class CharT, class ArgT1>
 void winx_call formatAppend(StringT& dest, const CharT* fmt, const ArgT1& arg1)
 {
 	fmt = format_detail::put(dest, fmt, arg1);
-	NS_STDEXT_TEXT::append(dest, fmt);
+	format_detail::put(dest, fmt);
 }
 
 template <class StringT, class CharT, class ArgT1, class ArgT2>
@@ -81,7 +104,7 @@ void winx_call formatAppend(StringT& dest, const CharT* fmt, const ArgT1& arg1, 
 {
 	fmt = format_detail::put(dest, fmt, arg1);
 	fmt = format_detail::put(dest, fmt, arg2);
-	NS_STDEXT_TEXT::append(dest, fmt);
+	format_detail::put(dest, fmt);
 }
 
 template <class StringT, class CharT, class ArgT1, class ArgT2, class ArgT3>
@@ -90,7 +113,7 @@ void winx_call formatAppend(StringT& dest, const CharT* fmt, const ArgT1& arg1, 
 	fmt = format_detail::put(dest, fmt, arg1);
 	fmt = format_detail::put(dest, fmt, arg2);
 	fmt = format_detail::put(dest, fmt, arg3);
-	NS_STDEXT_TEXT::append(dest, fmt);
+	format_detail::put(dest, fmt);
 }
 
 template <class StringT, class CharT, class ArgT1, class ArgT2, class ArgT3, class ArgT4>
@@ -102,7 +125,7 @@ void winx_call formatAppend(
 	fmt = format_detail::put(dest, fmt, arg2);
 	fmt = format_detail::put(dest, fmt, arg3);
 	fmt = format_detail::put(dest, fmt, arg4);
-	NS_STDEXT_TEXT::append(dest, fmt);
+	format_detail::put(dest, fmt);
 }
 
 template <class StringT, class CharT, class ArgT1, class ArgT2, class ArgT3, class ArgT4, class ArgT5>
@@ -116,7 +139,7 @@ void winx_call formatAppend(
 	fmt = format_detail::put(dest, fmt, arg3);
 	fmt = format_detail::put(dest, fmt, arg4);
 	fmt = format_detail::put(dest, fmt, arg5);
-	NS_STDEXT_TEXT::append(dest, fmt);
+	format_detail::put(dest, fmt);
 }
 
 template <
@@ -133,7 +156,7 @@ void winx_call formatAppend(
 	fmt = format_detail::put(dest, fmt, arg4);
 	fmt = format_detail::put(dest, fmt, arg5);
 	fmt = format_detail::put(dest, fmt, arg6);
-	NS_STDEXT_TEXT::append(dest, fmt);
+	format_detail::put(dest, fmt);
 }
 
 template <
@@ -151,7 +174,7 @@ void winx_call formatAppend(
 	fmt = format_detail::put(dest, fmt, arg5);
 	fmt = format_detail::put(dest, fmt, arg6);
 	fmt = format_detail::put(dest, fmt, arg7);
-	NS_STDEXT_TEXT::append(dest, fmt);
+	format_detail::put(dest, fmt);
 }
 
 template <
@@ -170,7 +193,7 @@ void winx_call formatAppend(
 	fmt = format_detail::put(dest, fmt, arg6);
 	fmt = format_detail::put(dest, fmt, arg7);
 	fmt = format_detail::put(dest, fmt, arg8);
-	NS_STDEXT_TEXT::append(dest, fmt);
+	format_detail::put(dest, fmt);
 }
 
 template <
@@ -190,7 +213,7 @@ void winx_call formatAppend(
 	fmt = format_detail::put(dest, fmt, arg7);
 	fmt = format_detail::put(dest, fmt, arg8);
 	fmt = format_detail::put(dest, fmt, arg9);
-	NS_STDEXT_TEXT::append(dest, fmt);
+	format_detail::put(dest, fmt);
 }
 
 // -------------------------------------------------------------------------
@@ -199,7 +222,7 @@ template <class StringT, class CharT>
 inline void winx_call format(StringT& dest, const CharT* fmt)
 {
 	NS_STDEXT_TEXT::clear(dest);
-	NS_STDEXT_TEXT::append(dest, fmt);
+	format_detail::put(dest, fmt);
 }
 
 template <class StringT, class CharT, class ArgT1>
@@ -295,7 +318,7 @@ inline void winx_call format(
 template <class CharT>
 inline void winx_call print(const CharT* fmt)
 {
-	NS_STDEXT_TEXT::append(*stdout, fmt);
+	format_detail::put(*stdout, fmt);
 }
 
 template <class CharT, class ArgT1>

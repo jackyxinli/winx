@@ -117,9 +117,9 @@ void testCArray()
 	NS_STDEXT::CArray<char> s(4, '!');
 	NS_STDEXT::BasicArray<char> s2 = s;
 	NS_STDEXT::String s3 = s;
-	NS_STDEXT::CArray<char> s4 = s;
+	NS_STDEXT::CArray<char> s4(s);
 	NS_STDEXT::CArray<char> s5;
-	s5 = s4;
+	s5.assign(s4);
 
 	NS_STDEXT::CArray<char> s6(5);
 	s6[2] = '\0';

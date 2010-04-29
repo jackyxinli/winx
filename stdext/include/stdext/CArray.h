@@ -37,6 +37,8 @@ class CArray : public Range<const Type*, Type>
 {
 private:
 	typedef Range<const Type*, Type> Base;
+	
+	const CArray& winx_call operator=(const CArray& rhs); // use .assign(rhs) please
 
 public:
 	typedef typename Base::size_type size_type;
@@ -46,10 +48,6 @@ public:
 	CArray(const Type* arr, size_type n)
 	{
 		init(arr, n);
-	}
-	CArray(const CArray& rhs)
-	{
-		init(rhs.first, rhs.second - rhs.first);
 	}
 
 	template <class Iterator>
@@ -63,6 +61,16 @@ public:
 		init_n(n, val);
 	}
 
+	explicit CArray(const Base& rhs)
+	{
+		init(rhs.first, rhs.second - rhs.first);
+	}
+
+	explicit CArray(const CArray& rhs)
+	{
+		init(rhs.first, rhs.second - rhs.first);
+	}
+	
 	explicit CArray(size_type n)
 	{
 		new_n(n);
@@ -139,13 +147,6 @@ public:
 	{
 		clear();
 		init(Base::first, Base::second - Base::first);
-	}
-
-	const CArray& winx_call operator=(const CArray& rhs)
-	{
-		clear();
-		init(Base::first, Base::second - Base::first);
-		return *this;
 	}
 
 public:

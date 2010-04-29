@@ -54,7 +54,7 @@ public:
 	template <class CharT>
 	void winx_call print(const CharT* fmt)
 	{
-		NS_STDEXT_TEXT::append(dest, fmt);
+		format_detail::put(dest, fmt);
 		ActionT::afterPrint(dest);
 	}
 

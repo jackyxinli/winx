@@ -27,10 +27,10 @@ int main()
 	// ----------------------------------------
 
 	NS_STDEXT::StringBuilder s2;
-	NS_STDEXT::format(s2, "1: %.5d%c %5s! %f\n", -123, '\"'-1, NS_STDEXT::String("xushiwei", 2), 134.5);
+	NS_STDEXT::format(s2, "1: %% %.5d%c %5s! %f %%\n", -123, '\"'-1, NS_STDEXT::String("xushiwei", 2), 134.5);
 	std::cout << s2;
 
-	printf("2: %.5d%c %5s! %f\n", -123, '\"'-1, "xu", 134.5);
+	printf("2: %% %.5d%c %5s! %f %%\n", -123, '\"'-1, "xu", 134.5);
 
 	// ----------------------------------------
 
