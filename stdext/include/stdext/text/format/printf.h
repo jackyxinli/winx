@@ -77,7 +77,6 @@ Retry:	p = tchar::strchr(fmt, (CharT)'%');
 		}
 		else
 		{
-			static const CharT s_null = CharT();
 			NS_STDEXT_TEXT::append(dest, fmt);
 		}
 	}
