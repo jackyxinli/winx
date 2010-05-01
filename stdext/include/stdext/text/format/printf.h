@@ -65,7 +65,11 @@ Retry:	p = tchar::strchr(fmt, (CharT)'%');
 		const CharT* p;
 
 Retry:	p = tchar::strchr(fmt, (CharT)'%');
-		if (p != NULL)
+		if (p == NULL)
+		{
+			NS_STDEXT_TEXT::append(dest, fmt);
+		}
+		else
 		{
 			++p;
 			NS_STDEXT_TEXT::append(dest, fmt, p);
@@ -74,10 +78,6 @@ Retry:	p = tchar::strchr(fmt, (CharT)'%');
 
 			fmt = p;
 			goto Retry;
-		}
-		else
-		{
-			NS_STDEXT_TEXT::append(dest, fmt);
 		}
 	}
 }
