@@ -27,7 +27,15 @@
 #include "Mutex.h"
 #endif
 
+#ifndef STDEXT_DETAIL_GLOBALVAR_H
+#include "../detail/GlobalVar.h"
+#endif
+
 NS_STDEXT_BEGIN
+
+// -------------------------------------------------------------------------
+
+#define WINX_DETAIL_GVAR_TLS_MUTEX_	detail::GlobalVar<Mutex, WINX_DETAIL_GIDX_TLS_MUTEX_>::g_var
 
 // -------------------------------------------------------------------------
 // class WinTlsKey
@@ -51,8 +59,7 @@ public:
 	}
 
 	int winx_mtcall create() {
-		static Mutex g_mutex;
-		Mutex::scoped_lock lock(g_mutex);
+		Mutex::scoped_lock lock(WINX_DETAIL_GVAR_TLS_MUTEX_);
 		if (m_key == TLS_OUT_OF_INDEXES)
 			m_key = TlsAlloc();
 		return 0;
@@ -94,8 +101,7 @@ public:
 	}
 
 	int winx_mtcall create() {
-		static Mutex g_mutex;
-		Mutex::scoped_lock lock(g_mutex);
+		Mutex::scoped_lock lock(WINX_DETAIL_GVAR_TLS_MUTEX_);
 		if (m_key == TLS_OUT_OF_INDEXES)
 			pthread_key_create(&m_key, NULL);
 		return 0;
@@ -141,7 +147,6 @@ using boost::thread_specific_ptr;
 #endif
 
 // -------------------------------------------------------------------------
-//	$Log: $
 
 NS_STDEXT_END
 
