@@ -38,18 +38,12 @@ class tls_pools_alloc
 private:
 	static NS_STDEXT::TlsKey g_tls;
 	
-	static int BOOST_MEMORY_CALL init()
-	{
-		g_tls.create();
-		return 0;
-	}
-
 public:
 	typedef pools_alloc<PolicyT> pools_type;
 
 	static void BOOST_MEMORY_CALL put(pools_type& r)
 	{
-		static int g_result = init();
+		static int g_result = g_tls.create();
 		g_tls.put(&r);
 	}
 

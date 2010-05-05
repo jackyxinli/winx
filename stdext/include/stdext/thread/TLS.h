@@ -50,11 +50,12 @@ public:
 		return m_key != TLS_OUT_OF_INDEXES;
 	}
 
-	void winx_mtcall create() {
+	int winx_mtcall create() {
 		static Mutex g_mutex;
 		Mutex::scoped_lock lock(g_mutex);
 		if (m_key == TLS_OUT_OF_INDEXES)
 			m_key = TlsAlloc();
+		return 0;
 	}
 
 	void winx_call clear() {
@@ -92,11 +93,12 @@ public:
 		return m_key != TLS_OUT_OF_INDEXES;
 	}
 
-	void winx_mtcall create() {
+	int winx_mtcall create() {
 		static Mutex g_mutex;
 		Mutex::scoped_lock lock(g_mutex);
 		if (m_key == TLS_OUT_OF_INDEXES)
 			pthread_key_create(&m_key, NULL);
+		return 0;
 	}
 
 	void winx_call clear() {
