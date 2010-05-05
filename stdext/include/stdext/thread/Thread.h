@@ -125,12 +125,12 @@ public:
 		CloseThread(hThread);
 	}
 
-	void cerl_call join() const // = boost::thread::join
+	void winx_call join() const // = boost::thread::join
 	{
 		WaitThread(hThread);
 	}
 
-	void cerl_call wait() const
+	void winx_call wait() const
 	{
 		WaitThread(hThread);
 	}

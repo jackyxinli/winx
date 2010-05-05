@@ -23,6 +23,10 @@
 #include "Basic.h"
 #endif
 
+#ifndef STDEXT_THREAD_MUTEX_H
+#include "Mutex.h"
+#endif
+
 NS_STDEXT_BEGIN
 
 // -------------------------------------------------------------------------
@@ -41,13 +45,21 @@ public:
 	WinTlsKey()
 		: m_key(TLS_OUT_OF_INDEXES) {
 	}
+	
+	bool winx_call good() const {
+		return m_key != TLS_OUT_OF_INDEXES;
+	}
 
-	void winx_call create() {
-		m_key = TlsAlloc();
+	void winx_mtcall create() {
+		static Mutex g_mutex;
+		Mutex::scoped_lock lock(g_mutex);
+		if (m_key == TLS_OUT_OF_INDEXES)
+			m_key = TlsAlloc();
 	}
 
 	void winx_call clear() {
 		TlsFree(m_key);
+		m_key = TLS_OUT_OF_INDEXES;
 	}
 
 	void winx_call put(void* p) const {
@@ -76,12 +88,20 @@ public:
 		: m_key(TLS_OUT_OF_INDEXES) {
 	}
 
-	void winx_call create() {
-		pthread_key_create(&m_key, NULL);
+	bool winx_call good() const {
+		return m_key != TLS_OUT_OF_INDEXES;
 	}
 
-	void winx_call clear() const {
+	void winx_mtcall create() {
+		static Mutex g_mutex;
+		Mutex::scoped_lock lock(g_mutex);
+		if (m_key == TLS_OUT_OF_INDEXES)
+			pthread_key_create(&m_key, NULL);
+	}
+
+	void winx_call clear() {
 		pthread_key_delete(m_key);
+		m_key = TLS_OUT_OF_INDEXES;
 	}
 
 	void winx_call put(void* p) const {

@@ -1,5 +1,6 @@
 #include <stdext/Basic.h>
 #include <stdext/thread/Thread.h>
+#include <stdext/thread/TLS.h>
 
 THREADRET WINAPI writer(void* val)
 {

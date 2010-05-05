@@ -118,13 +118,21 @@
 #endif
 
 // -------------------------------------------------------------------------
-// winx_call
+// winx_call, winx_mtcall
 
 #ifndef winx_call
 #	if defined(WINX_GCC)
 #		define winx_call
 #	else
 #		define winx_call	__fastcall
+#	endif
+#endif
+
+#ifndef winx_mtcall
+#	if defined(WINX_GCC)
+#		define winx_mtcall
+#	else
+#		define winx_mtcall	winx_call
 #	endif
 #endif
 
