@@ -24,6 +24,7 @@
 #endif
 
 #if defined(X_OS_WINDOWS)
+#pragma warning(disable:4996)
 // -------------------------------------------------------------------------
 // Windows
 
