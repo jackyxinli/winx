@@ -44,6 +44,7 @@ public:
 	static void BOOST_MEMORY_CALL put(pools_type& r)
 	{
 		static int g_result = g_tls.create();
+		(void)g_result;
 		g_tls.put(&r);
 	}
 
