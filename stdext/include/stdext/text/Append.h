@@ -38,34 +38,6 @@ NS_STDEXT_TEXT_BEGIN
 // -------------------------------------------------------------------------
 
 template <class CharT, class AllocT>
-inline void winx_call clear(std::vector<CharT, AllocT>& dest)
-{
-	dest.clear();
-}
-
-template <class CharT, class Tr, class AllocT>
-inline void winx_call clear(std::basic_string<CharT, Tr, AllocT>& dest)
-{
-	dest.erase();
-}
-
-template<class CharT, class Tr>
-inline void winx_call clear(std::basic_ostream<CharT, Tr>& os)
-{
-}
-
-template <class Handle, class StreamHandle, class CacheT>
-inline void winx_call clear(WriteArchive<Handle, StreamHandle, CacheT>& ar)
-{
-}
-
-inline void winx_call clear(FILE& dest)
-{
-}
-
-// -------------------------------------------------------------------------
-
-template <class CharT, class AllocT>
 inline void winx_call append(std::vector<CharT, AllocT>& dest, const CharT* val, const CharT* valEnd)
 {
 	dest.insert(dest.end(), val, valEnd);
@@ -87,6 +59,12 @@ template <class CharT>
 inline void winx_call append(NS_STDEXT::BasicStringBuilder<CharT>& dest, const CharT val)
 {
 	dest.push_back(val);
+}
+
+template <class CharT, class AllocT>
+inline void winx_call clear(std::vector<CharT, AllocT>& dest)
+{
+	dest.clear();
 }
 
 // -------------------------------------------------------------------------
@@ -115,6 +93,12 @@ inline void winx_call append(std::basic_string<CharT, Tr, AllocT>& dest, const C
 	dest.append(1, val);
 }
 
+template <class CharT, class Tr, class AllocT>
+inline void winx_call clear(std::basic_string<CharT, Tr, AllocT>& dest)
+{
+	dest.erase();
+}
+
 // -------------------------------------------------------------------------
 
 template<class CharT, class Tr>
@@ -134,6 +118,11 @@ template<class CharT, class Tr>
 inline void winx_call append(std::basic_ostream<CharT, Tr>& os, const CharT val)
 {
 	os.put(val);
+}
+
+template<class CharT, class Tr>
+inline void winx_call clear(std::basic_ostream<CharT, Tr>& os)
+{
 }
 
 // -------------------------------------------------------------------------
@@ -157,6 +146,11 @@ inline void winx_call append(WriteArchive<Handle, StreamHandle, CacheT>& ar, con
 	ar.put(val);
 }
 
+template <class Handle, class StreamHandle, class CacheT>
+inline void winx_call clear(WriteArchive<Handle, StreamHandle, CacheT>& ar)
+{
+}
+
 // -------------------------------------------------------------------------
 
 template <class CharT>
@@ -176,6 +170,48 @@ inline void winx_call append(FILE& fp, const char val)
 	putc(val, &fp);
 }
 
+inline void winx_call clear(FILE& dest)
+{
+}
+
+// -------------------------------------------------------------------------
+
+template <class ArchiveT>
+class Archive2Appender
+{
+private:
+	Archive2Appender();
+	Archive2Appender(const Archive2Appender&);
+	void operator=(const Archive2Appender&);
+
+public:
+	ArchiveT ar;
+};
+
+template <class ArchiveT, class CharT>
+inline void winx_call append(Archive2Appender<ArchiveT>& app, const CharT* val, const CharT* valEnd)
+{
+	app.ar.put(val, valEnd - val);
+}
+
+template <class ArchiveT, class CharT>
+inline void winx_call append(Archive2Appender<ArchiveT>& app, size_t count, const CharT val)
+{
+	while (count--)
+		app.ar.put(val);
+}
+
+template <class ArchiveT, class CharT>
+inline void winx_call append(Archive2Appender<ArchiveT>& app, const CharT val)
+{
+	app.ar.put(val);
+}
+
+template <class ArchiveT>
+inline void winx_call clear(Archive2Appender<ArchiveT>& app)
+{
+}
+
 // -------------------------------------------------------------------------
 
 template <class StringT>
@@ -193,5 +229,17 @@ inline void winx_call append(StringT& dest, const WString& val)
 // -------------------------------------------------------------------------
 
 NS_STDEXT_TEXT_END
+
+NS_STDEXT_BEGIN // function ar2appender
+
+template <class ArchiveT>
+NS_STDEXT_TEXT::Archive2Appender<ArchiveT>& winx_call ar2appender(ArchiveT& ar)
+{
+	return *(NS_STDEXT_TEXT::Archive2Appender<ArchiveT>*)&ar;
+}
+
+NS_STDEXT_END
+
+// -------------------------------------------------------------------------
 
 #endif /* STDEXT_TEXT_APPEND_H */
