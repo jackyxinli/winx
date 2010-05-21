@@ -233,7 +233,7 @@ NS_STDEXT_TEXT_END
 NS_STDEXT_BEGIN // function ar2appender
 
 template <class ArchiveT>
-NS_STDEXT_TEXT::Archive2Appender<ArchiveT>& winx_call ar2appender(ArchiveT& ar)
+__forceinline NS_STDEXT_TEXT::Archive2Appender<ArchiveT>& winx_call ar2appender(ArchiveT& ar)
 {
 	return *(NS_STDEXT_TEXT::Archive2Appender<ArchiveT>*)&ar;
 }
