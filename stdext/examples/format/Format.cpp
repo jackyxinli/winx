@@ -57,7 +57,7 @@ int main()
 	NS_STDEXT::print("3: %#6o! - %p %g\n", 123, &s4, 134.5);
 	printf("4: %#6o! - %p %g\n", 123, &s4, 134.5);
 	NS_STDEXT::format(ar, "5: %#6o! - %p %g\n", 123, &s4, 134.5);
-	NS_STDEXT::format(ar2appender(ar), "6: %#6o! - %p %g\n", 123, &s4, 134.5);
+	NS_STDEXT::format(NS_STDEXT::ar2appender(ar), "6: %#6o! - %p %g\n", 123, &s4, 134.5);
 	ar.clear_cache();
 
 	// ----------------------------------------
