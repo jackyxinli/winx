@@ -1,2 +1,0 @@
-AppPath=`dirname $0`
-ls $* | xargs --no-run-if-empty $AppPath/do-cvs-rm
