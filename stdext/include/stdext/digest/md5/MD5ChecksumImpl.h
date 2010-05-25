@@ -179,7 +179,7 @@ inline
 DWORD CMD5Checksum::RotateLeft(DWORD x, int n)
 {
 	//check that DWORD is 4 bytes long - true in Visual C++ 6 and 32 bit Windows
-	ASSERT( sizeof(x) == 4 );
+	WINX_ASSERT( sizeof(x) == 4 );
 
 	//rotate and return x
 	return (x << n) | (x >> (32-n));
@@ -288,9 +288,9 @@ inline
 void CMD5Checksum::ByteToDWord(DWORD* Output, const BYTE* Input, UINT nLength)
 {
 	//entry invariants
-	ASSERT( nLength % 4 == 0 );
-//	ASSERT( AfxIsValidAddress(Output, nLength/4, TRUE) );
-//	ASSERT( AfxIsValidAddress(Input, nLength, FALSE) );
+	WINX_ASSERT( nLength % 4 == 0 );
+//	WINX_ASSERT( AfxIsValidAddress(Output, nLength/4, TRUE) );
+//	WINX_ASSERT( AfxIsValidAddress(Input, nLength, FALSE) );
 
 	//initialisations
 	UINT i=0;	//index to Output array
@@ -449,9 +449,9 @@ inline
 void CMD5Checksum::DWordToByte(BYTE* Output, const DWORD* Input, UINT nLength )
 {
 	//entry invariants
-	ASSERT( nLength % 4 == 0 );
-//	ASSERT( AfxIsValidAddress(Output, nLength, TRUE) );
-//	ASSERT( AfxIsValidAddress(Input, nLength/4, FALSE) );
+	WINX_ASSERT( nLength % 4 == 0 );
+//	WINX_ASSERT( AfxIsValidAddress(Output, nLength, TRUE) );
+//	WINX_ASSERT( AfxIsValidAddress(Input, nLength/4, FALSE) );
 
 	//transfer the data by shifting and copying
 	UINT i = 0;
@@ -562,10 +562,10 @@ void CMD5Checksum::Final(OUT BYTE nChecksum[16])
 			Str.Format("%x",lpszMD5[i]);
 		}
 
-		ASSERT( Str.GetLength() == 2 );
+		WINX_ASSERT( Str.GetLength() == 2 );
 		strMD5 += Str;
 	}
-	ASSERT( strMD5.GetLength() == 32 );
+	WINX_ASSERT( strMD5.GetLength() == 32 );
 	return strMD5;
 */
 }
