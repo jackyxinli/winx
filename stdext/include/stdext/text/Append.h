@@ -177,38 +177,35 @@ inline void winx_call clear(FILE& dest)
 // -------------------------------------------------------------------------
 
 template <class ArchiveT>
-class Archive2Appender
+class Archive2Appender : public ArchiveT
 {
 private:
 	Archive2Appender();
 	Archive2Appender(const Archive2Appender&);
 	void operator=(const Archive2Appender&);
-
-public:
-	ArchiveT ar;
 };
 
 template <class ArchiveT, class CharT>
-inline void winx_call append(Archive2Appender<ArchiveT>& app, const CharT* val, const CharT* valEnd)
+inline void winx_call append(Archive2Appender<ArchiveT>& ar, const CharT* val, const CharT* valEnd)
 {
-	app.ar.put(val, valEnd - val);
+	ar.put(val, valEnd - val);
 }
 
 template <class ArchiveT, class CharT>
-inline void winx_call append(Archive2Appender<ArchiveT>& app, size_t count, const CharT val)
+inline void winx_call append(Archive2Appender<ArchiveT>& ar, size_t count, const CharT val)
 {
 	while (count--)
-		app.ar.put(val);
+		ar.put(val);
 }
 
 template <class ArchiveT, class CharT>
-inline void winx_call append(Archive2Appender<ArchiveT>& app, const CharT val)
+inline void winx_call append(Archive2Appender<ArchiveT>& ar, const CharT val)
 {
-	app.ar.put(val);
+	ar.put(val);
 }
 
 template <class ArchiveT>
-inline void winx_call clear(Archive2Appender<ArchiveT>& app)
+inline void winx_call clear(Archive2Appender<ArchiveT>& ar)
 {
 }
 
@@ -235,7 +232,7 @@ NS_STDEXT_BEGIN // function ar2appender
 template <class ArchiveT>
 __forceinline NS_STDEXT_TEXT::Archive2Appender<ArchiveT>& winx_call ar2appender(ArchiveT& ar)
 {
-	return *(NS_STDEXT_TEXT::Archive2Appender<ArchiveT>*)&ar;
+	return *static_cast<NS_STDEXT_TEXT::Archive2Appender<ArchiveT>*>(&ar);
 }
 
 NS_STDEXT_END
