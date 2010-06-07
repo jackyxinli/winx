@@ -34,10 +34,6 @@ namespace detail {
 
 } // namespace detail
 
-#if defined(WINX_BYTESWAP)
-#error "todo: byteswap"
-#endif
-
 class SHA1Checksum
 {
 private:
@@ -48,9 +44,25 @@ public:
 		m_impl.Input(buf, bytes);
 	}
 
-	void winx_call Final(BYTE checksum[20]) {
+#if defined(WINX_BYTESWAP)
+	void winx_call Final(BYTE checksum[20])
+	{
 		m_impl.Result( (detail::UINT4*)checksum );
 	}
+#else
+	void winx_call Final(BYTE* checksum)
+	{
+		detail::UINT4 key[5];
+		m_impl.Result( key );
+		for (size_t i = 0; i < 5; ++i)
+		{
+			*checksum++ = (BYTE)(key[i] >> 24);
+			*checksum++ = (BYTE)(key[i] >> 16);
+			*checksum++ = (BYTE)(key[i] >> 8);
+			*checksum++ = (BYTE)key[i];
+		}
+	}
+#endif
 };
 
 // -------------------------------------------------------------------------
