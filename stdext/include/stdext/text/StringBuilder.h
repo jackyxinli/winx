@@ -56,9 +56,8 @@ private:
 	typedef BasicStringBuilder Myt_;
 
 private:
-	BasicStringBuilder(const BasicStringBuilder&);
 	void operator=(const BasicStringBuilder&);
-	
+
 public:
 	typedef typename Base::size_type size_type;
 	typedef typename Base::difference_type difference_type;
@@ -70,7 +69,9 @@ public:
 public:
 	BasicStringBuilder() {}
 
-	explicit BasicStringBuilder(const String_ s)
+	explicit BasicStringBuilder(const BasicStringBuilder& s)
+		: Base(s) {}
+	explicit BasicStringBuilder(const String_& s)
 		: Base(s.begin(), s.end()) {}
 
 	BasicStringBuilder(size_type cch, CharT ch)
