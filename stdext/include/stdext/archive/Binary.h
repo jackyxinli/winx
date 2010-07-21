@@ -112,6 +112,22 @@ inline void winx_call put32i(
 		put32i(ar, dwarray[i]);
 }
 
+template <class WriteArchiveT>
+inline void winx_call put64i(
+	IN WriteArchiveT& ar, IN const UINT64 dwarray[], IN size_t count) throw(IoException)
+{
+	for (size_t i = 0; i < count; ++i)
+		put64i(ar, dwarray[i]);
+}
+
+template <class WriteArchiveT>
+inline void winx_call put64i(
+	IN WriteArchiveT& ar, IN const INT64 dwarray[], IN size_t count) throw(IoException)
+{
+	for (size_t i = 0; i < count; ++i)
+		put64i(ar, dwarray[i]);
+}
+
 template <class WriteArchiveT, class StrucType>
 inline void winx_call put_struct(
 	WriteArchiveT& ar, const StrucType* array, size_t count) throw(IoException)
@@ -148,6 +164,20 @@ inline void winx_call put32i(
 	IN WriteArchiveT& ar, IN const INT32 dwarray[], IN size_t count) throw(IoException)
 {
 	ar.put( (const char*)dwarray, sizeof(INT32)*count );
+}
+
+template <class WriteArchiveT>
+inline void winx_call put64i(
+	IN WriteArchiveT& ar, IN const UINT64 dwarray[], IN size_t count) throw(IoException)
+{
+	ar.put( (const char*)dwarray, sizeof(UINT64)*count );
+}
+
+template <class WriteArchiveT>
+inline void winx_call put64i(
+	IN WriteArchiveT& ar, IN const INT64 dwarray[], IN size_t count) throw(IoException)
+{
+	ar.put( (const char*)dwarray, sizeof(INT64)*count );
 }
 
 template <class WriteArchiveT, class StrucType>
@@ -208,6 +238,28 @@ inline bool winx_call get32i(ReadArchiveT& ar, INT32& val)
 	return false;
 }
 
+template <class ReadArchiveT>
+inline bool winx_call get64i(ReadArchiveT& ar, UINT64& val)
+{
+	if (ar.get((char*)&val, sizeof(val)) == sizeof(val))
+	{
+		_WinxByteSwap64(val);
+		return true;
+	}
+	return false;
+}
+
+template <class ReadArchiveT>
+inline bool winx_call get64i(ReadArchiveT& ar, INT64& val)
+{
+	if (ar.get((char*)&val, sizeof(val)) == sizeof(val))
+	{
+		_WinxByteSwap64(val);
+		return true;
+	}
+	return false;
+}
+
 template <class ReadArchiveT, class StrucType>
 inline bool winx_call get_struct(ReadArchiveT& ar, StrucType& val)
 {
@@ -258,6 +310,28 @@ inline bool winx_call get32i(ReadArchiveT& ar, INT32 dwarray[], size_t count)
 	for (size_t i = 0; i < count; ++i)
 	{
 		if (!get32i(ar, dwarray[i]))
+			return false;
+	}
+	return true;
+}
+
+template <class ReadArchiveT>
+inline bool winx_call get64i(ReadArchiveT& ar, UINT64 dwarray[], size_t count)
+{
+	for (size_t i = 0; i < count; ++i)
+	{
+		if (!get64i(ar, dwarray[i]))
+			return false;
+	}
+	return true;
+}
+
+template <class ReadArchiveT>
+inline bool winx_call get64i(ReadArchiveT& ar, INT64 dwarray[], size_t count)
+{
+	for (size_t i = 0; i < count; ++i)
+	{
+		if (!get64i(ar, dwarray[i]))
 			return false;
 	}
 	return true;
@@ -363,6 +437,28 @@ inline bool winx_call peek32i(ReadArchiveT& ar, INT32& val)
 }
 
 template <class ReadArchiveT>
+inline bool winx_call peek64i(ReadArchiveT& ar, UINT64& val)
+{
+	const char* p = ar.peek(sizeof(val));
+	if (p) {
+		val = *(const UINT64*)p;
+		return true;
+	}
+	return false;
+}
+
+template <class ReadArchiveT>
+inline bool winx_call peek64i(ReadArchiveT& ar, INT64& val)
+{
+	const char* p = ar.peek(sizeof(val));
+	if (p) {
+		val = *(const INT64*)p;
+		return true;
+	}
+	return false;
+}
+
+template <class ReadArchiveT>
 inline bool winx_call get16i(ReadArchiveT& ar, UINT16 warray[], size_t count)
 {
 	const size_t cbToRead = sizeof(UINT16) * count;
@@ -390,6 +486,19 @@ inline bool winx_call get32i(ReadArchiveT& ar, INT32 dwarray[], size_t count)
 	return ar.get((char*)dwarray, cbToRead) == cbToRead;
 }
 
+template <class ReadArchiveT>
+inline bool winx_call get64i(ReadArchiveT& ar, UINT64 dwarray[], size_t count)
+{
+	const size_t cbToRead = sizeof(UINT64) * count;
+	return ar.get((char*)dwarray, cbToRead) == cbToRead;
+}
+
+template <class ReadArchiveT>
+inline bool winx_call get64i(ReadArchiveT& ar, INT64 dwarray[], size_t count)
+{
+	const size_t cbToRead = sizeof(INT32) * count;
+	return ar.get((char*)dwarray, cbToRead) == cbToRead;
+}
 template <class ReadArchiveT, class StrucType>
 inline bool winx_call get_struct(ReadArchiveT& ar, StrucType array[], size_t count)
 {
