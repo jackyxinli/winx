@@ -32,7 +32,7 @@ NS_STDEXT_BEGIN
 // -------------------------------------------------------------------------
 // function bin2hex, hex2bin
 
-inline void winx_call bin2hex(
+inline char* winx_call bin2hex(
 	char* buf /* bytes * 2 */, const BYTE* bin /* bytes */, const size_t bytes)
 {
 	const char* const hex = "0123456789abcdef";
@@ -41,6 +41,7 @@ inline void winx_call bin2hex(
 		*buf++ = hex[*(unsigned char*)bin >> 4];
 		*buf++ = hex[*bin & 0xf];
 	}
+	return buf;
 }
 
 inline bool winx_call hex2bin(
@@ -57,6 +58,16 @@ inline bool winx_call hex2bin(
 		*bin = (c1 << 4) | c2;
 	}
 	return true;
+}
+
+// -------------------------------------------------------------------------
+// function bin2hexStr
+
+inline const char* winx_call bin2hexStr(
+	char* buf /* bytes * 2 + 1 */, const BYTE* bin /* bytes */, const size_t bytes)
+{
+	*bin2hex(buf, bin, bytes) = '\0';
+	return buf;
 }
 
 // -------------------------------------------------------------------------
