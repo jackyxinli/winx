@@ -71,7 +71,7 @@ public:
 inline void winx_call sha1(const void* buf, size_t bytes, BYTE checksum[20])
 {
 	SHA1Checksum chksum;
-	chksum.Update( (const BYTE*)buf, bytes );
+	chksum.Update( (const BYTE*)buf, (UINT)bytes );
 	chksum.Final( checksum );
 }
 

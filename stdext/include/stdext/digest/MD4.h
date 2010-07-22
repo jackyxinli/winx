@@ -58,13 +58,13 @@ public:
 // -------------------------------------------------------------------------
 // function md4
 
-inline void winx_call md4(const void* buf, UINT bytes, BYTE checksum[16])
+inline void winx_call md4(const void* buf, size_t bytes, BYTE checksum[16])
 {
 	using namespace detail;
 
 	MD4_CTX context;
 	MD4Init(&context);
-	MD4Update(&context, (const BYTE*)buf, bytes);
+	MD4Update(&context, (const BYTE*)buf, (UINT)bytes);
 	MD4Final(checksum, &context);
 }
 

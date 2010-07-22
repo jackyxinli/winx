@@ -43,7 +43,7 @@ typedef detail::CMD5Checksum MD5Checksum;
 inline void winx_call md5(const void* buf, size_t bytes, BYTE checksum[16])
 {
 	MD5Checksum chksum;
-	chksum.Update( (const BYTE*)buf, bytes );
+	chksum.Update( (const BYTE*)buf, (UINT)bytes );
 	chksum.Final( checksum );
 }
 

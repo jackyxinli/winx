@@ -36,7 +36,7 @@ inline char* winx_call bin2hex(
 	char* buf /* bytes * 2 */, const BYTE* bin /* bytes */, const size_t bytes)
 {
 	const char* const hex = "0123456789abcdef";
-	for (const char* binEnd = bin + bytes; bin != binEnd; ++bin)
+	for (const BYTE* binEnd = bin + bytes; bin != binEnd; ++bin)
 	{
 		*buf++ = hex[*(unsigned char*)bin >> 4];
 		*buf++ = hex[*bin & 0xf];
@@ -49,7 +49,7 @@ inline bool winx_call hex2bin(
 {
 	typedef NS_STDEXT::DigitTable DigitTable;
 
-	for (const char* binEnd = bin + bytes; bin != binEnd; ++bin)
+	for (const BYTE* binEnd = bin + bytes; bin != binEnd; ++bin)
 	{
 		const unsigned c1 = DigitTable::toDigit(*buf++);
 		const unsigned c2 = DigitTable::toDigit(*buf++);
