@@ -23,6 +23,10 @@
 #include "../Append.h"
 #endif
 
+#ifndef STDEXT_TEXT_STRINGALGO_H
+#include "../StringAlgo.h"
+#endif
+
 #ifndef STDEXT_INT_TRAITS_H
 #include "../../int/Traits.h"
 #endif
@@ -434,6 +438,14 @@ template <class StringT>
 inline const char* winx_call put(StringT& dest, const char* fmt, const String& val)
 {
 	return putString(dest, fmt, val.begin(), val.end());
+}
+
+template <class StringT>
+inline const char* winx_call put(StringT& dest, const char* fmt, const WString& val)
+{
+	StringBuilder s;
+	iconv(val.data(), val.size(), cp_auto, s);
+	return putString(dest, fmt, std::iterToPointer(s.begin()), std::iterToPointer(s.end()));
 }
 
 template <class StringT>

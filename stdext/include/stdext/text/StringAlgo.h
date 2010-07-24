@@ -64,18 +64,18 @@ template <class StringT>
 inline void winx_call iconv(
 	const wchar_t* str, size_t cch, codepage_t to, StringT& dest)
 {
-	int cch2 = WideCharToMultiByte(to, 0, str, cch, NULL, 0, NULL, NULL);
+	int cch2 = WideCharToMultiByte(to, 0, str, (int)cch, NULL, 0, NULL, NULL);
 	char* str2 = std::resize(dest, cch2);
-	WideCharToMultiByte(to, 0, str, cch, str2, cch2, NULL, NULL);
+	WideCharToMultiByte(to, 0, str, (int)cch, str2, cch2, NULL, NULL);
 }
 
 template <class AllocT>
 inline BasicString<wchar_t> winx_call iconv(
 	AllocT& alloc, codepage_t from, const char* str, size_t cch)
 {
-	int cch2 = MultiByteToWideChar(from, 0, str, cch, NULL, 0);
+	int cch2 = MultiByteToWideChar(from, 0, str, (int)cch, NULL, 0);
 	wchar_t* str2 = STD_ALLOC_ARRAY(alloc, wchar_t, cch2);
-	MultiByteToWideChar(from, 0, str, cch, str2, cch2);
+	MultiByteToWideChar(from, 0, str, (int)cch, str2, cch2);
 	return BasicString<wchar_t>(str2, cch2);
 }
 
@@ -83,9 +83,9 @@ template <class AllocT>
 inline BasicString<char> winx_call iconv(
 	AllocT& alloc, const wchar_t* str, size_t cch, codepage_t to)
 {
-	int cch2 = WideCharToMultiByte(to, 0, str, cch, NULL, 0, NULL, NULL);
+	int cch2 = WideCharToMultiByte(to, 0, str, (int)cch, NULL, 0, NULL, NULL);
 	char* str2 = STD_ALLOC_ARRAY(alloc, char, cch2);
-	WideCharToMultiByte(to, 0, str, cch, str2, cch2, NULL, NULL);
+	WideCharToMultiByte(to, 0, str, (int)cch, str2, cch2, NULL, NULL);
 	return BasicString<char>(str2, cch2);
 }
 
