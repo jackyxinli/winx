@@ -173,7 +173,7 @@ void winx_call formatVal(StringT& dest, const FormatParams& params, const CharT*
 	 *  -- might be negative
      *  but this will just mean zero
 	 */
-    padding = params.width - (textEnd - text) - prefixlen;
+    padding = params.width - (int)(textEnd - text) - prefixlen;
 
     /* put out the padding, prefix, and text */
 
