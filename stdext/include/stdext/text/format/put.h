@@ -213,7 +213,7 @@ inline void winx_call formatString(StringT& dest, const FormatParams& params, co
 	 *  -- might be negative
      *  but this will just mean zero
 	 */
-	const int padding = params.width - (textEnd - text);
+	const int padding = params.width - (int)(textEnd - text);
 
     /* put out the padding, prefix, and text */
 
