@@ -23,6 +23,13 @@
 #include "Basic.h"
 #endif
 
+#if defined(X_OS_LINUX)
+#define STDEXT_POSIX_SEMAPHORE
+#ifndef _SEMAPHORE_H
+#include <semaphore.h>
+#endif
+#endif
+
 NS_STDEXT_BEGIN
 
 // =========================================================================
@@ -49,12 +56,22 @@ public:
 		CloseHandle(hEvent);
 	}
 
+public:
+	void winx_call acquire() {
+		WaitForSingleObject(hEvent, INFINITE);
+	}
+
+	void winx_call release() {
+		SetEvent(hEvent);
+	}
+
+public:
 	void winx_call wait() {
 		WaitForSingleObject(hEvent, INFINITE);
 	}
 
 	bool winx_call timed_wait(duration_type ms) {
-		return WaitForSingleObject(hEvent, ms) == WAIT_OBJECT_0;
+		return WaitForSingleObject(hEvent, (DWORD)ms) == WAIT_OBJECT_0;
 	}
 
 	void winx_call notify() {
@@ -65,6 +82,49 @@ public:
 #endif // defined(STDEXT_THREAD_WINDOWS)
 
 // =========================================================================
+// class PosixEvent
+
+#if defined(STDEXT_POSIX_SEMAPHORE)
+
+class PosixEvent
+{
+private:
+	PosixEvent(const PosixEvent&);
+	void operator=(const PosixEvent&);
+
+private:
+	sem_t m_sem;
+
+public:
+	explicit PosixEvent() {
+		sem_init(&m_sem, 0, 0);
+	}
+	~PosixEvent() {
+		sem_destroy(&m_sem);
+	}
+
+public:
+	void winx_call acquire() {
+		sem_wait(&m_sem);
+	}
+
+	void winx_call release() {
+		sem_post(&m_sem);
+	}
+
+public:
+	void winx_call wait() {
+		sem_wait(&m_sem);
+	}
+
+	void winx_call notify() {
+		sem_post(&m_sem);
+	}
+};
+
+#endif
+
+// =========================================================================
 // class Event
 
 #if defined(STDEXT_THREAD_WINDOWS)
@@ -73,12 +133,11 @@ typedef WinEvent Event;
 
 #else
 
-typedef PthreadEvent Event;
+typedef PosixEvent Event;
 
 #endif
 
 // =========================================================================
-// $Log: $
 
 NS_STDEXT_END
 
