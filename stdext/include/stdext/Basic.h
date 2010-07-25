@@ -136,6 +136,10 @@
 #	endif
 #endif
 
+#ifndef winx_callback
+#define winx_callback		__stdcall
+#endif
+
 // -------------------------------------------------------------------------
 // macro __noop - diagnost
 
