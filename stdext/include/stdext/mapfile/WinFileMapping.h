@@ -32,7 +32,7 @@ struct MappingReadWrite
 	enum { FileDesiredAccess = GENERIC_WRITE|GENERIC_READ };
 	enum { FileShareMode = FILE_SHARE_READ };
 	enum { FileCreationDisposition = OPEN_ALWAYS };
-	enum { FileFlagsAndAttributes = FILE_FLAG_WRITE_THROUGH|FILE_ATTRIBUTE_ARCHIVE };
+	enum { FileFlagsAndAttributes = FILE_FLAG_WRITE_THROUGH|FILE_ATTRIBUTE_NORMAL };
 
 	enum { GetSizeOnOpen = FALSE };
 };
