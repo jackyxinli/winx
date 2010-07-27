@@ -253,8 +253,14 @@ inline int winx_call append(File2Appender<FileT>& app, size_t count, const CharT
 	return app.put(count, val);
 }
 
-template <class FileT, class CharT>
-inline int winx_call append(File2Appender<FileT>& app, const CharT val)
+template <class FileT>
+inline int winx_call append(File2Appender<FileT>& app, const char val)
+{
+	return app.put(val);
+}
+
+template <class FileT>
+inline int winx_call append(File2Appender<FileT>& app, const char* val)
 {
 	return app.put(val);
 }

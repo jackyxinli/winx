@@ -274,7 +274,8 @@ struct Utils
 	static void winx_call formatPtr(StringT& dest, const void* val)
 	{
 		CharT buf[64];
-		const CharT* text = formatUInt(buf + countof(buf), (unsigned long)val, STD_PRINTYPE_I_HEX, 8);
+		const CharT* text = formatUInt(
+			buf + countof(buf), (size_t)val, STD_PRINTYPE_I_HEX, 8);
 		NS_STDEXT_TEXT::append(dest, text, buf + countof(buf));
 	}
 };
