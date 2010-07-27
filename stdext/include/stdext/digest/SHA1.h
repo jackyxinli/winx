@@ -40,8 +40,8 @@ private:
 	detail::SHA1 m_impl;
 
 public:
-	void winx_call Update(const BYTE* buf, UINT bytes) {
-		m_impl.Input(buf, bytes);
+	void winx_call Update(const BYTE* buf, size_t bytes) {
+		m_impl.Input(buf, (UINT)bytes);
 	}
 
 #if defined(WINX_BYTESWAP)

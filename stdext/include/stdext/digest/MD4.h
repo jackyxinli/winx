@@ -46,8 +46,8 @@ public:
 		detail::MD4Init(&context);
 	}
 
-	void winx_call Update(const BYTE* buf, UINT bytes) {
-		detail::MD4Update(&context, buf, bytes);
+	void winx_call Update(const BYTE* buf, size_t bytes) {
+		detail::MD4Update(&context, buf, (UINT)bytes);
 	}
 
 	void winx_call Final(BYTE checksum[16]) {
