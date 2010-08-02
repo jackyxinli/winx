@@ -370,15 +370,6 @@ NS_STDEXT_END
 #endif
 
 // -------------------------------------------------------------------------
-// class NullClass
-
-NS_STDEXT_BEGIN
-
-class NullClass {};
-
-NS_STDEXT_END
-
-// -------------------------------------------------------------------------
 // Debug Utilities
 
 #ifndef STDEXT_DEBUG_H
@@ -386,6 +377,56 @@ NS_STDEXT_END
 #endif
 
 using NS_STDEXT::DllMainInit;
+
+// -------------------------------------------------------------------------
+// class NullClass, Resource
+
+NS_STDEXT_BEGIN
+
+class NullClass {};
+
+template <class Type>
+class Resource
+{
+private:
+	Resource(const Resource&);
+	void operator=(const Resource&);
+
+public:
+	Type object;
+
+	Resource() {}
+	Resource(const Type& inst)
+		: object(inst) {
+	}
+	~Resource() {
+		object.release();
+	}
+
+	Type* winx_call operator&() {
+		WINX_ASSERT(!object.good());
+		return &object;
+	}
+
+	Type* winx_call operator->() {
+		return &object;
+	}
+
+	const Type* winx_call operator->() const {
+		return &object;
+	}
+
+	void winx_call operator=(const Type& inst) {
+		object.release();
+		object = inst;
+	}
+
+	void winx_call clear() {
+		object.release();
+	}
+};
+
+NS_STDEXT_END
 
 // -------------------------------------------------------------------------
 // TestCase class
