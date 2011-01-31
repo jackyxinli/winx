@@ -43,6 +43,11 @@ public:
 	void winx_call Update(const BYTE* buf, size_t bytes) {
 		m_impl.Input(buf, (UINT)bytes);
 	}
+	
+	void winx_call Reset()
+	{
+		m_impl.Reset();
+	}
 
 #if defined(WINX_BYTESWAP)
 	void winx_call Final(BYTE checksum[20])

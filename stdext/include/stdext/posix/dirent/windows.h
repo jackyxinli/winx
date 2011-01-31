@@ -97,6 +97,10 @@ typedef struct DIR {
 # define STRNCPY(dest,src,size) strncpy((dest),(src),(size))
 #endif
 
+inline int is_dir(const dirent* d)
+{
+	return (d->data.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY);
+}
 
 /*
  * Open directory stream DIRNAME for read and return a pointer to the
