@@ -17,12 +17,11 @@ public:
 	typedef int Mode;
 	typedef int Attrs;
 	typedef int Errno;
-	typedef INT64 FileOffset;
-	typedef FileOffset FileSize;
+	typedef INT64 Offset;
 	typedef INT64 FileTime;
+	typedef Offset FileOffset;
+	typedef Offset FileSize;
 	typedef WinFile Self;
-
-	typedef char char_type;
 	typedef size_t size_type;
 
 private:
@@ -162,75 +161,83 @@ public:
 			return 0;
 		return getErrno();
 	}
-
-	Errno winx_call put(char ch)
+	
+	Errno winx_call pwrite(FileOffset offset, const void* buf, size_t bytes)
 	{
-		DWORD bytes;
-		if (WriteFile(m_fd, &ch, 1, &bytes, NULL))
-			return 0;
-		return getErrno();		
+		if (SetFilePointerEx(m_fd, *(PLARGE_INTEGER)&offset, NULL, BEGIN))
+			return write(buf, bytes);
+		return getErrno();
 	}
 
-	Errno winx_call put(size_t count, char ch)
+	Errno winx_call pwrite(FileOffset offset, const void* buf, size_t bytes, size_t* putten)
 	{
-		DWORD bytes;
-		while (count--)
-		{
-			if (!WriteFile(m_fd, &ch, 1, &bytes, NULL))
-				return getErrno();
-		}
-		return 0;
+		if (SetFilePointerEx(m_fd, *(PLARGE_INTEGER)&offset, NULL, BEGIN))
+			return write(buf, bytes, putten);
+		return getErrno();
 	}
 
-	Errno winx_call put(const char* s)
+	Errno winx_call pread(FileOffset offset, void* buf, size_t bytes)
 	{
-		return put(s, strlen(s));
+		if (SetFilePointerEx(m_fd, *(PLARGE_INTEGER)&offset, NULL, BEGIN))
+			return read(buf, bytes);
+		return getErrno();
 	}
 
-	Errno winx_call put(const char* buf, size_t bytes)
+	Errno winx_call pread(FileOffset offset, void* buf, size_t bytes, size_t* getten)
+	{
+		if (SetFilePointerEx(m_fd, *(PLARGE_INTEGER)&offset, NULL, BEGIN))
+			return read(buf, bytes, getten);
+		return getErrno();
+	}
+
+	Errno winx_call write(const void* buf, size_t bytes)
 	{
 		if (WriteFile(m_fd, buf, (DWORD)bytes, (DWORD*)&bytes, NULL))
 			return 0;
 		return getErrno();
 	}
 
-	Errno winx_call put(const char* buf, size_t bytes, size_t& putten)
+	Errno winx_call write(const void* buf, size_t bytes, size_t* putten)
 	{
 		if (sizeof(DWORD) == sizeof(size_t))
 		{
-			if (WriteFile(m_fd, buf, (DWORD)bytes, (DWORD*)&putten, NULL))
+			if (WriteFile(m_fd, buf, (DWORD)bytes, (DWORD*)putten, NULL))
 				return 0;
 		}
 		else
 		{
 			DWORD tmp;
-			if (WriteFile(m_fd, buf, (DWORD)bytes, &tmp, NULL)) {
-				putten = tmp;
+			if (WriteFile(m_fd, buf, (DWORD)bytes, &tmp, NULL))
+			{
+				if (putten)
+					*putten = tmp;
 				return 0;
 			}
 		}
 		return getErrno();
 	}
 
-	Errno winx_call get(char* buf, size_t bytes)
+	Errno winx_call read(void* buf, size_t bytes)
 	{
 		if (ReadFile(m_fd, buf, (DWORD)bytes, (DWORD*)&bytes, NULL))
 			return 0;
 		return getErrno();
 	}
 
-	Errno winx_call get(char* buf, size_t bytes, size_t& getten)
+	Errno winx_call read(void* buf, size_t bytes, size_t* getten)
 	{
 		if (sizeof(DWORD) == sizeof(size_t))
 		{
-			if (ReadFile(m_fd, buf, (DWORD)bytes, (DWORD*)&getten, NULL))
+			if (ReadFile(m_fd, buf, (DWORD)bytes, (DWORD*)getten, NULL))
 				return 0;
 		}
 		else
 		{
 			DWORD tmp;
-			if (ReadFile(m_fd, buf, (DWORD)bytes, (DWORD*)&tmp, NULL)) {
-				getten = tmp;
+			if (ReadFile(m_fd, buf, (DWORD)bytes, (DWORD*)&tmp, NULL))
+			{
+				if (getten)
+					*getten = tmp;
 				return 0;
 			}
 		}
