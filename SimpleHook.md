@@ -1,0 +1,1 @@
+Deprecated. See [MessageHook](MessageHook.md).
